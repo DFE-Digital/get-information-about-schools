@@ -1,0 +1,18 @@
+{
+  "name": "govuk-styleguide-theme",
+  "private": true,
+  "version": "0.0.1",
+  "authors": [
+    "pflannery <pflannery@users.noreply.github.com>"
+  ],
+  "description": "Style guide theme that uses hologram",
+  "license": "MIT",
+  "ignore": [
+    "*",
+    "!partials/**/*",
+    "!scripts/**/*",
+    "!styles/**/*",
+    "!_footer.html",
+    "!_header.html"
+  ]
+}

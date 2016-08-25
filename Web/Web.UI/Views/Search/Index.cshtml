@@ -1,0 +1,15 @@
+﻿<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-large">Search</h1>
+        @using (Html.BeginForm("Results", "Search", FormMethod.Get))
+        {
+            @Html.ValidationSummary()
+            <div class="form-group">
+                <input class="form-control" id="searchTerm" name="searchTerm" type="text" placeholder="Enter name, URN or LAESTAB" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="button button-next">Search</button>
+            </div>
+        }
+    </div>
+</div>

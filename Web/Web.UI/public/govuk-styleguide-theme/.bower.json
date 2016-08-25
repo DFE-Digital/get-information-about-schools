@@ -1,0 +1,27 @@
+{
+  "name": "govuk-styleguide-theme",
+  "private": true,
+  "authors": [
+    "pflannery <pflannery@users.noreply.github.com>"
+  ],
+  "description": "Style guide theme that uses hologram",
+  "license": "MIT",
+  "ignore": [
+    "*",
+    "!partials/**/*",
+    "!scripts/**/*",
+    "!styles/**/*",
+    "!_footer.html",
+    "!_header.html"
+  ],
+  "homepage": "https://github.com/DFEAGILEDEVOPS/govuk-styleguide-theme",
+  "_release": "de52f921f8",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "de52f921f8bbc37706ed9dc26dc4dc38d6a2891e"
+  },
+  "_source": "git://github.com/DFEAGILEDEVOPS/govuk-styleguide-theme.git",
+  "_target": "*",
+  "_originalSource": "DFEAGILEDEVOPS/govuk-styleguide-theme"
+}

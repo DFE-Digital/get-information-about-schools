@@ -1,0 +1,191 @@
+/*doc
+---
+title: Buttons
+name: button
+category: Base
+---
+```html_example
+<h4 class="styleguide">Standard Button Examples</h4>
+<div class='button button-default'>Default</div>
+<div class='button button-primary'>Primary</div>
+<div class='button button-secondary'>Secondary</div>
+```
+
+```html_example
+<h4>Button Next</h4>
+<div class='button button-next'>Continue</div>
+```
+
+```html_example
+<h4>Get Started Button Example</h4>
+<div class='button button-get-started'>Start Now</div>
+```
+*/
+
+// Buttons
+// ==========================================================================
+// GOV.UK front end toolkit dependencies
+@import "design-patterns/buttons";
+@import "measurements";
+@import "typography";
+// Path to assets for use with file-url()
+$path: $images-path;
+
+.button {
+  @include button;
+  margin: 0 $gutter-half $gutter-half 0;
+  // padding: em(10) em(15) em(5) em(15);
+  vertical-align: top;
+}
+
+// Fix unwanted button padding in Firefox
+.button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.button:focus {
+  outline: 3px solid $focus-colour;
+}
+
+// Disabled buttons
+.button[disabled="disabled"] {
+  background: $button-colour;
+}
+
+.button[disabled="disabled"]:focus {
+  outline: none;
+}
+
+// Start now buttons
+.button-get-started {
+  @include bold-24;
+  background-image: file-url("icons/icon-pointer.png");
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+  padding: em(7) em(41) em(4) em(16);
+
+  @include device-pixel-ratio {
+    background-image: file-url("icons/icon-pointer-2x.png");
+    background-size: 30px 19px;
+  }
+
+  @include ie(6) {
+    background-image: file-url("icons/icon-pointer-2x.png");
+  }
+}
+
+.button-next {
+  @include core-19();
+  background-image: file-url("icons/icon-pointer.png");
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+  padding: em(7) em(41) em(4) em(16);
+
+  @include device-pixel-ratio {
+    background-image: file-url("icons/icon-pointer-2x.png");
+    background-size: 30px 19px;
+  }
+
+  @include ie(6) {
+    background-image: file-url("icons/icon-pointer-2x.png");
+  }
+}
+
+.button-as-link {
+  @include core-19();
+  background: none;
+  border: none;
+}
+
+// Button skins
+// --------------------------------------------------
+
+.button-default {
+  @include button-variant($btn-default-color, $btn-default-bg, $btn-default-border);
+}
+
+.button-primary {
+  @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+}
+
+.button-secondary {
+  @include button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
+}
+
+.button-grey {
+  @include button-variant($grey-1, $btn-secondary-bg , $btn-default-border);
+}
+
+.button-comparison {
+  @include core-19;
+  color: black;
+  margin-top : $gutter/2;
+  text-decoration: none;
+
+  @include media(desktop){
+    margin: 0 0 0 0;
+    float:right;
+    text-align:right;
+  }
+}
+
+.add-to-default-table,
+.remove-from-default-table {
+  @include core-14;
+  color: black;
+  margin-top : $gutter/2;
+  text-decoration: none;
+}
+
+.button-add-comparison,
+.button-comparison-school {
+    @extend .button-comparison;
+    @include media(desktop) {
+        margin: 0 0 0 0;
+        float: none;
+        text-align: left;
+    }
+}
+
+.button-view-comparison {
+     margin-bottom: 0
+}
+
+.noshadow {
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	box-shadow: none !important;
+}
+
+.button-comparison-add {
+  @include button-variant($black, $grey-2, $btn-default-border, 0);
+}
+
+.button-comparison-remove, .button-basket-comparison-remove {
+  @include button-variant($black, $grey-3, $btn-default-border, 0);
+}
+
+// Button Sizes
+// --------------------------------------------------
+
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}
+
+.btn-borderless {
+  border: none;
+}
+
+// todo: resolve this hack (pflannery)
+.btn-mobile {
+  @include media(mobile) {
+    width: 100%;
+    margin-top: 15px;
+  }
+}

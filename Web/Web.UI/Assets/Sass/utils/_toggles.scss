@@ -1,0 +1,12 @@
+﻿// Path to assets for use with file-url()
+$path: $images-path;
+
+@mixin toggle-open() {
+  padding-left: 0.75em;
+  background: file-url("icons/icon-caret-right.png") left 0.3em no-repeat;
+}
+
+@mixin toggle-closed() {
+  padding-left: 0.75em;
+  background: file-url("icons/icon-caret-down.png") left 0.5em no-repeat;
+}

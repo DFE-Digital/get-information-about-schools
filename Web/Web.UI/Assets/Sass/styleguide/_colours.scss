@@ -1,0 +1,70 @@
+// Colour styles - hexidecimal
+
+// For the base colours see:
+// https://github.com/alphagov/govuk_frontend_toolkit/blob/master/stylesheets/_colours.scss
+
+
+// These are extras which are only used in the frontend app.
+$default-colour:  #00692f !default;
+$primary-colour: #3DB2EC !default;
+$secondary-colour: white !default;
+
+$homepage-top-colour: $mainstream-brand;
+$brand-primary: #3DB2EC;
+$brand-secondary: white;
+
+// Forms
+// ==========================================================================
+
+// Links
+// ==========================================================================
+$link-color: green;
+$link-hover-color: blue;
+$link-hover-decoration: underline;
+$nav-link-hover-bg: $grey-2;
+$nav-disabled-link-color: darkgray;
+$nav-disabled-link-hover-color: darkgray;
+
+// Buttons
+// ==========================================================================
+$btn-default-color:        white !default;
+$btn-default-bg:            $default-colour;
+$btn-default-border:       #ccc !default;
+
+$btn-primary-color:        #fff !default;
+$btn-primary-bg:           $primary-colour !default;
+$btn-primary-border:       darken($btn-primary-bg, 5%) !default;
+
+$btn-secondary-color:      black !default;
+$btn-secondary-bg:         $secondary-colour !default;
+$btn-secondary-border:     darken($btn-secondary-bg, 5%) !default;
+
+$btn-link-disabled-color:  $grey-3 !default;
+
+// Notices
+// ==========================================================================
+$notice-default-bg:         white;
+$notice-default-text:       black !default;
+$notice-default-border:     $default-colour;
+
+$notice-primary-bg:         white;
+$notice-primary-text:       black !default;
+$notice-primary-border:     $primary-colour;
+
+$notice-subtle-bg:         white;
+$notice-subtle-text:       gray !default;
+$notice-subtle-border:     gray;
+
+// Tables
+// ==========================================================================
+
+//** Default background color used for all tables.
+$table-bg:                      transparent !default;
+//** Background color used for `.table-striped`.
+$table-bg-accent:               #f9f9f9 !default;
+//** Background color used for `.table-hover`.
+$table-bg-hover:                #f5f5f5 !default;
+$table-bg-active:               $table-bg-hover !default;
+
+//** Border color for table and cell borders.
+$table-border-color:            white !default;

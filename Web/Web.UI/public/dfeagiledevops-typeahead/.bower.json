@@ -1,0 +1,24 @@
+{
+  "name": "corejs-typeahead",
+  "main": "dist/typeahead.bundle.js",
+  "dependencies": {
+    "jquery": ">=1.7"
+  },
+  "devDependencies": {
+    "jquery": "~1.7",
+    "jasmine-ajax": "~1.3.1",
+    "jasmine-jquery": "~1.7.0"
+  },
+  "resolutions": {
+    "jquery": "1.7.2"
+  },
+  "homepage": "https://github.com/DFEAGILEDEVOPS/typeahead.js",
+  "_release": "a8d1bd98d1",
+  "_resolution": {
+    "type": "commit",
+    "commit": "a8d1bd98d148fe27d95d5ce661602a36067a4c85"
+  },
+  "_source": "https://github.com/DFEAGILEDEVOPS/typeahead.js.git",
+  "_target": "a8d1bd98d148fe27d95d5ce661602a36067a4c85",
+  "_originalSource": "https://github.com/DFEAGILEDEVOPS/typeahead.js.git"
+}

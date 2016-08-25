@@ -1,0 +1,12 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{
+    Layout = "dfe/layouts/template";
+    ViewBag.pageTitle = "Sorry we are experiencing technical problems.";
+    ViewBag.pageClass = "home-page";
+}
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-large">@ViewBag.pageTitle</h1>
+        <p>Please try again in a few moments.</p>
+    </div>
+</div>

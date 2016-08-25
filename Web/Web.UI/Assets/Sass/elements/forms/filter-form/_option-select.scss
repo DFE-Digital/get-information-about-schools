@@ -1,0 +1,230 @@
+/*doc
+---
+title: Option Select
+name: option-select
+category: Forms
+---
+```html_example
+<div class="grid-row">
+  <div class="column-half">
+    <div class="filter-form">
+      <form>
+
+        <!-- Alert Option Select -->
+        <div class="govuk-option-select js-collapsible" data-closed-on-load="true">
+          <div class="container-head js-container-head">
+            <div class='option-select-label'>Alert type</div>
+          </div>
+          <div class="options-container" id="alert_type">
+            <div class="js-auto-height-inner">
+              <label for="drugs">
+                <input name="alert_type[]" value="drugs" id="drugs" type="checkbox" aria-controls="js-search-results-info">
+                Drug alert
+              </label>
+              <label for="devices">
+                <input name="alert_type[]" value="devices" id="devices" type="checkbox" aria-controls="js-search-results-info">
+                Medical device alert
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- End Alert Option Select -->
+
+        <div class="filter-divider"></div>
+
+        <!-- Medical Specialism Option Select -->
+        <div class="govuk-option-select js-collapsible" data-closed-on-load="true">
+          <div class="container-head js-container-head">
+            <div class='option-select-label'>Medical specialism</div>
+          </div>
+          <div class="options-container" id="medical_specialism" style="max-height: none; height: 214px;">
+            <div class="js-auto-height-inner">
+
+              <label for="anaesthetics">
+                <input name="medical_specialism[]" value="anaesthetics" id="anaesthetics" type="checkbox" aria-controls="js-search-results-info">
+                Anaesthetics
+              </label>
+
+              <label for="cardiology">
+                <input name="medical_specialism[]" value="cardiology" id="cardiology" type="checkbox" aria-controls="js-search-results-info">
+                Cardiology
+              </label>
+
+              <label for="care-home-staff">
+                <input name="medical_specialism[]" value="care-home-staff" id="care-home-staff" type="checkbox" aria-controls="js-search-results-info">
+                Care home staff
+              </label>
+
+              <label for="cosmetic-surgery">
+                <input name="medical_specialism[]" value="cosmetic-surgery" id="cosmetic-surgery" type="checkbox" aria-controls="js-search-results-info">
+                Cosmetic surgery
+              </label>
+
+              <label for="critical-care">
+                <input name="medical_specialism[]" value="critical-care" id="critical-care" type="checkbox" aria-controls="js-search-results-info">
+                Critical care
+              </label>
+
+              <label for="dentistry">
+                <input name="medical_specialism[]" value="dentistry" id="dentistry" type="checkbox" aria-controls="js-search-results-info">
+                Dentistry
+              </label>
+
+              <label for="general-practice">
+                <input name="medical_specialism[]" value="general-practice" id="general-practice" type="checkbox" aria-controls="js-search-results-info">
+                General practice
+              </label>
+
+              <label for="general-surgery">
+                <input name="medical_specialism[]" value="general-surgery" id="general-surgery" type="checkbox" aria-controls="js-search-results-info">
+                General surgery
+              </label>
+
+              <label for="haematology-oncology">
+                <input name="medical_specialism[]" value="haematology-oncology" id="haematology-oncology" type="checkbox" aria-controls="js-search-results-info">
+                Haematology and oncology
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- End Medical Specialism Option Select -->
+
+      </form>
+    </div>
+  </div>
+</div>
+
+```
+*/
+
+.govuk-option-select {
+  background-color: $grey-3;
+  padding: 5px;
+
+  @include media(desktop) {
+    /* Redefine scrollbars on desktop where these lists are scrollable
+    so they are always visible in option lists */
+    ::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 7px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgba(0,0,0,.5);
+      -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    }
+  }
+
+  &:focus {
+    outline: 3px solid $yellow;
+  }
+
+  .container-head {
+    padding: 5px 8px;
+  }
+
+  .option-select-label {
+    @include core-19;
+    margin-right: 40px;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-left: 10px;
+  }
+
+  .options-container {
+    position: relative;
+    background-color: $page-colour;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    @include media(desktop) {
+      max-height: 200px;
+    }
+
+    label {
+      @include inline-block;
+      padding: 7px 0 7px 30px;
+      border-bottom: 1px solid $border-colour;
+      width: 100%;
+      cursor: pointer;
+      font-size:16px;
+
+      @include media(desktop) {
+        /* leave room for the scroll bars on desktop*/
+        width: 90%;
+      }
+
+      &:hover {
+        background-color: $highlight-colour;
+      }
+
+      &[disabled] {
+        color: $grey-2;
+      }
+    }
+
+    input {
+      margin-left: -23px;
+      vertical-align: top;
+    }
+  }
+
+  .js-enabled & {
+    padding: 0 0 1px 0;
+
+    .js-selected-counter {
+      @include core-14;
+      padding-left: $gutter-half;
+    }
+
+    .options-container {
+      border: 5px solid $grey-3;
+      border-top: 10px;
+    }
+
+    /* styles for collapsibleness. .js-collapsible is added by the javascript if the browser is not ie6/7 in which case these don't collapse */
+    &.js-collapsible {
+      button {
+        z-index: 97;
+        position: relative;
+        border: none;
+        display: block;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        margin-bottom: -1px;
+        padding: 5px 0;
+        background: file-url('../assets/images/option-select-toggle-sprite.png') no-repeat right 5px;
+        background-color: $grey-3;
+
+        @include device-pixel-ratio() {
+          background-size: 32px 50px;
+        }
+
+        &:hover {
+          background-color: $grey-2;
+        }
+
+        &:hover + .options-container {
+          border-color: $grey-2;
+        }
+
+        &[disabled] {
+          background-image: none;
+          color: inherit;
+        }
+      }
+
+      &.js-closed {
+        button {
+          background-position: right -75px;
+        }
+
+        .options-container {
+          display: none;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+﻿@using Web.UI.Helpers
+@model dynamic
+@{
+    ViewBag.Title = string.Format("Search results for '{0}'", Model.SearchTerm);
+    ViewBag.PageClass = "search-results";
+}
+
+<p>@Html.ActionLink("Go back", "Index")</p>
+
+<h1 class="heading-large">Results for '@Model.SearchTerm'</h1>
+
+<h2>Searched by: @Model.SearchType</h2>
+
+<hr />
+
+@if (Model.Error != null)
+{
+    <h2 class="heading-medium">Error</h2>
+
+    <p>@Model.Error</p>
+}
+else if (Model.Results != null)
+{
+    <ul>
+        @foreach (var result in Model.Results)
+        {
+            <li>
+                <strong>@Html.ActionLink((string)result.SCHNAME, "Details", "Schools", new { id = (string)result.id }, null)</strong>
+                <ul>
+                    <li><strong>Address</strong>: @SchoolDetailsHelpers.GetAddress(result)</li>
+                    <li><strong>URN</strong>: @result.id</li>
+                    <li><strong>LAESTAB</strong>: @result.LAESTAB</li>
+                </ul>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Sorry, we could not find any matching schools. Please check your spelling and try again.</p>
+}
