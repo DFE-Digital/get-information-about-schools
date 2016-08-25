@@ -1,6 +1,6 @@
-# SPT Web
+# Edubase
 
- * NancyFx
+ * Asp.net MVC
  * Razor
  * GDS Template
  * Redis Cache
