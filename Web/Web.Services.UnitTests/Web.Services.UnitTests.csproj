@@ -61,9 +61,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Web.Identity\Web.Identity.csproj">
       <Project>{8DF3C000-D130-4385-ADC5-DE2F70C749A4}</Project>
       <Name>Web.Identity</Name>
@@ -72,6 +69,9 @@
       <Project>{F50A30DA-CE47-4BC6-9E8F-0E070F42F280}</Project>
       <Name>Web.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
