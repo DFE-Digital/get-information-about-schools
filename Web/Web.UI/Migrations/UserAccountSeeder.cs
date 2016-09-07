@@ -47,7 +47,7 @@ namespace Web.UI.Migrations
                 adminUser = new ApplicationUser
                 {
                     UserName = "admin",
-                    Email = "admin@raiseonline.user",
+                    Email = "admin@edubase.user",
                     EmailConfirmed = true
                 };
 

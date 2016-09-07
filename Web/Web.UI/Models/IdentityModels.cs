@@ -20,7 +20,7 @@ namespace Web.UI.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("RaiseSqlDb", throwIfV1Schema: false)
+            : base("EdubaseSqlDb", throwIfV1Schema: false)
         {
         }
 
