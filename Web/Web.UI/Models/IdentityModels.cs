@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 
 namespace Web.UI.Models
 {
@@ -22,6 +23,8 @@ namespace Web.UI.Models
         public ApplicationDbContext()
             : base("EdubaseSqlDb", throwIfV1Schema: false)
         {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Migrations.Configuration>());
+            Database.Initialize(false);
         }
 
         public static ApplicationDbContext Create()

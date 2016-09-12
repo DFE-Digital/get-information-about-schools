@@ -24,6 +24,30 @@ namespace Web.UI.Helpers
                 return new RedirectResult(returnUrl);
             }
 
+            var claim = _userIdentity.FindFirstClaim(IdentityConstants.AccessibleSchoolIdsClaimTypeName);
+            if(claim != null && !string.IsNullOrWhiteSpace(claim.Value))
+            {
+                var schoolIds = claim.Value.Split(',');
+                var schoolId = schoolIds[0];
+                return RedirectTo("Schools", "Details", schoolId);
+            }
+
+            claim = _userIdentity.FindFirstClaim(IdentityConstants.ClaimTypeNameMATAdmin);
+            if (claim != null && !string.IsNullOrWhiteSpace(claim.Value))
+            {
+                var ids = claim.Value.Split(',');
+                var id = ids[0];
+                return RedirectTo("Home", "MATAdmin", id);
+            }
+
+            claim = _userIdentity.FindFirstClaim(IdentityConstants.ClaimTypeNameLAAdmin);
+            if (claim != null && !string.IsNullOrWhiteSpace(claim.Value))
+            {
+                var ids = claim.Value.Split(',');
+                var id = ids[0];
+                return RedirectTo("Home", "LAAdmin", id);
+            }
+
             if (_userIdentity.IsInRole(IdentityConstants.AccessAllSchoolsRoleName))
             {
                 return RedirectTo("Search");
@@ -32,12 +56,13 @@ namespace Web.UI.Helpers
             return RedirectTo("Home");
         }
 
-        private static RedirectToRouteResult RedirectTo(string controller, string action = "Index")
+        private static RedirectToRouteResult RedirectTo(string controller, string action = "Index", string id = "")
         {
             return new RedirectToRouteResult(null, new RouteValueDictionary
                 {
                     {"action", action},
-                    {"controller", controller}
+                    {"controller", controller},
+                    {"id", id }
                 });
         }
     }

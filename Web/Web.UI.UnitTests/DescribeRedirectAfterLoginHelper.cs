@@ -66,6 +66,7 @@ namespace Web.UI.UnitTests
 
                 { "action", "Index"},
                 { "controller", "Home"},
+                { "id", "" }
             };
 
             // Act
@@ -88,6 +89,7 @@ namespace Web.UI.UnitTests
 
                 { "action", "Index"},
                 { "controller", "Search"},
+                { "id", "" }
             };
 
             // Act
@@ -121,6 +123,7 @@ namespace Web.UI.UnitTests
 
                 { "action", "Index"},
                 { "controller", "Home"},
+                { "id", string.Empty }
             };
 
             // Act
