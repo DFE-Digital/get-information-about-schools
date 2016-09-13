@@ -5,9 +5,9 @@ using System.Web.Routing;
 using Moq;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
+using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Utils;
 using Web.Identity;
-using Web.UI.Helpers;
-using Web.UI.Utils;
 
 namespace Web.UI.UnitTests
 {

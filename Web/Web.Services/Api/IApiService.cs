@@ -67,5 +67,7 @@ namespace Web.Services.Api
         dynamic SuggestTown(string url, string query);
 
         dynamic GetSimilarSchools(string urn, string phase);
+
+        RegionsAndAuthorities GetRegionsAndAuthorities();
     }
 }

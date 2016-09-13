@@ -93,13 +93,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Edubase.Web.UI\Edubase.Web.UI.csproj">
+      <Project>{f32e2a2e-6782-4293-b533-284ff1b17ff6}</Project>
+      <Name>Edubase.Web.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Web.Identity\Web.Identity.csproj">
       <Project>{8DF3C000-D130-4385-ADC5-DE2F70C749A4}</Project>
       <Name>Web.Identity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Web.UI\Web.UI.csproj">
-      <Project>{F32E2A2E-6782-4293-B533-284FF1B17FF6}</Project>
-      <Name>Web.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

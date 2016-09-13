@@ -1,0 +1,33 @@
+﻿@model Edubase.Web.UI.Models.MATSearchResultsViewModel
+@{
+    ViewBag.Title = string.Format("Search results for '{0}'", Model.SearchTerm);
+    ViewBag.PageClass = "search-results";
+}
+
+<p>@Html.ActionLink("Go back", "Index")</p>
+
+<h1 class="heading-large">Results for '@Model.SearchTerm'</h1>
+
+<hr />
+
+@if (Model.Error != null)
+{
+    <h2 class="heading-medium">Error</h2>
+
+    <p>@Model.Error</p>
+}
+else
+{
+    <ul>
+        @foreach (var result in Model.Results)
+        {
+            <li>
+                <strong>@Html.ActionLink(result.GroupName, "Details", "MAT", new { id = result.GroupUID }, null)</strong>
+                <ul>
+                    <li><strong>Type</strong>: @result.GroupType</li>
+                    <li><strong>Companies House Number</strong>: @result.CompaniesHouseNumber</li>
+                </ul>
+            </li>
+        }
+    </ul>
+}
