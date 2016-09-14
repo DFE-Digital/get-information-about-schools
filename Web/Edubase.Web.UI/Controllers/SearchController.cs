@@ -5,6 +5,8 @@ using System.Web.Mvc;
 using Web.Identity;
 using Web.Services.Exceptions;
 using Web.Services.Search;
+using Edubase.Common;
+using System.Linq;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -34,24 +36,32 @@ namespace Edubase.Web.UI.Controllers
             model.Error = null;
             ISearchSchoolsStrategy selectedStrategy = null;
 
-            try
+            if (searchTerm.IsInteger() && searchTerm.Length != 6 && searchTerm.Length != 7)
             {
-                foreach (var strategy in _schoolSearchStrategieses.Where(s=>!(s is SearchSchoolsByLaNameStrategy)).OrderBy(s => s.Priority))
+                model.Error = "The LAESTAB or URN was invalid.";
+            }
+            else
+            {
+
+                try
                 {
-                    selectedStrategy = strategy;
-                    var results = strategy.Search(searchTerm);
-                    if (results != null)
+                    foreach (var strategy in _schoolSearchStrategieses.Where(s => !(s is SearchSchoolsByLaNameStrategy)).OrderBy(s => s.Priority))
                     {
-                        model.Results = results;
-                        break;
+                        selectedStrategy = strategy;
+                        var results = strategy.Search(searchTerm);
+                        if (results != null)
+                        {
+                            model.Results = results;
+                            break;
+                        }
                     }
                 }
+                catch (SearchException ex)
+                {
+                    model.Error = ex.Message;
+                }
             }
-            catch (SearchException ex)
-            {
-                model.Error = ex.Message;
-            }
-
+            
             model.SearchType = selectedStrategy?.Description;
 
             return View("Results", model);

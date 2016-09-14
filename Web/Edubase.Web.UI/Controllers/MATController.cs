@@ -35,5 +35,10 @@ namespace Edubase.Web.UI.Controllers
 
             return View(viewModel);
         }
+
+        public ActionResult Details(int id)
+        {
+            return Content("", "text/plain"); //View(model);
+        }
     }
 }
