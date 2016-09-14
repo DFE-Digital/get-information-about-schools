@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Query\Interfaces\ISchoolQueryService.cs" />
     <Compile Include="Query\SchoolQueryService.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,6 +53,10 @@
     <ProjectReference Include="..\Edubase.Data\Edubase.Data.csproj">
       <Project>{8c3d6834-3fa1-440a-a396-6489e22e8063}</Project>
       <Name>Edubase.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Web.Services\Web.Services.csproj">
+      <Project>{F50A30DA-CE47-4BC6-9E8F-0E070F42F280}</Project>
+      <Name>Web.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

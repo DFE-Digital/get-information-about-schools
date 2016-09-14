@@ -14,5 +14,11 @@ namespace Edubase.Data.Repositories
                 return dc.MATs.Where(x => x.GroupName.Contains(name) || x.CompaniesHouseNumber.Equals(companiesHouseNumber))
                     .OrderBy(x => x.GroupName).Skip(skip).Take(take).ToList();
         }
+
+        public MAT Find(short groupUID)
+        {
+            using (var dc = new ApplicationDbContext())
+                return dc.MATs.FirstOrDefault(x => x.GroupUID == groupUID);
+        }
     }
 }

@@ -6,11 +6,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Edubase.Common;
+using Edubase.Services.Query.Interfaces;
 
 namespace Edubase.Web.UI.Controllers
 {
     public class MATController : Controller
     {
+        ISchoolQueryService _schoolQueryService;
+
+        public MATController(ISchoolQueryService schoolQueryService) // TODO: inject IMATRepository
+        {
+            _schoolQueryService = schoolQueryService;
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -36,9 +44,12 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        public ActionResult Details(int id)
+        public ActionResult Details(short id)
         {
-            return Content("", "text/plain"); //View(model);
+            var model = new MATRepository().Find(id);
+            var schools = _schoolQueryService.GetSchoolsInMAT(id);
+
+            return View(new MATDetailViewModel(model, schools));
         }
     }
 }

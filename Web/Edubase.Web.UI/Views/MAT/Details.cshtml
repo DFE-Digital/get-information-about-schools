@@ -1,0 +1,26 @@
+﻿@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Models
+
+@model MATDetailViewModel
+@{
+    ViewBag.Title = Model.Data.GroupName;
+    ViewBag.PageClass = "mat-details";
+}
+<br />
+<p>@Html.ActionLink("Go back", "Index")</p>
+
+<h1 class="heading-large">@Model.Data.GroupName <span class="urn">(Group UID: @Model.Data.GroupUID)</span></h1>
+
+<div class="column-full">
+    <div class="grid-row summary">
+        
+        <h3 class="heading-medium">Schools within this MAT/AS:</h3>
+        <ul class="list-bullet">
+            @foreach (var item in Model.Schools)
+            {
+                <li>@Html.ActionLink((string)item.SCHNAME, "Details", "Schools", new { id = item.id }, null)</li>
+            }
+        </ul>
+
+    </div>
+</div>
