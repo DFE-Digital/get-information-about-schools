@@ -37,7 +37,7 @@ namespace Web.Services.Search
                 MemoryCache.Default.Set("las", localAuthorities, new CacheItemPolicy());
             }
 
-            var la = localAuthorities.LocalAuthorities.Where(x => x.LANAME.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) > -1).FirstOrDefault();
+            var la = localAuthorities.LocalAuthorities.Where(x => x.LANAME.Equals(searchTerm, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (la == null) throw new LaNameNotFoundException();
 
             return _apiService.SearchSchool($"LA eq '{la.id}'")?.Results;
