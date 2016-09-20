@@ -188,6 +188,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Controllers\MATController.cs" />
+    <Compile Include="Controllers\PrototypeController.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -624,6 +625,7 @@
     <Content Include="Views\MAT\Index.cshtml" />
     <Content Include="Views\MAT\Search.cshtml" />
     <Content Include="Views\MAT\Details.cshtml" />
+    <Content Include="Views\Prototype\TestView.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <None Include="Views\Search\Index.cshtml" />
