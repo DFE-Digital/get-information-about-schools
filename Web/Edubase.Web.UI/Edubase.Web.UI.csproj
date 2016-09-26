@@ -222,6 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Scripts\app.js" />
+    <Content Include="Assets\Scripts\Views\school-search-form.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -577,6 +578,7 @@
     <Content Include="Assets\Sass\elements\_school-details.scss" />
     <Content Include="Assets\Sass\elements\_search-results.scss" />
     <Content Include="packages.config" />
+    <Content Include="Assets\Sass\elements\_school-search.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -626,6 +628,7 @@
     <Content Include="Views\MAT\Search.cshtml" />
     <Content Include="Views\MAT\Details.cshtml" />
     <Content Include="Views\Prototype\TestView.cshtml" />
+    <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <None Include="Views\Search\Index.cshtml" />
@@ -636,7 +639,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Assets\Scripts\Views\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
   </ItemGroup>
   <ItemGroup>
