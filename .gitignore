@@ -195,8 +195,10 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 # Web.UI folders
-Web/Web.UI/public/assets/stylesheets/*
-Web/Web.UI/public/assets/styleguide/*
-Web/Web.UI/public/assets/scripts/application.*
-Web/Web.UI/test/results*
-Web/Web.UI/public/assets/scripts/index.html
+Web/Edubase.Web.UI/public/assets/stylesheets/*
+Web/Edubase.Web.UI/public/assets/styleguide/*
+Web/Edubase.Web.UI/public/assets/scripts/application.*
+Web/Edubase.Web.UI/test/results*
+Web/Edubase.Web.UI/public/assets/scripts/index.html
+Web/Web.UI/
+
