@@ -1,26 +1,74 @@
-﻿<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-large">Search</h1>
-        @using (Html.BeginForm("Search", "Search", FormMethod.Get))
-        {
-            @Html.ValidationSummary()
-            <div class="form-group">
-                <input class="form-control" id="searchTerm" name="searchTerm" type="text" placeholder="Enter name, URN or LAESTAB" required>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="button button-next">Search</button>
-            </div>
-        }
+﻿
+@{
+    ViewBag.bodyClasses = "schools-search-page";
+    ViewBag.hideLogo = true;
+}
 
-        @using (Html.BeginForm("SearchByLaName", "Search", FormMethod.Get))
-        {
+@helper SearchElement(
+    String label,
+    String hint,
+    String componentId,
+    String componentName,
+    String placeholder = "")
+{
+    <li class="search-type-wrapper">
+        <label>
+            <input type="radio" id="@componentId" class="panel-toggle" />
+            <span class="label-text">@label</span>
+        </label>
+        <div class="expanding-search-field">
+            <span class="search-hint">@hint</span>
+            <input type="text" class="form-control" placeholder="@placeholder" id="@componentId" name="@componentName" required>
+            <button type="submit" class="button button-next" name="searchtype">Search</button>
+        </div>
+    </li>
+}
+
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">Search for schools and colleges</h1>
+    </div>
+
+    <div class="column-full">
+        <fieldset class="search-types-accordion">
+            <legend>Search by:</legend>
             @Html.ValidationSummary()
-            <div class="form-group">
-                <input class="form-control" id="searchTermLaName" name="searchTerm" type="text" placeholder="Enter local authority name" required>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="button button-next">Search</button>
-            </div>
-        }
+
+            <ul class="search-type-list">
+                <li class="search-type-wrapper">
+                    @using (Html.BeginForm("Search", "Search", FormMethod.Get))
+                    {
+                        @SearchElement("Enter name, URN or LAESTAB",
+                            "e.g. Aston Academy",
+                            "searchTerm",
+                            "searchTerm",
+                            "Enter name, URN or LAESTAB")
+                    }
+                </li>
+                <li class="search-type-wrapper">
+                    @using (Html.BeginForm("SearchByLaName", "Search", FormMethod.Get))
+                    {
+                        @SearchElement("Local Authority",
+                            "e.g. Tameside or Gloucestershire",
+                            "searchTermLaName",
+                            "searchTerm",
+                            "Enter a local authority name")
+                    }
+                </li>
+                
+                <li class="search-type-wrapper">
+                    @using (Html.BeginForm("Search", "MAT", FormMethod.Get))
+                    {
+                        @SearchElement("Search for a MAT/Academy Sponsor", 
+                            "Enter name or companies house number",
+                            "searchMAT",
+                            "term",
+                            "Enter name or companies house number")                      
+                    }
+                </li>
+            </ul>
+        </fieldset>
     </div>
 </div>
+
