@@ -3,39 +3,77 @@
 @{
     ViewBag.Title = string.Format("Search results for '{0}'", Model.SearchTerm);
     ViewBag.PageClass = "search-results";
+    ViewBag.HideLogo = true;
+
+    var resultCount = 0;
+
+    if (Model.Results != null)
+    {
+        resultCount = Model.Results.Count;
+    }
 }
 
-<p>@Html.ActionLink("Go back", "Index")</p>
 
-<h1 class="heading-large">Results for '@Model.SearchTerm'</h1>
 
-<h2>Searched by: @Model.SearchType</h2>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        @Html.ActionLink("Go back", "Index", null, new { @class = "home-link" })
 
-<hr />
+        <h1 class="heading-xlarge">Search results</h1>
+        <p>We found <span class="heading-xlarge">@resultCount</span> schools or colleges for the search term "@Model.SearchTerm"</p>
+    </div>
+</div>
+<div class="grid-row">
 
-@if (Model.Error != null)
-{
-    <h2 class="heading-medium">Error</h2>
+</div>
+<div class="grid-row">
+    @if (Model.Error != null)
+    {
+        <div class="column-two-thirds">
+            <h2 class="heading-medium">Error</h2>
 
-    <p>@Model.Error</p>
-}
-else if (Model.Results != null)
-{
-    <ul>
-        @foreach (var result in Model.Results)
+            <p>@Model.Error</p>
+        </div>
+    }
+    else if (Model.Results != null)
+    {
+        if (Model.PageCount > 1)
         {
-            <li>
-                <strong>@Html.ActionLink((string)result.SCHNAME, "Details", "Schools", new { id = (string)result.id }, null)</strong>
-                <ul>
-                    <li><strong>Address</strong>: @SchoolDetailsHelpers.GetAddress(result)</li>
-                    <li><strong>URN</strong>: @result.id</li>
-                    <li><strong>LAESTAB</strong>: @result.LAESTAB</li>
-                </ul>
-            </li>
+            <div class="column-two-thirds top-pagination">
+                @Html.Partial("_ResultsPagination")
+            </div>
         }
-    </ul>
-}
-else
-{
-    <p>Sorry, we could not find any matching schools. Please check your spelling and try again.</p>
-}
+        <div class="column-two-thirds">
+            <ul class="school-results-listing">
+                @foreach (var result in Model.Page)
+                {
+                    <li>
+                        <h3>@Html.ActionLink((string)result.SCHNAME, "Details", "Schools", new { id = (string)result.id }, new { @class = "bold-small" })</h3>
+                        <dl>
+                            <dt>Address:</dt>
+                            <dd>@SchoolDetailsHelpers.GetAddress(result)</dd>
+                            <dt>URN:</dt>
+                            <dd> @result.id</dd>
+                            <dt>LAESTAB:</dt>
+                            <dd>@result.LAESTAB</dd>
+                        </dl>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        if (Model.PageCount > 1)
+        {
+            <div class="column-two-thirds lower-pagination">
+                @Html.Partial("_ResultsPagination")
+            </div>
+        }
+    }
+    else
+    {
+        <div class="column-two-thirds">
+            <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
+        </div>
+    }
+
+</div>
