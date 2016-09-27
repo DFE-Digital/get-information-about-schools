@@ -179,14 +179,16 @@
             </div>
         </div>
     </div>
-
+@if (ViewBag.HideLogo != true)
+{
     <div class="side-width-wrapper">
         <div class="grid-row">
             <div class="column-full">
-                <img class="top-logo" src="/public/assets/images/dfe-xsmall.png" />
+                <img class="top-logo" src="/public/assets/images/dfe-xsmall.png"/>
             </div>
         </div>
     </div>
+}
 
     @RenderBody()
 
