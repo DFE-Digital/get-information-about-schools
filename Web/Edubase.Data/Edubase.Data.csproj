@@ -58,9 +58,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="Entity\Address.cs" />
     <Compile Include="Entity\ApplicationUser.cs" />
+    <Compile Include="Entity\Company.cs" />
+    <Compile Include="Entity\ContactDetail.cs" />
+    <Compile Include="Entity\EdubaseEntity.cs" />
+    <Compile Include="Entity\LocalAuthority.cs" />
+    <Compile Include="Entity\Lookups\ReasonEstablishmentClosed.cs" />
+    <Compile Include="Entity\Lookups\HeadTitle.cs" />
+    <Compile Include="Entity\Lookups\Diocese.cs" />
+    <Compile Include="Entity\Lookups\ReligiousEthos.cs" />
+    <Compile Include="Entity\Lookups\ReligiousCharacter.cs" />
+    <Compile Include="Entity\Lookups\ReasonEstablishmentOpened.cs" />
+    <Compile Include="Entity\Lookups\GroupType.cs" />
+    <Compile Include="Entity\Lookups\EstablishmentStatus.cs" />
+    <Compile Include="Entity\Lookups\EducationPhase.cs" />
+    <Compile Include="Entity\Lookups\EstablishmentType.cs" />
+    <Compile Include="Entity\Lookups\AdmissionsPolicy.cs" />
+    <Compile Include="Entity\Lookups\ProvisionOfficialSixthForm.cs" />
+    <Compile Include="Entity\Lookups\ProvisionNursery.cs" />
+    <Compile Include="Entity\Lookups\ProvisionBoarding.cs" />
     <Compile Include="Entity\MAT.cs" />
+    <Compile Include="Entity\Establishment.cs" />
     <Compile Include="Entity\SchoolMAT.cs" />
+    <Compile Include="Entity\Lookups\Gender.cs" />
+    <Compile Include="Entity\Lookups\ProvisionSpecialClasses.cs" />
     <Compile Include="Migrations\201608191328102_Initial.cs" />
     <Compile Include="Migrations\201608191328102_Initial.Designer.cs">
       <DependentUpon>201608191328102_Initial.cs</DependentUpon>
