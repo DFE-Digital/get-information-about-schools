@@ -1,0 +1,763 @@
+﻿<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+<!-- EF Runtime content -->
+<edmx:Runtime>
+<!-- SSDL content -->
+<edmx:StorageModels>
+<Schema Namespace="EdubaseSourceModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="EdubaseSourceModelStoreContainer">
+    <EntitySet Name="Admissionspolicy" EntityType="EdubaseSourceModel.Store.Admissionspolicy" store:Type="Tables" />
+    <EntitySet Name="Boarders" EntityType="EdubaseSourceModel.Store.Boarders" store:Type="Tables" />
+    <EntitySet Name="CompanyTable" EntityType="EdubaseSourceModel.Store.CompanyTable" store:Type="Tables" />
+    <EntitySet Name="Diocese" EntityType="EdubaseSourceModel.Store.Diocese" store:Type="Tables" />
+    <EntitySet Name="Establishmentstatus" EntityType="EdubaseSourceModel.Store.Establishmentstatus" store:Type="Tables" />
+    <EntitySet Name="Gender" EntityType="EdubaseSourceModel.Store.Gender" store:Type="Tables" />
+    <EntitySet Name="GroupType" EntityType="EdubaseSourceModel.Store.GroupType" store:Type="Tables" />
+    <EntitySet Name="Headtitle" EntityType="EdubaseSourceModel.Store.Headtitle" store:Type="Tables" />
+    <EntitySet Name="LocalAuthority" EntityType="EdubaseSourceModel.Store.LocalAuthority" store:Type="Tables" />
+    <EntitySet Name="Nurseryprovision" EntityType="EdubaseSourceModel.Store.Nurseryprovision" store:Type="Tables" />
+    <EntitySet Name="Officialsixthform" EntityType="EdubaseSourceModel.Store.Officialsixthform" store:Type="Tables" />
+    <EntitySet Name="Phaseofeducation" EntityType="EdubaseSourceModel.Store.Phaseofeducation" store:Type="Tables" />
+    <EntitySet Name="Reasonestablishmentclosed" EntityType="EdubaseSourceModel.Store.Reasonestablishmentclosed" store:Type="Tables" />
+    <EntitySet Name="Reasonestablishmentopened" EntityType="EdubaseSourceModel.Store.Reasonestablishmentopened" store:Type="Tables" />
+    <EntitySet Name="Religiouscharacter" EntityType="EdubaseSourceModel.Store.Religiouscharacter" store:Type="Tables" />
+    <EntitySet Name="Religiousethos" EntityType="EdubaseSourceModel.Store.Religiousethos" store:Type="Tables" />
+    <EntitySet Name="SchoolsTable" EntityType="EdubaseSourceModel.Store.SchoolsTable" store:Type="Tables" />
+    <EntitySet Name="SchoolToCompanyLinks" EntityType="EdubaseSourceModel.Store.SchoolToCompanyLinks" store:Type="Tables" />
+    <EntitySet Name="SchoolToSchoolLinks" EntityType="EdubaseSourceModel.Store.SchoolToSchoolLinks" store:Type="Tables" />
+    <EntitySet Name="Specialclasses" EntityType="EdubaseSourceModel.Store.Specialclasses" store:Type="Tables" />
+    <EntitySet Name="Typeofestablishment" EntityType="EdubaseSourceModel.Store.Typeofestablishment" store:Type="Tables" />
+  </EntityContainer>
+  <EntityType Name="Admissionspolicy">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Boarders">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="CompanyTable">
+    <Key>
+      <PropertyRef Name="GroupUID" />
+    </Key>
+    <Property Name="GroupUID" Type="nvarchar" Nullable="false" />
+    <Property Name="GroupID" Type="nvarchar" />
+    <Property Name="GroupName" Type="nvarchar" />
+    <Property Name="CompaniesHouseNumber" Type="nvarchar" />
+    <Property Name="GroupTypecode" Type="nvarchar" />
+    <Property Name="GroupType" Type="nvarchar" />
+    <Property Name="ClosedDate" Type="nvarchar" />
+    <Property Name="GroupStatuscode" Type="nvarchar" />
+    <Property Name="GroupStatus" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Diocese">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Establishmentstatus">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Gender">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="GroupType">
+    <Key>
+      <PropertyRef Name="GroupTypecode" />
+    </Key>
+    <Property Name="GroupTypecode" Type="nvarchar" Nullable="false" />
+    <Property Name="GroupType" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Headtitle">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="LocalAuthority">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+    <Property Name="_Group" Type="nvarchar" />
+    <Property Name="_Order" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Nurseryprovision">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Officialsixthform">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Phaseofeducation">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Reasonestablishmentclosed">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Reasonestablishmentopened">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Religiouscharacter">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Religiousethos">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="SchoolsTable">
+    <Key>
+      <PropertyRef Name="URN" />
+    </Key>
+    <Property Name="URN" Type="nvarchar" Nullable="false" />
+    <Property Name="LAcode" Type="nvarchar" />
+    <Property Name="LAname" Type="nvarchar" />
+    <Property Name="EstablishmentNumber" Type="nvarchar" />
+    <Property Name="EstablishmentName" Type="nvarchar" />
+    <Property Name="TypeOfEstablishmentcode" Type="nvarchar" />
+    <Property Name="TypeOfEstablishmentname" Type="nvarchar" />
+    <Property Name="EstablishmentStatuscode" Type="nvarchar" />
+    <Property Name="EstablishmentStatusname" Type="nvarchar" />
+    <Property Name="ReasonEstablishmentOpenedcode" Type="nvarchar" />
+    <Property Name="ReasonEstablishmentOpenedname" Type="nvarchar" />
+    <Property Name="OpenDate" Type="nvarchar" />
+    <Property Name="ReasonEstablishmentClosedcode" Type="nvarchar" />
+    <Property Name="ReasonEstablishmentClosedname" Type="nvarchar" />
+    <Property Name="CloseDate" Type="nvarchar" />
+    <Property Name="PhaseOfEducationcode" Type="nvarchar" />
+    <Property Name="PhaseOfEducationname" Type="nvarchar" />
+    <Property Name="StatutoryLowAge" Type="nvarchar" />
+    <Property Name="StatutoryHighAge" Type="nvarchar" />
+    <Property Name="Boarderscode" Type="nvarchar" />
+    <Property Name="Boardersname" Type="nvarchar" />
+    <Property Name="NurseryProvisioncode" Type="nvarchar" />
+    <Property Name="NurseryProvisionname" Type="nvarchar" />
+    <Property Name="OfficialSixthFormcode" Type="nvarchar" />
+    <Property Name="OfficialSixthFormname" Type="nvarchar" />
+    <Property Name="Gendercode" Type="nvarchar" />
+    <Property Name="Gendername" Type="nvarchar" />
+    <Property Name="ReligiousCharactercode" Type="nvarchar" />
+    <Property Name="ReligiousCharactername" Type="nvarchar" />
+    <Property Name="ReligiousEthoscode" Type="nvarchar" />
+    <Property Name="ReligiousEthosname" Type="nvarchar" />
+    <Property Name="Diocesecode" Type="nvarchar" />
+    <Property Name="Diocesename" Type="nvarchar" />
+    <Property Name="AdmissionsPolicycode" Type="nvarchar" />
+    <Property Name="AdmissionsPolicyname" Type="nvarchar" />
+    <Property Name="SchoolCapacity" Type="nvarchar" />
+    <Property Name="SpecialClassescode" Type="nvarchar" />
+    <Property Name="SpecialClassesname" Type="nvarchar" />
+    <Property Name="UKPRN" Type="nvarchar" />
+    <Property Name="LastChangedDate" Type="nvarchar" />
+    <Property Name="Street" Type="nvarchar" />
+    <Property Name="Locality" Type="nvarchar" />
+    <Property Name="Address3" Type="nvarchar" />
+    <Property Name="Town" Type="nvarchar" />
+    <Property Name="Countyname" Type="nvarchar" />
+    <Property Name="Postcode" Type="nvarchar" />
+    <Property Name="SchoolWebsite" Type="nvarchar" />
+    <Property Name="MainEmail" Type="nvarchar" />
+    <Property Name="AlternativeEmail" Type="nvarchar" />
+    <Property Name="TelephoneNum" Type="nvarchar" />
+    <Property Name="HeadTitlecode" Type="nvarchar" />
+    <Property Name="HeadTitlename" Type="nvarchar" />
+    <Property Name="HeadFirstName" Type="nvarchar" />
+    <Property Name="HeadLastName" Type="nvarchar" />
+    <Property Name="HeadPreferredJobTitle" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="SchoolToCompanyLinks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="nvarchar" />
+    <Property Name="LinkedUID" Type="nvarchar" />
+    <Property Name="Joineddate" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="SchoolToSchoolLinks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="nvarchar" />
+    <Property Name="LinkURN" Type="nvarchar" />
+    <Property Name="LinkName" Type="nvarchar" />
+    <Property Name="LinkType" Type="nvarchar" />
+    <Property Name="LinkEstablishedDate" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Specialclasses">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Typeofestablishment">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+</Schema>
+</edmx:StorageModels>
+<!-- CSDL content -->
+<edmx:ConceptualModels>
+<Schema Namespace="EdubaseSourceModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="EdubaseSourceEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="Admissionspolicy" EntityType="EdubaseSourceModel.Admissionspolicy" />
+    <EntitySet Name="Boarders" EntityType="EdubaseSourceModel.Boarders" />
+    <EntitySet Name="CompanyTable" EntityType="EdubaseSourceModel.CompanyTable" />
+    <EntitySet Name="Diocese" EntityType="EdubaseSourceModel.Diocese" />
+    <EntitySet Name="Establishmentstatus" EntityType="EdubaseSourceModel.Establishmentstatus" />
+    <EntitySet Name="Gender" EntityType="EdubaseSourceModel.Gender" />
+    <EntitySet Name="GroupType" EntityType="EdubaseSourceModel.GroupType" />
+    <EntitySet Name="Headtitle" EntityType="EdubaseSourceModel.Headtitle" />
+    <EntitySet Name="LocalAuthority" EntityType="EdubaseSourceModel.LocalAuthority" />
+    <EntitySet Name="Nurseryprovision" EntityType="EdubaseSourceModel.Nurseryprovision" />
+    <EntitySet Name="Officialsixthform" EntityType="EdubaseSourceModel.Officialsixthform" />
+    <EntitySet Name="Phaseofeducation" EntityType="EdubaseSourceModel.Phaseofeducation" />
+    <EntitySet Name="Reasonestablishmentclosed" EntityType="EdubaseSourceModel.Reasonestablishmentclosed" />
+    <EntitySet Name="Reasonestablishmentopened" EntityType="EdubaseSourceModel.Reasonestablishmentopened" />
+    <EntitySet Name="Religiouscharacter" EntityType="EdubaseSourceModel.Religiouscharacter" />
+    <EntitySet Name="Religiousethos" EntityType="EdubaseSourceModel.Religiousethos" />
+    <EntitySet Name="SchoolsTable" EntityType="EdubaseSourceModel.SchoolsTable" />
+    <EntitySet Name="SchoolToCompanyLinks" EntityType="EdubaseSourceModel.SchoolToCompanyLinks" />
+    <EntitySet Name="SchoolToSchoolLinks" EntityType="EdubaseSourceModel.SchoolToSchoolLinks" />
+    <EntitySet Name="Specialclasses" EntityType="EdubaseSourceModel.Specialclasses" />
+    <EntitySet Name="Typeofestablishment" EntityType="EdubaseSourceModel.Typeofestablishment" />
+  </EntityContainer>
+  <EntityType Name="Admissionspolicy">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Boarders">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="CompanyTable">
+    <Key>
+      <PropertyRef Name="GroupUID" />
+    </Key>
+    <Property Name="GroupUID" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CompaniesHouseNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupTypecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupType" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ClosedDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupStatuscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupStatus" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Diocese">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Establishmentstatus">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Gender">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="GroupType">
+    <Key>
+      <PropertyRef Name="GroupTypecode" />
+    </Key>
+    <Property Name="GroupTypecode" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupType1" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Headtitle">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="LocalAuthority">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="C_Group" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Nurseryprovision">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Officialsixthform">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Phaseofeducation">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Reasonestablishmentclosed">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Reasonestablishmentopened">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Religiouscharacter">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Religiousethos">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="SchoolsTable">
+    <Key>
+      <PropertyRef Name="URN" />
+    </Key>
+    <Property Name="URN" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LAcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LAname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TypeOfEstablishmentcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TypeOfEstablishmentname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentStatuscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentStatusname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonEstablishmentOpenedcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonEstablishmentOpenedname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="OpenDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonEstablishmentClosedcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonEstablishmentClosedname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CloseDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PhaseOfEducationcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PhaseOfEducationname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="StatutoryLowAge" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="StatutoryHighAge" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Boarderscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Boardersname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="NurseryProvisioncode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="NurseryProvisionname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="OfficialSixthFormcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="OfficialSixthFormname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Gendercode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Gendername" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReligiousCharactercode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReligiousCharactername" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReligiousEthoscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReligiousEthosname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Diocesecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Diocesename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AdmissionsPolicycode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AdmissionsPolicyname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SchoolCapacity" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SpecialClassescode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SpecialClassesname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="UKPRN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LastChangedDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Street" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Locality" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Address3" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Town" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Countyname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Postcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SchoolWebsite" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="MainEmail" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AlternativeEmail" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TelephoneNum" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadTitlecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadTitlename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadFirstName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadLastName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadPreferredJobTitle" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="SchoolToCompanyLinks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkedUID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Joineddate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="SchoolToSchoolLinks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkURN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkType" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkEstablishedDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Specialclasses">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Typeofestablishment">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+</Schema>
+</edmx:ConceptualModels>
+<!-- C-S mapping content -->
+<edmx:Mappings>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EdubaseSourceModelStoreContainer" CdmEntityContainer="EdubaseSourceEntities">
+    <EntitySetMapping Name="Admissionspolicy">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Admissionspolicy">
+        <MappingFragment StoreEntitySet="Admissionspolicy">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Boarders">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Boarders">
+        <MappingFragment StoreEntitySet="Boarders">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CompanyTable">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.CompanyTable">
+        <MappingFragment StoreEntitySet="CompanyTable">
+          <ScalarProperty Name="GroupUID" ColumnName="GroupUID" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+          <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+          <ScalarProperty Name="CompaniesHouseNumber" ColumnName="CompaniesHouseNumber" />
+          <ScalarProperty Name="GroupTypecode" ColumnName="GroupTypecode" />
+          <ScalarProperty Name="GroupType" ColumnName="GroupType" />
+          <ScalarProperty Name="ClosedDate" ColumnName="ClosedDate" />
+          <ScalarProperty Name="GroupStatuscode" ColumnName="GroupStatuscode" />
+          <ScalarProperty Name="GroupStatus" ColumnName="GroupStatus" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Diocese">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Diocese">
+        <MappingFragment StoreEntitySet="Diocese">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Establishmentstatus">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Establishmentstatus">
+        <MappingFragment StoreEntitySet="Establishmentstatus">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Gender">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Gender">
+        <MappingFragment StoreEntitySet="Gender">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GroupType">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.GroupType">
+        <MappingFragment StoreEntitySet="GroupType">
+          <ScalarProperty Name="GroupTypecode" ColumnName="GroupTypecode" />
+          <ScalarProperty Name="GroupType1" ColumnName="GroupType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Headtitle">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Headtitle">
+        <MappingFragment StoreEntitySet="Headtitle">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LocalAuthority">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.LocalAuthority">
+        <MappingFragment StoreEntitySet="LocalAuthority">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C_Group" ColumnName="_Group" />
+          <ScalarProperty Name="C_Order" ColumnName="_Order" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Nurseryprovision">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Nurseryprovision">
+        <MappingFragment StoreEntitySet="Nurseryprovision">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Officialsixthform">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Officialsixthform">
+        <MappingFragment StoreEntitySet="Officialsixthform">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Phaseofeducation">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Phaseofeducation">
+        <MappingFragment StoreEntitySet="Phaseofeducation">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reasonestablishmentclosed">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Reasonestablishmentclosed">
+        <MappingFragment StoreEntitySet="Reasonestablishmentclosed">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reasonestablishmentopened">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Reasonestablishmentopened">
+        <MappingFragment StoreEntitySet="Reasonestablishmentopened">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Religiouscharacter">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Religiouscharacter">
+        <MappingFragment StoreEntitySet="Religiouscharacter">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Religiousethos">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Religiousethos">
+        <MappingFragment StoreEntitySet="Religiousethos">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SchoolsTable">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.SchoolsTable">
+        <MappingFragment StoreEntitySet="SchoolsTable">
+          <ScalarProperty Name="URN" ColumnName="URN" />
+          <ScalarProperty Name="LAcode" ColumnName="LAcode" />
+          <ScalarProperty Name="LAname" ColumnName="LAname" />
+          <ScalarProperty Name="EstablishmentNumber" ColumnName="EstablishmentNumber" />
+          <ScalarProperty Name="EstablishmentName" ColumnName="EstablishmentName" />
+          <ScalarProperty Name="TypeOfEstablishmentcode" ColumnName="TypeOfEstablishmentcode" />
+          <ScalarProperty Name="TypeOfEstablishmentname" ColumnName="TypeOfEstablishmentname" />
+          <ScalarProperty Name="EstablishmentStatuscode" ColumnName="EstablishmentStatuscode" />
+          <ScalarProperty Name="EstablishmentStatusname" ColumnName="EstablishmentStatusname" />
+          <ScalarProperty Name="ReasonEstablishmentOpenedcode" ColumnName="ReasonEstablishmentOpenedcode" />
+          <ScalarProperty Name="ReasonEstablishmentOpenedname" ColumnName="ReasonEstablishmentOpenedname" />
+          <ScalarProperty Name="OpenDate" ColumnName="OpenDate" />
+          <ScalarProperty Name="ReasonEstablishmentClosedcode" ColumnName="ReasonEstablishmentClosedcode" />
+          <ScalarProperty Name="ReasonEstablishmentClosedname" ColumnName="ReasonEstablishmentClosedname" />
+          <ScalarProperty Name="CloseDate" ColumnName="CloseDate" />
+          <ScalarProperty Name="PhaseOfEducationcode" ColumnName="PhaseOfEducationcode" />
+          <ScalarProperty Name="PhaseOfEducationname" ColumnName="PhaseOfEducationname" />
+          <ScalarProperty Name="StatutoryLowAge" ColumnName="StatutoryLowAge" />
+          <ScalarProperty Name="StatutoryHighAge" ColumnName="StatutoryHighAge" />
+          <ScalarProperty Name="Boarderscode" ColumnName="Boarderscode" />
+          <ScalarProperty Name="Boardersname" ColumnName="Boardersname" />
+          <ScalarProperty Name="NurseryProvisioncode" ColumnName="NurseryProvisioncode" />
+          <ScalarProperty Name="NurseryProvisionname" ColumnName="NurseryProvisionname" />
+          <ScalarProperty Name="OfficialSixthFormcode" ColumnName="OfficialSixthFormcode" />
+          <ScalarProperty Name="OfficialSixthFormname" ColumnName="OfficialSixthFormname" />
+          <ScalarProperty Name="Gendercode" ColumnName="Gendercode" />
+          <ScalarProperty Name="Gendername" ColumnName="Gendername" />
+          <ScalarProperty Name="ReligiousCharactercode" ColumnName="ReligiousCharactercode" />
+          <ScalarProperty Name="ReligiousCharactername" ColumnName="ReligiousCharactername" />
+          <ScalarProperty Name="ReligiousEthoscode" ColumnName="ReligiousEthoscode" />
+          <ScalarProperty Name="ReligiousEthosname" ColumnName="ReligiousEthosname" />
+          <ScalarProperty Name="Diocesecode" ColumnName="Diocesecode" />
+          <ScalarProperty Name="Diocesename" ColumnName="Diocesename" />
+          <ScalarProperty Name="AdmissionsPolicycode" ColumnName="AdmissionsPolicycode" />
+          <ScalarProperty Name="AdmissionsPolicyname" ColumnName="AdmissionsPolicyname" />
+          <ScalarProperty Name="SchoolCapacity" ColumnName="SchoolCapacity" />
+          <ScalarProperty Name="SpecialClassescode" ColumnName="SpecialClassescode" />
+          <ScalarProperty Name="SpecialClassesname" ColumnName="SpecialClassesname" />
+          <ScalarProperty Name="UKPRN" ColumnName="UKPRN" />
+          <ScalarProperty Name="LastChangedDate" ColumnName="LastChangedDate" />
+          <ScalarProperty Name="Street" ColumnName="Street" />
+          <ScalarProperty Name="Locality" ColumnName="Locality" />
+          <ScalarProperty Name="Address3" ColumnName="Address3" />
+          <ScalarProperty Name="Town" ColumnName="Town" />
+          <ScalarProperty Name="Countyname" ColumnName="Countyname" />
+          <ScalarProperty Name="Postcode" ColumnName="Postcode" />
+          <ScalarProperty Name="SchoolWebsite" ColumnName="SchoolWebsite" />
+          <ScalarProperty Name="MainEmail" ColumnName="MainEmail" />
+          <ScalarProperty Name="AlternativeEmail" ColumnName="AlternativeEmail" />
+          <ScalarProperty Name="TelephoneNum" ColumnName="TelephoneNum" />
+          <ScalarProperty Name="HeadTitlecode" ColumnName="HeadTitlecode" />
+          <ScalarProperty Name="HeadTitlename" ColumnName="HeadTitlename" />
+          <ScalarProperty Name="HeadFirstName" ColumnName="HeadFirstName" />
+          <ScalarProperty Name="HeadLastName" ColumnName="HeadLastName" />
+          <ScalarProperty Name="HeadPreferredJobTitle" ColumnName="HeadPreferredJobTitle" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SchoolToCompanyLinks">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.SchoolToCompanyLinks">
+        <MappingFragment StoreEntitySet="SchoolToCompanyLinks">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="URN" ColumnName="URN" />
+          <ScalarProperty Name="LinkedUID" ColumnName="LinkedUID" />
+          <ScalarProperty Name="Joineddate" ColumnName="Joineddate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SchoolToSchoolLinks">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.SchoolToSchoolLinks">
+        <MappingFragment StoreEntitySet="SchoolToSchoolLinks">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="URN" ColumnName="URN" />
+          <ScalarProperty Name="LinkURN" ColumnName="LinkURN" />
+          <ScalarProperty Name="LinkName" ColumnName="LinkName" />
+          <ScalarProperty Name="LinkType" ColumnName="LinkType" />
+          <ScalarProperty Name="LinkEstablishedDate" ColumnName="LinkEstablishedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Specialclasses">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Specialclasses">
+        <MappingFragment StoreEntitySet="Specialclasses">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Typeofestablishment">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Typeofestablishment">
+        <MappingFragment StoreEntitySet="Typeofestablishment">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
+</edmx:Mappings>
+</edmx:Runtime>
+<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+<edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+<Connection><DesignerInfoPropertySet><DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" /></DesignerInfoPropertySet></Connection>
+<edmx:Options><DesignerInfoPropertySet><DesignerProperty Name="ValidateOnBuild" Value="True" /><DesignerProperty Name="EnablePluralization" Value="False" /><DesignerProperty Name="IncludeForeignKeysInModel" Value="True" /><DesignerProperty Name="UseLegacyProvider" Value="False" /><DesignerProperty Name="CodeGenerationStrategy" Value="None" /></DesignerInfoPropertySet></edmx:Options>
+<edmx:Diagrams >
+      <Diagram DiagramId="71986df053ea4fa89d86bf53c0d321dd" Name="Diagram1">
+        <EntityTypeShape EntityType="EdubaseSourceModel.Admissionspolicy" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Boarders" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.CompanyTable" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Diocese" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Establishmentstatus" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Gender" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.GroupType" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Headtitle" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.LocalAuthority" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Nurseryprovision" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Officialsixthform" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Phaseofeducation" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Reasonestablishmentclosed" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Reasonestablishmentopened" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Religiouscharacter" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Religiousethos" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.SchoolsTable" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.SchoolToCompanyLinks" Width="1.5" PointX="6.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.SchoolToSchoolLinks" Width="1.5" PointX="8.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Specialclasses" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceModel.Typeofestablishment" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
+      </Diagram>
+    </edmx:Diagrams>
+</edmx:Designer></edmx:Edmx>

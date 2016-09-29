@@ -1,6 +1,7 @@
-﻿using Edubase.Data.Entity.Lookup;
+﻿using Edubase.Data.Entity.Lookups;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
@@ -33,7 +34,8 @@ namespace Edubase.Data.Entity
         public IDbSet<Company> Companies { get; set; }
         public IDbSet<Establishment> Establishments { get; set; }
         public IDbSet<LocalAuthority> LocalAuthorities { get; set; }
-        
+
+        private bool _enableIdentityInsert;
 
         public ApplicationDbContext()
             : base("EdubaseSqlDb", throwIfV1Schema: false)
@@ -41,10 +43,76 @@ namespace Edubase.Data.Entity
             
         }
 
+        public ApplicationDbContext(bool enableIdentityInsert) 
+            : this()
+        {
+            _enableIdentityInsert = enableIdentityInsert;
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
+
+            if (_enableIdentityInsert)
+            {
+                modelBuilder.Entity<AdmissionsPolicy>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+                modelBuilder.Entity<ProvisionBoarding>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+                modelBuilder.Entity<EducationPhase>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+                modelBuilder.Entity<EstablishmentType>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+                modelBuilder.Entity<EstablishmentStatus>()
+                                    .Property(x => x.Id)
+                                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+                modelBuilder.Entity<Gender>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+                modelBuilder.Entity<GroupType>()
+                .Property(x => x.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+                modelBuilder.Entity<HeadTitle>()
+                                .Property(x => x.Id)
+                                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<ProvisionNursery>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<ProvisionOfficialSixthForm>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<ProvisionSpecialClasses>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<ReasonEstablishmentClosed>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<ReasonEstablishmentOpened>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<ReligiousCharacter>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<ReligiousEthos>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            }
+
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public static ApplicationDbContext Create()

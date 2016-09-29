@@ -1,4 +1,4 @@
-﻿using Edubase.Data.Entity.Lookup;
+﻿using Edubase.Data.Entity.Lookups;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

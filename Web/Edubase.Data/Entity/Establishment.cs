@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Edubase.Data.Entity.Lookup;
 using System;
+using Edubase.Data.Entity.Lookups;
+using Edubase.Data.Entity.ComplexTypes;
 
 namespace Edubase.Data.Entity
 {
@@ -48,6 +49,7 @@ namespace Edubase.Data.Entity
         public ProvisionSpecialClasses ProvisionSpecialClasses { get; set; }
         public int? ProvisionSpecialClassesId { get; set; }
         public int? UKPRN { get; set; }
+
         [Obsolete("This is potentially obsolete due to base.LastUpdatedUtc")]
         public DateTime? LastChangedDate { get; set; }
         public Address Address { get; set; }
@@ -60,6 +62,12 @@ namespace Edubase.Data.Entity
         public ContactDetail Contact { get; set; }
         public ContactDetail ContactAlt { get; set; }
 
+        public Establishment()
+        {
+            Contact = new ContactDetail();
+            ContactAlt = new ContactDetail();
+            Address = new Address();
+        }
 
     }
 }
