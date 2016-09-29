@@ -1,4 +1,5 @@
 ﻿using Edubase.Data.Entity;
+using Edubase.Data.Stubs;
 using System.Collections.Generic;
 
 namespace Edubase.Web.UI.Models

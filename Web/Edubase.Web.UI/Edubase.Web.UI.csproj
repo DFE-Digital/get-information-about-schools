@@ -189,14 +189,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Controllers\MATController.cs" />
     <Compile Include="Controllers\PrototypeController.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnauthorizedAccessAttribute.cs" />
-    <Compile Include="Migrations\UserAccountSeeder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
