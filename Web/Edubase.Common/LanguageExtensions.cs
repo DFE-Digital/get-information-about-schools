@@ -52,7 +52,7 @@ namespace Edubase.Common
         public static DateTime? ToDateTime(this string data, string[] formats)
         {
             if (string.IsNullOrWhiteSpace(data)) return null;
-            else return formats.Select(x => x.ToDateTime(data)).FirstOrDefault(x => x.HasValue);
+            else return formats.Select(x => data.ToDateTime(x)).FirstOrDefault(x => x.HasValue);
         }
 
         public static bool IsNullOrEmpty(this string text) => string.IsNullOrWhiteSpace(text);

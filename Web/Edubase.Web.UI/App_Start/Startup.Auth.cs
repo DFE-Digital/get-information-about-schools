@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Edubase.Web.UI.Models;
 using Edubase.Data.Entity;
+using Edubase.Data.Identity;
 
 namespace Edubase.Web.UI
 {

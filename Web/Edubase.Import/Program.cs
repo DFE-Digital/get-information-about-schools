@@ -107,7 +107,14 @@ namespace Edubase.Import
                     Console.WriteLine();
                     Console.WriteLine();
 
-                    MigrateEstablishments(source, dest);
+                    if (dest.Establishments.Count() == 0) MigrateEstablishments(source, dest);
+                    else Console.WriteLine("NOT IMPORTING ESTABLISHMENTS as there is data already present");
+
+                    if(dest.Estab2EstabLinks.Count() == 0) MigrateEstabLinks(source, dest);
+                    else Console.WriteLine("NOT IMPORTING Estab2EstabLinks as there is data already present");
+
+                    if (dest.Establishment2CompanyLinks.Count() == 0) MigrateEstablishment2CompanyLinks(source, dest);
+                    else Console.WriteLine("NOT IMPORTING Establishment2CompanyLinks as there is data already present");
                     
                 }
             }
@@ -178,13 +185,6 @@ namespace Edubase.Import
             Console.WriteLine("\rLoading lookups...done");
 
             int count = 0;
-            Action<string> toggle = theSwitch =>
-            {
-                dc.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + nameof(Establishment) + " " + theSwitch);
-                if(theSwitch.Equals("on", StringComparison.OrdinalIgnoreCase)) dc.Database.ExecuteSqlCommand("ALTER TABLE "+ nameof(Establishment) + " NOCHECK CONSTRAINT ALL");
-                else dc.Database.ExecuteSqlCommand("ALTER TABLE " + nameof(Establishment) + " WITH CHECK CHECK CONSTRAINT ALL");
-            };
-
             var batchCount = 0;
             var estabs = new List<Establishment>();
             foreach (var batch in source.SchoolsTable.Batch(1000))
@@ -234,7 +234,7 @@ namespace Edubase.Import
                     e.Urn = x.URN.ToInteger().Value;
                     estabs.Add(e);
                     count++;
-                    if (count % 100 == 0) Console.WriteLine("Loaded up: " + count);
+                    if (count % 1000 == 0) Console.WriteLine("Loaded up: " + count);
                 });
             }
 
@@ -248,6 +248,96 @@ namespace Edubase.Import
                 bulkCopy.WriteToServer(dt);
                 connection.Close();
             }
+        }
+
+        private static void MigrateEstabLinks(EdubaseSourceEntities source, ApplicationDbContext dc)
+        {
+            Console.WriteLine("Importing establishments links");
+            
+            int count = 0;
+            var batchCount = 0;
+
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            table.Columns.Add("LinkName", typeof(string));
+            table.Columns.Add("LinkType", typeof(string));
+            table.Columns.Add("LinkEstablishedDate", typeof(DateTime));
+            table.Columns.Add("Establishment_Urn", typeof(int));
+            table.Columns.Add("LinkedEstablishment_Urn", typeof(int));
+
+            foreach (var batch in source.SchoolToSchoolLinks.Batch(1000))
+            {
+                batchCount++;
+                Console.WriteLine("Loading batch #" + batchCount);
+                batch.ForEach(x =>
+                {
+                    var d = x.LinkEstablishedDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
+                    var row = table.NewRow();
+                    row["LinkName"] = (object) x.LinkName.Clean() ?? DBNull.Value;
+                    row["LinkType"] = (object) x.LinkType.Clean() ?? DBNull.Value;
+                    row["LinkEstablishedDate"] = d.HasValue ? d.Value : (object) DBNull.Value;
+                    row["Establishment_Urn"] = x.URN.ToInteger().Value;
+                    row["LinkedEstablishment_Urn"] = x.LinkURN.ToInteger().Value;
+                    table.Rows.Add(row);
+                    count++;
+                    if (count % 1000 == 0) Console.WriteLine("Loaded up: " + count);
+                });
+            }
+            
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString))
+            {
+                SqlBulkCopy bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.UseInternalTransaction, null);
+                bulkCopy.DestinationTableName = "Estab2Estab";
+                connection.Open();
+                bulkCopy.WriteToServer(table);
+                connection.Close();
+            }
+
+            Console.WriteLine("DONE");
+        }
+
+        private static void MigrateEstablishment2CompanyLinks(EdubaseSourceEntities source, ApplicationDbContext dc)
+        {
+            Console.WriteLine("Importing Establishment2Company links");
+
+            int count = 0;
+            var batchCount = 0;
+
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            table.Columns.Add("JoinedDate", typeof(DateTime));
+            table.Columns.Add("Establishment_Urn", typeof(int));
+            table.Columns.Add("Company_GroupUID", typeof(int));
+
+            foreach (var batch in source.SchoolToCompanyLinks.Batch(1000))
+            {
+                batchCount++;
+                Console.WriteLine("Loading batch #" + batchCount);
+                batch.ForEach(x =>
+                {
+                    var d = x.Joineddate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
+                    var row = table.NewRow();
+                    row["JoinedDate"] = d.HasValue ? d.Value : (object)DBNull.Value;
+                    row["Establishment_Urn"] = x.URN.ToInteger().Value;
+                    row["Company_GroupUID"] = x.LinkedUID.ToInteger().Value;
+                    table.Rows.Add(row);
+                    count++;
+                    if (count % 1000 == 0) Console.WriteLine("Loaded up: " + count);
+                });
+            }
+
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString))
+            {
+                SqlBulkCopy bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.UseInternalTransaction, null);
+                bulkCopy.DestinationTableName = "Establishment2Company";
+                connection.Open();
+                bulkCopy.WriteToServer(table);
+                connection.Close();
+            }
+
+            Console.WriteLine("DONE");
         }
 
         private static T Map<T>(string id, string name) where T : LookupBase, new() => new T

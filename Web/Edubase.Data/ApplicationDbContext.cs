@@ -9,12 +9,6 @@ namespace Edubase.Data.Entity
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        [Obsolete]
-        public IDbSet<SchoolMAT> SchoolMATs { get; set; }
-
-        [Obsolete]
-        public IDbSet<MAT> MATs { get; set; }
-
         public IDbSet<AdmissionsPolicy> AdmissionsPolicies { get; set; }
         public IDbSet<Diocese> Dioceses { get; set; }
         public IDbSet<EducationPhase> EducationPhases { get; set; }
@@ -34,6 +28,8 @@ namespace Edubase.Data.Entity
         public IDbSet<Company> Companies { get; set; }
         public IDbSet<Establishment> Establishments { get; set; }
         public IDbSet<LocalAuthority> LocalAuthorities { get; set; }
+        public IDbSet<Estab2Estab> Estab2EstabLinks { get; set; }
+        public IDbSet<Establishment2Company> Establishment2CompanyLinks { get; set; }
 
         private bool _enableIdentityInsert;
 

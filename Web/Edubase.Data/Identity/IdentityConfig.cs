@@ -7,10 +7,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Edubase.Web.UI.Models;
 using Edubase.Data.Entity;
 
-namespace Edubase.Web.UI
+namespace Edubase.Data.Identity
 {
     public class EmailService : IIdentityMessageService
     {
