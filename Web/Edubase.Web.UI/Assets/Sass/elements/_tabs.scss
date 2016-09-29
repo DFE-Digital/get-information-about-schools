@@ -112,3 +112,81 @@ nav.tabs
         }
     }
 }
+
+
+.tab-wrap {
+    border-bottom: $black 1px solid;
+
+    @include media(mobile) {
+        border-bottom: 0;
+        margin-bottom: 20px;
+    }
+
+    &:after {
+        clear: both;
+        content: "";
+        display: block;
+    }
+}
+
+.horizontal-tabs {
+    position: relative;
+
+    li {
+        float:left;
+
+        @include media(mobile) {
+            width: 48%;
+            margin: 1%;
+            text-align: left;
+
+            &:nth-child(odd) {
+                clear: left;
+            }
+        }
+
+    }
+
+    .horizontal-tab {
+        text-decoration: none;
+        background-color: $grey-2;
+        display: block;
+        padding: 12px 24px;
+        margin-right: 8px;
+        text-align: center;
+
+        @include media(mobile) {
+            font-size: 14px;
+            text-align: left;
+            padding-left: 8px;
+        }
+        
+
+        &.selected-tab {
+            color: $black;
+            background: #fff;
+            border: $black 1px solid;
+            border-bottom: #fff 1px solid;
+            position: relative;
+            top: 1px;
+
+            @include media(mobile) {
+                top: 0;
+                border-bottom: $black 1px solid;
+                background-color: $grey-2;
+                color: $black;
+            }
+        }
+    }
+}
+
+.horizontal-tabs-content {
+    .tab-content {
+        margin: 0;
+        padding: 24px 0;
+
+        &.hidden-tab-content {
+            display: none;
+        }
+    }
+}
