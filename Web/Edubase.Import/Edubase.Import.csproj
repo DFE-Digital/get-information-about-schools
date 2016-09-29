@@ -175,6 +175,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">
+      <Project>{8e4a0f2b-368f-4c22-8723-7e234a8c46f3}</Project>
+      <Name>Edubase.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Edubase.Data\Edubase.Data.csproj">
       <Project>{8c3d6834-3fa1-440a-a396-6489e22e8063}</Project>
       <Name>Edubase.Data</Name>

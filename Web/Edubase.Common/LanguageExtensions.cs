@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Edubase.Common
 {
@@ -38,6 +40,19 @@ namespace Edubase.Common
         {
             if (text.IsNullOrEmpty()) return null;
             else return text.Trim();
+        }
+        public static DateTime? ToDateTime(this string data, string format)
+        {
+            if (data == null) return null;
+            DateTime temp;
+            if (DateTime.TryParseExact(data, format, null, DateTimeStyles.None, out temp)) return temp;
+            else return null;
+        }
+
+        public static DateTime? ToDateTime(this string data, string[] formats)
+        {
+            if (string.IsNullOrWhiteSpace(data)) return null;
+            else return formats.Select(x => x.ToDateTime(data)).FirstOrDefault(x => x.HasValue);
         }
 
         public static bool IsNullOrEmpty(this string text) => string.IsNullOrWhiteSpace(text);

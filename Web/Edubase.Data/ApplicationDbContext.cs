@@ -59,34 +59,27 @@ namespace Edubase.Data.Entity
                 modelBuilder.Entity<AdmissionsPolicy>()
                     .Property(x => x.Id)
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
                 modelBuilder.Entity<ProvisionBoarding>()
                     .Property(x => x.Id)
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
                 modelBuilder.Entity<EducationPhase>()
                     .Property(x => x.Id)
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
                 modelBuilder.Entity<EstablishmentType>()
                     .Property(x => x.Id)
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
                 modelBuilder.Entity<EstablishmentStatus>()
-                                    .Property(x => x.Id)
-                                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
                 modelBuilder.Entity<Gender>()
                     .Property(x => x.Id)
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
                 modelBuilder.Entity<GroupType>()
-                .Property(x => x.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
                 modelBuilder.Entity<HeadTitle>()
-                                .Property(x => x.Id)
-                                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
                 modelBuilder.Entity<ProvisionNursery>()
                     .Property(x => x.Id)
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
@@ -107,6 +100,15 @@ namespace Edubase.Data.Entity
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
                 modelBuilder.Entity<ReligiousEthos>()
                     .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<Company>()
+                    .Property(x => x.GroupUID)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<LocalAuthority>()
+                    .Property(x => x.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<Establishment>()
+                    .Property(x => x.Urn)
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             }
