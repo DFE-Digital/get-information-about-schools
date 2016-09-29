@@ -23,9 +23,7 @@
         <p>We found <span class="heading-xlarge">@resultCount</span> schools or colleges for the search term "@Model.SearchTerm"</p>
     </div>
 </div>
-<div class="grid-row">
 
-</div>
 <div class="grid-row">
     @if (Model.Error != null)
     {
@@ -48,7 +46,7 @@
                 @foreach (var result in Model.Page)
                 {
                     <li>
-                        <h3>@Html.ActionLink((string)result.SCHNAME, "Details", "Schools", new { id = (string)result.id }, new { @class = "bold-small" })</h3>
+                        <h2>@Html.ActionLink((string)result.SCHNAME, "Details", "Schools", new { id = (string)result.id }, new { @class = "bold-small" })</h2>
                         <dl>
                             <dt>Address:</dt>
                             <dd>@SchoolDetailsHelpers.GetAddress(result)</dd>

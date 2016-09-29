@@ -2,32 +2,50 @@
 @{
     ViewBag.Title = string.Format("Search results for '{0}'", Model.SearchTerm);
     ViewBag.PageClass = "search-results";
+    ViewBag.HideLogo = true;
+
+    var resultCount = 0;
+
+    if (Model.Results != null)
+    {
+        resultCount = Model.Results.Count;
+    }
 }
 
-<p>@Html.ActionLink("Search for another MAT/AS", "Index")</p>
 
-<h1 class="heading-large">Results for '@Model.SearchTerm'</h1>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        @Html.ActionLink("Search for schools or colleges", "Index", null, new { @class = "home-link" })
 
-<hr />
+        <h1 class="heading-xlarge">Search results</h1>
+        <p>We found <span class="heading-xlarge">@resultCount</span> schools or colleges for the search term "@Model.SearchTerm"</p>
+    </div>
+</div>
 
-@if (Model.Error != null)
-{
-    <h2 class="heading-medium">Error</h2>
+<div class="grid-row">
+    @if (Model.Error != null)
+    {
+        <h2 class="heading-medium">Error</h2>
 
-    <p>@Model.Error</p>
-}
-else
-{
-    <ul>
-        @foreach (var result in Model.Results)
-        {
-            <li>
-                <strong>@Html.ActionLink(result.GroupName, "Details", "MAT", new { id = result.GroupUID }, null)</strong>
-                <ul>
-                    <li><strong>Type</strong>: @result.GroupType</li>
-                    <li><strong>Companies House Number</strong>: @result.CompaniesHouseNumber</li>
-                </ul>
-            </li>
-        }
-    </ul>
-}
+        <p>@Model.Error</p>
+    }
+    else
+    {
+        <div class="column-two-thirds">
+            <ul class="school-results-listing">
+                @foreach (var result in Model.Results)
+                {
+                    <li>
+                        <h2>@Html.ActionLink(result.GroupName, "Details", "MAT", new { id = result.GroupUID }, null)</h2>
+                        <dl>
+                            <dt>Type:</dt>
+                            <dd>@result.GroupType</dd>
+                            <dt>Companies House Number:</dt>
+                            <dd>@result.CompaniesHouseNumber</dd>
+                        </dl>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
