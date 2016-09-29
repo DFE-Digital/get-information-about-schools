@@ -77,9 +77,9 @@
     <Compile Include="Entity\MAT.cs" />
     <Compile Include="Entity\Establishment.cs" />
     <Compile Include="Entity\SchoolMAT.cs" />
-    <Compile Include="Migrations\201609291030057_InitialCreate.cs" />
-    <Compile Include="Migrations\201609291030057_InitialCreate.Designer.cs">
-      <DependentUpon>201609291030057_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201609291737582_InitialiseDB.cs" />
+    <Compile Include="Migrations\201609291737582_InitialiseDB.Designer.cs">
+      <DependentUpon>201609291737582_InitialiseDB.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,8 +97,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609291030057_InitialCreate.resx">
-      <DependentUpon>201609291030057_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201609291737582_InitialiseDB.resx">
+      <DependentUpon>201609291737582_InitialiseDB.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

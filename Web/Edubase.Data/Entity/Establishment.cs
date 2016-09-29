@@ -42,7 +42,7 @@ namespace Edubase.Data.Entity
         public ReligiousEthos ReligiousEthos { get; set; }
         public int? ReligiousEthosId { get; set; }
         public Diocese Diocese { get; set; }
-        public int? DioceseId { get; set; }
+        public string DioceseId { get; set; }
         public AdmissionsPolicy AdmissionsPolicy { get; set; }
         public int? AdmissionsPolicyId { get; set; }
         public int? Capacity { get; set; }

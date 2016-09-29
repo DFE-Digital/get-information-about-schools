@@ -12,6 +12,13 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Edubase.Common;
+using System.Collections.Generic;
+using System.Data;
+using System.ComponentModel;
+using System.Data.Entity.Core.Metadata.Edm;
+using Edubase.Data.Entity.ComplexTypes;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace Edubase.Import
 {
@@ -30,75 +37,75 @@ namespace Edubase.Import
             {
                 using (var dest = new ApplicationDbContext(true))
                 {
-                    //Console.WriteLine("Importing lookups...");
+                    Console.WriteLine("Importing lookups...");
 
-                    //MigrateData(dest, "AdmissionsPolicy",
-                    //        () => source.Admissionspolicy.ForEach(x => dest.AdmissionsPolicies.AddOrUpdate(Map<AdmissionsPolicy>(x.code, x.name))));
+                    MigrateData(dest, "AdmissionsPolicy",
+                            () => source.Admissionspolicy.ForEach(x => dest.AdmissionsPolicies.AddOrUpdate(Map<AdmissionsPolicy>(x.code, x.name))));
 
-                    //MigrateData(dest, "Diocese",
-                    //    () => source.Diocese.ForEach(x => dest.Dioceses.AddOrUpdate(new EdubaseDiocese { Id = x.code, Name = x.name })), false);
+                    MigrateData(dest, "Diocese",
+                        () => source.Diocese.ForEach(x => dest.Dioceses.AddOrUpdate(new EdubaseDiocese { Id = x.code, Name = x.name })), false);
 
-                    //MigrateData(dest, "ProvisionBoarding",
-                    //    () => source.Boarders.ForEach(x => dest.BoardingProvisions.AddOrUpdate(Map<ProvisionBoarding>(x.code, x.name))));
+                    MigrateData(dest, "ProvisionBoarding",
+                        () => source.Boarders.ForEach(x => dest.BoardingProvisions.AddOrUpdate(Map<ProvisionBoarding>(x.code, x.name))));
 
-                    //MigrateData(dest, "EducationPhase",
-                    //    () => source.Phaseofeducation.ForEach(x => dest.EducationPhases.AddOrUpdate(Map<EducationPhase>(x.code, x.name))));
+                    MigrateData(dest, "EducationPhase",
+                        () => source.Phaseofeducation.ForEach(x => dest.EducationPhases.AddOrUpdate(Map<EducationPhase>(x.code, x.name))));
 
-                    //MigrateData(dest, "EstablishmentStatus",
-                    //    () => source.Establishmentstatus.ForEach(x => dest.EstablishmentStatuses.AddOrUpdate(Map<EstablishmentStatus>(x.code, x.name))));
+                    MigrateData(dest, "EstablishmentStatus",
+                        () => source.Establishmentstatus.ForEach(x => dest.EstablishmentStatuses.AddOrUpdate(Map<EstablishmentStatus>(x.code, x.name))));
 
-                    //MigrateData(dest, "EstablishmentType",
-                    //    () => source.Typeofestablishment.ForEach(x => dest.EstablishmentTypes.AddOrUpdate(Map<EstablishmentType>(x.code, x.name))));
+                    MigrateData(dest, "EstablishmentType",
+                        () => source.Typeofestablishment.ForEach(x => dest.EstablishmentTypes.AddOrUpdate(Map<EstablishmentType>(x.code, x.name))));
 
-                    //MigrateData(dest, "Gender",
-                    //    () => source.Gender.ForEach(x => dest.Genders.AddOrUpdate(Map<EdubaseGender>(x.code, x.name))));
+                    MigrateData(dest, "Gender",
+                        () => source.Gender.ForEach(x => dest.Genders.AddOrUpdate(Map<EdubaseGender>(x.code, x.name))));
 
-                    //MigrateData(dest, "GroupType",
-                    //    () => source.GroupType.ForEach(x => dest.GroupTypes.AddOrUpdate(Map<EdubaseGroupType>(x.GroupTypecode, x.GroupType1))));
+                    MigrateData(dest, "GroupType",
+                        () => source.GroupType.ForEach(x => dest.GroupTypes.AddOrUpdate(Map<EdubaseGroupType>(x.GroupTypecode, x.GroupType1))));
 
-                    //MigrateData(dest, "HeadTitle",
-                    //    () => source.Headtitle.ForEach(x => dest.HeadTitles.AddOrUpdate(Map<HeadTitle>(x.code, x.name))));
+                    MigrateData(dest, "HeadTitle",
+                        () => source.Headtitle.ForEach(x => dest.HeadTitles.AddOrUpdate(Map<HeadTitle>(x.code, x.name))));
 
-                    //Console.WriteLine("... half way through...");
+                    Console.WriteLine("... half way through...");
 
-                    //MigrateData(dest, "ProvisionNursery",
-                    //    () => source.Nurseryprovision.ForEach(x => dest.NurseryProvisions.AddOrUpdate(Map<ProvisionNursery>(x.code, x.name))));
+                    MigrateData(dest, "ProvisionNursery",
+                        () => source.Nurseryprovision.ForEach(x => dest.NurseryProvisions.AddOrUpdate(Map<ProvisionNursery>(x.code, x.name))));
 
-                    //MigrateData(dest, "ProvisionOfficialSixthForm",
-                    //    () => source.Officialsixthform.ForEach(x => dest.OfficialSixthFormProvisions.AddOrUpdate(Map<ProvisionOfficialSixthForm>(x.code, x.name))));
+                    MigrateData(dest, "ProvisionOfficialSixthForm",
+                        () => source.Officialsixthform.ForEach(x => dest.OfficialSixthFormProvisions.AddOrUpdate(Map<ProvisionOfficialSixthForm>(x.code, x.name))));
 
-                    //MigrateData(dest, "ProvisionSpecialClasses",
-                    //    () => source.Specialclasses.ForEach(x => dest.SpecialClassesProvisions.AddOrUpdate(Map<ProvisionSpecialClasses>(x.code, x.name))));
+                    MigrateData(dest, "ProvisionSpecialClasses",
+                        () => source.Specialclasses.ForEach(x => dest.SpecialClassesProvisions.AddOrUpdate(Map<ProvisionSpecialClasses>(x.code, x.name))));
 
-                    //MigrateData(dest, "ReasonEstablishmentClosed",
-                    //    () => source.Reasonestablishmentclosed.ForEach(x => dest.EstablishmentClosedReasons.AddOrUpdate(Map<ReasonEstablishmentClosed>(x.code, x.name))));
+                    MigrateData(dest, "ReasonEstablishmentClosed",
+                        () => source.Reasonestablishmentclosed.ForEach(x => dest.EstablishmentClosedReasons.AddOrUpdate(Map<ReasonEstablishmentClosed>(x.code, x.name))));
 
-                    //MigrateData(dest, "ReasonEstablishmentOpened",
-                    //    () => source.Reasonestablishmentopened.ForEach(x => dest.EstablishmentOpenedReasons.AddOrUpdate(Map<ReasonEstablishmentOpened>(x.code, x.name))));
+                    MigrateData(dest, "ReasonEstablishmentOpened",
+                        () => source.Reasonestablishmentopened.ForEach(x => dest.EstablishmentOpenedReasons.AddOrUpdate(Map<ReasonEstablishmentOpened>(x.code, x.name))));
 
-                    //MigrateData(dest, "ReligiousCharacter",
-                    //    () => source.Religiouscharacter.ForEach(x => dest.ReligiousCharacters.AddOrUpdate(Map<ReligiousCharacter>(x.code, x.name))));
+                    MigrateData(dest, "ReligiousCharacter",
+                        () => source.Religiouscharacter.ForEach(x => dest.ReligiousCharacters.AddOrUpdate(Map<ReligiousCharacter>(x.code, x.name))));
 
-                    //MigrateData(dest, "ReligiousEthos",
-                    //    () => source.Religiousethos.ForEach(x => dest.ReligiousEthos.AddOrUpdate(Map<ReligiousEthos>(x.code, x.name))));
+                    MigrateData(dest, "ReligiousEthos",
+                        () => source.Religiousethos.ForEach(x => dest.ReligiousEthos.AddOrUpdate(Map<ReligiousEthos>(x.code, x.name))));
 
-                    //MigrateData(dest, "LocalAuthority",
-                    //    () => source.LocalAuthority.ForEach(x => dest.LocalAuthorities.AddOrUpdate(new EdubaseLocalAuthority
-                    //    {
-                    //        Group = x.C_Group,
-                    //        Id = x.Code.ToInteger().Value,
-                    //        Name = x.Name,
-                    //        Order = x.C_Order.ToInteger().Value
-                    //    })));
+                    MigrateData(dest, "LocalAuthority",
+                        () => source.LocalAuthority.ForEach(x => dest.LocalAuthorities.AddOrUpdate(new EdubaseLocalAuthority
+                        {
+                            Group = x.C_Group,
+                            Id = x.Code.ToInteger().Value,
+                            Name = x.Name,
+                            Order = x.C_Order.ToInteger().Value
+                        })));
 
-                    //Console.WriteLine("..done");
-                    //Console.WriteLine();
-                    //Console.WriteLine();
-                    //Console.Write("Importing companies");
-                    //MigrateCompanies(source, dest);
-                    //Console.WriteLine("..done");
-                    //Console.WriteLine();
-                    //Console.WriteLine();
+                    Console.WriteLine("..done");
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.Write("Importing companies");
+                    MigrateCompanies(source, dest);
+                    Console.WriteLine("..done");
+                    Console.WriteLine();
+                    Console.WriteLine();
 
                     MigrateEstablishments(source, dest);
                     
@@ -179,67 +186,68 @@ namespace Edubase.Import
             };
 
             var batchCount = 0;
-            foreach (var batch in source.SchoolsTable.Batch(100))
+            var estabs = new List<Establishment>();
+            foreach (var batch in source.SchoolsTable.Batch(1000))
             {
                 batchCount++;
                 Console.WriteLine("Loading batch #" + batchCount);
-                using (var tran = dc.Database.BeginTransaction())
+                batch.ForEach(x =>
                 {
-                    toggle("ON");
-                    batch.ForEach(x =>
-                    {
-                        var e = new Establishment();
-                        e.Address.CityOrTown = x.Town.Clean();
-                        e.Address.County = x.Countyname.Clean();
-                        e.Address.Line1 = x.Street.Clean();
-                        e.Address.Line2 = x.Address3.Clean();
-                        e.Address.Locality = x.Locality.Clean();
-                        e.Address.PostCode = x.Postcode.Clean();
-                        e.AdmissionsPolicy = admpol.FirstOrDefault(a => a.Id == int.Parse(x.AdmissionsPolicycode));
-                        e.Capacity = x.SchoolCapacity.ToInteger();
-                        e.CloseDate = x.CloseDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
-                        e.Contact.EmailAddress = x.MainEmail.Clean();
-                        e.Contact.TelephoneNumber = x.TelephoneNum.Clean();
-                        e.Contact.WebsiteAddress = x.SchoolWebsite.Clean();
-                        e.ContactAlt.EmailAddress = x.AlternativeEmail.Clean();
-                        e.Diocese = dioceses.FirstOrDefault(a => a.Id == x.Diocesecode);
-                        e.EducationPhase = educationPhases.FirstOrDefault(a => a.Id == int.Parse(x.PhaseOfEducationcode));
-                        e.EstablishmentNumber = x.EstablishmentNumber.ToInteger();
-                        e.EstablishmentType = establishmentTypes.FirstOrDefault(a => a.Id == int.Parse(x.TypeOfEstablishmentcode));
-                        e.Gender = genders.FirstOrDefault(a => a.Id == int.Parse(x.Gendercode));
-                        e.HeadFirstName = x.HeadFirstName.Clean();
-                        e.HeadLastName = x.HeadLastName.Clean();
-                        e.HeadTitle = headTitles.FirstOrDefault(a => a.Id == int.Parse(x.HeadTitlecode));
-                        e.LastChangedDate = x.LastChangedDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
-                        e.LocalAuthority = localAuthorities.FirstOrDefault(a => a.Id == int.Parse(x.LAcode));
-                        e.Name = x.EstablishmentName.Clean();
-                        e.OpenDate = x.OpenDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
-                        e.ProvisionBoarding = boardingProvisions.FirstOrDefault(a => a.Id == int.Parse(x.Boarderscode));
-                        e.ProvisionNursery = nurseryProvisions.FirstOrDefault(a => a.Id == int.Parse(x.NurseryProvisioncode));
-                        e.ProvisionOfficialSixthForm = officialSixthFormProvisions.FirstOrDefault(a => a.Id == int.Parse(x.OfficialSixthFormcode));
-                        e.ProvisionSpecialClasses = specialClassesProvisions.FirstOrDefault(a => a.Id == int.Parse(x.SpecialClassescode));
-                        e.ReasonEstablishmentClosed = establishmentClosedReasons.FirstOrDefault(a => a.Id == int.Parse(x.ReasonEstablishmentClosedcode));
-                        e.ReasonEstablishmentOpened = establishmentOpenedReasons.FirstOrDefault(a => a.Id == int.Parse(x.ReasonEstablishmentOpenedcode));
-                        e.ReligiousCharacter = religiousCharacters.FirstOrDefault(a => a.Id == int.Parse(x.ReligiousCharactercode));
-                        e.ReligiousEthos = religiousEthos.FirstOrDefault(a => a.Id == int.Parse(x.ReligiousEthoscode));
-                        e.Status = establishmentStatuses.FirstOrDefault(a => a.Id == int.Parse(x.EstablishmentStatuscode));
-                        e.StatutoryHighAge = x.StatutoryHighAge.ToInteger();
-                        e.StatutoryLowAge = x.StatutoryLowAge.ToInteger();
-                        e.UKPRN = x.UKPRN.ToInteger();
-                        e.Urn = x.URN.ToInteger().Value;
-                        dc.Establishments.AddOrUpdate(e);
-                        count++;
-                    });
-                    Console.WriteLine("Saving...");
-                    dc.SaveChanges();
-                    toggle("OFF");
-                    Console.WriteLine("Committing...");
-                    tran.Commit();
-                    Console.WriteLine("DONE");
-                }
+                    var e = new Establishment();
+                    e.Address.CityOrTown = x.Town.Clean();
+                    e.Address.County = x.Countyname.Clean();
+                    e.Address.Line1 = x.Street.Clean();
+                    e.Address.Line2 = x.Address3.Clean();
+                    e.Address.Locality = x.Locality.Clean();
+                    e.Address.PostCode = x.Postcode.Clean();
+                    e.AdmissionsPolicyId = admpol.FirstOrDefault(a => a.Id == int.Parse(x.AdmissionsPolicycode))?.Id;
+                    e.Capacity = x.SchoolCapacity.ToInteger();
+                    e.CloseDate = x.CloseDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
+                    e.Contact.EmailAddress = x.MainEmail.Clean();
+                    e.Contact.TelephoneNumber = x.TelephoneNum.Clean();
+                    e.Contact.WebsiteAddress = x.SchoolWebsite.Clean();
+                    e.ContactAlt.EmailAddress = x.AlternativeEmail.Clean();
+                    e.DioceseId = dioceses.FirstOrDefault(a => a.Id == x.Diocesecode)?.Id;
+                    e.EducationPhaseId = educationPhases.FirstOrDefault(a => a.Id == int.Parse(x.PhaseOfEducationcode))?.Id;
+                    e.EstablishmentNumber = x.EstablishmentNumber.ToInteger();
+                    e.TypeId = establishmentTypes.FirstOrDefault(a => a.Id == int.Parse(x.TypeOfEstablishmentcode))?.Id;
+                    e.GenderId = genders.FirstOrDefault(a => a.Id == int.Parse(x.Gendercode))?.Id;
+                    e.HeadFirstName = x.HeadFirstName.Clean();
+                    e.HeadLastName = x.HeadLastName.Clean();
+                    e.HeadTitleId = headTitles.FirstOrDefault(a => a.Id == int.Parse(x.HeadTitlecode))?.Id;
+                    e.LastChangedDate = x.LastChangedDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
+                    e.LocalAuthorityId = localAuthorities.FirstOrDefault(a => a.Id == int.Parse(x.LAcode))?.Id;
+                    e.Name = x.EstablishmentName.Clean();
+                    e.OpenDate = x.OpenDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
+                    e.ProvisionBoardingId = boardingProvisions.FirstOrDefault(a => a.Id == int.Parse(x.Boarderscode))?.Id;
+                    e.ProvisionNurseryId = nurseryProvisions.FirstOrDefault(a => a.Id == int.Parse(x.NurseryProvisioncode))?.Id;
+                    e.ProvisionOfficialSixthFormId = officialSixthFormProvisions.FirstOrDefault(a => a.Id == int.Parse(x.OfficialSixthFormcode))?.Id;
+                    e.ProvisionSpecialClassesId = specialClassesProvisions.FirstOrDefault(a => a.Id == int.Parse(x.SpecialClassescode))?.Id;
+                    e.ReasonEstablishmentClosedId = establishmentClosedReasons.FirstOrDefault(a => a.Id == int.Parse(x.ReasonEstablishmentClosedcode))?.Id;
+                    e.ReasonEstablishmentOpenedId = establishmentOpenedReasons.FirstOrDefault(a => a.Id == int.Parse(x.ReasonEstablishmentOpenedcode))?.Id;
+                    e.ReligiousCharacterId = religiousCharacters.FirstOrDefault(a => a.Id == int.Parse(x.ReligiousCharactercode))?.Id;
+                    e.ReligiousEthosId = religiousEthos.FirstOrDefault(a => a.Id == int.Parse(x.ReligiousEthoscode))?.Id;
+                    e.StatusId = establishmentStatuses.FirstOrDefault(a => a.Id == int.Parse(x.EstablishmentStatuscode))?.Id;
+                    e.StatutoryHighAge = x.StatutoryHighAge.ToInteger();
+                    e.StatutoryLowAge = x.StatutoryLowAge.ToInteger();
+                    e.UKPRN = x.UKPRN.ToInteger();
+                    e.Urn = x.URN.ToInteger().Value;
+                    estabs.Add(e);
+                    count++;
+                    if (count % 100 == 0) Console.WriteLine("Loaded up: " + count);
+                });
             }
 
-            
+            var dt = ToDataTable(estabs);
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString))
+            {
+                SqlBulkCopy bulkCopy = new SqlBulkCopy (connection, SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.FireTriggers | SqlBulkCopyOptions.KeepIdentity | SqlBulkCopyOptions.UseInternalTransaction, null );
+                bulkCopy.DestinationTableName = "Establishment";
+                connection.Open();
+                bulkCopy.WriteToServer(dt);
+                connection.Close();
+            }
         }
 
         private static T Map<T>(string id, string name) where T : LookupBase, new() => new T
@@ -250,5 +258,52 @@ namespace Edubase.Import
             LastUpdatedUtc = DateTime.UtcNow,
             IsDeleted = false
         };
+
+        public static DataTable ToDataTable<T>(IList<T> data)
+        {
+            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(T));
+            DataTable table = new DataTable();
+
+            foreach (PropertyDescriptor prop in properties)
+            {
+                if (!prop.PropertyType.IsClass || prop.PropertyType == typeof(string))
+                {
+                    table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                }
+                else if (prop.PropertyType == typeof(ContactDetail) || prop.PropertyType == typeof(Address))
+                {
+                    PropertyDescriptorCollection properties2 = TypeDescriptor.GetProperties(prop.PropertyType);
+                    foreach (PropertyDescriptor prop2 in properties2)
+                    {
+                        table.Columns.Add(prop.Name + "_" + prop2.Name, Nullable.GetUnderlyingType(prop2.PropertyType) ?? prop2.PropertyType);
+                    }
+                }
+            }
+
+            foreach (T item in data)
+            {
+                DataRow row = table.NewRow();
+
+                foreach (PropertyDescriptor prop in properties)
+                {
+                    if (!prop.PropertyType.IsClass || prop.PropertyType == typeof(string))
+                    {
+                        row[prop.Name]= prop.GetValue(item) ?? DBNull.Value;
+                    }
+                    else if (prop.PropertyType == typeof(ContactDetail) || prop.PropertyType == typeof(Address))
+                    {
+                        var inner = prop.GetValue(item);
+                        PropertyDescriptorCollection properties2 = TypeDescriptor.GetProperties(prop.PropertyType);
+                        foreach (PropertyDescriptor prop2 in properties2)
+                        {
+                            var colName = prop.Name + "_" + prop2.Name;
+                            row[colName] = prop2.GetValue(inner) ?? DBNull.Value;
+                        }
+                    }
+                }
+                table.Rows.Add(row);
+            }
+            return table;
+        }
     }
 }

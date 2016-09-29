@@ -3,7 +3,7 @@ namespace Edubase.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class InitialiseDB : DbMigration
     {
         public override void Up()
         {
@@ -131,7 +131,7 @@ namespace Edubase.Data.Migrations
                         GenderId = c.Int(),
                         ReligiousCharacterId = c.Int(),
                         ReligiousEthosId = c.Int(),
-                        DioceseId = c.Int(),
+                        DioceseId = c.String(maxLength: 128),
                         AdmissionsPolicyId = c.Int(),
                         Capacity = c.Int(),
                         ProvisionSpecialClassesId = c.Int(),
@@ -161,12 +161,11 @@ namespace Edubase.Data.Migrations
                         CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         IsDeleted = c.Boolean(nullable: false),
-                        Diocese_Id = c.String(maxLength: 128),
                         EstablishmentType_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Urn)
                 .ForeignKey("dbo.AdmissionsPolicy", t => t.AdmissionsPolicyId)
-                .ForeignKey("dbo.Diocese", t => t.Diocese_Id)
+                .ForeignKey("dbo.Diocese", t => t.DioceseId)
                 .ForeignKey("dbo.EducationPhase", t => t.EducationPhaseId)
                 .ForeignKey("dbo.EstablishmentType", t => t.EstablishmentType_Id)
                 .ForeignKey("dbo.Gender", t => t.GenderId)
@@ -192,10 +191,10 @@ namespace Edubase.Data.Migrations
                 .Index(t => t.GenderId)
                 .Index(t => t.ReligiousCharacterId)
                 .Index(t => t.ReligiousEthosId)
+                .Index(t => t.DioceseId)
                 .Index(t => t.AdmissionsPolicyId)
                 .Index(t => t.ProvisionSpecialClassesId)
                 .Index(t => t.HeadTitleId)
-                .Index(t => t.Diocese_Id)
                 .Index(t => t.EstablishmentType_Id);
             
             CreateTable(
@@ -436,7 +435,7 @@ namespace Edubase.Data.Migrations
             DropForeignKey("dbo.Establishment", "GenderId", "dbo.Gender");
             DropForeignKey("dbo.Establishment", "EstablishmentType_Id", "dbo.EstablishmentType");
             DropForeignKey("dbo.Establishment", "EducationPhaseId", "dbo.EducationPhase");
-            DropForeignKey("dbo.Establishment", "Diocese_Id", "dbo.Diocese");
+            DropForeignKey("dbo.Establishment", "DioceseId", "dbo.Diocese");
             DropForeignKey("dbo.Establishment", "AdmissionsPolicyId", "dbo.AdmissionsPolicy");
             DropForeignKey("dbo.Company", "GroupTypeId", "dbo.GroupType");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
@@ -447,10 +446,10 @@ namespace Edubase.Data.Migrations
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.Establishment", new[] { "EstablishmentType_Id" });
-            DropIndex("dbo.Establishment", new[] { "Diocese_Id" });
             DropIndex("dbo.Establishment", new[] { "HeadTitleId" });
             DropIndex("dbo.Establishment", new[] { "ProvisionSpecialClassesId" });
             DropIndex("dbo.Establishment", new[] { "AdmissionsPolicyId" });
+            DropIndex("dbo.Establishment", new[] { "DioceseId" });
             DropIndex("dbo.Establishment", new[] { "ReligiousEthosId" });
             DropIndex("dbo.Establishment", new[] { "ReligiousCharacterId" });
             DropIndex("dbo.Establishment", new[] { "GenderId" });
