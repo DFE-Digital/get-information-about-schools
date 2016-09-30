@@ -49,7 +49,7 @@
                 
             });
             
-            // only process the has if it's for a valid hash
+            // only process the hash if it's for a valid
             if (window.location.hash && intialTabSelection > -1) {
                 $tabs.eq(intialTabSelection).click();
             } else {
