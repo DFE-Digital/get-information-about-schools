@@ -28,8 +28,14 @@ namespace Edubase.Web.UI.Helpers
             return FormatHelpers.ConcatNonEmpties(", ", schoolDetails.STREET, schoolDetails.TOWN, schoolDetails.POSTCODE);
         }
 
+        public static string GetLatLng(dynamic schoolDetails)
+        {
+            return schoolDetails.Location.coordinates.ToString();
+        }
+
         private static bool IsTrue(dynamic x)
         {
+            return x?.ToString() == "1";
             return x?.ToString() == "1";
         }
 

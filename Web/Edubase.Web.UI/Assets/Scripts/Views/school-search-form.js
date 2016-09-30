@@ -10,7 +10,7 @@
 
     function ExpandingSearchForm(el, opts) {
         this.el = el;
-        this.opts = $.extend({}, defaults, opts);;
+        this.opts = $.extend({}, defaults, opts);
 
         this.init();
     }
