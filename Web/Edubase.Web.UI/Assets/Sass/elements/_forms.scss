@@ -213,3 +213,85 @@ legend {
     width: 100%;
   }
 }
+
+
+.header-submit {
+    float: right;
+    margin-top: 0.5em;
+    display: none;
+    @media(min-width: 540px) {
+        display: block;
+    }
+}
+
+.mobile-full-width {
+    width: 100%;
+    clear: both;
+    display: block;
+    float:none;
+
+    @media(min-width: 540px) {
+        width: auto;
+        float: right;
+    }
+}
+.help-icon {
+    border-radius: 20px;
+    text-align: center;
+    font-weight: bold;
+    padding: 4px 3px 1px;
+    display: none;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    background-color: $light-blue;
+    text-decoration: none !important;
+    cursor: pointer;
+    &:hover {
+        color: #fff;
+    }
+
+    .js-enabled & {
+        display: inline-block;
+    }
+}
+
+.help-text {
+    border-left: 4px solid $grey-2;
+    padding-left: 8px;    
+    .js-enabled & {
+        display: none;
+    }
+}
+
+.borderless {
+
+    .create-edit-school & {
+        width: 66%;
+    }
+    
+    .form-group {
+
+        &.error {
+            border-left: 4px solid $error-colour;
+        }
+    }
+    
+    .error-message {
+        font-size: 14px;
+        color: $error-colour;
+        display: none; 
+        font-weight: normal; 
+    }
+    .error .error-message {
+        display: block;
+    }
+
+    .form-control {
+        font-size: 14px;
+    }
+
+    select {
+        width: 99%;
+    }
+}
