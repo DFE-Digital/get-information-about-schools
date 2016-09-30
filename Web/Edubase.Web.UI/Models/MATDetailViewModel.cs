@@ -9,13 +9,14 @@ namespace Edubase.Web.UI.Models
 {
     public class MATDetailViewModel
     {
-        public MAT Data { get; set; }
-        public dynamic Schools { get; set; }
 
-        public MATDetailViewModel(MAT model, dynamic schools)
+        public List<Establishment2Company> Establishments { get; set; }
+        public Company MAT { get; set; }
+
+        public MATDetailViewModel(List<Establishment2Company> estabs, Company mat)
         {
-            Data = model;
-            Schools = schools;
+            MAT = mat;
+            Establishments = estabs;
         }
     }
 }

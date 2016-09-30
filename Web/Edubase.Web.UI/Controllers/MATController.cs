@@ -1,12 +1,10 @@
 ﻿using Edubase.Data.Repositories;
 using Edubase.Web.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Edubase.Common;
 using Edubase.Services.Query.Interfaces;
+using Edubase.Data.Entity;
+using System.Data.Entity;
+using System.Linq;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -19,37 +17,15 @@ namespace Edubase.Web.UI.Controllers
             _schoolQueryService = schoolQueryService;
         }
 
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-        
-        //public ActionResult Search(string term)
-        //{
-        //    var viewModel = new MATSearchResultsViewModel(term);
-        //    var repo = new MATRepository();
-        //    var results = repo.Search(term);
-
-        //    if (results.Count == 0 && term.IsInteger())
-        //    {
-        //        viewModel.Error = "The companies house number does not match any MAT/Academy Sponsor; please check the number entered or try searching using MAT/Academy Sponsor name";
-        //    }
-        //    else if(results.Count == 0)
-        //    {
-        //        viewModel.Error = "Sorry, we could not find any matching records. Please check your spelling and try again.";
-        //    }
-
-        //    viewModel.Results = results;
-
-        //    return View(viewModel);
-        //}
-
         public ActionResult Details(short id)
         {
-            var model = new MATRepository().Find(id);
-            var schools = _schoolQueryService.GetSchoolsInMAT(id);
-
-            return View(new MATDetailViewModel(model, schools));
+            using (var dc = new ApplicationDbContext())
+            {
+                var mat = dc.Companies.FirstOrDefault(x => x.GroupUID == id);
+                var estabs = dc.Establishment2CompanyLinks.Include(x => x.Establishment)
+                    .Where(x => x.Company.GroupUID == id).ToList();
+                return View(new MATDetailViewModel(estabs, mat));
+            }
         }
     }
 }
