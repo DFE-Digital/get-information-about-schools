@@ -1,48 +1,48 @@
 ﻿@using Edubase.Web.UI.Helpers
-@model dynamic
+@model Edubase.Data.Entity.Establishment
 @{
-    ViewBag.Title = Model.SCHNAME.ToString();
+    ViewBag.Title = Model.Name;
     ViewBag.PageClass = "school-details";
     ViewBag.HideLogo = true;
 }
 
-<h1 class="heading-large">@Model.SCHNAME <span class="urn">(URN: @Model.id)</span></h1>
+<h1 class="heading-large">@Model.Name <span class="urn">(URN: @Model.Urn)</span></h1>
 
 <div class="column-full">
     <div class="grid-row summary">
         <table class="borderless">
-            <caption class="visually-hidden">@Model.SCHNAME information</caption>
+            <caption class="visually-hidden">@Model.Name information</caption>
             <tr>
                 <th scope="row">Address</th>
                 <td>@SchoolDetailsHelpers.GetAddress(Model)</td>
             </tr>
             <tr>
                 <th scope="row">Local authority</th>
-                <td>@Model.EDUB_LANAME</td>
+                <td>@*@Model.EDUB_LANAME*@</td>
             </tr>
             <tr>
                 <th scope="row">Headteacher/Principal</th>
-                <td>@Model.EDUB_HEADTITLE @Model.EDUB_HEADFIRSTNAME @Model.EDUB_HEADLASTNAME</td>
+                <td>@*@Model.EDUB_HEADTITLE @Model.EDUB_HEADFIRSTNAME @Model.EDUB_HEADLASTNAME*@</td>
             </tr>
             <tr>
                 <th scope="col">Age range</th>
-                <td>@Model.AGEL to @Model.AGEH </td>
+                <td>@*@Model.AGEL to @Model.AGEH*@ </td>
             </tr>
             <tr>
                 <th scope="row">Phase of education</th>
-                <td>@SchoolDetailsHelpers.GetPhasesOfEducation(Model)</td>
+                <td>@*@SchoolDetailsHelpers.GetPhasesOfEducation(Model)*@</td>
             </tr>
             <tr>
                 <th scope="row">School type</th>
-                <td>@Model.EDUB_TYPEOFESTABLISHMENT</td>
+                <td>@*@Model.EDUB_TYPEOFESTABLISHMENT*@</td>
             </tr>
             <tr>
                 <th scope="row">Gender of entry</th>
-                <td> @Model.GENDER </td>
+                <td> @*@Model.GENDER*@ </td>
             </tr>
             <tr>
                 <th scope="row">URN</th>
-                <td>@Model.id</td>
+                <td>@Model.Urn</td>
             </tr>
             <tr>
                 <th scope="row">LAESTAB</th>
@@ -54,15 +54,15 @@
             </tr>
             <tr>
                 <th scope="row">Admissions policy</th>
-                <td>@Model.ADMPOL</td>
+                <td>@*@Model.ADMPOL*@</td>
             </tr>
         </table>
 
         <div class="map-container">
             <a href="#map" id="map-toggle" class="expanding-content-trigger map-toggle">Show map</a>
             <div id="map" class="school-detail-map"
-                 data-latlng="@SchoolDetailsHelpers.GetLatLng(Model)"
-                 data-school-name="@Model.SCHNAME"
+                 data-latlng="[-2.583500,51.436290]"
+                 data-school-name="@Model.Name"
                  data-school-address="@SchoolDetailsHelpers.GetAddress(Model)"></div>
         </div>
     </div>
@@ -89,14 +89,14 @@
         <div class="tab-content-wrapper horizontal-tabs-content">
             <div id="school-dashboard" class="tab-content">
                 <table class="borderless">
-                    <caption class="visually-hidden">@Model.SCHNAME details</caption>
+                    <caption class="visually-hidden">@Model.Name details</caption>
                     <tr>
                         <th scope="row">Reason establishment opened</th>
                         <td> -TBC- </td>
                     </tr>
                     <tr>
                         <th scope="row">Establishment open date</th>
-                        <td>XX/XX/XXXX</td>
+                        <td>@(Model.OpenDate.HasValue ? Model.OpenDate.Value.ToString("dd/MM/yyyy") : "")</td>
                     </tr>
                     <tr>
                         <th scope="row">Reason establishment closed</th>
@@ -104,7 +104,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Date establishment closed</th>
-                        <td>XX/XX/XXXX</td>
+                        <td>@(Model.CloseDate.HasValue ? Model.CloseDate.Value.ToString("dd/MM/yyyy") : "")</td>
                     </tr>
                     <tr>
                         <th scope="row">Boarders</th>
@@ -124,33 +124,33 @@
                     </tr>
                     <tr>
                         <th scope="row">School capacity</th>
-                        <td> -TBC- </td>
+                        <td>@Model.Capacity</td>
                     </tr>
                     <tr>
                         <th scope="row">UK provider reference number</th>
-                        <td> -TBC- </td>
+                        <td>@Model.UKPRN</td>
                     </tr>
                 </table>
 
             </div>
             <div id="school-contact" class="tab-content">
                 <table class="borderless">
-                    <caption class="visually-hidden">Contact information for @Model.SCHNAME</caption>
+                    <caption class="visually-hidden">Contact information for @Model.Name</caption>
                 <tr>
                     <th scope="row">School website</th>
-                    <td> -TBC- </td>
+                    <td>@Model.Contact.WebsiteAddress</td>
                 </tr>
                 <tr>
                     <th scope="row">Main email</th>
-                    <td> -TBC- </td>
+                    <td>@Model.Contact.EmailAddress</td>
                 </tr>
                 <tr>
                     <th scope="row">Alternative email</th>
-                    <td> -TBC- </td>
+                    <td>@Model.ContactAlt.EmailAddress</td>
                 </tr>
                 <tr>
                     <th scope="row">Telephone number</th>
-                    <td> -TBC- </td>
+                    <td>@Model.Contact.TelephoneNumber</td>
                 </tr>
             </table>
         </div>

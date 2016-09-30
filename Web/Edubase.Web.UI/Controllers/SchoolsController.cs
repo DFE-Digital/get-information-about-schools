@@ -3,6 +3,8 @@ using System.Linq;
 using System.Web.Mvc;
 using Web.Services.Schools;
 using Edubase.Web.UI.Models;
+using Edubase.Data.Entity;
+using System.Dynamic;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -28,16 +30,26 @@ namespace Edubase.Web.UI.Controllers
                 return RedirectToAction("Details", new {id = accessibleSchoolIds.Single()});
             }
 
-            var model = accessibleSchoolIds.Select(id => _schoolService.GetSchoolDetails(id));
-
-            return View(model);
+            using (var dc = new ApplicationDbContext())
+            {
+                var model = accessibleSchoolIds.Select(id =>
+                {
+                    dynamic o = new ExpandoObject();
+                    o.SCHNAME = dc.Establishments.FirstOrDefault(x => x.Urn == id)?.Name;
+                    o.id = id;
+                    return o;
+                });
+                return View(model);
+            }
         }
 
         public ActionResult Details(int id)
         {
-            var model = _schoolService.GetSchoolDetails(id);
-
-            return View(model);
+            using (var dc = new ApplicationDbContext())
+            {
+                var model = dc.Establishments.FirstOrDefault(x => x.Urn == id);
+                return View(model);
+            }
         }
     }
 }
