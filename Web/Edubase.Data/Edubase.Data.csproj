@@ -127,6 +127,10 @@
     <Compile Include="Migrations\201609291904537_RemovedOldTables.Designer.cs">
       <DependentUpon>201609291904537_RemovedOldTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609301054166_EstabTypeForeignKey.cs" />
+    <Compile Include="Migrations\201609301054166_EstabTypeForeignKey.Designer.cs">
+      <DependentUpon>201609301054166_EstabTypeForeignKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\MATRepository.cs" />
@@ -158,6 +162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609291904537_RemovedOldTables.resx">
       <DependentUpon>201609291904537_RemovedOldTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609301054166_EstabTypeForeignKey.resx">
+      <DependentUpon>201609301054166_EstabTypeForeignKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

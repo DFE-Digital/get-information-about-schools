@@ -5,6 +5,7 @@ using Web.Services.Schools;
 using Edubase.Web.UI.Models;
 using Edubase.Data.Entity;
 using System.Dynamic;
+using System.Data.Entity;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -47,7 +48,25 @@ namespace Edubase.Web.UI.Controllers
         {
             using (var dc = new ApplicationDbContext())
             {
-                var model = dc.Establishments.FirstOrDefault(x => x.Urn == id);
+                var model = dc.Establishments
+                    .Include(x => x.AdmissionsPolicy)
+                    .Include(x => x.Diocese)
+                    .Include(x => x.EducationPhase)
+                    .Include(x => x.EstablishmentType)
+                    .Include(x => x.Gender)
+                    .Include(x => x.HeadTitle)
+                    .Include(x => x.LocalAuthority)
+                    .Include(x => x.ProvisionBoarding)
+                    .Include(x => x.ProvisionNursery)
+                    .Include(x => x.ProvisionOfficialSixthForm)
+                    .Include(x => x.ProvisionSpecialClasses)
+                    .Include(x => x.ReasonEstablishmentClosed)
+                    .Include(x => x.ReasonEstablishmentOpened)
+                    .Include(x => x.ReligiousCharacter)
+                    .Include(x => x.ReligiousEthos)
+                    .Include(x => x.Status)
+                    .Include(x => x.EstablishmentType)
+                    .FirstOrDefault(x => x.Urn == id);
                 return View(model);
             }
         }

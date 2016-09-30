@@ -9,5 +9,7 @@ namespace Edubase.Data.Entity
         public string Name { get; set; }
         public string Group { get; set; }
         public int Order { get; set; }
+
+        public override string ToString() => Name;
     }
 }

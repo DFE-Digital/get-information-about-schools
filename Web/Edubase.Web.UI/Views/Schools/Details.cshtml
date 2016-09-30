@@ -1,4 +1,5 @@
 ﻿@using Edubase.Web.UI.Helpers
+@using Edubase.Common;
 @model Edubase.Data.Entity.Establishment
 @{
     ViewBag.Title = Model.Name;
@@ -18,27 +19,27 @@
             </tr>
             <tr>
                 <th scope="row">Local authority</th>
-                <td>@*@Model.EDUB_LANAME*@</td>
+                <td>@Model.LocalAuthority</td>
             </tr>
             <tr>
                 <th scope="row">Headteacher/Principal</th>
-                <td>@*@Model.EDUB_HEADTITLE @Model.EDUB_HEADFIRSTNAME @Model.EDUB_HEADLASTNAME*@</td>
+                <td>@Model.HeadTitle @Model.HeadFirstName @Model.HeadLastName</td>
             </tr>
             <tr>
                 <th scope="col">Age range</th>
-                <td>@*@Model.AGEL to @Model.AGEH*@ </td>
+                <td>@Model.StatutoryHighAge to @Model.StatutoryLowAge</td>
             </tr>
             <tr>
                 <th scope="row">Phase of education</th>
-                <td>@*@SchoolDetailsHelpers.GetPhasesOfEducation(Model)*@</td>
+                <td>@Model.EducationPhase</td>
             </tr>
             <tr>
                 <th scope="row">School type</th>
-                <td>@*@Model.EDUB_TYPEOFESTABLISHMENT*@</td>
+                <td>@Model.EstablishmentType</td>
             </tr>
             <tr>
                 <th scope="row">Gender of entry</th>
-                <td> @*@Model.GENDER*@ </td>
+                <td>@Model.Gender</td>
             </tr>
             <tr>
                 <th scope="row">URN</th>
@@ -50,11 +51,11 @@
             </tr>
             <tr>
                 <th scope="row">Establishment status</th>
-                <td>TODO</td>
+                <td>@Model.Status</td>
             </tr>
             <tr>
                 <th scope="row">Admissions policy</th>
-                <td>@*@Model.ADMPOL*@</td>
+                <td>@Model.AdmissionsPolicy</td>
             </tr>
         </table>
 
@@ -92,35 +93,35 @@
                     <caption class="visually-hidden">@Model.Name details</caption>
                     <tr>
                         <th scope="row">Reason establishment opened</th>
-                        <td> -TBC- </td>
+                        <td>@Model.ReasonEstablishmentOpened</td>
                     </tr>
                     <tr>
                         <th scope="row">Establishment open date</th>
-                        <td>@(Model.OpenDate.HasValue ? Model.OpenDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                        <td>@(Model.OpenDate.HasValue ? Model.OpenDate.Value.ToString("dd/MM/yyyy") : "---")</td>
                     </tr>
                     <tr>
                         <th scope="row">Reason establishment closed</th>
-                        <td> -TBC- </td>
+                        <td>@Model.ReasonEstablishmentClosed</td>
                     </tr>
                     <tr>
                         <th scope="row">Date establishment closed</th>
-                        <td>@(Model.CloseDate.HasValue ? Model.CloseDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                        <td>@(Model.CloseDate.HasValue ? Model.CloseDate.Value.ToString("dd/MM/yyyy") : "---")</td>
                     </tr>
                     <tr>
                         <th scope="row">Boarders</th>
-                        <td> -TBC- </td>
+                        <td>@Model.ProvisionBoarding</td>
                     </tr>
                     <tr>
                         <th scope="row">Nursery provision</th>
-                        <td> -TBC- </td>
+                        <td>@Model.ProvisionNursery</td>
                     </tr>
                     <tr>
                         <th scope="row">Official sixth form</th>
-                        <td> -TBC- </td>
+                        <td>@Model.ProvisionOfficialSixthForm</td>
                     </tr>
                     <tr>
                         <th scope="row">Diocese</th>
-                        <td> -TBC- </td>
+                        <td>@(Model.Diocese?.Name ?? "---")</td>
                     </tr>
                     <tr>
                         <th scope="row">School capacity</th>

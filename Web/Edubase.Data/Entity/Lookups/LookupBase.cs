@@ -10,6 +10,9 @@ namespace Edubase.Data.Entity.Lookups
 
         [Required]
         public string Name { get; set; }
+
+        public override string ToString() => Name;
+        
     }
 
     public class AdmissionsPolicy : LookupBase { }

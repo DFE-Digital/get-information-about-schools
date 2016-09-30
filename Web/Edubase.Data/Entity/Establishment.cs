@@ -16,7 +16,7 @@ namespace Edubase.Data.Entity
         public string Name { get; set; }
         [Column("Type")]
         public EstablishmentType EstablishmentType { get; set; }
-        public int? TypeId { get; set; }
+        
         public EstablishmentStatus Status { get; set; }
         public int? StatusId { get; set; }
         public ReasonEstablishmentOpened ReasonEstablishmentOpened { get; set; }
@@ -49,7 +49,6 @@ namespace Edubase.Data.Entity
         public ProvisionSpecialClasses ProvisionSpecialClasses { get; set; }
         public int? ProvisionSpecialClassesId { get; set; }
         public int? UKPRN { get; set; }
-
         [Obsolete("This is potentially obsolete due to base.LastUpdatedUtc")]
         public DateTime? LastChangedDate { get; set; }
         public Address Address { get; set; }
@@ -61,6 +60,10 @@ namespace Edubase.Data.Entity
 
         public ContactDetail Contact { get; set; }
         public ContactDetail ContactAlt { get; set; }
+
+        [ForeignKey("EstablishmentType")]
+        public int? TypeId { get; set; }
+
 
         [NotMapped]
         public string LAESTAB => string.Concat(LocalAuthorityId, EstablishmentNumber);
