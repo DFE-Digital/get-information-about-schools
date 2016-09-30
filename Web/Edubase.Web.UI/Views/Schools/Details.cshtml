@@ -3,140 +3,174 @@
 @{
     ViewBag.Title = Model.SCHNAME.ToString();
     ViewBag.PageClass = "school-details";
+    ViewBag.HideLogo = true;
 }
 
 <h1 class="heading-large">@Model.SCHNAME <span class="urn">(URN: @Model.id)</span></h1>
 
 <div class="column-full">
     <div class="grid-row summary">
-        <details>
-            <summary>
-                <span class="summary">Show school details<span class="visuallyhidden"> Click to expand</span></span>
-            </summary>
-            <div class="panel-indent with-icons">
-                <div class="column-half">
-                    <div class="grid-row">
-                        <ul class="school-details-list">
-                            <li class="school-address"><strong>@*@SchoolDetailsHelpers.GetAddress(Model)*@</strong></li>
-                            <li class="school-local-authority">Local authority: <strong>@Model.EDUB_LANAME</strong></li>
-                            <li class="school-headteacher">Headteacher: <strong>@Model.EDUB_HEADTITLE @Model.EDUB_HEADFIRSTNAME @Model.EDUB_HEADLASTNAME</strong></li>
-                        </ul>
-                    </div>
-                </div>
+        <table class="borderless">
+            <caption class="visually-hidden">@Model.SCHNAME information</caption>
+            <tr>
+                <th scope="row">Address</th>
+                <td>@SchoolDetailsHelpers.GetAddress(Model)</td>
+            </tr>
+            <tr>
+                <th scope="row">Local authority</th>
+                <td>@Model.EDUB_LANAME</td>
+            </tr>
+            <tr>
+                <th scope="row">Headteacher/Principal</th>
+                <td>@Model.EDUB_HEADTITLE @Model.EDUB_HEADFIRSTNAME @Model.EDUB_HEADLASTNAME</td>
+            </tr>
+            <tr>
+                <th scope="col">Age range</th>
+                <td>@Model.AGEL to @Model.AGEH </td>
+            </tr>
+            <tr>
+                <th scope="row">Phase of education</th>
+                <td>@SchoolDetailsHelpers.GetPhasesOfEducation(Model)</td>
+            </tr>
+            <tr>
+                <th scope="row">School type</th>
+                <td>@Model.EDUB_TYPEOFESTABLISHMENT</td>
+            </tr>
+            <tr>
+                <th scope="row">Gender of entry</th>
+                <td> @Model.GENDER </td>
+            </tr>
+            <tr>
+                <th scope="row">URN</th>
+                <td>@Model.id</td>
+            </tr>
+            <tr>
+                <th scope="row">LAESTAB</th>
+                <td>@Model.LAESTAB</td>
+            </tr>
+            <tr>
+                <th scope="row">Establishment status</th>
+                <td>TODO</td>
+            </tr>
+            <tr>
+                <th scope="row">Admissions policy</th>
+                <td>@Model.ADMPOL</td>
+            </tr>
+        </table>
 
-                <div class="column-half">
-                    <div class="grid-row">
-                        <ul class="school-details-list">
-                            <li>Phase of education: <strong>@*@SchoolDetailsHelpers.GetPhasesOfEducation(Model)*@</strong></li>
-                            <li>School type: <strong>@*@Model.EDUB_TYPEOFESTABLISHMENT*@</strong></li>
-                            <li>Admissions policy: <strong>@Model.ADMPOL</strong></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </details>
-    </div>
-
-    <div class="grid-row">
-        <hr/>
-        <div class="ofsted">
-            <div class="column-quarter">
-                <img src="/public/assets/images/ofsted-logo-x-small.jpeg" alt="Ofsted logo" />
-            </div>
-            <div class="column-three-quarters">
-                <p class="ofsted-rating">@*@SchoolDetailsHelpers.GetOfstedRating(Model.OFSTED_INSPOUTCOME)*@</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="grid-row">
-        <hr/>
-        <div class="stats-left">
-            <div class="column-quarter stats-icon pupils">
-                <p class="main-stats-label">Pupils</p>
-                <p class="main-stats-value">@Model.census.NOR</p>
-            </div>
-            <div class="column-quarter stats-icon ages">
-                <p class="main-stats-label">Ages</p>
-                <p class="main-stats-value">@Model.AGEL to @Model.AGEH</p>
-            </div>
-        </div>
-        <div class="stats-right">
-            <div class="column-quarter stats-icon gender-mixed">
-                <p class="main-stats-label">Gender</p>
-                <p class="main-stats-value">@Model.GENDER</p>
-            </div>
-            <div class="column-quarter stats-icon denom">
-                <p class="main-stats-label">Denomination</p>
-                <p class="main-stats-value">@Model.RELDENOM</p>
-            </div>
-        </div>
-        <hr />
-    </div>
-
-    <div class="grid-row outer side-menu">
-        <div class="column-quarter">
-            <div class="grid-row">
-                <div class="tab first">
-                    Dashboard
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="tab">
-                    School characteristics
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="tab">
-                    Absence and exclusions
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="tab">
-                    Key stage 4
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="tab">
-                    Documents
-                </div>
-            </div>
-            <div class="grid-row">
-                <div class="tab last">
-                    Useful info
-                </div>
-            </div>
-        </div>
-        <div class="column-three-quarters content-column">
-            <div class="tab-content-wrapper">
-                <div class="tab-content">
-                </div>
-            </div>
+        <div class="map-container">
+            <a href="#map" id="map-toggle" class="expanding-content-trigger map-toggle">Show map</a>
+            <div id="map" class="school-detail-map"
+                 data-latlng="@SchoolDetailsHelpers.GetLatLng(Model)"
+                 data-school-name="@Model.SCHNAME"
+                 data-school-address="@SchoolDetailsHelpers.GetAddress(Model)"></div>
         </div>
     </div>
 
-    <div class="grid-row outer selector-menu">
-        <div class="grid-row">
-            <div class="column-full selector-menu-options">
-                <select>
-                    <option>Dashboard</option>
-                    <option>School characteristics</option>
-                    <option>Absence and exclusions</option>
-                    <option>Key stage 4</option>
-                    <option>Documents</option>
-                    <option>Dashboard</option>
-                    <option>Useful info</option>
-                    <option>123</option>
-                </select>
-            </div>
+    <div class="grid-row horizontal-tabs-wrapper">
+        <div class="tab-wrap">
+            <ul class="horizontal-tabs">
+                <li>
+                    <a href="#school-dashboard" class="horizontal-tab">Details</a>
+                </li>
+                <li>
+                    <a href="#school-contact" class="horizontal-tab">Contact</a>
+                </li>
+                <li>
+                    <a href="#school-governance" class="horizontal-tab">Governance</a>
+                </li>
+                <li>
+                    <a href="#school-links" class="horizontal-tab">Links</a>
+                </li>
+            </ul>
         </div>
-        <div class="grid-row">
-            <div class="column-full content-column">
-                <div class="tab-content-wrapper">
-                    <div class="tab-content">
-                    </div>
-                </div>
+
+
+        <div class="tab-content-wrapper horizontal-tabs-content">
+            <div id="school-dashboard" class="tab-content">
+                <table class="borderless">
+                    <caption class="visually-hidden">@Model.SCHNAME details</caption>
+                    <tr>
+                        <th scope="row">Reason establishment opened</th>
+                        <td> -TBC- </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Establishment open date</th>
+                        <td>XX/XX/XXXX</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Reason establishment closed</th>
+                        <td> -TBC- </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Date establishment closed</th>
+                        <td>XX/XX/XXXX</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Boarders</th>
+                        <td> -TBC- </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nursery provision</th>
+                        <td> -TBC- </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Official sixth form</th>
+                        <td> -TBC- </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Diocese</th>
+                        <td> -TBC- </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">School capacity</th>
+                        <td> -TBC- </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">UK provider reference number</th>
+                        <td> -TBC- </td>
+                    </tr>
+                </table>
+
             </div>
+            <div id="school-contact" class="tab-content">
+                <table class="borderless">
+                    <caption class="visually-hidden">Contact information for @Model.SCHNAME</caption>
+                <tr>
+                    <th scope="row">School website</th>
+                    <td> -TBC- </td>
+                </tr>
+                <tr>
+                    <th scope="row">Main email</th>
+                    <td> -TBC- </td>
+                </tr>
+                <tr>
+                    <th scope="row">Alternative email</th>
+                    <td> -TBC- </td>
+                </tr>
+                <tr>
+                    <th scope="row">Telephone number</th>
+                    <td> -TBC- </td>
+                </tr>
+            </table>
+        </div>
+        <div id="school-governance" class="tab-content">
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+        </div>
+        <div id="school-links" class="tab-content">
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
         </div>
     </div>
+</div>
+
 </div>

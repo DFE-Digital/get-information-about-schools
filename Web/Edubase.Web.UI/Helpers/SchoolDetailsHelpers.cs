@@ -29,5 +29,11 @@ namespace Edubase.Web.UI.Helpers
             return FormatHelpers.ConcatNonEmpties(", ", schoolDetails.Address.Line1, schoolDetails.Address.CityOrTown, schoolDetails.Address.PostCode);
         }
         
+        public static string GetLatLng(dynamic schoolDetails)
+        {
+            return schoolDetails.Location.coordinates.ToString();
+        }
+
+            return x?.ToString() == "1";
     }
 }
