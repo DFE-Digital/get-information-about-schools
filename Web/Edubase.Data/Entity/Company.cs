@@ -21,5 +21,11 @@ namespace Edubase.Data.Entity
         public DateTime? ClosedDate { get; set; }
         public string GroupStatus { get; set; }
         public string GroupStatusCode { get; set; }
+
+        /// <summary>
+        /// Temporary!
+        /// </summary>
+        [Obsolete, NotMapped]
+        public int EstablishmentCount { get; set; }
     }
 }

@@ -62,6 +62,9 @@ namespace Edubase.Data.Entity
         public ContactDetail Contact { get; set; }
         public ContactDetail ContactAlt { get; set; }
 
+        [NotMapped]
+        public string LAESTAB => string.Concat(LocalAuthorityId, EstablishmentNumber);
+
         public Establishment()
         {
             Contact = new ContactDetail();

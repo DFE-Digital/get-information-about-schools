@@ -1,12 +1,12 @@
 ﻿@{
     var startResult = @Model.StartIndex + 1;
-    var endResult = (@Model.StartIndex + @Model.PageSize > @Model.Results.Count) ? @Model.Results.Count : @Model.StartIndex + @Model.PageSize;
+    var endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
     var currentPage = @Model.StartIndex / @Model.PageSize;
     var totalPages = @Model.Results.Count / @Model.PageSize;
     var action = ViewContext.RouteData.Values["action"].ToString();    
 }
 <div class="pagination">
-    <p>Showing @startResult - @endResult of @Model.Results.Count</p>
+    <p>Showing @startResult - @endResult of @Model.Count</p>
     <ul class="pagination-links">
     @{
         if (currentPage > 0)

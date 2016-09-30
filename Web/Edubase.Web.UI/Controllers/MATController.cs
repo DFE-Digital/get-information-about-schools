@@ -14,35 +14,35 @@ namespace Edubase.Web.UI.Controllers
     {
         ISchoolQueryService _schoolQueryService;
 
-        public MATController(ISchoolQueryService schoolQueryService) // TODO: inject IMATRepository
+        public MATController(ISchoolQueryService schoolQueryService)
         {
             _schoolQueryService = schoolQueryService;
         }
 
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
         
-        public ActionResult Search(string term)
-        {
-            var viewModel = new MATSearchResultsViewModel(term);
-            var repo = new MATRepository();
-            var results = repo.Search(term);
+        //public ActionResult Search(string term)
+        //{
+        //    var viewModel = new MATSearchResultsViewModel(term);
+        //    var repo = new MATRepository();
+        //    var results = repo.Search(term);
 
-            if (results.Count == 0 && term.IsInteger())
-            {
-                viewModel.Error = "The companies house number does not match any MAT/Academy Sponsor; please check the number entered or try searching using MAT/Academy Sponsor name";
-            }
-            else if(results.Count == 0)
-            {
-                viewModel.Error = "Sorry, we could not find any matching records. Please check your spelling and try again.";
-            }
+        //    if (results.Count == 0 && term.IsInteger())
+        //    {
+        //        viewModel.Error = "The companies house number does not match any MAT/Academy Sponsor; please check the number entered or try searching using MAT/Academy Sponsor name";
+        //    }
+        //    else if(results.Count == 0)
+        //    {
+        //        viewModel.Error = "Sorry, we could not find any matching records. Please check your spelling and try again.";
+        //    }
 
-            viewModel.Results = results;
+        //    viewModel.Results = results;
 
-            return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
 
         public ActionResult Details(short id)
         {

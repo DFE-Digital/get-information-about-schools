@@ -17,7 +17,7 @@
                 <div class="column-half">
                     <div class="grid-row">
                         <ul class="school-details-list">
-                            <li class="school-address"><strong>@SchoolDetailsHelpers.GetAddress(Model)</strong></li>
+                            <li class="school-address"><strong>@*@SchoolDetailsHelpers.GetAddress(Model)*@</strong></li>
                             <li class="school-local-authority">Local authority: <strong>@Model.EDUB_LANAME</strong></li>
                             <li class="school-headteacher">Headteacher: <strong>@Model.EDUB_HEADTITLE @Model.EDUB_HEADFIRSTNAME @Model.EDUB_HEADLASTNAME</strong></li>
                         </ul>
@@ -27,8 +27,8 @@
                 <div class="column-half">
                     <div class="grid-row">
                         <ul class="school-details-list">
-                            <li>Phase of education: <strong>@SchoolDetailsHelpers.GetPhasesOfEducation(Model)</strong></li>
-                            <li>School type: <strong>@Model.EDUB_TYPEOFESTABLISHMENT</strong></li>
+                            <li>Phase of education: <strong>@*@SchoolDetailsHelpers.GetPhasesOfEducation(Model)*@</strong></li>
+                            <li>School type: <strong>@*@Model.EDUB_TYPEOFESTABLISHMENT*@</strong></li>
                             <li>Admissions policy: <strong>@Model.ADMPOL</strong></li>
                         </ul>
                     </div>
@@ -44,7 +44,7 @@
                 <img src="/public/assets/images/ofsted-logo-x-small.jpeg" alt="Ofsted logo" />
             </div>
             <div class="column-three-quarters">
-                <p class="ofsted-rating">@SchoolDetailsHelpers.GetOfstedRating(Model.OFSTED_INSPOUTCOME)</p>
+                <p class="ofsted-rating">@*@SchoolDetailsHelpers.GetOfstedRating(Model.OFSTED_INSPOUTCOME)*@</p>
             </div>
         </div>
     </div>

@@ -212,6 +212,8 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MATDetailViewModel.cs" />
     <Compile Include="Models\MATSearchResultsViewModel.cs" />
+    <Compile Include="Models\MATASSearchResultsModel.cs" />
+    <Compile Include="Models\SearchResultsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\IRequestContext.cs" />
@@ -629,9 +631,12 @@
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <None Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Search\MATASResults.cshtml" />
     <None Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_ResultsPagination.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

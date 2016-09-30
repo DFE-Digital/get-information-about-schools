@@ -58,12 +58,12 @@
                 </li>
                 
                 <li class="search-type-wrapper">
-                    @using (Html.BeginForm("Search", "MAT", FormMethod.Get))
+                    @using (Html.BeginForm("SearchByMATAS", "Search", FormMethod.Get))
                     {
                         @SearchElement("Search for a MAT/Academy Sponsor", 
                             "Enter name or companies house number",
                             "searchMAT",
-                            "term",
+                            "searchTerm",
                             "Enter name or companies house number")                      
                     }
                 </li>
