@@ -1,10 +1,36 @@
 ﻿@{
-    var startResult = @Model.StartIndex + 1;
-    var endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
-    var currentPage = @Model.StartIndex / @Model.PageSize;
-    var totalPages = @Model.Results.Count / @Model.PageSize;
-    var action = ViewContext.RouteData.Values["action"].ToString();    
+    int startResult = @Model.StartIndex + 1;
+    int endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
+    int currentPage = @Model.StartIndex / @Model.PageSize;
+    int totalPages = @Model.Results.Count / @Model.PageSize;
+    String action = ViewContext.RouteData.Values["action"].ToString();
+    int maxPages = 10;
+    int paginationStart = 0;
+    int paginationFinish = @Model.PageCount;
+    
 }
+
+@if (Model.PageCount > maxPages)
+{
+    if (currentPage < 5)
+    {
+        paginationFinish = maxPages;
+    }
+    else if (currentPage + 5 > Model.PageCount)
+    {
+        paginationFinish = Model.PageCount;
+        paginationStart = paginationFinish - maxPages;
+    }
+    else if (currentPage >= 5)
+    {
+        paginationFinish = currentPage + 5;
+        paginationStart = paginationFinish - maxPages;
+    }
+
+}
+
+
+
 <div class="pagination">
     <p>Showing @startResult - @endResult of @Model.Count</p>
     <ul class="pagination-links">
@@ -17,7 +43,7 @@
                      new { @class = "pagination-prev" })</li>
         }
 
-        for (int i = 0; i < Model.PageCount; i++)
+        for (int i = paginationStart; i < paginationFinish; i++)
             {
                 var displayPage = i + 1;
                 if (i == currentPage)
@@ -33,7 +59,7 @@
                 }
          }
 
-        if (currentPage < totalPages)
+        if (currentPage < Model.PageCount - 1)
         {
             <li>@Html.ActionLink("Next", 
                     @action,
