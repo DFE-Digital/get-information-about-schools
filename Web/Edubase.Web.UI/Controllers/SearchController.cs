@@ -30,7 +30,7 @@ namespace Edubase.Web.UI.Controllers
             return View();
         }
 
-        public ActionResult Search(string searchTerm, int startIndex = 0, int pageSize = 20)
+        public ActionResult Search(string searchTerm, int startIndex = 0, int pageSize = 50)
         {
             if (searchTerm.Clean() == null) return RedirectToAction("Index");
 
@@ -89,7 +89,7 @@ namespace Edubase.Web.UI.Controllers
             return View("Results", viewModel);
         }
 
-        public ActionResult SearchByLaName(string searchTerm, int startIndex = 0, int pageSize = 20)
+        public ActionResult SearchByLaName(string searchTerm, int startIndex = 0, int pageSize = 50)
         {
             if (searchTerm.Clean() == null) return RedirectToAction("Index");
 
@@ -127,7 +127,7 @@ namespace Edubase.Web.UI.Controllers
             return View("Results", viewModel);
         }
 
-        public ActionResult SearchByMATAS(string searchTerm, int startIndex = 0, int pageSize = 20)
+        public ActionResult SearchByMATAS(string searchTerm, int startIndex = 0, int pageSize = 50)
         {
             if (searchTerm.Clean() == null) return RedirectToAction("Index");
 
