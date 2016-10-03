@@ -8,6 +8,7 @@ namespace Edubase.Web.UI
     {
         protected void Application_Start()
         {
+            AutoMapperConfig.Configure();
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

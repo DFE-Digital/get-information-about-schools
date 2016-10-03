@@ -10,6 +10,7 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Utils;
 using Edubase.Services.Query;
 using Edubase.Services.Query.Interfaces;
+using AutoMapper;
 
 namespace Edubase.Web.UI
 {
@@ -59,7 +60,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<SearchSchoolsByLaNameStrategy>().As<ISearchSchoolsStrategy>();
 
             builder.RegisterType<SchoolQueryService>().As<ISchoolQueryService>();
-
         }
     }
 }

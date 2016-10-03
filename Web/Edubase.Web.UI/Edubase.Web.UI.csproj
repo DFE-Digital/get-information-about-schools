@@ -58,6 +58,10 @@
       <HintPath>..\packages\Autofac.Mvc5.4.0.0\lib\net451\Autofac.Integration.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -192,7 +196,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="Controllers\EstablishmentController.cs" />
     <Compile Include="Controllers\MATController.cs" />
     <Compile Include="Controllers\PrototypeController.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -211,10 +217,15 @@
     </Compile>
     <Compile Include="Helpers\FormatHelpers.cs" />
     <Compile Include="Helpers\IRedirectAfterLoginHelper.cs" />
+    <Compile Include="Helpers\LookupsHelper.cs" />
     <Compile Include="Helpers\RedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\SchoolDetailsHelpers.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
+    <Compile Include="Models\ContactDetailsViewModel.cs" />
+    <Compile Include="Models\CreateEditEstablishmentModel.cs" />
+    <Compile Include="Models\DateTimeViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MATDetailViewModel.cs" />
     <Compile Include="Models\MATSearchResultsViewModel.cs" />
@@ -637,6 +648,7 @@
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
+    <Content Include="Views\Establishment\CreateEdit.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <None Include="Views\Search\Index.cshtml" />

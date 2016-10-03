@@ -1,0 +1,396 @@
+﻿@model Edubase.Web.UI.Models.CreateEditEstablishmentModel
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = "Create/Edit establishment";
+
+    var dc = new Edubase.Data.Entity.ApplicationDbContext();
+}
+
+@helper FormHint(string controlId, string hintText = "help with this field. <br>and more help - even more help could go here...")
+{
+    <a class="help-icon" tab-index="0">?</a>
+    <div class="help-text" id="help-@controlId">
+        <p>Here is some thext that would assist a user with filling in the associated field:</p>
+        <p>
+            Lorem ipsum dolor sit amet, reque mollis ponderum vis et, no reprimique efficiantur accommodare
+            nec. Nec ad deleniti percipitur. Salutandi erroribus sea ex. At vidisse honestatis
+        </p>
+    </div>
+
+}
+
+@using (Html.BeginForm((Model.Urn == null ? "Create" : "Edit"), "Establishment", FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.Urn)
+    <div class="column-full">
+        <div class="grid-row">
+            <button type="submit" class="button header-submit">Submit</button>
+
+            @if (Model.Urn == null)
+            {
+                <h1 class="heading-xlarge">Create a new school or college</h1>
+            }
+            else
+            {
+                <h1 class="heading-xlarge">Edit school or college</h1>
+            }
+            
+
+            @Html.ValidationSummary()
+
+            <table class="borderless">
+                <colgroup>
+                    <col style="width:40%" />
+                    <col style="width:60%" />
+                </colgroup>
+                <caption class="visually-hidden">School information</caption>
+                <tr>
+                    <th scope="row">
+                        <label for="school-name">School / College name</label>
+                        @FormHint("school-name")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">An invalid school name was entered.</span>
+                            @Html.TextBoxFor(x => x.Name, new { maxlength = 120, required = true, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="school-street">Street</label>
+                        @FormHint("school-street")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">An invalid street name was entered.</span>
+                            @Html.TextBoxFor(x => x.Address.Line1, new { maxlength = 120, id = "school-street", @class = "form-control", aria_describedby = "help-school-street" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="school-locality">Locality</label>
+                        @FormHint("school-locality")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">An invalid locality was entered. What kind of shenanigans is this?</span>
+                            @Html.TextBoxFor(x => x.Address.Locality, new { maxlength = 120, id = "school-locality", @class = "form-control", aria_describedby = "help-school-locality" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="school-addressline3">Address line 3</label>
+                        @FormHint("school-addressline3")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.Address.Line3, new { maxlength = 120, id = "school-addressline3", @class = "form-control", aria_describedby = "help-school-addressline3" })
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="school-town">City / town</label>
+                        @FormHint("school-town")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">An invalid town was entered.</span>
+                            @Html.TextBoxFor(x => x.Address.CityOrTown, new { maxlength = 120, required = "true", id = "school-town", @class = "form-control", aria_describedby = "help-school-town" })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-town">Post code</label>
+                        @FormHint("school-postcode")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.Address.PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control", aria_describedby = "help-school-postcode" })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Local authority</label>
+                        @FormHint("local-authority")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">Please select a valid option</span>
+                            @Html.DropDownListFor(x => x.LocalAuthorityId, dc.LocalAuthorities.Select(x => new SelectListItem { Text = string.Concat(x.Name, "(", x.Id, ")"), Value = x.Id.ToString() }), "", new { id = "la", @class = "form-control", required=true })
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Headteacher/Principle</label>
+                        @FormHint("headteacher")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">Please select a valid option</span>
+                            @Html.DropDownListFor(x => x.HeadTitleId, dc.HeadTitles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "headteacher", @class = "form-control", style="width:70px;" })
+                            @Html.TextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", aria_describedby = "help-headfirstname", placeholder = "First name", style = "width:120px;" })
+                            @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", aria_describedby = "help-headlastname", placeholder = "Last name", style = "width:120px;" })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Age range</label>
+                        @FormHint("agerange")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control", aria_describedby = "help-agerange-from", placeholder = "From", type = "number", min = 1, max = 99, style = "width:70px;" })
+                            to
+                            @Html.TextBoxFor(x => x.StatutoryHighAge, new { maxlength = 120, id = "agerange-to", @class = "form-control", aria_describedby = "help-agerange-to", placeholder = "To", type = "number", min = 1, max = 99, style = "width:70px;" })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Phase of education</label>
+                        @FormHint("education-phase")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">Please select a valid option</span>
+                            @Html.DropDownListFor(x => x.EducationPhaseId, dc.EducationPhases.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "education-phase", @class = "form-control", required = true })
+                        </div>
+                    </td>
+                </tr>
+                
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">School type</label>
+                        @FormHint("school-type")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">Please select a valid option</span>
+                            @Html.DropDownListFor(x => x.TypeId, dc.EstablishmentTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "school-type", @class = "form-control", required = true })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Gender of entry</label>
+                        @FormHint("gender-of-entry")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.GenderId, dc.Genders.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "gender", @class = "form-control" })
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">URN</label>
+                        @FormHint("urn")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", aria_describedby = "help-urn", placeholder = "auto-generated", @readonly = true })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">LAESTAB</label>
+                        @FormHint("laestab")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.LAESTAB, new { id = "laestab", @class = "form-control", aria_describedby = "help-laestab", type = "number", required = true })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Establishment status</label>
+                        @FormHint("establishment-status")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.StatusId, dc.EstablishmentStatuses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "gender", @class = "form-control", required = true })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Admissions policy</label>
+                        @FormHint("admissions-policy")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.AdmissionsPolicyId, dc.AdmissionsPolicies.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "gender", @class = "form-control" })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <h2 class="heading-medium">Details</h2>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Reason establishment opened</label>
+                        @FormHint("reason-establishment-opened")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.EstablishmentOpenedReasons.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "gender", @class = "form-control", required = true })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Open date</label>
+                        @FormHint("open-date")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.OpenDate.Day, new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;", required = true })
+                            @Html.TextBoxFor(x => x.OpenDate.Month, new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;", required = true })
+                            @Html.TextBoxFor(x => x.OpenDate.Year, new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;", required = true })
+                         </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Reason establishment closed</label>
+                        @FormHint("reason-establishment-closed")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, dc.EstablishmentClosedReasons.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-closed", @class = "form-control" })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Close date</label>
+                        @FormHint("close-date")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.CloseDate.Day, new { id = "closedate-day", @class = "form-control", aria_describedby = "help-closedate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;" })
+                            @Html.TextBoxFor(x => x.CloseDate.Month, new { id = "closedate-month", @class = "form-control", aria_describedby = "help-closedate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;" })
+                            @Html.TextBoxFor(x => x.CloseDate.Year, new { id = "closedate-year", @class = "form-control", aria_describedby = "help-closedate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;" })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Boarders</label>
+                        @FormHint("boarders")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.ProvisionBoardingId, dc.BoardingProvisions.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "boarders", @class = "form-control" })
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Nursery provision</label>
+                        @FormHint("nursery")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.ProvisionNurseryId, dc.NurseryProvisions.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "nursery", @class = "form-control"})
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Sixth form</label>
+                        @FormHint("sixthform")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, dc.OfficialSixthFormProvisions.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "sixthform", @class = "form-control" })
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Diocese</label>
+                        @FormHint("diocese")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.DioceseId, dc.Dioceses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "diocese", @class = "form-control" })
+                        </div>
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">School capacity</label>
+                        @FormHint("school-capacity")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.Capacity, new { id = "school-capacity", @class = "form-control", aria_describedby = "help-school-capacity", type = "number" })
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">UK Provider Reference Number</label>
+                        @FormHint("ukprn")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", aria_describedby = "help-ukprn", type = "number" })
+                        </div>
+                    </td>
+                </tr>
+
+
+            </table>
+            <button type="submit" class="button mobile-full-width">Submit</button>
+        </div>
+
+
+    </div>
+}

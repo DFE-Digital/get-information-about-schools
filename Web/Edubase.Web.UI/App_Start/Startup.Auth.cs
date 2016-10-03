@@ -20,7 +20,7 @@ namespace Edubase.Web.UI
                 var configuredValue = ConfigurationManager.AppSettings["SessionExpireTimeSpan"];
                 return configuredValue != null
                     ? TimeSpan.Parse(configuredValue)
-                    : TimeSpan.FromMinutes(5);
+                    : TimeSpan.FromMinutes(60);
             }
         }
 

@@ -8,6 +8,7 @@
 }
 
 <h1 class="heading-large">@Model.Name</h1>
+@Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Urn }, new { @class = "button mobile-full-width" })
 
 <div class="column-full">
     <div class="grid-row summary">
