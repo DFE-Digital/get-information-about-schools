@@ -2,10 +2,14 @@
 
 @if (!Model.IsValid)
 {
-    <div class="error error-section">
-        @foreach (var modelError in Model.SelectMany(keyValuePair => keyValuePair.Value.Errors))
-        {
-            <p class="error-message">@modelError.ErrorMessage</p>
-        }
+    <div class="error-summary">
+        <h2 class="heading-medium error-summary-heading">Please correct the following error(s).</h2>
+        <ul class="error-summary-list">
+            @foreach (var modelError in Model.SelectMany(keyValuePair => keyValuePair.Value.Errors))
+            {
+                <!-- in an ideal world the target for this link would be the associated form field-->
+                <li class="error-message"><a href="#">@modelError.ErrorMessage</a></li>
+            }
+        </ul>
     </div>
 }
