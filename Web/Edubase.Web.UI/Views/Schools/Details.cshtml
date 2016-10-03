@@ -7,7 +7,7 @@
     ViewBag.HideLogo = true;
 }
 
-<h1 class="heading-large">@Model.Name <span class="urn">(URN: @Model.Urn)</span></h1>
+<h1 class="heading-large">@Model.Name</h1>
 
 <div class="column-full">
     <div class="grid-row summary">
@@ -19,7 +19,12 @@
             </tr>
             <tr>
                 <th scope="row">Local authority</th>
-                <td>@Model.LocalAuthority</td>
+                <td>
+                    <a href="/Search/SearchByLaName?searchTerm=@Model.LocalAuthority">
+                        @Model.LocalAuthority
+                    </a> 
+                    (@Model.LocalAuthorityId)
+                </td>
             </tr>
             <tr>
                 <th scope="row">Headteacher/Principal</th>
@@ -27,7 +32,7 @@
             </tr>
             <tr>
                 <th scope="col">Age range</th>
-                <td>@Model.StatutoryHighAge to @Model.StatutoryLowAge</td>
+                <td>@Model.StatutoryLowAge to @Model.StatutoryHighAge</td>
             </tr>
             <tr>
                 <th scope="row">Phase of education</th>

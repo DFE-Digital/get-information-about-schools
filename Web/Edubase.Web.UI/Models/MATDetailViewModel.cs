@@ -17,6 +17,7 @@ namespace Edubase.Web.UI.Models
         {
             MAT = mat;
             Establishments = estabs;
+            mat.EstablishmentCount = estabs.Count;
         }
     }
 }

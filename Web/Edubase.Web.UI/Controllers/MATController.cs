@@ -21,8 +21,10 @@ namespace Edubase.Web.UI.Controllers
         {
             using (var dc = new ApplicationDbContext())
             {
-                var mat = dc.Companies.FirstOrDefault(x => x.GroupUID == id);
+                var mat = dc.Companies.Include(x => x.GroupType).FirstOrDefault(x => x.GroupUID == id);
                 var estabs = dc.Establishment2CompanyLinks.Include(x => x.Establishment)
+                    .Include(x => x.Establishment.EstablishmentType)
+                    .Include(x => x.Establishment.HeadTitle)
                     .Where(x => x.Company.GroupUID == id).ToList();
                 return View(new MATDetailViewModel(estabs, mat));
             }

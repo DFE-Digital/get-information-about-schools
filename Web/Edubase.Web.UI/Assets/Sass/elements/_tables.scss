@@ -500,3 +500,21 @@ table {
     }
   }
 }
+
+.borderless {
+    width: 100%;
+       
+    th, td { 
+        border : none;
+        font-size: 14px;
+    }
+    @media(min-width: 640px) {
+        width: 60%;        
+    }
+}
+
+.borderless.no-padding {
+    th, td { 
+        padding:0;
+    }
+}

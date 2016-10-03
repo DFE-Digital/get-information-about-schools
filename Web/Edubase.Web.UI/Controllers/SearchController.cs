@@ -11,6 +11,7 @@ using System.Linq;
 using System.Web.Routing;
 using Edubase.Data.Entity;
 using Edubase.Web.UI.Models;
+using System.Data.Entity;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -44,7 +45,8 @@ namespace Edubase.Web.UI.Controllers
                 {
                     using (var dc = new ApplicationDbContext())
                     {
-                        viewModel.Results = dc.Establishments.Where(x => x.Urn == id).ToList();
+                        viewModel.Results = dc.Establishments.Include(x => x.Status)
+                            .Where(x => x.Urn == id).ToList();
                         viewModel.Count = viewModel.Results.Count;
                     }
                     viewModel.SearchType = SearchResultsModel.eSearchType.URN;
@@ -55,7 +57,8 @@ namespace Edubase.Web.UI.Controllers
                     var estabNo = int.Parse(searchTerm.Substring(3, 4));
                     using (var dc = new ApplicationDbContext())
                     {
-                        var query = dc.Establishments.Where(x => x.LocalAuthorityId == localAuthorityId && x.EstablishmentNumber == estabNo);
+                        var query = dc.Establishments.Include(x => x.Status)
+                            .Where(x => x.LocalAuthorityId == localAuthorityId && x.EstablishmentNumber == estabNo);
                         viewModel.Count = query.Count();
                         viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
                     }
@@ -67,7 +70,8 @@ namespace Edubase.Web.UI.Controllers
             {
                 using (var dc = new ApplicationDbContext())
                 {
-                    var query = dc.Establishments.Where(x => x.Name.Contains(searchTerm));
+                    var query = dc.Establishments.Include(x => x.Status)
+                        .Where(x => x.Name.Contains(searchTerm));
                     viewModel.Count = query.Count();
                     viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
                 }
@@ -101,7 +105,8 @@ namespace Edubase.Web.UI.Controllers
                 var la = dc.LocalAuthorities.Where(x => x.Name.Equals(searchTerm)).FirstOrDefault();
                 if (la != null)
                 {
-                    var query = dc.Establishments.Where(x => x.LocalAuthorityId == la.Id);
+                    var query = dc.Establishments.Include(x => x.Status)
+                        .Where(x => x.LocalAuthorityId == la.Id);
                     viewModel.Count = query.Count();
                     viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
                 }
@@ -136,27 +141,31 @@ namespace Edubase.Web.UI.Controllers
 
             using (var dc = new ApplicationDbContext())
             {
-                var query = dc.Companies.Where(x => x.Name.Contains(searchTerm));
+                IQueryable<Company> query = null;
+                if (searchTerm.IsInteger()) query = dc.Companies.Where(x => x.CompaniesHouseNumber == searchTerm);
+                else query = dc.Companies.Where(x => x.Name.Contains(searchTerm));
+
                 viewModel.Count = query.Count();
                 viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
 
                 foreach (var result in viewModel.Results)
                 {
-                    result.EstablishmentCount = dc.Database.SqlQuery<int>("SELECT COUNT(1) FROM Establishment2Company WHERE Company_GroupUID = " + result.GroupUID).Single();
+                    result.EstablishmentCount = dc.Database
+                        .SqlQuery<int>("SELECT COUNT(1) FROM Establishment2Company WHERE Company_GroupUID = " + result.GroupUID).Single();
                 }
 
             }
             viewModel.SearchType = "MAT/AS";
 
-            //if (viewModel.Count == 1)
-            //{
-            //    return new RedirectToRouteResult(null, new RouteValueDictionary
-            //    {
-            //        { "action", "Details" },
-            //        { "controller", "Schools" },
-            //        { "id", viewModel.Results.Single().Urn }
-            //    });
-            //}
+            if (viewModel.Count == 1)
+            {
+                return new RedirectToRouteResult(null, new RouteValueDictionary
+                {
+                    { "action", "Details" },
+                    { "controller", "MAT" },
+                    { "id", viewModel.Results.Single().GroupUID }
+                });
+            }
 
             viewModel.CalculatePageStats(pageSize);
 

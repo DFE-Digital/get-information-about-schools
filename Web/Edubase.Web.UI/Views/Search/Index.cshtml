@@ -5,11 +5,11 @@
 }
 
 @helper SearchElement(
-    String label,
-    String hint,
-    String componentId,
-    String componentName,
-    String placeholder = "")
+    string label,
+    string hint,
+    string componentId,
+    string componentName,
+    string placeholder = "")
 {
     <li class="search-type-wrapper">
         <label>
@@ -19,7 +19,7 @@
         <div class="expanding-search-field">
             <span class="search-hint">@hint</span>
             <input type="text" class="form-control" placeholder="@placeholder" id="@componentId" name="@componentName" required>
-            <button type="submit" class="button button-next" name="searchtype">Search</button>
+            <button type="submit" class="button button-next">Search</button>
         </div>
     </li>
 }
@@ -39,11 +39,31 @@
                 <li class="search-type-wrapper">
                     @using (Html.BeginForm("Search", "Search", FormMethod.Get))
                     {
-                        @SearchElement("Enter name, URN or LAESTAB",
+                        @SearchElement("School or college name",
                             "e.g. Aston Academy",
                             "searchTerm",
                             "searchTerm",
-                            "Enter name, URN or LAESTAB")
+                            "Enter name")
+                    }
+                </li>
+                <li class="search-type-wrapper">
+                    @using (Html.BeginForm("Search", "Search", FormMethod.Get))
+                    {
+                        @SearchElement("School or college URN",
+                            "e.g. 100053",
+                            "searchTerm",
+                            "searchTerm",
+                            "Enter URN")
+                    }
+                </li>
+                <li class="search-type-wrapper">
+                    @using (Html.BeginForm("Search", "Search", FormMethod.Get))
+                    {
+                        @SearchElement("School or college LAESTAB",
+                            "e.g. 8804116",
+                            "searchTerm",
+                            "searchTerm",
+                            "Enter LAESTAB")
                     }
                 </li>
                 <li class="search-type-wrapper">
