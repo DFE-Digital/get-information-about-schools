@@ -138,6 +138,10 @@
         }
     }
 
+    .borderless.editor {
+        th,td { padding:0px 10px 3px 0px; }
+    }
+
     .map-container {
         width: 40%;
         float: left;

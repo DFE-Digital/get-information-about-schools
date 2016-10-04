@@ -39,7 +39,7 @@
 
             @Html.ValidationSummary()
 
-            <table class="borderless">
+            <table class="borderless editor">
                 <colgroup>
                     <col style="width:40%" />
                     <col style="width:60%" />
@@ -79,9 +79,20 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            @Html.TextBoxFor(x => x.OpenDate.Day, new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;", required = true })
-                            @Html.TextBoxFor(x => x.OpenDate.Month, new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;", required = true })
-                            @Html.TextBoxFor(x => x.OpenDate.Year, new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;", required = true })
+                            @Html.DropDownListFor(x => x.OpenDate.Day,
+                                Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "DD",
+                                new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day",
+                                    style = "width:70px;", required = true })
+
+                            @Html.DropDownListFor(x => x.OpenDate.Month,
+                                Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "MM",
+                                new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month",
+                                    style = "width:70px;", required = true })
+
+                            @Html.DropDownListFor(x => x.OpenDate.Year,
+                                Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "YYYY",
+                                new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year",
+                                    style = "width:70px;", required = true })
                         </div>
                     </td>
                 </tr>

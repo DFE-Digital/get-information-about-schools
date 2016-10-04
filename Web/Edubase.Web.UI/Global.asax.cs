@@ -17,6 +17,8 @@ namespace Edubase.Web.UI
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             IocConfig.Register();
+
+            // REMOVE WHEN IN WEBFARM!!!!!
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
         }
     }
