@@ -203,7 +203,6 @@
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Controllers\EstablishmentController.cs" />
-    <Compile Include="Controllers\MATController.cs" />
     <Compile Include="Controllers\PrototypeController.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IocConfig.cs" />
@@ -215,6 +214,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SchoolsController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\TrustController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -224,15 +224,20 @@
     <Compile Include="Helpers\LookupsHelper.cs" />
     <Compile Include="Helpers\RedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\SchoolDetailsHelpers.cs" />
+    <Compile Include="Identity\Constants.cs" />
+    <Compile Include="Identity\ISchoolPermissions.cs" />
+    <Compile Include="Identity\IUserIdentity.cs" />
+    <Compile Include="Identity\SchoolPermissions.cs" />
+    <Compile Include="Identity\UserIdentity.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
+    <Compile Include="Models\CreateEditTrustModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MATDetailViewModel.cs" />
-    <Compile Include="Models\MATSearchResultsViewModel.cs" />
     <Compile Include="Models\MATASSearchResultsModel.cs" />
     <Compile Include="Models\SearchResultsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -502,9 +507,6 @@
     <Content Include="public\jquery\src\wrap.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Config\beta\log4net.Release.config" />
-    <Content Include="Config\dev\log4net.Release.config" />
-    <Content Include="Config\stage\log4net.Release.config" />
     <Content Include="ci\compile.cmd" />
     <Content Include="ci\unit-tests.cmd" />
     <Content Include="Assets\Sass\docs\resources.md" />
@@ -646,9 +648,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Account\RegisterSucceeded.cshtml" />
     <Content Include="Views\Account\Lockout.cshtml" />
-    <Content Include="Views\MAT\Index.cshtml" />
-    <Content Include="Views\MAT\Search.cshtml" />
-    <Content Include="Views\MAT\Details.cshtml" />
+    <Content Include="Views\Trust\Details.cshtml" />
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
@@ -662,6 +662,7 @@
     <Content Include="Views\Shared\Placeholder.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_ResultsPagination.cshtml" />
+    <Content Include="Views\Trust\CreateEdit.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -686,18 +687,6 @@
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
       <Project>{D605ACE4-2659-48DC-BF21-94E7B8D230DA}</Project>
       <Name>Edubase.Services</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Web.Domain\Web.Domain.csproj">
-      <Project>{C7D71B89-D508-43FA-8130-1266BAA6DDA9}</Project>
-      <Name>Web.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Web.Identity\Web.Identity.csproj">
-      <Project>{8DF3C000-D130-4385-ADC5-DE2F70C749A4}</Project>
-      <Name>Web.Identity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Web.Services\Web.Services.csproj">
-      <Project>{F50A30DA-CE47-4BC6-9E8F-0E070F42F280}</Project>
-      <Name>Web.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
@@ -748,7 +737,7 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
-  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" >
+  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild">
     <ItemGroup>
       <RoslynFiles Include="$(SolutionDir)packages\Microsoft.Net.Compilers.1.3.2\tools\*" />
     </ItemGroup>

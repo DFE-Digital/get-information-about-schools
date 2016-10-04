@@ -1,28 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Web.Identity;
-using Web.Services.Exceptions;
-using Web.Services.Search;
 using Edubase.Common;
-using System.Linq;
 using System.Web.Routing;
 using Edubase.Data.Entity;
 using Edubase.Web.UI.Models;
 using System.Data.Entity;
+using Edubase.Web.UI.Identity;
 
 namespace Edubase.Web.UI.Controllers
 {
     [Authorize(Roles = IdentityConstants.AccessAllSchoolsRoleName)]
     public class SearchController : Controller
     {
-        private readonly IEnumerable<ISearchSchoolsStrategy> _schoolSearchStrategieses;
-
-        public SearchController(IEnumerable<ISearchSchoolsStrategy> schoolSearchStrategieses)
+        public SearchController()
         {
-            _schoolSearchStrategieses = schoolSearchStrategieses;
+
         }
 
         // GET: Search

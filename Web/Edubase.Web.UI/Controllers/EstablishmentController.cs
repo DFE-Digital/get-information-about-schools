@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Edubase.Web.UI.Models;
-using Web.Identity;
 using Edubase.Data.Entity;
 using AutoMapper;
+using Edubase.Web.UI.Identity;
 
 namespace Edubase.Web.UI.Controllers
 {

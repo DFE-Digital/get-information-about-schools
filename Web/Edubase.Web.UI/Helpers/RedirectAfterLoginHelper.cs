@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Web.Identity;
 using Edubase.Web.UI.Utils;
+using Edubase.Web.UI.Identity;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -25,7 +25,7 @@ namespace Edubase.Web.UI.Helpers
             }
 
             var claim = _userIdentity.FindFirstClaim(IdentityConstants.AccessibleSchoolIdsClaimTypeName);
-            if(claim != null && !string.IsNullOrWhiteSpace(claim.Value))
+            if (claim != null && !string.IsNullOrWhiteSpace(claim.Value))
             {
                 var schoolIds = claim.Value.Split(',');
                 var schoolId = schoolIds[0];

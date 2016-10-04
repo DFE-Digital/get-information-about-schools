@@ -1,0 +1,93 @@
+﻿@model Edubase.Web.UI.Models.CreateEditTrustModel
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = "Create/edit trust";
+
+    var dc = new Edubase.Data.Entity.ApplicationDbContext();
+}
+
+@helper FormHint(string controlId, string hintText = "help with this field. <br>and more help - even more help could go here...")
+{
+    <a class="help-icon" tab-index="0">?</a>
+    <div class="help-text" id="help-@controlId">
+        <p>Here is some thext that would assist a user with filling in the associated field:</p>
+        <p>
+            Lorem ipsum dolor sit amet, reque mollis ponderum vis et, no reprimique efficiantur accommodare
+            nec. Nec ad deleniti percipitur. Salutandi erroribus sea ex. At vidisse honestatis
+        </p>
+    </div>
+
+}
+
+@using (Html.BeginForm((Model.GroupUID == null ? "Create" : "Edit"), "Trust", FormMethod.Post))
+{ 
+    @Html.HiddenFor(x => x.GroupUID)
+    <div class="column-full">
+        <div class="grid-row">
+            <button type="submit" class="button header-submit">Submit</button>
+
+            @if (Model.GroupUID == null)
+            {
+                <h1 class="heading-xlarge">Create a new Multi Academy Trust</h1>
+            }
+            else
+            {
+                <h1 class="heading-xlarge">Edit Multi Academy Trust</h1>
+            }
+
+
+            @Html.ValidationSummary()
+
+            <table class="borderless">
+                <colgroup>
+                    <col style="width:40%" />
+                    <col style="width:60%" />
+                </colgroup>
+                <caption class="visually-hidden">School information</caption>
+                <tr>
+                    <th scope="row">
+                        <label for="school-name">Trust name</label>
+                        @FormHint("name")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">An invalid school name was entered.</span>
+                            @Html.TextBoxFor(x => x.Name, new { maxlength = 120, required = true, id = "name", @class = "form-control", aria_describedby = "help-name" })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Trust type</label>
+                        @FormHint("trust-type")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">Please select a valid option</span>
+                            @Html.DropDownListFor(x => x.TypeId, dc.GroupTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "la", @class = "form-control", required = true })
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Open date</label>
+                        @FormHint("open-date")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.OpenDate.Day, new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;", required = true })
+                            @Html.TextBoxFor(x => x.OpenDate.Month, new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;", required = true })
+                            @Html.TextBoxFor(x => x.OpenDate.Year, new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;", required = true })
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+            <button type="submit" class="button mobile-full-width">Submit</button>
+        </div>
+    </div>
+}

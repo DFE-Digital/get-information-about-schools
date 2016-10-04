@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Web.Services.Schools;
-using Edubase.Web.UI.Models;
 using Edubase.Data.Entity;
 using System.Dynamic;
 using System.Data.Entity;
+using Edubase.Web.UI.Identity;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -13,12 +11,10 @@ namespace Edubase.Web.UI.Controllers
     public class SchoolsController : Controller
     {
         private readonly ISchoolPermissions _schoolPermissions;
-        private readonly ISchoolService _schoolService;
-
-        public SchoolsController(ISchoolPermissions schoolPermissions, ISchoolService schoolService)
+        
+        public SchoolsController(ISchoolPermissions schoolPermissions)
         {
             _schoolPermissions = schoolPermissions;
-            _schoolService = schoolService;
         }
 
         // GET: School

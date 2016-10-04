@@ -49,7 +49,7 @@ namespace Edubase.Web.UI
                 Month = source.Value.Month,
                 Year = source.Value.Year
             };
-            else return new Models.DateTimeViewModel();
+            else return new DateTimeViewModel();
         }
     }
 

@@ -2,15 +2,9 @@
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
-using Web.Identity;
-using Web.Services.Api;
-using Web.Services.Schools;
-using Web.Services.Search;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Utils;
-using Edubase.Services.Query;
-using Edubase.Services.Query.Interfaces;
-using AutoMapper;
+using Edubase.Web.UI.Identity;
 
 namespace Edubase.Web.UI
 {
@@ -46,20 +40,9 @@ namespace Edubase.Web.UI
         private static void RegisterTypes(ContainerBuilder builder)
         {
             builder.RegisterType<SchoolPermissions>().As<ISchoolPermissions>();
-            builder.RegisterType<SchoolService>().As<ISchoolService>();
-            builder.RegisterType<ApiService>().As<IApiService>();
-            builder.RegisterType<HttpService>().As<IHttpService>();
-            builder.RegisterType<AppSettings>().As<IAppSettings>();
             builder.RegisterType<UserIdentity>().As<IUserIdentity>();
             builder.RegisterType<RedirectAfterLoginHelper>().As<IRedirectAfterLoginHelper>();
             builder.RegisterType<RequestContextWrapper>().As<IRequestContext>();
-
-            builder.RegisterType<SearchSchoolsByUrnStrategy>().As<ISearchSchoolsStrategy>();
-            builder.RegisterType<SearchSchoolsByLaEstabStrategy>().As<ISearchSchoolsStrategy>();
-            builder.RegisterType<SearchSchoolsByNameStrategy>().As<ISearchSchoolsStrategy>();
-            builder.RegisterType<SearchSchoolsByLaNameStrategy>().As<ISearchSchoolsStrategy>();
-
-            builder.RegisterType<SchoolQueryService>().As<ISchoolQueryService>();
         }
     }
 }

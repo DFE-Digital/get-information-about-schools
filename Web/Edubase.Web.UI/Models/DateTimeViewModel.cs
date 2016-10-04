@@ -24,5 +24,20 @@ namespace Edubase.Web.UI.Models
             }
             return null;
         }
+
+        public DateTimeViewModel()
+        {
+
+        }
+
+        public DateTimeViewModel(DateTime? dt)
+        {
+            if (dt.HasValue)
+            {
+                Day = dt.Value.Day;
+                Month = dt.Value.Month;
+                Year = dt.Value.Year;
+            }
+        }
     }
 }

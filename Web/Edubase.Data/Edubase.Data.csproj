@@ -138,11 +138,12 @@
     <Compile Include="Migrations\201609301054166_EstabTypeForeignKey.Designer.cs">
       <DependentUpon>201609301054166_EstabTypeForeignKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610041504493_AddedCompanyOpenDate.cs" />
+    <Compile Include="Migrations\201610041504493_AddedCompanyOpenDate.Designer.cs">
+      <DependentUpon>201610041504493_AddedCompanyOpenDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\MATRepository.cs" />
-    <Compile Include="Repositories\SchoolRepository.cs" />
-    <Compile Include="Stubs\Stubs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">
@@ -173,6 +174,13 @@
     <EmbeddedResource Include="Migrations\201609301054166_EstabTypeForeignKey.resx">
       <DependentUpon>201609301054166_EstabTypeForeignKey.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610041504493_AddedCompanyOpenDate.resx">
+      <DependentUpon>201610041504493_AddedCompanyOpenDate.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+    <Folder Include="Stubs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -21,6 +21,7 @@ namespace Edubase.Data.Entity
         public DateTime? ClosedDate { get; set; }
         public string GroupStatus { get; set; }
         public string GroupStatusCode { get; set; }
+        public DateTime? OpenDate { get; set; }
 
         /// <summary>
         /// Temporary!
