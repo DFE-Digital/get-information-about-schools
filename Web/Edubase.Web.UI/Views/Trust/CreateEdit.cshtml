@@ -25,6 +25,8 @@
     @Html.HiddenFor(x => x.GroupUID)
     <div class="column-full">
         <div class="grid-row">
+            @Html.ActionLink("Search for a Multi Academy Trust", "Index", "Search", null, new { @class = "home-link" })
+            <br />
             <button type="submit" class="button header-submit">Submit</button>
 
             @if (Model.GroupUID == null)

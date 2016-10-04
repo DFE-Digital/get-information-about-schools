@@ -15,7 +15,7 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult Create() => View(VIEWNAME, new CreateEditTrustModel());
 
         [HttpPost]
-        public ActionResult Create(CreateEditTrustModel viewModel)
+        public async Task<ActionResult> Create(CreateEditTrustModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -28,7 +28,7 @@ namespace Edubase.Web.UI.Controllers
                         OpenDate = viewModel.OpenDate.ToDateTime()
                     };
                     dc.Companies.Add(company);
-                    dc.SaveChanges();
+                    await dc.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = company.GroupUID });
                 }
             }
@@ -57,13 +57,10 @@ namespace Edubase.Web.UI.Controllers
             {
                 using (var dc = new ApplicationDbContext())
                 {
-                    var company = new Company
-                    {
-                        Name = viewModel.Name,
-                        GroupTypeId = viewModel.TypeId,
-                        OpenDate = viewModel.OpenDate.ToDateTime()
-                    };
-                    dc.Companies.Add(company);
+                    var company = dc.Companies.Single(x => x.GroupUID == viewModel.GroupUID.Value);
+                    company.Name = viewModel.Name;
+                    company.OpenDate = viewModel.OpenDate.ToDateTime();
+                    company.GroupTypeId = viewModel.TypeId;
                     await dc.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = company.GroupUID });
                 }
