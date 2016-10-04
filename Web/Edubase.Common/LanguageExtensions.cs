@@ -82,5 +82,7 @@ namespace Edubase.Common
             else return text;
         }
 
+        public static string Sentenceify(this string[] data) => StringUtil.Sentenceify(data);
+
     }
 }
