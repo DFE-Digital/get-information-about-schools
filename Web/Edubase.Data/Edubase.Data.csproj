@@ -71,6 +71,10 @@
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -95,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="DbUtil.cs" />
     <Compile Include="Entity\ComplexTypes\Address.cs" />
     <Compile Include="Entity\ApplicationUser.cs" />
     <Compile Include="Entity\Company.cs" />
@@ -106,6 +111,7 @@
     <Compile Include="Entity\Establishment.cs" />
     <Compile Include="Entity\Establishment2Company.cs" />
     <Compile Include="Entity\Estab2Estab.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\UserAccountSeeder.cs" />
     <Compile Include="Migrations\201609291737582_InitialiseDB.cs" />

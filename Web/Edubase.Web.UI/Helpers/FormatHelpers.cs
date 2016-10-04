@@ -6,31 +6,6 @@ namespace Edubase.Web.UI.Helpers
 {
     public static class FormatHelpers
     {
-        public class LinkItem
-        {
-            public string Url { get; set; }
-            public string Name { get; set; }
-            public bool IsExternal { get; set; }
-        }
-
-        public static string GrammarCase(string[] stringList)
-        {
-            string result = "";
-            int index = 0;
-
-            foreach (string entry in stringList)
-            {
-                result += entry;
-                if (index < stringList.Length - 2)
-                    result += ", ";
-                else if (index == stringList.Length - 2)
-                    result += " and ";
-
-                index++;
-            }
-
-            return result;
-        }
 
         public static double ConvertBytesToMegabytes(long bytes, int decimalPlaces = 2, double minimumValue = 0)
         {

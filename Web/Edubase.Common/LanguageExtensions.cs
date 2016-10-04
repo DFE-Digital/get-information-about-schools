@@ -36,10 +36,16 @@ namespace Edubase.Common
             else return defaultValue;
         }
 
+        /// <summary>
+        /// Coalesces to null when empty, whitespace or null; also trims the string
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public static string Clean(this string text)
         {
+            text = text?.Trim();
             if (text.IsNullOrEmpty()) return null;
-            else return text.Trim();
+            else return text;
         }
         public static DateTime? ToDateTime(this string data, string format)
         {
