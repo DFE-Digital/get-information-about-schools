@@ -1,0 +1,520 @@
+// Tables
+// ==========================================================================
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+table th,
+table td {
+  @include core-14;
+  //padding: 0.7em 1em 0.7em 1em;
+  padding: 6px 10px 6px 8px;
+  color: #0b0c0c;
+  border-bottom: 1px solid $border-colour;
+  vertical-align: top;
+}
+
+thead tr.collapsible-data th.first-column{
+    text-align: left;
+}
+
+tbody th {
+    text-align: left;
+}
+
+table td.no-data-row {
+    text-align: center;
+}
+
+table tr 
+{
+    td:first-child
+    {
+        text-align:left;
+    }
+    th.first-column
+    {
+        text-align:left;
+    }
+}
+table tbody tr 
+{
+    td:first-child, th:first-child, th.first-column
+    {
+        text-align:left;
+    }
+}
+
+// Right align table cell content for text content
+table td.text,
+table td.freetext,
+table td.numeric,
+table td.integer,
+table td.currency,
+table td.percentage,
+table th.freetext,
+table th.text,
+table th.numeric,
+table th.integer,
+table th.currency,
+table th.percentage {
+  text-align: right;
+}
+
+// Grouping when the table is stacked in mobile view and requires indentation and grouping to reveal hierarchy between data items
+@include media(tablet and mobile)
+{
+    table.table-collapsible
+    {
+        thead
+        {
+            th.mobile-indented
+            {
+                padding-left:10px !important;
+                &.group-start:before
+                {
+                    margin-left:-10px;
+                    content: attr(data-group-name);
+                    display: block;
+                    padding: 0 0 5px 0;
+                }
+            }
+        }
+        tbody
+        {
+            td.mobile-indented, th.mobile-indented
+            {
+                padding-left:20px !important;
+            }
+            td.mobile-group-start, th.mobile-group-start
+            {
+                display:block;
+                padding:5px 0 5px 8px;
+                &:before
+                {
+                    content:none;
+                }
+            }
+        }
+    }
+}
+td.mobile-group-start, th.mobile-group-start
+{
+    display:none;
+}
+
+table tr.borders th {
+    border: 2px solid $border-colour;
+}
+
+table tr.shaded th {
+    @include media(desktop) {
+        background-color: #F2F2F2 !important;
+    }
+}
+
+table thead tr:first-of-type th:first-child {
+  text-align: left;
+}
+
+table thead tr.collapse-sortable {
+  text-align: right;
+}
+
+table thead th {
+  font-weight: normal;
+  vertical-align: top;
+}
+
+// Use tabular numbers for numeric table cells
+table tbody .integer,
+table tbody .currency,
+table tbody .percent {
+  @include core-14($tabular-numbers: true);
+  text-align: right;
+}
+
+table tbody .url {
+  word-break: break-all;
+}
+
+table thead .sort-column,
+table tbody .sort-column {
+  font-weight: bold;
+}
+
+.table-no-header .sort-column {
+  font-weight: normal;
+}
+
+.table-collapsible {
+
+    thead th.no-sorting {
+        text-align: center !important;
+    }
+
+    @include media($max-width: 900px) {
+        th, td {
+            padding-right: 10px;
+        }
+    }
+
+    @include media($max-width: 768px) {
+        display: block;
+        width: auto;
+
+        thead tr {
+            display: block;
+        }
+
+        thead tr.collapsible-data {
+            border-bottom: 1px solid $border-colour;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        thead tr.collapsible-data th {
+            padding: 0px 8px;
+            background-color: white !important;
+        }
+
+        thead tr.collapsible-data th {
+            display: block;
+            text-align: left;
+            border-bottom: 0;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            width: auto;
+
+            &:before {
+                content: attr(data-title);
+                display: inline-block;
+                font-weight: bold;
+                width: 85%;
+            }
+
+            &:first-child {
+                @include bold-19();
+                width: 100%;
+
+                &:before {
+                    content: "";
+                    margin-right: 0;
+                    width: 0;
+                    display: none;
+                }
+            }
+        }
+
+        tbody tr {
+            display: block;
+            padding-bottom: 15px;
+            border-bottom: 1px solid $border-colour;
+            margin-bottom: 15px;
+        }
+
+        tbody > tr:first-child {
+            padding-top: 10px;
+        }
+
+        thead th.no-preamble {
+            &:first-child {
+                &:before {
+                    content: none;
+                }
+            }
+        }
+
+        thead th.no-sorting {
+            display: none;
+        }
+
+        thead th.no-sorting.level-0 {
+            display: block;
+            text-align: left !important;
+            @include bold-24();
+            padding-bottom: 20px;
+        }
+
+        thead tr.mobile-sort-by-label th:first-of-type 
+        {
+            &:before 
+            {
+                @include bold-24();
+                content: "Sort by:";
+                text-align: left;
+                display: block;
+                width: 85%;
+                padding-bottom: 5px;
+            }
+            width: 100%;
+        }
+        
+
+        thead th {
+            display: block;
+            text-align: left;
+            border: 0 !important;
+            padding: 3px 0;
+            width: initial;
+        }
+
+        thead tr.collapsible-data, tbody tr {
+            margin-left: -7px;
+        }
+
+        tbody th, tbody td {
+            display: block;
+            text-align: left;
+            border-bottom: 0;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            width: auto;
+
+            &:first-child {
+                @include bold-19();
+                width: 100%;
+
+                &:before {
+                    content: "";
+                    margin-right: 7px;
+                    width: auto;
+                    display: none;
+                }
+            }
+        }
+
+        tbody td.no-data-row {
+            &:before {
+                content: '';
+                display: inline-block;
+                width: 0;
+            }
+
+            &:first-child {
+                @include bold-19();
+                width: 100%;
+
+                &:before {
+                    content: '';
+                    width: 0;
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+//
+
+table {
+  &.touch-table {
+    margin-left: 1em;
+    margin-right: 1em;
+    width: calc(100% - 2em);
+  }
+
+  @include media(desktop) {
+    &.floated-header {
+      thead {
+        display: block;
+      }
+
+      tbody {
+        display: block;
+        max-height: 28em;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+          -webkit-appearance: none;
+        }
+
+        &::-webkit-scrollbar:vertical {
+          width: 11px;
+        }
+
+        &::-webkit-scrollbar:horizontal {
+          height: 11px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 8px;
+          border: 2px solid white; 
+          background-color: rgba(0, 0, 0, .5);
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: #fff;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+
+    th 
+    {
+        a 
+        {
+            text-decoration: none;
+            &:hover 
+            {
+                text-decoration: underline;
+            }
+            &:focus {
+                background-color: inherit !important;
+                outline: 3px solid #ffbf47 !important;
+            }
+        }
+
+        .js-sort-container {
+            position: relative;
+        }
+
+        a.js-sort
+        {
+            display:inline-block;
+            padding-right:11px;
+        }
+        a.js-sort:after
+        {
+            content:'';
+            position:absolute;
+            right:0;
+            top:0;
+            width:8px;
+            height:9px;
+            background-image:url('/public/assets/images/icons/sort-glyph.png');
+            background-position:0 0;
+            background-repeat:no-repeat;
+            @include device-pixel-ratio() 
+            {
+                background-image: url('/public/assets/images/icons/sort-glyph@2x.png');
+                background-size:100%;
+            }
+        }
+        &.ascending
+        {
+            a.js-sort:after
+            {
+                background-position:0 -9px;
+            }
+        }
+
+        &.descending
+        {
+            a.js-sort:after
+            {
+                background-position:0 -18px;
+            }
+        }
+    }
+
+  .currency, .percent, .integer, .number {
+    text-align: right;
+  }
+}
+
+.visualisation-table.visuallyhidden {
+  max-height: 28em;
+  overflow: auto;
+}
+
+.visualisation-table, .sticky-table-js {
+  /*margin-top: 2em;*/
+  margin-bottom: 1em;
+  padding-right: 0;
+  width: 100%;
+
+  @include media(mobile) {
+      margin-bottom: 2px;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 0;
+
+    thead th, thead tr {
+      background-color: white;
+    }
+
+    &.touch-table {
+      width: calc(100% - 3em);
+    }
+  }
+
+  @include media(tablet) {
+    float: left;
+    min-width: 66%;
+  }
+
+}
+
+.visualisation-table-vscroll {
+  /*margin-top: 2em;*/
+  margin-bottom: 1em;
+  padding-right: 0;
+  width: 100%;
+
+  table {
+    width: 100%;
+    margin-top: 0;
+
+    &.touch-table {
+      width: calc(100% - 3em);
+    }
+  }
+
+  @include media(tablet) {
+    float: left;
+    min-width: 66%;
+  }
+
+  @include media(desktop) {
+    overflow-x: scroll;
+    height: 30em;
+
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+    }
+
+    &::-webkit-scrollbar:vertical {
+      width: 11px;
+    }
+
+    &::-webkit-scrollbar:horizontal {
+      height: 11px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 8px;
+      border: 2px solid white;
+      background-color: rgba(0, 0, 0, .5);
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: #fff;
+      border-radius: 8px;
+    }
+  }
+}
+
+.borderless {
+    width: 100%;
+       
+    th, td { 
+        border : none;
+        font-size: 14px;
+    }
+    @media(min-width: 640px) {
+        width: 60%;        
+    }
+}
+
+.borderless.no-padding {
+    th, td { 
+        padding:0;
+    }
+}

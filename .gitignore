@@ -106,6 +106,9 @@ AutoTest.Net/
 # Web workbench (sass)
 .sass-cache/
 
+*.css.map
+*.css
+
 # Installshield output folder
 [Ee]xpress/
 
@@ -141,6 +144,7 @@ packages/*
 # This line needs to be after the ignore of the build folder
 # (and the packages folder if the line above has been uncommented)
 !packages/build/
+!packages/Microsoft.Net.Compilers.1.3.2/build/
 
 # Windows Azure Build Output
 csx/
@@ -192,8 +196,12 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 # Web.UI folders
-Web/Web.UI/public/assets/stylesheets/*
-Web/Web.UI/public/assets/styleguide/*
-Web/Web.UI/public/assets/scripts/application.*
-Web/Web.UI/test/results*
-Web/Web.UI/public/assets/scripts/index.html
+Web/Edubase.Web.UI/public/assets/stylesheets/*
+Web/Edubase.Web.UI/public/assets/styleguide/*
+Web/Edubase.Web.UI/public/assets/scripts/application.*
+Web/Edubase.Web.UI/test/results*
+Web/Edubase.Web.UI/public/assets/scripts/index.html
+Web/Web.UI/
+
+.idea
+

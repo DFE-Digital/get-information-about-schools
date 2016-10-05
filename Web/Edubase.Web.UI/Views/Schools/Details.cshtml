@@ -1,0 +1,183 @@
+﻿@using Edubase.Web.UI.Helpers
+@using Edubase.Common;
+@model Edubase.Data.Entity.Establishment
+@{
+    ViewBag.Title = Model.Name;
+    ViewBag.PageClass = "school-details";
+    ViewBag.HideLogo = true;
+}
+
+<h1 class="heading-large">@Model.Name</h1>
+@Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Urn }, new { @class = "button mobile-full-width" })
+
+<div class="column-full">
+    <div class="grid-row summary">
+        <table class="borderless">
+            <caption class="visually-hidden">@Model.Name information</caption>
+            <tr>
+                <th scope="row">Address</th>
+                <td>@SchoolDetailsHelpers.GetAddress(Model)</td>
+            </tr>
+            <tr>
+                <th scope="row">Local authority</th>
+                <td>
+                    <a href="/Search/SearchByLaName?searchTerm=@Model.LocalAuthority">
+                        @Model.LocalAuthority
+                    </a> 
+                    (@Model.LocalAuthorityId)
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Headteacher/Principal</th>
+                <td>@Model.HeadTitle @Model.HeadFirstName @Model.HeadLastName</td>
+            </tr>
+            <tr>
+                <th scope="col">Age range</th>
+                <td>@Model.StatutoryLowAge to @Model.StatutoryHighAge</td>
+            </tr>
+            <tr>
+                <th scope="row">Phase of education</th>
+                <td>@Model.EducationPhase</td>
+            </tr>
+            <tr>
+                <th scope="row">School type</th>
+                <td>@Model.EstablishmentType</td>
+            </tr>
+            <tr>
+                <th scope="row">Gender of entry</th>
+                <td>@Model.Gender</td>
+            </tr>
+            <tr>
+                <th scope="row">URN</th>
+                <td>@Model.Urn</td>
+            </tr>
+            <tr>
+                <th scope="row">LAESTAB</th>
+                <td>@Model.LAESTAB</td>
+            </tr>
+            <tr>
+                <th scope="row">Establishment status</th>
+                <td>@Model.Status</td>
+            </tr>
+            <tr>
+                <th scope="row">Admissions policy</th>
+                <td>@Model.AdmissionsPolicy</td>
+            </tr>
+        </table>
+
+        <div class="map-container">
+            <a href="#map" id="map-toggle" class="expanding-content-trigger map-toggle">Show map</a>
+            <div id="map" class="school-detail-map"
+                 data-latlng="[-2.583500,51.436290]"
+                 data-school-name="@Model.Name"
+                 data-school-address="@SchoolDetailsHelpers.GetAddress(Model)"></div>
+        </div>
+    </div>
+
+    <div class="grid-row horizontal-tabs-wrapper">
+        <div class="tab-wrap">
+            <ul class="horizontal-tabs">
+                <li>
+                    <a href="#school-dashboard" class="horizontal-tab">Details</a>
+                </li>
+                <li>
+                    <a href="#school-contact" class="horizontal-tab">Contact</a>
+                </li>
+                <li>
+                    <a href="#school-governance" class="horizontal-tab">Governance</a>
+                </li>
+                <li>
+                    <a href="#school-links" class="horizontal-tab">Links</a>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="tab-content-wrapper horizontal-tabs-content">
+            <div id="school-dashboard" class="tab-content">
+                <table class="borderless">
+                    <caption class="visually-hidden">@Model.Name details</caption>
+                    <tr>
+                        <th scope="row">Reason establishment opened</th>
+                        <td>@Model.ReasonEstablishmentOpened</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Establishment open date</th>
+                        <td>@(Model.OpenDate.HasValue ? Model.OpenDate.Value.ToString("dd/MM/yyyy") : "---")</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Reason establishment closed</th>
+                        <td>@Model.ReasonEstablishmentClosed</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Date establishment closed</th>
+                        <td>@(Model.CloseDate.HasValue ? Model.CloseDate.Value.ToString("dd/MM/yyyy") : "---")</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Boarders</th>
+                        <td>@Model.ProvisionBoarding</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nursery provision</th>
+                        <td>@Model.ProvisionNursery</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Official sixth form</th>
+                        <td>@Model.ProvisionOfficialSixthForm</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Diocese</th>
+                        <td>@(Model.Diocese?.Name ?? "---")</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">School capacity</th>
+                        <td>@Model.Capacity</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">UK provider reference number</th>
+                        <td>@Model.UKPRN</td>
+                    </tr>
+                </table>
+
+            </div>
+            <div id="school-contact" class="tab-content">
+                <table class="borderless">
+                    <caption class="visually-hidden">Contact information for @Model.Name</caption>
+                <tr>
+                    <th scope="row">School website</th>
+                    <td>@Model.Contact.WebsiteAddress</td>
+                </tr>
+                <tr>
+                    <th scope="row">Main email</th>
+                    <td>@Model.Contact.EmailAddress</td>
+                </tr>
+                <tr>
+                    <th scope="row">Alternative email</th>
+                    <td>@Model.ContactAlt.EmailAddress</td>
+                </tr>
+                <tr>
+                    <th scope="row">Telephone number</th>
+                    <td>@Model.Contact.TelephoneNumber</td>
+                </tr>
+            </table>
+        </div>
+        <div id="school-governance" class="tab-content">
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+            <p>PLACEHOLDER FOR: Governance info here</p>
+        </div>
+        <div id="school-links" class="tab-content">
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
+            <p>PLACEHOLDER FOR: School links here</p>
+        </div>
+    </div>
+</div>
+
+</div>

@@ -1,0 +1,300 @@
+/*doc
+---
+title: Checkboxes
+name: checkboxes
+category: Forms
+---
+```html_examples
+<div class="grid-row">
+  <div class="column-half">
+    <form action="/school/search" method="POST">
+      <div class="form-group">
+        <label class="block-label" for="findSchoolPrimary">
+          <input id="findSchoolPrimary" name="findSchoolPrimary" type="checkbox">
+          Primary
+        </label>
+        <label class="block-label" for="findSchoolSecondary">
+          <input id="findSchoolSecondary" name="findSchoolSecondary" type="checkbox">
+          Secondary
+        </label>
+        <label class="block-label" for="findSchool1618">
+          <input id="findSchool1618" name="findSchool1618" type="checkbox">
+          16-18
+        </label>
+      </div>
+    </form>
+  </div>
+</div>
+```
+*/
+// Forms
+// ==========================================================================
+// GOV.UK front end toolkit dependencies
+@import "helpers";
+@import "colours";
+
+// Fieldset is used to group more than one .form-group
+fieldset {
+  @extend %contain-floats;
+  width: 100%;
+}
+
+// Fix left hand gap in IE7 and below
+@include ie-lte(7) {
+  legend {
+    margin-left: -7px;
+  }
+}
+
+// Form group is used to wrap label and input pairs
+.form-group {
+  @extend %contain-floats;
+  @include box-sizing(border-box);
+  /*float: left;*/ // PJF: fixes height not set correctly
+  width: 100%;
+  margin-bottom: $gutter-half;
+}
+
+.form-group-related {
+  margin-bottom: 10px;
+
+  @include media(tablet) {
+    margin-bottom: 20px;
+  }
+}
+
+// Form group compound is used to reduce the space between label and input pairs
+.form-group-compound {
+  margin-bottom: 10px;
+}
+
+
+// Form title
+.form-title {
+  margin-bottom: $gutter;
+
+  @include media(tablet) {
+    margin-bottom: ($gutter*1.5);
+  }
+}
+
+
+// Labels
+
+// Form labels, or for legends styled to look like labels
+.form-label,
+.form-label-bold {
+  display: block;
+  color: $text-colour;
+}
+
+.form-label {
+  @include core-19;
+}
+
+.form-label-bold {
+  @include bold-19;
+}
+
+// Add spacing under spans within labels
+legend {
+  .form-label,
+  .form-label-bold {
+    padding-bottom: 7px;
+  }
+}
+
+// Remove spacing when error messages are shown
+.error legend {
+  .form-label,
+  .form-label-bold {
+    padding-bottom: 0;
+  }
+}
+
+// Used for paragraphs in-between form elements
+.form-block {
+  @extend %contain-floats;
+  float: left;
+  width: 100%;
+
+  margin-bottom: 5px;
+
+  @include media(tablet) {
+    margin-top: 10px;
+  }
+}
+
+
+// Hints
+
+// Form hints & examples are light grey and sit above a form control
+.form-hint {
+  @include core-19;
+  display: block;
+  color: $secondary-text-colour;
+  font-weight: normal;
+  margin-bottom: 5px;
+}
+
+
+// Form controls
+
+// By default, form controls are 50% width for desktop,
+// and 100% width for mobile
+.form-control {
+  @include box-sizing(border-box);
+  @include core-19;
+  width: 100%;
+
+  padding: 4px;
+  background-color: $white;
+  border: 1px solid $border-colour;
+
+  /*@include media(tablet) {
+    width: 50%;
+  }*/
+}
+
+
+// Form control widths
+.form-control-3-4 {
+  width: 100%;
+
+  @include media(tablet) {
+    width: 75%;
+  }
+}
+
+.form-control-1-2 {
+  width: 100%;
+
+  @include media(tablet) {
+    width: 50%;
+  }
+}
+
+.form-control-1-4 {
+  width: 25%;
+}
+
+.form-control-1-8 {
+  width: 12.5%;
+}
+
+
+// Radio buttons
+.form-radio {
+  display: block;
+  margin: 10px 0;
+
+  input {
+    vertical-align: middle;
+    margin: -4px 5px 0 0;
+  }
+}
+
+
+// Checkboxes
+.form-checkbox {
+  display: block;
+  margin: $gutter-half 0;
+
+  input {
+    vertical-align: middle;
+    margin: -2px 5px 0 0;
+  }
+}
+
+
+// Buttons
+.form .button {
+  @include media(mobile) {
+    width: 100%;
+  }
+}
+
+
+.header-submit {
+    float: right;
+    margin-top: 0.5em;
+    display: none;
+    @media(min-width: 540px) {
+        display: block;
+    }
+}
+
+.mobile-full-width {
+    clear: both;
+    display: block;
+    float:none;
+
+    @media(min-width: 540px) {
+        width: auto;
+        float: right;
+    }
+}
+
+
+.help-icon {
+    border-radius: 20px;
+    text-align: center;
+    font-weight: bold;
+    padding: 4px 3px 1px;
+    display: none;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    background-color: $light-blue;
+    text-decoration: none !important;
+    cursor: pointer;
+    &:hover {
+        color: #fff;
+    }
+
+    .js-enabled & {
+        display: inline-block;
+    }
+}
+
+.help-text {
+    border-left: 4px solid $grey-2;
+    padding-left: 8px;    
+    .js-enabled & {
+        display: none;
+    }
+}
+
+.borderless {
+
+    .create-edit-school & {
+        width: 66%;
+    }
+    
+    .form-group {
+
+        &.error {
+            border-left: 4px solid $error-colour;
+        }
+    }
+    
+    .error-message, .field-validation-error {
+        font-size: 14px;
+        color: $error-colour;
+        display: none; 
+        font-weight: normal; 
+    }
+    .error .error-message, .error .field-validation-error {
+        display: block;
+    }
+
+    .form-control {
+        font-size: 14px;
+    }
+
+    select {
+        width: 99%;
+    }
+}
+
+hr { height:3px; background-color:$grey-3; border:none; }

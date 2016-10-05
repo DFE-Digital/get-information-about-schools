@@ -1,0 +1,207 @@
+/*doc
+---
+title: Errors
+name: errors
+category: Forms
+---
+```html_examples
+<h4 class="styleguide">Error Summary Example</h4>
+<div class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+  <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+    Error Summary Title
+  </h1>
+  <p>
+    Optional description of the error(s) and how to correct them
+  </p>
+  <ul class="error-summary-list">
+    <li><a href="#example-error-1">Issue 1 which should be linked to the error in the form</a></li>
+    <li><a href="#example-error-2">Issue 2 which should be linked to the error in the form</a></li>
+  </ul>
+</div>
+```
+```html_examples
+<h4 class="styleguide">Field Error Example</h4>
+<form>
+  <div class="form-group error">
+    <fieldset>
+      <legend id="example-error-1">
+        <span class="form-label-bold">
+          Are your personal details correct and up-to-date?
+        </span>
+        <span class="error-message">
+          Error message about personal details goes here
+        </span>
+      </legend>
+      <label class="block-label" for="personal_details_yes">
+        <input id="personal_details_yes" type="radio" name="personal_details" value="Yes">
+        <span></span> Yes, my personal details are correct
+      </label>
+      <label class="block-label" for="personal_details_no">
+        <input id="personal_details_no" type="radio" name="personal_details" value="No">
+        <span></span> No, some details are wrong or have changed
+      </label>
+    </fieldset>
+  </div>
+  <div class="form-group error">
+    <fieldset>
+      <legend id="example-error-2">
+        <span class="form-label-bold">
+          Enter your postcode (UK only)
+        </span>
+        <span class="error-message">
+          An invalid postcode was entered.
+        </span>
+      </legend>
+      <input type="text">
+    </fieldset>
+  </div>
+</form>
+```
+*/
+
+// Validation summary box
+@import "colours";
+@import "measurements";
+@import "conditionals";
+@import "typography";
+
+.validation-summary {
+    border: 3px solid $error-colour;
+    padding: $gutter-half $gutter;
+    margin-bottom: $gutter;
+
+    @include ie-lte(6) {
+        zoom: 1;
+    }
+
+    ul {
+        margin-top: 10px;
+    }
+
+    li,
+    p {
+        @include core-16;
+    }
+
+    p {
+        margin-top: $gutter-half;
+        margin-bottom: 5px;
+    }
+
+    a {
+        color: $error-colour;
+
+        @include ie-lte(6) {
+            color: $error-colour !important;
+        }
+    }
+
+    .heading-small {
+        margin-top: $gutter-half;
+    }
+}
+
+// Validation message
+.validation-message {
+    @include bold-16();
+    display: block;
+    color: $error-colour;
+
+    &.error {
+        padding-left: 0;
+        margin-right: 0;
+        border: none;
+    }
+}
+
+
+
+// Using the classname .error as it's shorter than .validation and easier to type!
+.error {
+    // Ensure the .error class is applied to .form-group, otherwide box-sizing(border-box) will need to be used
+    // @include box-sizing(border-box);
+    margin-right: 15px;
+    // Error messages should be red and bold
+    .error-message {
+        color: $error-colour;
+        font-weight: bold;
+    }
+    // Form inputs should have a red border
+    .form-control {
+        border: 4px solid $error-colour;
+    }
+
+    .form-hint {
+        margin-bottom: 0;
+    }
+}
+
+.error,
+.error-summary {
+    // Add a red border to the left of the field
+    border-left: 4px solid $error-colour;
+    padding-left: 10px;
+
+    @include media(tablet) {
+        border-left: 5px solid $error-colour;
+        padding-left: $gutter-half;
+    }
+}
+
+.error-message {
+    @include core-19;
+    display: block;
+    clear: both;
+    margin: 0;
+    padding: 5px 0 7px 0;
+}
+
+// Summary of multiple error messages
+.error-summary {
+    // Error summary has a border on all sides
+    border: 4px solid $error-colour;
+    margin-top: $gutter-half;
+    margin-bottom: $gutter-half;
+    padding: $gutter-half 10px;
+
+    @include media(tablet) {
+        border: 5px solid $error-colour;
+        margin-top: $gutter;
+        margin-bottom: $gutter;
+        padding: 20px $gutter-half $gutter-half $gutter-half;
+    }
+
+    @include ie-lte(6) {
+        zoom: 1;
+    }
+    // Use the GOV.UK outline focus style
+    &:focus {
+        outline: 3px solid $focus-colour;
+    }
+
+    .error-summary-heading {
+        margin-top: 0;
+    }
+
+    p {
+        margin-bottom: 10px;
+    }
+
+    .error-summary-list, ul {
+        padding-left: 0;
+
+        li {
+            font-weight: bold;
+
+            @include media(tablet) {
+                margin-bottom: 5px;
+            }
+        }
+
+        a {
+            color: $error-colour;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    }
+}

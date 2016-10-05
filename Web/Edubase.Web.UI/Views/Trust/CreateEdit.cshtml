@@ -1,0 +1,106 @@
+﻿@model Edubase.Web.UI.Models.CreateEditTrustModel
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = "Create/edit trust";
+
+    var dc = new Edubase.Data.Entity.ApplicationDbContext();
+}
+
+@helper FormHint(string controlId, string hintText = "help with this field. <br>and more help - even more help could go here...")
+{
+    <a class="help-icon" tab-index="0">?</a>
+    <div class="help-text" id="help-@controlId">
+        <p>Here is some thext that would assist a user with filling in the associated field:</p>
+        <p>
+            Lorem ipsum dolor sit amet, reque mollis ponderum vis et, no reprimique efficiantur accommodare
+            nec. Nec ad deleniti percipitur. Salutandi erroribus sea ex. At vidisse honestatis
+        </p>
+    </div>
+
+}
+
+@using (Html.BeginForm((Model.GroupUID == null ? "Create" : "Edit"), "Trust", FormMethod.Post))
+{ 
+    @Html.HiddenFor(x => x.GroupUID)
+    <div class="column-full">
+        <div class="grid-row">
+            @Html.ActionLink("Search for a Multi Academy Trust", "Index", "Search", null, new { @class = "home-link" })
+            <br />
+            <button type="submit" class="button header-submit">Submit</button>
+
+            @if (Model.GroupUID == null)
+            {
+                <h1 class="heading-xlarge">Create a new Multi Academy Trust</h1>
+            }
+            else
+            {
+                <h1 class="heading-xlarge">Edit Multi Academy Trust</h1>
+            }
+
+
+            @Html.ValidationSummary()
+
+            <table class="borderless editor">
+                <colgroup>
+                    <col style="width:40%" />
+                    <col style="width:60%" />
+                </colgroup>
+                <caption class="visually-hidden">School information</caption>
+                <tr>
+                    <th scope="row">
+                        <label for="school-name">Trust name</label>
+                        @FormHint("name")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">An invalid school name was entered.</span>
+                            @Html.TextBoxFor(x => x.Name, new { maxlength = 120, required = true, id = "name", @class = "form-control", aria_describedby = "help-name" })
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Trust type</label>
+                        @FormHint("trust-type")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            <span class="error-message">Please select a valid option</span>
+                            @Html.DropDownListFor(x => x.TypeId, dc.GroupTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "la", @class = "form-control", required = true })
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-type">Open date</label>
+                        @FormHint("open-date")
+                    </th>
+                    <td>
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.OpenDate.Day,
+                                Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "DD",
+                                new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day",
+                                    style = "width:70px;", required = true })
+
+                            @Html.DropDownListFor(x => x.OpenDate.Month,
+                                Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "MM",
+                                new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month",
+                                    style = "width:70px;", required = true })
+
+                            @Html.DropDownListFor(x => x.OpenDate.Year,
+                                Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "YYYY",
+                                new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year",
+                                    style = "width:70px;", required = true })
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+            <button type="submit" class="button mobile-full-width">Submit</button>
+        </div>
+    </div>
+}

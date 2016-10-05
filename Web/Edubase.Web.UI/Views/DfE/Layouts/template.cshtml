@@ -1,0 +1,51 @@
+﻿@using Edubase.Web.UI.Controllers
+@{
+    Layout = "../../govuk/layouts/template.cshtml";
+    var version = typeof (HomeController).Assembly.GetName().Version;
+}
+
+@section Head {
+    <!--[if gt IE 8]><!--><link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css"><!--<![endif]-->
+    <!--[if IE 6]><link href="/public/assets/stylesheets/main-ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if IE 7]><link href="/public/assets/stylesheets/main-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if IE 8]><link href="/public/assets/stylesheets/main-ie8.css" rel="stylesheet" type="text/css"/><![endif]-->    
+}
+
+<main id="content" class="page @(ViewBag.pageClass)" role="main" tabindex="-1">
+    @if (ViewBag.suppressHomeLink != true)
+    {
+        @*<div class="grid-row">
+            <div class="column-full">
+                <a class="home-link" href="/">Home</a>
+            </div>
+        </div>*@
+    }
+    else
+    {
+        <div class="pre-content"></div>
+    }
+
+    @RenderBody()
+</main>
+
+@section BodyEnd {
+
+    @if (!Request.Browser.Browser.Contains("MSIE 8"))
+    {
+        <script src="/public/jquery/dist/jquery.min.js"></script>
+        <script src="/public/jquery-simulate/jquery.simulate.js"></script>
+        
+
+        <!--[if IE 9]>
+        <script src="/public/termi/element.details.ie8.js"></script>
+        <!--<![endif]-->
+        <!--[if gt IE 9]>
+        <script src="/public/termi/element.details.js"></script>
+        <!--<![endif]-->
+        
+
+        <script src="/public/assets/scripts/application.js?v=@version"></script>
+        @(RenderSection("ViewScripts", required: false))
+    }
+ 
+}

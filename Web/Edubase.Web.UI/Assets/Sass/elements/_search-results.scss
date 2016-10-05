@@ -1,0 +1,104 @@
+.search-results {
+    li strong {
+        font-weight: bold;
+    }
+
+    li ul {
+        margin: 5px 0 10px 30px;
+    }
+}
+
+.result-info {
+    border-bottom: 1px solid #bfc1c3;
+    p {
+        font-size: 16px;
+        line-height: 1.25;
+        margin-bottom: 8px;
+    }
+}
+
+.school-results-listing {
+    margin: 15px 0;
+    li {
+        clear: both;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #bfc1c3;
+
+        &:last-child {
+            border-bottom:0; 
+        }
+    }
+    dl {
+        overflow: hidden;
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        @media (min-width: 640px) {
+            font-size: 14px;
+        }
+    }
+    dt, dd {
+        float: left;
+    }
+    dt {
+        clear: left;
+        padding-right: 0.5em;
+    }
+}
+
+.pagination {
+    overflow: hidden;
+    position: relative;
+    font-size: 16px;
+    padding-bottom: 8px;
+
+    .top-pagination & {
+        border-bottom: $black 1px solid;
+    }
+    .lower-pagination & {
+        border-top: $black 1px solid;
+        
+        p {
+            margin-top: em(20, 16);
+        }
+
+        .pagination-links {
+            top: em(20, 16);
+        }
+    }
+
+    p {
+        float: left;
+    }
+
+    .pagination-links {
+        clear: left;
+        margin: 0;
+        padding: 0;
+
+        @media (min-width: 640px) {
+            position: absolute;
+            right: 0;
+        }
+
+        @media(max-width: 640px) {
+            .numeric-pagination {
+                display: none;
+            }
+
+            .pagination-prev {
+                margin-right: 12px;
+            }
+        }
+    }
+    li {
+        float: left;
+        display:block;
+        text-align: center;
+    }
+
+    a, .go-nowhere {
+        display: block;
+        min-width: 30px;
+    }
+}

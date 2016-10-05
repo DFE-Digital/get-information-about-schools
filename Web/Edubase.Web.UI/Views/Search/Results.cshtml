@@ -1,0 +1,87 @@
+﻿@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Helpers
+@model SearchResultsModel
+@{
+    ViewBag.Title = string.Format("Search results for '{0}'", Model.SearchTerm);
+    ViewBag.PageClass = "search-results";
+    ViewBag.HideLogo = true;
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        @Html.ActionLink("Go back", "Index", null, new { @class = "home-link" })
+
+        <h1 class="heading-xlarge">Search results</h1>
+        @if (Model.SearchType == SearchResultsModel.eSearchType.SchoolName || Model.SearchType == SearchResultsModel.eSearchType.Unknown)
+        {
+            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges for the search term "@Model.SearchTerm".</p>
+        }
+        else if(Model.SearchType == SearchResultsModel.eSearchType.LA)
+        {
+            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges in Local Auhority "@Model.SearchTerm".</p>
+        }
+        else if (Model.SearchType == SearchResultsModel.eSearchType.LAESTAB)
+        {
+            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the LAESTAB "@Model.SearchTerm".</p>
+        }
+        else if (Model.SearchType == SearchResultsModel.eSearchType.URN)
+        {
+            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the URN "@Model.SearchTerm".</p>
+        }
+
+    </div>
+</div>
+
+<div class="grid-row">
+    @if (Model.Error != null)
+    {
+        <div class="column-two-thirds">
+            <h2 class="heading-medium">Error</h2>
+
+            <p>@Model.Error</p>
+        </div>
+    }
+    else if (Model.Results.Count > 0)
+    {
+        if (Model.PageCount > 1)
+        {
+            <div class="column-two-thirds top-pagination">
+                @Html.Partial("_ResultsPagination")
+            </div>
+        }
+        <div class="column-two-thirds">
+            <ul class="school-results-listing">
+                @foreach (var result in Model.Results)
+                {
+                    <li>
+                        <h2>@Html.ActionLink(result.Name, "Details", "Schools", new { id = result.Urn }, new { @class = "bold-small" })</h2>
+                        <dl>
+                            <dt>Address:</dt>
+                            <dd>@SchoolDetailsHelpers.GetAddress(result)</dd>
+                            <dt>URN:</dt>
+                            <dd> @result.Urn</dd>
+                            <dt>LAESTAB:</dt>
+                            <dd>@result.LAESTAB</dd>
+                            <dt>Status:</dt>
+                            <dd>@result.Status</dd>
+                        </dl>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        if (Model.PageCount > 1)
+        {
+            <div class="column-two-thirds lower-pagination">
+                @Html.Partial("_ResultsPagination")
+            </div>
+        }
+    }
+    else
+    {
+        <div class="column-two-thirds">
+            <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
+        </div>
+    }
+
+</div>
