@@ -7,6 +7,11 @@
     var dc = new Edubase.Data.Entity.ApplicationDbContext();
 }
 
+@section ViewScripts {
+    <script src="/Scripts/jquery.validate.js"></script>
+    <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
+}
+
 @helper FormHint(string controlId, string hintText = "help with this field. <br>and more help - even more help could go here...")
 {
     <a class="help-icon" tab-index="0">?</a>
@@ -22,6 +27,7 @@
 
 @using (Html.BeginForm((Model.Urn == null ? "Create" : "Edit"), "Establishment", FormMethod.Post))
 {
+    @Html.AntiForgeryToken();
     @Html.HiddenFor(x => x.Urn)
     <div class="column-full">
         <div class="grid-row">
@@ -37,7 +43,7 @@
             }
             
 
-            @Html.ValidationSummary()
+            @Html.ValidationSummary(null, new { @class = "error-summary" })
 
             <table class="borderless editor">
                 <colgroup>
@@ -51,9 +57,9 @@
                         @FormHint("school-name")
                     </th>
                     <td>
-                        <div class="form-group">
-                            <span class="error-message">An invalid school name was entered.</span>
-                            @Html.TextBoxFor(x => x.Name, new { maxlength = 120, required = true, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.Name)">
+                            @Html.ValidationMessageFor(x => x.Name)
+                            @Html.TextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
                         </div>
                     </td>
                 </tr>
@@ -100,7 +106,7 @@
                     <td>
                         <div class="form-group">
                             <span class="error-message">An invalid town was entered.</span>
-                            @Html.TextBoxFor(x => x.Address.CityOrTown, new { maxlength = 120, required = "true", id = "school-town", @class = "form-control", aria_describedby = "help-school-town" })
+                            @Html.TextBoxFor(x => x.Address.CityOrTown, new { maxlength = 120, id = "school-town", @class = "form-control", aria_describedby = "help-school-town" })
                         </div>
                     </td>
                 </tr>
@@ -123,9 +129,9 @@
                         @FormHint("local-authority")
                     </th>
                     <td>
-                        <div class="form-group">
-                            <span class="error-message">Please select a valid option</span>
-                            @Html.DropDownListFor(x => x.LocalAuthorityId, dc.LocalAuthorities.Select(x => new SelectListItem { Text = string.Concat(x.Name, "(", x.Id, ")"), Value = x.Id.ToString() }), "", new { id = "la", @class = "form-control", required=true })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                            @Html.ValidationMessageFor(x => x.LocalAuthorityId)
+                            @Html.DropDownListFor(x => x.LocalAuthorityId, dc.LocalAuthorities.Select(x => new SelectListItem { Text = string.Concat(x.Name, "(", x.Id, ")"), Value = x.Id.ToString() }), "", new { id = "la", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -166,9 +172,9 @@
                         @FormHint("education-phase")
                     </th>
                     <td>
-                        <div class="form-group">
-                            <span class="error-message">Please select a valid option</span>
-                            @Html.DropDownListFor(x => x.EducationPhaseId, dc.EducationPhases.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "education-phase", @class = "form-control", required = true })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                            @Html.ValidationMessageFor(x => x.EducationPhaseId)
+                            @Html.DropDownListFor(x => x.EducationPhaseId, dc.EducationPhases.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "education-phase", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -180,9 +186,9 @@
                         @FormHint("school-type")
                     </th>
                     <td>
-                        <div class="form-group">
-                            <span class="error-message">Please select a valid option</span>
-                            @Html.DropDownListFor(x => x.TypeId, dc.EstablishmentTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "school-type", @class = "form-control", required = true })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
+                            @Html.ValidationMessageFor(x => x.TypeId)
+                            @Html.DropDownListFor(x => x.TypeId, dc.EstablishmentTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "school-type", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -207,7 +213,7 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", aria_describedby = "help-urn", placeholder = "auto-generated", @readonly = true })
+                            @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", aria_describedby = "help-urn", placeholder = "auto-generated", @readonly = true, disabled = true, style = "background-color:#eee" })
                         </div>
                     </td>
                 </tr>
@@ -218,20 +224,22 @@
                         @FormHint("laestab")
                     </th>
                     <td>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.LAESTAB, new { id = "laestab", @class = "form-control", aria_describedby = "help-laestab", type = "number", required = true })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.LAESTAB)">
+                            @Html.ValidationMessageFor(x => x.LAESTAB)
+                            @Html.TextBoxFor(x => x.LAESTAB, new { id = "laestab", @class = "form-control", aria_describedby = "help-laestab", type = "number", maxlength = 7 })
                         </div>
                     </td>
                 </tr>
 
                 <tr>
                     <th scope="row">
-                        <label for="school-type">Establishment status</label>
+                        <label for="status">Establishment status</label>
                         @FormHint("establishment-status")
                     </th>
                     <td>
-                        <div class="form-group">
-                            @Html.DropDownListFor(x => x.StatusId, dc.EstablishmentStatuses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "gender", @class = "form-control", required = true })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
+                            @Html.ValidationMessageFor(x => x.StatusId)
+                            @Html.DropDownListFor(x => x.StatusId, dc.EstablishmentStatuses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "status", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -250,19 +258,22 @@
 
                 <tr>
                     <td colspan="2">
-                        <h2 class="heading-medium">Details</h2>
+                        <h2 class="heading-medium" style="margin-bottom:0;">Details</h2>
+                        <hr />
+                        <br />
                     </td>
                 </tr>
 
 
                 <tr>
                     <th scope="row">
-                        <label for="school-type">Reason establishment opened</label>
+                        <label for="reason-establishment-opened">Reason establishment opened</label>
                         @FormHint("reason-establishment-opened")
                     </th>
                     <td>
-                        <div class="form-group">
-                            @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.EstablishmentOpenedReasons.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "gender", @class = "form-control", required = true })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
+                            @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.EstablishmentOpenedReasons.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-opened", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -273,10 +284,11 @@
                         @FormHint("open-date")
                     </th>
                     <td>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.OpenDate.Day, new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;", required = true })
-                            @Html.TextBoxFor(x => x.OpenDate.Month, new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;", required = true })
-                            @Html.TextBoxFor(x => x.OpenDate.Year, new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;", required = true })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.OpenDate)">
+                            @Html.ValidationMessageFor(x => x.OpenDate)
+                            @Html.TextBoxFor(x => x.OpenDate.Day, new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;" })
+                            @Html.TextBoxFor(x => x.OpenDate.Month, new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;" })
+                            @Html.TextBoxFor(x => x.OpenDate.Year, new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;" })
                          </div>
                     </td>
                 </tr>
@@ -288,7 +300,7 @@
                         @FormHint("reason-establishment-closed")
                     </th>
                     <td>
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
                             @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, dc.EstablishmentClosedReasons.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-closed", @class = "form-control" })
                         </div>
                     </td>
@@ -300,7 +312,8 @@
                         @FormHint("close-date")
                     </th>
                     <td>
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CloseDate)">
+                            @Html.ValidationMessageFor(x => x.CloseDate)
                             @Html.TextBoxFor(x => x.CloseDate.Day, new { id = "closedate-day", @class = "form-control", aria_describedby = "help-closedate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;" })
                             @Html.TextBoxFor(x => x.CloseDate.Month, new { id = "closedate-month", @class = "form-control", aria_describedby = "help-closedate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;" })
                             @Html.TextBoxFor(x => x.CloseDate.Year, new { id = "closedate-year", @class = "form-control", aria_describedby = "help-closedate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;" })
@@ -314,7 +327,7 @@
                         @FormHint("boarders")
                     </th>
                     <td>
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
                             @Html.DropDownListFor(x => x.ProvisionBoardingId, dc.BoardingProvisions.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "boarders", @class = "form-control" })
                         </div>
                     </td>
@@ -327,7 +340,7 @@
                         @FormHint("nursery")
                     </th>
                     <td>
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
                             @Html.DropDownListFor(x => x.ProvisionNurseryId, dc.NurseryProvisions.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "nursery", @class = "form-control"})
                         </div>
                     </td>
@@ -340,7 +353,7 @@
                         @FormHint("sixthform")
                     </th>
                     <td>
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
                             @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, dc.OfficialSixthFormProvisions.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "sixthform", @class = "form-control" })
                         </div>
                     </td>
@@ -353,7 +366,7 @@
                         @FormHint("diocese")
                     </th>
                     <td>
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
                             @Html.DropDownListFor(x => x.DioceseId, dc.Dioceses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "diocese", @class = "form-control" })
                         </div>
                     </td>
@@ -367,7 +380,8 @@
                         @FormHint("school-capacity")
                     </th>
                     <td>
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.Capacity)">
+                            @Html.ValidationMessageFor(x => x.Capacity)
                             @Html.TextBoxFor(x => x.Capacity, new { id = "school-capacity", @class = "form-control", aria_describedby = "help-school-capacity", type = "number" })
                         </div>
                     </td>
@@ -380,9 +394,38 @@
                         @FormHint("ukprn")
                     </th>
                     <td>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", aria_describedby = "help-ukprn", type = "number" })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
+                            @Html.ValidationMessageFor(x => x.UKPRN)
+                            @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", aria_describedby = "help-ukprn", type = "text" })
                         </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <h2 class="heading-medium" style="margin-bottom:0;">Contact</h2>
+                        <hr />
+                        <br />
+                        <h3>Placeholder</h3>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <h2 class="heading-medium" style="margin-bottom:0;">Governance</h2>
+                        <hr />
+                        <br />
+                        <h3>Placeholder</h3>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td colspan="2">
+                        <h2 class="heading-medium" style="margin-bottom:0;">Links</h2>
+                        <hr />
+                        <br />
+                        <h3>Placeholder</h3>
                     </td>
                 </tr>
 

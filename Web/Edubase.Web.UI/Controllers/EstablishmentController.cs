@@ -7,6 +7,7 @@ using Edubase.Web.UI.Models;
 using Edubase.Data.Entity;
 using AutoMapper;
 using Edubase.Web.UI.Identity;
+using FluentValidation.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -24,12 +25,9 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit(CreateEditEstablishmentModel model)
         {
-            if (model.OpenDate.ToDateTime() == null)
-                ModelState.AddModelError("opendate", "Open date is a required field");
-
             if (ModelState.IsValid)
             {
                 using (var dc = ApplicationDbContext.Create())
@@ -37,9 +35,9 @@ namespace Edubase.Web.UI.Controllers
                     var dataModel = dc.Establishments.FirstOrDefault(x => x.Urn == model.Urn);
                     Mapper.Map(model, dataModel);
                     dc.SaveChanges();
+                    return RedirectToAction("Details", "Schools", new { id = model.Urn.Value });
                 }
             }
-
             return View("CreateEdit", model);
         }
 
@@ -51,12 +49,9 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult Create(CreateEditEstablishmentModel model)
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] CreateEditEstablishmentModel model)
         {
-            if (model.OpenDate.ToDateTime() == null)
-                ModelState.AddModelError("opendate", "Open date is a required field");
-
             if (ModelState.IsValid)
             {
                 using (var dc = ApplicationDbContext.Create())
@@ -64,7 +59,7 @@ namespace Edubase.Web.UI.Controllers
                     var dataModel = Mapper.Map<Establishment>(model);
                     dc.Establishments.Add(dataModel);
                     dc.SaveChanges();
-                    return RedirectToAction("Edit", new { id = dataModel.Urn });
+                    return RedirectToAction("Details", "Schools", new { id = dataModel.Urn });
                 }
             }
             else return View("CreateEdit", model);

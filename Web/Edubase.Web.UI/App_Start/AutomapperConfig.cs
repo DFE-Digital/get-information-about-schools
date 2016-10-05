@@ -25,7 +25,7 @@ namespace Edubase.Web.UI
                     }).ReverseMap().AfterMap((s, d) =>
                     {
                         if (s.EstablishmentNumber.HasValue && s.LocalAuthorityId.HasValue)
-                            d.LAESTAB = int.Parse(string.Concat(s.EstablishmentNumber, s.LocalAuthorityId));
+                            d.LAESTAB = int.Parse(string.Concat(s.LocalAuthorityId, s.EstablishmentNumber));
                     });
                 cfg.CreateMap<ContactDetailsViewModel, ContactDetail>().ReverseMap();
                 cfg.CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();

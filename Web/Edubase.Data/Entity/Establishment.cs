@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using Edubase.Data.Entity.Lookups;
 using Edubase.Data.Entity.ComplexTypes;
+using Edubase.Common;
 
 namespace Edubase.Data.Entity
 {
@@ -66,7 +67,21 @@ namespace Edubase.Data.Entity
 
 
         [NotMapped]
-        public string LAESTAB => string.Concat(LocalAuthorityId, EstablishmentNumber);
+        public int? LAESTAB
+        {
+            get { return string.Concat(LocalAuthorityId, EstablishmentNumber).ToInteger(); }
+            set
+            {
+                if (value.HasValue)
+                {
+                    var temp = value.ToString();
+                    if (temp.Length == 7)
+                    {
+                        EstablishmentNumber = temp.Substring(3, 4).ToInteger();
+                    }
+                }
+            }
+        }
 
         public Establishment()
         {

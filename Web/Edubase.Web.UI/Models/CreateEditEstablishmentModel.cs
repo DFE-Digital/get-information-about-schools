@@ -1,21 +1,18 @@
-﻿using System;
+﻿using Edubase.Web.UI.Models.Validators;
+using FluentValidation.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace Edubase.Web.UI.Models
 {
+    [Validator(typeof(CreateEditEstablishmentModelValidator))]
     public class CreateEditEstablishmentModel
     {
         public int? Urn { get; set; }
         public int? LocalAuthorityId { get; set; }
-        public int? EstablishmentNumber { get; set; }
-
-        [Required]
         public string Name { get; set; }
         public int? StatusId { get; set; }
-        [Required]
         public int? ReasonEstablishmentOpenedId { get; set; }
         public int? ReasonEstablishmentClosedId { get; set; }
-        [Required]
         public int? EducationPhaseId { get; set; }
         public int? StatutoryLowAge { get; set; }
         public int? StatutoryHighAge { get; set; }
@@ -36,13 +33,8 @@ namespace Edubase.Web.UI.Models
         public int? HeadTitleId { get; set; }
         public ContactDetailsViewModel Contact { get; set; }
         public ContactDetailsViewModel ContactAlt { get; set; }
-
         public int? LAESTAB { get; set; }
-
-        [Required]
         public int? TypeId { get; set; }
-
-        [Required]
         public DateTimeViewModel OpenDate { get; set; }
         public DateTimeViewModel CloseDate { get; set; }
 
@@ -55,12 +47,6 @@ namespace Edubase.Web.UI.Models
             OpenDate = new DateTimeViewModel();
             CloseDate = new DateTimeViewModel();
         }
-
         
-        private void PopulateLookups()
-        {
-
-        }
-
     }
 }

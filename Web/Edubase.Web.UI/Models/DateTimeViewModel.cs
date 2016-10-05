@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Edubase.Web.UI.Models
 {
@@ -11,6 +7,18 @@ namespace Edubase.Web.UI.Models
         public int? Day { get; set; }
         public int? Month { get; set; }
         public int? Year { get; set; }
+
+        public DateTimeViewModel() {  }
+
+        public DateTimeViewModel(DateTime? dateTime)
+        {
+            if (dateTime.HasValue)
+            {
+                Day = dateTime.Value.Day;
+                Month = dateTime.Value.Month;
+                Year = dateTime.Value.Year;
+            }
+        }
 
         public DateTime? ToDateTime()
         {
@@ -25,19 +33,9 @@ namespace Edubase.Web.UI.Models
             return null;
         }
 
-        public DateTimeViewModel()
-        {
+        public bool IsValid() => !IsEmpty() && ToDateTime() != null;
 
-        }
-
-        public DateTimeViewModel(DateTime? dt)
-        {
-            if (dt.HasValue)
-            {
-                Day = dt.Value.Day;
-                Month = dt.Value.Month;
-                Year = dt.Value.Year;
-            }
-        }
+        public bool IsEmpty() => !Day.HasValue || !Month.HasValue || !Year.HasValue;
+        public bool IsNotEmpty() => !IsEmpty();
     }
 }

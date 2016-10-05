@@ -278,13 +278,13 @@ legend {
         }
     }
     
-    .error-message {
+    .error-message, .field-validation-error {
         font-size: 14px;
         color: $error-colour;
         display: none; 
         font-weight: normal; 
     }
-    .error .error-message {
+    .error .error-message, .error .field-validation-error {
         display: block;
     }
 
@@ -296,3 +296,5 @@ legend {
         width: 99%;
     }
 }
+
+hr { height:3px; background-color:$grey-3; border:none; }
