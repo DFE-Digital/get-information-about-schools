@@ -1,4 +1,5 @@
-﻿@model Edubase.Web.UI.Models.CreateEditEstablishmentModel
+﻿@using System.Dynamic;
+@model Edubase.Web.UI.Models.CreateEditEstablishmentModel
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
@@ -58,8 +59,7 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.Name)">
-                            @Html.ValidationMessageFor(x => x.Name)
-                            @Html.TextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
+                            @Html.EduTextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
                         </div>
                     </td>
                 </tr>
@@ -70,7 +70,6 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            <span class="error-message">An invalid street name was entered.</span>
                             @Html.TextBoxFor(x => x.Address.Line1, new { maxlength = 120, id = "school-street", @class = "form-control", aria_describedby = "help-school-street" })
                         </div>
                     </td>
@@ -105,7 +104,6 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            <span class="error-message">An invalid town was entered.</span>
                             @Html.TextBoxFor(x => x.Address.CityOrTown, new { maxlength = 120, id = "school-town", @class = "form-control", aria_describedby = "help-school-town" })
                         </div>
                     </td>
@@ -130,8 +128,8 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-                            @Html.ValidationMessageFor(x => x.LocalAuthorityId)
-                            @Html.DropDownListFor(x => x.LocalAuthorityId, dc.LocalAuthorities.Select(x => new SelectListItem { Text = string.Concat(x.Name, "(", x.Id, ")"), Value = x.Id.ToString() }), "", new { id = "la", @class = "form-control" })
+                            @Html.EduDropDownFor(x => x.LocalAuthorityId, dc.LocalAuthorities.Select(x => 
+                               new SelectListItem { Text = string.Concat(x.Name, "(", x.Id, ")"), Value = x.Id.ToString() }))
                         </div>
                     </td>
                 </tr>
@@ -145,9 +143,9 @@
                     <td>
                         <div class="form-group">
                             <span class="error-message">Please select a valid option</span>
-                            @Html.DropDownListFor(x => x.HeadTitleId, dc.HeadTitles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "headteacher", @class = "form-control", style="width:70px;" })
-                            @Html.TextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", aria_describedby = "help-headfirstname", placeholder = "First name", style = "width:120px;" })
-                            @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", aria_describedby = "help-headlastname", placeholder = "Last name", style = "width:120px;" })
+                            @Html.EduDropDownFor(x => x.HeadTitleId, dc.HeadTitles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), new { id = "headteacher", @class = "form-control", style="width:70px;" })
+                            @Html.EduTextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", aria_describedby = "help-headfirstname", placeholder = "First name", style = "width:120px;" })
+                            @Html.EduTextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", aria_describedby = "help-headlastname", placeholder = "Last name", style = "width:120px;" })
                         </div>
                     </td>
                 </tr>
@@ -159,9 +157,9 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            @Html.TextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control", aria_describedby = "help-agerange-from", placeholder = "From", type = "number", min = 1, max = 99, style = "width:70px;" })
+                            @Html.EduTextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control", aria_describedby = "help-agerange-from", placeholder = "From", type = "number", min = 1, max = 99, style = "width:70px;" })
                             to
-                            @Html.TextBoxFor(x => x.StatutoryHighAge, new { maxlength = 120, id = "agerange-to", @class = "form-control", aria_describedby = "help-agerange-to", placeholder = "To", type = "number", min = 1, max = 99, style = "width:70px;" })
+                            @Html.EduTextBoxFor(x => x.StatutoryHighAge, new { maxlength = 120, id = "agerange-to", @class = "form-control", aria_describedby = "help-agerange-to", placeholder = "To", type = "number", min = 1, max = 99, style = "width:70px;" })
                         </div>
                     </td>
                 </tr>
@@ -173,8 +171,9 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
-                            @Html.ValidationMessageFor(x => x.EducationPhaseId)
-                            @Html.DropDownListFor(x => x.EducationPhaseId, dc.EducationPhases.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "education-phase", @class = "form-control" })
+                            @Html.EduDropDownFor(x => x.EducationPhaseId, 
+                               dc.EducationPhases.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                                new { id = "education-phase", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -187,8 +186,8 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
-                            @Html.ValidationMessageFor(x => x.TypeId)
-                            @Html.DropDownListFor(x => x.TypeId, dc.EstablishmentTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "school-type", @class = "form-control" })
+                            @Html.EduDropDownFor(x => x.TypeId, dc.EstablishmentTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), 
+                           new { id = "school-type", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -200,7 +199,8 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            @Html.DropDownListFor(x => x.GenderId, dc.Genders.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "gender", @class = "form-control" })
+                            @Html.EduDropDownFor(x => x.GenderId, dc.Genders.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), 
+                                new { id = "gender", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -225,8 +225,9 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.LAESTAB)">
-                            @Html.ValidationMessageFor(x => x.LAESTAB)
-                            @Html.TextBoxFor(x => x.LAESTAB, new { id = "laestab", @class = "form-control", aria_describedby = "help-laestab", type = "number", maxlength = 7 })
+                            @Html.EduTextBoxFor(x => x.LAESTAB, 
+                                new { id = "laestab", @class = "form-control", aria_describedby = "help-laestab", type = "number", maxlength = 7 }, 
+                                "EstablishmentNumber")
                         </div>
                     </td>
                 </tr>
@@ -238,8 +239,8 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
-                            @Html.ValidationMessageFor(x => x.StatusId)
-                            @Html.DropDownListFor(x => x.StatusId, dc.EstablishmentStatuses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "status", @class = "form-control" })
+                            @Html.EduDropDownFor(x => x.StatusId, dc.EstablishmentStatuses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), 
+                                new { id = "status", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -251,7 +252,8 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            @Html.DropDownListFor(x => x.AdmissionsPolicyId, dc.AdmissionsPolicies.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "gender", @class = "form-control" })
+                            @Html.EduDropDownFor(x => x.AdmissionsPolicyId, dc.AdmissionsPolicies.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), 
+                                new { id = "gender", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -286,9 +288,9 @@
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.OpenDate)">
                             @Html.ValidationMessageFor(x => x.OpenDate)
-                            @Html.TextBoxFor(x => x.OpenDate.Day, new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;" })
-                            @Html.TextBoxFor(x => x.OpenDate.Month, new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;" })
-                            @Html.TextBoxFor(x => x.OpenDate.Year, new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;" })
+                            @Html.EduTextBoxFor(x => x.OpenDate.Day, new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;" }, "OpenDate")
+                            @Html.EduTextBoxFor(x => x.OpenDate.Month, new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;" }, "OpenDate")
+                            @Html.EduTextBoxFor(x => x.OpenDate.Year, new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;" }, "OpenDate")
                          </div>
                     </td>
                 </tr>
@@ -314,9 +316,9 @@
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.CloseDate)">
                             @Html.ValidationMessageFor(x => x.CloseDate)
-                            @Html.TextBoxFor(x => x.CloseDate.Day, new { id = "closedate-day", @class = "form-control", aria_describedby = "help-closedate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;" })
-                            @Html.TextBoxFor(x => x.CloseDate.Month, new { id = "closedate-month", @class = "form-control", aria_describedby = "help-closedate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;" })
-                            @Html.TextBoxFor(x => x.CloseDate.Year, new { id = "closedate-year", @class = "form-control", aria_describedby = "help-closedate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;" })
+                            @Html.EduTextBoxFor(x => x.CloseDate.Day, new { id = "closedate-day", @class = "form-control", aria_describedby = "help-closedate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;" }, "CloseDate")
+                            @Html.EduTextBoxFor(x => x.CloseDate.Month, new { id = "closedate-month", @class = "form-control", aria_describedby = "help-closedate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;" }, "CloseDate")
+                            @Html.EduTextBoxFor(x => x.CloseDate.Year, new { id = "closedate-year", @class = "form-control", aria_describedby = "help-closedate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;" }, "CloseDate")
                         </div>
                     </td>
                 </tr>
@@ -376,13 +378,12 @@
 
                 <tr>
                     <th scope="row">
-                        <label for="school-type">School capacity</label>
+                        <label for="school-capacity">School capacity</label>
                         @FormHint("school-capacity")
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.Capacity)">
-                            @Html.ValidationMessageFor(x => x.Capacity)
-                            @Html.TextBoxFor(x => x.Capacity, new { id = "school-capacity", @class = "form-control", aria_describedby = "help-school-capacity", type = "number" })
+                            @Html.EduTextBoxFor(x => x.Capacity, new { id = "school-capacity", @class = "form-control", aria_describedby = "help-school-capacity", type = "number" })
                         </div>
                     </td>
                 </tr>
@@ -390,7 +391,7 @@
 
                 <tr>
                     <th scope="row">
-                        <label for="school-type">UK Provider Reference Number</label>
+                        <label for="ukprn">UK Provider Reference Number</label>
                         @FormHint("ukprn")
                     </th>
                     <td>
@@ -436,4 +437,48 @@
 
 
     </div>
+}
+
+@functions {
+    Dictionary<string, object> Attr(bool isDisabled, object otherAttributes = null)
+    {
+        var d = new Dictionary<string, object>();
+        d["class"] = "form-control";
+        if (isDisabled) d["disabled"] = "disabled";
+
+        if (otherAttributes != null)
+        {
+            var items = Edubase.Common.ReflectionHelper.GetProperties(otherAttributes);
+            foreach (var item in items)
+            {
+                d[item] = Edubase.Common.ReflectionHelper.GetProperty(otherAttributes, item);
+            }
+        }
+
+        if (isDisabled) d["style"] = d.ContainsKey("style") ? (d["style"].ToString() + ";background-color:#eee;") : "background-color:#eee";
+
+
+        return d;
+    }
+
+    Dictionary<string, object> Attr(string id, bool isDisabled, object otherAttributes = null)
+    {
+        var d = new Dictionary<string, object>();
+        d["class"] = "form-control";
+        d["id"] = id;
+        if (isDisabled) d["disabled"] = "disabled";
+
+        if (otherAttributes != null)
+        {
+            var items = Edubase.Common.ReflectionHelper.GetProperties(otherAttributes);
+            foreach (var item in items)
+            {
+                d[item] = Edubase.Common.ReflectionHelper.GetProperty(otherAttributes, item);
+            }
+        }
+
+        if (isDisabled) d["style"] = d.ContainsKey("style") ? (d["style"].ToString() + ";background-color:#eee;") : "background-color:#eee";
+
+        return d;
+    }
 }

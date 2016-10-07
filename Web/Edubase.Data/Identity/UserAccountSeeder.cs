@@ -21,8 +21,9 @@ namespace Edubase.Data.Migrations
         {
             var roleManager = new ApplicationRoleManager(new RoleStore<IdentityRole>(context));
 
-            yield return GetOrCreateRole(roleManager, "Admin");
-            yield return GetOrCreateRole(roleManager, "AccessAllSchools");
+            yield return GetOrCreateRole(roleManager, Roles.Admin);
+            yield return GetOrCreateRole(roleManager, Roles.LA);
+            yield return GetOrCreateRole(roleManager, Roles.Academy);
         }
 
         private static IdentityRole GetOrCreateRole(ApplicationRoleManager roleManager, string roleName)
@@ -56,19 +57,18 @@ namespace Edubase.Data.Migrations
                 userManager.Create(adminUser, "Dfe34500!");
             }
 
-            EnsureInRole(roles, adminUser, "Admin");
-            EnsureInRole(roles, adminUser, "AccessAllSchools");
+            EnsureInRole(roles, adminUser, Roles.Admin);
             userManager.Update(adminUser);
         }
 
         private static void SeedOtherUsers(DbContext context, IEnumerable<IdentityRole> roles)
         {
-            SeedOtherUser(context, "academy.user", null, roles, new IdentityUserClaim { ClaimType = "AccessibleSchools", ClaimValue = "137083" });
-            SeedOtherUser(context, "la.maintained.sch.user", null, roles, new IdentityUserClaim { ClaimType = "AccessibleSchools", ClaimValue = "121662" });
+            SeedOtherUser(context, "academy.user", new[] { Roles.Academy }, roles, new IdentityUserClaim { ClaimType = "AccessibleSchools", ClaimValue = "137083" });
+            SeedOtherUser(context, "la.maintained.sch.user", new[] { Roles.LA }, roles, new IdentityUserClaim { ClaimType = "AccessibleSchools", ClaimValue = "121662" });
             SeedOtherUser(context, "free.school.user", null, roles, new IdentityUserClaim { ClaimType = "AccessibleSchools", ClaimValue = "141011" });
-            SeedOtherUser(context, "mat.admin.user", null, roles, new IdentityUserClaim { ClaimType = "MATAdmin", ClaimValue = "2046" });
-            SeedOtherUser(context, "la.admin.user", null, roles, new IdentityUserClaim { ClaimType = "LAAdmin", ClaimValue = "816" });
-            SeedOtherUser(context, "backoffice.user", new[] { "Admin" }, roles);
+            SeedOtherUser(context, "mat.admin.user", new[] { Roles.Academy }, roles, new IdentityUserClaim { ClaimType = "MATAdmin", ClaimValue = "2046" });
+            SeedOtherUser(context, "la.admin.user", new[] { Roles.LA }, roles, new IdentityUserClaim { ClaimType = "LAAdmin", ClaimValue = "816" });
+            SeedOtherUser(context, "backoffice.user", new[] { Roles.Admin }, roles);
         }
 
         private static void SeedOtherUser(DbContext context, string userName, string[] userRoles, IEnumerable<IdentityRole> fullRolesList, IdentityUserClaim claim = null)

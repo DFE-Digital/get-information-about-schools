@@ -2,6 +2,12 @@
 using System.Linq;
 using System.Text;
 using MoreLinq;
+using System.Reflection;
+using System.Data.Entity.Core.Metadata.Edm;
+using Edubase.Data.Entity;
+using System;
+using System.Data.Entity.Infrastructure;
+using Edubase.Data.Entity.Permissions;
 
 namespace Edubase.Data
 {
@@ -13,5 +19,12 @@ namespace Edubase.Data
             exception.EntityValidationErrors.SelectMany(x => x.ValidationErrors).ForEach(x => sb.AppendLine(x.PropertyName + ", " + x.ErrorMessage));
             return sb.ToString();
         }
+
+        
+
+        
+
+        
+        
     }
 }

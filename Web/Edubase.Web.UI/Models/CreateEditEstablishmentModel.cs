@@ -1,6 +1,14 @@
-﻿using Edubase.Web.UI.Models.Validators;
+﻿using Edubase.Data.Entity;
+using Edubase.Web.UI.Models.Validators;
 using FluentValidation.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
+using System.Web.Mvc;
+using System.Data.Entity;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace Edubase.Web.UI.Models
 {
@@ -37,8 +45,7 @@ namespace Edubase.Web.UI.Models
         public int? TypeId { get; set; }
         public DateTimeViewModel OpenDate { get; set; }
         public DateTimeViewModel CloseDate { get; set; }
-
-
+        
         public CreateEditEstablishmentModel()
         {
             Address = new AddressViewModel();
@@ -47,6 +54,8 @@ namespace Edubase.Web.UI.Models
             OpenDate = new DateTimeViewModel();
             CloseDate = new DateTimeViewModel();
         }
+
+
         
     }
 }

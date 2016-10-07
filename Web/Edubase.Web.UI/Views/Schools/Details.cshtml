@@ -1,67 +1,119 @@
 ﻿@using Edubase.Web.UI.Helpers
-@using Edubase.Common;
-@model Edubase.Data.Entity.Establishment
+@using Edubase.Web.UI.Models
+@using Edubase.Common
+@using Edubase.Data.Entity
+@model EstablishmentDetailViewModel
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = Model.Establishment.Name;
     ViewBag.PageClass = "school-details";
     ViewBag.HideLogo = true;
 }
 
-<h1 class="heading-large">@Model.Name</h1>
-@Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Urn }, new { @class = "button mobile-full-width" })
+@if (Model.ShowPendingMessage)
+{
+    <div class="pending-updates-message">
+        <div class="tick"></div>
+        Updates require approval. The Data Owner has been notified.
+        <div class="cross" onclick="$(this).parent().hide();"></div>
+    </div>
+}
+
+@if (Model.PendingChanges.Any())
+{
+    <div class="pending-updates">
+        <div class="icon">!</div>
+        <h3>Data update@(Model.PendingChanges.Count > 1 ? "s" : "") pending Data Owner approval</h3>
+        @foreach (var item in Model.PendingChanges)
+        {
+            <div class="group">
+                <div>Data field: @item.DataField</div>
+                <div>Old: @(item.OldValue.Clean() ?? "(nothing)")</div>
+                <div>New: @(item.NewValue.Clean() ?? "(nothing)")</div>
+            </div>
+        }
+    </div>
+}
+
+<h1 class="heading-large">@Model.Establishment.Name @Html.PendingUpdateFor(x => x.Name)</h1>
+@Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
 
 <div class="column-full">
     <div class="grid-row summary">
         <table class="borderless">
-            <caption class="visually-hidden">@Model.Name information</caption>
+            <caption class="visually-hidden">@Model.Establishment.Name information</caption>
             <tr>
                 <th scope="row">Address</th>
-                <td>@SchoolDetailsHelpers.GetAddress(Model)</td>
+                <td>@SchoolDetailsHelpers.GetAddress(Model.Establishment)</td>
             </tr>
             <tr>
                 <th scope="row">Local authority</th>
                 <td>
-                    <a href="/Search/SearchByLaName?searchTerm=@Model.LocalAuthority">
-                        @Model.LocalAuthority
+                    @Html.PendingUpdateFor(x => x.LocalAuthorityId)
+                    <a href="/Search/SearchByLaName?searchTerm=@Model.Establishment.LocalAuthority">
+                        @Model.Establishment.LocalAuthority
                     </a> 
-                    (@Model.LocalAuthorityId)
+                    (@Model.Establishment.LocalAuthorityId)
                 </td>
             </tr>
             <tr>
                 <th scope="row">Headteacher/Principal</th>
-                <td>@Model.HeadTitle @Model.HeadFirstName @Model.HeadLastName</td>
+                <td>
+                    @(Html.PendingUpdatesFor("HeadTitleId", "HeadFirstName", "HeadLastName"))
+                    @Model.Establishment.HeadTitle @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
+                </td>
             </tr>
             <tr>
                 <th scope="col">Age range</th>
-                <td>@Model.StatutoryLowAge to @Model.StatutoryHighAge</td>
+                <td>
+                    @(Html.PendingUpdatesFor("StatutoryLowAge", "StatutoryHighAge"))
+                    @Model.Establishment.StatutoryLowAge to @Model.Establishment.StatutoryHighAge
+                </td>
             </tr>
             <tr>
                 <th scope="row">Phase of education</th>
-                <td>@Model.EducationPhase</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x=>x.EducationPhaseId))
+                    @Model.Establishment.EducationPhase
+                </td>
             </tr>
             <tr>
                 <th scope="row">School type</th>
-                <td>@Model.EstablishmentType</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.TypeId))
+                    @Model.Establishment.EstablishmentType
+                </td>
             </tr>
             <tr>
                 <th scope="row">Gender of entry</th>
-                <td>@Model.Gender</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.GenderId))
+                    @Model.Establishment.Gender
+                </td>
             </tr>
             <tr>
                 <th scope="row">URN</th>
-                <td>@Model.Urn</td>
+                <td>@Model.Establishment.Urn</td>
             </tr>
             <tr>
                 <th scope="row">LAESTAB</th>
-                <td>@Model.LAESTAB</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.EstablishmentNumber))
+                    @Model.Establishment.LAESTAB
+                </td>
             </tr>
             <tr>
                 <th scope="row">Establishment status</th>
-                <td>@Model.Status</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.StatusId))
+                    @Model.Establishment.Status
+                </td>
             </tr>
             <tr>
                 <th scope="row">Admissions policy</th>
-                <td>@Model.AdmissionsPolicy</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.AdmissionsPolicyId))
+                    @Model.Establishment.AdmissionsPolicy
+                </td>
             </tr>
         </table>
 
@@ -69,8 +121,8 @@
             <a href="#map" id="map-toggle" class="expanding-content-trigger map-toggle">Show map</a>
             <div id="map" class="school-detail-map"
                  data-latlng="[-2.583500,51.436290]"
-                 data-school-name="@Model.Name"
-                 data-school-address="@SchoolDetailsHelpers.GetAddress(Model)"></div>
+                 data-school-name="@Model.Establishment.Name"
+                 data-school-address="@SchoolDetailsHelpers.GetAddress(Model.Establishment)"></div>
         </div>
     </div>
 
@@ -96,68 +148,74 @@
         <div class="tab-content-wrapper horizontal-tabs-content">
             <div id="school-dashboard" class="tab-content">
                 <table class="borderless">
-                    <caption class="visually-hidden">@Model.Name details</caption>
+                    <caption class="visually-hidden">@Model.Establishment.Name details</caption>
                     <tr>
                         <th scope="row">Reason establishment opened</th>
-                        <td>@Model.ReasonEstablishmentOpened</td>
+                        <td>@Model.Establishment.ReasonEstablishmentOpened</td>
                     </tr>
                     <tr>
                         <th scope="row">Establishment open date</th>
-                        <td>@(Model.OpenDate.HasValue ? Model.OpenDate.Value.ToString("dd/MM/yyyy") : "---")</td>
+                        <td>
+                            @(Html.PendingUpdatesFor(x => x.OpenDate))
+                            @(Model.Establishment.OpenDate.HasValue ? Model.Establishment.OpenDate.Value.ToString("dd/MM/yyyy") : "---")
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Reason establishment closed</th>
-                        <td>@Model.ReasonEstablishmentClosed</td>
+                        <td>@Model.Establishment.ReasonEstablishmentClosed</td>
                     </tr>
                     <tr>
                         <th scope="row">Date establishment closed</th>
-                        <td>@(Model.CloseDate.HasValue ? Model.CloseDate.Value.ToString("dd/MM/yyyy") : "---")</td>
+                        <td>
+                            @(Html.PendingUpdatesFor(x => x.CloseDate))
+                            @(Model.Establishment.CloseDate.HasValue ? Model.Establishment.CloseDate.Value.ToString("dd/MM/yyyy") : "---")
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Boarders</th>
-                        <td>@Model.ProvisionBoarding</td>
+                        <td>@Model.Establishment.ProvisionBoarding</td>
                     </tr>
                     <tr>
                         <th scope="row">Nursery provision</th>
-                        <td>@Model.ProvisionNursery</td>
+                        <td>@Model.Establishment.ProvisionNursery</td>
                     </tr>
                     <tr>
                         <th scope="row">Official sixth form</th>
-                        <td>@Model.ProvisionOfficialSixthForm</td>
+                        <td>@Model.Establishment.ProvisionOfficialSixthForm</td>
                     </tr>
                     <tr>
                         <th scope="row">Diocese</th>
-                        <td>@(Model.Diocese?.Name ?? "---")</td>
+                        <td>@(Model.Establishment.Diocese?.Name ?? "---")</td>
                     </tr>
                     <tr>
                         <th scope="row">School capacity</th>
-                        <td>@Model.Capacity</td>
+                        <td>@Html.PendingUpdateFor(x => x.Capacity) @Model.Establishment.Capacity</td>
                     </tr>
                     <tr>
                         <th scope="row">UK provider reference number</th>
-                        <td>@Model.UKPRN</td>
+                        <td>@Model.Establishment.UKPRN</td>
                     </tr>
                 </table>
 
             </div>
             <div id="school-contact" class="tab-content">
                 <table class="borderless">
-                    <caption class="visually-hidden">Contact information for @Model.Name</caption>
+                    <caption class="visually-hidden">Contact information for @Model.Establishment.Name</caption>
                 <tr>
                     <th scope="row">School website</th>
-                    <td>@Model.Contact.WebsiteAddress</td>
+                    <td>@Model.Establishment.Contact.WebsiteAddress</td>
                 </tr>
                 <tr>
                     <th scope="row">Main email</th>
-                    <td>@Model.Contact.EmailAddress</td>
+                    <td>@Model.Establishment.Contact.EmailAddress</td>
                 </tr>
                 <tr>
                     <th scope="row">Alternative email</th>
-                    <td>@Model.ContactAlt.EmailAddress</td>
+                    <td>@Model.Establishment.ContactAlt.EmailAddress</td>
                 </tr>
                 <tr>
                     <th scope="row">Telephone number</th>
-                    <td>@Model.Contact.TelephoneNumber</td>
+                    <td>@Model.Establishment.Contact.TelephoneNumber</td>
                 </tr>
             </table>
         </div>

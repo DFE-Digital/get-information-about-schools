@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,7 +36,11 @@ namespace Edubase.Data
                 }
             }
         }
-
         
+        public static PropertyInfo[] GetProperties<T>() => typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        
+
+
+
     }
 }

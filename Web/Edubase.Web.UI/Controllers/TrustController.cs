@@ -32,7 +32,7 @@ namespace Edubase.Web.UI.Controllers
                     return RedirectToAction("Details", new { id = company.GroupUID });
                 }
             }
-            else return View(VIEWNAME);
+            else return View(VIEWNAME, viewModel);
         }
 
         [HttpGet]
@@ -65,7 +65,7 @@ namespace Edubase.Web.UI.Controllers
                     return RedirectToAction("Details", new { id = company.GroupUID });
                 }
             }
-            else return View(VIEWNAME);
+            else return View(VIEWNAME, viewModel);
         }
 
 

@@ -39,7 +39,7 @@
             }
 
 
-            @Html.ValidationSummary()
+            @Html.ValidationSummary(null, new { @class = "error-summary" })
 
             <table class="borderless editor">
                 <colgroup>
@@ -53,9 +53,9 @@
                         @FormHint("name")
                     </th>
                     <td>
-                        <div class="form-group">
-                            <span class="error-message">An invalid school name was entered.</span>
-                            @Html.TextBoxFor(x => x.Name, new { maxlength = 120, required = true, id = "name", @class = "form-control", aria_describedby = "help-name" })
+                        <div class="form-group @Html.ValidationCssClassFor(x=>x.Name)">
+                            
+                            @Html.EduTextBoxFor(x => x.Name, new { maxlength = 120, id = "name", @class = "form-control", aria_describedby = "help-name" })
                         </div>
                     </td>
                 </tr>
@@ -66,9 +66,9 @@
                         @FormHint("trust-type")
                     </th>
                     <td>
-                        <div class="form-group">
-                            <span class="error-message">Please select a valid option</span>
-                            @Html.DropDownListFor(x => x.TypeId, dc.GroupTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "la", @class = "form-control", required = true })
+                        <div class="form-group @Html.ValidationCssClassFor(x=>x.TypeId)">
+                            @Html.EduDropDownFor(x => x.TypeId, dc.GroupTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), 
+                                new { id = "la", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -80,21 +80,22 @@
                         @FormHint("open-date")
                     </th>
                     <td>
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x=>x.OpenDate)">
+                            @Html.ValidationMessageFor(x=>x.OpenDate)
                             @Html.DropDownListFor(x => x.OpenDate.Day,
                                 Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "DD",
                                 new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day",
-                                    style = "width:70px;", required = true })
+                                    style = "width:70px;" })
 
                             @Html.DropDownListFor(x => x.OpenDate.Month,
                                 Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "MM",
                                 new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month",
-                                    style = "width:70px;", required = true })
+                                    style = "width:70px;" })
 
                             @Html.DropDownListFor(x => x.OpenDate.Year,
                                 Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "YYYY",
                                 new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year",
-                                    style = "width:70px;", required = true })
+                                    style = "width:70px;" })
                         </div>
                     </td>
                 </tr>

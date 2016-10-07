@@ -100,19 +100,23 @@
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="DbUtil.cs" />
+    <Compile Include="Entity\EstablishmentApprovalQueue.cs" />
     <Compile Include="Entity\ComplexTypes\Address.cs" />
     <Compile Include="Entity\ApplicationUser.cs" />
     <Compile Include="Entity\Company.cs" />
     <Compile Include="Entity\ComplexTypes\ContactDetail.cs" />
     <Compile Include="Entity\EdubaseEntity.cs" />
+    <Compile Include="Entity\EstablishmentPermission.cs" />
     <Compile Include="Entity\LocalAuthority.cs" />
     <Compile Include="Entity\Lookups\Diocese.cs" />
     <Compile Include="Entity\Lookups\LookupBase.cs" />
     <Compile Include="Entity\Establishment.cs" />
     <Compile Include="Entity\Establishment2Company.cs" />
     <Compile Include="Entity\Estab2Estab.cs" />
+    <Compile Include="Entity\Permissions\Permission.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
+    <Compile Include="Identity\Roles.cs" />
     <Compile Include="Identity\UserAccountSeeder.cs" />
     <Compile Include="Migrations\201609291737582_InitialiseDB.cs" />
     <Compile Include="Migrations\201609291737582_InitialiseDB.Designer.cs">
@@ -141,6 +145,14 @@
     <Compile Include="Migrations\201610041504493_AddedCompanyOpenDate.cs" />
     <Compile Include="Migrations\201610041504493_AddedCompanyOpenDate.Designer.cs">
       <DependentUpon>201610041504493_AddedCompanyOpenDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610051956256_Permissions.cs" />
+    <Compile Include="Migrations\201610051956256_Permissions.Designer.cs">
+      <DependentUpon>201610051956256_Permissions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610070658424_ApprovalQueue.cs" />
+    <Compile Include="Migrations\201610070658424_ApprovalQueue.Designer.cs">
+      <DependentUpon>201610070658424_ApprovalQueue.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -176,6 +188,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610041504493_AddedCompanyOpenDate.resx">
       <DependentUpon>201610041504493_AddedCompanyOpenDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610051956256_Permissions.resx">
+      <DependentUpon>201610051956256_Permissions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610070658424_ApprovalQueue.resx">
+      <DependentUpon>201610070658424_ApprovalQueue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

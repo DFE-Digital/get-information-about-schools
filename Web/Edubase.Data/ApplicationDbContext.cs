@@ -30,6 +30,9 @@ namespace Edubase.Data.Entity
         public IDbSet<LocalAuthority> LocalAuthorities { get; set; }
         public IDbSet<Estab2Estab> Estab2EstabLinks { get; set; }
         public IDbSet<Establishment2Company> Establishment2CompanyLinks { get; set; }
+        public IDbSet<EstablishmentPermission> Permissions { get; set; }
+        public IDbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
+
 
         private bool _enableIdentityInsert;
 

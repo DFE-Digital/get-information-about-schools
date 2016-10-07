@@ -4,10 +4,13 @@ using Edubase.Data.Entity;
 using System.Dynamic;
 using System.Data.Entity;
 using Edubase.Web.UI.Identity;
+using System;
+using System.Collections.Generic;
+using Edubase.Web.UI.Models;
+using Edubase.Common;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [Authorize]
     public class SchoolsController : Controller
     {
         private readonly ISchoolPermissions _schoolPermissions;
@@ -40,8 +43,14 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, bool? pendingUpdates)
         {
+            var viewModel = new EstablishmentDetailViewModel
+            {
+                ShowPendingMessage = pendingUpdates.GetValueOrDefault(),
+                IsUserLoggedOn = User.Identity.IsAuthenticated
+            };
+
             using (var dc = new ApplicationDbContext())
             {
                 var model = dc.Establishments
@@ -63,7 +72,55 @@ namespace Edubase.Web.UI.Controllers
                     .Include(x => x.Status)
                     .Include(x => x.EstablishmentType)
                     .FirstOrDefault(x => x.Urn == id);
-                return View(model);
+
+                viewModel.Establishment = model;
+                
+                if (User.Identity.IsAuthenticated)
+                {
+                    var pending = dc.EstablishmentApprovalQueue.Where(x => x.Urn == id).ToList();
+                    if (pending.Any())
+                    {
+                        foreach (var item in pending)
+                        {
+                            var change = new PendingChangeViewModel() { DataField = item.Name };
+                            var number = item.Value.ToInteger();
+                            switch (item.Name)
+                            {
+                                case "LocalAuthorityId":
+                                    change.NewValue = dc.LocalAuthorities.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.OldValue = model.LocalAuthority?.ToString();
+                                    break;
+                                case "HeadTitleId":
+                                    change.NewValue = dc.HeadTitles.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.OldValue = model.HeadTitle?.ToString();
+                                    break;
+                                case "GenderId":
+                                    change.NewValue = dc.Genders.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.OldValue = model.Gender?.ToString();
+                                    break;
+                                case "EducationPhaseId":
+                                    change.NewValue = dc.EducationPhases.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.OldValue = model.EducationPhase?.ToString();
+                                    break;
+                                case "AdmissionsPolicyId":
+                                    change.NewValue = dc.AdmissionsPolicies.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.OldValue = model.AdmissionsPolicy?.ToString();
+                                    break;
+                                case "StatusId":
+                                    change.NewValue = dc.EstablishmentStatuses.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.OldValue = model.Status?.ToString();
+                                    break;
+                                default:
+                                    change.NewValue = item.Value;
+                                    change.OldValue = ReflectionHelper.GetProperty(model, item.Name);
+                                    break;
+                            }
+                            viewModel.PendingChanges.Add(change);
+                        }
+                    }
+                }
+
+                return View(viewModel);
             }
         }
     }
