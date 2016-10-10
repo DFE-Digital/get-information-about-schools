@@ -1,19 +1,16 @@
-﻿using System.Web.Mvc;
+﻿using Edubase.Data.Identity;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
     public class HomeController : Controller
     {
-        /*
-        public StyleGuideController()
-        {
-            Get["/public/assets/styleguide"] = _ => Response.AsFile("public/assets/styleguide/base.html", "text/html");
-        }
-        */
-
         public ActionResult Index()
         {
-            return View();
+            var model = new Models.HomepageViewModel();
+            model.AllowApprovals = User.Identity.IsAuthenticated;
+            model.AllowCreation = User.IsInRole(Roles.Admin);
+            return View(model);
         }
 
         [HttpGet]

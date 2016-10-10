@@ -282,16 +282,42 @@
 
                 <tr>
                     <th scope="row">
-                        <label for="school-type">Open date</label>
+                        <label for="open-date-day">Open date</label>
                         @FormHint("open-date")
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.OpenDate)">
                             @Html.ValidationMessageFor(x => x.OpenDate)
-                            @Html.EduTextBoxFor(x => x.OpenDate.Day, new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;" }, "OpenDate")
-                            @Html.EduTextBoxFor(x => x.OpenDate.Month, new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;" }, "OpenDate")
-                            @Html.EduTextBoxFor(x => x.OpenDate.Year, new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;" }, "OpenDate")
-                         </div>
+                            @Html.EduDropDownFor(x => x.OpenDate.Day,
+                                Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                new
+                                {
+                                    id = "opendate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-opendate-day",
+                                    style = "width:70px;"
+                                }, label: "DD", fieldName: "OpenDate")
+
+                            @Html.EduDropDownFor(x => x.OpenDate.Month,
+                                Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), 
+                                new
+                                {
+                                    id = "opendate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-opendate-month",
+                                    style = "width:70px;"
+                                }, label: "MM", fieldName: "OpenDate")
+
+                            @Html.EduDropDownFor(x => x.OpenDate.Year,
+                                Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), 
+                                new
+                                {
+                                    id = "opendate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-opendate-year",
+                                    style = "width:70px;"
+                                }, label: "YYYY", fieldName: "OpenDate")
+                        </div>
                     </td>
                 </tr>
 
@@ -316,11 +342,38 @@
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.CloseDate)">
                             @Html.ValidationMessageFor(x => x.CloseDate)
-                            @Html.EduTextBoxFor(x => x.CloseDate.Day, new { id = "closedate-day", @class = "form-control", aria_describedby = "help-closedate-day", placeholder = "Day", type = "number", min = 1, max = 31, style = "width:70px;" }, "CloseDate")
-                            @Html.EduTextBoxFor(x => x.CloseDate.Month, new { id = "closedate-month", @class = "form-control", aria_describedby = "help-closedate-month", placeholder = "Month", type = "number", min = 1, max = 12, style = "width:70px;" }, "CloseDate")
-                            @Html.EduTextBoxFor(x => x.CloseDate.Year, new { id = "closedate-year", @class = "form-control", aria_describedby = "help-closedate-year", placeholder = "Year", type = "number", min = 1700, max = 9999, style = "width:70px;" }, "CloseDate")
+                            @Html.EduDropDownFor(x => x.CloseDate.Day,
+                                Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                new
+                                {
+                                    id = "Closedate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-day",
+                                    style = "width:70px;"
+                                }, label: "DD", fieldName: "CloseDate")
+
+                            @Html.EduDropDownFor(x => x.CloseDate.Month,
+                                Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                new
+                                {
+                                    id = "Closedate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-month",
+                                    style = "width:70px;"
+                                }, label: "MM", fieldName: "CloseDate")
+
+                            @Html.EduDropDownFor(x => x.CloseDate.Year,
+                                Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                new
+                                {
+                                    id = "Closedate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-year",
+                                    style = "width:70px;"
+                                }, label: "YYYY", fieldName: "CloseDate")
                         </div>
                     </td>
+
                 </tr>
 
                 <tr>

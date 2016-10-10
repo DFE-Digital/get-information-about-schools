@@ -1,10 +1,52 @@
-﻿@{
+﻿@using Edubase.Web.UI.Models
+@model HomepageViewModel
+@{
     ViewBag.Title = "Edubase";
 }
+
 <div class="grid-row">
-    <div class="column-two-thirds">
-        <h1 class="heading-xlarge">
-            @ViewBag.Title
-        </h1>
+    <div class="column-full">
+        <br />
+        <h1 class="heading-xlarge" style="margin-bottom:0;">Home page</h1>
     </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-half">
+        <h2 class="heading-medium">Search</h2>
+        <ul>
+            <li>@Html.ActionLink("Search for establishments", "Index", "Search")</li>
+            <li>@Html.ActionLink("Search for governors", "Placeholder", "Prototype")</li>
+        </ul>
+
+        <h2 class="heading-medium">Downloads</h2>
+        <ul>
+            <li>@Html.ActionLink("Download all school data", "Placeholder", "Prototype")</li>
+        </ul>
+
+    </div>
+
+    @if (Model.AllowApprovals || Model.AllowCreation)
+    {
+        <div class="column-half">
+
+            @if (Model.AllowApprovals)
+            {
+                <h2 class="heading-medium">Approvals</h2>
+                <ul>
+                    <li>@Html.ActionLink("View my approval items (0)", "Index", "Search")</li>
+                </ul>
+            }
+
+            @if (Model.AllowCreation)
+            {
+                <h2 class="heading-medium">Create</h2>
+                <ul>
+                    <li>@Html.ActionLink("Create new school", "Create", "Establishment")</li>
+                    <li>@Html.ActionLink("Create new Multi-Academy Trust", "Create", "Trust")</li>
+                </ul>
+            }
+
+        </div>
+    }
 </div>

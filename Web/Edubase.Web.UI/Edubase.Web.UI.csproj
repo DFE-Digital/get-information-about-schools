@@ -248,6 +248,7 @@
     <Compile Include="Models\CreateEditTrustModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
     <Compile Include="Models\EstablishmentDetailViewModel.cs" />
+    <Compile Include="Models\HomepageViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MATDetailViewModel.cs" />
     <Compile Include="Models\MATASSearchResultsModel.cs" />
@@ -670,6 +671,7 @@
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
     <Content Include="Views\Establishment\CreateEdit.cshtml" />
+    <Content Include="Views\Prototype\Placeholder.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <None Include="Views\Search\Index.cshtml" />

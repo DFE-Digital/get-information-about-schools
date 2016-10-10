@@ -81,10 +81,11 @@ namespace Edubase.Web.UI.Helpers
             return result;
         }
 
-        public static MvcHtmlString EduDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, IEnumerable<SelectListItem> selectList, object attributes = null, string fieldName = null)
+        public static MvcHtmlString EduDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, 
+            IEnumerable<SelectListItem> selectList, object attributes = null, string fieldName = null, string label = null)
         {
             var canUpdate = fieldName == null ? CanUpdateFor(htmlHelper, expression) : CanUpdate(htmlHelper, fieldName);
-            var result = htmlHelper.DropDownListFor(expression, selectList, string.Empty, SetAttributes(!canUpdate, attributes));
+            var result = htmlHelper.DropDownListFor(expression, selectList, label ?? string.Empty, SetAttributes(!canUpdate, attributes));
             var valMsg = htmlHelper.ValidationMessageFor(expression);
             if (valMsg != null) result = new MvcHtmlString(result.ToHtmlString() + valMsg.ToHtmlString());
             if (!canUpdate)
@@ -93,6 +94,16 @@ namespace Edubase.Web.UI.Helpers
             }
             return result;
         }
+
+        //public static MvcHtmlString EduDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, 
+        //    IEnumerable<SelectListItem> selectList, object attributes = null, Expression<Func<TModel, TProperty>> permissionExpression = null, string label = null)
+        //{
+        //    string fieldName = null;
+        //    if (permissionExpression != null) fieldName = ExpressionHelper.GetExpressionText(permissionExpression);
+        //    return EduDropDownFor(htmlHelper, expression, selectList, attributes, fieldName, label);
+        //}
+
+
 
         public static MvcHtmlString PendingUpdateFor<TProperty>(this HtmlHelper<EstablishmentDetailViewModel> htmlHelper, 
             Expression<Func<Establishment, TProperty>> expression)
@@ -143,26 +154,6 @@ namespace Edubase.Web.UI.Helpers
             if (isDisabled) d["style"] = d.ContainsKey("style") ? (d["style"].ToString() + ";background-color:#eee;") : "background-color:#eee";
             return d;
         }
-
-        private static Dictionary<string, object> SetAttributes(string id, bool isDisabled, object otherAttributes = null)
-        {
-            var d = new Dictionary<string, object>();
-            d["class"] = "form-control";
-            d["id"] = id;
-            if (isDisabled) d["disabled"] = "disabled";
-
-            if (otherAttributes != null)
-            {
-                var items = ReflectionHelper.GetProperties(otherAttributes);
-                foreach (var item in items)
-                {
-                    d[item] = ReflectionHelper.GetProperty(otherAttributes, item);
-                }
-            }
-
-            if (isDisabled) d["style"] = d.ContainsKey("style") ? (d["style"].ToString() + ";background-color:#eee;") : "background-color:#eee";
-
-            return d;
-        }
+        
     }
 }

@@ -35,7 +35,7 @@ namespace Edubase.Web.UI.Models
 
         public bool IsValid() => !IsEmpty() && ToDateTime() != null;
 
-        public bool IsEmpty() => !Day.HasValue || !Month.HasValue || !Year.HasValue;
+        public bool IsEmpty() => !Day.HasValue && !Month.HasValue && !Year.HasValue;
         public bool IsNotEmpty() => !IsEmpty();
     }
 }
