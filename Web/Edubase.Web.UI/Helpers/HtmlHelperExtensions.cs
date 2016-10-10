@@ -73,7 +73,7 @@ namespace Edubase.Web.UI.Helpers
             var canUpdate = fieldName == null ? CanUpdateFor(htmlHelper, expression) : CanUpdate(htmlHelper, fieldName);
             var result = htmlHelper.TextBoxFor(expression, SetAttributes(!canUpdate, attributes));
             var valMsg = htmlHelper.ValidationMessageFor(expression);
-            if (valMsg != null) result = new MvcHtmlString(result.ToHtmlString() + valMsg.ToHtmlString());
+            if (valMsg != null) result = new MvcHtmlString(valMsg.ToHtmlString()+ result.ToHtmlString());
             if (!canUpdate)
             {
                 result = new MvcHtmlString(result.ToHtmlString() + htmlHelper.HiddenFor(expression).ToHtmlString());
@@ -87,7 +87,7 @@ namespace Edubase.Web.UI.Helpers
             var canUpdate = fieldName == null ? CanUpdateFor(htmlHelper, expression) : CanUpdate(htmlHelper, fieldName);
             var result = htmlHelper.DropDownListFor(expression, selectList, label ?? string.Empty, SetAttributes(!canUpdate, attributes));
             var valMsg = htmlHelper.ValidationMessageFor(expression);
-            if (valMsg != null) result = new MvcHtmlString(result.ToHtmlString() + valMsg.ToHtmlString());
+            if (valMsg != null) result = new MvcHtmlString(valMsg.ToHtmlString() + result.ToHtmlString());
             if (!canUpdate)
             {
                 result = new MvcHtmlString(result.ToHtmlString() + htmlHelper.HiddenFor(expression).ToHtmlString());

@@ -14,6 +14,8 @@ using MoreLinq;
 using System.Dynamic;
 using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Common;
+using System.Net.Mail;
+using System.Configuration;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -38,6 +40,8 @@ namespace Edubase.Web.UI.Controllers
             {
                 using (var dc = ApplicationDbContext.Create())
                 {
+                    Establishment dataModel2 = null;
+                    using (var dc2 = ApplicationDbContext.Create()) dataModel2 = dc2.Establishments.FirstOrDefault(x => x.Urn == model.Urn);
                     var dataModel = dc.Establishments.FirstOrDefault(x => x.Urn == model.Urn);
 
                     if (User.IsInRole(Roles.Admin))
@@ -64,16 +68,21 @@ namespace Edubase.Web.UI.Controllers
                         });
 
                         var mapper = config.CreateMapper();
+                        var estabTemp = mapper.Map(model, dataModel2);
+                        var changes = ReflectionHelper.DetectChanges(estabTemp, dataModel, typeof(Address), typeof(ContactDetail));
                         mapper.Map(model, dataModel);
+                        
+
 
                         var establishment = Mapper.Map<CreateEditEstablishmentModel, Establishment>(model);
-
+                        List<string> permPropertiesThatChanged = new List<string>();
                         permissions.ForEach(p =>
                         {
                             var newValue = ReflectionHelper.GetProperty(establishment, p.PropertyName).Clean();
                             var oldValue = ReflectionHelper.GetProperty(dataModel, p.PropertyName).Clean();
                             if (newValue != oldValue)
                             {
+                                permPropertiesThatChanged.Add(p.PropertyName);
                                 dc.EstablishmentApprovalQueue.Add(new EstablishmentApprovalQueue
                                 {
                                     Urn = dataModel.Urn,
@@ -82,8 +91,22 @@ namespace Edubase.Web.UI.Controllers
                                 });
                             }
                         });
+
                         dc.SaveChanges();
-                        return RedirectToAction("Details", "Schools", new { id = model.Urn.Value, pendingUpdates = true });
+                        
+                        if (changes.Count > 0)
+                        {
+                            new SmtpClient().Send("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment data changed",
+                                $"For Establishment URN: {dataModel.Urn}, the following has changed: \r\n" + string.Join("\r\n", changes));
+                        }
+
+                        if (permPropertiesThatChanged.Count > 0)
+                        {
+                            new SmtpClient().Send("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment data changes require approval",
+                                $"For Establishment URN: {dataModel.Urn}, the following has changed and requires approval: \r\n" + string.Join("\r\n", permPropertiesThatChanged));
+                        }
+
+                        return RedirectToAction("Details", "Schools", new { id = model.Urn.Value, pendingUpdates = permPropertiesThatChanged.Count > 0 });
                     }
                 }
             }

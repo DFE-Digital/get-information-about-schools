@@ -9,7 +9,6 @@ using Edubase.Web.UI.Identity;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [Authorize(Roles = IdentityConstants.AccessAllSchoolsRoleName)]
     public class SearchController : Controller
     {
         public SearchController()
