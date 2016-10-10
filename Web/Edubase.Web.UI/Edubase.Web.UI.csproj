@@ -211,6 +211,7 @@
   <ItemGroup>
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="Controllers\ApprovalController.cs" />
     <Compile Include="Controllers\EstablishmentController.cs" />
     <Compile Include="Controllers\PrototypeController.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
+    <Compile Include="Models\ApprovalsViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateEditTrustModel.cs" />
@@ -672,6 +674,7 @@
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
     <Content Include="Views\Establishment\CreateEdit.cshtml" />
     <Content Include="Views\Prototype\Placeholder.cshtml" />
+    <Content Include="Views\Approval\Index.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <None Include="Views\Search\Index.cshtml" />
@@ -682,6 +685,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_ResultsPagination.cshtml" />
     <Content Include="Views\Trust\CreateEdit.cshtml" />
+    <Content Include="Views\Shared\_ResultsPagination2.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

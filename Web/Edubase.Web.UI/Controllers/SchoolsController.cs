@@ -83,7 +83,7 @@ namespace Edubase.Web.UI.Controllers
                         foreach (var item in pending)
                         {
                             var change = new PendingChangeViewModel() { DataField = item.Name };
-                            var number = item.Value.ToInteger();
+                            var number = item.NewValue.ToInteger();
                             switch (item.Name)
                             {
                                 case "LocalAuthorityId":
@@ -111,7 +111,7 @@ namespace Edubase.Web.UI.Controllers
                                     change.OldValue = model.Status?.ToString();
                                     break;
                                 default:
-                                    change.NewValue = item.Value;
+                                    change.NewValue = item.NewValue;
                                     change.OldValue = ReflectionHelper.GetProperty(model, item.Name);
                                     break;
                             }

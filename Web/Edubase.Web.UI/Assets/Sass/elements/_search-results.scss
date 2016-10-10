@@ -102,3 +102,32 @@
         min-width: 30px;
     }
 }
+
+
+table.approval-items {
+    display: table;
+    
+    td, th {
+        font-size: 13px;
+        padding:5px 1px 5px 1px;
+     }
+
+    
+    td.bb {
+        -ms-word-break: break-all;
+        word-break: break-all;
+        -ms-word-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    @include media(mobile) {
+        display: none;
+    }
+}
+
+ul.approval-items{
+    display:none;
+    @include media(mobile){
+        display:block;
+    }
+}

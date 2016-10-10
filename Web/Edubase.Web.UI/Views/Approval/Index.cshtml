@@ -1,0 +1,82 @@
+﻿@using Edubase.Services.Domain;
+@model ApprovalDto
+@{
+    ViewBag.Title = "Approve changes";
+    ViewBag.PageClass = "search-results";
+    ViewBag.HideLogo = true;
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">Items for approval</h1>
+    </div>
+
+    <div class="column-two-thirds">
+
+        <table class="approval-items">
+            <thead>
+                <tr>
+                    <th>URN</th>
+                    <th>Establishment name</th>
+                    <th>Updated field</th>
+                    <th>Old value</th>
+                    <th>New value</th>
+                    <th>Date changed</th>
+                    <th>Suggested from</th>
+                    <th colspan="2">Approve or Reject?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Schools", new { id = item.EstablishmentUrn }, null)</td>
+                        <th>@item.EstablishmentName</th>
+                        <td class="bb">@item.UpdatedFieldName</td>
+                        <td>@item.OldValue</td>
+                        <td>@item.NewValue</td>
+                        <td>@item.DateOfChange</td>
+                        <td class="bb">@item.OriginatorName</td>
+                        <td>@Html.ActionLink("Accept", "Accept")</td>
+                        <td>@Html.ActionLink("Reject", "Reject")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+
+        <ul class="school-results-listing approval-items">
+            @foreach (var item in Model.Items)
+            {
+                <li>
+                    <dl>
+                        <dt>URN:</dt>
+                        <dd>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Schools", new { id = item.EstablishmentUrn }, null)</dd>
+                        <dt>Establishment name:</dt>
+                        <dd>@item.EstablishmentName</dd>
+                        <dt>Updated field:</dt>
+                        <dd>@item.UpdatedFieldName</dd>
+                        <dt>Old value:</dt>
+                        <dd>@item.OldValue</dd>
+                        <dt>New value:</dt>
+                        <dd>@item.NewValue</dd>
+                        <dt>Date changed:</dt>
+                        <dd>@item.DateOfChange</dd>
+                        <dt>Suggested from:</dt>
+                        <dd>@item.OldValue</dd>
+                        <dt></dt>
+                        <dd>@Html.ActionLink("Accept", "Accept")</dd>
+                        <dt></dt>
+                        <dd>@Html.ActionLink("Reject", "Reject")</dd>
+
+                    </dl>
+                </li>
+            }
+        </ul>
+        
+    </div>
+
+    <div class="column-two-thirds lower-pagination">
+        @Html.Partial("_ResultsPagination2", Model)
+    </div>
+</div>

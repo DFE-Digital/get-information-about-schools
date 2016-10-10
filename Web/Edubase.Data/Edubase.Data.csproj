@@ -154,6 +154,10 @@
     <Compile Include="Migrations\201610070658424_ApprovalQueue.Designer.cs">
       <DependentUpon>201610070658424_ApprovalQueue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610101413260_AddedApprovalCols.cs" />
+    <Compile Include="Migrations\201610101413260_AddedApprovalCols.Designer.cs">
+      <DependentUpon>201610101413260_AddedApprovalCols.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -194,6 +198,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610070658424_ApprovalQueue.resx">
       <DependentUpon>201610070658424_ApprovalQueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610101413260_AddedApprovalCols.resx">
+      <DependentUpon>201610101413260_AddedApprovalCols.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

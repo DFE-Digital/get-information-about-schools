@@ -125,7 +125,6 @@
             </div>
             <div class="header-proposition">
                 <div class="content">
-                    @*<a href="#proposition-links" class="js-header-toggle menu">Menu</a>*@
                     <nav id="proposition-menu">
                         <a href="/" id="proposition-name">Edubase</a>
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -138,16 +137,12 @@
                                 }
                                 else
                                 {
-                                    if (User.IsInRole("AccessAllSchools"))
-                                    {
-                                        <li><a href="/Search">Search</a></li>
-                                        @*<li><a href="/MAT">Search MAT/Academy Sponsor</a></li>*@
-                                    }
-
+                                    <li><a href="/Search">Search</a></li>
                                     <li><a href="/Schools">Schools</a></li>
 
                                     if (User.IsInRole("Admin"))
                                     {
+                                        <li>@Html.ActionLink("View approval items", "Index", "Approval")</li>
                                         <li><a href="/Admin">Admin</a></li>
                                     }
                                     <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>

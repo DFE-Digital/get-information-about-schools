@@ -14,13 +14,13 @@ namespace Edubase.Data.Entity
         [ForeignKey("Urn")]
         public Establishment Establishment { get; set; }
         public string Name { get; set; }
-        public string Value { get; set; }
+        public string NewValue { get; set; }
         public bool IsApproved { get; set; }
         public ApplicationUser OriginatorUser { get; set; }
         public string OriginatorUserId { get; set; }
-        public DateTime ApprovalDate { get; set; }
+        public DateTime? ApprovalDate { get; set; }
         public ApplicationUser ApproverUser { get; set; }
         public string ApproverUserId { get; set; }
-
+        public string OldValue { get; set; }
     }
 }

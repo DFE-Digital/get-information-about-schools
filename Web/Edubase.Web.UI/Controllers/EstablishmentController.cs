@@ -16,6 +16,8 @@ using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Common;
 using System.Net.Mail;
 using System.Configuration;
+using System.IdentityModel.Claims;
+using System.Security.Claims;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -44,7 +46,7 @@ namespace Edubase.Web.UI.Controllers
                     using (var dc2 = ApplicationDbContext.Create()) dataModel2 = dc2.Establishments.FirstOrDefault(x => x.Urn == model.Urn);
                     var dataModel = dc.Establishments.FirstOrDefault(x => x.Urn == model.Urn);
 
-                    if (User.IsInRole(Roles.Admin))
+                    if (User.IsInRole(Roles.Admin) && 1 == 2) // temporarily disabled this clause
                     {
                         Mapper.Map(model, dataModel);
                         dc.SaveChanges();
@@ -53,7 +55,7 @@ namespace Edubase.Web.UI.Controllers
 
                     else // user is in restrictive role
                     {
-                        var role = Roles.RestrictiveRoles.FirstOrDefault(x => User.IsInRole(x));
+                        var role = Roles.RestrictiveRoles.FirstOrDefault(x => User.IsInRole(x)) ?? Roles.Academy; 
                         var permissions = dc.Permissions.Where(x => x.RoleName == role).ToArray();
 
                         var config = new MapperConfiguration(cfg =>
@@ -87,7 +89,9 @@ namespace Edubase.Web.UI.Controllers
                                 {
                                     Urn = dataModel.Urn,
                                     Name = p.PropertyName,
-                                    Value = newValue
+                                    NewValue = newValue,
+                                    OldValue = oldValue,
+                                    OriginatorUserId = ((ClaimsPrincipal)(User)).FindFirst(System.IdentityModel.Claims.ClaimTypes.NameIdentifier).Value
                                 });
                             }
                         });
