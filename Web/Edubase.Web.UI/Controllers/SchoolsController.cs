@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using Edubase.Web.UI.Models;
 using Edubase.Common;
+using Edubase.Services;
+using System.Security.Claims;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -119,6 +121,10 @@ namespace Edubase.Web.UI.Controllers
                         }
                     }
                 }
+
+                if (viewModel.IsUserLoggedOn)
+                    viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
+                
 
                 return View(viewModel);
             }

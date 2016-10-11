@@ -17,5 +17,7 @@ namespace Edubase.Web.UI.Controllers
             var dto = new ApprovalService().GetAll(User as ClaimsPrincipal, skip, take, urn);
             return View(dto);
         }
+
+        
     }
 }

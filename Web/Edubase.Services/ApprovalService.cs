@@ -15,40 +15,24 @@ namespace Edubase.Services
     {
         public ApprovalDto GetAll(ClaimsPrincipal currentUser, int skip = 0, int take = 10, int? establishmentUrn = null)
         {
-            if (currentUser == null) throw new ArgumentNullException(nameof(currentUser));
-
-            if (!currentUser.Identity.IsAuthenticated)
-                throw new SecurityException("Permission denied");
-
             var retVal = new ApprovalDto(skip, take);
+            Verify(currentUser);
+            
             using (var dc = new ApplicationDbContext())
             {
-                var q = dc.EstablishmentApprovalQueue.AsQueryable();
-
-                if (!currentUser.IsInRole(Roles.Admin))
-                {
-                    var roleName = Roles.RestrictiveRoles.FirstOrDefault(x => currentUser.IsInRole(x));
-                    if (roleName == null) throw new SecurityException("The current user is not in a restrictive role or admin role; cannot determine permissions for this operation");
-                    q = q.Join(dc.Permissions, eaq => new { PropertyName = eaq.Name, RoleName = roleName, AllowApproval = true }, p => new { p.PropertyName, p.RoleName, p.AllowApproval }, (x, y) => x);
-                }
-
-                q = q.Include(x => x.Establishment.Name)
-                    .Include(x => x.OriginatorUser.UserName)
-                    .AsQueryable()
-                    .Where(x => x.IsDeleted == false);
-
+                var query = CreateQuery(dc, currentUser, establishmentUrn);
+                
                 if (establishmentUrn.HasValue)
                 {
                     retVal.EstablishmentUrn = establishmentUrn;
                     retVal.EstablishmentName = dc.Establishments.First(x => x.Urn == establishmentUrn).Name;
-                    q = q.Where(x => x.Urn == establishmentUrn);
                 }
 
-                retVal.Count = q.Count();
+                retVal.Count = query.Count();
 
-                q = q.OrderBy(x => x.CreatedUtc).Skip(skip).Take(take);
+                query = query.OrderBy(x => x.CreatedUtc).Skip(skip).Take(take);
 
-                retVal.Items = q.Select(x => new ApprovalItem
+                retVal.Items = query.Select(x => new ApprovalItemDto
                 {
                     DateOfChange = x.CreatedUtc,
                     EstablishmentName = x.Establishment.Name,
@@ -72,6 +56,53 @@ namespace Edubase.Services
             }
             return retVal;
         }
+
+        public int Count(ClaimsPrincipal currentUser, int? establishmentUrn = null)
+        {
+            Verify(currentUser);
+            using (var dc = new ApplicationDbContext())
+            {
+                var query = CreateQuery(dc, currentUser, establishmentUrn);
+                return query.Count();   
+            }
+        }
+
+        public bool Any(ClaimsPrincipal currentUser, int? establishmentUrn = null)
+        {
+            Verify(currentUser);
+            using (var dc = new ApplicationDbContext())
+            {
+                var query = CreateQuery(dc, currentUser, establishmentUrn);
+                return query.Any();
+            }
+        }
+
+        private static void Verify(ClaimsPrincipal currentUser)
+        {
+            if (currentUser == null) throw new ArgumentNullException(nameof(currentUser));
+            if (!currentUser.Identity.IsAuthenticated)
+                throw new SecurityException("Permission denied");
+        }
+
+        private IQueryable<EstablishmentApprovalQueue> CreateQuery(ApplicationDbContext dc, ClaimsPrincipal currentUser, int? establishmentUrn = null)
+        {
+            var q = dc.EstablishmentApprovalQueue.AsQueryable();
+
+            if (!currentUser.IsInRole(Roles.Admin))
+            {
+                var roleName = Roles.RestrictiveRoles.FirstOrDefault(x => currentUser.IsInRole(x));
+                if (roleName == null) throw new SecurityException("The current user is not in a restrictive role or admin role; cannot determine permissions for this operation");
+                q = q.Join(dc.Permissions, eaq => new { PropertyName = eaq.Name, RoleName = roleName, AllowApproval = true }, p => new { p.PropertyName, p.RoleName, p.AllowApproval }, (x, y) => x);
+            }
+
+            q = q.Include(x => x.Establishment.Name)
+                .Include(x => x.OriginatorUser.UserName)
+                .AsQueryable()
+                .Where(x => x.IsDeleted == false && (establishmentUrn == null || x.Urn == establishmentUrn) && x.IsApproved == false);
+
+            return q;
+        }
+
         
 
     }

@@ -60,7 +60,7 @@
   <ItemGroup>
     <Compile Include="ApprovalService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
-    <Compile Include="Domain\ApprovalItem.cs" />
+    <Compile Include="Domain\ApprovalItemDto.cs" />
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="LookupService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -17,6 +17,14 @@
         <div class="cross" onclick="$(this).parent().hide();"></div>
     </div>
 }
+else if (Model.UserHasPendingApprovals)
+{
+    <div class="pending-updates-message">
+        <div class="tick"></div>
+        You have pending approvals awaiting for this school. @Html.ActionLink("Approve now.", "Index", "Approval", new { urn = Model.Establishment.Urn }, null)
+        <div class="cross" onclick="$(this).parent().hide();"></div>
+    </div>
+}
 
 @if (Model.PendingChanges.Any())
 {

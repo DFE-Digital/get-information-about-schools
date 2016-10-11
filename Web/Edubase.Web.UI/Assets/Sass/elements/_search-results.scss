@@ -103,13 +103,25 @@
     }
 }
 
+div.approval-data
+{
+    dl{
+        font-size:15px;
+    }
+}
 
 table.approval-items {
     display: table;
     
+    th {
+        font-weight:bold;
+        text-align:left;
+    }
+
     td, th {
         font-size: 13px;
-        padding:5px 1px 5px 1px;
+        padding:5px 2px 5px 2px;
+        border:2px solid #eee;
      }
 
     

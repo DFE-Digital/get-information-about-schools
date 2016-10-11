@@ -9,9 +9,20 @@
 <div class="grid-row">
     <div class="column-full">
         <h1 class="heading-xlarge">Items for approval</h1>
+        <p>You have <span class="bold-large">@Model.Count</span> item@(Model.Count == 1 ? "":"s") that require@(Model.Count == 1 ? "s" : "") your approval
+            @if(Model.EstablishmentName!= null)
+            {
+                <text>for the Establishment '<span class="bold-small">@Model.EstablishmentName</span>'</text>
+            }
+        </p>
     </div>
 
-    <div class="column-two-thirds">
+    <div class="column-full top-pagination">
+        @Html.Partial("_ResultsPagination2", Model)
+        <br />
+    </div>
+
+    <div class="column-full approval-data">
 
         <table class="approval-items">
             <thead>
@@ -31,7 +42,7 @@
                 {
                     <tr>
                         <td>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Schools", new { id = item.EstablishmentUrn }, null)</td>
-                        <th>@item.EstablishmentName</th>
+                        <td>@Html.ActionLink(item.EstablishmentName, "Details", "Schools", new { id = item.EstablishmentUrn }, null)</td>
                         <td class="bb">@item.UpdatedFieldName</td>
                         <td>@item.OldValue</td>
                         <td>@item.NewValue</td>
@@ -43,8 +54,7 @@
                 }
             </tbody>
         </table>
-        <br />
-
+        
         <ul class="school-results-listing approval-items">
             @foreach (var item in Model.Items)
             {
@@ -76,7 +86,8 @@
         
     </div>
 
-    <div class="column-two-thirds lower-pagination">
+    <div class="column-full lower-pagination">
+        <br />
         @Html.Partial("_ResultsPagination2", Model)
     </div>
 </div>

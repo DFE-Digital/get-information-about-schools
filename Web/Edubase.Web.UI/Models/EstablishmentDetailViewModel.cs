@@ -15,6 +15,7 @@ namespace Edubase.Web.UI.Models
         public bool ShowPendingMessage { get; set; }
 
         public bool HasPendingUpdate(string fieldName) => PendingChanges.Any(x => x.DataField.Equals(fieldName));
+        public bool UserHasPendingApprovals { get; set; }
 
         public bool IsUserLoggedOn { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using Edubase.Web.UI.Filters;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI
 {
@@ -8,6 +9,7 @@ namespace Edubase.Web.UI
         {
             filters.Add(new UnauthorizedAccessAttribute());
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new PendingApprovalsFilter());
         }
     }
 }

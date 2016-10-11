@@ -140,9 +140,13 @@
                                     <li><a href="/Search">Search</a></li>
                                     <li><a href="/Schools">Schools</a></li>
 
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        <li>@Html.ActionLink("View approval items" + (ViewBag.PendingApprovalItemsCount > 0 ? " (" + ViewBag.PendingApprovalItemsCount + ")" : "") as string, "Index", "Approval")</li>
+                                    }
+
                                     if (User.IsInRole("Admin"))
                                     {
-                                        <li>@Html.ActionLink("View approval items", "Index", "Approval")</li>
                                         <li><a href="/Admin">Admin</a></li>
                                     }
                                     <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>

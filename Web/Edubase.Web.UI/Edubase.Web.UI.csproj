@@ -226,6 +226,7 @@
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TrustController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
+    <Compile Include="Filters\PendingApprovalsFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -10,10 +10,8 @@ namespace Edubase.Services.Domain
     {   
         public int? EstablishmentUrn { get; set; }
         public string EstablishmentName { get; set; }
-        public List<ApprovalItem> Items { get; set; }
-        public ApprovalDto(int skip, int take) : base(skip, take)
-        {
-        }
+        public List<ApprovalItemDto> Items { get; set; }
 
+        public ApprovalDto(int skip, int take) : base(skip, take) { }
     }
 }
