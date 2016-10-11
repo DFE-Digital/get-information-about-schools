@@ -158,8 +158,8 @@ namespace Edubase.Services
         private IQueryable<EstablishmentApprovalQueue> CreateQuery(ApplicationDbContext dc, ClaimsPrincipal currentUser, int? establishmentUrn = null, int ? approvalItemId = null)
         {
             var q = dc.EstablishmentApprovalQueue
-                .Include(x => x.Establishment.Name)
-                .Include(x => x.OriginatorUser.UserName)
+                .Include(x => x.Establishment)
+                .Include(x => x.OriginatorUser)
                 .AsQueryable();
 
             if (!currentUser.IsInRole(Roles.Admin))
