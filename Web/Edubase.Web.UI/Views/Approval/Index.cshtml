@@ -6,6 +6,15 @@
     ViewBag.HideLogo = true;
 }
 
+@if (ViewBag.UpdatedName != null)
+{
+    <div class="pending-updates-message">
+        <div class="tick"></div>
+        The update to @ViewBag.UpdatedName has been @(ViewBag.ActionName == "a" ? "accepted" : "rejected"). The editor has been notified via email.
+        <div class="cross" onclick="$(this).parent().hide();"></div>
+    </div>
+}
+
 <div class="grid-row">
     <div class="column-full">
         <h1 class="heading-xlarge">Items for approval</h1>
@@ -48,8 +57,27 @@
                         <td>@item.NewValue</td>
                         <td>@item.DateOfChange</td>
                         <td class="bb">@item.OriginatorName</td>
-                        <td>@Html.ActionLink("Accept", "Accept")</td>
-                        <td>@Html.ActionLink("Reject", "Reject")</td>
+                        <td>
+                            @using (Html.BeginForm("Accept", "Approval", FormMethod.Post))
+                            {
+                                @Html.Hidden("skip", Model.Skip)
+                                @Html.Hidden("take", Model.Take)
+                                @Html.Hidden("id", item.Id)
+                                @Html.Hidden("urn", Model.EstablishmentUrn)
+                                <input type="submit" value="Approve" class="link-button" />
+                            }
+                        </td>
+                        <td>
+                            @using (Html.BeginForm("Reject", "Approval", FormMethod.Post))
+                            {
+                                @Html.Hidden("skip", Model.Skip)
+                                @Html.Hidden("take", Model.Take)
+                                @Html.Hidden("id", item.Id)
+                                @Html.Hidden("urn", Model.EstablishmentUrn)
+                                <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().focus(); $(this).hide()" />
+                                <input type="text" name="reason" style="display:none;" placeholder="Reason" />
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -73,11 +101,30 @@
                         <dt>Date changed:</dt>
                         <dd>@item.DateOfChange</dd>
                         <dt>Suggested from:</dt>
-                        <dd>@item.OldValue</dd>
+                        <dd>@item.OriginatorName</dd>
                         <dt></dt>
-                        <dd>@Html.ActionLink("Accept", "Accept")</dd>
+                        <dd>
+                            @using (Html.BeginForm("Accept", "Approval", FormMethod.Post))
+                            {
+                                @Html.Hidden("skip", Model.Skip)
+                                @Html.Hidden("take", Model.Take)
+                                @Html.Hidden("id", item.Id)
+                                @Html.Hidden("urn", Model.EstablishmentUrn)
+                                <input type="submit" value="Approve" class="link-button" />
+                            }
+                        </dd>
                         <dt></dt>
-                        <dd>@Html.ActionLink("Reject", "Reject")</dd>
+                        <dd>
+                            @using (Html.BeginForm("Reject", "Approval", FormMethod.Post))
+                            {
+                                @Html.Hidden("skip", Model.Skip)
+                                @Html.Hidden("take", Model.Take)
+                                @Html.Hidden("id", item.Id)
+                                @Html.Hidden("urn", Model.EstablishmentUrn)
+                                <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().focus(); $(this).hide()" />
+                                <input type="text" name="reason" style="display:none;" placeholder="Reason" onkeydown="if ($.event.fix(event).which == 27) { $(this).prev().show(); $(this).blur(); $(this).hide(); }" />
+                            }
+                        </dd>
 
                     </dl>
                 </li>

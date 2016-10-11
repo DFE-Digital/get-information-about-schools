@@ -79,7 +79,7 @@ namespace Edubase.Web.UI.Controllers
                 
                 if (User.Identity.IsAuthenticated)
                 {
-                    var pending = dc.EstablishmentApprovalQueue.Where(x => x.Urn == id).ToList();
+                    var pending = dc.EstablishmentApprovalQueue.Where(x => x.Urn == id && x.IsApproved == false && x.IsDeleted == false && x.IsRejected == false).ToList();
                     if (pending.Any())
                     {
                         foreach (var item in pending)

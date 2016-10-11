@@ -143,3 +143,48 @@ ul.approval-items{
         display:block;
     }
 }
+
+input.link-button
+{
+    padding:0;
+    background-color:transparent;
+    color:$link-colour;
+    border:none;
+    cursor:pointer;
+    text-decoration:underline;
+}
+
+
+
+.pending-updates-message {
+        background-color:$turquoise;
+        font-size:15px;
+        color:white;
+        padding:6px 36px 6px 36px;
+        position:relative;
+        margin-bottom:10px;
+
+        .tick {
+            position:absolute;
+            left:0;
+            top:0;
+            width:35px;
+            height:35px;
+            background-image: url('/public/assets/images/icons/tick.PNG');
+            background-repeat:no-repeat;
+            background-size:contain;
+        }
+        .cross {
+            position:absolute;
+            background-image: url('/public/assets/images/icons/cross.PNG');
+            top:0;
+            right:0;
+            width:31px;
+            height:31px;
+            background-repeat:no-repeat;
+            background-size:contain;
+            cursor:pointer;
+        }
+
+        a { color:white; }
+    }

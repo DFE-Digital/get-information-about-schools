@@ -16,11 +16,13 @@ namespace Edubase.Data.Entity
         public string Name { get; set; }
         public string NewValue { get; set; }
         public bool IsApproved { get; set; }
+        public bool IsRejected { get; set; }
+        public string RejectionReason { get; set; }
         public ApplicationUser OriginatorUser { get; set; }
         public string OriginatorUserId { get; set; }
-        public DateTime? ApprovalDate { get; set; }
-        public ApplicationUser ApproverUser { get; set; }
-        public string ApproverUserId { get; set; }
+        public ApplicationUser ProcessorUser { get; set; }
+        public string ProcessorUserId { get; set; }
         public string OldValue { get; set; }
+        public DateTime? ProcessedDateUtc { get; set; }
     }
 }
