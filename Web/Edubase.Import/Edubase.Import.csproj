@@ -125,6 +125,7 @@
     <Compile Include="Headtitle.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
+    <Compile Include="LangExt.cs" />
     <Compile Include="LocalAuthority.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>

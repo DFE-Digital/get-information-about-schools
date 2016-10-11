@@ -83,6 +83,9 @@ namespace Edubase.Common
         }
 
         public static string Sentenceify(this string[] data) => StringUtil.Sentenceify(data);
+
+
+        public static bool IsInFuture(this DateTime? dt) => dt.HasValue ? dt.Value.Date > DateTime.UtcNow.Date : false;
         
 
     }

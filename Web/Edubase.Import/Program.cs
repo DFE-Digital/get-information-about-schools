@@ -22,6 +22,8 @@ using System.Configuration;
 
 namespace Edubase.Import
 {
+    using GovMap = Tuple<string, Type, Func<Governor, object>>;
+
     class Program
     {
         static void Main(string[] args)
@@ -310,21 +312,21 @@ namespace Edubase.Import
             int count = 0;
             var batchCount = 0;
 
-            var cols = new List<Tuple<string, Type, Func<Governor, object>>>()
+            var cols = new List<GovMap>()
             {
-                new Tuple<string, Type, Func<Governor, object>>("Id", typeof(int), x=>x.GID.ToInteger().Value),
-                new Tuple<string, Type, Func<Governor, object>>("EstablishmentUrn", typeof(int), x=>x.URN.ToInteger().Value),
-                new Tuple<string, Type, Func<Governor, object>>("Title", typeof(string), x=>(object) x.Title.Clean() ?? DBNull.Value),
-                new Tuple<string, Type, Func<Governor, object>>("Forename1", typeof(string), x=> (object) x.Forename1.Clean() ?? DBNull.Value),
-                new Tuple<string, Type, Func<Governor, object>>("Forename2", typeof(string), x=>(object) x.Forename2.Clean() ?? DBNull.Value),
-                new Tuple<string, Type, Func<Governor, object>>("Surname", typeof(string), x=> (object) x.Surname.Clean() ?? DBNull.Value),
-                new Tuple<string, Type, Func<Governor, object>>("AppointmentStartDate", typeof(DateTime), x=> (object)x.Dateofappointment.ToDateTime("dd/MM/yyyy")??DBNull.Value),
-                new Tuple<string, Type, Func<Governor, object>>("AppointmentEndDate", typeof(DateTime), x=>(object)x.Datetermofofficeendsended.ToDateTime("dd/MM/yyyy")??DBNull.Value),
-                new Tuple<string, Type, Func<Governor, object>>("RoleId", typeof(int), x=> (object) roles.FirstOrDefault(r => r.Name == x.Role)?.Id ?? DBNull.Value),
-                new Tuple<string, Type, Func<Governor, object>>("GovernorAppointingBodyId", typeof(int), x=> (object) bods.FirstOrDefault(r => r.Name == x.Appointingbody)?.Id ?? DBNull.Value),
-                new Tuple<string, Type, Func<Governor, object>>("CreatedUtc", typeof(DateTime), x=>DateTime.UtcNow),
-                new Tuple<string, Type, Func<Governor, object>>("LastUpdatedUtc", typeof(DateTime), x=>DateTime.UtcNow),
-                new Tuple<string, Type, Func<Governor, object>>("IsDeleted", typeof(bool), x=>false),
+                new GovMap("Id", typeof(int), x => x.GID.ToInteger().Value),
+                new GovMap("EstablishmentUrn", typeof(int), x => x.URN.ToInteger().Value),
+                new GovMap("Title", typeof(string), x => x.Title.SQLify()),
+                new GovMap("Forename1", typeof(string), x=> x.Forename1.SQLify()),
+                new GovMap("Forename2", typeof(string), x=>x.Forename2.SQLify()),
+                new GovMap("Surname", typeof(string), x => x.Surname.SQLify()),
+                new GovMap("AppointmentStartDate", typeof(DateTime), x => x.Dateofappointment.ToDateTime("dd/MM/yyyy").SQLify()),
+                new GovMap("AppointmentEndDate", typeof(DateTime), x => x.Datetermofofficeendsended.ToDateTime("dd/MM/yyyy").SQLify()),
+                new GovMap("RoleId", typeof(int), x=> (object) roles.FirstOrDefault(r => r.Name == x.Role)?.Id ?? DBNull.Value),
+                new GovMap("GovernorAppointingBodyId", typeof(int), x=> (object) bods.FirstOrDefault(r => r.Name == x.Appointingbody)?.Id ?? DBNull.Value),
+                new GovMap("CreatedUtc", typeof(DateTime), x => DateTime.UtcNow),
+                new GovMap("LastUpdatedUtc", typeof(DateTime), x=>DateTime.UtcNow),
+                new GovMap("IsDeleted", typeof(bool), x=>false),
             };
 
             var table = new DataTable();
@@ -352,6 +354,7 @@ namespace Edubase.Import
                     | SqlBulkCopyOptions.UseInternalTransaction, null);
                 bulkCopy.DestinationTableName = "Governor";
                 connection.Open();
+                bulkCopy.BulkCopyTimeout = 900;
                 bulkCopy.WriteToServer(table);
                 connection.Close();
             }

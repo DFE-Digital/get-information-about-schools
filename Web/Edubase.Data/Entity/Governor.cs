@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity.Lookups;
+﻿using Edubase.Common;
+using Edubase.Data.Entity.Lookups;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,5 +25,8 @@ namespace Edubase.Data.Entity
         public GovernorRole Role { get; set; }
         public int? GovernorAppointingBodyId { get; set; }
         public GovernorAppointingBody GovernorAppointingBody { get; set; }
+
+        [NotMapped]
+        public string FullName => StringUtil.ConcatNonEmpties(" ", Title, Forename1, Forename2, Surname);
     }
 }

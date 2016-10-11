@@ -76,7 +76,9 @@ namespace Edubase.Web.UI.Controllers
                     .FirstOrDefault(x => x.Urn == id);
 
                 viewModel.Establishment = model;
+                viewModel.Govs = dc.Governors.Include(x=>x.GovernorAppointingBody).Include(x=>x.Role).Where(x => x.EstablishmentUrn == id).ToArray();
                 
+
                 if (User.Identity.IsAuthenticated)
                 {
                     var pending = dc.EstablishmentApprovalQueue.Where(x => x.Urn == id && x.IsApproved == false && x.IsDeleted == false && x.IsRejected == false).ToList();
