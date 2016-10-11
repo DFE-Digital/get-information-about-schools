@@ -25,26 +25,27 @@ namespace Edubase.Import
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Admissionspolicy> Admissionspolicy { get; set; }
-        public virtual DbSet<Boarders> Boarders { get; set; }
-        public virtual DbSet<CompanyTable> CompanyTable { get; set; }
+        public virtual DbSet<Admissionspolicy> Admissionspolicies { get; set; }
+        public virtual DbSet<Boarder> Boarders { get; set; }
+        public virtual DbSet<CompanyTable> CompanyTables { get; set; }
         public virtual DbSet<Diocese> Diocese { get; set; }
-        public virtual DbSet<Establishmentstatus> Establishmentstatus { get; set; }
-        public virtual DbSet<Gender> Gender { get; set; }
-        public virtual DbSet<GroupType> GroupType { get; set; }
-        public virtual DbSet<Headtitle> Headtitle { get; set; }
-        public virtual DbSet<LocalAuthority> LocalAuthority { get; set; }
-        public virtual DbSet<Nurseryprovision> Nurseryprovision { get; set; }
-        public virtual DbSet<Officialsixthform> Officialsixthform { get; set; }
-        public virtual DbSet<Phaseofeducation> Phaseofeducation { get; set; }
-        public virtual DbSet<Reasonestablishmentclosed> Reasonestablishmentclosed { get; set; }
-        public virtual DbSet<Reasonestablishmentopened> Reasonestablishmentopened { get; set; }
-        public virtual DbSet<Religiouscharacter> Religiouscharacter { get; set; }
-        public virtual DbSet<Religiousethos> Religiousethos { get; set; }
-        public virtual DbSet<SchoolsTable> SchoolsTable { get; set; }
-        public virtual DbSet<SchoolToCompanyLinks> SchoolToCompanyLinks { get; set; }
-        public virtual DbSet<SchoolToSchoolLinks> SchoolToSchoolLinks { get; set; }
-        public virtual DbSet<Specialclasses> Specialclasses { get; set; }
-        public virtual DbSet<Typeofestablishment> Typeofestablishment { get; set; }
+        public virtual DbSet<Establishmentstatu> Establishmentstatus { get; set; }
+        public virtual DbSet<Gender> Genders { get; set; }
+        public virtual DbSet<Governor> Governors { get; set; }
+        public virtual DbSet<GroupType> GroupTypes { get; set; }
+        public virtual DbSet<Headtitle> Headtitles { get; set; }
+        public virtual DbSet<LocalAuthority> LocalAuthorities { get; set; }
+        public virtual DbSet<Nurseryprovision> Nurseryprovisions { get; set; }
+        public virtual DbSet<Officialsixthform> Officialsixthforms { get; set; }
+        public virtual DbSet<Phaseofeducation> Phaseofeducations { get; set; }
+        public virtual DbSet<Reasonestablishmentclosed> Reasonestablishmentcloseds { get; set; }
+        public virtual DbSet<Reasonestablishmentopened> Reasonestablishmentopeneds { get; set; }
+        public virtual DbSet<Religiouscharacter> Religiouscharacters { get; set; }
+        public virtual DbSet<Religiousetho> Religiousethos { get; set; }
+        public virtual DbSet<SchoolsTable> SchoolsTables { get; set; }
+        public virtual DbSet<SchoolToCompanyLink> SchoolToCompanyLinks { get; set; }
+        public virtual DbSet<SchoolToSchoolLink> SchoolToSchoolLinks { get; set; }
+        public virtual DbSet<Specialclass> Specialclasses { get; set; }
+        public virtual DbSet<Typeofestablishment> Typeofestablishments { get; set; }
     }
 }

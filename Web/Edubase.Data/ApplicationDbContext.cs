@@ -32,6 +32,9 @@ namespace Edubase.Data.Entity
         public IDbSet<Establishment2Company> Establishment2CompanyLinks { get; set; }
         public IDbSet<EstablishmentPermission> Permissions { get; set; }
         public IDbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
+        public IDbSet<Governor> Governors { get; set; }
+        public IDbSet<GovernorRole> GovernorRoles { get; set; }
+        public IDbSet<GovernorAppointingBody> GovernorAppointingBodies { get; set; }
 
 
         private bool _enableIdentityInsert;

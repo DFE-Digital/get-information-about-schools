@@ -107,6 +107,7 @@
     <Compile Include="Entity\ComplexTypes\ContactDetail.cs" />
     <Compile Include="Entity\EdubaseEntity.cs" />
     <Compile Include="Entity\EstablishmentPermission.cs" />
+    <Compile Include="Entity\Governor.cs" />
     <Compile Include="Entity\LocalAuthority.cs" />
     <Compile Include="Entity\Lookups\Diocese.cs" />
     <Compile Include="Entity\Lookups\LookupBase.cs" />
@@ -162,6 +163,10 @@
     <Compile Include="Migrations\201610111043490_AddedRejectionCols.Designer.cs">
       <DependentUpon>201610111043490_AddedRejectionCols.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610111352104_Governors.cs" />
+    <Compile Include="Migrations\201610111352104_Governors.Designer.cs">
+      <DependentUpon>201610111352104_Governors.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -208,6 +213,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610111043490_AddedRejectionCols.resx">
       <DependentUpon>201610111043490_AddedRejectionCols.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610111352104_Governors.resx">
+      <DependentUpon>201610111352104_Governors.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

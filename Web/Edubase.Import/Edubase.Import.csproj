@@ -86,7 +86,7 @@
     <Compile Include="Admissionspolicy.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
-    <Compile Include="Boarders.cs">
+    <Compile Include="Boarder.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
     <Compile Include="CompanyTable.cs">
@@ -110,10 +110,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EdubaseSource.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Establishmentstatus.cs">
+    <Compile Include="Establishmentstatu.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
     <Compile Include="Gender.cs">
+      <DependentUpon>EdubaseSource.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Governor.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
     <Compile Include="GroupType.cs">
@@ -145,19 +148,19 @@
     <Compile Include="Religiouscharacter.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
-    <Compile Include="Religiousethos.cs">
+    <Compile Include="Religiousetho.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
     <Compile Include="SchoolsTable.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
-    <Compile Include="SchoolToCompanyLinks.cs">
+    <Compile Include="SchoolToCompanyLink.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
-    <Compile Include="SchoolToSchoolLinks.cs">
+    <Compile Include="SchoolToSchoolLink.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
-    <Compile Include="Specialclasses.cs">
+    <Compile Include="Specialclass.cs">
       <DependentUpon>EdubaseSource.tt</DependentUpon>
     </Compile>
     <Compile Include="Typeofestablishment.cs">
@@ -189,6 +192,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="EdubaseSource.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="EdubaseSource.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>EdubaseSource.Context.cs</LastGenOutput>
@@ -199,9 +207,6 @@
       <LastGenOutput>EdubaseSource.cs</LastGenOutput>
       <DependentUpon>EdubaseSource.edmx</DependentUpon>
     </Content>
-    <None Include="EdubaseSource.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
