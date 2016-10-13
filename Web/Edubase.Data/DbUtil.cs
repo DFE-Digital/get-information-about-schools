@@ -28,7 +28,7 @@ namespace Edubase.Data
                 catch (DbUpdateConcurrencyException)
                 {
                     if (i == 999) throw;
-                    System.Threading.Thread.Sleep(Random2.Next(10, 60));
+                    System.Threading.Thread.Sleep(RandomNumber.Next(10, 60));
                 }
                 catch (Exception)
                 {

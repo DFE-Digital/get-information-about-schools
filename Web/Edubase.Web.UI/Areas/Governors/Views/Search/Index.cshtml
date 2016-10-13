@@ -1,0 +1,53 @@
+﻿@model SearchModel
+@{
+    ViewBag.bodyClasses = "schools-search-page";
+    ViewBag.hideLogo = true;
+    var dc = new Edubase.Data.Entity.ApplicationDbContext();
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <br />
+        <h1 class="heading-xlarge">Search for Governors</h1>
+    </div>
+</div>
+
+    
+<div class="grid-row">
+    <div class="column-half">
+
+        @using (Html.BeginForm("Search", "Search", FormMethod.Get))
+        {
+            @Html.ValidationSummary(null, new { @class = "error-summary" })
+
+            <label for="forename" class="bold-xsmall" style="margin-bottom:10px; display:block;">Forename</label>
+            <div class="form-hint">e.g. John</div>
+            @Html.EduTextBoxFor(x => x.Forename, new { maxlength = 120, id = "forename", @class = "form-control" })
+            <br /><br />
+
+            <label for="surname" class="bold-xsmall" style="margin-bottom:10px; display:block;">Surname</label>
+            <div class="form-hint">e.g. Evans</div>
+            @Html.EduTextBoxFor(x => x.Surname, new { maxlength = 120, id = "surname", @class = "form-control" })
+            <br /><br />
+
+            <label for="roleid" class="bold-xsmall" style="margin-bottom:10px; display:block;">Role</label>
+            <div class="form-hint">e.g. Trustee</div>
+            @Html.EduDropDownFor(x => x.RoleId, dc.GovernorRoles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                    new { id = "roleid", @class = "form-control" })
+            <br /><br />
+
+            <label class="form-checkbox" for="IncludeHistoric">
+                @Html.CheckBoxFor(x => x.IncludeHistoric)
+                <span class="font-xsmall">Include historic records (Governors stepped down in the last 12 months)</span>
+            </label>
+
+            <br /><br />
+            <input type="submit" class="button button-next" value="Search" />
+
+            <br /><br />
+            @Html.ActionLink("Reset search options", "Index", null, new { style= "color:#005ea5;", @class = "font-xsmall" })
+        }
+
+    </div>
+</div>
+

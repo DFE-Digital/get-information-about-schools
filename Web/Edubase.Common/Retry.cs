@@ -63,11 +63,46 @@ namespace Edubase.Common
                 {
                     failureAction?.Invoke(ex);
                     if (i == (maxRetries - 1)) throw;
-                    else System.Threading.Thread.Sleep(Random2.Next(minInterval, maxInterval));
+                    else System.Threading.Thread.Sleep(RandomNumber.Next(minInterval, maxInterval));
                 }
             }
         }
 
-        
+
+
+        /// <summary>
+        /// Retries performing an action according to the supplied constraints
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="minInterval"></param>
+        /// <param name="maxInterval"></param>
+        /// <param name="maxRetries"></param>
+        /// <param name="failureAction"></param>
+        public static async Task RetryableActionAsync(Func<Task> func,
+            int minInterval = 100,
+            int maxInterval = 500,
+            int maxRetries = 5,
+            Action<Exception> failureAction = null)
+        {
+            for (int i = 0; i < maxRetries; i++)
+            {
+                try
+                {
+                    await func();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    failureAction?.Invoke(ex);
+                    if (i == (maxRetries - 1)) throw;
+                    else await Task.Delay(RandomNumber.Next(minInterval, maxInterval));
+                }
+            }
+        }
+
+
+
+
+
     }
 }

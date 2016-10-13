@@ -1,4 +1,7 @@
 ﻿using Edubase.Data.Identity;
+using Edubase.Services;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
@@ -26,5 +29,16 @@ namespace Edubase.Web.UI.Controllers
             ViewBag.Message = $"As an LA Administrator for LA ID {id} you'll soon be able to see a list of schools on this page";
             return View("Placeholder");
         }
+
+        public ActionResult DoException() { throw new System.Exception("This is a test exception"); }
+
+        [HttpGet]
+        public ActionResult GetPendingErrors(string pwd)
+        {
+            if (pwd == "c7634") return Json(MessageLoggingService.Instance.GetPending(), JsonRequestBehavior.AllowGet);
+            else return new EmptyResult();
+        }
+
+        public async Task FlushErrors() => await MessageLoggingService.Instance.FlushAsync();
     }
 }

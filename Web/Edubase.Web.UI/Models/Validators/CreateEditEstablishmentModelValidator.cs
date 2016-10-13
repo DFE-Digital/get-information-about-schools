@@ -25,7 +25,7 @@ namespace Edubase.Web.UI.Models.Validators
             RuleFor(x => x.LAESTAB)
                 .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotEmpty()
-                .WithMessage("LASTAB is invalid")
+                .WithMessage("LAESTAB is invalid")
                 .Must((m, v) => v.ToString().StartsWith(m.LocalAuthorityId.ToString()))
                 .WithMessage("LAESTAB should be a numeric value of LA Code + Establishment Number")
                 .Must(x => x.ToString().Length == 7)
