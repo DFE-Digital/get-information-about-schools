@@ -26,7 +26,7 @@
 
     </div>
 
-    @if (Model.AllowApprovals || Model.AllowCreation)
+    @if (Model.AllowApprovals || Model.AllowSchoolCreation || Model.AllowTrustCreation)
     {
         <div class="column-half">
 
@@ -38,12 +38,18 @@
                 </ul>
             }
 
-            @if (Model.AllowCreation)
+            @if (Model.AllowSchoolCreation || Model.AllowTrustCreation)
             {
                 <h2 class="heading-medium">Create</h2>
                 <ul>
-                    <li>@Html.ActionLink("Create new school", "Create", "Establishment")</li>
-                    <li>@Html.ActionLink("Create new Multi-Academy Trust", "Create", "Trust")</li>
+                    @if (Model.AllowSchoolCreation)
+                    {
+                        <li>@Html.ActionLink("Create new school", "Create", "Establishment")</li>
+                    }
+                    @if (Model.AllowTrustCreation)
+                    {
+                        <li>@Html.ActionLink("Create new Multi-Academy Trust", "Create", "Trust")</li>
+                    }
                 </ul>
             }
 

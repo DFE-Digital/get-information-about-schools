@@ -26,8 +26,9 @@
     <div class="column-full">
         <div class="grid-row">
             @Html.ActionLink("Search for a Multi Academy Trust", "Index", "Search", null, new { @class = "home-link" })
-            <br />
-            <button type="submit" class="button header-submit">Submit</button>
+            
+            
+            <button type="submit" class="button header-submit" style="margin-top:80px;">Submit</button>
 
             @if (Model.GroupUID == null)
             {
@@ -38,6 +39,8 @@
                 <h1 class="heading-xlarge">Edit Multi Academy Trust</h1>
             }
 
+
+            
 
             @Html.ValidationSummary(null, new { @class = "error-summary" })
 
@@ -101,6 +104,9 @@
                 </tr>
 
             </table>
+            
+            <div class="mi v-space-300"></div>
+            <div class="mvo v-space-100"></div>
             <button type="submit" class="button mobile-full-width">Submit</button>
         </div>
     </div>

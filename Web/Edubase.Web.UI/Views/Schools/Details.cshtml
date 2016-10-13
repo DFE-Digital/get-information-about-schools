@@ -20,7 +20,7 @@
 else if (Model.UserHasPendingApprovals)
 {
     <div class="pending-updates-message">
-        <div class="tick"></div>
+        <div class="exclaim"></div>
         You have pending approvals awaiting for this school. @Html.ActionLink("Approve now.", "Index", "Approval", new { urn = Model.Establishment.Urn }, null)
         <div class="cross" onclick="$(this).parent().hide();"></div>
     </div>
@@ -29,7 +29,7 @@ else if (Model.UserHasPendingApprovals)
 @if (Model.PendingChanges.Any())
 {
     <div class="pending-updates">
-        <div class="icon">!</div>
+        <div class="icon" style="height:24px;">!</div>
         <h3>Data update@(Model.PendingChanges.Count > 1 ? "s" : "") pending Data Owner approval</h3>
         @foreach (var item in Model.PendingChanges)
         {
@@ -244,7 +244,7 @@ else if (Model.UserHasPendingApprovals)
             @RenderGovernors("Local Governor[s]", Model.NonHistoric(Model.LocalGovernors))
             @RenderGovernors("Governor[s]", Model.NonHistoric(Model.Governors))
 
-            @if (Model.Govs.Any(x => !x.AppointmentEndDate.IsInFuture()))
+            @if (Model.Historic(Model.Govs).Any())
             {
                 if (Model.NonHistoric(Model.Govs).Any())
                 {
@@ -339,6 +339,7 @@ else if (Model.UserHasPendingApprovals)
                         <td>@gov.GovernorAppointingBody</td>
                     </tr>
                 </table>
+                <div style="clear:both;"></div>
             </details>
         }
         <div style="height:15px;float:none;clear:both;"><br /></div>

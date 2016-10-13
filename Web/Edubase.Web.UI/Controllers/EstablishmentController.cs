@@ -118,14 +118,14 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles="Admin,LA")]
         public ActionResult Create()
         {
             return View("CreateEdit", new CreateEditEstablishmentModel());
         }
 
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Admin,LA")]
         public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] CreateEditEstablishmentModel model)
         {
             if (ModelState.IsValid)

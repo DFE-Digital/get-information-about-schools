@@ -7,7 +7,8 @@ namespace Edubase.Web.UI.Models
 {
     public class HomepageViewModel
     {
-        public bool AllowCreation { get; set; }
+        public bool AllowSchoolCreation { get; set; }
+        public bool AllowTrustCreation { get; set; }
         public bool AllowApprovals { get; set; }
         public int PendingApprovalsCount { get; set; }
     }
