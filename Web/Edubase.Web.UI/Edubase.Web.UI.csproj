@@ -298,6 +298,7 @@
     <Content Include="public\assets\images\icon-location.png" />
     <Content Include="public\assets\images\icon-pupils.png" />
     <Content Include="public\assets\images\icons\cross.PNG" />
+    <Content Include="public\assets\images\icons\exclaim.PNG" />
     <Content Include="public\assets\images\icons\icon-calendar-2x.png" />
     <Content Include="public\assets\images\icons\icon-calendar.png" />
     <Content Include="public\assets\images\icons\icon-file-download-2x.png" />
@@ -704,6 +705,7 @@
     <Content Include="Areas\Governors\Views\Shared\_ResultsPagination.cshtml" />
     <Content Include="Views\Trust\CreateEdit.cshtml" />
     <Content Include="Views\Shared\_ResultsPagination2.cshtml" />
+    <Content Include="Views\Shared\_ResultsPagination.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
