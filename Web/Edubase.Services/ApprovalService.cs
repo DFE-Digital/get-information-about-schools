@@ -26,7 +26,7 @@ namespace Edubase.Services
                 var prop = typeof(Establishment).GetProperty(item.Name);
 
                 object newValue = null;
-                if (item.NewValue.IsInteger()) item.NewValue.ToInteger();
+                if (item.NewValue.IsInteger()) newValue = item.NewValue.ToInteger();
                 else newValue = item.NewValue;
                 
 
