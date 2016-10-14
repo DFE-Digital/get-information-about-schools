@@ -78,7 +78,7 @@ namespace Edubase.Web.UI.Controllers
                     .Include(x => x.Establishment.EstablishmentType)
                     .Include(x => x.Establishment.HeadTitle)
                     .Where(x => x.Company.GroupUID == id).ToList();
-                return View(new MATDetailViewModel(estabs, mat));
+                return View(new MATDetailViewModel(estabs, mat, User.Identity.IsAuthenticated));
             }
         }
 
