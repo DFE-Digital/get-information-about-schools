@@ -42,7 +42,7 @@ else if (Model.UserHasPendingApprovals)
     </div>
 }
 
-<h1 class="heading-large">@Model.Establishment.Name @Html.PendingUpdateFor(x => x.Name)</h1>
+<h1 class="heading-large">@Html.PendingUpdateFor(x => x.Name) @Model.Establishment.Name</h1>
 @if (Model.IsUserLoggedOn)
 {
     @Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
@@ -60,10 +60,13 @@ else if (Model.UserHasPendingApprovals)
                 <th scope="row">Local authority</th>
                 <td>
                     @Html.PendingUpdateFor(x => x.LocalAuthorityId)
-                    <a href="/Search/SearchByLaName?searchTerm=@Model.Establishment.LocalAuthority">
-                        @Model.Establishment.LocalAuthority
-                    </a> 
-                    (@Model.Establishment.LocalAuthorityId)
+                    @if (Model.Establishment.LocalAuthorityId.HasValue)
+                    {
+                        <a href="/Search/SearchByLaName?searchTerm=@Model.Establishment.LocalAuthority">
+                            @Model.Establishment.LocalAuthority
+                        </a> 
+                        <text>(@Model.Establishment.LocalAuthorityId)</text>
+                    }
                 </td>
             </tr>
             <tr>

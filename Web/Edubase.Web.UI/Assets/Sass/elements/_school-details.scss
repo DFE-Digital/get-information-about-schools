@@ -33,10 +33,12 @@
 
     h1 {
         .pending-update-icon {
+            @include pending-update;
+            position:relative;
             display:inline-block;
             padding:3px 0 0 0;
             height:21px;
-            @include pending-update;
+            top:-6px;
         }
     }
     
