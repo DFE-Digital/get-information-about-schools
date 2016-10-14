@@ -11,5 +11,6 @@ namespace Edubase.Web.UI.Models
         public string Name { get; set; }
         public int? TypeId { get; set; }
         public DateTimeViewModel OpenDate { get; set; }
+        public string CompaniesHouseNumber { get; set; }
     }
 }

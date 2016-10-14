@@ -10,6 +10,7 @@ namespace Edubase.Web.UI.Models.Validators
             RuleFor(x => x.OpenDate).Must(x => x.IsValid()).When(x => x.OpenDate.IsNotEmpty()).WithMessage("Open date is invalid");
             RuleFor(x => x.Name).NotEmpty().WithMessage("Name is invalid");
             RuleFor(x => x.TypeId).NotEmpty().WithMessage("Type is invalid");
+            RuleFor(x => x.CompaniesHouseNumber).NotEmpty().WithMessage("Companies house number is invalid");
         }
         
     }

@@ -2,7 +2,7 @@
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
-    ViewBag.Title = "Create/edit trust";
+    ViewBag.Title = "Create/edit academy trust";
 
     var dc = new Edubase.Data.Entity.ApplicationDbContext();
 }
@@ -25,18 +25,18 @@
     @Html.HiddenFor(x => x.GroupUID)
     <div class="column-full">
         <div class="grid-row">
-            @Html.ActionLink("Search for a Multi Academy Trust", "Index", "Search", null, new { @class = "home-link" })
+            @Html.ActionLink("Search for an Academy Trust", "Index", "Search", null, new { @class = "home-link" })
             
             
             <button type="submit" class="button header-submit" style="margin-top:80px;">Submit</button>
 
             @if (Model.GroupUID == null)
             {
-                <h1 class="heading-xlarge">Create a new Multi Academy Trust</h1>
+                <h1 class="heading-xlarge">Create a new Academy Trust</h1>
             }
             else
             {
-                <h1 class="heading-xlarge">Edit Multi Academy Trust</h1>
+                <h1 class="heading-xlarge">Edit Academy Trust</h1>
             }
 
 
@@ -99,6 +99,20 @@
                                 Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "YYYY",
                                 new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year",
                                     style = "width:70px;" })
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th scope="row">
+                        <label for="school-name">Companies house number</label>
+                        @FormHint("companieshousenumber")
+                    </th>
+                    <td>
+                        <div class="form-group @Html.ValidationCssClassFor(x=>x.CompaniesHouseNumber)">
+
+                            @Html.EduTextBoxFor(x => x.CompaniesHouseNumber, new { maxlength = 120, id = "companieshousenumber", @class = "form-control", aria_describedby = "help-companieshousenumber" })
                         </div>
                     </td>
                 </tr>

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using Edubase.Common;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -25,7 +26,8 @@ namespace Edubase.Web.UI.Controllers
                     {
                         Name = viewModel.Name,
                         GroupTypeId = viewModel.TypeId,
-                        OpenDate = viewModel.OpenDate.ToDateTime()
+                        OpenDate = viewModel.OpenDate.ToDateTime(),
+                        CompaniesHouseNumber = viewModel.CompaniesHouseNumber
                     };
                     dc.Companies.Add(company);
                     await dc.SaveChangesAsync();
@@ -46,6 +48,7 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.Name = company.Name;
                 viewModel.TypeId = company.GroupTypeId;
                 viewModel.OpenDate = new DateTimeViewModel(company.OpenDate);
+                viewModel.CompaniesHouseNumber = company.CompaniesHouseNumber;
             }
             return View(VIEWNAME, viewModel);
         }
@@ -61,6 +64,7 @@ namespace Edubase.Web.UI.Controllers
                     company.Name = viewModel.Name;
                     company.OpenDate = viewModel.OpenDate.ToDateTime();
                     company.GroupTypeId = viewModel.TypeId;
+                    company.CompaniesHouseNumber = viewModel.CompaniesHouseNumber.Clean();
                     await dc.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = company.GroupUID });
                 }
