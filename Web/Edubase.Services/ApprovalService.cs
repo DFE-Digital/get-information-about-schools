@@ -28,7 +28,7 @@ namespace Edubase.Services
 
                 object newValue = null;
                 if (item.NewValue.IsInteger()) newValue = item.NewValue.ToInteger();
-                else newValue = item.NewValue;
+                else newValue = (object) item.NewValue.ToDateTime() ?? item.NewValue;
                 
 
                 ReflectionHelper.SetProperty(establishment, item.Name, newValue);

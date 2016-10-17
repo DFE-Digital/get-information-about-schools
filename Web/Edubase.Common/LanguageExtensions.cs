@@ -55,6 +55,14 @@ namespace Edubase.Common
             else return null;
         }
 
+        public static DateTime? ToDateTime(this string data)
+        {
+            if (data == null) return null;
+            DateTime temp;
+            if (DateTime.TryParse(data, out temp)) return temp;
+            else return null;
+        }
+
         public static DateTime? ToDateTime(this string data, string[] formats)
         {
             if (string.IsNullOrWhiteSpace(data)) return null;
