@@ -21,12 +21,12 @@
             @if (Model.Surname.Clean() != null)
             {
                 <text>Surname <span class="bold-small">'@Model.Surname'</span>&nbsp;</text>
-}
+            }
 
             @if (Model.RoleName.Clean() != null)
             {
                 <text>Role <span class="bold-small">'@Model.RoleName'</span>&nbsp;</text>
-}
+            }
 
         </p>
         
@@ -63,14 +63,12 @@
                             <dd>@Html.ActionLink(result.Establishment.Name, "Details", "Schools", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
                             <dt>GID:</dt>
                             <dd>@result.Id</dd>
-                            @if (result.AppointmentEndDate.HasValue)
-                            {
-                                <dt>Date term of office ends/ended</dt>
-                                <dd>@result.AppointmentEndDate.Value.ToString("dd/MM/yyyy")</dd>
-                            }
+                            <dt>Date term of office ends/ended:</dt>
+                            <dd>@(result.AppointmentEndDate?.ToString("dd/MM/yyyy") ?? "None recorded")</dd>
+                            
                             @if (result.AppointmentStartDate.HasValue)
                             {
-                                <dt>Date of appointment</dt>
+                                <dt>Date of appointment:</dt>
                                 <dd>@result.AppointmentStartDate.Value.ToString("dd/MM/yyyy")</dd>
                             }
                             @if (result.GovernorAppointingBodyId.HasValue)
