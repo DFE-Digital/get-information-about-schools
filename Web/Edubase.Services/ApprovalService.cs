@@ -11,12 +11,13 @@ using System.Security;
 using Microsoft.AspNet.Identity;
 using System.Configuration;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace Edubase.Services
 {
     public class ApprovalService
     {
-        public string Accept(ClaimsPrincipal currentUser, int approvalItemId)
+        public async Task<string> AcceptAsync(ClaimsPrincipal currentUser, int approvalItemId)
         {
             using (var dc = new ApplicationDbContext())
             {
@@ -35,10 +36,13 @@ namespace Edubase.Services
                 item.ProcessorUserId = currentUser.Identity.GetUserId();
                 item.IsApproved = true;
                 item.LastUpdatedUtc = DateTime.UtcNow;
-                dc.SaveChanges();
 
-                new SmtpClient().Send("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment change accepted",
+                await dc.SaveChangesAsync();
+
+                await new SmtpClient().SendMailAsync("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment change accepted",
                                 $"For Establishment URN: {establishment.Urn}, the item '{item.Name}' has changed to '{item.NewValue}'");
+
+                await new BusMessagingService().SendEstablishmentUpdateMessage(establishment);
 
                 return item.Name;
             }

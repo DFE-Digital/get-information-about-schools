@@ -194,6 +194,10 @@
     <Compile Include="Migrations\201610111352104_Governors.Designer.cs">
       <DependentUpon>201610111352104_Governors.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.cs" />
+    <Compile Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.Designer.cs">
+      <DependentUpon>201610171337070_EstabCompanyLinkIdProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\LogMessageRepository.cs" />
@@ -245,6 +249,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610111352104_Governors.resx">
       <DependentUpon>201610111352104_Governors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.resx">
+      <DependentUpon>201610171337070_EstabCompanyLinkIdProperties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

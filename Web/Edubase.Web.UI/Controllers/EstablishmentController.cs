@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Edubase.Web.UI.Models;
-using Edubase.Data.Entity;
-using AutoMapper;
-using Edubase.Web.UI.Identity;
-using FluentValidation.Mvc;
-using Edubase.Data.Identity;
-using Edubase.Data.Entity.Permissions;
-using MoreLinq;
-using System.Dynamic;
-using Edubase.Data.Entity.ComplexTypes;
+﻿using AutoMapper;
 using Edubase.Common;
-using System.Net.Mail;
+using Edubase.Data.Entity;
+using Edubase.Data.Entity.ComplexTypes;
+using Edubase.Data.Identity;
+using Edubase.Services;
+using Edubase.Web.UI.Models;
+using FluentValidation.Mvc;
+using Microsoft.ServiceBus.Messaging;
+using MoreLinq;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
-using System.IdentityModel.Claims;
+using System.Data.Entity;
+using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -55,7 +53,7 @@ namespace Edubase.Web.UI.Controllers
 
                     else // user is in restrictive role
                     {
-                        var role = Roles.RestrictiveRoles.FirstOrDefault(x => User.IsInRole(x)) ?? Roles.Academy; 
+                        var role = Roles.RestrictiveRoles.FirstOrDefault(x => User.IsInRole(x)) ?? Roles.Academy;
                         var permissions = dc.Permissions.Where(x => x.RoleName == role).ToArray();
 
                         var config = new MapperConfiguration(cfg =>
@@ -73,7 +71,7 @@ namespace Edubase.Web.UI.Controllers
                         var estabTemp = mapper.Map(model, dataModel2);
                         var changes = ReflectionHelper.DetectChanges(estabTemp, dataModel, typeof(Address), typeof(ContactDetail));
                         mapper.Map(model, dataModel);
-                        
+
 
 
                         var establishment = Mapper.Map<CreateEditEstablishmentModel, Establishment>(model);
@@ -97,7 +95,7 @@ namespace Edubase.Web.UI.Controllers
                         });
 
                         dc.SaveChanges();
-                        
+
                         if (changes.Count > 0)
                         {
                             new SmtpClient().Send("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment data changed",
@@ -110,19 +108,17 @@ namespace Edubase.Web.UI.Controllers
                                 $"For Establishment URN: {dataModel.Urn}, the following has changed and requires approval: \r\n" + string.Join("\r\n", permPropertiesThatChanged));
                         }
 
+                        var t = new BusMessagingService().SendEstablishmentUpdateMessage(dataModel);
+
                         return RedirectToAction("Details", "Schools", new { id = model.Urn.Value, pendingUpdates = permPropertiesThatChanged.Count > 0 });
                     }
                 }
             }
             return View("CreateEdit", model);
         }
-
-
+        
         [HttpGet, Authorize(Roles="Admin,LA")]
-        public ActionResult Create()
-        {
-            return View("CreateEdit", new CreateEditEstablishmentModel());
-        }
+        public ActionResult Create() => View("CreateEdit", new CreateEditEstablishmentModel());
 
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Admin,LA")]

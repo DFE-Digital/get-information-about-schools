@@ -142,7 +142,7 @@ namespace Edubase.Web.UI.Controllers
                 foreach (var result in viewModel.Results)
                 {
                     result.EstablishmentCount = dc.Database
-                        .SqlQuery<int>("SELECT COUNT(1) FROM Establishment2Company WHERE Company_GroupUID = " + result.GroupUID).Single();
+                        .SqlQuery<int>("SELECT COUNT(1) FROM Establishment2Company WHERE CompanyGroupUID = " + result.GroupUID).Single();
                 }
 
             }

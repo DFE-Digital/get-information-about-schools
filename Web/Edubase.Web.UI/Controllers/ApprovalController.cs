@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -27,9 +28,9 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Accept(int id, int? urn, int skip, int take)
+        public async Task<ActionResult> Accept(int id, int? urn, int skip, int take)
         {
-            var fieldname = new ApprovalService().Accept(User as ClaimsPrincipal, id);
+            var fieldname = await new ApprovalService().AcceptAsync(User as ClaimsPrincipal, id);
             return RedirectToAction("Index", new { skip, take, urn, updatedName = fieldname, a = "a" });
         }
 

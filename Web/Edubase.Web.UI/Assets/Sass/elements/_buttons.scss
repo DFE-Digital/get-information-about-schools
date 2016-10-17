@@ -190,3 +190,32 @@ input[type="button"] {
     margin-top: 15px;
   }
 }
+
+
+.submit-cancel-panel {
+    float: right;
+
+    .button {
+        display: inline-block;
+    }
+
+    .submit{
+        float:right;
+    }
+
+    @include media(mobile) {
+        float: none;
+        .submit{
+            float:none;
+        }
+        .button {
+            float:none;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
+            display: block;
+        }
+        
+    }
+}

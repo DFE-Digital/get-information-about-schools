@@ -90,6 +90,9 @@ namespace Edubase.Data.Entity
 
         public HeadTitle HeadTitle { get; set; }
 
+        [NotMapped]
+        public string HeadteacherFullName => StringUtil.ConcatNonEmpties(" ", HeadTitle?.ToString(), HeadFirstName, HeadLastName);
+
         [RequiresApproval]
         public int? HeadTitleId { get; set; }
 

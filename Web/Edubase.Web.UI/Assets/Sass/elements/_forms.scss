@@ -156,6 +156,11 @@ legend {
   }*/
 }
 
+.form-control.search-box {
+    padding:5px;
+}
+
+
 
 // Form control widths
 .form-control-3-4 {
@@ -167,7 +172,7 @@ legend {
 }
 
 .form-control-1-2 {
-  width: 100%;
+  width: 50%;
 
   @include media(tablet) {
     width: 50%;
@@ -213,7 +218,6 @@ legend {
     width: 100%;
   }
 }
-
 
 .header-submit {
     float: right;
