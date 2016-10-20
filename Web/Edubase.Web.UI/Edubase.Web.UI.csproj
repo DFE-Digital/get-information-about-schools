@@ -228,6 +228,7 @@
     <Compile Include="Areas\Governors\GovernorsAreaRegistration.cs" />
     <Compile Include="Areas\Governors\Models\SearchModel.cs" />
     <Compile Include="Controllers\ApprovalController.cs" />
+    <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EstablishmentController.cs" />
     <Compile Include="Controllers\PrototypeController.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -700,6 +701,7 @@
     <Content Include="Views\Establishment\CreateEdit.cshtml" />
     <Content Include="Views\Prototype\Placeholder.cshtml" />
     <Content Include="Views\Approval\Index.cshtml" />
+    <Content Include="Views\Downloads\Index.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <None Include="Views\Search\Index.cshtml" />
