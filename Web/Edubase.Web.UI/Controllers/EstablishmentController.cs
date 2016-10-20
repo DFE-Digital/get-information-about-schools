@@ -44,7 +44,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Edit(ViewModel model)
+        public async Task<ActionResult> Edit(ViewModel model)
         {
             if (model.Action == ViewModel.eAction.Save)
             {
