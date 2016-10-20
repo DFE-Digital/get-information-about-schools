@@ -234,10 +234,13 @@ legend {
 
 .mobile-full-width {
     display: block;
-    clear:both;
-    float:right;
+    clear: both;
+    float: right;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 
-    @include media(mobile){
+    @include media(mobile) {
         width: 100%;
         float: none;
         clear: both;

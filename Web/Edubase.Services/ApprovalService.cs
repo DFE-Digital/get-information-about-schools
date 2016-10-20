@@ -42,7 +42,7 @@ namespace Edubase.Services
                 await new SmtpClient().SendMailAsync("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment change accepted",
                                 $"For Establishment URN: {establishment.Urn}, the item '{item.Name}' has changed to '{item.NewValue}'");
 
-                await new BusMessagingService().SendEstablishmentUpdateMessage(establishment);
+                await new BusMessagingService().SendEstablishmentUpdateMessageAsync(establishment);
 
                 return item.Name;
             }

@@ -25,6 +25,9 @@ namespace Edubase.Web.UI.Models
         }
 
         public Establishment Establishment { get; set; }
+
+        public LinkedEstab[] LinkedEstablishments { get; set; }
+
         public List<PendingChangeViewModel> PendingChanges { get; set; } = new List<PendingChangeViewModel>();
         public bool ShowPendingMessage { get; set; }
 

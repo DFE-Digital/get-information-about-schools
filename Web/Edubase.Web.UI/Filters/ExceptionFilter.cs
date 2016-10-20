@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Edubase.Common;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -17,13 +18,16 @@ namespace Edubase.Web.UI.Filters
             if (filterContext == null) throw new ArgumentNullException(nameof(filterContext));
             var msg = Log(filterContext.HttpContext, filterContext.Exception);
 
-            filterContext.Result = new ViewResult
+            if (StringUtil.Boolify(ConfigurationManager.AppSettings["EnableFriendlyErrorPage"], true))
             {
-                ViewName = "~/Views/Shared/Error.cshtml",
-                ViewData = new ViewDataDictionary() { { "ErrorCode", msg.Id } }
-            };
+                filterContext.Result = new ViewResult
+                {
+                    ViewName = "~/Views/Shared/Error.cshtml",
+                    ViewData = new ViewDataDictionary() { { "ErrorCode", msg.Id } }
+                };
 
-            filterContext.ExceptionHandled = true;
+                filterContext.ExceptionHandled = true;
+            }
         }
 
         public LogMessage Log(HttpContextBase ctx, Exception exception)

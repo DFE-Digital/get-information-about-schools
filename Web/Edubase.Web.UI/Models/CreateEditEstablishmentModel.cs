@@ -9,12 +9,27 @@ using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Collections.Generic;
 
 namespace Edubase.Web.UI.Models
 {
     [Validator(typeof(CreateEditEstablishmentModelValidator))]
     public class CreateEditEstablishmentModel
     {
+        public enum eAction
+        {
+            FindEstablishment,
+            Save,
+            AddLinkedSchool,
+            RemoveLinkedSchool
+        }
+
+        public enum eLinkType
+        {
+            Successor,
+            Predecessor
+        }
+
         public int? Urn { get; set; }
         public int? LocalAuthorityId { get; set; }
         public string Name { get; set; }
@@ -35,27 +50,34 @@ namespace Edubase.Web.UI.Models
         public int? Capacity { get; set; }
         public int? ProvisionSpecialClassesId { get; set; }
         public int? UKPRN { get; set; }
-        public AddressViewModel Address { get; set; }
+        public AddressViewModel Address { get; set; } = new AddressViewModel();
         public string HeadFirstName { get; set; }
         public string HeadLastName { get; set; }
         public int? HeadTitleId { get; set; }
-        public ContactDetailsViewModel Contact { get; set; }
-        public ContactDetailsViewModel ContactAlt { get; set; }
+        public ContactDetailsViewModel Contact { get; set; } = new ContactDetailsViewModel();
+        public ContactDetailsViewModel ContactAlt { get; set; } = new ContactDetailsViewModel();
         public int? LAESTAB { get; set; }
         public int? TypeId { get; set; }
-        public DateTimeViewModel OpenDate { get; set; }
-        public DateTimeViewModel CloseDate { get; set; }
-        
+        public DateTimeViewModel OpenDate { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel CloseDate { get; set; } = new DateTimeViewModel();
+        public eAction Action { get; set; }
+
+        public int? LinkedSearchUrn { get; set; }
+        public int? LinkedUrnToAdd { get; set; }
+        public string LinkedEstabNameToAdd { get; set; }
+        public eLinkType? LinkTypeToAdd { get; set; }
+        public DateTimeViewModel LinkedDateToAdd { get; set; }
+        public int? LinkedItemPositionToRemove { get; set; }
+        public List<LinkedEstab> Links { get; internal set; } = new List<LinkedEstab>();
+        public bool ScrollToLinksSection { get; set; }
+
         public CreateEditEstablishmentModel()
         {
-            Address = new AddressViewModel();
-            Contact = new ContactDetailsViewModel();
-            ContactAlt = new ContactDetailsViewModel();
-            OpenDate = new DateTimeViewModel();
-            CloseDate = new DateTimeViewModel();
+
         }
 
-
         
+
+
     }
 }

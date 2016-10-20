@@ -8,7 +8,7 @@ namespace Edubase.Services
 {
     public class BusMessagingService
     {
-        public async Task SendEstablishmentUpdateMessage(Establishment establishment)
+        public async Task SendEstablishmentUpdateMessageAsync(Establishment establishment)
         {
             var title = establishment.HeadTitleId.HasValue ? new LookupService().GetName("HeadTitleId", establishment.HeadTitleId.Value) : null as string;
             var client = QueueClient.CreateFromConnectionString(ConfigurationManager.ConnectionStrings["ServiceBusConnectionString"].ConnectionString, "updates");

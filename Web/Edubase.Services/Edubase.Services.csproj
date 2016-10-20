@@ -83,6 +83,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -99,10 +100,13 @@
   <ItemGroup>
     <Compile Include="ApprovalService.cs" />
     <Compile Include="BusMessagingService.cs" />
+    <Compile Include="CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="EmailService.cs" />
+    <Compile Include="EstablishmentService.cs" />
+    <Compile Include="ILookupService.cs" />
     <Compile Include="MessageLoggingService.cs" />
     <Compile Include="LookupService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -121,6 +125,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

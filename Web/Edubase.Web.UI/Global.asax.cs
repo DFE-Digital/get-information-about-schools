@@ -30,9 +30,8 @@ namespace Edubase.Web.UI
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
             Database.SetInitializer(m);
             FluentValidationModelValidatorProvider.Configure();
-
-            if (bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableErrorReporting"]))
-                FlushLogMessages();
+            
+            FlushLogMessages();
         }
 
         private void FlushLogMessages(CacheEntryRemovedArguments arguments = null)

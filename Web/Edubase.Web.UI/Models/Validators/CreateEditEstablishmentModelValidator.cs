@@ -6,13 +6,23 @@ namespace Edubase.Web.UI.Models.Validators
     {
         public CreateEditEstablishmentModelValidator()
         {
-            ConfigureRules();
-            RuleSet("oncreate", () =>
+            When(x => x.Action == CreateEditEstablishmentModel.eAction.Save, () =>
             {
                 ConfigureRules();
-                RuleFor(x => x.OpenDate).Must(x => x.IsNotEmpty()).WithMessage("Please specify an Open Date");
-                RuleFor(x => x.ReasonEstablishmentOpenedId).NotEmpty().WithMessage("Reason opened should be specified");
-                RuleFor(x => x.EducationPhaseId).NotEmpty().WithMessage("Phase should be set");
+                RuleSet("oncreate", () =>
+                {
+                    ConfigureRules();
+                    RuleFor(x => x.OpenDate).Must(x => x.IsNotEmpty()).WithMessage("Please specify an Open Date");
+                    RuleFor(x => x.ReasonEstablishmentOpenedId).NotEmpty().WithMessage("Reason opened should be specified");
+                    RuleFor(x => x.EducationPhaseId).NotEmpty().WithMessage("Phase should be set");
+                });
+            });
+
+            When(x => x.Action == CreateEditEstablishmentModel.eAction.AddLinkedSchool, () =>
+            {
+                RuleFor(x => x.LinkedDateToAdd).Must(x => x.IsValid()).When(x => x.LinkedDateToAdd.IsNotEmpty()).WithMessage("Linked date is invalid");
+                RuleFor(x => x.LinkedDateToAdd).Must(x => x.IsNotEmpty()).WithMessage("Please specify a Linked date ");
+                RuleFor(x => x.LinkTypeToAdd).NotNull().WithMessage("Please specify a Link Type");
             });
         }
 

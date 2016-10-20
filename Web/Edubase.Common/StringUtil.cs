@@ -22,5 +22,12 @@ namespace Edubase.Common
             else if (items.Length == 2) return string.Join(" and ", items);
             else return string.Concat(string.Join(", ", items.Take(items.Length - 1)), " and ", items.Last());
         }
+
+        public static bool Boolify(string data, bool defaultValue = false)
+        {
+            var retVal = false;
+            if (bool.TryParse(data, out retVal)) return retVal;
+            else return defaultValue;
+        }
     }
 }

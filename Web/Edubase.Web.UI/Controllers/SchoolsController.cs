@@ -10,6 +10,7 @@ using Edubase.Web.UI.Models;
 using Edubase.Common;
 using Edubase.Services;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -45,7 +46,7 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        public ActionResult Details(int id, bool? pendingUpdates)
+        public async Task<ActionResult> Details(int id, bool? pendingUpdates)
         {
             var viewModel = new EstablishmentDetailViewModel
             {
@@ -55,7 +56,7 @@ namespace Edubase.Web.UI.Controllers
 
             using (var dc = new ApplicationDbContext())
             {
-                var model = dc.Establishments
+                var model = await dc.Establishments
                     .Include(x => x.AdmissionsPolicy)
                     .Include(x => x.Diocese)
                     .Include(x => x.EducationPhase)
@@ -73,15 +74,16 @@ namespace Edubase.Web.UI.Controllers
                     .Include(x => x.ReligiousEthos)
                     .Include(x => x.Status)
                     .Include(x => x.EstablishmentType)
-                    .FirstOrDefault(x => x.Urn == id);
+                    .FirstOrDefaultAsync(x => x.Urn == id);
 
                 viewModel.Establishment = model;
-                viewModel.Govs = dc.Governors.Include(x=>x.GovernorAppointingBody).Include(x=>x.Role).Where(x => x.EstablishmentUrn == id).ToArray();
-                
+                viewModel.Govs = await dc.Governors.Include(x=>x.GovernorAppointingBody).Include(x=>x.Role).Where(x => x.EstablishmentUrn == id).ToArrayAsync();
+                viewModel.LinkedEstablishments = (await dc.Estab2EstabLinks.Include(x => x.LinkedEstablishment).Where(x => x.Establishment_Urn == id).ToArrayAsync())
+                    .Select(x => new LinkedEstab(x)).ToArray();
 
                 if (User.Identity.IsAuthenticated)
                 {
-                    var pending = dc.EstablishmentApprovalQueue.Where(x => x.Urn == id && x.IsApproved == false && x.IsDeleted == false && x.IsRejected == false).ToList();
+                    var pending = await dc.EstablishmentApprovalQueue.Where(x => x.Urn == id && x.IsApproved == false && x.IsDeleted == false && x.IsRejected == false).ToListAsync();
                     if (pending.Any())
                     {
                         foreach (var item in pending)
@@ -127,7 +129,6 @@ namespace Edubase.Web.UI.Controllers
                 if (viewModel.IsUserLoggedOn)
                     viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
                 
-
                 return View(viewModel);
             }
         }
