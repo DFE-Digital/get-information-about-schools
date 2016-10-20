@@ -604,11 +604,11 @@
                                         <tbody>
                                             <tr>
                                                 <th>URN</th>
-                                                <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
+                                                <td>@Html.ActionLink(l.Urn.ToString(), "Details", "Schools", new { id = l.Urn }, null)</td>
                                             </tr>
                                             <tr>
                                                 <th>Establishment name</th>
-                                                <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
+                                                <td>@Html.ActionLink(l.Name, "Details", "Schools", new { id = l.Urn }, null)</td>
                                             </tr>
                                             <tr>
                                                 <th>Type of link</th>

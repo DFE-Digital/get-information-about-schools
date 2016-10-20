@@ -50,7 +50,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var thereArePendingUpdates = SaveEstablishment(model);
+                    var thereArePendingUpdates = await SaveEstablishment(model);
                     return RedirectToAction("Details", "Schools", new { id = model.Urn.Value, pendingUpdates = thereArePendingUpdates });
                 }
             }
