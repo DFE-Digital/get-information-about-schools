@@ -74,8 +74,11 @@
                                 @Html.Hidden("take", Model.Take)
                                 @Html.Hidden("id", item.Id)
                                 @Html.Hidden("urn", Model.EstablishmentUrn)
-                                <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().focus(); $(this).hide()" />
-                                <input type="text" name="reason" style="display:none;" placeholder="Reason" />
+                                <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().children(':first').focus(); $(this).hide()" />
+                                <div style="display:none;">
+                                    <input type="text" name="reason" placeholder="Reason" autocomplete="off" class="form-control" /><br />
+                                    <input type="submit" value="Save" class="button" style="font-size:16px; margin-top:10px; " />
+                                </div>
                             }
                         </td>
                     </tr>
@@ -113,18 +116,20 @@
                                 <input type="submit" value="Approve" class="link-button" />
                             }
                         </dd>
-                        <dt></dt>
-                        <dd>
+                        <div style="clear:left;">
                             @using (Html.BeginForm("Reject", "Approval", FormMethod.Post))
                             {
                                 @Html.Hidden("skip", Model.Skip)
                                 @Html.Hidden("take", Model.Take)
                                 @Html.Hidden("id", item.Id)
                                 @Html.Hidden("urn", Model.EstablishmentUrn)
-                                <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().focus(); $(this).hide()" />
-                                <input type="text" name="reason" style="display:none;" placeholder="Reason" onkeydown="if ($.event.fix(event).which == 27) { $(this).prev().show(); $(this).blur(); $(this).hide(); }" />
+                                <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().children(':first').focus(); $(this).hide()" />
+                                <div style="display:none;" class="form-group">
+                                    <input type="text" name="reason" placeholder="Reason" autocomplete="off" class="form-control" style="margin:4px; width:90%" /><br />
+                                    <input type="submit" value="Save" class="button" style="font-size:16px; margin-top:10px; width:100%;" />
+                                </div>
                             }
-                        </dd>
+                        </div>
 
                     </dl>
                 </li>
