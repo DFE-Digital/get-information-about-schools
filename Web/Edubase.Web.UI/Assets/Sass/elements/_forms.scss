@@ -283,7 +283,9 @@ legend {
         width: 66%;
     }
     
-    .form-group {
+}
+
+.form-group {
 
         &.error {
             border-left: 4px solid $error-colour;
@@ -291,7 +293,7 @@ legend {
     }
     
     .error-message, .field-validation-error {
-        font-size: 14px;
+        font-size: 16px;
         color: $error-colour;
         display: none; 
         font-weight: bold; 
@@ -301,12 +303,11 @@ legend {
     }
 
     .form-control {
-        font-size: 14px;
+        font-size: 16px;
     }
 
     select {
         width: 99%;
     }
-}
 
 hr { height:3px; background-color:$grey-3; border:none; }

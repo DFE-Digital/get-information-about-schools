@@ -103,6 +103,7 @@
     <Compile Include="CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
+    <Compile Include="Domain\DomainException.cs" />
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="EstablishmentService.cs" />

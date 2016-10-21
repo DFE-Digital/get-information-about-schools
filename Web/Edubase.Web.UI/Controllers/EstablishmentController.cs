@@ -39,7 +39,7 @@ namespace Edubase.Web.UI.Controllers
                     .ToArrayAsync())
                     .Select(x => new LinkedEstabViewModel(x)).ToList();
 
-                return View("CreateEdit", viewModel);
+                return View(viewModel);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Edubase.Web.UI.Controllers
                 }
                 model.ScrollToLinksSection = true;
             }
-            return View("CreateEdit", model);
+            return View(model);
         }
 
         private void AddLinkedEstablishment(ViewModel model)
@@ -231,7 +231,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Authorize(Roles="Admin,LA")]
-        public ActionResult Create() => View("CreateEdit", new ViewModel());
+        public ActionResult Create() => View(new ViewModel());
 
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Admin,LA")]
@@ -242,12 +242,20 @@ namespace Edubase.Web.UI.Controllers
                 using (var dc = ApplicationDbContext.Create())
                 {
                     var dataModel = Mapper.Map<Establishment>(model);
+
+                    var svc = new EstablishmentService();
+                    var pol = svc.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);
+                    if(pol == EstablishmentService.EstabNumberEntryPolicy.SystemGenerated)
+                    {
+                        dataModel.EstablishmentNumber = svc.GenerateEstablishmentNumber(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value, dataModel.LocalAuthorityId.Value);
+                    }
+
                     dc.Establishments.Add(dataModel);
                     dc.SaveChanges();
                     return RedirectToAction("Details", "Schools", new { id = dataModel.Urn });
                 }
             }
-            else return View("CreateEdit", model);
+            else return View(model);
         }
 
         

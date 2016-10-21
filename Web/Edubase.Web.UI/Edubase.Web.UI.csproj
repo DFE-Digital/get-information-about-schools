@@ -278,6 +278,7 @@
     <Compile Include="Models\TrustEstabViewModel.cs" />
     <Compile Include="Models\Validators\CreateEditTrustModelValidator.cs" />
     <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
+    <Compile Include="Models\Validators\EstablishmentNumber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\IRequestContext.cs" />
@@ -698,10 +699,11 @@
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
-    <Content Include="Views\Establishment\CreateEdit.cshtml" />
+    <Content Include="Views\Establishment\Edit.cshtml" />
     <Content Include="Views\Prototype\Placeholder.cshtml" />
     <Content Include="Views\Approval\Index.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
+    <Content Include="Views\Establishment\Create.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <None Include="Views\Search\Index.cshtml" />

@@ -80,7 +80,10 @@ else if (Model.UserHasPendingApprovals)
                 <th scope="col">Age range</th>
                 <td>
                     @(Html.PendingUpdatesFor("StatutoryLowAge", "StatutoryHighAge"))
-                    @Model.Establishment.StatutoryLowAge to @Model.Establishment.StatutoryHighAge
+                    @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
+                    {
+                        <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
+                    }
                 </td>
             </tr>
             <tr>

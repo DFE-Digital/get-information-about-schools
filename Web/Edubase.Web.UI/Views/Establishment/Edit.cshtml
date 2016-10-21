@@ -93,7 +93,6 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            <span class="error-message">An invalid locality was entered. What kind of shenanigans is this?</span>
                             @Html.TextBoxFor(x => x.Address.Locality, new { maxlength = 120, id = "school-locality", @class = "form-control", aria_describedby = "help-school-locality" })
                         </div>
                     </td>
@@ -153,7 +152,6 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            <span class="error-message">Please select a valid option</span>
                             @Html.EduHeadTitlesDropDownFor(x => x.HeadTitleId)
                             @Html.EduTextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", aria_describedby = "help-headfirstname", placeholder = "First name", style = "width:120px;" })
                             @Html.EduTextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", aria_describedby = "help-headlastname", placeholder = "Last name", style = "width:120px;" })

@@ -23,6 +23,7 @@ namespace Edubase.Common
         public static int? ToInteger(this string text)
         {
             int retVal;
+            text = text.Clean();
             if (!text.IsNullOrEmpty() && int.TryParse(text, out retVal)) return retVal;
             else return null;
         }
@@ -95,6 +96,21 @@ namespace Edubase.Common
 
         public static bool IsInFuture(this DateTime? dt) => dt.HasValue ? dt.Value.Date > DateTime.UtcNow.Date : false;
         
+
+        public static string GetPart(this string data, string separator, int index = 0)
+        {
+            data = data.Clean();
+            if (data != null)
+            {
+                var bits = data.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+                if(index <= bits.GetUpperBound(0))
+                {
+                    return bits[index];
+                }
+            }
+
+            return null;
+        }
 
     }
 }

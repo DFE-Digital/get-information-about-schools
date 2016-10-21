@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Collections.Generic;
+using Edubase.Services;
 
 namespace Edubase.Web.UI.Models
 {
@@ -71,9 +72,11 @@ namespace Edubase.Web.UI.Models
         public List<LinkedEstabViewModel> Links { get; internal set; } = new List<LinkedEstabViewModel>();
         public bool ScrollToLinksSection { get; set; }
 
+        public Dictionary<string, string> SimplifiedLAESTABRules { get; set; }
+
         public CreateEditEstablishmentModel()
         {
-
+            SimplifiedLAESTABRules = new EstablishmentService().GetSimplifiedRules();
         }
 
         
