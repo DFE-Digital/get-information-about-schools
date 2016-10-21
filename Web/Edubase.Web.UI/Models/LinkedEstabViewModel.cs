@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Edubase.Web.UI.Models
 {
-    public class LinkedEstab
+    public class LinkedEstabViewModel
     {
         public int? Id { get; set; }
         public int? Urn { get; set; }
@@ -14,12 +14,12 @@ namespace Edubase.Web.UI.Models
         public DateTime? LinkDate { get; set; }
         public string Name { get; set; }
 
-        public LinkedEstab()
+        public LinkedEstabViewModel()
         {
 
         }
 
-        public LinkedEstab(Estab2Estab link)
+        public LinkedEstabViewModel(Estab2Estab link)
         {
             Id = link.Id;
             Urn = link.LinkedEstablishment_Urn;

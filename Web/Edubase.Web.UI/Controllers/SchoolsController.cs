@@ -79,7 +79,7 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.Establishment = model;
                 viewModel.Govs = await dc.Governors.Include(x=>x.GovernorAppointingBody).Include(x=>x.Role).Where(x => x.EstablishmentUrn == id).ToArrayAsync();
                 viewModel.LinkedEstablishments = (await dc.Estab2EstabLinks.Include(x => x.LinkedEstablishment).Where(x => x.Establishment_Urn == id).ToArrayAsync())
-                    .Select(x => new LinkedEstab(x)).ToArray();
+                    .Select(x => new LinkedEstabViewModel(x)).ToArray();
 
                 if (User.Identity.IsAuthenticated)
                 {

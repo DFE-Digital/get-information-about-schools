@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Models
         public eLinkType? LinkTypeToAdd { get; set; }
         public DateTimeViewModel LinkedDateToAdd { get; set; }
         public int? LinkedItemPositionToRemove { get; set; }
-        public List<LinkedEstab> Links { get; internal set; } = new List<LinkedEstab>();
+        public List<LinkedEstabViewModel> Links { get; internal set; } = new List<LinkedEstabViewModel>();
         public bool ScrollToLinksSection { get; set; }
 
         public CreateEditEstablishmentModel()

@@ -269,7 +269,7 @@
     <Compile Include="Models\DateTimeViewModel.cs" />
     <Compile Include="Models\EstablishmentDetailViewModel.cs" />
     <Compile Include="Models\HomepageViewModel.cs" />
-    <Compile Include="Models\LinkedEstab.cs" />
+    <Compile Include="Models\LinkedEstabViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MATDetailViewModel.cs" />
     <Compile Include="Models\MATASSearchResultsModel.cs" />
