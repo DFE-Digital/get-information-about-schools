@@ -41,6 +41,9 @@ namespace Edubase.Services
         public List<EstablishmentType> EstablishmentTypesGetAll() => Cacher.Auto(_svc.EstablishmentTypesGetAll);
 
         public Task<List<EstablishmentType>> EstablishmentTypesGetAllAsync() => Cacher.AutoAsync(_svc.EstablishmentTypesGetAllAsync);
+        public List<GroupType> GroupeTypesGetAll() => Cacher.Auto(_svc.GroupeTypesGetAll);
+
+        public Task<List<GroupType>> GroupeTypesGetAllAsync() => Cacher.AutoAsync(_svc.GroupeTypesGetAllAsync);
 
 
         public string GetName(string lookupName, int id)

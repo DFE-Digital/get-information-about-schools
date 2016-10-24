@@ -61,11 +61,15 @@ namespace Edubase.Services
 
         public List<EstablishmentType> EstablishmentTypesGetAll() => DataContext.EstablishmentTypes.ToList();
         public async Task<List<EstablishmentType>> EstablishmentTypesGetAllAsync() => await DataContext.EstablishmentTypes.ToListAsync();
+        public async Task<List<GroupType>> GroupeTypesGetAllAsync() => await DataContext.GroupTypes.ToListAsync();
+        public List<GroupType> GroupeTypesGetAll() => DataContext.GroupTypes.ToList();
 
         public void Dispose()
         {
             if (_dc.IsValueCreated)
                 DataContext.Dispose();
         }
+
+        
     }
 }

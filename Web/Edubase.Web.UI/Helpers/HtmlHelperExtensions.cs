@@ -178,7 +178,10 @@ namespace Edubase.Web.UI.Helpers
 
         public static MvcHtmlString EduEstablishmentTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, 
             Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.EstablishmentTypesGetAll());
-        
+
+        public static MvcHtmlString EduGroupTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GroupeTypesGetAll());
+
         public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, 
             TProperty>> expression, IEnumerable<LookupBase> items) => 
             htmlHelper.EduDropDownFor(expression, items.Select(x => new SelectListItem

@@ -6,41 +6,45 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using Edubase.Common;
 using System;
-using System.Runtime.Caching;
-using FluentValidation.Mvc;
+using Edubase.Services;
+using Edubase.Services.Domain;
+using System.Security.Claims;
 
 namespace Edubase.Web.UI.Controllers
 {
     public class TrustController : Controller
     {
         private const string VIEWNAME = "CreateEdit";
-
-        [HttpGet, Authorize(Roles="Admin,Academy")]
-        public ActionResult Create() => View(VIEWNAME, new CreateEditTrustModel());
-
-        [HttpPost, Authorize(Roles = "Admin,Academy")]
-        public async Task<ActionResult> Create([CustomizeValidator(RuleSet = "oncreate")] CreateEditTrustModel viewModel)
+        
+        [Authorize(Roles = "Admin,Academy")]
+        public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
-            if (!(viewModel.Action?.Equals("save", StringComparison.OrdinalIgnoreCase)).GetValueOrDefault())
-                throw new Exception("Action was unrecognised for Trust save process");
+            if (!viewModel.SearchText.IsNullOrEmpty())
+            {
+                var svc = new TrustService();
+                if (viewModel.SearchText.IsInteger()) viewModel.Results = await svc.SearchByCompaniesHouseNumber(viewModel.SearchText);
+                else viewModel.Results = await svc.SearchByName(viewModel.SearchText, viewModel.Skip);
+                viewModel.NotFound = !viewModel.Results.Items.Any();
+            }
+            return View(viewModel);
+        }
 
+        [HttpGet, Authorize(Roles = "Admin,Academy")]
+        public async Task<ActionResult> Create(string id)
+        {
+            var companyProfile = await new TrustService().SearchByCompaniesHouseNumber(id);
+            return View("Create", new CreateTrustModel(companyProfile.Items.First()));
+        }
+        
+        [HttpPost, Authorize(Roles = "Admin,Academy")]
+        public async Task<ActionResult> Create(CreateTrustModel viewModel)
+        {
             if (ModelState.IsValid)
             {
-                using (var dc = new ApplicationDbContext())
-                {
-                    var company = new Company
-                    {
-                        Name = viewModel.Name,
-                        GroupTypeId = viewModel.TypeId,
-                        OpenDate = viewModel.OpenDate.ToDateTime(),
-                        CompaniesHouseNumber = viewModel.CompaniesHouseNumber
-                    };
-                    dc.Companies.Add(company);
-                    await dc.SaveChangesAsync();
-                    return RedirectToAction("Details", new { id = company.GroupUID });
-                }
+                var id = await new TrustService().CreateAsync(User as ClaimsPrincipal, viewModel.CompaniesHouseNumber, viewModel.TypeId.Value);
+                return RedirectToAction("Details", new { id });
             }
-            else return View(VIEWNAME, viewModel);
+            else return View(viewModel);
         }
 
         [HttpGet, Authorize(Roles = "Admin,Academy")]

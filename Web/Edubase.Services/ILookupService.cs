@@ -24,5 +24,9 @@ namespace Edubase.Services
         Task<List<LocalAuthority>> LocalAuthorityGetAllAsync();
         List<EstablishmentType> EstablishmentTypesGetAll();
         Task<List<EstablishmentType>> EstablishmentTypesGetAllAsync();
+
+        Task<List<GroupType>> GroupeTypesGetAllAsync();
+        List<GroupType> GroupeTypesGetAll();
+
     }
 }

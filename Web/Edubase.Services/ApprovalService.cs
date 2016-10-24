@@ -86,7 +86,7 @@ namespace Edubase.Services
             return item;
         }
 
-        private string GetUserRestrictiveRole(ClaimsPrincipal currentUser)=> Roles.RestrictiveRoles.FirstOrDefault(x => currentUser.IsInRole(x));
+        private string GetUserRestrictiveRole(ClaimsPrincipal currentUser) => Roles.RestrictiveRoles.FirstOrDefault(x => currentUser.IsInRole(x));
 
         public ApprovalDto GetAll(ClaimsPrincipal currentUser, int skip = 0, int take = 10, int? establishmentUrn = null)
         {
