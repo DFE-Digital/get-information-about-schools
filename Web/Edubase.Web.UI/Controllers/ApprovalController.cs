@@ -13,11 +13,11 @@ namespace Edubase.Web.UI.Controllers
     public class ApprovalController : Controller
     {
         // GET: Approval
-        public ActionResult Index(int? urn = null, int skip = 0, int take = 10, string updatedName = null, string a = null)
+        public async Task<ActionResult> Index(int? urn = null, int skip = 0, int take = 10, string updatedName = null, string a = null)
         {
             ViewBag.UpdatedName = updatedName;
             ViewBag.ActionName = a;
-            var dto = new ApprovalService().GetAll(User as ClaimsPrincipal, skip, take, urn);
+            var dto = await new ApprovalService().GetAllAsync(User as ClaimsPrincipal, skip, take, urn);
 
             if(dto.Items.Count == 0 && dto.Count > 0 && skip > 0)
             {

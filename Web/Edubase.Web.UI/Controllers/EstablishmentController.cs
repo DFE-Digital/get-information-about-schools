@@ -130,14 +130,15 @@ namespace Edubase.Web.UI.Controllers
                 mapper.Map(model, dataModel);
 
                 var establishment = Mapper.Map<ViewModel, Establishment>(model);
-                List<string> permPropertiesThatChanged = new List<string>();
+                var permPropertiesThatChanged = new List<ChangeDescriptor>();
                 permissions.ForEach(p =>
                 {
                     var newValue = ReflectionHelper.GetProperty(establishment, p.PropertyName).Clean();
                     var oldValue = ReflectionHelper.GetProperty(dataModel, p.PropertyName).Clean();
+
                     if (newValue != oldValue)
                     {
-                        permPropertiesThatChanged.Add(p.PropertyName);
+                        permPropertiesThatChanged.Add(new ChangeDescriptor(p.PropertyName, newValue, oldValue));
                         dc.EstablishmentApprovalQueue.Add(new EstablishmentApprovalQueue
                         {
                             Urn = dataModel.Urn,
@@ -148,6 +149,10 @@ namespace Edubase.Web.UI.Controllers
                         });
                     }
                 });
+
+                new EstablishmentService().AddChangeHistory(dataModel.Urn, dc, null,
+                    ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value,
+                    DateTime.UtcNow, changes.ToArray());
 
                 await AddOrRemoveEstablishmentLinks(model, dc);
 

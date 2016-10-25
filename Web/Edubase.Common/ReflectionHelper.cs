@@ -35,44 +35,44 @@ namespace Edubase.Common
             return props.Select(p => p.Name).ToList();
         }
 
-        public static List<string> DetectChanges(object obj, object obj2, params Type[] types)
+        public static List<ChangeDescriptor> DetectChanges(object obj, object obj2, params Type[] types)
         {
             return DetectChanges(obj, obj2, null, types);
         }
-
-        public static List<string> DetectChanges(object obj, object obj2, string prefixer, params Type[] types)
+        
+        public static List<ChangeDescriptor> DetectChanges(object newModel, object oldModel, string prefixer, params Type[] types)
         {
             if (!string.IsNullOrWhiteSpace(prefixer)) prefixer += ".";
-            var retVal = new List<string>();
+            var retVal = new List<ChangeDescriptor>();
             
-            var props = GetProperties(obj);
+            var props = GetProperties(newModel);
             foreach (var prop in props)
             {
-                var p = obj.GetType().GetProperty(prop);
-                var p2 = obj2.GetType().GetProperty(prop);
+                var p = newModel.GetType().GetProperty(prop);
+                var p2 = oldModel.GetType().GetProperty(prop);
                 if (types.Any(x => x == p.PropertyType))
                 {
-                    retVal.AddRange(DetectChanges(p.GetValue(obj), p2.GetValue(obj2), p.Name, types));
+                    retVal.AddRange(DetectChanges(p.GetValue(newModel), p2.GetValue(oldModel), p.Name, types));
                 }
                 else if(p.PropertyType.IsValueType)
                 {
-                    var v1 = (ValueType) p.GetValue(obj);
-                    var v2 = (ValueType) p2.GetValue(obj2);
+                    var v1 = (ValueType) p.GetValue(newModel);
+                    var v2 = (ValueType) p2.GetValue(oldModel);
                     if ((v1 == null && v2 != null) 
                         || (v1 != null && v2 == null) 
                         || (v1 != null && !v1.Equals(v2) 
                         || (v2 != null && !v2.Equals(v1))))
                     {
-                        retVal.Add(prefixer + p.Name);
+                        retVal.Add(new ChangeDescriptor(prefixer + p.Name, v1, v2));
                     }
                 }
                 else if (p.PropertyType == typeof(string))
                 {
-                    var v1 = p.GetValue(obj)?.ToString();
-                    var v2 = p2.GetValue(obj2)?.ToString();
+                    var v1 = p.GetValue(newModel)?.ToString();
+                    var v2 = p2.GetValue(oldModel)?.ToString();
                     if (v1 != v2)
                     {
-                        retVal.Add(prefixer + p.Name);
+                        retVal.Add(new ChangeDescriptor(prefixer + p.Name, v1, v2));
                     }
                 }
             }

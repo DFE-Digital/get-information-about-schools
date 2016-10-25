@@ -26,6 +26,8 @@ namespace Edubase.Web.UI.Models
 
         public Establishment Establishment { get; set; }
 
+        public Edubase.Services.Domain.EstablishmentChangeDto[] ChangeHistory { get; set; }
+
         public LinkedEstabViewModel[] LinkedEstablishments { get; set; }
 
         public List<PendingChangeViewModel> PendingChanges { get; set; } = new List<PendingChangeViewModel>();

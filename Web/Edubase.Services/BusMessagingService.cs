@@ -10,7 +10,10 @@ namespace Edubase.Services
     {
         public async Task SendEstablishmentUpdateMessageAsync(Establishment establishment)
         {
-            var title = establishment.HeadTitleId.HasValue ? new LookupService().GetName("HeadTitleId", establishment.HeadTitleId.Value) : null as string;
+            var title = await (establishment.HeadTitleId.HasValue 
+                ? new CachedLookupService().GetNameAsync("HeadTitleId", establishment.HeadTitleId.Value) 
+                : Task.FromResult(null as string));
+
             var client = QueueClient.CreateFromConnectionString(ConfigurationManager.ConnectionStrings["ServiceBusConnectionString"].ConnectionString, "updates");
             var payload = JsonConvert.SerializeObject(new
             {

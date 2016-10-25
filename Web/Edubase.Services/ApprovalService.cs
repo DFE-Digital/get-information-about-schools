@@ -25,17 +25,22 @@ namespace Edubase.Services
                 var establishment = dc.Establishments.Single(x => x.Urn == item.Urn);
 
                 var prop = typeof(Establishment).GetProperty(item.Name);
+                var oldValue = ReflectionHelper.GetProperty(establishment, item.Name);
 
                 object newValue = null;
                 if (item.NewValue.IsInteger()) newValue = item.NewValue.ToInteger();
                 else newValue = (object) item.NewValue.ToDateTime() ?? item.NewValue;
                 
-
                 ReflectionHelper.SetProperty(establishment, item.Name, newValue);
                 item.ProcessedDateUtc = DateTime.UtcNow;
                 item.ProcessorUserId = currentUser.Identity.GetUserId();
                 item.IsApproved = true;
                 item.LastUpdatedUtc = DateTime.UtcNow;
+
+                new EstablishmentService().AddChangeHistory(item.Urn, dc, 
+                    currentUser.Identity.GetUserId(),
+                    item.OriginatorUserId, item.CreatedUtc, 
+                    new ChangeDescriptor(item.Name, newValue, oldValue));
 
                 await dc.SaveChangesAsync();
 
@@ -88,7 +93,7 @@ namespace Edubase.Services
 
         private string GetUserRestrictiveRole(ClaimsPrincipal currentUser) => Roles.RestrictiveRoles.FirstOrDefault(x => currentUser.IsInRole(x));
 
-        public ApprovalDto GetAll(ClaimsPrincipal currentUser, int skip = 0, int take = 10, int? establishmentUrn = null)
+        public async Task<ApprovalDto> GetAllAsync(ClaimsPrincipal currentUser, int skip = 0, int take = 10, int? establishmentUrn = null)
         {
             var retVal = new ApprovalDto(skip, take);
             Validate(currentUser);
@@ -119,13 +124,13 @@ namespace Edubase.Services
                     OriginatorName = x.OriginatorUser.UserName
                 }).ToList();
 
-                var svc = new LookupService();
+                var svc = new CachedLookupService();
                 foreach (var item in retVal.Items)
                 {
                     if (svc.IsLookupField(item.UpdatedFieldName))
                     {
-                        if (item.NewValue.IsInteger()) item.NewValue = svc.GetName(item.UpdatedFieldName, item.NewValue.ToInteger().Value);
-                        if (item.OldValue.IsInteger()) item.OldValue = svc.GetName(item.UpdatedFieldName, item.OldValue.ToInteger().Value);
+                        if (item.NewValue.IsInteger()) item.NewValue = await svc.GetNameAsync(item.UpdatedFieldName, item.NewValue.ToInteger().Value);
+                        if (item.OldValue.IsInteger()) item.OldValue = await svc.GetNameAsync(item.UpdatedFieldName, item.OldValue.ToInteger().Value);
                     }
                 }
             }

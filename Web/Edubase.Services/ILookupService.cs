@@ -16,10 +16,9 @@ namespace Edubase.Services
         Task<List<EstablishmentStatus>> EstablishmentStatusesGetAllAsync();
         List<Gender> GendersGetAll();
         Task<List<Gender>> GendersGetAllAsync();
-        string GetName(string lookupName, int id);
         List<HeadTitle> HeadTitleGetAll();
         Task<List<HeadTitle>> HeadTitleGetAllAsync();
-        bool IsLookupField(string name);
+        
         List<LocalAuthority> LocalAuthorityGetAll();
         Task<List<LocalAuthority>> LocalAuthorityGetAllAsync();
         List<EstablishmentType> EstablishmentTypesGetAll();

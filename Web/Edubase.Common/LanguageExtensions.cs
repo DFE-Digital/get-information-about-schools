@@ -79,6 +79,20 @@ namespace Edubase.Common
         }
 
         /// <summary>
+        /// Returns the value from a dictionary or NULL (as opposed to throwing KeyNotFound exception)
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static T2 Get<T1,T2>(this IDictionary<T1, T2> data, T1 key)
+        {
+            if (data.ContainsKey(key)) return data[key];
+            return default(T2);
+        }
+
+        /// <summary>
         /// Truncates a string if necessary and appends an ellipsis
         /// </summary>
         /// <param name="text"></param>

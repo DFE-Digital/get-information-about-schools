@@ -126,6 +126,7 @@
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="DbUtil.cs" />
+    <Compile Include="Entity\EstablishmentChangeHistory.cs" />
     <Compile Include="Entity\LogMessage.cs" />
     <Compile Include="Entity\EstablishmentApprovalQueue.cs" />
     <Compile Include="Entity\ComplexTypes\Address.cs" />
@@ -198,6 +199,10 @@
     <Compile Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.Designer.cs">
       <DependentUpon>201610171337070_EstabCompanyLinkIdProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610250515442_AddEstabChangeHist.cs" />
+    <Compile Include="Migrations\201610250515442_AddEstabChangeHist.Designer.cs">
+      <DependentUpon>201610250515442_AddEstabChangeHist.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\LogMessageRepository.cs" />
@@ -252,6 +257,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.resx">
       <DependentUpon>201610171337070_EstabCompanyLinkIdProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610250515442_AddEstabChangeHist.resx">
+      <DependentUpon>201610250515442_AddEstabChangeHist.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

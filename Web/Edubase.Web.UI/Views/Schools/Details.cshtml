@@ -158,6 +158,12 @@ else if (Model.UserHasPendingApprovals)
                 <li>
                     <a href="#school-links" class="horizontal-tab">Links</a>
                 </li>
+                @if (Model.ChangeHistory != null)
+                {
+                    <li>
+                        <a href="#school-change-history" class="horizontal-tab">Changes</a>
+                    </li>
+                }
             </ul>
         </div>
 
@@ -236,107 +242,174 @@ else if (Model.UserHasPendingApprovals)
                 </tr>
             </table>
         </div>
-        <div id="school-governance" class="tab-content">
+            <div id="school-governance" class="tab-content">
 
-            @if (!Model.Govs.Any())
-            {
-                <p>There is no governance information for this establishment</p>
-            }
-
-            @RenderGovernors("Chair[s] of Trustees", Model.NonHistoric(Model.ChairsOfTrustees))
-            @RenderGovernors("Trustee[s]", Model.NonHistoric(Model.Trustees))
-            @RenderGovernors("Member[s]", Model.NonHistoric(Model.Members))
-            @RenderGovernors("Accounting Officer[s]", Model.NonHistoric(Model.AccountingOfficers))
-            @RenderGovernors("Chief Financial Officer[s]", Model.NonHistoric(Model.ChiefFinancialOfficers))
-            @RenderGovernors("Chair[s] of Governors", Model.NonHistoric(Model.ChairsOfGovernors))
-            @RenderGovernors("Chair[s] of Local Governing Body", Model.NonHistoric(Model.ChairsOfLocalGoverningBody))
-            @RenderGovernors("Local Governor[s]", Model.NonHistoric(Model.LocalGovernors))
-            @RenderGovernors("Governor[s]", Model.NonHistoric(Model.Governors))
-
-            @if (Model.Historic(Model.Govs).Any())
-            {
-                if (Model.NonHistoric(Model.Govs).Any())
+                @if (!Model.Govs.Any())
                 {
-                    <hr />
+                    <p>There is no governance information for this establishment</p>
                 }
-                <h3 class="bold-xsmall" style="padding-top:5px;">Historic (left within the past 12 months)</h3>
-                <table class="borderless" style="max-width:500px;">
-                    @RenderHistoricGovernors("Chair[s] of Trustees", Model.Historic(Model.ChairsOfTrustees))
-                    @RenderHistoricGovernors("Trustee[s]", Model.Historic(Model.Trustees))
-                    @RenderHistoricGovernors("Member[s]", Model.Historic(Model.Members))
-                    @RenderHistoricGovernors("Accounting Officer[s]", Model.Historic(Model.AccountingOfficers))
-                    @RenderHistoricGovernors("Chief Financial Officer[s]", Model.Historic(Model.ChiefFinancialOfficers))
-                    @RenderHistoricGovernors("Chair[s] of Governors", Model.Historic(Model.ChairsOfGovernors))
-                    @RenderHistoricGovernors("Chair[s] of Local Governing Body", Model.Historic(Model.ChairsOfLocalGoverningBody))
-                    @RenderHistoricGovernors("Local Governor[s]", Model.Historic(Model.LocalGovernors))
-                    @RenderHistoricGovernors("Governor[s]", Model.Historic(Model.Governors))
-                </table>
-            }
 
-        </div>
-            <div id="school-links" class="tab-content">
-                @if (Model.LinkedEstablishments.Length > 0)
+                @RenderGovernors("Chair[s] of Trustees", Model.NonHistoric(Model.ChairsOfTrustees))
+                @RenderGovernors("Trustee[s]", Model.NonHistoric(Model.Trustees))
+                @RenderGovernors("Member[s]", Model.NonHistoric(Model.Members))
+                @RenderGovernors("Accounting Officer[s]", Model.NonHistoric(Model.AccountingOfficers))
+                @RenderGovernors("Chief Financial Officer[s]", Model.NonHistoric(Model.ChiefFinancialOfficers))
+                @RenderGovernors("Chair[s] of Governors", Model.NonHistoric(Model.ChairsOfGovernors))
+                @RenderGovernors("Chair[s] of Local Governing Body", Model.NonHistoric(Model.ChairsOfLocalGoverningBody))
+                @RenderGovernors("Local Governor[s]", Model.NonHistoric(Model.LocalGovernors))
+                @RenderGovernors("Governor[s]", Model.NonHistoric(Model.Governors))
+
+                @if (Model.Historic(Model.Govs).Any())
                 {
-                    <table class="estab-links mi">
-                        <thead>
-                            <tr>
-                                <th>URN</th>
-                                <th>Establishment name</th>
-                                <th>Type of link</th>
-                                <th>Date linked</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    if (Model.NonHistoric(Model.Govs).Any())
+                    {
+                        <hr />
+                    }
+                    <h3 class="bold-xsmall" style="padding-top:5px;">Historic (left within the past 12 months)</h3>
+                    <table class="borderless" style="max-width:500px;">
+                        @RenderHistoricGovernors("Chair[s] of Trustees", Model.Historic(Model.ChairsOfTrustees))
+                        @RenderHistoricGovernors("Trustee[s]", Model.Historic(Model.Trustees))
+                        @RenderHistoricGovernors("Member[s]", Model.Historic(Model.Members))
+                        @RenderHistoricGovernors("Accounting Officer[s]", Model.Historic(Model.AccountingOfficers))
+                        @RenderHistoricGovernors("Chief Financial Officer[s]", Model.Historic(Model.ChiefFinancialOfficers))
+                        @RenderHistoricGovernors("Chair[s] of Governors", Model.Historic(Model.ChairsOfGovernors))
+                        @RenderHistoricGovernors("Chair[s] of Local Governing Body", Model.Historic(Model.ChairsOfLocalGoverningBody))
+                        @RenderHistoricGovernors("Local Governor[s]", Model.Historic(Model.LocalGovernors))
+                        @RenderHistoricGovernors("Governor[s]", Model.Historic(Model.Governors))
+                    </table>
+                }
+
+            </div>
+            <div id="school-links" class="tab-content">
+                    @if (Model.LinkedEstablishments.Length > 0)
+                    {
+                        <table class="estab-links mi">
+                            <thead>
+                                <tr>
+                                    <th>URN</th>
+                                    <th>Establishment name</th>
+                                    <th>Type of link</th>
+                                    <th>Date linked</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.LinkedEstablishments.Length; i++)
+                                {
+                                    var l = Model.LinkedEstablishments[i];
+                                    <tr>
+                                        <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
+                                        <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
+                                        <td>@l.Type</td>
+                                        <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    
+                        <div class="mvo">
                             @for (int i = 0; i < Model.LinkedEstablishments.Length; i++)
                             {
                                 var l = Model.LinkedEstablishments[i];
+                                <table class="estab-links">
+                                    <tbody>
+                                        <tr>
+                                            <th>URN</th>
+                                            <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Establishment name</th>
+                                            <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Type of link</th>
+                                            <td>@l.Type</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Date linked</th>
+                                            <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br />
+                            }
+                        </div>
+                    
+                    }
+                    else
+                    {
+                        <p>There are no linked establishments</p>
+                    }
+            </div>
+            @if (Model.ChangeHistory != null)
+            {
+            <div id="school-change-history" class="tab-content approval-data">
+                <h2 class="bold-small" style="margin-bottom:8px;">Change History</h2>
+                @if (Model.ChangeHistory.Length == 0)
+                {
+                    <p>There are no change records available at the moment</p>
+                }
+                else
+                {
+                    <table class="approval-items">
+                        <thead>
+                            <tr>
+                                <th>Updated field</th>
+                                <th>Old value</th>
+                                <th>New value</th>
+                                <th>Date changed</th>
+                                <th>Date requested</th>
+                                <th>Suggested from</th>
+                                <th>Approved by</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ChangeHistory)
+                            {
                                 <tr>
-                                    <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
-                                    <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
-                                    <td>@l.Type</td>
-                                    <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.OldValue</td>
+                                    <td>@item.NewValue</td>
+                                    <td>@item.EffectiveDateUtc</td>
+                                    <td>@item.RequestedDateUtc</td>
+                                    <td>@item.OriginatorUserName</td>
+                                    <td>@item.ApproverUserName</td>
                                 </tr>
                             }
                         </tbody>
                     </table>
-                    
-                    <div class="mvo">
-                        @for (int i = 0; i < Model.LinkedEstablishments.Length; i++)
-                        {
-                            var l = Model.LinkedEstablishments[i];
-                            <table class="estab-links">
-                                <tbody>
-                                    <tr>
-                                        <th>URN</th>
-                                        <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Establishment name</th>
-                                        <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Type of link</th>
-                                        <td>@l.Type</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Date linked</th>
-                                        <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <br />
-                        }
-                    </div>
-                    
-                }
-                else
-                {
-                    <p>There are no linked establishments</p>
-                }
-            </div>
 
+                    <ul class="school-results-listing approval-items">
+                        @foreach (var item in Model.ChangeHistory)
+                        {
+                            <li>
+                                <dl>
+                                    <dt>Updated field:</dt>
+                                    <dd>@item.Name</dd>
+                                    <dt>Old value:</dt>
+                                    <dd>@item.OldValue</dd>
+                                    <dt>New value:</dt>
+                                    <dd>@item.NewValue</dd>
+                                    <dt>Date changed:</dt>
+                                    <dd>@item.EffectiveDateUtc</dd>
+                                    <dt>Date requested:</dt>
+                                    <dd>@item.RequestedDateUtc</dd>
+                                    <dt>Suggested from:</dt>
+                                    <dd>@item.OriginatorUserName</dd>
+                                    <dt>Approved by:</dt>
+                                    <dd>@item.ApproverUserName</dd>
+                                </dl>
+                            </li>
+                        }
+                    </ul>
+
+                }
+
+                
+
+            </div>
+            }
+        </div>
     </div>
-</div>
 
 </div>
 

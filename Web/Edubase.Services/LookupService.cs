@@ -13,33 +13,13 @@ namespace Edubase.Services
     {
         private Lazy<ApplicationDbContext> _dc = new Lazy<ApplicationDbContext>(ApplicationDbContext.Create);
         private ApplicationDbContext DataContext => _dc.Value;
-
-        private Dictionary<string, Func<ApplicationDbContext, int, string>> _mapping = new Dictionary<string, Func<ApplicationDbContext, int, string>>()
-        {
-            { "LocalAuthorityId", (dc, id) => dc.LocalAuthorities.FirstOrDefault(x=>x.Id==id)?.Name },
-            { "HeadTitleId", (dc, id) => dc.HeadTitles.FirstOrDefault(x=>x.Id==id)?.Name },
-            { "GenderId", (dc, id) => dc.Genders.FirstOrDefault(x=>x.Id==id)?.Name },
-            { "EducationPhaseId", (dc, id) => dc.EducationPhases.FirstOrDefault(x=>x.Id==id)?.Name },
-            { "AdmissionsPolicyId", (dc, id) => dc.AdmissionsPolicies.FirstOrDefault(x=>x.Id==id)?.Name },
-            { "StatusId", (dc, id) => dc.EstablishmentStatuses.FirstOrDefault(x=>x.Id==id)?.Name }
-        };
         
         public LookupService()
         {
 
         }
-
-        public string GetName(string lookupName, int id)
-        {
-            if (IsLookupField(lookupName))
-            {
-                using (var dc = new ApplicationDbContext())
-                    return _mapping[lookupName]?.Invoke(dc, id);
-            }
-            else throw new Exception($"The lookup '{lookupName}' is not a valid lookup item");
-        }
-
-        public bool IsLookupField(string name) => _mapping.ContainsKey(name);
+        
+        public bool IsLookupField(string name) => true; // _mapping.ContainsKey(name);
 
         public List<LocalAuthority> LocalAuthorityGetAll() => DataContext.LocalAuthorities.ToList();
         public async Task<List<LocalAuthority>> LocalAuthorityGetAllAsync() => await DataContext.LocalAuthorities.ToListAsync();
@@ -61,8 +41,46 @@ namespace Edubase.Services
 
         public List<EstablishmentType> EstablishmentTypesGetAll() => DataContext.EstablishmentTypes.ToList();
         public async Task<List<EstablishmentType>> EstablishmentTypesGetAllAsync() => await DataContext.EstablishmentTypes.ToListAsync();
+
+        public List<ReasonEstablishmentClosed> EstablishmentClosedReasonsGetAll() => DataContext.EstablishmentClosedReasons.ToList();
+        public async Task<List<ReasonEstablishmentClosed>> EstablishmentClosedReasonsGetAllAsync() => await DataContext.EstablishmentClosedReasons.ToListAsync();
+
+        public List<ReasonEstablishmentOpened> EstablishmentOpenedReasonsGetAll() => DataContext.EstablishmentOpenedReasons.ToList();
+        public async Task<List<ReasonEstablishmentOpened>> EstablishmentOpenedReasonsGetAllAsync() => await DataContext.EstablishmentOpenedReasons.ToListAsync();
+
+
+        public List<ProvisionBoarding> BoardingProvisionsGetAll() => DataContext.BoardingProvisions.ToList();
+        public async Task<List<ProvisionBoarding>> BoardingProvisionsGetAllAsync() => await DataContext.BoardingProvisions.ToListAsync();
+
+
+
+        public List<ProvisionNursery> NurseryProvisionsGetAll() => DataContext.NurseryProvisions.ToList();
+        public async Task<List<ProvisionNursery>> NurseryProvisionsGetAllAsync() => await DataContext.NurseryProvisions.ToListAsync();
+
+
+        public List<ProvisionOfficialSixthForm> OfficialSixthFormProvisionsGetAll() => DataContext.OfficialSixthFormProvisions.ToList();
+        public async Task<List<ProvisionOfficialSixthForm>> OfficialSixthFormProvisionsGetAllAsync() => await DataContext.OfficialSixthFormProvisions.ToListAsync();
+
+
+        public List<ReligiousCharacter> ReligiousCharactersGetAll() => DataContext.ReligiousCharacters.ToList();
+        public async Task<List<ReligiousCharacter>> ReligiousCharactersGetAllAsync() => await DataContext.ReligiousCharacters.ToListAsync();
+
+
+        public List<ReligiousEthos> ReligiousEthosGetAll() => DataContext.ReligiousEthos.ToList();
+        public async Task<List<ReligiousEthos>> ReligiousEthosGetAllAsync() => await DataContext.ReligiousEthos.ToListAsync();
+
+
+        public List<Diocese> DiocesesGetAll() => DataContext.Dioceses.ToList();
+        public async Task<List<Diocese>> DiocesesGetAllAsync() => await DataContext.Dioceses.ToListAsync();
+
+
+        public List<ProvisionSpecialClasses> SpecialClassesProvisionsGetAll() => DataContext.SpecialClassesProvisions.ToList();
+        public async Task<List<ProvisionSpecialClasses>> SpecialClassesProvisionsGetAllAsync() => await DataContext.SpecialClassesProvisions.ToListAsync();
+
+
         public async Task<List<GroupType>> GroupeTypesGetAllAsync() => await DataContext.GroupTypes.ToListAsync();
         public List<GroupType> GroupeTypesGetAll() => DataContext.GroupTypes.ToList();
+        
 
         public void Dispose()
         {
