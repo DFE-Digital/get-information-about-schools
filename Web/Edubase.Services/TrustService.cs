@@ -80,13 +80,13 @@ namespace Edubase.Services
                         CompaniesHouseNumber = companiesHouseNumber,
                         Name = dto.Name,
                         OpenDate = dto.IncorporationDate,
-                        GroupTypeId = groupTypeId
+                        GroupTypeId = groupTypeId,
+                        Address = dto.Address
                     };
                     dc.Companies.Add(model);
                     await dc.SaveChangesAsync();
                     return model.GroupUID;
                 }
-
             }
             else throw new Exception("Company not found");
         }

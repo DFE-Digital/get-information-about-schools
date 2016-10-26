@@ -4,10 +4,8 @@ namespace Edubase.Common
 {
     public class StringUtil
     {
-        public static string ConcatNonEmpties(string separator, params string[] items)
-        {
-            return string.Join(separator, items.Where(x => x != null && !string.IsNullOrWhiteSpace(x)));
-        }
+        public static string ConcatNonEmpties(string separator, params string[] items) => 
+            string.Join(separator, items.Where(x => x.Clean() != null));
 
         /// <summary>
         /// Takes a string array and converts it into a sentence

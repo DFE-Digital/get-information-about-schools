@@ -182,6 +182,19 @@ namespace Edubase.Web.UI.Helpers
         public static MvcHtmlString EduGroupTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GroupeTypesGetAll());
 
+        /// <summary>
+        /// Group Types drop down but limited to just single and multi-academy trusts
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TProperty"></typeparam>
+        /// <param name="htmlHelper"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static MvcHtmlString EduGroupTypesForCreateDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(
+                        expression, _lookup.GroupeTypesGetAll().Where(x=>x.Name.Contains("Multi") 
+                        || x.Name.Contains("Single")));
+
         public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, 
             TProperty>> expression, IEnumerable<LookupBase> items) => 
             htmlHelper.EduDropDownFor(expression, items.Select(x => new SelectListItem

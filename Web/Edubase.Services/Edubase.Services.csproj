@@ -122,7 +122,6 @@
     <Compile Include="MessageLoggingService.cs" />
     <Compile Include="LookupService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceBase.cs" />
     <Compile Include="TrustService.cs" />
   </ItemGroup>
   <ItemGroup>

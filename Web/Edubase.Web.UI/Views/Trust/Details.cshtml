@@ -30,7 +30,15 @@
                 <th scope="col">Number of schools belonging to the MAT</th>
                 <td>@Model.MAT.EstablishmentCount</td>
             </tr>
-            
+            <tr>
+                <th scope="col">Open date</th>
+                <td>@(Model.MAT.OpenDate?.ToString("dd/MM/yyyy"))</td>
+            </tr>
+            <tr>
+                <th scope="col">Address</th>
+                <td>@Model.MAT.Address</td>
+            </tr>
+
         </table>
 
         
