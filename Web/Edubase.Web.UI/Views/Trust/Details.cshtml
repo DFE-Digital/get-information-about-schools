@@ -32,11 +32,11 @@
             </tr>
             <tr>
                 <th scope="col">Open date</th>
-                <td>@(Model.MAT.OpenDate?.ToString("dd/MM/yyyy"))</td>
+                <td>@(Model.MAT.OpenDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
             </tr>
             <tr>
                 <th scope="col">Address</th>
-                <td>@Model.MAT.Address</td>
+                <td>@(Model.MAT.Address ?? "None recorded")</td>
             </tr>
 
         </table>
