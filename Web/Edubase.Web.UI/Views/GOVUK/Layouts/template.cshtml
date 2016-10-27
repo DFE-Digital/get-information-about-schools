@@ -127,32 +127,31 @@
                 <div class="content">
                     <nav id="proposition-menu">
                         <a href="/" id="proposition-name">Edubase</a>
-                        @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <ul id="proposition-links">
-                                @if (!Request.IsAuthenticated)
-                                {
-                                    <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "" }, null)</li>
-                                }
-                                else
-                                {
-                                    <li><a href="/Search">Search</a></li>
-                                    <li><a href="/Schools">Schools</a></li>
+                        
+                        @Html.AntiForgeryToken()
+                        <ul id="proposition-links">
+                            @if (!Request.IsAuthenticated)
+                            {
+                                <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "" }, null)</li>
+                            }
+                            @*else
+                            {
+                                <li><a href="/Search">Search</a></li>
+                                <li><a href="/Schools">Schools</a></li>
 
-                                    if (User.Identity.IsAuthenticated)
-                                    {
-                                        <li>@Html.ActionLink("View approval items" + (ViewBag.PendingApprovalItemsCount > 0 ? " (" + ViewBag.PendingApprovalItemsCount + ")" : "") as string, "Index", "Approval", new { area = "" }, null)</li>
-                                    }
-
-                                    if (User.IsInRole("Admin"))
-                                    {
-                                        <li><a href="/Admin">Admin</a></li>
-                                    }
-                                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                                if (User.Identity.IsAuthenticated)
+                                {
+                                    <li>@Html.ActionLink("View approval items" + (ViewBag.PendingApprovalItemsCount > 0 ? " (" + ViewBag.PendingApprovalItemsCount + ")" : "") as string, "Index", "Approval", new { area = "" }, null)</li>
                                 }
-                            </ul>
-                        }
+
+                                if (User.IsInRole("Admin"))
+                                {
+                                    <li><a href="/Admin">Admin</a></li>
+                                }
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                            }*@
+                        </ul>
+                        
                     </nav>
                 </div>
             </div>
@@ -178,16 +177,17 @@
             </div>
         </div>
     </div>
-@if (ViewBag.HideLogo != true)
-{
-    <div class="side-width-wrapper">
-        <div class="grid-row">
-            <div class="column-full">
-                <img class="top-logo" src="/public/assets/images/dfe-xsmall.png"/>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="side-width-wrapper">
+            <div class="grid-row">
+                <div class="column-full">
+                    @Html.ActionLink("Sign out", "LogOff", "Account", null, new { @class = "sign-out-link" })
+                </div>
             </div>
         </div>
-    </div>
-}
+    }
 
     @RenderBody()
 

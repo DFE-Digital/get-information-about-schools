@@ -97,3 +97,13 @@ a.font14-ext-link[rel="external"]
 .error-section {
     margin: 20px 0;
 }
+
+.sign-out-link {
+    float:right; 
+    margin-top:8px; 
+    display:block;
+    color:$link-colour;
+    &:visited {
+        color:$link-colour;
+    }
+}
