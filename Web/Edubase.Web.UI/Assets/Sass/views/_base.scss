@@ -98,10 +98,16 @@ a.font14-ext-link[rel="external"]
     margin: 20px 0;
 }
 
+.sign-out-container {
+    position:relative;
+}
+
 .sign-out-link {
-    float:right; 
-    margin-top:8px; 
-    display:block;
+    position:absolute;
+    right:15px;
+    bottom:-30px;
+    font-size:15px;
+    display:inline-block;
     color:$link-colour;
     &:visited {
         color:$link-colour;

@@ -153,7 +153,7 @@ namespace Edubase.Web.UI.Controllers
                 return new RedirectToRouteResult(null, new RouteValueDictionary
                 {
                     { "action", "Details" },
-                    { "controller", "MAT" },
+                    { "controller", "Trust" },
                     { "id", viewModel.Results.Single().GroupUID }
                 });
             }

@@ -117,7 +117,7 @@
             <div class="header-global">
                 <div class="header-logo">
                     <a href="http://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
-                        <img src="@(ViewBag.assetsPath)/images/gov.uk_logotype_crown.png?0.13.0" width="35" height="31" alt="">
+                        <img src="/public/govuk_template/assets/images/gov.uk_logotype_crown.png?0.13.0" width="35" height="31" alt="" style="visibility:visible">
                         GOV.UK
                     </a>
                 </div>
@@ -170,10 +170,11 @@
 
     <div class="side-width-wrapper">
         <div class="grid-row">
-            <div class="column-full">
+            <div class="column-full sign-out-container">
                 <div class="phase-banner">
                     @(Html.Partial("../govuk/partials/phase/alpha"))
                 </div>
+                @Html.ActionLink("Sign out", "LogOff", "Account", null, new { @class = "sign-out-link" })
             </div>
         </div>
     </div>
@@ -183,7 +184,7 @@
         <div class="side-width-wrapper">
             <div class="grid-row">
                 <div class="column-full">
-                    @Html.ActionLink("Sign out", "LogOff", "Account", null, new { @class = "sign-out-link" })
+                    
                 </div>
             </div>
         </div>

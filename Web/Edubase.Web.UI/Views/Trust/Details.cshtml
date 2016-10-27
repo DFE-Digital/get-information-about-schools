@@ -5,8 +5,7 @@
     ViewBag.Title = Model.MAT.Name;
     ViewBag.PageClass = "mat-details";
 }
-<br />
-<p>@Html.ActionLink("Go back", "Index", "Search")</p>
+<p>@Html.ActionLink("Go back", "Index", "Search", null, new { onclick = "history.back();" })</p>
 
 <h1 class="heading-large">@Model.MAT.Name</h1>
 
