@@ -2,12 +2,12 @@
 using Edubase.Data.Entity;
 using Edubase.Data.Migrations;
 using Edubase.Services;
+using Edubase.Services.Lucene;
 using Edubase.Web.UI.Filters;
 using FluentValidation.Mvc;
 using System;
 using System.Data.Entity;
 using System.Runtime.Caching;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -15,7 +15,7 @@ using System.Web.Routing;
 
 namespace Edubase.Web.UI
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
@@ -30,6 +30,7 @@ namespace Edubase.Web.UI
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
             Database.SetInitializer(m);
             FluentValidationModelValidatorProvider.Configure();
+            EstablishmentsIndex.Instance.InitialiseAsync().Wait();
             
             FlushLogMessages();
         }

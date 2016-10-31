@@ -14,6 +14,13 @@ namespace Edubase.Common
             return Regex.IsMatch(text, @"\A\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b\Z", RegexOptions.IgnoreCase);
         }
 
+        public static string RemoveSubstring(this string data, string stringToRemove)
+        {
+            if (data == null || string.IsNullOrWhiteSpace(data)) return null;
+            data = data.Replace(stringToRemove, string.Empty);
+            return data;
+        }
+
         public static string ToTitleCase(this string text)
         {
             if (text.Clean() == null) return null;
@@ -90,6 +97,12 @@ namespace Edubase.Common
         {
             if (data.ContainsKey(key)) return data[key];
             return default(T2);
+        }
+
+        public static T2 Get<T1, T2>(this IDictionary<T1, T2> data, T1 key, T2 defaultValue)
+        {
+            if (data.ContainsKey(key)) return data[key];
+            return defaultValue;
         }
 
         /// <summary>

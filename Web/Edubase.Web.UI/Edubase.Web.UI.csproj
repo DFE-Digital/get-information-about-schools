@@ -229,6 +229,7 @@
     <Compile Include="Areas\Governors\Models\SearchModel.cs" />
     <Compile Include="Controllers\ApprovalController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
+    <Compile Include="Controllers\EduBaseController.cs" />
     <Compile Include="Controllers\EstablishmentController.cs" />
     <Compile Include="Controllers\PrototypeController.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -252,8 +253,10 @@
     <Compile Include="Helpers\FormatHelpers.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\IRedirectAfterLoginHelper.cs" />
+    <Compile Include="Helpers\JsonCamelCaseResult.cs" />
     <Compile Include="Helpers\RedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\SchoolDetailsHelpers.cs" />
+    <Compile Include="Helpers\UrlHelperExtensions.cs" />
     <Compile Include="Identity\Constants.cs" />
     <Compile Include="Identity\ISchoolPermissions.cs" />
     <Compile Include="Identity\IUserIdentity.cs" />
@@ -263,6 +266,7 @@
     <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\ApprovalsViewModel.cs" />
+    <Compile Include="Models\AdvancedSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateTrustModel.cs" />
@@ -292,6 +296,7 @@
     <Content Include="Assets\Scripts\tabs.js" />
     <Content Include="Assets\Scripts\Views\create-edit-school.js" />
     <Content Include="Assets\Scripts\Views\establishment-details.js" />
+    <Content Include="Assets\Scripts\Views\google-location.js" />
     <Content Include="Assets\Scripts\Views\school-search-form.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -654,6 +659,7 @@
     <Content Include="Areas\Governors\Views\Search\Index.cshtml" />
     <Content Include="Areas\Governors\Views\Search\Results.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
+    <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -709,8 +715,10 @@
     <Content Include="Views\Establishment\Create.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
+    <Content Include="Views\Search\Advanced.cshtml" />
     <None Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Search\MATASResults.cshtml" />
+    <Content Include="Views\Search\AdvancedSearchResults.cshtml" />
     <None Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />
@@ -722,6 +730,7 @@
     <Content Include="Views\Trust\SearchCompaniesHouse.cshtml" />
     <Content Include="Views\Trust\Create.cshtml" />
     <Content Include="Views\Shared\_ResultsPagination3.cshtml" />
+    <Content Include="Views\Shared\_ResultsPaginationAdvSearch.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

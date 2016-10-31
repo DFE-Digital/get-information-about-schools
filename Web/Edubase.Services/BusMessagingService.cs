@@ -1,6 +1,7 @@
 ﻿using Edubase.Data.Entity;
 using Microsoft.ServiceBus.Messaging;
 using Newtonsoft.Json;
+using System;
 using System.Configuration;
 using System.Threading.Tasks;
 
@@ -32,5 +33,17 @@ namespace Edubase.Services
                 Text = "Estab upd msg sent: " + payload
             });
         }
+
+        /// <summary>
+        /// Broadcasts a message to all listeners.
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public async Task Broadcast(string topic, string message)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

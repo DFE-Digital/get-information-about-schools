@@ -13,12 +13,12 @@
     "jquery": "1.7.2"
   },
   "homepage": "https://github.com/DFEAGILEDEVOPS/typeahead.js",
-  "_release": "a8d1bd98d1",
+  "_release": "95582dfe56",
   "_resolution": {
     "type": "commit",
-    "commit": "a8d1bd98d148fe27d95d5ce661602a36067a4c85"
+    "commit": "95582dfe56df715e3ea46c9798a3047eb6b939f0"
   },
   "_source": "https://github.com/DFEAGILEDEVOPS/typeahead.js.git",
-  "_target": "a8d1bd98d148fe27d95d5ce661602a36067a4c85",
+  "_target": "95582dfe56df715e3ea46c9798a3047eb6b939f0",
   "_originalSource": "https://github.com/DFEAGILEDEVOPS/typeahead.js.git"
 }

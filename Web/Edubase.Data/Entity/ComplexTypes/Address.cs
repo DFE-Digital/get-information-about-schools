@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity.Permissions;
+﻿using Edubase.Common;
+using Edubase.Data.Entity.Permissions;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Edubase.Data.Entity.ComplexTypes
@@ -34,5 +35,13 @@ namespace Edubase.Data.Entity.ComplexTypes
         public string Northing { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+
+        public override string ToString() => StringUtil.ConcatNonEmpties(", ",
+            Line1,
+            Line2,
+            Line3,
+            Locality,
+            CityOrTown,
+            PostCode);
     }
 }

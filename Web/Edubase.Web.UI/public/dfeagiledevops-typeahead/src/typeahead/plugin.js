@@ -73,7 +73,8 @@
         menu = new MenuConstructor({
           node: $menu,
           datasets: datasets,
-          ariaOwnsId: o.ariaOwnsId
+          ariaOwnsId: o.ariaOwnsId,
+          highlightAliases: o.highlightAliases
         }, www);
 
         typeahead = new Typeahead({

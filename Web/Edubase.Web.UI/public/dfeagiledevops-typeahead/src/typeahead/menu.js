@@ -31,6 +31,7 @@ var Menu = (function() {
       var node = that.$node.find(oDataset.node).first();
       oDataset.node = node.length ? node : $('<div>').appendTo(that.$node);
       oDataset.ariaOwnsId = o.ariaOwnsId;
+      oDataset.highlightAliases = o.highlightAliases;
 
       return new Dataset(oDataset, www);
     }

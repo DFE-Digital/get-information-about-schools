@@ -8,11 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using MoreLinq;
+using Edubase.Services.Lucene;
 
 namespace Edubase.Services
 {
     public class EstablishmentService
     {
+        #region EstabNoRules
+
         private static readonly string[][] _estabNoRules = new string[][]
         {
             new[]{"","0 - Not applicable","1 - Nursery","2 - Primary","3 - Middle Deemed Primary","4 - Secondary","5 - Middle Deemed Secondary","6 - 16 Plus","7 - All Through","9 - Unknown"},
@@ -77,6 +80,8 @@ namespace Edubase.Services
             /// </summary>
             SystemGenerated
         }
+
+        #endregion
 
         public string GetName(int urn)
         {
@@ -155,8 +160,7 @@ namespace Edubase.Services
             phases.ForEach(p => types.ForEach(t => retVal.Add(string.Concat(p, "-", t), GetEstabNumberEntryPolicy(t, p).ToString())));
             return retVal;
         }
-
-
+        
         public void AddChangeHistory(int urn, ApplicationDbContext dc, string approverUserId, string originatorUserId, DateTime requestedDate, params ChangeDescriptor[] changes)
         {
             changes.ForEach(x => dc.EstablishmentChangeHistories.Add(new EstablishmentChangeHistory
@@ -221,6 +225,13 @@ namespace Edubase.Services
             return changes;
         }
 
+        public EstablishmentAutoSuggestionDto[] Autosuggest(string text)
+        {
+            return EstablishmentsIndex.Instance.Establishments
+                .Where(x => x.Name.StartsWith(text)).Take(10)
+                .Select(x => new EstablishmentAutoSuggestionDto(x.Urn, x.Name, 
+                x.FullAddress, x.Address.CityOrTown, x.Address.PostCode)).ToArray();
+        }
 
     }
 }

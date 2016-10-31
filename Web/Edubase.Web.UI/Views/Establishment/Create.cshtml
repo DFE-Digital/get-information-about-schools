@@ -31,7 +31,7 @@
         </script>
     }
     <script type="text/javascript">
-        var laestabRules = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.SimplifiedLAESTABRules));
+        var laestabRules = @Html.Json(Model.SimplifiedLAESTABRules));
         function processLAESTABTextBox(){
             var $input = $("#laestab");
             var p = $("#educationphaseid").val();

@@ -24,6 +24,7 @@ namespace Edubase.Web.UI.Models
         public int PageCount { get; private set; }
         public int PageSize { get; set; }
         public int StartIndex { get; set; }
+        
 
         public SearchResultsModel(string searchTerm)
         {

@@ -3,6 +3,8 @@ using Edubase.Data.Entity;
 using Edubase.Data.Entity.Lookups;
 using Edubase.Services;
 using Edubase.Web.UI.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -202,6 +204,11 @@ namespace Edubase.Web.UI.Helpers
                 Text = x.Name,
                 Value = x.Id.ToString()
             }));
-        
+
+
+        public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 
+            new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+
+
     }
 }

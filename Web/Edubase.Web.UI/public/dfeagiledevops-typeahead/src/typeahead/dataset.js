@@ -41,6 +41,7 @@ var Dataset = (function() {
     www.mixin(this);
 
     this.highlight = !!o.highlight;
+    this.highlightAliases = o.highlightAliases;
     this.name = o.name || nameGenerator();
 
     this.limit = o.limit || 5;
@@ -202,6 +203,7 @@ var Dataset = (function() {
 
       this.highlight && highlight({
         className: this.classes.highlight,
+        highlightAliases: this.highlightAliases, 
         node: fragment,
         pattern: query
       });

@@ -27,15 +27,20 @@ namespace Edubase.Data.Entity
 
         [Column("Type"), RestrictPermission]
         public EstablishmentType EstablishmentType { get; set; }
-
+        
         public EstablishmentStatus Status { get; set; }
 
         [RestrictPermission]
         public int? StatusId { get; set; }
+
         public ReasonEstablishmentOpened ReasonEstablishmentOpened { get; set; }
+
         public ReasonEstablishmentClosed ReasonEstablishmentClosed { get; set; }
+
         public int? ReasonEstablishmentOpenedId { get; set; }
+
         public int? ReasonEstablishmentClosedId { get; set; }
+
         [RestrictPermission]
         public DateTime? OpenDate { get; set; }
 
@@ -52,22 +57,30 @@ namespace Edubase.Data.Entity
 
         [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? StatutoryHighAge { get; set; }
+
         public ProvisionBoarding ProvisionBoarding { get; set; }
         public int? ProvisionBoardingId { get; set; }
+
         public ProvisionNursery ProvisionNursery { get; set; }
         public int? ProvisionNurseryId { get; set; }
+
         public ProvisionOfficialSixthForm ProvisionOfficialSixthForm { get; set; }
         public int? ProvisionOfficialSixthFormId { get; set; }
+
         public Gender Gender { get; set; }
 
         [RestrictPermission]
         public int? GenderId { get; set; }
+
         public ReligiousCharacter ReligiousCharacter { get; set; }
         public int? ReligiousCharacterId { get; set; }
+
         public ReligiousEthos ReligiousEthos { get; set; }
         public int? ReligiousEthosId { get; set; }
+
         public Diocese Diocese { get; set; }
         public string DioceseId { get; set; }
+
         public AdmissionsPolicy AdmissionsPolicy { get; set; }
 
         [RestrictPermission]
@@ -75,11 +88,13 @@ namespace Edubase.Data.Entity
 
         [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? Capacity { get; set; }
+
         public ProvisionSpecialClasses ProvisionSpecialClasses { get; set; }
         public int? ProvisionSpecialClassesId { get; set; }
         public int? UKPRN { get; set; }
         [Obsolete("This is potentially obsolete due to base.LastUpdatedUtc")]
         public DateTime? LastChangedDate { get; set; }
+
         public Address Address { get; set; }
 
         [RequiresApproval]
@@ -97,6 +112,7 @@ namespace Edubase.Data.Entity
         public int? HeadTitleId { get; set; }
 
         public ContactDetail Contact { get; set; }
+
         public ContactDetail ContactAlt { get; set; }
 
         [ForeignKey("EstablishmentType")]
@@ -118,6 +134,15 @@ namespace Edubase.Data.Entity
                     }
                 }
             }
+        }
+
+        private string _fullAddress = null;
+
+        [NotMapped]
+        public string FullAddress
+        {
+            get { return _fullAddress ?? Address?.ToString(); }
+            set { _fullAddress = value; }
         }
 
         public Establishment()

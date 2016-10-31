@@ -1,12 +1,16 @@
-﻿using Edubase.Data.Identity;
+﻿using Edubase.Common.IO;
+using Edubase.Data.Identity;
 using Edubase.Services;
+using Edubase.Services.Lucene;
+using Edubase.Web.UI.Helpers;
 using Newtonsoft.Json;
+using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : EduBaseController
     {
         public ActionResult Index()
         {
@@ -36,10 +40,30 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet]
         public ActionResult GetPendingErrors(string pwd)
         {
-            if (pwd == "c7634") return Json(MessageLoggingService.Instance.GetPending(), JsonRequestBehavior.AllowGet);
+            if (pwd == "c7634") return Json(MessageLoggingService.Instance.GetPending());
             else return new EmptyResult();
         }
 
+        
+
+
+        [HttpGet]
+        public async Task<ActionResult> RebuildIndex()
+        {
+            var log = await EstablishmentsIndex.Instance.RebuildEstablishmentsIndexAsync();
+            return Content(log.ToString(), "text/plain");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ReinitIndex()
+        {
+            var log = await EstablishmentsIndex.Instance.InitialiseAsync();
+            return Content(log.ToString(), "text/plain");
+        }
+
+
+
         public async Task FlushErrors() => await MessageLoggingService.Instance.FlushAsync();
+
     }
 }
