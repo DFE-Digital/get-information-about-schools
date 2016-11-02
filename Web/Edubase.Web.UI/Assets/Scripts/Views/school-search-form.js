@@ -61,7 +61,7 @@
                     self.bindAutosuggest('#TextSearchModel_Text', '#TextSearchModel_AutoSuggestValue', self.getSchoolsSuggestionHandler);
                     self.bindAutosuggest('#TrustSearchModel_Text', '#TrustSearchModel_AutoSuggestValue', self.getTrustSuggestionHandler);
                     self.bindAutosuggest('#LocalAuthoritySearchModel_Text', '#LocalAuthoritySearchModel_AutoSuggestValue', { data: window.localAuthorities, name: "name", value: "id" });
-                }, 1000);
+                }, 500);
                 
             });
             
@@ -83,6 +83,11 @@
         },
 
         bindAutosuggest: function (targetInputElementName, targetResolvedInputElementName, suggestionSource) {
+
+            if ($(targetInputElementName).length == 0) {
+                console.log("The input field '"+targetInputElementName+"' does not exist.");
+                return;
+            }
 
             var field = "name";
             var value = "id";

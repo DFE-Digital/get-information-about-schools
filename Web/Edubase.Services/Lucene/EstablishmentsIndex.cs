@@ -47,31 +47,36 @@ namespace Edubase.Services.Lucene
             var svc = new BlobService();
             var blob = svc.GetBlobReference(BLOB_CONTAINER_NAME, BLOB_FILENAME);
             var zipFileLocation = FileHelper.GetTempFileName("zip");
-            await blob.DownloadToFileAsync(zipFileLocation, FileMode.Create);
 
-            if (logger != null) await logger.WriteLineAsync("Downloaded file");
-
-            var luceneDirectoryPath = DirectoryHelper.CreateTempDirectory();
-            using (var zip = new ZipFile(zipFileLocation))
-                zip.ExtractAll(luceneDirectoryPath.FullName);
-            File.Delete(zipFileLocation);
-
-            if (logger != null) await logger.WriteLineAsync("Extracted zip file");
-
-            var luceneDirectory = new MMapDirectory(luceneDirectoryPath);
-            var luceneDataProvider = new LuceneDataProvider(luceneDirectory, LuceneVer.LUCENE_30);
-            luceneDataProvider.Settings.EnableMultipleEntities = false;
-            
-            if (logger != null) await logger.WriteLineAsync("Opened index successfully");
-
-            using (Disposer.Capture(_luceneDataProvider, _luceneDirectory))
+            if (await blob.ExistsAsync())
             {
-                _luceneDirectoryPath = luceneDirectoryPath;
-                _luceneDirectory = luceneDirectory;
-                _luceneDataProvider = luceneDataProvider;
-            }
+                await blob.DownloadToFileAsync(zipFileLocation, FileMode.Create);
 
-            _isInitialised = true;
+                if (logger != null) await logger.WriteLineAsync("Downloaded file");
+
+                var luceneDirectoryPath = DirectoryHelper.CreateTempDirectory();
+                using (var zip = new ZipFile(zipFileLocation))
+                    zip.ExtractAll(luceneDirectoryPath.FullName);
+                File.Delete(zipFileLocation);
+
+                if (logger != null) await logger.WriteLineAsync("Extracted zip file");
+
+                var luceneDirectory = new MMapDirectory(luceneDirectoryPath);
+                var luceneDataProvider = new LuceneDataProvider(luceneDirectory, LuceneVer.LUCENE_30);
+                luceneDataProvider.Settings.EnableMultipleEntities = false;
+
+                if (logger != null) await logger.WriteLineAsync("Opened index successfully");
+
+                using (Disposer.Capture(_luceneDataProvider, _luceneDirectory))
+                {
+                    _luceneDirectoryPath = luceneDirectoryPath;
+                    _luceneDirectory = luceneDirectory;
+                    _luceneDataProvider = luceneDataProvider;
+                }
+
+                _isInitialised = true;
+            }
+            else await logger.WriteLineAsync("The index file doesn't exist.");
         }
 
         public async Task<LogTextWriter> InitialiseAsync()
