@@ -43,11 +43,14 @@
         padding: 12px 0 24px 8px;
         margin-bottom: 12px;
         clear: left;
-        overflow: hidden;
+        //overflow: hidden;
       
         .js-enabled & {
             display: none;
         }
+
+        
+
 
         .form-control {
             width: 60%;
@@ -58,6 +61,8 @@
             @media(max-width: 380px) {
                 line-height: 1.3;
             }
+
+            &.tt-menu{width:100%;}
         }
 
         .button {
@@ -66,4 +71,62 @@
             }
         }
     }
+}
+
+
+.schools-search-page {
+
+    .horizontal-tabs { 
+        .horizontal-tab {
+            font-weight:bold;
+            height:45px;
+        }
+    }
+
+
+    .twitter-typeahead 
+    {
+        width: 50%;
+        @include media(mobile)
+        {
+            width:100%;
+        }
+
+        .form-control
+        {
+            width:100%;
+        }
+    }
+
+    .tt-menu 
+    {
+        background-color: white;
+        z-index:99 !important; // accessibility requirement
+        .tt-suggestion 
+        {
+            a 
+            {
+                display: block;
+                padding: $gutter-one-quarter;
+                text-decoration: none;
+            }
+
+            a strong {
+                text-decoration: underline;
+            }
+
+            &:hover, a:hover 
+            {
+                background-color: $link-hover-colour;
+                color: white;
+                cursor: pointer;
+            }
+        }
+
+        .tt-cursor 
+        {
+            background-color: #f9f9f9;
+        }
+    }
+
 }

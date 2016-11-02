@@ -22,6 +22,7 @@ namespace Edubase.Data.Entity
         public string GroupStatus { get; set; }
         public string GroupStatusCode { get; set; }
         public DateTime? OpenDate { get; set; }
+        public string Address { get; set; }
 
         /// <summary>
         /// Temporary!

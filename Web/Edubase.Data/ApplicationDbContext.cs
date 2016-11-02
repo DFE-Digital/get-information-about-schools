@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Threading.Tasks;
 
 namespace Edubase.Data.Entity
 {
@@ -30,6 +31,12 @@ namespace Edubase.Data.Entity
         public IDbSet<LocalAuthority> LocalAuthorities { get; set; }
         public IDbSet<Estab2Estab> Estab2EstabLinks { get; set; }
         public IDbSet<Establishment2Company> Establishment2CompanyLinks { get; set; }
+        public IDbSet<EstablishmentPermission> Permissions { get; set; }
+        public IDbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
+        public IDbSet<Governor> Governors { get; set; }
+        public IDbSet<GovernorRole> GovernorRoles { get; set; }
+        public IDbSet<GovernorAppointingBody> GovernorAppointingBodies { get; set; }
+        public IDbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; }
 
         private bool _enableIdentityInsert;
 
@@ -113,9 +120,33 @@ namespace Edubase.Data.Entity
             base.OnModelCreating(modelBuilder);
         }
 
-        public static ApplicationDbContext Create()
+        public static ApplicationDbContext Create() => new ApplicationDbContext();
+
+        public static async Task<T> OperationAsync<T>(Func<ApplicationDbContext, Task<T>> action, ApplicationDbContext dc = null)
         {
-            return new ApplicationDbContext();
+            if (dc == null)
+            {
+                using (var dataContext = new ApplicationDbContext())
+                {
+                    T retVal = await action(dataContext);
+                    await dataContext.SaveChangesAsync();
+                    return retVal;
+                }
+            }
+            else return await action(dc);
+        }
+
+        public static async Task OperationAsync(Func<ApplicationDbContext, Task> action, ApplicationDbContext dc = null)
+        {
+            if (dc == null)
+            {
+                using (var dataContext = new ApplicationDbContext())
+                {
+                    await action(dataContext);
+                    await dataContext.SaveChangesAsync();
+                }
+            }
+            else await action(dc);
         }
     }
 }

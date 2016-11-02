@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace Edubase.Data
                 catch (DbUpdateConcurrencyException)
                 {
                     if (i == 999) throw;
-                    System.Threading.Thread.Sleep(Random2.Next(10, 60));
+                    System.Threading.Thread.Sleep(RandomNumber.Next(10, 60));
                 }
                 catch (Exception)
                 {
@@ -35,7 +36,10 @@ namespace Edubase.Data
                 }
             }
         }
-
         
+        public static PropertyInfo[] GetProperties<T>() => typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+       
+
+
     }
 }

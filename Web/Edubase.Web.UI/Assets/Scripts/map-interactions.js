@@ -3,7 +3,7 @@
 DfE.mapInteractions =  (function () {
     'use strict';
     var settings = {
-        apikey: 'AIzaSyA-eSFOhFG0RnFzwhgFf4fSyQl_ypklraE' // registered to Jon B, resticted to localhost / dev / stage for Edubase
+        apikey: 'AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw' // registered to Jon B, resticted to localhost / dev / stage for Edubase
     }
 
      return {

@@ -1,67 +1,136 @@
 ﻿@using Edubase.Web.UI.Helpers
-@using Edubase.Common;
-@model Edubase.Data.Entity.Establishment
+@using Edubase.Web.UI.Models
+@using Edubase.Common
+@using Edubase.Data.Entity
+@model EstablishmentDetailViewModel
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = Model.Establishment.Name;
     ViewBag.PageClass = "school-details";
     ViewBag.HideLogo = true;
 }
 
-<h1 class="heading-large">@Model.Name</h1>
-@Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Urn }, new { @class = "button mobile-full-width" })
+@if (Model.ShowPendingMessage)
+{
+    <div class="pending-updates-message">
+        <div class="tick"></div>
+        Updates require approval. The Data Owner has been notified.
+        <div class="cross" onclick="$(this).parent().hide();"></div>
+    </div>
+}
+else if (Model.UserHasPendingApprovals)
+{
+    <div class="pending-updates-message">
+        <div class="exclaim"></div>
+        You have pending approvals awaiting for this school. @Html.ActionLink("Approve now.", "Index", "Approval", new { urn = Model.Establishment.Urn }, null)
+        <div class="cross" onclick="$(this).parent().hide();"></div>
+    </div>
+}
+
+@if (Model.PendingChanges.Any())
+{
+    <div class="pending-updates">
+        <div class="icon" style="height:24px;">!</div>
+        <h3>Data update@(Model.PendingChanges.Count > 1 ? "s" : "") pending Data Owner approval</h3>
+        @foreach (var item in Model.PendingChanges)
+        {
+            <div class="group">
+                <div>Data field: @item.DataField</div>
+                <div>Old: @(item.OldValue.Clean() ?? "(nothing)")</div>
+                <div>New: @(item.NewValue.Clean() ?? "(nothing)")</div>
+            </div>
+        }
+    </div>
+}
+
+<h1 class="heading-large">@Html.PendingUpdateFor(x => x.Name) @Model.Establishment.Name</h1>
+@if (Model.IsUserLoggedOn)
+{
+    @Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
+}
 
 <div class="column-full">
     <div class="grid-row summary">
         <table class="borderless">
-            <caption class="visually-hidden">@Model.Name information</caption>
+            <caption class="visually-hidden">@Model.Establishment.Name information</caption>
             <tr>
                 <th scope="row">Address</th>
-                <td>@SchoolDetailsHelpers.GetAddress(Model)</td>
+                <td>@SchoolDetailsHelpers.GetAddress(Model.Establishment)</td>
             </tr>
             <tr>
                 <th scope="row">Local authority</th>
                 <td>
-                    <a href="/Search/SearchByLaName?searchTerm=@Model.LocalAuthority">
-                        @Model.LocalAuthority
-                    </a> 
-                    (@Model.LocalAuthorityId)
+                    @Html.PendingUpdateFor(x => x.LocalAuthorityId)
+                    @if (Model.Establishment.LocalAuthorityId.HasValue)
+                    {
+                        <a href="/Search/SearchByLaName?searchTerm=@Model.Establishment.LocalAuthority">
+                            @Model.Establishment.LocalAuthority
+                        </a> 
+                        <text>(@Model.Establishment.LocalAuthorityId)</text>
+                    }
                 </td>
             </tr>
             <tr>
                 <th scope="row">Headteacher/Principal</th>
-                <td>@Model.HeadTitle @Model.HeadFirstName @Model.HeadLastName</td>
+                <td>
+                    @(Html.PendingUpdatesFor("HeadTitleId", "HeadFirstName", "HeadLastName"))
+                    @Model.Establishment.HeadTitle @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
+                </td>
             </tr>
             <tr>
                 <th scope="col">Age range</th>
-                <td>@Model.StatutoryLowAge to @Model.StatutoryHighAge</td>
+                <td>
+                    @(Html.PendingUpdatesFor("StatutoryLowAge", "StatutoryHighAge"))
+                    @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
+                    {
+                        <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
+                    }
+                </td>
             </tr>
             <tr>
                 <th scope="row">Phase of education</th>
-                <td>@Model.EducationPhase</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x=>x.EducationPhaseId))
+                    @Model.Establishment.EducationPhase
+                </td>
             </tr>
             <tr>
                 <th scope="row">School type</th>
-                <td>@Model.EstablishmentType</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.TypeId))
+                    @Model.Establishment.EstablishmentType
+                </td>
             </tr>
             <tr>
                 <th scope="row">Gender of entry</th>
-                <td>@Model.Gender</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.GenderId))
+                    @Model.Establishment.Gender
+                </td>
             </tr>
             <tr>
                 <th scope="row">URN</th>
-                <td>@Model.Urn</td>
+                <td>@Model.Establishment.Urn</td>
             </tr>
             <tr>
                 <th scope="row">LAESTAB</th>
-                <td>@Model.LAESTAB</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.EstablishmentNumber))
+                    @Model.Establishment.LAESTAB
+                </td>
             </tr>
             <tr>
                 <th scope="row">Establishment status</th>
-                <td>@Model.Status</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.StatusId))
+                    @Model.Establishment.Status
+                </td>
             </tr>
             <tr>
                 <th scope="row">Admissions policy</th>
-                <td>@Model.AdmissionsPolicy</td>
+                <td>
+                    @(Html.PendingUpdatesFor(x => x.AdmissionsPolicyId))
+                    @Model.Establishment.AdmissionsPolicy
+                </td>
             </tr>
         </table>
 
@@ -69,8 +138,8 @@
             <a href="#map" id="map-toggle" class="expanding-content-trigger map-toggle">Show map</a>
             <div id="map" class="school-detail-map"
                  data-latlng="[-2.583500,51.436290]"
-                 data-school-name="@Model.Name"
-                 data-school-address="@SchoolDetailsHelpers.GetAddress(Model)"></div>
+                 data-school-name="@Model.Establishment.Name"
+                 data-school-address="@SchoolDetailsHelpers.GetAddress(Model.Establishment)"></div>
         </div>
     </div>
 
@@ -89,6 +158,12 @@
                 <li>
                     <a href="#school-links" class="horizontal-tab">Links</a>
                 </li>
+                @if (Model.ChangeHistory != null)
+                {
+                    <li>
+                        <a href="#school-change-history" class="horizontal-tab">Changes</a>
+                    </li>
+                }
             </ul>
         </div>
 
@@ -96,88 +171,330 @@
         <div class="tab-content-wrapper horizontal-tabs-content">
             <div id="school-dashboard" class="tab-content">
                 <table class="borderless">
-                    <caption class="visually-hidden">@Model.Name details</caption>
+                    <caption class="visually-hidden">@Model.Establishment.Name details</caption>
                     <tr>
                         <th scope="row">Reason establishment opened</th>
-                        <td>@Model.ReasonEstablishmentOpened</td>
+                        <td>@Model.Establishment.ReasonEstablishmentOpened</td>
                     </tr>
                     <tr>
                         <th scope="row">Establishment open date</th>
-                        <td>@(Model.OpenDate.HasValue ? Model.OpenDate.Value.ToString("dd/MM/yyyy") : "---")</td>
+                        <td>
+                            @(Html.PendingUpdatesFor(x => x.OpenDate))
+                            @(Model.Establishment.OpenDate.HasValue ? Model.Establishment.OpenDate.Value.ToString("dd/MM/yyyy") : "---")
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Reason establishment closed</th>
-                        <td>@Model.ReasonEstablishmentClosed</td>
+                        <td>@Model.Establishment.ReasonEstablishmentClosed</td>
                     </tr>
                     <tr>
                         <th scope="row">Date establishment closed</th>
-                        <td>@(Model.CloseDate.HasValue ? Model.CloseDate.Value.ToString("dd/MM/yyyy") : "---")</td>
+                        <td>
+                            @(Html.PendingUpdatesFor(x => x.CloseDate))
+                            @(Model.Establishment.CloseDate.HasValue ? Model.Establishment.CloseDate.Value.ToString("dd/MM/yyyy") : "---")
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Boarders</th>
-                        <td>@Model.ProvisionBoarding</td>
+                        <td>@Model.Establishment.ProvisionBoarding</td>
                     </tr>
                     <tr>
                         <th scope="row">Nursery provision</th>
-                        <td>@Model.ProvisionNursery</td>
+                        <td>@Model.Establishment.ProvisionNursery</td>
                     </tr>
                     <tr>
                         <th scope="row">Official sixth form</th>
-                        <td>@Model.ProvisionOfficialSixthForm</td>
+                        <td>@Model.Establishment.ProvisionOfficialSixthForm</td>
                     </tr>
                     <tr>
                         <th scope="row">Diocese</th>
-                        <td>@(Model.Diocese?.Name ?? "---")</td>
+                        <td>@(Model.Establishment.Diocese?.Name ?? "---")</td>
                     </tr>
                     <tr>
                         <th scope="row">School capacity</th>
-                        <td>@Model.Capacity</td>
+                        <td>@Html.PendingUpdateFor(x => x.Capacity) @Model.Establishment.Capacity</td>
                     </tr>
                     <tr>
                         <th scope="row">UK provider reference number</th>
-                        <td>@Model.UKPRN</td>
+                        <td>@Model.Establishment.UKPRN</td>
                     </tr>
                 </table>
 
             </div>
             <div id="school-contact" class="tab-content">
                 <table class="borderless">
-                    <caption class="visually-hidden">Contact information for @Model.Name</caption>
+                    <caption class="visually-hidden">Contact information for @Model.Establishment.Name</caption>
                 <tr>
                     <th scope="row">School website</th>
-                    <td>@Model.Contact.WebsiteAddress</td>
+                    <td>@Model.Establishment.Contact.WebsiteAddress</td>
                 </tr>
                 <tr>
                     <th scope="row">Main email</th>
-                    <td>@Model.Contact.EmailAddress</td>
+                    <td>@Model.Establishment.Contact.EmailAddress</td>
                 </tr>
                 <tr>
                     <th scope="row">Alternative email</th>
-                    <td>@Model.ContactAlt.EmailAddress</td>
+                    <td>@Model.Establishment.ContactAlt.EmailAddress</td>
                 </tr>
                 <tr>
                     <th scope="row">Telephone number</th>
-                    <td>@Model.Contact.TelephoneNumber</td>
+                    <td>@Model.Establishment.Contact.TelephoneNumber</td>
                 </tr>
             </table>
         </div>
-        <div id="school-governance" class="tab-content">
-            <p>PLACEHOLDER FOR: Governance info here</p>
-            <p>PLACEHOLDER FOR: Governance info here</p>
-            <p>PLACEHOLDER FOR: Governance info here</p>
-            <p>PLACEHOLDER FOR: Governance info here</p>
-            <p>PLACEHOLDER FOR: Governance info here</p>
-            <p>PLACEHOLDER FOR: Governance info here</p>
-        </div>
-        <div id="school-links" class="tab-content">
-            <p>PLACEHOLDER FOR: School links here</p>
-            <p>PLACEHOLDER FOR: School links here</p>
-            <p>PLACEHOLDER FOR: School links here</p>
-            <p>PLACEHOLDER FOR: School links here</p>
-            <p>PLACEHOLDER FOR: School links here</p>
-            <p>PLACEHOLDER FOR: School links here</p>
+            <div id="school-governance" class="tab-content">
+
+                @if (!Model.Govs.Any())
+                {
+                    <p>There is no governance information for this establishment</p>
+                }
+
+                @RenderGovernors("Chair[s] of Trustees", Model.NonHistoric(Model.ChairsOfTrustees))
+                @RenderGovernors("Trustee[s]", Model.NonHistoric(Model.Trustees))
+                @RenderGovernors("Member[s]", Model.NonHistoric(Model.Members))
+                @RenderGovernors("Accounting Officer[s]", Model.NonHistoric(Model.AccountingOfficers))
+                @RenderGovernors("Chief Financial Officer[s]", Model.NonHistoric(Model.ChiefFinancialOfficers))
+                @RenderGovernors("Chair[s] of Governors", Model.NonHistoric(Model.ChairsOfGovernors))
+                @RenderGovernors("Chair[s] of Local Governing Body", Model.NonHistoric(Model.ChairsOfLocalGoverningBody))
+                @RenderGovernors("Local Governor[s]", Model.NonHistoric(Model.LocalGovernors))
+                @RenderGovernors("Governor[s]", Model.NonHistoric(Model.Governors))
+
+                @if (Model.Historic(Model.Govs).Any())
+                {
+                    if (Model.NonHistoric(Model.Govs).Any())
+                    {
+                        <hr />
+                    }
+                    <h3 class="bold-xsmall" style="padding-top:5px;">Historic (left within the past 12 months)</h3>
+                    <table class="borderless" style="max-width:500px;">
+                        @RenderHistoricGovernors("Chair[s] of Trustees", Model.Historic(Model.ChairsOfTrustees))
+                        @RenderHistoricGovernors("Trustee[s]", Model.Historic(Model.Trustees))
+                        @RenderHistoricGovernors("Member[s]", Model.Historic(Model.Members))
+                        @RenderHistoricGovernors("Accounting Officer[s]", Model.Historic(Model.AccountingOfficers))
+                        @RenderHistoricGovernors("Chief Financial Officer[s]", Model.Historic(Model.ChiefFinancialOfficers))
+                        @RenderHistoricGovernors("Chair[s] of Governors", Model.Historic(Model.ChairsOfGovernors))
+                        @RenderHistoricGovernors("Chair[s] of Local Governing Body", Model.Historic(Model.ChairsOfLocalGoverningBody))
+                        @RenderHistoricGovernors("Local Governor[s]", Model.Historic(Model.LocalGovernors))
+                        @RenderHistoricGovernors("Governor[s]", Model.Historic(Model.Governors))
+                    </table>
+                }
+
+            </div>
+            <div id="school-links" class="tab-content">
+                    @if (Model.LinkedEstablishments.Length > 0)
+                    {
+                        <table class="estab-links mi">
+                            <thead>
+                                <tr>
+                                    <th>URN</th>
+                                    <th>Establishment name</th>
+                                    <th>Type of link</th>
+                                    <th>Date linked</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.LinkedEstablishments.Length; i++)
+                                {
+                                    var l = Model.LinkedEstablishments[i];
+                                    <tr>
+                                        <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
+                                        <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
+                                        <td>@l.Type</td>
+                                        <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    
+                        <div class="mvo">
+                            @for (int i = 0; i < Model.LinkedEstablishments.Length; i++)
+                            {
+                                var l = Model.LinkedEstablishments[i];
+                                <table class="estab-links">
+                                    <tbody>
+                                        <tr>
+                                            <th>URN</th>
+                                            <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Establishment name</th>
+                                            <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Type of link</th>
+                                            <td>@l.Type</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Date linked</th>
+                                            <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br />
+                            }
+                        </div>
+                    
+                    }
+                    else
+                    {
+                        <p>There are no linked establishments</p>
+                    }
+            </div>
+            @if (Model.ChangeHistory != null)
+            {
+            <div id="school-change-history" class="tab-content approval-data">
+                <h2 class="bold-small" style="margin-bottom:8px;">Change History</h2>
+                @if (Model.ChangeHistory.Length == 0)
+                {
+                    <p>There are no change records available at the moment</p>
+                }
+                else
+                {
+                    <table class="approval-items">
+                        <thead>
+                            <tr>
+                                <th>Updated field</th>
+                                <th>Old value</th>
+                                <th>New value</th>
+                                <th>Date changed</th>
+                                <th>Date requested</th>
+                                <th>Suggested from</th>
+                                <th>Approved by</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ChangeHistory)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.OldValue</td>
+                                    <td>@item.NewValue</td>
+                                    <td>@item.EffectiveDateUtc</td>
+                                    <td>@item.RequestedDateUtc</td>
+                                    <td>@item.OriginatorUserName</td>
+                                    <td>@item.ApproverUserName</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <ul class="school-results-listing approval-items">
+                        @foreach (var item in Model.ChangeHistory)
+                        {
+                            <li>
+                                <dl>
+                                    <dt>Updated field:</dt>
+                                    <dd>@item.Name</dd>
+                                    <dt>Old value:</dt>
+                                    <dd>@item.OldValue</dd>
+                                    <dt>New value:</dt>
+                                    <dd>@item.NewValue</dd>
+                                    <dt>Date changed:</dt>
+                                    <dd>@item.EffectiveDateUtc</dd>
+                                    <dt>Date requested:</dt>
+                                    <dd>@item.RequestedDateUtc</dd>
+                                    <dt>Suggested from:</dt>
+                                    <dd>@item.OriginatorUserName</dd>
+                                    <dt>Approved by:</dt>
+                                    <dd>@item.ApproverUserName</dd>
+                                </dl>
+                            </li>
+                        }
+                    </ul>
+
+                }
+
+                
+
+            </div>
+            }
         </div>
     </div>
-</div>
 
 </div>
+
+@helper RenderGovernors(string label, Governor[] governors)
+{
+    if (governors.Any())
+    {
+        <div class="bold-xsmall" style="padding-bottom:6px;">@label.Replace("[s]", (governors.Length > 1 ? "s" : ""))</div>
+        foreach (var gov in governors)
+        {
+            <details style="padding-bottom:3px;padding-left:6px;">
+                <summary class="font-xsmall" style="text-decoration:underline;">@(gov.FullName).
+                    @if (gov.AppointmentStartDate.HasValue)
+                    {
+                        <text>Appointed on: @(gov.AppointmentStartDate.Value.ToString("dd/MM/yyyy")).</text>
+                    }
+                    @if (gov.AppointmentEndDate.HasValue)
+                    {
+                        <text>Term of office ends: @(gov.AppointmentEndDate.Value.ToString("dd/MM/yyyy")).</text>
+                    }
+                </summary>
+                <table class="borderless" style="max-width:500px; margin-bottom:10px; float:none; clear:both;">
+                    <tr>
+                        <td>Title</td>
+                        <td>@gov.Title</td>
+                    </tr>
+                    <tr>
+                        <td>Forename 1</td>
+                        <td>@gov.Forename1</td>
+                    </tr>
+                    @if (gov.Forename2 != null)
+                    {
+                        <tr>
+                            <td>Forename 2</td>
+                            <td>@gov.Forename2</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Surname</td>
+                        <td>@gov.Surname</td>
+                    </tr>
+                    <tr>
+                        <td>Role</td>
+                        <td>@gov.Role</td>
+                    </tr>
+                    @if (gov.AppointmentStartDate.HasValue)
+                    {
+                        <tr>
+                            <td>Date of appointment</td>
+                            <td>@gov.AppointmentStartDate.Value.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                    @if (gov.AppointmentEndDate.HasValue)
+                    {
+                        <tr>
+                            <td>Date term of office ends/ended</td>
+                            <td>@gov.AppointmentEndDate.Value.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Apponting body</td>
+                        <td>@gov.GovernorAppointingBody</td>
+                    </tr>
+                </table>
+                <div style="clear:both;"></div>
+            </details>
+        }
+        <div style="height:15px;float:none;clear:both;"><br /></div>
+    }
+}
+
+
+
+@helper RenderHistoricGovernors(string label, Governor[] governors)
+{
+    if (governors.Any())
+    {
+        <tr>
+            <td>@label.Replace("[s]", (governors.Length > 1 ? "s" : ""))</td>
+            <td>
+                @foreach (var item in governors)
+                {
+                    <div>@item.FullName</div>
+                }
+            </td>
+        </tr>
+    }
+}

@@ -15,7 +15,8 @@ var highlight = (function(doc) {
         tagName: 'strong',
         className: null,
         wordsOnly: false,
-        caseSensitive: false
+        caseSensitive: false,
+        highlightAliases: []
       };
 
   return function hightlight(o) {
@@ -30,6 +31,30 @@ var highlight = (function(doc) {
 
     // support wrapping multiple patterns
     o.pattern = _.isArray(o.pattern) ? o.pattern : [o.pattern];
+
+    if(o.highlightAliases && o.highlightAliases.length > 0)
+    {
+      var target = o.pattern[0].toLowerCase();
+      for (var index = 0; index < o.highlightAliases.length; index++) {
+        var aliases = o.highlightAliases[index];
+        var matched = null;
+        if(aliases.some(function(ele, i, arr) 
+        {
+          var retVal = target.indexOf(ele.toLowerCase()) > -1; 
+          if(retVal) matched = ele;
+          return retVal;
+        })) {
+          for (var j = 0; j < aliases.length; j++) {
+            var alias = aliases[j];
+            if(alias != matched){
+              o.pattern.push(target.replace(matched, alias));
+            }
+          }
+          break;
+        }
+      }
+    }
+    
 
     regex = getRegex(o.pattern, o.caseSensitive, o.wordsOnly);
     traverse(o.node, hightlightTextNode);

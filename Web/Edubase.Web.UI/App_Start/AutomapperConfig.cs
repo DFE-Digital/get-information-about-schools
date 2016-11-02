@@ -4,6 +4,7 @@ using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Web.UI.Models;
 using System;
 using Edubase.Common;
+using Edubase.Data.Entity.Permissions;
 
 namespace Edubase.Web.UI
 {
@@ -11,10 +12,13 @@ namespace Edubase.Web.UI
     {
         public static void Configure()
         {
+            
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<AddressViewModel, Address>().ReverseMap();
-                cfg.CreateMap<CreateEditEstablishmentModel, Establishment>()
+
+                var estabVm2DmMap = cfg.CreateMap<CreateEditEstablishmentModel, Establishment>()
+                    //.ForMember(x => x.Name, opt => opt.Ignore())
                     .AfterMap((s, d) =>
                     {
                         if (s.LAESTAB.HasValue)
@@ -22,11 +26,17 @@ namespace Edubase.Web.UI
                             var laestab = s.LAESTAB.Value.ToString();
                             if (laestab.Length == 7) d.EstablishmentNumber = laestab.Substring(3, 4).ToInteger();
                         }
-                    }).ReverseMap().AfterMap((s, d) =>
-                    {
-                        if (s.EstablishmentNumber.HasValue && s.LocalAuthorityId.HasValue)
-                            d.LAESTAB = int.Parse(string.Concat(s.LocalAuthorityId, s.EstablishmentNumber));
                     });
+
+
+                estabVm2DmMap.ReverseMap().AfterMap((s, d) =>
+                {
+                    if (s.EstablishmentNumber.HasValue && s.LocalAuthorityId.HasValue)
+                        d.LAESTAB = int.Parse(string.Concat(s.LocalAuthorityId, s.EstablishmentNumber));
+                });
+
+
+
                 cfg.CreateMap<ContactDetailsViewModel, ContactDetail>().ReverseMap();
                 cfg.CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();
                 cfg.CreateMap<DateTime?, DateTimeViewModel>().ConvertUsing<DateTimeViewModelTypeConverter>();

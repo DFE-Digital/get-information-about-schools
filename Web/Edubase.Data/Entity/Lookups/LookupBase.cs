@@ -12,7 +12,6 @@ namespace Edubase.Data.Entity.Lookups
         public string Name { get; set; }
 
         public override string ToString() => Name;
-        
     }
 
     public class AdmissionsPolicy : LookupBase { }
@@ -30,6 +29,9 @@ namespace Edubase.Data.Entity.Lookups
     public class ReasonEstablishmentOpened : LookupBase { }
     public class ReligiousCharacter : LookupBase { }
     public class ReligiousEthos : LookupBase { }
+    public class GovernorRole : LookupBase { }
+    public class GovernorAppointingBody : LookupBase { }
+
 }
 
 

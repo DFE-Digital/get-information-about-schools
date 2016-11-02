@@ -156,6 +156,11 @@ legend {
   }*/
 }
 
+.form-control.search-box {
+    padding:5px;
+}
+
+
 
 // Form control widths
 .form-control-3-4 {
@@ -167,7 +172,7 @@ legend {
 }
 
 .form-control-1-2 {
-  width: 100%;
+  width: 50%;
 
   @include media(tablet) {
     width: 50%;
@@ -214,24 +219,31 @@ legend {
   }
 }
 
-
 .header-submit {
     float: right;
     margin-top: 0.5em;
-    display: none;
-    @media(min-width: 540px) {
-        display: block;
+    display: block;
+    @include media(mobile){
+        width: 100%;
+        display:none;
+        float: none;
+        clear: both;
     }
+    
 }
 
 .mobile-full-width {
-    clear: both;
     display: block;
-    float:none;
+    clear: both;
+    float: right;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 
-    @media(min-width: 540px) {
-        width: auto;
-        float: right;
+    @include media(mobile) {
+        width: 100%;
+        float: none;
+        clear: both;
     }
 }
 
@@ -271,7 +283,9 @@ legend {
         width: 66%;
     }
     
-    .form-group {
+}
+
+.form-group {
 
         &.error {
             border-left: 4px solid $error-colour;
@@ -279,22 +293,21 @@ legend {
     }
     
     .error-message, .field-validation-error {
-        font-size: 14px;
+        font-size: 16px;
         color: $error-colour;
         display: none; 
-        font-weight: normal; 
+        font-weight: bold; 
     }
     .error .error-message, .error .field-validation-error {
         display: block;
     }
 
     .form-control {
-        font-size: 14px;
+        font-size: 16px;
     }
 
     select {
         width: 99%;
     }
-}
 
 hr { height:3px; background-color:$grey-3; border:none; }

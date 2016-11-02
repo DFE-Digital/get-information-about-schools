@@ -7,9 +7,8 @@
     int maxPages = 10;
     int paginationStart = 0;
     int paginationFinish = @Model.PageCount;
-    
-}
 
+}
 @if (Model.PageCount > maxPages)
 {
     if (currentPage < 5)
@@ -29,44 +28,51 @@
 
 }
 
-
-
 <div class="pagination">
     <p>Showing @startResult - @endResult of @Model.Count</p>
     <ul class="pagination-links">
-    @{
-        if (currentPage > 0)
-        {
-            <li>@Html.ActionLink("Previous",
+        @{
+            if (currentPage > 0)
+            {
+                <li>
+                    @Html.ActionLink("Previous",
                      @action,
-                     new { Model.SearchTerm, startIndex = ((currentPage - 1) * Model.PageSize)},
-                     new { @class = "pagination-prev" })</li>
-        }
+                     new { Model.SearchTerm, startIndex = ((currentPage - 1) * Model.PageSize) },
+                     new { @class = "pagination-prev" })
+            </li>
+            }
 
-        for (int i = paginationStart; i < paginationFinish; i++)
+            for (int i = paginationStart; i < paginationFinish; i++)
             {
                 var displayPage = i + 1;
                 if (i == currentPage)
                 {
-                 <li><span class="go-nowhere numeric-pagination">@displayPage.ToString()</span></li>
+                    <li><span class="go-nowhere numeric-pagination">@displayPage.ToString()</span></li>
                 }
                 else
                 {
-                <li>@Html.ActionLink(displayPage.ToString(),
-                        @action, 
-                        new { Model.SearchTerm, startIndex = (i * Model.PageSize)},
-                        new { @class = "numeric-pagination" })</li>
+                    <li>
+                        @Html.ActionLink(displayPage.ToString(),
+                        @action,
+                        new { Model.SearchTerm, startIndex = (i * Model.PageSize) },
+                        new { @class = "numeric-pagination" })
+                </li>
                 }
-         }
+            }
 
-        if (currentPage < Model.PageCount - 1)
-        {
-            <li>@Html.ActionLink("Next", 
+            if (currentPage < Model.PageCount - 1)
+            {
+                <li>
+                    @Html.ActionLink("Next",
                     @action,
-                    new { Model.SearchTerm,
-                    startIndex = ((currentPage + 1) * Model.PageSize)},
-                    new { @class = "pagination-next" })</li>
+                    new
+                    {
+                        Model.SearchTerm,
+                        startIndex = ((currentPage + 1) * Model.PageSize)
+                    },
+                    new { @class = "pagination-next" })
+            </li>
+            }
         }
-    }
     </ul>
 </div>

@@ -5,22 +5,113 @@ using System.Web.Routing;
 using Edubase.Data.Entity;
 using Edubase.Web.UI.Models;
 using System.Data.Entity;
-using Edubase.Web.UI.Identity;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [Authorize(Roles = IdentityConstants.AccessAllSchoolsRoleName)]
-    public class SearchController : Controller
-    {
-        public SearchController()
-        {
+    using Services;
+    using System;
+    using ViewModel = AdvancedSearchViewModel;
+    using Areas.Governors.Models;
 
+    public class SearchController : EduBaseController
+    {
+        public ActionResult Index() => View();
+
+        [HttpGet]
+        public ActionResult Advanced() => View(new ViewModel());
+
+        [HttpGet]
+        public ActionResult Results(ViewModel model)
+        {
+            if (model.SearchType == ViewModel.eSearchType.Text) return SearchByTextSearch(model);
+            else if (model.SearchType == ViewModel.eSearchType.Location) return SearchByLocation(model);
+            else if (model.SearchType == ViewModel.eSearchType.LocalAuthority) return SearchByLocalAuthority(model);
+            else if (model.SearchType == ViewModel.eSearchType.Trust) return SearchTrusts(model);
+            else if (model.SearchType == ViewModel.eSearchType.Governor) return SearchGovernors(model.GovernorSearchModel);
+            else throw new Exception("Unrecognised action");
         }
 
-        // GET: Search
-        public ActionResult Index()
+        private ActionResult SearchByTextSearch(ViewModel model)
         {
-            return View();
+            var query = CreateTextSearchQuery(model, model.TextSearchModel);
+            return ProcessResult(model, query);
+        }
+
+        private IQueryable<Establishment> CreateTextSearchQuery(ViewModel model, ViewModel.Payload payload)
+        {
+            var query = GetEstablishmentsQuery();
+            if (payload.AutoSuggestValue.IsInteger())
+            {
+                var id = payload.AutoSuggestValue.ToInteger();
+                query = query.Where(x => x.Urn == id);
+            }
+            else if (payload.Text.IsInteger())
+            {
+                var id = payload.Text.ToInteger();
+                if (model.TextSearchType == ViewModel.eTextSearchType.LAESTAB)
+                {
+                    var localAuthorityId = int.Parse(payload.Text.Substring(0, 3));
+                    var estabNo = int.Parse(payload.Text.Substring(3, 4));
+                    query = query.Where(x => x.LocalAuthorityId == localAuthorityId && x.EstablishmentNumber == estabNo);
+                }
+                else if (model.TextSearchType == ViewModel.eTextSearchType.UKPRN) query = query.Where(x => x.UKPRN == id);
+                else if (model.TextSearchType == ViewModel.eTextSearchType.URN) query = query.Where(x => x.Urn == id);
+                else model.Error = "The LAESTAB, UKPRN or URN was invalid.";
+            }
+            else if (model.TextSearchType == ViewModel.eTextSearchType.EstablishmentName) query = query.Where(x => x.Name.Contains(model.TextSearchModel.Text));
+            else if (model.TextSearchType == ViewModel.eTextSearchType.Unknown) model.Error = "Search type was invalid";
+            return query;
+        }
+        
+        private ActionResult SearchGovernors(SearchModel governorSearchModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ActionResult SearchByLocalAuthority(ViewModel model)
+        {
+            var query = GetEstablishmentsQuery();
+            var payload = model.LocalAuthoritySearchModel;
+            if (payload.AutoSuggestValue.IsInteger()) query = query.Where(x => x.LocalAuthorityId == payload.AutoSuggestValueAsInt);
+            else
+            {
+                var la = new CachedLookupService().LocalAuthorityGetAll().FirstOrDefault(x => x.Name == payload.Text);
+                if (la != null) query = query.Where(x => x.LocalAuthorityId == la.Id);
+                else model.Error = "The local authority name was not found";
+            }
+
+            return ProcessResult(model, query);
+        }
+
+        private ActionResult ProcessResult(ViewModel model, IQueryable<Establishment> query)
+        {
+            if (!model.HasError)
+            {
+                model.Count = query.Count();
+                model.Results = query.OrderBy(x => x.Name).Skip(model.StartIndex).Take(model.PageSize).ToList();
+            }
+
+            if (model.Count == 1)
+            {
+                return new RedirectToRouteResult(null, new RouteValueDictionary
+                {
+                    { "action", "Details" },
+                    { "controller", "Schools" },
+                    { "id", model.Results.Single().Urn }
+                });
+            }
+            else return View("AdvancedSearchResults", model);
+        }
+
+
+        private ActionResult SearchByLocation(ViewModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ActionResult SearchTrusts(ViewModel model)
+        {
+            throw new NotImplementedException();
         }
 
         public ActionResult Search(string searchTerm, int startIndex = 0, int pageSize = 50)
@@ -143,7 +234,7 @@ namespace Edubase.Web.UI.Controllers
                 foreach (var result in viewModel.Results)
                 {
                     result.EstablishmentCount = dc.Database
-                        .SqlQuery<int>("SELECT COUNT(1) FROM Establishment2Company WHERE Company_GroupUID = " + result.GroupUID).Single();
+                        .SqlQuery<int>("SELECT COUNT(1) FROM Establishment2Company WHERE CompanyGroupUID = " + result.GroupUID).Single();
                 }
 
             }
@@ -154,7 +245,7 @@ namespace Edubase.Web.UI.Controllers
                 return new RedirectToRouteResult(null, new RouteValueDictionary
                 {
                     { "action", "Details" },
-                    { "controller", "MAT" },
+                    { "controller", "Trust" },
                     { "id", viewModel.Results.Single().GroupUID }
                 });
             }
@@ -163,5 +254,14 @@ namespace Edubase.Web.UI.Controllers
 
             return View("MATASResults", viewModel);
         }
+        
+        [HttpGet]
+        public ActionResult Suggest(string text) => Json(new EstablishmentService().Autosuggest(text));
+
+        [HttpGet]
+        public ActionResult SuggestTrust(string text) => Json(DataContext.Companies.Where(x => x.Name.StartsWith(text))
+            .OrderBy(x=>x.Name).Take(10).Select(x => new { Name = x.Name, Id = x.GroupUID }));
+
+        private IQueryable<Establishment> GetEstablishmentsQuery() => DataContext.Establishments.Include(x => x.Status);
     }
 }

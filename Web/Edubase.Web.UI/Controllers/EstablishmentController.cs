@@ -1,68 +1,266 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Edubase.Web.UI.Models;
+﻿using AutoMapper;
+using Edubase.Common;
 using Edubase.Data.Entity;
-using AutoMapper;
-using Edubase.Web.UI.Identity;
+using Edubase.Data.Entity.ComplexTypes;
+using Edubase.Data.Identity;
+using Edubase.Services;
+using Edubase.Web.UI.Models;
 using FluentValidation.Mvc;
+using Microsoft.ServiceBus.Messaging;
+using MoreLinq;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity;
+using System.Linq;
+using System.Net.Mail;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [Authorize(Roles = IdentityConstants.AccessAllSchoolsRoleName)]
+    [Authorize]
     public class EstablishmentController : Controller
     {
         [HttpGet]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
             using (var dc = ApplicationDbContext.Create())
             {
                 var dataModel = dc.Establishments.FirstOrDefault(x => x.Urn == id);
-                var viewModel = Mapper.Map<Establishment, CreateEditEstablishmentModel>(dataModel);
-                return View("CreateEdit", viewModel);
+                var viewModel = Mapper.Map<Establishment, ViewModel>(dataModel);
+
+                viewModel.Links = (await dc.Estab2EstabLinks
+                    .Include(x => x.LinkedEstablishment)
+                    .Where(x => x.Establishment_Urn == id)
+                    .Select(x => x)
+                    .ToArrayAsync())
+                    .Select(x => new LinkedEstabViewModel(x)).ToList();
+
+                return View(viewModel);
             }
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Edit(CreateEditEstablishmentModel model)
+        public async Task<ActionResult> Edit(ViewModel model)
         {
-            if (ModelState.IsValid)
+            if (model.Action == ViewModel.eAction.Save)
             {
-                using (var dc = ApplicationDbContext.Create())
+                if (ModelState.IsValid)
                 {
-                    var dataModel = dc.Establishments.FirstOrDefault(x => x.Urn == model.Urn);
-                    Mapper.Map(model, dataModel);
-                    dc.SaveChanges();
-                    return RedirectToAction("Details", "Schools", new { id = model.Urn.Value });
+                    var thereArePendingUpdates = await SaveEstablishment(model);
+                    if(thereArePendingUpdates) return RedirectToAction("Details", "Schools", new { id = model.Urn.Value, pendingUpdates = true });
+                    else return RedirectToAction("Details", "Schools", new { id = model.Urn.Value });
                 }
             }
-            return View("CreateEdit", model);
+            else
+            {
+                if (model.Action == ViewModel.eAction.FindEstablishment && model.LinkedSearchUrn.HasValue)
+                {
+                    ModelState.Clear();
+                    model.LinkedEstabNameToAdd = new EstablishmentService().GetName(model.LinkedSearchUrn.Value);
+                    model.LinkedUrnToAdd = model.LinkedSearchUrn;
+                }
+                else if (model.Action == ViewModel.eAction.AddLinkedSchool)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        AddLinkedEstablishment(model);
+                        ModelState.Clear();
+                    }
+                }
+                else if (model.Action == ViewModel.eAction.RemoveLinkedSchool)
+                {
+                    ModelState.Clear();
+                    if (model.LinkedItemPositionToRemove.HasValue)
+                        model.Links.RemoveAt(model.LinkedItemPositionToRemove.Value);
+                }
+                model.ScrollToLinksSection = true;
+            }
+            return View(model);
         }
 
-
-        [HttpGet]
-        public ActionResult Create()
+        private void AddLinkedEstablishment(ViewModel model)
         {
-            return View("CreateEdit", new CreateEditEstablishmentModel());
+            if (!model.Links.Any(x => x.Urn == model.LinkedUrnToAdd))
+            {
+                using (var dc = new ApplicationDbContext())
+                {
+                    var link = new LinkedEstabViewModel
+                    {
+                        LinkDate = model.LinkedDateToAdd.ToDateTime(),
+                        Name = model.LinkedEstabNameToAdd,
+                        Type = model.LinkTypeToAdd.ToString(),
+                        Urn = model.LinkedUrnToAdd
+                    };
+                    model.Links.Insert(0, link);
+                    model.LinkedSearchUrn = model.LinkedUrnToAdd = null;
+                    model.LinkedEstabNameToAdd = null;
+                }
+            }
         }
 
+        private async Task<bool> SaveEstablishment(ViewModel model)
+        {
+            using (var dc = ApplicationDbContext.Create())
+            {
+                Establishment dataModel2 = null;
+                using (var dc2 = ApplicationDbContext.Create()) dataModel2 = dc2.Establishments.FirstOrDefault(x => x.Urn == model.Urn);
+                var dataModel = await dc.Establishments.FirstOrDefaultAsync(x => x.Urn == model.Urn);
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] CreateEditEstablishmentModel model)
+                var role = Roles.RestrictiveRoles.FirstOrDefault(x => User.IsInRole(x)) ?? Roles.Academy;
+                var permissions = await dc.Permissions.Where(x => x.RoleName == role).ToArrayAsync();
+
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<ContactDetailsViewModel, ContactDetail>();
+                    cfg.CreateMap<AddressViewModel, Address>();
+                    cfg.CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();
+
+                    var map = cfg.CreateMap<ViewModel, Establishment>();
+                    permissions.Where(x => !x.PropertyName.Contains("_"))
+                        .ForEach(p => map.ForMember(p.PropertyName, opt => opt.Ignore()));
+                });
+
+                var mapper = config.CreateMapper();
+                var estabTemp = mapper.Map(model, dataModel2);
+                var changes = ReflectionHelper.DetectChanges(estabTemp, dataModel, typeof(Address), typeof(ContactDetail));
+                mapper.Map(model, dataModel);
+
+                var establishment = Mapper.Map<ViewModel, Establishment>(model);
+                var permPropertiesThatChanged = new List<ChangeDescriptor>();
+                permissions.ForEach(p =>
+                {
+                    var newValue = ReflectionHelper.GetProperty(establishment, p.PropertyName).Clean();
+                    var oldValue = ReflectionHelper.GetProperty(dataModel, p.PropertyName).Clean();
+
+                    if (newValue != oldValue)
+                    {
+                        permPropertiesThatChanged.Add(new ChangeDescriptor(p.PropertyName, newValue, oldValue));
+                        dc.EstablishmentApprovalQueue.Add(new EstablishmentApprovalQueue
+                        {
+                            Urn = dataModel.Urn,
+                            Name = p.PropertyName,
+                            NewValue = newValue,
+                            OldValue = oldValue,
+                            OriginatorUserId = ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value
+                        });
+                    }
+                });
+
+                new EstablishmentService().AddChangeHistory(dataModel.Urn, dc, null,
+                    ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value,
+                    DateTime.UtcNow, changes.ToArray());
+
+                await AddOrRemoveEstablishmentLinks(model, dc);
+
+                await dc.SaveChangesAsync();
+
+                if (changes.Count > 0)
+                {
+                    new SmtpClient().Send("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment data changed",
+                        $"For Establishment URN: {dataModel.Urn}, the following has changed: \r\n" + string.Join("\r\n", changes));
+
+                    await new BusMessagingService().SendEstablishmentUpdateMessageAsync(dataModel);
+                }
+
+                if (permPropertiesThatChanged.Count > 0)
+                {
+                    new SmtpClient().Send("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment data changes require approval",
+                        $"For Establishment URN: {dataModel.Urn}, the following has changed and requires approval: \r\n" + string.Join("\r\n", permPropertiesThatChanged));
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private async Task AddOrRemoveEstablishmentLinks(ViewModel model, ApplicationDbContext dc)
+        {
+            var linksInDb = dc.Estab2EstabLinks.Where(x => x.Establishment_Urn == model.Urn).ToList();
+            var urnsInDb = linksInDb.Select(x => x.LinkedEstablishment_Urn).Cast<int?>().ToArray();
+            var urnsInModel = model.Links.Select(x => x.Urn).Cast<int?>().ToArray();
+
+            var urnsToAdd = from e in urnsInModel
+                            join l in urnsInDb on e equals l into l2
+                            from l3 in l2.DefaultIfEmpty()
+                            where l3 == null
+                            select e;
+
+            var urnsToRemove = from l in urnsInDb
+                               join e in urnsInModel on l equals e into e2
+                               from e3 in e2.DefaultIfEmpty()
+                               where e3 == null
+                               select l;
+
+            foreach (var urn in urnsToAdd.Cast<int>())
+            {
+                var item = model.Links.Where(x => x.Urn == urn).First();
+                var link = new Estab2Estab
+                {
+                    Establishment_Urn = model.Urn,
+                    LinkedEstablishment_Urn = urn,
+                    LinkEstablishedDate = item.LinkDate,
+                    LinkName = item.Name,
+                    LinkType = item.Type.ToString()
+                };
+                dc.Estab2EstabLinks.Add(link);
+
+                var oppositeLinkType = (item.Type.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
+                var oppositeLink = await dc.Estab2EstabLinks.FirstOrDefaultAsync(x => x.Establishment_Urn == urn && x.LinkedEstablishment_Urn == model.Urn && x.LinkType == oppositeLinkType);
+                if (oppositeLink == null)
+                {
+                    oppositeLink = new Estab2Estab
+                    {
+                        Establishment_Urn = urn,
+                        LinkedEstablishment_Urn = model.Urn,
+                        LinkEstablishedDate = item.LinkDate,
+                        LinkName = model.Name,
+                        LinkType = oppositeLinkType
+                    };
+                    dc.Estab2EstabLinks.Add(oppositeLink);
+                }
+            }
+
+            foreach (var urn in urnsToRemove.Cast<int>())
+            {
+                var linkDataModel = linksInDb.FirstOrDefault(x => x.LinkedEstablishment_Urn == urn);
+                if (linkDataModel != null) dc.Estab2EstabLinks.Remove(linkDataModel);
+
+                var oppositeLinkType = (linkDataModel.LinkType.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
+                var oppositeLink = await dc.Estab2EstabLinks.FirstOrDefaultAsync(x => x.Establishment_Urn == urn && x.LinkedEstablishment_Urn == model.Urn && x.LinkType == oppositeLinkType);
+                if (oppositeLink != null) dc.Estab2EstabLinks.Remove(oppositeLink);
+            }
+
+        }
+
+        [HttpGet, Authorize(Roles="Admin,LA")]
+        public ActionResult Create() => View(new ViewModel());
+
+
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Admin,LA")]
+        public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] ViewModel model)
         {
             if (ModelState.IsValid)
             {
                 using (var dc = ApplicationDbContext.Create())
                 {
                     var dataModel = Mapper.Map<Establishment>(model);
+
+                    var svc = new EstablishmentService();
+                    var pol = svc.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);
+                    if(pol == EstablishmentService.EstabNumberEntryPolicy.SystemGenerated)
+                    {
+                        dataModel.EstablishmentNumber = svc.GenerateEstablishmentNumber(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value, dataModel.LocalAuthorityId.Value);
+                    }
+
                     dc.Establishments.Add(dataModel);
                     dc.SaveChanges();
                     return RedirectToAction("Details", "Schools", new { id = dataModel.Urn });
                 }
             }
-            else return View("CreateEdit", model);
+            else return View(model);
         }
 
         

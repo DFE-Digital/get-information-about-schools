@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -43,6 +47,18 @@
       <HintPath>..\packages\EntityFramework.SqlServerCompact.6.1.3\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Lucene.Net.Linq, Version=3.6.0.125, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lucene.Net.Linq.3.6.0\lib\net40\Lucene.Net.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
@@ -53,6 +69,22 @@
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.4\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.4\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -71,23 +103,37 @@
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Remotion.Linq, Version=1.13.183.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.1.13.183.0\lib\net35\Remotion.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -100,19 +146,26 @@
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="DbUtil.cs" />
+    <Compile Include="Entity\EstablishmentChangeHistory.cs" />
+    <Compile Include="Entity\LogMessage.cs" />
+    <Compile Include="Entity\EstablishmentApprovalQueue.cs" />
     <Compile Include="Entity\ComplexTypes\Address.cs" />
     <Compile Include="Entity\ApplicationUser.cs" />
     <Compile Include="Entity\Company.cs" />
     <Compile Include="Entity\ComplexTypes\ContactDetail.cs" />
     <Compile Include="Entity\EdubaseEntity.cs" />
+    <Compile Include="Entity\EstablishmentPermission.cs" />
+    <Compile Include="Entity\Governor.cs" />
     <Compile Include="Entity\LocalAuthority.cs" />
     <Compile Include="Entity\Lookups\Diocese.cs" />
     <Compile Include="Entity\Lookups\LookupBase.cs" />
     <Compile Include="Entity\Establishment.cs" />
     <Compile Include="Entity\Establishment2Company.cs" />
     <Compile Include="Entity\Estab2Estab.cs" />
+    <Compile Include="Entity\Permissions\Permission.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
+    <Compile Include="Identity\Roles.cs" />
     <Compile Include="Identity\UserAccountSeeder.cs" />
     <Compile Include="Migrations\201609291737582_InitialiseDB.cs" />
     <Compile Include="Migrations\201609291737582_InitialiseDB.Designer.cs">
@@ -142,8 +195,42 @@
     <Compile Include="Migrations\201610041504493_AddedCompanyOpenDate.Designer.cs">
       <DependentUpon>201610041504493_AddedCompanyOpenDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610051956256_Permissions.cs" />
+    <Compile Include="Migrations\201610051956256_Permissions.Designer.cs">
+      <DependentUpon>201610051956256_Permissions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610070658424_ApprovalQueue.cs" />
+    <Compile Include="Migrations\201610070658424_ApprovalQueue.Designer.cs">
+      <DependentUpon>201610070658424_ApprovalQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610101413260_AddedApprovalCols.cs" />
+    <Compile Include="Migrations\201610101413260_AddedApprovalCols.Designer.cs">
+      <DependentUpon>201610101413260_AddedApprovalCols.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610111043490_AddedRejectionCols.cs" />
+    <Compile Include="Migrations\201610111043490_AddedRejectionCols.Designer.cs">
+      <DependentUpon>201610111043490_AddedRejectionCols.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610111352104_Governors.cs" />
+    <Compile Include="Migrations\201610111352104_Governors.Designer.cs">
+      <DependentUpon>201610111352104_Governors.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.cs" />
+    <Compile Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.Designer.cs">
+      <DependentUpon>201610171337070_EstabCompanyLinkIdProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610250515442_AddEstabChangeHist.cs" />
+    <Compile Include="Migrations\201610250515442_AddEstabChangeHist.Designer.cs">
+      <DependentUpon>201610250515442_AddEstabChangeHist.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610261511592_AddTrustAddress.cs" />
+    <Compile Include="Migrations\201610261511592_AddTrustAddress.Designer.cs">
+      <DependentUpon>201610261511592_AddTrustAddress.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\LogMessageRepository.cs" />
+    <Compile Include="Repositories\TableStorage\TableStorageBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">
@@ -177,10 +264,32 @@
     <EmbeddedResource Include="Migrations\201610041504493_AddedCompanyOpenDate.resx">
       <DependentUpon>201610041504493_AddedCompanyOpenDate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610051956256_Permissions.resx">
+      <DependentUpon>201610051956256_Permissions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610070658424_ApprovalQueue.resx">
+      <DependentUpon>201610070658424_ApprovalQueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610101413260_AddedApprovalCols.resx">
+      <DependentUpon>201610101413260_AddedApprovalCols.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610111043490_AddedRejectionCols.resx">
+      <DependentUpon>201610111043490_AddedRejectionCols.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610111352104_Governors.resx">
+      <DependentUpon>201610111352104_Governors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.resx">
+      <DependentUpon>201610171337070_EstabCompanyLinkIdProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610250515442_AddEstabChangeHist.resx">
+      <DependentUpon>201610250515442_AddEstabChangeHist.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610261511592_AddTrustAddress.resx">
+      <DependentUpon>201610261511592_AddTrustAddress.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

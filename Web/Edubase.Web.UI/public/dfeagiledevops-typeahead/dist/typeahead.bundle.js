@@ -1307,7 +1307,8 @@
             tagName: "strong",
             className: null,
             wordsOnly: false,
-            caseSensitive: false
+            caseSensitive: false,
+            highlightAliases: []
         };
         return function hightlight(o) {
             var regex;
@@ -1316,6 +1317,26 @@
                 return;
             }
             o.pattern = _.isArray(o.pattern) ? o.pattern : [ o.pattern ];
+            if (o.highlightAliases && o.highlightAliases.length > 0) {
+                var target = o.pattern[0].toLowerCase();
+                for (var index = 0; index < o.highlightAliases.length; index++) {
+                    var aliases = o.highlightAliases[index];
+                    var matched = null;
+                    if (aliases.some(function(ele, i, arr) {
+                        var retVal = target.indexOf(ele.toLowerCase()) > -1;
+                        if (retVal) matched = ele;
+                        return retVal;
+                    })) {
+                        for (var j = 0; j < aliases.length; j++) {
+                            var alias = aliases[j];
+                            if (alias != matched) {
+                                o.pattern.push(target.replace(matched, alias));
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
             regex = getRegex(o.pattern, o.caseSensitive, o.wordsOnly);
             traverse(o.node, hightlightTextNode);
             function hightlightTextNode(textNode) {
@@ -1589,6 +1610,7 @@
             }
             www.mixin(this);
             this.highlight = !!o.highlight;
+            this.highlightAliases = o.highlightAliases;
             this.name = o.name || nameGenerator();
             this.limit = o.limit || 5;
             this.displayFn = getDisplayFn(o.display || o.displayKey);
@@ -1677,6 +1699,7 @@
                 });
                 this.highlight && highlight({
                     className: this.classes.highlight,
+                    highlightAliases: this.highlightAliases,
                     node: fragment,
                     pattern: query
                 });
@@ -1790,6 +1813,7 @@
                 var node = that.$node.find(oDataset.node).first();
                 oDataset.node = node.length ? node : $("<div>").appendTo(that.$node);
                 oDataset.ariaOwnsId = o.ariaOwnsId;
+                oDataset.highlightAliases = o.highlightAliases;
                 return new Dataset(oDataset, www);
             }
         }
@@ -2287,7 +2311,8 @@
                     menu = new MenuConstructor({
                         node: $menu,
                         datasets: datasets,
-                        ariaOwnsId: o.ariaOwnsId
+                        ariaOwnsId: o.ariaOwnsId,
+                        highlightAliases: o.highlightAliases
                     }, www);
                     typeahead = new Typeahead({
                         input: input,

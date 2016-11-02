@@ -5,11 +5,14 @@
     ViewBag.Title = Model.MAT.Name;
     ViewBag.PageClass = "mat-details";
 }
-<br />
-<p>@Html.ActionLink("Go back", "Index", "Search")</p>
+<p>@Html.ActionLink("Go back", "Index", "Search", null, new { onclick = "history.back();" })</p>
 
 <h1 class="heading-large">@Model.MAT.Name</h1>
-@Html.ActionLink("Edit", "Edit", "Trust", new { id = Model.MAT.GroupUID }, new { @class = "button mobile-full-width" })
+
+@if (Model.IsUserLoggedOn)
+{
+    @Html.ActionLink("Edit", "Edit", "Trust", new { id = Model.MAT.GroupUID }, new { @class = "button mobile-full-width" })
+}
 
 <div class="column-full">
     <div class="grid-row summary">
@@ -26,7 +29,15 @@
                 <th scope="col">Number of schools belonging to the MAT</th>
                 <td>@Model.MAT.EstablishmentCount</td>
             </tr>
-            
+            <tr>
+                <th scope="col">Open date</th>
+                <td>@(Model.MAT.OpenDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+            </tr>
+            <tr>
+                <th scope="col">Address</th>
+                <td>@(Model.MAT.Address ?? "None recorded")</td>
+            </tr>
+
         </table>
 
         

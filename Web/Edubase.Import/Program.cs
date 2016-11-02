@@ -22,6 +22,8 @@ using System.Configuration;
 
 namespace Edubase.Import
 {
+    using GovMap = Tuple<string, Type, Func<Governor, object>>;
+
     class Program
     {
         static void Main(string[] args)
@@ -107,15 +109,18 @@ namespace Edubase.Import
                     //Console.WriteLine();
                     //Console.WriteLine();
 
-                    if (dest.Establishments.Count() == 0) MigrateEstablishments(source, dest);
-                    else Console.WriteLine("NOT IMPORTING ESTABLISHMENTS as there is data already present");
+                    //if (dest.Establishments.Count() == 0) MigrateEstablishments(source, dest);
+                    //else Console.WriteLine("NOT IMPORTING ESTABLISHMENTS as there is data already present");
 
-                    if(dest.Estab2EstabLinks.Count() == 0) MigrateEstabLinks(source, dest);
-                    else Console.WriteLine("NOT IMPORTING Estab2EstabLinks as there is data already present");
+                    //if(dest.Estab2EstabLinks.Count() == 0) MigrateEstabLinks(source, dest);
+                    //else Console.WriteLine("NOT IMPORTING Estab2EstabLinks as there is data already present");
 
-                    if (dest.Establishment2CompanyLinks.Count() == 0) MigrateEstablishment2CompanyLinks(source, dest);
-                    else Console.WriteLine("NOT IMPORTING Establishment2CompanyLinks as there is data already present");
-                    
+                    //if (dest.Establishment2CompanyLinks.Count() == 0) MigrateEstablishment2CompanyLinks(source, dest);
+                    //else Console.WriteLine("NOT IMPORTING Establishment2CompanyLinks as there is data already present");
+
+                    if (dest.Governors.Count() == 0) MigrateGovernors(source, dest);
+                    else Console.WriteLine("NOT IMPORTING GOVERNORS as there is data already present");
+
                 }
             }
         }
@@ -140,7 +145,7 @@ namespace Edubase.Import
             using (var tran = dc.Database.BeginTransaction())
             {
                 toggle("ON");
-                source.CompanyTable.ForEach(x =>
+                source.CompanyTables.ForEach(x =>
                 {
                     var groupType = groupTypes.FirstOrDefault(gt => gt.Id == int.Parse(x.GroupTypecode));
                     var comp = new Company();
@@ -187,7 +192,7 @@ namespace Edubase.Import
             int count = 0;
             var batchCount = 0;
             var estabs = new List<Establishment>();
-            foreach (var batch in source.SchoolsTable.Batch(1000))
+            foreach (var batch in source.SchoolsTables.Batch(1000))
             {
                 batchCount++;
                 Console.WriteLine("Loading batch #" + batchCount);
@@ -290,6 +295,66 @@ namespace Edubase.Import
                 SqlBulkCopy bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.UseInternalTransaction, null);
                 bulkCopy.DestinationTableName = "Estab2Estab";
                 connection.Open();
+                bulkCopy.WriteToServer(table);
+                connection.Close();
+            }
+
+            Console.WriteLine("DONE");
+        }
+
+        private static void MigrateGovernors(EdubaseSourceEntities source, ApplicationDbContext dc)
+        {
+            Console.WriteLine("Importing governors");
+
+            var bods = dc.GovernorAppointingBodies.ToList();
+            var roles = dc.GovernorRoles.ToList();
+
+            int count = 0;
+            var batchCount = 0;
+
+            var cols = new List<GovMap>()
+            {
+                new GovMap("Id", typeof(int), x => x.GID.ToInteger().Value),
+                new GovMap("EstablishmentUrn", typeof(int), x => x.URN.ToInteger().Value),
+                new GovMap("Title", typeof(string), x => x.Title.SQLify()),
+                new GovMap("Forename1", typeof(string), x=> x.Forename1.SQLify()),
+                new GovMap("Forename2", typeof(string), x=>x.Forename2.SQLify()),
+                new GovMap("Surname", typeof(string), x => x.Surname.SQLify()),
+                new GovMap("AppointmentStartDate", typeof(DateTime), x => x.Dateofappointment.ToDateTime("dd/MM/yyyy").SQLify()),
+                new GovMap("AppointmentEndDate", typeof(DateTime), x => x.Datetermofofficeendsended.ToDateTime("dd/MM/yyyy").SQLify()),
+                new GovMap("RoleId", typeof(int), x=> (object) roles.FirstOrDefault(r => r.Name == x.Role)?.Id ?? DBNull.Value),
+                new GovMap("GovernorAppointingBodyId", typeof(int), x=> (object) bods.FirstOrDefault(r => r.Name == x.Appointingbody)?.Id ?? DBNull.Value),
+                new GovMap("CreatedUtc", typeof(DateTime), x => DateTime.UtcNow),
+                new GovMap("LastUpdatedUtc", typeof(DateTime), x=>DateTime.UtcNow),
+                new GovMap("IsDeleted", typeof(bool), x=>false),
+            };
+
+            var table = new DataTable();
+            cols.ForEach(x => table.Columns.Add(x.Item1, x.Item2));
+
+            foreach (var batch in source.Governors.Batch(1000))
+            {
+                batchCount++;
+                Console.WriteLine("Loading batch #" + batchCount);
+                batch.ForEach(x =>
+                {
+                    var row = table.NewRow();
+                    cols.ForEach(c => row[c.Item1] = c.Item3(x));
+                    table.Rows.Add(row);
+                    count++;
+                    if (count % 1000 == 0) Console.WriteLine("Loaded up: " + count);
+                });
+            }
+
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString))
+            {
+                SqlBulkCopy bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock 
+                    | SqlBulkCopyOptions.KeepIdentity 
+                    | SqlBulkCopyOptions.UseInternalTransaction, null);
+                bulkCopy.DestinationTableName = "Governor";
+                connection.Open();
+                bulkCopy.BulkCopyTimeout = 900;
                 bulkCopy.WriteToServer(table);
                 connection.Close();
             }

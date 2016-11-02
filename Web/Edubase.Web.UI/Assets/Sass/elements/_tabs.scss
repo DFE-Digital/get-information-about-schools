@@ -42,6 +42,7 @@ nav.tabs
                 text-decoration: underline;
             }
 
+
             &.active
             {
                 background-color: $white;
@@ -91,6 +92,10 @@ nav.tabs
                 box-sizing: border-box;
                 padding:10px 25px 0 25px;
                 white-space:nowrap;
+                color:$black;
+                &:visited {
+                    color:$black;
+                }
                 @include media(mobile)
                 {
                     padding:10px 10px 0 10px;
@@ -154,6 +159,19 @@ nav.tabs
         padding: 12px 24px;
         margin-right: 8px;
         text-align: center;
+        color: $black;
+
+        &:visited {
+            color: $black;
+        }
+
+        span.sub {
+            font-size:16px;
+            font-weight:normal;
+            @include media(mobile) {
+                font-size: 12px;
+            }
+        }
 
         @include media(mobile) {
             font-size: 14px;

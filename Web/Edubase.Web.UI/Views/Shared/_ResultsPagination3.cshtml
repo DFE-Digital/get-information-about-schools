@@ -1,0 +1,83 @@
+﻿@using Edubase.Services.Domain;
+@model SearchCompaniesHouseModel
+@{
+    var m = Model.Results;
+    int startResult = m.Skip + 1;
+    int endResult = (m.Skip + m.Take > m.Count) ? m.Count : m.Skip + m.Take;
+    int currentPage = m.Skip / m.Take;
+    int totalPages = m.Count / m.Take;
+    string action = ViewContext.RouteData.Values["action"].ToString();
+    int maxPages = 10;
+    int paginationStart = 0;
+    int paginationFinish = m.PageCount;
+
+}
+
+@if (m.PageCount > maxPages)
+{
+    if (currentPage < 5)
+    {
+        paginationFinish = maxPages;
+    }
+    else if (currentPage + 5 > m.PageCount)
+    {
+        paginationFinish = m.PageCount;
+        paginationStart = paginationFinish - maxPages;
+    }
+    else if (currentPage >= 5)
+    {
+        paginationFinish = currentPage + 5;
+        paginationStart = paginationFinish - maxPages;
+    }
+
+}
+
+@if (m.Count > 0 && m.PageCount > 1)
+{
+
+    <div class="pagination" style="padding-bottom:0;">
+        <p>Showing @startResult - @endResult of @m.Count</p>
+        <ul class="pagination-links">
+            @{
+                if (currentPage > 0)
+                {
+                    <li>
+                        @Html.ActionLink("Previous",
+                     @action,
+                     new { skip = ((currentPage - 1) * m.Take), Model.SearchText },
+                     new { @class = "pagination-prev" })
+                </li>
+                }
+
+                for (int i = paginationStart; i < paginationFinish; i++)
+                {
+                    var displayPage = i + 1;
+                    if (i == currentPage)
+                    {
+                        <li><span class="go-nowhere numeric-pagination">@displayPage.ToString()</span></li>
+                    }
+                    else
+                    {
+                        <li>
+                            @Html.ActionLink(displayPage.ToString(),
+                        @action,
+                        new { skip = (i * m.Take), Model.SearchText },
+                        new { @class = "numeric-pagination" })
+                    </li>
+                    }
+                }
+
+                if (currentPage < m.PageCount - 1)
+                {
+                    <li>
+                        @Html.ActionLink("Next",
+                    @action,
+                    new { skip = ((currentPage + 1) * m.Take), Model.SearchText },
+                    new { @class = "pagination-next" })
+                </li>
+                }
+            }
+        </ul>
+    </div>
+}
+

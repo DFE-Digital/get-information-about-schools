@@ -117,7 +117,7 @@
             <div class="header-global">
                 <div class="header-logo">
                     <a href="http://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
-                        <img src="@(ViewBag.assetsPath)/images/gov.uk_logotype_crown.png?0.13.0" width="35" height="31" alt="">
+                        <img src="/public/govuk_template/assets/images/gov.uk_logotype_crown.png?0.13.0" width="35" height="31" alt="" style="visibility:visible">
                         GOV.UK
                     </a>
                 </div>
@@ -125,35 +125,40 @@
             </div>
             <div class="header-proposition">
                 <div class="content">
-                    @*<a href="#proposition-links" class="js-header-toggle menu">Menu</a>*@
                     <nav id="proposition-menu">
                         <a href="/" id="proposition-name">Edubase</a>
-                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <ul id="proposition-links">
-                                @if (!Request.IsAuthenticated)
-                                {
-                                    <li>@Html.ActionLink("Log in", "LogIn", "Account")</li>
-                                }
-                                else
-                                {
-                                    if (User.IsInRole("AccessAllSchools"))
-                                    {
-                                        <li><a href="/Search">Search</a></li>
-                                        @*<li><a href="/MAT">Search MAT/Academy Sponsor</a></li>*@
-                                    }
+                        
+                        @Html.AntiForgeryToken()
+                        <ul id="proposition-links">
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li>
+                                    @Html.ActionLink("Log off", "LogOff", "Account")
+                                </li>
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "" }, null)</li>
+                            }
+                            @*else
+                            {
+                                <li><a href="/Search">Search</a></li>
+                                <li><a href="/Schools">Schools</a></li>
 
-                                    <li><a href="/Schools">Schools</a></li>
-
-                                    if (User.IsInRole("Admin"))
-                                    {
-                                        <li><a href="/Admin">Admin</a></li>
-                                    }
-                                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                                if (User.Identity.IsAuthenticated)
+                                {
+                                    <li>@Html.ActionLink("View approval items" + (ViewBag.PendingApprovalItemsCount > 0 ? " (" + ViewBag.PendingApprovalItemsCount + ")" : "") as string, "Index", "Approval", new { area = "" }, null)</li>
                                 }
-                            </ul>
-                        }
+
+                                if (User.IsInRole("Admin"))
+                                {
+                                    <li><a href="/Admin">Admin</a></li>
+                                }
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                            }*@
+
+                        </ul>
+                        
                     </nav>
                 </div>
             </div>
@@ -172,23 +177,28 @@
 
     <div class="side-width-wrapper">
         <div class="grid-row">
-            <div class="column-full">
+            <div class="column-full sign-out-container">
                 <div class="phase-banner">
                     @(Html.Partial("../govuk/partials/phase/alpha"))
                 </div>
+                @*@if (User.Identity.IsAuthenticated)
+                {
+                    @Html.ActionLink("Sign out", "LogOff", "Account", null, new { @class = "sign-out-link" })
+                }*@
             </div>
         </div>
     </div>
-@if (ViewBag.HideLogo != true)
-{
-    <div class="side-width-wrapper">
-        <div class="grid-row">
-            <div class="column-full">
-                <img class="top-logo" src="/public/assets/images/dfe-xsmall.png"/>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="side-width-wrapper">
+            <div class="grid-row">
+                <div class="column-full">
+                    
+                </div>
             </div>
         </div>
-    </div>
-}
+    }
 
     @RenderBody()
 

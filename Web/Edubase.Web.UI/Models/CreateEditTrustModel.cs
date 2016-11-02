@@ -1,18 +1,28 @@
-﻿using System;
+﻿using Edubase.Data.Entity;
+using Edubase.Web.UI.Models.Validators;
+using FluentValidation.Attributes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Edubase.Web.UI.Models
 {
+    [Validator(typeof(CreateEditTrustModelValidator))]
     public class CreateEditTrustModel
     {
         public int? GroupUID { get; set; }
-        [Required]
         public string Name { get; set; }
-        [Required]
         public int? TypeId { get; set; }
         public DateTimeViewModel OpenDate { get; set; }
+        public string CompaniesHouseNumber { get; set; }
+
+        public string SearchURN { get; set; }
+        public string EstablishmentName { get; set; }
+        public int? EstablishmentUrn { get; set; }
+        public bool EstablishmentNotFound { get; set; }
+        public int? EstabUrnToRemove { get; set; }
+        
+        public string Action { get; set; }
+
+        public List<TrustEstabViewModel> Establishments { get; set; } = new List<TrustEstabViewModel>();
     }
 }

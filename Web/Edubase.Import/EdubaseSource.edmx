@@ -1,4 +1,4 @@
-﻿<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
 <!-- EF Runtime content -->
 <edmx:Runtime>
 <!-- SSDL content -->
@@ -11,6 +11,7 @@
     <EntitySet Name="Diocese" EntityType="EdubaseSourceModel.Store.Diocese" store:Type="Tables" />
     <EntitySet Name="Establishmentstatus" EntityType="EdubaseSourceModel.Store.Establishmentstatus" store:Type="Tables" />
     <EntitySet Name="Gender" EntityType="EdubaseSourceModel.Store.Gender" store:Type="Tables" />
+    <EntitySet Name="Governors" EntityType="EdubaseSourceModel.Store.Governors" store:Type="Tables" />
     <EntitySet Name="GroupType" EntityType="EdubaseSourceModel.Store.GroupType" store:Type="Tables" />
     <EntitySet Name="Headtitle" EntityType="EdubaseSourceModel.Store.Headtitle" store:Type="Tables" />
     <EntitySet Name="LocalAuthority" EntityType="EdubaseSourceModel.Store.LocalAuthority" store:Type="Tables" />
@@ -75,6 +76,21 @@
     </Key>
     <Property Name="code" Type="nvarchar" Nullable="false" />
     <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Governors">
+    <Key>
+      <PropertyRef Name="GID" />
+    </Key>
+    <Property Name="URN" Type="nvarchar" />
+    <Property Name="GID" Type="nvarchar" Nullable="false" />
+    <Property Name="Role" Type="nvarchar" />
+    <Property Name="Title" Type="nvarchar" />
+    <Property Name="Forename1" Type="nvarchar" />
+    <Property Name="Forename2" Type="nvarchar" />
+    <Property Name="Surname" Type="nvarchar" />
+    <Property Name="Dateofappointment" Type="nvarchar" />
+    <Property Name="Datetermofofficeendsended" Type="nvarchar" />
+    <Property Name="Appointingbody" Type="nvarchar" />
   </EntityType>
   <EntityType Name="GroupType">
     <Key>
@@ -248,27 +264,28 @@
 <edmx:ConceptualModels>
 <Schema Namespace="EdubaseSourceModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
   <EntityContainer Name="EdubaseSourceEntities" p1:LazyLoadingEnabled="true">
-    <EntitySet Name="Admissionspolicy" EntityType="EdubaseSourceModel.Admissionspolicy" />
-    <EntitySet Name="Boarders" EntityType="EdubaseSourceModel.Boarders" />
-    <EntitySet Name="CompanyTable" EntityType="EdubaseSourceModel.CompanyTable" />
+    <EntitySet Name="Admissionspolicies" EntityType="EdubaseSourceModel.Admissionspolicy" />
+    <EntitySet Name="Boarders" EntityType="EdubaseSourceModel.Boarder" />
+    <EntitySet Name="CompanyTables" EntityType="EdubaseSourceModel.CompanyTable" />
     <EntitySet Name="Diocese" EntityType="EdubaseSourceModel.Diocese" />
-    <EntitySet Name="Establishmentstatus" EntityType="EdubaseSourceModel.Establishmentstatus" />
-    <EntitySet Name="Gender" EntityType="EdubaseSourceModel.Gender" />
-    <EntitySet Name="GroupType" EntityType="EdubaseSourceModel.GroupType" />
-    <EntitySet Name="Headtitle" EntityType="EdubaseSourceModel.Headtitle" />
-    <EntitySet Name="LocalAuthority" EntityType="EdubaseSourceModel.LocalAuthority" />
-    <EntitySet Name="Nurseryprovision" EntityType="EdubaseSourceModel.Nurseryprovision" />
-    <EntitySet Name="Officialsixthform" EntityType="EdubaseSourceModel.Officialsixthform" />
-    <EntitySet Name="Phaseofeducation" EntityType="EdubaseSourceModel.Phaseofeducation" />
-    <EntitySet Name="Reasonestablishmentclosed" EntityType="EdubaseSourceModel.Reasonestablishmentclosed" />
-    <EntitySet Name="Reasonestablishmentopened" EntityType="EdubaseSourceModel.Reasonestablishmentopened" />
-    <EntitySet Name="Religiouscharacter" EntityType="EdubaseSourceModel.Religiouscharacter" />
-    <EntitySet Name="Religiousethos" EntityType="EdubaseSourceModel.Religiousethos" />
-    <EntitySet Name="SchoolsTable" EntityType="EdubaseSourceModel.SchoolsTable" />
-    <EntitySet Name="SchoolToCompanyLinks" EntityType="EdubaseSourceModel.SchoolToCompanyLinks" />
-    <EntitySet Name="SchoolToSchoolLinks" EntityType="EdubaseSourceModel.SchoolToSchoolLinks" />
-    <EntitySet Name="Specialclasses" EntityType="EdubaseSourceModel.Specialclasses" />
-    <EntitySet Name="Typeofestablishment" EntityType="EdubaseSourceModel.Typeofestablishment" />
+    <EntitySet Name="Establishmentstatus" EntityType="EdubaseSourceModel.Establishmentstatu" />
+    <EntitySet Name="Genders" EntityType="EdubaseSourceModel.Gender" />
+    <EntitySet Name="Governors" EntityType="EdubaseSourceModel.Governor" />
+    <EntitySet Name="GroupTypes" EntityType="EdubaseSourceModel.GroupType" />
+    <EntitySet Name="Headtitles" EntityType="EdubaseSourceModel.Headtitle" />
+    <EntitySet Name="LocalAuthorities" EntityType="EdubaseSourceModel.LocalAuthority" />
+    <EntitySet Name="Nurseryprovisions" EntityType="EdubaseSourceModel.Nurseryprovision" />
+    <EntitySet Name="Officialsixthforms" EntityType="EdubaseSourceModel.Officialsixthform" />
+    <EntitySet Name="Phaseofeducations" EntityType="EdubaseSourceModel.Phaseofeducation" />
+    <EntitySet Name="Reasonestablishmentcloseds" EntityType="EdubaseSourceModel.Reasonestablishmentclosed" />
+    <EntitySet Name="Reasonestablishmentopeneds" EntityType="EdubaseSourceModel.Reasonestablishmentopened" />
+    <EntitySet Name="Religiouscharacters" EntityType="EdubaseSourceModel.Religiouscharacter" />
+    <EntitySet Name="Religiousethos" EntityType="EdubaseSourceModel.Religiousetho" />
+    <EntitySet Name="SchoolsTables" EntityType="EdubaseSourceModel.SchoolsTable" />
+    <EntitySet Name="SchoolToCompanyLinks" EntityType="EdubaseSourceModel.SchoolToCompanyLink" />
+    <EntitySet Name="SchoolToSchoolLinks" EntityType="EdubaseSourceModel.SchoolToSchoolLink" />
+    <EntitySet Name="Specialclasses" EntityType="EdubaseSourceModel.Specialclass" />
+    <EntitySet Name="Typeofestablishments" EntityType="EdubaseSourceModel.Typeofestablishment" />
   </EntityContainer>
   <EntityType Name="Admissionspolicy">
     <Key>
@@ -277,7 +294,7 @@
     <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
-  <EntityType Name="Boarders">
+  <EntityType Name="Boarder">
     <Key>
       <PropertyRef Name="code" />
     </Key>
@@ -305,7 +322,7 @@
     <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
-  <EntityType Name="Establishmentstatus">
+  <EntityType Name="Establishmentstatu">
     <Key>
       <PropertyRef Name="code" />
     </Key>
@@ -318,6 +335,21 @@
     </Key>
     <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Governor">
+    <Key>
+      <PropertyRef Name="GID" />
+    </Key>
+    <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GID" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Role" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Title" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Forename1" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Forename2" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Surname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Dateofappointment" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Datetermofofficeendsended" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Appointingbody" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="GroupType">
     <Key>
@@ -384,7 +416,7 @@
     <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
-  <EntityType Name="Religiousethos">
+  <EntityType Name="Religiousetho">
     <Key>
       <PropertyRef Name="code" />
     </Key>
@@ -451,7 +483,7 @@
     <Property Name="HeadLastName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="HeadPreferredJobTitle" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
-  <EntityType Name="SchoolToCompanyLinks">
+  <EntityType Name="SchoolToCompanyLink">
     <Key>
       <PropertyRef Name="id" />
     </Key>
@@ -460,7 +492,7 @@
     <Property Name="LinkedUID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Joineddate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
-  <EntityType Name="SchoolToSchoolLinks">
+  <EntityType Name="SchoolToSchoolLink">
     <Key>
       <PropertyRef Name="id" />
     </Key>
@@ -471,7 +503,7 @@
     <Property Name="LinkType" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="LinkEstablishedDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
-  <EntityType Name="Specialclasses">
+  <EntityType Name="Specialclass">
     <Key>
       <PropertyRef Name="code" />
     </Key>
@@ -491,7 +523,7 @@
 <edmx:Mappings>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="EdubaseSourceModelStoreContainer" CdmEntityContainer="EdubaseSourceEntities">
-    <EntitySetMapping Name="Admissionspolicy">
+    <EntitySetMapping Name="Admissionspolicies">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Admissionspolicy">
         <MappingFragment StoreEntitySet="Admissionspolicy">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -500,14 +532,14 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Boarders">
-      <EntityTypeMapping TypeName="EdubaseSourceModel.Boarders">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Boarder">
         <MappingFragment StoreEntitySet="Boarders">
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="CompanyTable">
+    <EntitySetMapping Name="CompanyTables">
       <EntityTypeMapping TypeName="EdubaseSourceModel.CompanyTable">
         <MappingFragment StoreEntitySet="CompanyTable">
           <ScalarProperty Name="GroupUID" ColumnName="GroupUID" />
@@ -531,14 +563,14 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Establishmentstatus">
-      <EntityTypeMapping TypeName="EdubaseSourceModel.Establishmentstatus">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Establishmentstatu">
         <MappingFragment StoreEntitySet="Establishmentstatus">
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Gender">
+    <EntitySetMapping Name="Genders">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Gender">
         <MappingFragment StoreEntitySet="Gender">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -546,7 +578,23 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="GroupType">
+    <EntitySetMapping Name="Governors">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Governor">
+        <MappingFragment StoreEntitySet="Governors">
+          <ScalarProperty Name="URN" ColumnName="URN" />
+          <ScalarProperty Name="GID" ColumnName="GID" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Forename1" ColumnName="Forename1" />
+          <ScalarProperty Name="Forename2" ColumnName="Forename2" />
+          <ScalarProperty Name="Surname" ColumnName="Surname" />
+          <ScalarProperty Name="Dateofappointment" ColumnName="Dateofappointment" />
+          <ScalarProperty Name="Datetermofofficeendsended" ColumnName="Datetermofofficeendsended" />
+          <ScalarProperty Name="Appointingbody" ColumnName="Appointingbody" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GroupTypes">
       <EntityTypeMapping TypeName="EdubaseSourceModel.GroupType">
         <MappingFragment StoreEntitySet="GroupType">
           <ScalarProperty Name="GroupTypecode" ColumnName="GroupTypecode" />
@@ -554,7 +602,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Headtitle">
+    <EntitySetMapping Name="Headtitles">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Headtitle">
         <MappingFragment StoreEntitySet="Headtitle">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -562,7 +610,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="LocalAuthority">
+    <EntitySetMapping Name="LocalAuthorities">
       <EntityTypeMapping TypeName="EdubaseSourceModel.LocalAuthority">
         <MappingFragment StoreEntitySet="LocalAuthority">
           <ScalarProperty Name="Code" ColumnName="Code" />
@@ -572,7 +620,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Nurseryprovision">
+    <EntitySetMapping Name="Nurseryprovisions">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Nurseryprovision">
         <MappingFragment StoreEntitySet="Nurseryprovision">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -580,7 +628,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Officialsixthform">
+    <EntitySetMapping Name="Officialsixthforms">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Officialsixthform">
         <MappingFragment StoreEntitySet="Officialsixthform">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -588,7 +636,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Phaseofeducation">
+    <EntitySetMapping Name="Phaseofeducations">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Phaseofeducation">
         <MappingFragment StoreEntitySet="Phaseofeducation">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -596,7 +644,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Reasonestablishmentclosed">
+    <EntitySetMapping Name="Reasonestablishmentcloseds">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Reasonestablishmentclosed">
         <MappingFragment StoreEntitySet="Reasonestablishmentclosed">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -604,7 +652,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Reasonestablishmentopened">
+    <EntitySetMapping Name="Reasonestablishmentopeneds">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Reasonestablishmentopened">
         <MappingFragment StoreEntitySet="Reasonestablishmentopened">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -612,7 +660,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Religiouscharacter">
+    <EntitySetMapping Name="Religiouscharacters">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Religiouscharacter">
         <MappingFragment StoreEntitySet="Religiouscharacter">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -621,14 +669,14 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Religiousethos">
-      <EntityTypeMapping TypeName="EdubaseSourceModel.Religiousethos">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Religiousetho">
         <MappingFragment StoreEntitySet="Religiousethos">
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="SchoolsTable">
+    <EntitySetMapping Name="SchoolsTables">
       <EntityTypeMapping TypeName="EdubaseSourceModel.SchoolsTable">
         <MappingFragment StoreEntitySet="SchoolsTable">
           <ScalarProperty Name="URN" ColumnName="URN" />
@@ -690,7 +738,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="SchoolToCompanyLinks">
-      <EntityTypeMapping TypeName="EdubaseSourceModel.SchoolToCompanyLinks">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.SchoolToCompanyLink">
         <MappingFragment StoreEntitySet="SchoolToCompanyLinks">
           <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="URN" ColumnName="URN" />
@@ -700,7 +748,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="SchoolToSchoolLinks">
-      <EntityTypeMapping TypeName="EdubaseSourceModel.SchoolToSchoolLinks">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.SchoolToSchoolLink">
         <MappingFragment StoreEntitySet="SchoolToSchoolLinks">
           <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="URN" ColumnName="URN" />
@@ -712,14 +760,14 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Specialclasses">
-      <EntityTypeMapping TypeName="EdubaseSourceModel.Specialclasses">
+      <EntityTypeMapping TypeName="EdubaseSourceModel.Specialclass">
         <MappingFragment StoreEntitySet="Specialclasses">
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Typeofestablishment">
+    <EntitySetMapping Name="Typeofestablishments">
       <EntityTypeMapping TypeName="EdubaseSourceModel.Typeofestablishment">
         <MappingFragment StoreEntitySet="Typeofestablishment">
           <ScalarProperty Name="code" ColumnName="code" />
@@ -734,30 +782,6 @@
 <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
 <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
 <Connection><DesignerInfoPropertySet><DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" /></DesignerInfoPropertySet></Connection>
-<edmx:Options><DesignerInfoPropertySet><DesignerProperty Name="ValidateOnBuild" Value="True" /><DesignerProperty Name="EnablePluralization" Value="False" /><DesignerProperty Name="IncludeForeignKeysInModel" Value="True" /><DesignerProperty Name="UseLegacyProvider" Value="False" /><DesignerProperty Name="CodeGenerationStrategy" Value="None" /></DesignerInfoPropertySet></edmx:Options>
-<edmx:Diagrams >
-      <Diagram DiagramId="71986df053ea4fa89d86bf53c0d321dd" Name="Diagram1">
-        <EntityTypeShape EntityType="EdubaseSourceModel.Admissionspolicy" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Boarders" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.CompanyTable" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Diocese" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Establishmentstatus" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Gender" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.GroupType" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Headtitle" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.LocalAuthority" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Nurseryprovision" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Officialsixthform" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Phaseofeducation" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Reasonestablishmentclosed" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Reasonestablishmentopened" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Religiouscharacter" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Religiousethos" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.SchoolsTable" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.SchoolToCompanyLinks" Width="1.5" PointX="6.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.SchoolToSchoolLinks" Width="1.5" PointX="8.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Specialclasses" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceModel.Typeofestablishment" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
-      </Diagram>
-    </edmx:Diagrams>
+<edmx:Options><DesignerInfoPropertySet><DesignerProperty Name="ValidateOnBuild" Value="True" /><DesignerProperty Name="EnablePluralization" Value="True" /><DesignerProperty Name="IncludeForeignKeysInModel" Value="True" /><DesignerProperty Name="UseLegacyProvider" Value="False" /><DesignerProperty Name="CodeGenerationStrategy" Value="None" /></DesignerInfoPropertySet></edmx:Options>
+<edmx:Diagrams />
 </edmx:Designer></edmx:Edmx>

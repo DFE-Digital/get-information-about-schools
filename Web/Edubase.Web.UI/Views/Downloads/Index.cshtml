@@ -1,0 +1,35 @@
+﻿@using Microsoft.WindowsAzure.Storage.Blob
+@model IEnumerable<CloudBlob>
+@{
+    ViewBag.Title = "Downloads";
+    ViewBag.HideLogo = true;
+}
+
+<h1 class="heading-large">Downloads</h1>
+<p>Select a file to download</p>
+<style>
+    li.icon-download {
+        width: auto;
+        padding: 10px 0 0 40px;
+    }
+</style>
+
+<ul class="lis">
+    @foreach (var item in Model)
+    {
+        <li class="icon icon-download">
+            <a href="@item.Uri" target="_blank" rel="nofollow">@item.Name.Substring(4, item.Name.Length-8)</a>
+            in ZIP format. @ConvertBytesToMegabytes(item.Properties.Length) MB
+        </li>
+    }
+
+</ul>
+
+@functions {
+
+    double ConvertBytesToMegabytes(long bytes, int decimalPlaces = 2, double minimumValue = 0)
+    {
+        var mb = Math.Round((double)bytes / 1024 / 1024, decimalPlaces);
+        return mb > minimumValue ? mb : minimumValue;
+    }
+}

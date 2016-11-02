@@ -3,7 +3,7 @@
 @{
     Layout = "../dfe/layouts/template.cshtml";
     ViewBag.Title = "Edubase";
-    ViewBag.pageDescription = "Reporting and Analysis for Improvement through school Self-Evaluation";
+    ViewBag.pageDescription = "";
     ViewBag.pageClass = "error-page";
     ViewBag.suppressHomeLink = true;
 }
@@ -11,3 +11,7 @@
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
+@if (ViewBag.ErrorCode != null)
+{
+    <p style="color:#ddd;">Error code: @ViewBag.ErrorCode</p>
+}

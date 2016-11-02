@@ -14,12 +14,15 @@ namespace Edubase.Web.UI
                 url: "prototype/{viewName}",
                 defaults: new { controller = "Prototype", action = "Index", viewName = "TestView" }
             );
-
+            
             routes.MapRoute(
-                name: "Default",
+                name: "Main",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                namespaces: new[] { "Edubase.Web.UI.Controllers" }
             );
+
+            
         }
     }
 }

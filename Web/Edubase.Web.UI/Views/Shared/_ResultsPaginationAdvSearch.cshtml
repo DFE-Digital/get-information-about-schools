@@ -1,0 +1,66 @@
+﻿@model AdvancedSearchViewModel
+@{
+    int startResult = @Model.StartIndex + 1;
+    int endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
+    int currentPage = @Model.StartIndex / @Model.PageSize;
+    int totalPages = @Model.Results.Count / @Model.PageSize;
+    int maxPages = 10;
+    int paginationStart = 0;
+    int paginationFinish = @Model.PageCount;
+
+}
+
+@if (Model.PageCount > maxPages)
+{
+    if (currentPage < 5)
+    {
+        paginationFinish = maxPages;
+    }
+    else if (currentPage + 5 > Model.PageCount)
+    {
+        paginationFinish = Model.PageCount;
+        paginationStart = paginationFinish - maxPages;
+    }
+    else if (currentPage >= 5)
+    {
+        paginationFinish = currentPage + 5;
+        paginationStart = paginationFinish - maxPages;
+    }
+
+}
+
+<div class="pagination">
+    <p>Showing @startResult - @endResult of @Model.Count</p>
+    <ul class="pagination-links">
+        
+        @if (currentPage > 0)
+        {
+            <li>
+                <a href="@Url.Current(new { startIndex = ((currentPage - 1) * Model.PageSize) })" class="pagination-prev">Previous</a>
+            </li>
+        }
+
+        @for (int i = paginationStart; i < paginationFinish; i++)
+        {
+            var displayPage = i + 1;
+            if (i == currentPage)
+            {
+                <li><span class="go-nowhere numeric-pagination">@displayPage.ToString()</span></li>
+            }
+            else
+            {
+                <li>
+                    <a href="@Url.Current(new { startIndex = (i * Model.PageSize) })" class="numeric-pagination">@displayPage</a>
+                </li>
+            }
+        }
+
+        @if (currentPage < Model.PageCount - 1)
+        {
+            <li>
+                <a href="@Url.Current(new { startIndex = ((currentPage + 1) * Model.PageSize) })" class="pagination-next">Next</a>
+            </li>
+        }
+        
+    </ul>
+</div>
