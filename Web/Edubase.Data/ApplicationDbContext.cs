@@ -57,6 +57,10 @@ namespace Edubase.Data.Entity
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
 
+            //modelBuilder.Entity<Establishment>().Property(a => a.Latitude).HasPrecision(18, 9);
+            //modelBuilder.Entity<Establishment>().Property(a => a.Longitude).HasPrecision(18, 9);
+
+
             if (_enableIdentityInsert)
             {
                 modelBuilder.Entity<AdmissionsPolicy>()

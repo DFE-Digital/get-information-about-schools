@@ -6,6 +6,7 @@ using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Common;
 using Edubase.Data.Entity.Permissions;
 using Edubase.Data.Identity;
+using System.Data.Entity.Spatial;
 
 namespace Edubase.Data.Entity
 {
@@ -135,6 +136,12 @@ namespace Edubase.Data.Entity
                 }
             }
         }
+
+        public int? Easting { get; set; }
+
+        public int? Northing { get; set; }
+        
+        public DbGeography Location { get; set; }
 
         private string _fullAddress = null;
 

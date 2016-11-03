@@ -1,6 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Edubase.Common;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -8,22 +11,20 @@ namespace Edubase.Web.UI.Helpers
     {
         public static MvcHtmlString Current(this UrlHelper helper, object substitutes)
         {
-            var routeDataValues = new RouteValueDictionary(helper.RequestContext.RouteData.Values);
-
-            var queryString = helper.RequestContext.HttpContext.Request.QueryString;
-
-            foreach (string param in queryString)
-                if (!string.IsNullOrEmpty(queryString[param]))
-                    routeDataValues[param] = queryString[param];
-
+            var url = helper.RequestContext.HttpContext.Request.Url;
+            var uriBuilder = new UriBuilder(url);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(substitutes.GetType()))
             {
-                var value = property.GetValue(substitutes);
-                if (string.IsNullOrEmpty(value?.ToString())) routeDataValues.Remove(property.Name); else routeDataValues[property.Name] = value;
+                var value = property.GetValue(substitutes)?.ToString()?.Clean();
+                if (value == null) query.Remove(property.Name);
+                else query[property.Name] = value;
             }
 
-            var url = helper.RouteUrl(routeDataValues);
-            return new MvcHtmlString(url);
+            uriBuilder.Query = query.ToString();
+            
+            return new MvcHtmlString(uriBuilder.Uri.MakeRelativeUri(uriBuilder.Uri).ToString());
         }
     }
 }

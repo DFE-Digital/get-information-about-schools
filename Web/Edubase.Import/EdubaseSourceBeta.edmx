@@ -1,0 +1,1910 @@
+﻿<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+<!-- EF Runtime content -->
+<edmx:Runtime>
+<!-- SSDL content -->
+<edmx:StorageModels>
+<Schema Namespace="EdubaseSourceBetaModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="EdubaseSourceBetaModelStoreContainer">
+    <EntitySet Name="Accomodationchanged" EntityType="EdubaseSourceBetaModel.Store.Accomodationchanged" store:Type="Tables" />
+    <EntitySet Name="Admissionspolicy" EntityType="EdubaseSourceBetaModel.Store.Admissionspolicy" store:Type="Tables" />
+    <EntitySet Name="Appointingbody" EntityType="EdubaseSourceBetaModel.Store.Appointingbody" store:Type="Tables" />
+    <EntitySet Name="Boarders" EntityType="EdubaseSourceBetaModel.Store.Boarders" store:Type="Tables" />
+    <EntitySet Name="Boardingestablishment" EntityType="EdubaseSourceBetaModel.Store.Boardingestablishment" store:Type="Tables" />
+    <EntitySet Name="Ccgovernance" EntityType="EdubaseSourceBetaModel.Store.Ccgovernance" store:Type="Tables" />
+    <EntitySet Name="Ccoperationalhours" EntityType="EdubaseSourceBetaModel.Store.Ccoperationalhours" store:Type="Tables" />
+    <EntitySet Name="Ccphasetype" EntityType="EdubaseSourceBetaModel.Store.Ccphasetype" store:Type="Tables" />
+    <EntitySet Name="Childcarefacilities" EntityType="EdubaseSourceBetaModel.Store.Childcarefacilities" store:Type="Tables" />
+    <EntitySet Name="Diocese" EntityType="EdubaseSourceBetaModel.Store.Diocese" store:Type="Tables" />
+    <EntitySet Name="Directprovisionofearlyyears" EntityType="EdubaseSourceBetaModel.Store.Directprovisionofearlyyears" store:Type="Tables" />
+    <EntitySet Name="Edubasetrigger" EntityType="EdubaseSourceBetaModel.Store.Edubasetrigger" store:Type="Tables" />
+    <EntitySet Name="Establishmentlinks" EntityType="EdubaseSourceBetaModel.Store.Establishmentlinks" store:Type="Tables" />
+    <EntitySet Name="Establishments" EntityType="EdubaseSourceBetaModel.Store.Establishments" store:Type="Tables" />
+    <EntitySet Name="Establishmentstatus" EntityType="EdubaseSourceBetaModel.Store.Establishmentstatus" store:Type="Tables" />
+    <EntitySet Name="Furthereducationtype" EntityType="EdubaseSourceBetaModel.Store.Furthereducationtype" store:Type="Tables" />
+    <EntitySet Name="Gender" EntityType="EdubaseSourceBetaModel.Store.Gender" store:Type="Tables" />
+    <EntitySet Name="Grouplinks" EntityType="EdubaseSourceBetaModel.Store.Grouplinks" store:Type="Tables" />
+    <EntitySet Name="GroupType" EntityType="EdubaseSourceBetaModel.Store.GroupType" store:Type="Tables" />
+    <EntitySet Name="Headtitle" EntityType="EdubaseSourceBetaModel.Store.Headtitle" store:Type="Tables" />
+    <EntitySet Name="Independentschooltype" EntityType="EdubaseSourceBetaModel.Store.Independentschooltype" store:Type="Tables" />
+    <EntitySet Name="Inspectorate" EntityType="EdubaseSourceBetaModel.Store.Inspectorate" store:Type="Tables" />
+    <EntitySet Name="Inspectoratename" EntityType="EdubaseSourceBetaModel.Store.Inspectoratename" store:Type="Tables" />
+    <EntitySet Name="LocalAuthority" EntityType="EdubaseSourceBetaModel.Store.LocalAuthority" store:Type="Tables" />
+    <EntitySet Name="Localgovernors" EntityType="EdubaseSourceBetaModel.Store.Localgovernors" store:Type="Tables" />
+    <EntitySet Name="Nationality" EntityType="EdubaseSourceBetaModel.Store.Nationality" store:Type="Tables" />
+    <EntitySet Name="Nurseryprovision" EntityType="EdubaseSourceBetaModel.Store.Nurseryprovision" store:Type="Tables" />
+    <EntitySet Name="Officialsixthform" EntityType="EdubaseSourceBetaModel.Store.Officialsixthform" store:Type="Tables" />
+    <EntitySet Name="Phaseofeducation" EntityType="EdubaseSourceBetaModel.Store.Phaseofeducation" store:Type="Tables" />
+    <EntitySet Name="PRUEBD" EntityType="EdubaseSourceBetaModel.Store.PRUEBD" store:Type="Tables" />
+    <EntitySet Name="Prueducatedbyothers" EntityType="EdubaseSourceBetaModel.Store.Prueducatedbyothers" store:Type="Tables" />
+    <EntitySet Name="Prufulltimeprovision" EntityType="EdubaseSourceBetaModel.Store.Prufulltimeprovision" store:Type="Tables" />
+    <EntitySet Name="PRUSEN" EntityType="EdubaseSourceBetaModel.Store.PRUSEN" store:Type="Tables" />
+    <EntitySet Name="Reasonestablishmentclosed" EntityType="EdubaseSourceBetaModel.Store.Reasonestablishmentclosed" store:Type="Tables" />
+    <EntitySet Name="Reasonestablishmentopened" EntityType="EdubaseSourceBetaModel.Store.Reasonestablishmentopened" store:Type="Tables" />
+    <EntitySet Name="Religiouscharacter" EntityType="EdubaseSourceBetaModel.Store.Religiouscharacter" store:Type="Tables" />
+    <EntitySet Name="Religiousethos" EntityType="EdubaseSourceBetaModel.Store.Religiousethos" store:Type="Tables" />
+    <EntitySet Name="Resourcedprovision" EntityType="EdubaseSourceBetaModel.Store.Resourcedprovision" store:Type="Tables" />
+    <EntitySet Name="Section41approved" EntityType="EdubaseSourceBetaModel.Store.Section41approved" store:Type="Tables" />
+    <EntitySet Name="Specialclasses" EntityType="EdubaseSourceBetaModel.Store.Specialclasses" store:Type="Tables" />
+    <EntitySet Name="Specialeducationaneeds" EntityType="EdubaseSourceBetaModel.Store.Specialeducationaneeds" store:Type="Tables" />
+    <EntitySet Name="Teenagemothers" EntityType="EdubaseSourceBetaModel.Store.Teenagemothers" store:Type="Tables" />
+    <EntitySet Name="Typeofresourcedprovision" EntityType="EdubaseSourceBetaModel.Store.Typeofresourcedprovision" store:Type="Tables" />
+  </EntityContainer>
+  <EntityType Name="Accomodationchanged">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Admissionspolicy">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Appointingbody">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+    <Property Name="_Order" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Boarders">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Boardingestablishment">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Ccgovernance">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Ccoperationalhours">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Ccphasetype">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Childcarefacilities">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Diocese">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Directprovisionofearlyyears">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Edubasetrigger">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Establishmentlinks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="nvarchar" />
+    <Property Name="LinkURN" Type="nvarchar" />
+    <Property Name="LinkName" Type="nvarchar" />
+    <Property Name="LinkType" Type="nvarchar" />
+    <Property Name="LinkEstablishedDate" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Establishments">
+    <Key>
+      <PropertyRef Name="URN" />
+    </Key>
+    <Property Name="URN" Type="nvarchar" Nullable="false" />
+    <Property Name="LAcode" Type="nvarchar" />
+    <Property Name="LAname" Type="nvarchar" />
+    <Property Name="EstablishmentNumber" Type="nvarchar" />
+    <Property Name="EstablishmentName" Type="nvarchar" />
+    <Property Name="TypeOfEstablishmentcode" Type="nvarchar" />
+    <Property Name="TypeOfEstablishmentname" Type="nvarchar" />
+    <Property Name="EstablishmentTypeGroupcode" Type="nvarchar" />
+    <Property Name="EstablishmentTypeGroupname" Type="nvarchar" />
+    <Property Name="EstablishmentStatuscode" Type="nvarchar" />
+    <Property Name="EstablishmentStatusname" Type="nvarchar" />
+    <Property Name="ReasonEstablishmentOpenedcode" Type="nvarchar" />
+    <Property Name="ReasonEstablishmentOpenedname" Type="nvarchar" />
+    <Property Name="OpenDate" Type="nvarchar" />
+    <Property Name="ReasonEstablishmentClosedcode" Type="nvarchar" />
+    <Property Name="ReasonEstablishmentClosedname" Type="nvarchar" />
+    <Property Name="CloseDate" Type="nvarchar" />
+    <Property Name="PhaseOfEducationcode" Type="nvarchar" />
+    <Property Name="PhaseOfEducationname" Type="nvarchar" />
+    <Property Name="StatutoryLowAge" Type="nvarchar" />
+    <Property Name="StatutoryHighAge" Type="nvarchar" />
+    <Property Name="Boarderscode" Type="nvarchar" />
+    <Property Name="Boardersname" Type="nvarchar" />
+    <Property Name="NurseryProvisioncode" Type="nvarchar" />
+    <Property Name="NurseryProvisionname" Type="nvarchar" />
+    <Property Name="OfficialSixthFormcode" Type="nvarchar" />
+    <Property Name="OfficialSixthFormname" Type="nvarchar" />
+    <Property Name="Gendercode" Type="nvarchar" />
+    <Property Name="Gendername" Type="nvarchar" />
+    <Property Name="ReligiousCharactercode" Type="nvarchar" />
+    <Property Name="ReligiousCharactername" Type="nvarchar" />
+    <Property Name="ReligiousEthoscode" Type="nvarchar" />
+    <Property Name="ReligiousEthosname" Type="nvarchar" />
+    <Property Name="Diocesecode" Type="nvarchar" />
+    <Property Name="Diocesename" Type="nvarchar" />
+    <Property Name="AdmissionsPolicycode" Type="nvarchar" />
+    <Property Name="AdmissionsPolicyname" Type="nvarchar" />
+    <Property Name="SchoolCapacity" Type="nvarchar" />
+    <Property Name="SpecialClassescode" Type="nvarchar" />
+    <Property Name="SpecialClassesname" Type="nvarchar" />
+    <Property Name="CensusDate" Type="nvarchar" />
+    <Property Name="NumberOfPupils" Type="nvarchar" />
+    <Property Name="NumberOfBoys" Type="nvarchar" />
+    <Property Name="NumberOfGirls" Type="nvarchar" />
+    <Property Name="FSM" Type="nvarchar" />
+    <Property Name="PercentageFSM" Type="nvarchar" />
+    <Property Name="TrustSchoolFlagcode" Type="nvarchar" />
+    <Property Name="TrustSchoolFlagname" Type="nvarchar" />
+    <Property Name="Trustscode" Type="nvarchar" />
+    <Property Name="Trustsname" Type="nvarchar" />
+    <Property Name="SchoolSponsorFlagcode" Type="nvarchar" />
+    <Property Name="SchoolSponsorFlagname" Type="nvarchar" />
+    <Property Name="SchoolSponsorscode" Type="nvarchar" />
+    <Property Name="SchoolSponsorsname" Type="nvarchar" />
+    <Property Name="FederationFlagcode" Type="nvarchar" />
+    <Property Name="FederationFlagname" Type="nvarchar" />
+    <Property Name="Federationscode" Type="nvarchar" />
+    <Property Name="Federationsname" Type="nvarchar" />
+    <Property Name="UKPRN" Type="nvarchar" />
+    <Property Name="FEHEIdentifier" Type="nvarchar" />
+    <Property Name="FurtherEducationTypecode" Type="nvarchar" />
+    <Property Name="FurtherEducationTypename" Type="nvarchar" />
+    <Property Name="OfstedLastInsp" Type="nvarchar" />
+    <Property Name="OfstedSpecialMeasurescode" Type="nvarchar" />
+    <Property Name="OfstedSpecialMeasuresname" Type="nvarchar" />
+    <Property Name="LastChangedDate" Type="nvarchar" />
+    <Property Name="Street" Type="nvarchar" />
+    <Property Name="Locality" Type="nvarchar" />
+    <Property Name="Address3" Type="nvarchar" />
+    <Property Name="Town" Type="nvarchar" />
+    <Property Name="Countycode" Type="nvarchar" />
+    <Property Name="Countyname" Type="nvarchar" />
+    <Property Name="Postcode" Type="nvarchar" />
+    <Property Name="SchoolWebsite" Type="nvarchar" />
+    <Property Name="MainEmail" Type="nvarchar" />
+    <Property Name="AlternativeEmail" Type="nvarchar" />
+    <Property Name="TelephoneNum" Type="nvarchar" />
+    <Property Name="FaxNum" Type="nvarchar" />
+    <Property Name="ContactPreferencecode" Type="nvarchar" />
+    <Property Name="ContactPreferencename" Type="nvarchar" />
+    <Property Name="HeadTitlecode" Type="nvarchar" />
+    <Property Name="HeadTitlename" Type="nvarchar" />
+    <Property Name="HeadFirstName" Type="nvarchar" />
+    <Property Name="HeadLastName" Type="nvarchar" />
+    <Property Name="HeadHonours" Type="nvarchar" />
+    <Property Name="HeadPreferredJobTitle" Type="nvarchar" />
+    <Property Name="InspectorateNamecode" Type="nvarchar" />
+    <Property Name="InspectorateNamename" Type="nvarchar" />
+    <Property Name="InspectorateReport" Type="nvarchar" />
+    <Property Name="DateOfLastInspectionVisit" Type="nvarchar" />
+    <Property Name="NextInspectionVisit" Type="nvarchar" />
+    <Property Name="TeenMothcode" Type="nvarchar" />
+    <Property Name="TeenMothname" Type="nvarchar" />
+    <Property Name="TeenMothPlaces" Type="nvarchar" />
+    <Property Name="CCFcode" Type="nvarchar" />
+    <Property Name="CCFname" Type="nvarchar" />
+    <Property Name="SENPRUcode" Type="nvarchar" />
+    <Property Name="SENPRUname" Type="nvarchar" />
+    <Property Name="EBDcode" Type="nvarchar" />
+    <Property Name="EBDname" Type="nvarchar" />
+    <Property Name="PlacesPRU" Type="nvarchar" />
+    <Property Name="FTProvcode" Type="nvarchar" />
+    <Property Name="FTProvname" Type="nvarchar" />
+    <Property Name="EdByOthercode" Type="nvarchar" />
+    <Property Name="EdByOthername" Type="nvarchar" />
+    <Property Name="Section41Approvedcode" Type="nvarchar" />
+    <Property Name="Section41Approvedname" Type="nvarchar" />
+    <Property Name="SEN1code" Type="nvarchar" />
+    <Property Name="SEN1name" Type="nvarchar" />
+    <Property Name="SEN2code" Type="nvarchar" />
+    <Property Name="SEN2name" Type="nvarchar" />
+    <Property Name="SEN3code" Type="nvarchar" />
+    <Property Name="SEN3name" Type="nvarchar" />
+    <Property Name="SEN4code" Type="nvarchar" />
+    <Property Name="SEN4name" Type="nvarchar" />
+    <Property Name="TypeOfResourcedProvisioncode" Type="nvarchar" />
+    <Property Name="TypeOfResourcedProvisionname" Type="nvarchar" />
+    <Property Name="ResourcedProvisionOnRoll" Type="nvarchar" />
+    <Property Name="ResourcedProvisionCapacity" Type="nvarchar" />
+    <Property Name="SenUnitOnRoll" Type="nvarchar" />
+    <Property Name="SenUnitCapacity" Type="nvarchar" />
+    <Property Name="GORcode" Type="nvarchar" />
+    <Property Name="GORname" Type="nvarchar" />
+    <Property Name="DistrictAdministrativecode" Type="nvarchar" />
+    <Property Name="DistrictAdministrativename" Type="nvarchar" />
+    <Property Name="AdministrativeWardcode" Type="nvarchar" />
+    <Property Name="AdministrativeWardname" Type="nvarchar" />
+    <Property Name="ParliamentaryConstituencycode" Type="nvarchar" />
+    <Property Name="ParliamentaryConstituencyname" Type="nvarchar" />
+    <Property Name="UrbanRuralcode" Type="nvarchar" />
+    <Property Name="UrbanRuralname" Type="nvarchar" />
+    <Property Name="GSSLACodecode" Type="nvarchar" />
+    <Property Name="GSSLACodename" Type="nvarchar" />
+    <Property Name="Easting" Type="nvarchar" />
+    <Property Name="Northing" Type="nvarchar" />
+    <Property Name="CensusAreaStatisticWardcode" Type="nvarchar" />
+    <Property Name="CensusAreaStatisticWardname" Type="nvarchar" />
+    <Property Name="MSOAcode" Type="nvarchar" />
+    <Property Name="MSOAname" Type="nvarchar" />
+    <Property Name="LSOAcode" Type="nvarchar" />
+    <Property Name="LSOAname" Type="nvarchar" />
+    <Property Name="Notes" Type="nvarchar" />
+    <Property Name="DateofLastFullBridgeInspection" Type="nvarchar" />
+    <Property Name="DateofLastFullOfstedInspection" Type="nvarchar" />
+    <Property Name="DateofLastFullISIInspection" Type="nvarchar" />
+    <Property Name="DateofLastFullSISInspection" Type="nvarchar" />
+    <Property Name="DateofLastFullWelfareInspection" Type="nvarchar" />
+    <Property Name="DateNextWelfareInspection" Type="nvarchar" />
+    <Property Name="DateofLastFPVisit" Type="nvarchar" />
+    <Property Name="DateNextFullInspection" Type="nvarchar" />
+    <Property Name="ActionGEN" Type="nvarchar" />
+    <Property Name="ActionWEL" Type="nvarchar" />
+    <Property Name="ActionFP" Type="nvarchar" />
+    <Property Name="CorrespondenceAddress" Type="nvarchar" />
+    <Property Name="Inspectoratecode" Type="nvarchar" />
+    <Property Name="Inspectoratename" Type="nvarchar" />
+    <Property Name="TotalPupilsFullTime" Type="nvarchar" />
+    <Property Name="TotalPupilsPartTime" Type="nvarchar" />
+    <Property Name="CompSchoolAge" Type="nvarchar" />
+    <Property Name="SENStat" Type="nvarchar" />
+    <Property Name="SENNoStat" Type="nvarchar" />
+    <Property Name="IndependentSchoolTypecode" Type="nvarchar" />
+    <Property Name="IndependentSchoolTypename" Type="nvarchar" />
+    <Property Name="PupilTeacherRatio" Type="nvarchar" />
+    <Property Name="CharityName" Type="nvarchar" />
+    <Property Name="CharityNum" Type="nvarchar" />
+    <Property Name="TotalHoursPerWeekPTStaff" Type="nvarchar" />
+    <Property Name="TotalPupilsInPublicCare" Type="nvarchar" />
+    <Property Name="PTBoys2andUnder" Type="nvarchar" />
+    <Property Name="PTBoys3" Type="nvarchar" />
+    <Property Name="PTBoys4a" Type="nvarchar" />
+    <Property Name="PTBoys4b" Type="nvarchar" />
+    <Property Name="PTBoys4c" Type="nvarchar" />
+    <Property Name="TotalBoyBoarders" Type="nvarchar" />
+    <Property Name="TotalStaffFullTime" Type="nvarchar" />
+    <Property Name="TotalStaffPartTime" Type="nvarchar" />
+    <Property Name="LowDayFee" Type="nvarchar" />
+    <Property Name="HighDayFee" Type="nvarchar" />
+    <Property Name="LowBoardFee" Type="nvarchar" />
+    <Property Name="HighBoardFee" Type="nvarchar" />
+    <Property Name="BoardingEstablishmentcode" Type="nvarchar" />
+    <Property Name="BoardingEstablishmentname" Type="nvarchar" />
+    <Property Name="PropsName" Type="nvarchar" />
+    <Property Name="PropsStreet" Type="nvarchar" />
+    <Property Name="PropsLocality" Type="nvarchar" />
+    <Property Name="PropsAddress3" Type="nvarchar" />
+    <Property Name="PropsTown" Type="nvarchar" />
+    <Property Name="PropsCountycode" Type="nvarchar" />
+    <Property Name="PropsCountyname" Type="nvarchar" />
+    <Property Name="PropsPostcode" Type="nvarchar" />
+    <Property Name="PropsTelephoneNum" Type="nvarchar" />
+    <Property Name="PropsFaxNumber" Type="nvarchar" />
+    <Property Name="PropsEmail" Type="nvarchar" />
+    <Property Name="PropsPreferredJobTitle" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyName" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyStreet" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyLocality" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyAddress3" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyTown" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyCountycode" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyCountyname" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyPostcode" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyTelephoneNum" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyFaxNumber" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyEmail" Type="nvarchar" />
+    <Property Name="ChairOfProprietorBodyPreferredJobTitle" Type="nvarchar" />
+    <Property Name="AccomChangecode" Type="nvarchar" />
+    <Property Name="AccomChangename" Type="nvarchar" />
+    <Property Name="PTGirls2andUnder" Type="nvarchar" />
+    <Property Name="PTGirls3" Type="nvarchar" />
+    <Property Name="PTGirls4a" Type="nvarchar" />
+    <Property Name="PTGirls4b" Type="nvarchar" />
+    <Property Name="PTGirls4c" Type="nvarchar" />
+    <Property Name="TotalGirlBoarders" Type="nvarchar" />
+    <Property Name="TotalPupilsThreeMonth" Type="nvarchar" />
+    <Property Name="CHName" Type="nvarchar" />
+    <Property Name="CHStreet" Type="nvarchar" />
+    <Property Name="CHLocality" Type="nvarchar" />
+    <Property Name="CHAddress3" Type="nvarchar" />
+    <Property Name="CHTown" Type="nvarchar" />
+    <Property Name="CHCountycode" Type="nvarchar" />
+    <Property Name="CHCountyname" Type="nvarchar" />
+    <Property Name="CHPostcode" Type="nvarchar" />
+    <Property Name="HelpdeskNotes" Type="nvarchar" />
+    <Property Name="EduBaseLastUpdate" Type="nvarchar" />
+    <Property Name="EduBaseTrigger1code" Type="nvarchar" />
+    <Property Name="EduBaseTrigger1name" Type="nvarchar" />
+    <Property Name="PreviousLAcode" Type="nvarchar" />
+    <Property Name="PreviousLAname" Type="nvarchar" />
+    <Property Name="PreviousEstablishmentNumber" Type="nvarchar" />
+    <Property Name="MarketingOptInOutcode" Type="nvarchar" />
+    <Property Name="MarketingOptInOutname" Type="nvarchar" />
+    <Property Name="ReasonForChangecode" Type="nvarchar" />
+    <Property Name="ReasonForChangename" Type="nvarchar" />
+    <Property Name="CCDirectProvisionOfEarlyYearscode" Type="nvarchar" />
+    <Property Name="CCDirectProvisionOfEarlyYearsname" Type="nvarchar" />
+    <Property Name="CCDisadvantagedAreacode" Type="nvarchar" />
+    <Property Name="CCDisadvantagedAreaname" Type="nvarchar" />
+    <Property Name="CCGovernancecode" Type="nvarchar" />
+    <Property Name="CCGovernancename" Type="nvarchar" />
+    <Property Name="CCGovernanceDetail" Type="nvarchar" />
+    <Property Name="CCGroupLeadcode" Type="nvarchar" />
+    <Property Name="CCGroupLeadname" Type="nvarchar" />
+    <Property Name="CCLAContactEmail" Type="nvarchar" />
+    <Property Name="CCLAContactLAPhone" Type="nvarchar" />
+    <Property Name="CCLAContactName" Type="nvarchar" />
+    <Property Name="CCNumberOfUnder5s" Type="nvarchar" />
+    <Property Name="CCOperationalHourscode" Type="nvarchar" />
+    <Property Name="CCOperationalHoursname" Type="nvarchar" />
+    <Property Name="ChildrensCentresGroupcode" Type="nvarchar" />
+    <Property Name="ChildrensCentresGroupname" Type="nvarchar" />
+    <Property Name="ChildrensCentresGroupFlagcode" Type="nvarchar" />
+    <Property Name="ChildrensCentresGroupFlagname" Type="nvarchar" />
+    <Property Name="ChildrensCentresPhaseTypecode" Type="nvarchar" />
+    <Property Name="ChildrensCentresPhaseTypename" Type="nvarchar" />
+    <Property Name="HeadEmail" Type="nvarchar" />
+    <Property Name="HeadAppointmentDate" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Establishmentstatus">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Furthereducationtype">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Gender">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Grouplinks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="nvarchar" />
+    <Property Name="LinkedUID" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="GroupType">
+    <Key>
+      <PropertyRef Name="GroupTypecode" />
+    </Key>
+    <Property Name="GroupTypecode" Type="nvarchar" Nullable="false" />
+    <Property Name="GroupType" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Headtitle">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Independentschooltype">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Inspectorate">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Inspectoratename">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+    <Property Name="_Order" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="LocalAuthority">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+    <Property Name="_Group" Type="nvarchar" />
+    <Property Name="_Order" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Localgovernors">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+    <Property Name="_Order" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Nationality">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+    <Property Name="_Order" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Nurseryprovision">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Officialsixthform">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Phaseofeducation">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="PRUEBD">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Prueducatedbyothers">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Prufulltimeprovision">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="PRUSEN">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Reasonestablishmentclosed">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Reasonestablishmentopened">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Religiouscharacter">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Religiousethos">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Resourcedprovision">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Section41approved">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+    <Property Name="_Order" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Specialclasses">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Specialeducationaneeds">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Teenagemothers">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Typeofresourcedprovision">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+</Schema>
+</edmx:StorageModels>
+<!-- CSDL content -->
+<edmx:ConceptualModels>
+<Schema Namespace="EdubaseSourceBetaModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="EdubaseSourceBetaEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="Accomodationchanged" EntityType="EdubaseSourceBetaModel.Accomodationchanged" />
+    <EntitySet Name="Admissionspolicy" EntityType="EdubaseSourceBetaModel.Admissionspolicy" />
+    <EntitySet Name="Appointingbody" EntityType="EdubaseSourceBetaModel.Appointingbody" />
+    <EntitySet Name="Boarders" EntityType="EdubaseSourceBetaModel.Boarders" />
+    <EntitySet Name="Boardingestablishment" EntityType="EdubaseSourceBetaModel.Boardingestablishment" />
+    <EntitySet Name="Ccgovernance" EntityType="EdubaseSourceBetaModel.Ccgovernance" />
+    <EntitySet Name="Ccoperationalhours" EntityType="EdubaseSourceBetaModel.Ccoperationalhours" />
+    <EntitySet Name="Ccphasetype" EntityType="EdubaseSourceBetaModel.Ccphasetype" />
+    <EntitySet Name="Childcarefacilities" EntityType="EdubaseSourceBetaModel.Childcarefacilities" />
+    <EntitySet Name="Diocese" EntityType="EdubaseSourceBetaModel.Diocese" />
+    <EntitySet Name="Directprovisionofearlyyears" EntityType="EdubaseSourceBetaModel.Directprovisionofearlyyears" />
+    <EntitySet Name="Edubasetrigger" EntityType="EdubaseSourceBetaModel.Edubasetrigger" />
+    <EntitySet Name="Establishmentlinks" EntityType="EdubaseSourceBetaModel.Establishmentlinks" />
+    <EntitySet Name="Establishments" EntityType="EdubaseSourceBetaModel.Establishments" />
+    <EntitySet Name="Establishmentstatus" EntityType="EdubaseSourceBetaModel.Establishmentstatus" />
+    <EntitySet Name="Furthereducationtype" EntityType="EdubaseSourceBetaModel.Furthereducationtype" />
+    <EntitySet Name="Gender" EntityType="EdubaseSourceBetaModel.Gender" />
+    <EntitySet Name="Grouplinks" EntityType="EdubaseSourceBetaModel.Grouplinks" />
+    <EntitySet Name="GroupType" EntityType="EdubaseSourceBetaModel.GroupType" />
+    <EntitySet Name="Headtitle" EntityType="EdubaseSourceBetaModel.Headtitle" />
+    <EntitySet Name="Independentschooltype" EntityType="EdubaseSourceBetaModel.Independentschooltype" />
+    <EntitySet Name="Inspectorate" EntityType="EdubaseSourceBetaModel.Inspectorate" />
+    <EntitySet Name="Inspectoratename" EntityType="EdubaseSourceBetaModel.Inspectoratename" />
+    <EntitySet Name="LocalAuthority" EntityType="EdubaseSourceBetaModel.LocalAuthority" />
+    <EntitySet Name="Localgovernors" EntityType="EdubaseSourceBetaModel.Localgovernors" />
+    <EntitySet Name="Nationality" EntityType="EdubaseSourceBetaModel.Nationality" />
+    <EntitySet Name="Nurseryprovision" EntityType="EdubaseSourceBetaModel.Nurseryprovision" />
+    <EntitySet Name="Officialsixthform" EntityType="EdubaseSourceBetaModel.Officialsixthform" />
+    <EntitySet Name="Phaseofeducation" EntityType="EdubaseSourceBetaModel.Phaseofeducation" />
+    <EntitySet Name="PRUEBD" EntityType="EdubaseSourceBetaModel.PRUEBD" />
+    <EntitySet Name="Prueducatedbyothers" EntityType="EdubaseSourceBetaModel.Prueducatedbyothers" />
+    <EntitySet Name="Prufulltimeprovision" EntityType="EdubaseSourceBetaModel.Prufulltimeprovision" />
+    <EntitySet Name="PRUSEN" EntityType="EdubaseSourceBetaModel.PRUSEN" />
+    <EntitySet Name="Reasonestablishmentclosed" EntityType="EdubaseSourceBetaModel.Reasonestablishmentclosed" />
+    <EntitySet Name="Reasonestablishmentopened" EntityType="EdubaseSourceBetaModel.Reasonestablishmentopened" />
+    <EntitySet Name="Religiouscharacter" EntityType="EdubaseSourceBetaModel.Religiouscharacter" />
+    <EntitySet Name="Religiousethos" EntityType="EdubaseSourceBetaModel.Religiousethos" />
+    <EntitySet Name="Resourcedprovision" EntityType="EdubaseSourceBetaModel.Resourcedprovision" />
+    <EntitySet Name="Section41approved" EntityType="EdubaseSourceBetaModel.Section41approved" />
+    <EntitySet Name="Specialclasses" EntityType="EdubaseSourceBetaModel.Specialclasses" />
+    <EntitySet Name="Specialeducationaneeds" EntityType="EdubaseSourceBetaModel.Specialeducationaneeds" />
+    <EntitySet Name="Teenagemothers" EntityType="EdubaseSourceBetaModel.Teenagemothers" />
+    <EntitySet Name="Typeofresourcedprovision" EntityType="EdubaseSourceBetaModel.Typeofresourcedprovision" />
+  </EntityContainer>
+  <EntityType Name="Accomodationchanged">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Admissionspolicy">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Appointingbody">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Boarders">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Boardingestablishment">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Ccgovernance">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Ccoperationalhours">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Ccphasetype">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Childcarefacilities">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Diocese">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Directprovisionofearlyyears">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Edubasetrigger">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Establishmentlinks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkURN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkType" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkEstablishedDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Establishments">
+    <Key>
+      <PropertyRef Name="URN" />
+    </Key>
+    <Property Name="URN" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LAcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LAname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TypeOfEstablishmentcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TypeOfEstablishmentname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentTypeGroupcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentTypeGroupname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentStatuscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EstablishmentStatusname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonEstablishmentOpenedcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonEstablishmentOpenedname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="OpenDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonEstablishmentClosedcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonEstablishmentClosedname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CloseDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PhaseOfEducationcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PhaseOfEducationname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="StatutoryLowAge" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="StatutoryHighAge" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Boarderscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Boardersname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="NurseryProvisioncode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="NurseryProvisionname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="OfficialSixthFormcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="OfficialSixthFormname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Gendercode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Gendername" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReligiousCharactercode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReligiousCharactername" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReligiousEthoscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReligiousEthosname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Diocesecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Diocesename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AdmissionsPolicycode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AdmissionsPolicyname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SchoolCapacity" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SpecialClassescode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SpecialClassesname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CensusDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="NumberOfPupils" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="NumberOfBoys" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="NumberOfGirls" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="FSM" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PercentageFSM" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TrustSchoolFlagcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TrustSchoolFlagname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Trustscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Trustsname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SchoolSponsorFlagcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SchoolSponsorFlagname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SchoolSponsorscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SchoolSponsorsname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="FederationFlagcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="FederationFlagname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Federationscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Federationsname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="UKPRN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="FEHEIdentifier" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="FurtherEducationTypecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="FurtherEducationTypename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="OfstedLastInsp" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="OfstedSpecialMeasurescode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="OfstedSpecialMeasuresname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LastChangedDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Street" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Locality" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Address3" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Town" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Countycode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Countyname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Postcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SchoolWebsite" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="MainEmail" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AlternativeEmail" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TelephoneNum" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="FaxNum" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ContactPreferencecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ContactPreferencename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadTitlecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadTitlename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadFirstName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadLastName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadHonours" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadPreferredJobTitle" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="InspectorateNamecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="InspectorateNamename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="InspectorateReport" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateOfLastInspectionVisit" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="NextInspectionVisit" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TeenMothcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TeenMothname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TeenMothPlaces" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCFcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCFname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SENPRUcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SENPRUname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EBDcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EBDname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PlacesPRU" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="FTProvcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="FTProvname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EdByOthercode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EdByOthername" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Section41Approvedcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Section41Approvedname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SEN1code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SEN1name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SEN2code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SEN2name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SEN3code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SEN3name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SEN4code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SEN4name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TypeOfResourcedProvisioncode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TypeOfResourcedProvisionname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ResourcedProvisionOnRoll" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ResourcedProvisionCapacity" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SenUnitOnRoll" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SenUnitCapacity" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GORcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GORname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DistrictAdministrativecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DistrictAdministrativename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AdministrativeWardcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AdministrativeWardname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ParliamentaryConstituencycode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ParliamentaryConstituencyname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="UrbanRuralcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="UrbanRuralname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GSSLACodecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GSSLACodename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Easting" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Northing" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CensusAreaStatisticWardcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CensusAreaStatisticWardname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="MSOAcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="MSOAname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LSOAcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LSOAname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Notes" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateofLastFullBridgeInspection" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateofLastFullOfstedInspection" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateofLastFullISIInspection" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateofLastFullSISInspection" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateofLastFullWelfareInspection" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateNextWelfareInspection" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateofLastFPVisit" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateNextFullInspection" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ActionGEN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ActionWEL" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ActionFP" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CorrespondenceAddress" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Inspectoratecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Inspectoratename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TotalPupilsFullTime" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TotalPupilsPartTime" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CompSchoolAge" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SENStat" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="SENNoStat" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="IndependentSchoolTypecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="IndependentSchoolTypename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PupilTeacherRatio" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CharityName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CharityNum" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TotalHoursPerWeekPTStaff" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TotalPupilsInPublicCare" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTBoys2andUnder" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTBoys3" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTBoys4a" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTBoys4b" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTBoys4c" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TotalBoyBoarders" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TotalStaffFullTime" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TotalStaffPartTime" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LowDayFee" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HighDayFee" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LowBoardFee" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HighBoardFee" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="BoardingEstablishmentcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="BoardingEstablishmentname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsStreet" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsLocality" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsAddress3" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsTown" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsCountycode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsCountyname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsPostcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsTelephoneNum" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsFaxNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsEmail" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PropsPreferredJobTitle" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyStreet" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyLocality" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyAddress3" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyTown" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyCountycode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyCountyname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyPostcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyTelephoneNum" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyFaxNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyEmail" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChairOfProprietorBodyPreferredJobTitle" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AccomChangecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="AccomChangename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTGirls2andUnder" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTGirls3" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTGirls4a" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTGirls4b" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PTGirls4c" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TotalGirlBoarders" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="TotalPupilsThreeMonth" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CHName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CHStreet" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CHLocality" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CHAddress3" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CHTown" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CHCountycode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CHCountyname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CHPostcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HelpdeskNotes" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EduBaseLastUpdate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EduBaseTrigger1code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="EduBaseTrigger1name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PreviousLAcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PreviousLAname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PreviousEstablishmentNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="MarketingOptInOutcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="MarketingOptInOutname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonForChangecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ReasonForChangename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCDirectProvisionOfEarlyYearscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCDirectProvisionOfEarlyYearsname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCDisadvantagedAreacode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCDisadvantagedAreaname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCGovernancecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCGovernancename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCGovernanceDetail" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCGroupLeadcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCGroupLeadname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCLAContactEmail" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCLAContactLAPhone" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCLAContactName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCNumberOfUnder5s" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCOperationalHourscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CCOperationalHoursname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChildrensCentresGroupcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChildrensCentresGroupname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChildrensCentresGroupFlagcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChildrensCentresGroupFlagname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChildrensCentresPhaseTypecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChildrensCentresPhaseTypename" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadEmail" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadAppointmentDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Establishmentstatus">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Furthereducationtype">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Gender">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Grouplinks">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LinkedUID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="GroupType">
+    <Key>
+      <PropertyRef Name="GroupTypecode" />
+    </Key>
+    <Property Name="GroupTypecode" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupType1" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Headtitle">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Independentschooltype">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Inspectorate">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Inspectoratename">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="LocalAuthority">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="C_Group" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Localgovernors">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Nationality">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Nurseryprovision">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Officialsixthform">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Phaseofeducation">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="PRUEBD">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Prueducatedbyothers">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Prufulltimeprovision">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="PRUSEN">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Reasonestablishmentclosed">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Reasonestablishmentopened">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Religiouscharacter">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Religiousethos">
+    <Key>
+      <PropertyRef Name="code" />
+    </Key>
+    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Resourcedprovision">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Section41approved">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Specialclasses">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Specialeducationaneeds">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Teenagemothers">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Typeofresourcedprovision">
+    <Key>
+      <PropertyRef Name="Code" />
+    </Key>
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+</Schema>
+</edmx:ConceptualModels>
+<!-- C-S mapping content -->
+<edmx:Mappings>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EdubaseSourceBetaModelStoreContainer" CdmEntityContainer="EdubaseSourceBetaEntities">
+    <EntitySetMapping Name="Accomodationchanged">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Accomodationchanged">
+        <MappingFragment StoreEntitySet="Accomodationchanged">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Admissionspolicy">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Admissionspolicy">
+        <MappingFragment StoreEntitySet="Admissionspolicy">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Appointingbody">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Appointingbody">
+        <MappingFragment StoreEntitySet="Appointingbody">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C_Order" ColumnName="_Order" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Boarders">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Boarders">
+        <MappingFragment StoreEntitySet="Boarders">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Boardingestablishment">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Boardingestablishment">
+        <MappingFragment StoreEntitySet="Boardingestablishment">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Ccgovernance">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Ccgovernance">
+        <MappingFragment StoreEntitySet="Ccgovernance">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Ccoperationalhours">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Ccoperationalhours">
+        <MappingFragment StoreEntitySet="Ccoperationalhours">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Ccphasetype">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Ccphasetype">
+        <MappingFragment StoreEntitySet="Ccphasetype">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Childcarefacilities">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Childcarefacilities">
+        <MappingFragment StoreEntitySet="Childcarefacilities">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Diocese">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Diocese">
+        <MappingFragment StoreEntitySet="Diocese">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Directprovisionofearlyyears">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Directprovisionofearlyyears">
+        <MappingFragment StoreEntitySet="Directprovisionofearlyyears">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Edubasetrigger">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Edubasetrigger">
+        <MappingFragment StoreEntitySet="Edubasetrigger">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Establishmentlinks">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Establishmentlinks">
+        <MappingFragment StoreEntitySet="Establishmentlinks">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="URN" ColumnName="URN" />
+          <ScalarProperty Name="LinkURN" ColumnName="LinkURN" />
+          <ScalarProperty Name="LinkName" ColumnName="LinkName" />
+          <ScalarProperty Name="LinkType" ColumnName="LinkType" />
+          <ScalarProperty Name="LinkEstablishedDate" ColumnName="LinkEstablishedDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Establishments">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Establishments">
+        <MappingFragment StoreEntitySet="Establishments">
+          <ScalarProperty Name="URN" ColumnName="URN" />
+          <ScalarProperty Name="LAcode" ColumnName="LAcode" />
+          <ScalarProperty Name="LAname" ColumnName="LAname" />
+          <ScalarProperty Name="EstablishmentNumber" ColumnName="EstablishmentNumber" />
+          <ScalarProperty Name="EstablishmentName" ColumnName="EstablishmentName" />
+          <ScalarProperty Name="TypeOfEstablishmentcode" ColumnName="TypeOfEstablishmentcode" />
+          <ScalarProperty Name="TypeOfEstablishmentname" ColumnName="TypeOfEstablishmentname" />
+          <ScalarProperty Name="EstablishmentTypeGroupcode" ColumnName="EstablishmentTypeGroupcode" />
+          <ScalarProperty Name="EstablishmentTypeGroupname" ColumnName="EstablishmentTypeGroupname" />
+          <ScalarProperty Name="EstablishmentStatuscode" ColumnName="EstablishmentStatuscode" />
+          <ScalarProperty Name="EstablishmentStatusname" ColumnName="EstablishmentStatusname" />
+          <ScalarProperty Name="ReasonEstablishmentOpenedcode" ColumnName="ReasonEstablishmentOpenedcode" />
+          <ScalarProperty Name="ReasonEstablishmentOpenedname" ColumnName="ReasonEstablishmentOpenedname" />
+          <ScalarProperty Name="OpenDate" ColumnName="OpenDate" />
+          <ScalarProperty Name="ReasonEstablishmentClosedcode" ColumnName="ReasonEstablishmentClosedcode" />
+          <ScalarProperty Name="ReasonEstablishmentClosedname" ColumnName="ReasonEstablishmentClosedname" />
+          <ScalarProperty Name="CloseDate" ColumnName="CloseDate" />
+          <ScalarProperty Name="PhaseOfEducationcode" ColumnName="PhaseOfEducationcode" />
+          <ScalarProperty Name="PhaseOfEducationname" ColumnName="PhaseOfEducationname" />
+          <ScalarProperty Name="StatutoryLowAge" ColumnName="StatutoryLowAge" />
+          <ScalarProperty Name="StatutoryHighAge" ColumnName="StatutoryHighAge" />
+          <ScalarProperty Name="Boarderscode" ColumnName="Boarderscode" />
+          <ScalarProperty Name="Boardersname" ColumnName="Boardersname" />
+          <ScalarProperty Name="NurseryProvisioncode" ColumnName="NurseryProvisioncode" />
+          <ScalarProperty Name="NurseryProvisionname" ColumnName="NurseryProvisionname" />
+          <ScalarProperty Name="OfficialSixthFormcode" ColumnName="OfficialSixthFormcode" />
+          <ScalarProperty Name="OfficialSixthFormname" ColumnName="OfficialSixthFormname" />
+          <ScalarProperty Name="Gendercode" ColumnName="Gendercode" />
+          <ScalarProperty Name="Gendername" ColumnName="Gendername" />
+          <ScalarProperty Name="ReligiousCharactercode" ColumnName="ReligiousCharactercode" />
+          <ScalarProperty Name="ReligiousCharactername" ColumnName="ReligiousCharactername" />
+          <ScalarProperty Name="ReligiousEthoscode" ColumnName="ReligiousEthoscode" />
+          <ScalarProperty Name="ReligiousEthosname" ColumnName="ReligiousEthosname" />
+          <ScalarProperty Name="Diocesecode" ColumnName="Diocesecode" />
+          <ScalarProperty Name="Diocesename" ColumnName="Diocesename" />
+          <ScalarProperty Name="AdmissionsPolicycode" ColumnName="AdmissionsPolicycode" />
+          <ScalarProperty Name="AdmissionsPolicyname" ColumnName="AdmissionsPolicyname" />
+          <ScalarProperty Name="SchoolCapacity" ColumnName="SchoolCapacity" />
+          <ScalarProperty Name="SpecialClassescode" ColumnName="SpecialClassescode" />
+          <ScalarProperty Name="SpecialClassesname" ColumnName="SpecialClassesname" />
+          <ScalarProperty Name="CensusDate" ColumnName="CensusDate" />
+          <ScalarProperty Name="NumberOfPupils" ColumnName="NumberOfPupils" />
+          <ScalarProperty Name="NumberOfBoys" ColumnName="NumberOfBoys" />
+          <ScalarProperty Name="NumberOfGirls" ColumnName="NumberOfGirls" />
+          <ScalarProperty Name="FSM" ColumnName="FSM" />
+          <ScalarProperty Name="PercentageFSM" ColumnName="PercentageFSM" />
+          <ScalarProperty Name="TrustSchoolFlagcode" ColumnName="TrustSchoolFlagcode" />
+          <ScalarProperty Name="TrustSchoolFlagname" ColumnName="TrustSchoolFlagname" />
+          <ScalarProperty Name="Trustscode" ColumnName="Trustscode" />
+          <ScalarProperty Name="Trustsname" ColumnName="Trustsname" />
+          <ScalarProperty Name="SchoolSponsorFlagcode" ColumnName="SchoolSponsorFlagcode" />
+          <ScalarProperty Name="SchoolSponsorFlagname" ColumnName="SchoolSponsorFlagname" />
+          <ScalarProperty Name="SchoolSponsorscode" ColumnName="SchoolSponsorscode" />
+          <ScalarProperty Name="SchoolSponsorsname" ColumnName="SchoolSponsorsname" />
+          <ScalarProperty Name="FederationFlagcode" ColumnName="FederationFlagcode" />
+          <ScalarProperty Name="FederationFlagname" ColumnName="FederationFlagname" />
+          <ScalarProperty Name="Federationscode" ColumnName="Federationscode" />
+          <ScalarProperty Name="Federationsname" ColumnName="Federationsname" />
+          <ScalarProperty Name="UKPRN" ColumnName="UKPRN" />
+          <ScalarProperty Name="FEHEIdentifier" ColumnName="FEHEIdentifier" />
+          <ScalarProperty Name="FurtherEducationTypecode" ColumnName="FurtherEducationTypecode" />
+          <ScalarProperty Name="FurtherEducationTypename" ColumnName="FurtherEducationTypename" />
+          <ScalarProperty Name="OfstedLastInsp" ColumnName="OfstedLastInsp" />
+          <ScalarProperty Name="OfstedSpecialMeasurescode" ColumnName="OfstedSpecialMeasurescode" />
+          <ScalarProperty Name="OfstedSpecialMeasuresname" ColumnName="OfstedSpecialMeasuresname" />
+          <ScalarProperty Name="LastChangedDate" ColumnName="LastChangedDate" />
+          <ScalarProperty Name="Street" ColumnName="Street" />
+          <ScalarProperty Name="Locality" ColumnName="Locality" />
+          <ScalarProperty Name="Address3" ColumnName="Address3" />
+          <ScalarProperty Name="Town" ColumnName="Town" />
+          <ScalarProperty Name="Countycode" ColumnName="Countycode" />
+          <ScalarProperty Name="Countyname" ColumnName="Countyname" />
+          <ScalarProperty Name="Postcode" ColumnName="Postcode" />
+          <ScalarProperty Name="SchoolWebsite" ColumnName="SchoolWebsite" />
+          <ScalarProperty Name="MainEmail" ColumnName="MainEmail" />
+          <ScalarProperty Name="AlternativeEmail" ColumnName="AlternativeEmail" />
+          <ScalarProperty Name="TelephoneNum" ColumnName="TelephoneNum" />
+          <ScalarProperty Name="FaxNum" ColumnName="FaxNum" />
+          <ScalarProperty Name="ContactPreferencecode" ColumnName="ContactPreferencecode" />
+          <ScalarProperty Name="ContactPreferencename" ColumnName="ContactPreferencename" />
+          <ScalarProperty Name="HeadTitlecode" ColumnName="HeadTitlecode" />
+          <ScalarProperty Name="HeadTitlename" ColumnName="HeadTitlename" />
+          <ScalarProperty Name="HeadFirstName" ColumnName="HeadFirstName" />
+          <ScalarProperty Name="HeadLastName" ColumnName="HeadLastName" />
+          <ScalarProperty Name="HeadHonours" ColumnName="HeadHonours" />
+          <ScalarProperty Name="HeadPreferredJobTitle" ColumnName="HeadPreferredJobTitle" />
+          <ScalarProperty Name="InspectorateNamecode" ColumnName="InspectorateNamecode" />
+          <ScalarProperty Name="InspectorateNamename" ColumnName="InspectorateNamename" />
+          <ScalarProperty Name="InspectorateReport" ColumnName="InspectorateReport" />
+          <ScalarProperty Name="DateOfLastInspectionVisit" ColumnName="DateOfLastInspectionVisit" />
+          <ScalarProperty Name="NextInspectionVisit" ColumnName="NextInspectionVisit" />
+          <ScalarProperty Name="TeenMothcode" ColumnName="TeenMothcode" />
+          <ScalarProperty Name="TeenMothname" ColumnName="TeenMothname" />
+          <ScalarProperty Name="TeenMothPlaces" ColumnName="TeenMothPlaces" />
+          <ScalarProperty Name="CCFcode" ColumnName="CCFcode" />
+          <ScalarProperty Name="CCFname" ColumnName="CCFname" />
+          <ScalarProperty Name="SENPRUcode" ColumnName="SENPRUcode" />
+          <ScalarProperty Name="SENPRUname" ColumnName="SENPRUname" />
+          <ScalarProperty Name="EBDcode" ColumnName="EBDcode" />
+          <ScalarProperty Name="EBDname" ColumnName="EBDname" />
+          <ScalarProperty Name="PlacesPRU" ColumnName="PlacesPRU" />
+          <ScalarProperty Name="FTProvcode" ColumnName="FTProvcode" />
+          <ScalarProperty Name="FTProvname" ColumnName="FTProvname" />
+          <ScalarProperty Name="EdByOthercode" ColumnName="EdByOthercode" />
+          <ScalarProperty Name="EdByOthername" ColumnName="EdByOthername" />
+          <ScalarProperty Name="Section41Approvedcode" ColumnName="Section41Approvedcode" />
+          <ScalarProperty Name="Section41Approvedname" ColumnName="Section41Approvedname" />
+          <ScalarProperty Name="SEN1code" ColumnName="SEN1code" />
+          <ScalarProperty Name="SEN1name" ColumnName="SEN1name" />
+          <ScalarProperty Name="SEN2code" ColumnName="SEN2code" />
+          <ScalarProperty Name="SEN2name" ColumnName="SEN2name" />
+          <ScalarProperty Name="SEN3code" ColumnName="SEN3code" />
+          <ScalarProperty Name="SEN3name" ColumnName="SEN3name" />
+          <ScalarProperty Name="SEN4code" ColumnName="SEN4code" />
+          <ScalarProperty Name="SEN4name" ColumnName="SEN4name" />
+          <ScalarProperty Name="TypeOfResourcedProvisioncode" ColumnName="TypeOfResourcedProvisioncode" />
+          <ScalarProperty Name="TypeOfResourcedProvisionname" ColumnName="TypeOfResourcedProvisionname" />
+          <ScalarProperty Name="ResourcedProvisionOnRoll" ColumnName="ResourcedProvisionOnRoll" />
+          <ScalarProperty Name="ResourcedProvisionCapacity" ColumnName="ResourcedProvisionCapacity" />
+          <ScalarProperty Name="SenUnitOnRoll" ColumnName="SenUnitOnRoll" />
+          <ScalarProperty Name="SenUnitCapacity" ColumnName="SenUnitCapacity" />
+          <ScalarProperty Name="GORcode" ColumnName="GORcode" />
+          <ScalarProperty Name="GORname" ColumnName="GORname" />
+          <ScalarProperty Name="DistrictAdministrativecode" ColumnName="DistrictAdministrativecode" />
+          <ScalarProperty Name="DistrictAdministrativename" ColumnName="DistrictAdministrativename" />
+          <ScalarProperty Name="AdministrativeWardcode" ColumnName="AdministrativeWardcode" />
+          <ScalarProperty Name="AdministrativeWardname" ColumnName="AdministrativeWardname" />
+          <ScalarProperty Name="ParliamentaryConstituencycode" ColumnName="ParliamentaryConstituencycode" />
+          <ScalarProperty Name="ParliamentaryConstituencyname" ColumnName="ParliamentaryConstituencyname" />
+          <ScalarProperty Name="UrbanRuralcode" ColumnName="UrbanRuralcode" />
+          <ScalarProperty Name="UrbanRuralname" ColumnName="UrbanRuralname" />
+          <ScalarProperty Name="GSSLACodecode" ColumnName="GSSLACodecode" />
+          <ScalarProperty Name="GSSLACodename" ColumnName="GSSLACodename" />
+          <ScalarProperty Name="Easting" ColumnName="Easting" />
+          <ScalarProperty Name="Northing" ColumnName="Northing" />
+          <ScalarProperty Name="CensusAreaStatisticWardcode" ColumnName="CensusAreaStatisticWardcode" />
+          <ScalarProperty Name="CensusAreaStatisticWardname" ColumnName="CensusAreaStatisticWardname" />
+          <ScalarProperty Name="MSOAcode" ColumnName="MSOAcode" />
+          <ScalarProperty Name="MSOAname" ColumnName="MSOAname" />
+          <ScalarProperty Name="LSOAcode" ColumnName="LSOAcode" />
+          <ScalarProperty Name="LSOAname" ColumnName="LSOAname" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="DateofLastFullBridgeInspection" ColumnName="DateofLastFullBridgeInspection" />
+          <ScalarProperty Name="DateofLastFullOfstedInspection" ColumnName="DateofLastFullOfstedInspection" />
+          <ScalarProperty Name="DateofLastFullISIInspection" ColumnName="DateofLastFullISIInspection" />
+          <ScalarProperty Name="DateofLastFullSISInspection" ColumnName="DateofLastFullSISInspection" />
+          <ScalarProperty Name="DateofLastFullWelfareInspection" ColumnName="DateofLastFullWelfareInspection" />
+          <ScalarProperty Name="DateNextWelfareInspection" ColumnName="DateNextWelfareInspection" />
+          <ScalarProperty Name="DateofLastFPVisit" ColumnName="DateofLastFPVisit" />
+          <ScalarProperty Name="DateNextFullInspection" ColumnName="DateNextFullInspection" />
+          <ScalarProperty Name="ActionGEN" ColumnName="ActionGEN" />
+          <ScalarProperty Name="ActionWEL" ColumnName="ActionWEL" />
+          <ScalarProperty Name="ActionFP" ColumnName="ActionFP" />
+          <ScalarProperty Name="CorrespondenceAddress" ColumnName="CorrespondenceAddress" />
+          <ScalarProperty Name="Inspectoratecode" ColumnName="Inspectoratecode" />
+          <ScalarProperty Name="Inspectoratename" ColumnName="Inspectoratename" />
+          <ScalarProperty Name="TotalPupilsFullTime" ColumnName="TotalPupilsFullTime" />
+          <ScalarProperty Name="TotalPupilsPartTime" ColumnName="TotalPupilsPartTime" />
+          <ScalarProperty Name="CompSchoolAge" ColumnName="CompSchoolAge" />
+          <ScalarProperty Name="SENStat" ColumnName="SENStat" />
+          <ScalarProperty Name="SENNoStat" ColumnName="SENNoStat" />
+          <ScalarProperty Name="IndependentSchoolTypecode" ColumnName="IndependentSchoolTypecode" />
+          <ScalarProperty Name="IndependentSchoolTypename" ColumnName="IndependentSchoolTypename" />
+          <ScalarProperty Name="PupilTeacherRatio" ColumnName="PupilTeacherRatio" />
+          <ScalarProperty Name="CharityName" ColumnName="CharityName" />
+          <ScalarProperty Name="CharityNum" ColumnName="CharityNum" />
+          <ScalarProperty Name="TotalHoursPerWeekPTStaff" ColumnName="TotalHoursPerWeekPTStaff" />
+          <ScalarProperty Name="TotalPupilsInPublicCare" ColumnName="TotalPupilsInPublicCare" />
+          <ScalarProperty Name="PTBoys2andUnder" ColumnName="PTBoys2andUnder" />
+          <ScalarProperty Name="PTBoys3" ColumnName="PTBoys3" />
+          <ScalarProperty Name="PTBoys4a" ColumnName="PTBoys4a" />
+          <ScalarProperty Name="PTBoys4b" ColumnName="PTBoys4b" />
+          <ScalarProperty Name="PTBoys4c" ColumnName="PTBoys4c" />
+          <ScalarProperty Name="TotalBoyBoarders" ColumnName="TotalBoyBoarders" />
+          <ScalarProperty Name="TotalStaffFullTime" ColumnName="TotalStaffFullTime" />
+          <ScalarProperty Name="TotalStaffPartTime" ColumnName="TotalStaffPartTime" />
+          <ScalarProperty Name="LowDayFee" ColumnName="LowDayFee" />
+          <ScalarProperty Name="HighDayFee" ColumnName="HighDayFee" />
+          <ScalarProperty Name="LowBoardFee" ColumnName="LowBoardFee" />
+          <ScalarProperty Name="HighBoardFee" ColumnName="HighBoardFee" />
+          <ScalarProperty Name="BoardingEstablishmentcode" ColumnName="BoardingEstablishmentcode" />
+          <ScalarProperty Name="BoardingEstablishmentname" ColumnName="BoardingEstablishmentname" />
+          <ScalarProperty Name="PropsName" ColumnName="PropsName" />
+          <ScalarProperty Name="PropsStreet" ColumnName="PropsStreet" />
+          <ScalarProperty Name="PropsLocality" ColumnName="PropsLocality" />
+          <ScalarProperty Name="PropsAddress3" ColumnName="PropsAddress3" />
+          <ScalarProperty Name="PropsTown" ColumnName="PropsTown" />
+          <ScalarProperty Name="PropsCountycode" ColumnName="PropsCountycode" />
+          <ScalarProperty Name="PropsCountyname" ColumnName="PropsCountyname" />
+          <ScalarProperty Name="PropsPostcode" ColumnName="PropsPostcode" />
+          <ScalarProperty Name="PropsTelephoneNum" ColumnName="PropsTelephoneNum" />
+          <ScalarProperty Name="PropsFaxNumber" ColumnName="PropsFaxNumber" />
+          <ScalarProperty Name="PropsEmail" ColumnName="PropsEmail" />
+          <ScalarProperty Name="PropsPreferredJobTitle" ColumnName="PropsPreferredJobTitle" />
+          <ScalarProperty Name="ChairOfProprietorBodyName" ColumnName="ChairOfProprietorBodyName" />
+          <ScalarProperty Name="ChairOfProprietorBodyStreet" ColumnName="ChairOfProprietorBodyStreet" />
+          <ScalarProperty Name="ChairOfProprietorBodyLocality" ColumnName="ChairOfProprietorBodyLocality" />
+          <ScalarProperty Name="ChairOfProprietorBodyAddress3" ColumnName="ChairOfProprietorBodyAddress3" />
+          <ScalarProperty Name="ChairOfProprietorBodyTown" ColumnName="ChairOfProprietorBodyTown" />
+          <ScalarProperty Name="ChairOfProprietorBodyCountycode" ColumnName="ChairOfProprietorBodyCountycode" />
+          <ScalarProperty Name="ChairOfProprietorBodyCountyname" ColumnName="ChairOfProprietorBodyCountyname" />
+          <ScalarProperty Name="ChairOfProprietorBodyPostcode" ColumnName="ChairOfProprietorBodyPostcode" />
+          <ScalarProperty Name="ChairOfProprietorBodyTelephoneNum" ColumnName="ChairOfProprietorBodyTelephoneNum" />
+          <ScalarProperty Name="ChairOfProprietorBodyFaxNumber" ColumnName="ChairOfProprietorBodyFaxNumber" />
+          <ScalarProperty Name="ChairOfProprietorBodyEmail" ColumnName="ChairOfProprietorBodyEmail" />
+          <ScalarProperty Name="ChairOfProprietorBodyPreferredJobTitle" ColumnName="ChairOfProprietorBodyPreferredJobTitle" />
+          <ScalarProperty Name="AccomChangecode" ColumnName="AccomChangecode" />
+          <ScalarProperty Name="AccomChangename" ColumnName="AccomChangename" />
+          <ScalarProperty Name="PTGirls2andUnder" ColumnName="PTGirls2andUnder" />
+          <ScalarProperty Name="PTGirls3" ColumnName="PTGirls3" />
+          <ScalarProperty Name="PTGirls4a" ColumnName="PTGirls4a" />
+          <ScalarProperty Name="PTGirls4b" ColumnName="PTGirls4b" />
+          <ScalarProperty Name="PTGirls4c" ColumnName="PTGirls4c" />
+          <ScalarProperty Name="TotalGirlBoarders" ColumnName="TotalGirlBoarders" />
+          <ScalarProperty Name="TotalPupilsThreeMonth" ColumnName="TotalPupilsThreeMonth" />
+          <ScalarProperty Name="CHName" ColumnName="CHName" />
+          <ScalarProperty Name="CHStreet" ColumnName="CHStreet" />
+          <ScalarProperty Name="CHLocality" ColumnName="CHLocality" />
+          <ScalarProperty Name="CHAddress3" ColumnName="CHAddress3" />
+          <ScalarProperty Name="CHTown" ColumnName="CHTown" />
+          <ScalarProperty Name="CHCountycode" ColumnName="CHCountycode" />
+          <ScalarProperty Name="CHCountyname" ColumnName="CHCountyname" />
+          <ScalarProperty Name="CHPostcode" ColumnName="CHPostcode" />
+          <ScalarProperty Name="HelpdeskNotes" ColumnName="HelpdeskNotes" />
+          <ScalarProperty Name="EduBaseLastUpdate" ColumnName="EduBaseLastUpdate" />
+          <ScalarProperty Name="EduBaseTrigger1code" ColumnName="EduBaseTrigger1code" />
+          <ScalarProperty Name="EduBaseTrigger1name" ColumnName="EduBaseTrigger1name" />
+          <ScalarProperty Name="PreviousLAcode" ColumnName="PreviousLAcode" />
+          <ScalarProperty Name="PreviousLAname" ColumnName="PreviousLAname" />
+          <ScalarProperty Name="PreviousEstablishmentNumber" ColumnName="PreviousEstablishmentNumber" />
+          <ScalarProperty Name="MarketingOptInOutcode" ColumnName="MarketingOptInOutcode" />
+          <ScalarProperty Name="MarketingOptInOutname" ColumnName="MarketingOptInOutname" />
+          <ScalarProperty Name="ReasonForChangecode" ColumnName="ReasonForChangecode" />
+          <ScalarProperty Name="ReasonForChangename" ColumnName="ReasonForChangename" />
+          <ScalarProperty Name="CCDirectProvisionOfEarlyYearscode" ColumnName="CCDirectProvisionOfEarlyYearscode" />
+          <ScalarProperty Name="CCDirectProvisionOfEarlyYearsname" ColumnName="CCDirectProvisionOfEarlyYearsname" />
+          <ScalarProperty Name="CCDisadvantagedAreacode" ColumnName="CCDisadvantagedAreacode" />
+          <ScalarProperty Name="CCDisadvantagedAreaname" ColumnName="CCDisadvantagedAreaname" />
+          <ScalarProperty Name="CCGovernancecode" ColumnName="CCGovernancecode" />
+          <ScalarProperty Name="CCGovernancename" ColumnName="CCGovernancename" />
+          <ScalarProperty Name="CCGovernanceDetail" ColumnName="CCGovernanceDetail" />
+          <ScalarProperty Name="CCGroupLeadcode" ColumnName="CCGroupLeadcode" />
+          <ScalarProperty Name="CCGroupLeadname" ColumnName="CCGroupLeadname" />
+          <ScalarProperty Name="CCLAContactEmail" ColumnName="CCLAContactEmail" />
+          <ScalarProperty Name="CCLAContactLAPhone" ColumnName="CCLAContactLAPhone" />
+          <ScalarProperty Name="CCLAContactName" ColumnName="CCLAContactName" />
+          <ScalarProperty Name="CCNumberOfUnder5s" ColumnName="CCNumberOfUnder5s" />
+          <ScalarProperty Name="CCOperationalHourscode" ColumnName="CCOperationalHourscode" />
+          <ScalarProperty Name="CCOperationalHoursname" ColumnName="CCOperationalHoursname" />
+          <ScalarProperty Name="ChildrensCentresGroupcode" ColumnName="ChildrensCentresGroupcode" />
+          <ScalarProperty Name="ChildrensCentresGroupname" ColumnName="ChildrensCentresGroupname" />
+          <ScalarProperty Name="ChildrensCentresGroupFlagcode" ColumnName="ChildrensCentresGroupFlagcode" />
+          <ScalarProperty Name="ChildrensCentresGroupFlagname" ColumnName="ChildrensCentresGroupFlagname" />
+          <ScalarProperty Name="ChildrensCentresPhaseTypecode" ColumnName="ChildrensCentresPhaseTypecode" />
+          <ScalarProperty Name="ChildrensCentresPhaseTypename" ColumnName="ChildrensCentresPhaseTypename" />
+          <ScalarProperty Name="HeadEmail" ColumnName="HeadEmail" />
+          <ScalarProperty Name="HeadAppointmentDate" ColumnName="HeadAppointmentDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Establishmentstatus">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Establishmentstatus">
+        <MappingFragment StoreEntitySet="Establishmentstatus">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Furthereducationtype">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Furthereducationtype">
+        <MappingFragment StoreEntitySet="Furthereducationtype">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Gender">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Gender">
+        <MappingFragment StoreEntitySet="Gender">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Grouplinks">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Grouplinks">
+        <MappingFragment StoreEntitySet="Grouplinks">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="URN" ColumnName="URN" />
+          <ScalarProperty Name="LinkedUID" ColumnName="LinkedUID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GroupType">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.GroupType">
+        <MappingFragment StoreEntitySet="GroupType">
+          <ScalarProperty Name="GroupTypecode" ColumnName="GroupTypecode" />
+          <ScalarProperty Name="GroupType1" ColumnName="GroupType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Headtitle">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Headtitle">
+        <MappingFragment StoreEntitySet="Headtitle">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Independentschooltype">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Independentschooltype">
+        <MappingFragment StoreEntitySet="Independentschooltype">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Inspectorate">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Inspectorate">
+        <MappingFragment StoreEntitySet="Inspectorate">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Inspectoratename">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Inspectoratename">
+        <MappingFragment StoreEntitySet="Inspectoratename">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C_Order" ColumnName="_Order" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LocalAuthority">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.LocalAuthority">
+        <MappingFragment StoreEntitySet="LocalAuthority">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C_Group" ColumnName="_Group" />
+          <ScalarProperty Name="C_Order" ColumnName="_Order" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Localgovernors">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Localgovernors">
+        <MappingFragment StoreEntitySet="Localgovernors">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C_Order" ColumnName="_Order" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Nationality">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Nationality">
+        <MappingFragment StoreEntitySet="Nationality">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C_Order" ColumnName="_Order" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Nurseryprovision">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Nurseryprovision">
+        <MappingFragment StoreEntitySet="Nurseryprovision">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Officialsixthform">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Officialsixthform">
+        <MappingFragment StoreEntitySet="Officialsixthform">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Phaseofeducation">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Phaseofeducation">
+        <MappingFragment StoreEntitySet="Phaseofeducation">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PRUEBD">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.PRUEBD">
+        <MappingFragment StoreEntitySet="PRUEBD">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Prueducatedbyothers">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Prueducatedbyothers">
+        <MappingFragment StoreEntitySet="Prueducatedbyothers">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Prufulltimeprovision">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Prufulltimeprovision">
+        <MappingFragment StoreEntitySet="Prufulltimeprovision">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PRUSEN">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.PRUSEN">
+        <MappingFragment StoreEntitySet="PRUSEN">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reasonestablishmentclosed">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Reasonestablishmentclosed">
+        <MappingFragment StoreEntitySet="Reasonestablishmentclosed">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reasonestablishmentopened">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Reasonestablishmentopened">
+        <MappingFragment StoreEntitySet="Reasonestablishmentopened">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Religiouscharacter">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Religiouscharacter">
+        <MappingFragment StoreEntitySet="Religiouscharacter">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Religiousethos">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Religiousethos">
+        <MappingFragment StoreEntitySet="Religiousethos">
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Resourcedprovision">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Resourcedprovision">
+        <MappingFragment StoreEntitySet="Resourcedprovision">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Section41approved">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Section41approved">
+        <MappingFragment StoreEntitySet="Section41approved">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C_Order" ColumnName="_Order" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Specialclasses">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Specialclasses">
+        <MappingFragment StoreEntitySet="Specialclasses">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Specialeducationaneeds">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Specialeducationaneeds">
+        <MappingFragment StoreEntitySet="Specialeducationaneeds">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Teenagemothers">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Teenagemothers">
+        <MappingFragment StoreEntitySet="Teenagemothers">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Typeofresourcedprovision">
+      <EntityTypeMapping TypeName="EdubaseSourceBetaModel.Typeofresourcedprovision">
+        <MappingFragment StoreEntitySet="Typeofresourcedprovision">
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
+</edmx:Mappings>
+</edmx:Runtime>
+<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+<edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+<Connection><DesignerInfoPropertySet><DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" /></DesignerInfoPropertySet></Connection>
+<edmx:Options><DesignerInfoPropertySet><DesignerProperty Name="ValidateOnBuild" Value="True" /><DesignerProperty Name="EnablePluralization" Value="False" /><DesignerProperty Name="IncludeForeignKeysInModel" Value="True" /><DesignerProperty Name="UseLegacyProvider" Value="False" /><DesignerProperty Name="CodeGenerationStrategy" Value="None" /></DesignerInfoPropertySet></edmx:Options>
+<edmx:Diagrams >
+      <Diagram DiagramId="c3191e0568a3407da108309537667d96" Name="Diagram1">
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Accomodationchanged" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Admissionspolicy" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Appointingbody" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Boarders" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Boardingestablishment" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Ccgovernance" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Ccoperationalhours" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Ccphasetype" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Childcarefacilities" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Diocese" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Directprovisionofearlyyears" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Edubasetrigger" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Establishmentlinks" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Establishments" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Establishmentstatus" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Furthereducationtype" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Gender" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Grouplinks" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.GroupType" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Headtitle" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Independentschooltype" Width="1.5" PointX="10.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Inspectorate" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Inspectoratename" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.LocalAuthority" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Localgovernors" Width="1.5" PointX="12.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Nationality" Width="1.5" PointX="4.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Nurseryprovision" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Officialsixthform" Width="1.5" PointX="12.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Phaseofeducation" Width="1.5" PointX="10.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.PRUEBD" Width="1.5" PointX="12.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Prueducatedbyothers" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Prufulltimeprovision" Width="1.5" PointX="14.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.PRUSEN" Width="1.5" PointX="14.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Reasonestablishmentclosed" Width="1.5" PointX="14.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Reasonestablishmentopened" Width="1.5" PointX="14.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Religiouscharacter" Width="1.5" PointX="0.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Religiousethos" Width="1.5" PointX="2.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Resourcedprovision" Width="1.5" PointX="4.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Section41approved" Width="1.5" PointX="10.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Specialclasses" Width="1.5" PointX="12.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Specialeducationaneeds" Width="1.5" PointX="14.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Teenagemothers" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceBetaModel.Typeofresourcedprovision" Width="1.5" PointX="16.75" PointY="3.75" IsExpanded="true" />
+      </Diagram>
+    </edmx:Diagrams>
+</edmx:Designer></edmx:Edmx>

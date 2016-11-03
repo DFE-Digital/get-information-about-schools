@@ -1,5 +1,6 @@
 ﻿@using Edubase.Web.UI.Models
 @using Edubase.Web.UI.Helpers
+@using Edubase.Data.Entity.Lookups
 @model AdvancedSearchViewModel
 @{
     ViewBag.Title = string.Format("Search results for '{0}'", Model.TextSearchModel.Text);
@@ -41,23 +42,82 @@
 </div>
 
 <div class="grid-row">
-    @if (Model.Error != null)
-    {
-        <div class="column-two-thirds">
-            <h2 class="heading-medium">Error</h2>
 
-            <p>@Model.Error</p>
-        </div>
-    }
-    else if (Model.Results.Count > 0)
-    {
-        if (Model.PageCount > 1)
-        {
-            <div class="column-two-thirds top-pagination">
-                @Html.Partial("_ResultsPaginationAdvSearch")
+    <div class="column-third">
+        <div class="filter-form">
+            
+            <div id="EditSearchCollapsible"
+                 class="button-as-link js-collapsible selected mbl js-track"
+                 data-track="search-results||edit-search"
+                 aria-controls="EditSearchCollapse"
+                 role="button">
+                <a class="help-toggle" href="/Search/Advanced">Edit search</a>
             </div>
+
+            <div id="EditSearchCollapse" aria-expanded="true">
+
+                <div class="filter-divider"></div>
+                <form method="get" action="@Url.Action("Results", "Search")">
+
+                    @Selector("Provider type", "t", Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Status", "s", Model.EstablishmentStatuses, Model.SelectedEstablishmentStatusIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Phase of education", "p", Model.EducationPhases, Model.SelectedEducationPhaseIds)
+                    <div class="filter-divider"></div>
+
+                    @if (Model.SearchType != AdvancedSearchViewModel.eSearchType.LocalAuthority)
+                    {
+                        @Selector("Local authority", "l", Model.LocalAuthorties, Model.SelectedLocalAuthorityIds)
+                        <div class="filter-divider"></div>
+                    }
+
+                    @Selector("Religious character", "r", Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
+                    <div class="filter-divider"></div>
+
+                    <input type="submit" value="Update" class="button" style="font-size:19px;" />
+
+                    @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
+                    {
+                        @Html.HiddenFor(!Model.TextSearchModel.Text.IsEmpty(), x => x.TextSearchModel.Text)
+                        @Html.HiddenFor(!Model.TextSearchModel.AutoSuggestValue.IsEmpty(), x => x.TextSearchModel.AutoSuggestValue)
+                    }
+                    else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Location)
+                    {
+                        @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
+                        @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
+                    }
+                    else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.LocalAuthority)
+                    {
+                        @Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.Text)
+                        @Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.AutoSuggestValue)
+                    }
+
+                    @Html.HiddenFor(x => x.SearchType)
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="column-two-thirds">
+
+        @if (Model.Error != null)
+        {
+            <h2 class="heading-medium">Error</h2>
+            <p>@Model.Error</p>
         }
-        <div class="column-two-thirds">
+        else if (Model.Results.Count > 0)
+        {
+            if (Model.PageCount > 1)
+            {
+                <div class="top-pagination">
+                    @Html.Partial("_ResultsPaginationAdvSearch")
+                </div>
+            }
             <ul class="school-results-listing">
                 @foreach (var result in Model.Results)
                 {
@@ -76,20 +136,57 @@
                     </li>
                 }
             </ul>
-        </div>
-
-        if (Model.PageCount > 1)
-        {
-            <div class="column-two-thirds lower-pagination">
-                @Html.Partial("_ResultsPaginationAdvSearch")
-            </div>
+            if (Model.PageCount > 1)
+            {
+                <div class="lower-pagination">
+                    @Html.Partial("_ResultsPaginationAdvSearch")
+                </div>
+            }
         }
-    }
-    else
-    {
-        <div class="column-two-thirds">
+        else
+        {
             <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
-        </div>
-    }
+        }
+
+    </div>
 
 </div>
+
+
+@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<string> selectedItems)
+{
+    <div class="govuk-option-select js-collapsible" data-closed-on-load="true">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">@label</div>
+            <div class="js-selected-counter"></div>
+        </div>
+        <div class="options-container" id="">
+            <div class="js-auto-height-inner">
+                <fieldset>
+                    <legend class="visuallyhidden">Select an option below to filter the results</legend>
+                    @foreach (var item in items)
+                    {
+                        <label for="@(name)_@item.Id">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            @item
+                            <span class="visuallyhidden">- changing the selection will refresh the results</span>
+                        </label>
+                    }
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section ViewScripts{
+    
+    <script>
+        $(function () {
+            $('.govuk-option-select').map(function () {
+                return new GOVUK.OptionSelect({ $el: $(this) });
+            });
+        })
+    </script>
+}

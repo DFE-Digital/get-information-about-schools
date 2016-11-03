@@ -56,8 +56,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Lucene.Net.Linq, Version=3.6.0.125, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.Linq.3.6.0\lib\net40\Lucene.Net.Linq.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Lucene.Net.Linq\Lucene.Net.Linq.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -227,6 +227,10 @@
     <Compile Include="Migrations\201610261511592_AddTrustAddress.Designer.cs">
       <DependentUpon>201610261511592_AddTrustAddress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611021417035_EstabLocation.cs" />
+    <Compile Include="Migrations\201611021417035_EstabLocation.Designer.cs">
+      <DependentUpon>201611021417035_EstabLocation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\LogMessageRepository.cs" />
@@ -287,6 +291,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610261511592_AddTrustAddress.resx">
       <DependentUpon>201610261511592_AddTrustAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611021417035_EstabLocation.resx">
+      <DependentUpon>201611021417035_EstabLocation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

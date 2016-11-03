@@ -254,6 +254,9 @@
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\IRedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\JsonCamelCaseResult.cs" />
+    <Compile Include="Helpers\ModelBinding\AliasedPropertyDescriptor.cs" />
+    <Compile Include="Helpers\ModelBinding\BindAliasAttribute.cs" />
+    <Compile Include="Helpers\ModelBinding\DefaultModelBinderEx.cs" />
     <Compile Include="Helpers\RedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\SchoolDetailsHelpers.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
@@ -271,6 +274,7 @@
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateTrustModel.cs" />
     <Compile Include="Models\CreateEditTrustModel.cs" />
+    <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Models\SearchCompaniesHouseModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
     <Compile Include="Models\EstablishmentDetailViewModel.cs" />
@@ -292,6 +296,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Scripts\app.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
     <Content Include="Assets\Scripts\map-interactions.js" />
     <Content Include="Assets\Scripts\tabs.js" />
     <Content Include="Assets\Scripts\Views\create-edit-school.js" />

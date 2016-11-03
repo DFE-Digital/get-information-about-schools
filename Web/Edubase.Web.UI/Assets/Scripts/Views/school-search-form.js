@@ -64,10 +64,8 @@
                 }, 500);
                 
             });
-            
-
         },
-
+        
         getSchoolsSuggestionHandler: function (keywords, callback) {
             var dataSuggestionUrl = $("#TextSearchModel_Text").attr("data-suggestion-url");
             return $.get(encodeURI(dataSuggestionUrl + keywords), function (response) {

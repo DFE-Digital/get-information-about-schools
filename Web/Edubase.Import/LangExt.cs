@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Edubase.Common;
+using Microsoft.SqlServer.Types;
+using System.Data.Entity.Spatial;
 
 namespace Edubase.Import
 {
@@ -22,5 +24,7 @@ namespace Edubase.Import
 
             return input ?? DBNull.Value;
         }
+
+        public static SqlGeography ToSqlGeography(this DbGeography coord) => coord != null ? SqlGeography.Parse(coord.AsText()).MakeValid() : null;
     }
 }

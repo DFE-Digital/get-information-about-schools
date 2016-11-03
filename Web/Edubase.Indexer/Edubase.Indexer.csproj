@@ -61,9 +61,8 @@
       <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Lucene.Net.Linq, Version=3.6.0.125, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.Linq.3.6.0\lib\net40\Lucene.Net.Linq.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Lucene.Net.Linq">
+      <HintPath>..\libs\Lucene.Net.Linq\Lucene.Net.Linq.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>

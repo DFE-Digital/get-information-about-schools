@@ -33,6 +33,8 @@ namespace Edubase.Web.UI
             EstablishmentsIndex.Instance.InitialiseAsync().Wait();
             
             FlushLogMessages();
+
+            ModelBinders.Binders.DefaultBinder = new Helpers.ModelBinding.DefaultModelBinderEx();
         }
 
         private void FlushLogMessages(CacheEntryRemovedArguments arguments = null)

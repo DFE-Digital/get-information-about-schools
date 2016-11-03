@@ -44,6 +44,20 @@ namespace Edubase.Common
             else return defaultValue;
         }
 
+        public static decimal? ToDecimal(this string text)
+        {
+            decimal temp;
+            if (!text.IsNullOrEmpty() && decimal.TryParse(text, out temp)) return temp;
+            else return null;
+        }
+
+        public static double? ToDouble(this string text)
+        {
+            double temp;
+            if (!text.IsNullOrEmpty() && double.TryParse(text, out temp)) return temp;
+            else return null;
+        }
+
         /// <summary>
         /// Coalesces to null when empty, whitespace or null; also trims the string
         /// </summary>
