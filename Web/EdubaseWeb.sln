@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Web.UI", "Edubase.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Indexer", "Edubase.Indexer\Edubase.Indexer.csproj", "{B6A31E9E-F682-48B7-B1AC-D9784E38A402}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Import", "Edubase.Import\Edubase.Import.csproj", "{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B6A31E9E-F682-48B7-B1AC-D9784E38A402}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6A31E9E-F682-48B7-B1AC-D9784E38A402}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6A31E9E-F682-48B7-B1AC-D9784E38A402}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
