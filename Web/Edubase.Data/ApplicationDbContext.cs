@@ -51,15 +51,15 @@ namespace Edubase.Data.Entity
         public IDbSet<LookupIndependentSchoolType> LookupIndependentSchoolTypes { get; set; }
         public IDbSet<LookupInspectorate> LookupInspectorates { get; set; }
         public IDbSet<LookupInspectorateName> LookupInspectorateNames { get; set; }
-        public IDbSet<LookupLocalGovernors> LookupLocalGovernorss { get; set; }
-        public IDbSet<LookupNationality> LookupNationalitys { get; set; }
+        public IDbSet<LookupLocalGovernors> LookupLocalGovernors { get; set; }
+        public IDbSet<LookupNationality> LookupNationalities { get; set; }
         public IDbSet<LookupPRUEBD> LookupPRUEBDs { get; set; }
-        public IDbSet<LookupPruEducatedByOthers> LookupPruEducatedByOtherss { get; set; }
+        public IDbSet<LookupPruEducatedByOthers> LookupPruEducatedByOthers { get; set; }
         public IDbSet<LookupPruFulltimeProvision> LookupPruFulltimeProvisions { get; set; }
         public IDbSet<LookupPRUSEN> LookupPRUSENs { get; set; }
         public IDbSet<LookupResourcedProvision> LookupResourcedProvisions { get; set; }
-        public IDbSet<LookupSection41Approved> LookupSection41Approveds { get; set; }
-        public IDbSet<LookupSpecialEducationNeeds> LookupSpecialEducationNeedss { get; set; }
+        public IDbSet<LookupSection41Approved> LookupSection41Approved { get; set; }
+        public IDbSet<LookupSpecialEducationNeeds> LookupSpecialEducationNeeds { get; set; }
         public IDbSet<LookupTeenageMothersProvision> LookupTeenageMothersProvisions { get; set; }
         public IDbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; }
 
@@ -93,6 +93,19 @@ namespace Edubase.Data.Entity
                 }
             }
             else return await action(dc);
+        }
+        public static T Operation<T>(Func<ApplicationDbContext, T> action, ApplicationDbContext dc = null)
+        {
+            if (dc == null)
+            {
+                using (var dataContext = new ApplicationDbContext())
+                {
+                    T retVal = action(dataContext);
+                    dataContext.SaveChanges();
+                    return retVal;
+                }
+            }
+            else return action(dc);
         }
 
         public static async Task OperationAsync(Func<ApplicationDbContext, Task> action, ApplicationDbContext dc = null)

@@ -83,7 +83,7 @@ namespace Edubase.Services
                         GroupTypeId = groupTypeId,
                         Address = dto.Address
                     };
-                    dc.Companies.Add(model);
+                    dc.Trusts.Add(model);
                     await dc.SaveChangesAsync();
                     return model.GroupUID;
                 }

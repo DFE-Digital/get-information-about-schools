@@ -98,23 +98,23 @@ namespace Edubase.Web.UI.Controllers
                                     change.OldValue = model.LocalAuthority?.ToString();
                                     break;
                                 case "HeadTitleId":
-                                    change.NewValue = dc.HeadTitles.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupHeadTitles.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.HeadTitle?.ToString();
                                     break;
                                 case "GenderId":
-                                    change.NewValue = dc.Genders.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupGenders.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.Gender?.ToString();
                                     break;
                                 case "EducationPhaseId":
-                                    change.NewValue = dc.EducationPhases.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupEducationPhases.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.EducationPhase?.ToString();
                                     break;
                                 case "AdmissionsPolicyId":
-                                    change.NewValue = dc.AdmissionsPolicies.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupAdmissionsPolicies.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.AdmissionsPolicy?.ToString();
                                     break;
                                 case "StatusId":
-                                    change.NewValue = dc.EstablishmentStatuses.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupEstablishmentStatuses.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.Status?.ToString();
                                     break;
                                 default:

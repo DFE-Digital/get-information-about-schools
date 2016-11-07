@@ -53,7 +53,7 @@ namespace Edubase.Web.UI.Controllers
             var viewModel = new CreateEditTrustModel();
             using (var dc = new ApplicationDbContext())
             {
-                var company = await dc.Companies.FirstOrDefaultAsync(x => x.GroupUID == id);
+                var company = await dc.Trusts.FirstOrDefaultAsync(x => x.GroupUID == id);
                 viewModel.GroupUID = company.GroupUID;
                 viewModel.Name = company.Name;
                 viewModel.TypeId = company.GroupTypeId;
@@ -112,7 +112,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     using (var dc = new ApplicationDbContext())
                     {
-                        var company = await dc.Companies.SingleAsync(x => x.GroupUID == viewModel.GroupUID.Value);
+                        var company = await dc.Trusts.SingleAsync(x => x.GroupUID == viewModel.GroupUID.Value);
                         company.Name = viewModel.Name;
                         company.OpenDate = viewModel.OpenDate.ToDateTime();
                         company.GroupTypeId = viewModel.TypeId;
@@ -166,7 +166,7 @@ namespace Edubase.Web.UI.Controllers
         {
             using (var dc = new ApplicationDbContext())
             {
-                var mat = dc.Companies.Include(x => x.GroupType).FirstOrDefault(x => x.GroupUID == id);
+                var mat = dc.Trusts.Include(x => x.GroupType).FirstOrDefault(x => x.GroupUID == id);
                 var estabs = dc.Establishment2CompanyLinks.Include(x => x.Establishment)
                     .Include(x => x.Establishment.EstablishmentType)
                     .Include(x => x.Establishment.HeadTitle)

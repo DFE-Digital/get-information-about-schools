@@ -144,7 +144,6 @@
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="EstablishmentService.cs" />
-    <Compile Include="ILookupService.cs" />
     <Compile Include="Lucene\EstablishmentIndexConfig.cs" />
     <Compile Include="Lucene\EstablishmentsIndex.cs" />
     <Compile Include="MessageLoggingService.cs" />

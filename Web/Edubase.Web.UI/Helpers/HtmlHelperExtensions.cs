@@ -164,7 +164,7 @@ namespace Edubase.Web.UI.Helpers
         }
         
         public static MvcHtmlString EduHeadTitlesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.HeadTitleGetAll());
+            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.HeadTitlesGetAll());
 
         public static MvcHtmlString EduGendersDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
                     Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GendersGetAll());
@@ -182,7 +182,7 @@ namespace Edubase.Web.UI.Helpers
             Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.EstablishmentTypesGetAll());
 
         public static MvcHtmlString EduGroupTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GroupeTypesGetAll());
+            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GroupTypesGetAll());
 
         /// <summary>
         /// Group Types drop down but limited to just single and multi-academy trusts
@@ -194,7 +194,7 @@ namespace Edubase.Web.UI.Helpers
         /// <returns></returns>
         public static MvcHtmlString EduGroupTypesForCreateDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
                     Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(
-                        expression, _lookup.GroupeTypesGetAll().Where(x=>x.Name.Contains("Multi") 
+                        expression, _lookup.GroupTypesGetAll().Where(x=>x.Name.Contains("Multi") 
                         || x.Name.Contains("Single")));
 
         public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, 

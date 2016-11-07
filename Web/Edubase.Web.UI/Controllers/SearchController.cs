@@ -264,8 +264,8 @@ namespace Edubase.Web.UI.Controllers
             using (var dc = new ApplicationDbContext())
             {
                 IQueryable<Trust> query = null;
-                if (searchTerm.IsInteger()) query = dc.Companies.Where(x => x.CompaniesHouseNumber == searchTerm);
-                else query = dc.Companies.Where(x => x.Name.Contains(searchTerm));
+                if (searchTerm.IsInteger()) query = dc.Trusts.Where(x => x.CompaniesHouseNumber == searchTerm);
+                else query = dc.Trusts.Where(x => x.Name.Contains(searchTerm));
 
                 viewModel.Count = query.Count();
                 viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
@@ -298,7 +298,7 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult Suggest(string text) => Json(new EstablishmentService().Autosuggest(text));
 
         [HttpGet]
-        public ActionResult SuggestTrust(string text) => Json(DataContext.Companies.Where(x => x.Name.StartsWith(text))
+        public ActionResult SuggestTrust(string text) => Json(DataContext.Trusts.Where(x => x.Name.StartsWith(text))
             .OrderBy(x=>x.Name).Take(10).Select(x => new { Name = x.Name, Id = x.GroupUID }));
 
         private IQueryable<Establishment> GetEstablishmentsQuery() => DataContext.Establishments.Include(x => x.Status);

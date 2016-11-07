@@ -9,7 +9,7 @@ namespace Edubase.Web.UI.Models
 {
     public class LookupItemViewModel
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
 
         public LookupItemViewModel()
@@ -19,17 +19,17 @@ namespace Edubase.Web.UI.Models
 
         public LookupItemViewModel(LookupBase item)
         {
-            Id = item.Id.ToString();
+            Id = item.Id;
             Name = item.Name;
         }
 
         public LookupItemViewModel(LocalAuthority item)
         {
-            Id = item.Id.ToString();
+            Id = item.Id;
             Name = item.Name;
         }
 
-        public LookupItemViewModel(Diocese item)
+        public LookupItemViewModel(LookupDiocese item)
         {
             Id = item.Id;
             Name = item.Name;
