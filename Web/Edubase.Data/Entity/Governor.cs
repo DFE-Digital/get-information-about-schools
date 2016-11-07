@@ -22,9 +22,9 @@ namespace Edubase.Data.Entity
         public DateTime? AppointmentStartDate { get; set; }
         public DateTime? AppointmentEndDate { get; set; }
         public int? RoleId { get; set; }
-        public GovernorRole Role { get; set; }
+        public LookupGovernorRole Role { get; set; }
         public int? GovernorAppointingBodyId { get; set; }
-        public GovernorAppointingBody GovernorAppointingBody { get; set; }
+        public LookupGovernorAppointingBody GovernorAppointingBody { get; set; }
 
         [NotMapped]
         public string FullName => StringUtil.ConcatNonEmpties(" ", Title, Forename1, Forename2, Surname);

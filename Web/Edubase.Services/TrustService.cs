@@ -75,7 +75,7 @@ namespace Edubase.Services
             {
                 using (var dc = new ApplicationDbContext())
                 {
-                    var model = new Company
+                    var model = new Trust
                     {
                         CompaniesHouseNumber = companiesHouseNumber,
                         Name = dto.Name,

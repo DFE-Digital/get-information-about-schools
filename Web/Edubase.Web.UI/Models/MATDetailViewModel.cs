@@ -7,10 +7,10 @@ namespace Edubase.Web.UI.Models
     {
 
         public List<Establishment2Company> Establishments { get; set; }
-        public Company MAT { get; set; }
+        public Trust MAT { get; set; }
         public bool IsUserLoggedOn { get; set; }
 
-        public MATDetailViewModel(List<Establishment2Company> estabs, Company mat, bool isUserLoggedOn)
+        public MATDetailViewModel(List<Establishment2Company> estabs, Trust mat, bool isUserLoggedOn)
         {
             MAT = mat;
             Establishments = estabs;

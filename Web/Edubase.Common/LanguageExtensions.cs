@@ -120,6 +120,21 @@ namespace Edubase.Common
         }
 
         /// <summary>
+        /// Alias of Add, but returns the value added.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static TValue Append<TKey, TValue>(this IDictionary<TKey, TValue> data, TKey key, TValue value)
+        {
+            data.Add(key, value);
+            return value;
+        }
+
+        /// <summary>
         /// Truncates a string if necessary and appends an ellipsis
         /// </summary>
         /// <param name="text"></param>

@@ -41,6 +41,17 @@ namespace Edubase.Common
             }
         }
 
+        public static void Using<T>(Func<T> factory, Action<T> before, Action<T> after, Action<T> meat) where T : IDisposable
+        {
+            var obj = factory();
+            using (obj)
+            {
+                before(obj);
+                meat(obj);
+                after(obj);
+            }
+        }
+
         public void Dispose() => Dispose(true);
     }
 }

@@ -34,8 +34,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Dynamitey, Version=1.0.2.0, Culture=neutral, PublicKeyToken=cbf53ea3aeb972c6, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dynamitey.1.0.2.0\lib\net40\Dynamitey.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -95,214 +103,166 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accomodationchanged.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Admissionspolicy.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Appointingbody.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Boarder.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Boarders.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Boardingestablishment.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Ccgovernance.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Ccoperationalhours.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Ccphasetype.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Childcarefacilities.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CompanyTable.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Diocese.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Directprovisionofearlyyears.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
-    <Compile Include="EdubaseSource.Context.cs">
+    <Compile Include="EdubaseSourceData.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EdubaseSource.Context.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="EdubaseSource.cs">
+    <Compile Include="EdubaseSourceData.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
-    <Compile Include="EdubaseSource.Designer.cs">
+    <Compile Include="EdubaseSourceData.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EdubaseSource.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="EdubaseSourceBeta.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EdubaseSourceBeta.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EdubaseSourceBeta.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EdubaseSourceBeta.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EdubaseSourceBeta.edmx</DependentUpon>
+      <DependentUpon>EdubaseSourceData.edmx</DependentUpon>
     </Compile>
     <Compile Include="Edubasetrigger.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Establishmentlinks.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Establishments.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Establishmentstatu.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Establishmentstatus.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Furthereducationtype.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Gender.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Governor.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Grouplinks.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="GroupType.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Headtitle.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\DatabaseHelper.cs" />
+    <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Independentschooltype.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Inspectorate.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Inspectoratename.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="LangExt.cs" />
     <Compile Include="LocalAuthority.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Localgovernors.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Mapping\AutoMapperConfiguration.cs" />
     <Compile Include="Nationality.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Nurseryprovision.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Officialsixthform.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Phaseofeducation.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="Program_Old.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PRUEBD.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Prueducatedbyothers.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Prufulltimeprovision.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="PRUSEN.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Reasonestablishmentclosed.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Reasonestablishmentopened.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Religiouscharacter.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Religiousetho.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Religiousethos.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Resourcedprovision.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SchoolsTable.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SchoolToCompanyLink.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SchoolToSchoolLink.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Section41approved.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Specialclass.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Specialclasses.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Specialeducationaneeds.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Teenagemothers.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Typeofestablishment.cs">
-      <DependentUpon>EdubaseSource.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Typeofresourcedprovision.cs">
-      <DependentUpon>EdubaseSourceBeta.tt</DependentUpon>
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="EdubaseSource.edmx">
+    <EntityDeploy Include="EdubaseSourceData.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>EdubaseSource.Designer.cs</LastGenOutput>
+      <LastGenOutput>EdubaseSourceData.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <EntityDeploy Include="EdubaseSourceBeta.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>EdubaseSourceBeta.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="EdubaseSourceBetaedmx.diagram">
-      <DependentUpon>EdubaseSourceBeta.edmx</DependentUpon>
-    </None>
-    <None Include="EdubaseSourceedmx.diagram">
-      <DependentUpon>EdubaseSource.edmx</DependentUpon>
+    <None Include="EdubaseSourceDataedmx.diagram">
+      <DependentUpon>EdubaseSourceData.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -320,11 +280,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="EdubaseSource.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x64\SqlServerSpatial110.dll">
       <Link>SqlServerTypes\x64\SqlServerSpatial110.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -337,30 +292,23 @@
       <Link>SqlServerTypes\x86\SqlServerSpatial110.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="EdubaseSource.Context.tt">
+    <Content Include="EdubaseSourceData.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EdubaseSource.Context.cs</LastGenOutput>
-      <DependentUpon>EdubaseSource.edmx</DependentUpon>
+      <LastGenOutput>EdubaseSourceData.Context.cs</LastGenOutput>
+      <DependentUpon>EdubaseSourceData.edmx</DependentUpon>
     </Content>
-    <Content Include="EdubaseSource.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EdubaseSource.cs</LastGenOutput>
-      <DependentUpon>EdubaseSource.edmx</DependentUpon>
-    </Content>
-    <Content Include="EdubaseSourceBeta.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EdubaseSourceBeta.Context.cs</LastGenOutput>
-      <DependentUpon>EdubaseSourceBeta.edmx</DependentUpon>
-    </Content>
-    <Content Include="EdubaseSourceBeta.sdf">
+    <Content Include="EdubaseSourceData.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="EdubaseSourceBeta.tt">
+    <Content Include="EdubaseSourceData.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EdubaseSourceBeta.cs</LastGenOutput>
-      <DependentUpon>EdubaseSourceBeta.edmx</DependentUpon>
+      <LastGenOutput>EdubaseSourceData.cs</LastGenOutput>
+      <DependentUpon>EdubaseSourceData.edmx</DependentUpon>
     </Content>
     <Content Include="SqlServerTypes\readme.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DTOs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

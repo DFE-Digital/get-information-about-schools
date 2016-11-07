@@ -263,7 +263,7 @@ namespace Edubase.Web.UI.Controllers
 
             using (var dc = new ApplicationDbContext())
             {
-                IQueryable<Company> query = null;
+                IQueryable<Trust> query = null;
                 if (searchTerm.IsInteger()) query = dc.Companies.Where(x => x.CompaniesHouseNumber == searchTerm);
                 else query = dc.Companies.Where(x => x.Name.Contains(searchTerm));
 
