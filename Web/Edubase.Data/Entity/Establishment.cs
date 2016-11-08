@@ -91,9 +91,11 @@ namespace Edubase.Data.Entity
         public int? Capacity { get; set; }
 
         public LookupProvisionSpecialClasses ProvisionSpecialClasses { get; set; }
+
         public int? ProvisionSpecialClassesId { get; set; }
+
         public int? UKPRN { get; set; }
-        [Obsolete("This is potentially obsolete due to base.LastUpdatedUtc")]
+
         public DateTime? LastChangedDate { get; set; }
 
         public Address Address { get; set; }

@@ -195,7 +195,7 @@
     <Compile Include="Localgovernors.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Mapping\AutoMapperConfiguration.cs" />
+    <Compile Include="Mapping\MappingConfiguration.cs" />
     <Compile Include="Nationality.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
@@ -275,6 +275,10 @@
       <Project>{8c3d6834-3fa1-440a-a396-6489e22e8063}</Project>
       <Name>Edubase.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
+      <Project>{D605ACE4-2659-48DC-BF21-94E7B8D230DA}</Project>
+      <Name>Edubase.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -307,9 +311,7 @@
     </Content>
     <Content Include="SqlServerTypes\readme.htm" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

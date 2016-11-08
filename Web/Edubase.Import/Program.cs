@@ -7,12 +7,17 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using MoreLinq;
 
 namespace Edubase.Import
 {
+    using Services;
     using Helpers;
     using System.Collections;
     using System.Diagnostics;
+    using System.Linq.Expressions;
+    using Mapping;
+    using AutoMapper;
 
     public class Program
     {
@@ -20,7 +25,9 @@ namespace Edubase.Import
 
         static void Main(string[] args)
         {
+            MappingConfiguration.Configure();
             _tables = new ApplicationDbContext().GenerateDataTables();
+
             using (var source = new EdubaseSourceDataEntities())
             {
                 Disposer.Using(CreateSqlConnection, x => x.Open(), x => x.Close(), connection =>
@@ -33,6 +40,7 @@ namespace Edubase.Import
         private static void MigrateAllData(SqlConnection connection, EdubaseSourceDataEntities source)
         {
             MigrateAllLookupData(connection, source);
+            MigrateEstablishmentsData(connection, source);
 
             // TODO:
             /* - Import establishments
@@ -41,7 +49,40 @@ namespace Edubase.Import
              * - Import trust2estab links
              * - Import Governors
              */
-             
+
+
+
+
+        }
+
+        private static void MigrateEstablishmentsData(SqlConnection connection, EdubaseSourceDataEntities source)
+        {
+            /*
+             * 1) Convert list of source items into destination entity types
+             * 2) Convert entity type into DataTable equivalent
+             *      Find the equiv datatable, using col collection and reflection, populate DataTable rows.
+             * 3) Bulk copy into sql table
+             * 
+             * 
+             */
+
+            var svc = new CachedLookupService();
+            
+            source.Establishments.Batch(1000).ForEach(batch =>
+            {
+                batch.ForEach(e =>
+                {
+                    var entity = Mapper.Map<Establishments, Establishment>(e);
+                });
+            });
+
+
+
+            Console.WriteLine("Importing establishments");
+            //var sw = Stopwatch.StartNew();
+            //var dataTable = CreateDataTable<Establishment>(source.Establishments, _tables);
+
+            //Console.WriteLine($"...done in {sw.ElapsedMilliseconds}ms");
         }
 
         private static void MigrateAllLookupData(SqlConnection connection, EdubaseSourceDataEntities source)
@@ -61,6 +102,7 @@ namespace Edubase.Import
             MigrateLookup<LookupDirectProvisionOfEarlyYears>(source.Directprovisionofearlyyears, connection);
             MigrateLookup<LookupEstablishmentStatus>(source.Establishmentstatus, connection);
             MigrateLookup<LookupFurtherEducationType>(source.Furthereducationtype, connection);
+            MigrateLookup<LookupGender>(source.Gender, connection);
             MigrateLookup<LookupGroupType>(source.GroupType, connection);
             MigrateLookup<LookupHeadTitle>(source.Headtitle, connection);
             MigrateLookup<LookupIndependentSchoolType>(source.Independentschooltype, connection);
@@ -105,22 +147,21 @@ namespace Edubase.Import
         
         public static DataTable ToLookupDataTable<T>(IEnumerable<LookupBase> data, Dictionary<Type, DataTable> tables)
         {
-            var table = tables[typeof(T)];
-            foreach (var item in data)
-            {
+            var table = tables.Get<T>();
+            data.ForEach(lookup => {
                 table.CreateRow(x =>
                 {
-                    x["Code"] = item.Code.SQLify();
-                    x["Name"] = item.Name.SQLify();
-                    x["DisplayOrder"] = item.DisplayOrder.SQLify();
-                    x["IsDeleted"] = item.IsDeleted;
-                    x["CreatedUtc"] = item.CreatedUtc;
-                    x["LastUpdatedUtc"] = item.LastUpdatedUtc;
+                    lookup.Set(x, l => l.Code)
+                        .Set(l => l.Name)
+                        .Set(l => l.DisplayOrder)
+                        .Set(l => l.IsDeleted)
+                        .Set(l => l.CreatedUtc)
+                        .Set(l => l.LastUpdatedUtc);
                 });
-            }
+            });
             return table;
         }
-
+        
         private static void MigrateLookup<TDest>(IEnumerable sourceData, SqlConnection connection)
             where TDest : LookupBase, new() => Migrate(CreateDataTable<TDest>(sourceData, _tables), connection);
 
@@ -128,8 +169,12 @@ namespace Edubase.Import
 
         private static void Migrate(DataTable table, SqlConnection connection, SqlBulkCopyOptions option)
         {
-            using (var bulkCopy = new SqlBulkCopy(connection, option, null) { DestinationTableName = table.TableName, BulkCopyTimeout = 900 })
-                bulkCopy.WriteToServer(table);
+            if (new SqlCommand($"SELECT COUNT(1) FROM {table.TableName}", connection).ExecuteScalar()?.ToString().ToInteger().GetValueOrDefault() == 0)
+            {
+                using (var bulkCopy = new SqlBulkCopy(connection, option, null) { DestinationTableName = table.TableName, BulkCopyTimeout = 900 })
+                    bulkCopy.WriteToServer(table);
+            }
+            else Console.WriteLine($"\t >> Ignoring {table.TableName} as it has data in it.");
         }
 
         private static SqlConnection CreateSqlConnection() => new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString);

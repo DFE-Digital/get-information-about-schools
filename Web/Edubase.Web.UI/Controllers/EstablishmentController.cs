@@ -32,7 +32,7 @@ namespace Edubase.Web.UI.Controllers
                 var dataModel = dc.Establishments.FirstOrDefault(x => x.Urn == id);
                 var viewModel = Mapper.Map<Establishment, ViewModel>(dataModel);
 
-                viewModel.Links = (await dc.Estab2EstabLinks
+                viewModel.Links = (await dc.EstablishmentLinks
                     .Include(x => x.LinkedEstablishment)
                     .Where(x => x.Establishment_Urn == id)
                     .Select(x => x)
@@ -178,7 +178,7 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task AddOrRemoveEstablishmentLinks(ViewModel model, ApplicationDbContext dc)
         {
-            var linksInDb = dc.Estab2EstabLinks.Where(x => x.Establishment_Urn == model.Urn).ToList();
+            var linksInDb = dc.EstablishmentLinks.Where(x => x.Establishment_Urn == model.Urn).ToList();
             var urnsInDb = linksInDb.Select(x => x.LinkedEstablishment_Urn).Cast<int?>().ToArray();
             var urnsInModel = model.Links.Select(x => x.Urn).Cast<int?>().ToArray();
 
@@ -197,7 +197,7 @@ namespace Edubase.Web.UI.Controllers
             foreach (var urn in urnsToAdd.Cast<int>())
             {
                 var item = model.Links.Where(x => x.Urn == urn).First();
-                var link = new Estab2Estab
+                var link = new EstablishmentLink
                 {
                     Establishment_Urn = model.Urn,
                     LinkedEstablishment_Urn = urn,
@@ -205,13 +205,13 @@ namespace Edubase.Web.UI.Controllers
                     LinkName = item.Name,
                     LinkType = item.Type.ToString()
                 };
-                dc.Estab2EstabLinks.Add(link);
+                dc.EstablishmentLinks.Add(link);
 
                 var oppositeLinkType = (item.Type.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
-                var oppositeLink = await dc.Estab2EstabLinks.FirstOrDefaultAsync(x => x.Establishment_Urn == urn && x.LinkedEstablishment_Urn == model.Urn && x.LinkType == oppositeLinkType);
+                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.Establishment_Urn == urn && x.LinkedEstablishment_Urn == model.Urn && x.LinkType == oppositeLinkType);
                 if (oppositeLink == null)
                 {
-                    oppositeLink = new Estab2Estab
+                    oppositeLink = new EstablishmentLink
                     {
                         Establishment_Urn = urn,
                         LinkedEstablishment_Urn = model.Urn,
@@ -219,18 +219,18 @@ namespace Edubase.Web.UI.Controllers
                         LinkName = model.Name,
                         LinkType = oppositeLinkType
                     };
-                    dc.Estab2EstabLinks.Add(oppositeLink);
+                    dc.EstablishmentLinks.Add(oppositeLink);
                 }
             }
 
             foreach (var urn in urnsToRemove.Cast<int>())
             {
                 var linkDataModel = linksInDb.FirstOrDefault(x => x.LinkedEstablishment_Urn == urn);
-                if (linkDataModel != null) dc.Estab2EstabLinks.Remove(linkDataModel);
+                if (linkDataModel != null) dc.EstablishmentLinks.Remove(linkDataModel);
 
                 var oppositeLinkType = (linkDataModel.LinkType.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
-                var oppositeLink = await dc.Estab2EstabLinks.FirstOrDefaultAsync(x => x.Establishment_Urn == urn && x.LinkedEstablishment_Urn == model.Urn && x.LinkType == oppositeLinkType);
-                if (oppositeLink != null) dc.Estab2EstabLinks.Remove(oppositeLink);
+                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.Establishment_Urn == urn && x.LinkedEstablishment_Urn == model.Urn && x.LinkType == oppositeLinkType);
+                if (oppositeLink != null) dc.EstablishmentLinks.Remove(oppositeLink);
             }
 
         }

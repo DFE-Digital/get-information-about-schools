@@ -160,16 +160,16 @@
     <Compile Include="Entity\LocalAuthority.cs" />
     <Compile Include="Entity\Lookups\LookupBase.cs" />
     <Compile Include="Entity\Establishment.cs" />
-    <Compile Include="Entity\Establishment2Company.cs" />
-    <Compile Include="Entity\Estab2Estab.cs" />
+    <Compile Include="Entity\EstablishmentTrust.cs" />
+    <Compile Include="Entity\EstablishmentLink.cs" />
     <Compile Include="Entity\Permissions\Permission.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
     <Compile Include="Identity\UserAccountSeeder.cs" />
-    <Compile Include="Migrations\201611071349015_InitialCreate.cs" />
-    <Compile Include="Migrations\201611071349015_InitialCreate.Designer.cs">
-      <DependentUpon>201611071349015_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201611081039384_Initial.cs" />
+    <Compile Include="Migrations\201611081039384_Initial.Designer.cs">
+      <DependentUpon>201611081039384_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -187,8 +187,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611071349015_InitialCreate.resx">
-      <DependentUpon>201611071349015_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611081039384_Initial.resx">
+      <DependentUpon>201611081039384_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

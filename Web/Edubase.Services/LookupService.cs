@@ -133,8 +133,8 @@ namespace Edubase.Services
         public async Task<List<LookupSection41Approved>> Section41ApprovedsGetAllAsync() => await DataContext.LookupSection41Approved.ToListAsync();
         public List<LookupSection41Approved> Section41ApprovedsGetAll() => DataContext.LookupSection41Approved.ToList();
 
-        public async Task<List<LookupSpecialEducationNeeds>> SpecialEducationNeedssGetAllAsync() => await DataContext.LookupSpecialEducationNeeds.ToListAsync();
-        public List<LookupSpecialEducationNeeds> SpecialEducationNeedssGetAll() => DataContext.LookupSpecialEducationNeeds.ToList();
+        public async Task<List<LookupSpecialEducationNeeds>> SpecialEducationNeedsGetAllAsync() => await DataContext.LookupSpecialEducationNeeds.ToListAsync();
+        public List<LookupSpecialEducationNeeds> SpecialEducationNeedsGetAll() => DataContext.LookupSpecialEducationNeeds.ToList();
 
         public async Task<List<LookupTeenageMothersProvision>> TeenageMothersProvisionsGetAllAsync() => await DataContext.LookupTeenageMothersProvisions.ToListAsync();
         public List<LookupTeenageMothersProvision> TeenageMothersProvisionsGetAll() => DataContext.LookupTeenageMothersProvisions.ToList();

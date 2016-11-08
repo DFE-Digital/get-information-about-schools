@@ -154,8 +154,8 @@ namespace Edubase.Services
         public async Task<List<LookupSection41Approved>> Section41ApprovedsGetAllAsync() => await Cacher.AutoAsync(_svc.Section41ApprovedsGetAllAsync);
         public List<LookupSection41Approved> Section41ApprovedsGetAll() => Cacher.Auto(_svc.Section41ApprovedsGetAll);
 
-        public async Task<List<LookupSpecialEducationNeeds>> SpecialEducationNeedssGetAllAsync() => await Cacher.AutoAsync(_svc.SpecialEducationNeedssGetAllAsync);
-        public List<LookupSpecialEducationNeeds> SpecialEducationNeedssGetAll() => Cacher.Auto(_svc.SpecialEducationNeedssGetAll);
+        public async Task<List<LookupSpecialEducationNeeds>> SpecialEducationNeedsGetAllAsync() => await Cacher.AutoAsync(_svc.SpecialEducationNeedsGetAllAsync);
+        public List<LookupSpecialEducationNeeds> SpecialEducationNeedsGetAll() => Cacher.Auto(_svc.SpecialEducationNeedsGetAll);
 
         public async Task<List<LookupTeenageMothersProvision>> TeenageMothersProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.TeenageMothersProvisionsGetAllAsync);
         public List<LookupTeenageMothersProvision> TeenageMothersProvisionsGetAll() => Cacher.Auto(_svc.TeenageMothersProvisionsGetAll);

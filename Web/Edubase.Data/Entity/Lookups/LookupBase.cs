@@ -14,7 +14,6 @@ namespace Edubase.Data.Entity.Lookups
 
         public short? DisplayOrder { get; set; }
         
-        [Obsolete("Contains the old 'Code' primary key value.  Code values are deprecated.")]
         public string Code { get; set; }
         
         public override string ToString() => Name;

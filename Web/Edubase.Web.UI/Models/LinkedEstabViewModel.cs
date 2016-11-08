@@ -19,7 +19,7 @@ namespace Edubase.Web.UI.Models
 
         }
 
-        public LinkedEstabViewModel(Estab2Estab link)
+        public LinkedEstabViewModel(EstablishmentLink link)
         {
             Id = link.Id;
             Urn = link.LinkedEstablishment_Urn;

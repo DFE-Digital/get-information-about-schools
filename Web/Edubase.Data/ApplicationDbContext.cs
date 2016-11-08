@@ -13,8 +13,8 @@ namespace Edubase.Data.Entity
         public IDbSet<Trust> Trusts { get; set; }
         public IDbSet<Establishment> Establishments { get; set; }
         public IDbSet<LocalAuthority> LocalAuthorities { get; set; }
-        public IDbSet<Estab2Estab> Estab2EstabLinks { get; set; }
-        public IDbSet<Establishment2Company> Establishment2CompanyLinks { get; set; }
+        public IDbSet<EstablishmentLink> EstablishmentLinks { get; set; }
+        public IDbSet<EstablishmentTrust> EstablishmentTrusts { get; set; }
         public IDbSet<EstablishmentPermission> Permissions { get; set; }
         public IDbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
         public IDbSet<Governor> Governors { get; set; }
