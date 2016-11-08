@@ -3,7 +3,7 @@ namespace Edubase.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initial : DbMigration
+    public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
@@ -56,7 +56,7 @@ namespace Edubase.Data.Migrations
                         GenderId = c.Int(),
                         ReligiousCharacterId = c.Int(),
                         ReligiousEthosId = c.Int(),
-                        DioceseId = c.String(),
+                        DioceseId = c.Int(),
                         AdmissionsPolicyId = c.Int(),
                         Capacity = c.Int(),
                         ProvisionSpecialClassesId = c.Int(),
@@ -70,10 +70,6 @@ namespace Edubase.Data.Migrations
                         Address_Country = c.String(),
                         Address_Locality = c.String(),
                         Address_PostCode = c.String(),
-                        Address_Easting = c.String(),
-                        Address_Northing = c.String(),
-                        Address_Latitude = c.Double(nullable: false),
-                        Address_Longitude = c.Double(nullable: false),
                         HeadFirstName = c.String(),
                         HeadLastName = c.String(),
                         HeadTitleId = c.Int(),
@@ -90,11 +86,10 @@ namespace Edubase.Data.Migrations
                         CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         IsDeleted = c.Boolean(nullable: false),
-                        Diocese_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Urn)
                 .ForeignKey("dbo.LookupAdmissionsPolicy", t => t.AdmissionsPolicyId)
-                .ForeignKey("dbo.LookupDiocese", t => t.Diocese_Id)
+                .ForeignKey("dbo.LookupDiocese", t => t.DioceseId)
                 .ForeignKey("dbo.LookupEducationPhase", t => t.EducationPhaseId)
                 .ForeignKey("dbo.LookupEstablishmentType", t => t.TypeId)
                 .ForeignKey("dbo.LookupGender", t => t.GenderId)
@@ -120,11 +115,11 @@ namespace Edubase.Data.Migrations
                 .Index(t => t.GenderId)
                 .Index(t => t.ReligiousCharacterId)
                 .Index(t => t.ReligiousEthosId)
+                .Index(t => t.DioceseId)
                 .Index(t => t.AdmissionsPolicyId)
                 .Index(t => t.ProvisionSpecialClassesId)
                 .Index(t => t.HeadTitleId)
-                .Index(t => t.TypeId)
-                .Index(t => t.Diocese_Id);
+                .Index(t => t.TypeId);
             
             CreateTable(
                 "dbo.LookupAdmissionsPolicy",
@@ -929,7 +924,7 @@ namespace Edubase.Data.Migrations
             DropForeignKey("dbo.Establishment", "GenderId", "dbo.LookupGender");
             DropForeignKey("dbo.Establishment", "TypeId", "dbo.LookupEstablishmentType");
             DropForeignKey("dbo.Establishment", "EducationPhaseId", "dbo.LookupEducationPhase");
-            DropForeignKey("dbo.Establishment", "Diocese_Id", "dbo.LookupDiocese");
+            DropForeignKey("dbo.Establishment", "DioceseId", "dbo.LookupDiocese");
             DropForeignKey("dbo.Establishment", "AdmissionsPolicyId", "dbo.LookupAdmissionsPolicy");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.Governor", new[] { "GovernorAppointingBodyId" });
@@ -948,11 +943,11 @@ namespace Edubase.Data.Migrations
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.Establishment", new[] { "Diocese_Id" });
             DropIndex("dbo.Establishment", new[] { "TypeId" });
             DropIndex("dbo.Establishment", new[] { "HeadTitleId" });
             DropIndex("dbo.Establishment", new[] { "ProvisionSpecialClassesId" });
             DropIndex("dbo.Establishment", new[] { "AdmissionsPolicyId" });
+            DropIndex("dbo.Establishment", new[] { "DioceseId" });
             DropIndex("dbo.Establishment", new[] { "ReligiousEthosId" });
             DropIndex("dbo.Establishment", new[] { "ReligiousCharacterId" });
             DropIndex("dbo.Establishment", new[] { "GenderId" });

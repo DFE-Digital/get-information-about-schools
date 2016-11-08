@@ -75,6 +75,13 @@ namespace Edubase.Import
         /// <param name="text"></param>
         /// <returns></returns>
         public static string ToCleanEmail(this string text) => text.Clean().IsValidEmail() ? text.Clean() : null;
+
+        public static object GetPropertyValue(this object item, string propertyName)
+        {
+            var type =  (item is Type) ? (Type) item : item?.GetType();
+            var propInfo = type.GetProperty(propertyName);
+            return propInfo?.GetValue(item, null);
+        }
     }
 
     public class DataRowChainableContext<T>

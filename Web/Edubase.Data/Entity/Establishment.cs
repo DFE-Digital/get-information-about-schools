@@ -60,12 +60,15 @@ namespace Edubase.Data.Entity
         public int? StatutoryHighAge { get; set; }
 
         public LookupProvisionBoarding ProvisionBoarding { get; set; }
+
         public int? ProvisionBoardingId { get; set; }
 
         public LookupProvisionNursery ProvisionNursery { get; set; }
+
         public int? ProvisionNurseryId { get; set; }
 
         public LookupProvisionOfficialSixthForm ProvisionOfficialSixthForm { get; set; }
+
         public int? ProvisionOfficialSixthFormId { get; set; }
 
         public LookupGender Gender { get; set; }
@@ -74,13 +77,16 @@ namespace Edubase.Data.Entity
         public int? GenderId { get; set; }
 
         public LookupReligiousCharacter ReligiousCharacter { get; set; }
+
         public int? ReligiousCharacterId { get; set; }
 
         public LookupReligiousEthos ReligiousEthos { get; set; }
+
         public int? ReligiousEthosId { get; set; }
 
         public LookupDiocese Diocese { get; set; }
-        public string DioceseId { get; set; }
+        
+        public int? DioceseId { get; set; }
 
         public LookupAdmissionsPolicy AdmissionsPolicy { get; set; }
 
@@ -160,6 +166,8 @@ namespace Edubase.Data.Entity
             ContactAlt = new ContactDetail();
             Address = new Address();
         }
+
+        public override string ToString() => base.ToString() + $"({Name})";
 
     }
 }

@@ -14,11 +14,18 @@ namespace Edubase.Import.Mapping
         private static readonly string[] _dateTimeFormats = new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" };
 
         private static CachedLookupService L { get; set; } = new CachedLookupService();
+        private static IMapper _mapper = null;
 
-        public static void Configure()
+        public static IMapper Create()
         {
-            Mapper.Initialize(cfg =>
+            return _mapper = new MapperConfiguration(cfg =>
             {
+                var contactAltMapper = new MapperConfiguration(cfg2 =>
+                {
+                    cfg2.CreateMap<Establishments, ContactDetail>()
+                        .ForMember(x => x.EmailAddress, opt => opt.MapFrom(m => m.AlternativeEmail.ToCleanEmail()));
+                }).CreateMapper();
+
                 cfg.CreateMap<Establishments, Address>()
                     .ForMember(x => x.Line1, opt => opt.MapFrom(m => m.Street.Clean()))
                     .ForMember(x => x.Line2, opt => opt.MapFrom(m => m.Locality.Clean()))
@@ -31,12 +38,13 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.EmailAddress, opt => opt.MapFrom(m => m.MainEmail.ToCleanEmail()))
                     .ForMember(x => x.TelephoneNumber, opt => opt.MapFrom(m => m.TelephoneNum.Clean()))
                     .ForMember(x => x.WebsiteAddress, opt => opt.MapFrom(m => m.SchoolWebsite.Clean()));
-                
+
                 cfg.CreateMap<Establishments, Establishment>()
                     .ForMember(x => x.Name, opt => opt.MapFrom(m => m.EstablishmentName.Clean()))
                     .ForMember(x => x.AdmissionsPolicyId, opt => opt.MapFrom(m => L.AdmissionsPoliciesGetAll().Id(m.AdmissionsPolicycode)))
-                    .ForMember(x => x.Address, opt => opt.MapFrom(m => Mapper.Map<Establishments, Address>(m)))
-                    .ForMember(x => x.Contact, opt => opt.MapFrom(m => Mapper.Map<Establishments, ContactDetail>(m)))
+                    .ForMember(x => x.Address, opt => opt.MapFrom(m => _mapper.Map<Establishments, Address>(m)))
+                    .ForMember(x => x.Contact, opt => opt.MapFrom(m => _mapper.Map<Establishments, ContactDetail>(m)))
+                    .ForMember(x => x.ContactAlt, opt => opt.MapFrom(m => contactAltMapper.Map<Establishments, ContactDetail>(m)))
                     .ForMember(x => x.Capacity, opt => opt.MapFrom(m => m.SchoolCapacity.ToInteger()))
                     .ForMember(x => x.CloseDate, opt => opt.MapFrom(m => m.CloseDate.ToDateTime(_dateTimeFormats)))
                     .ForMember(x => x.DioceseId, opt => opt.MapFrom(m => L.DiocesesGetAll().Id(m.Diocesecode)))
@@ -67,7 +75,7 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.UKPRN, opt => opt.MapFrom(m => m.UKPRN.ToInteger()))
                     .ForMember(x => x.Urn, opt => opt.MapFrom(m => m.URN.ToInteger()));
 
-            });
+            }).CreateMapper();
         }
         
         

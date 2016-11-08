@@ -18,14 +18,17 @@ namespace Edubase.Import
     using System.Linq.Expressions;
     using Mapping;
     using AutoMapper;
+    using System.Data.Entity.Spatial;
+    using Microsoft.SqlServer.Types;
 
     public class Program
     {
         private static Dictionary<Type, DataTable> _tables;
+        private static IMapper _mapper;
 
         static void Main(string[] args)
         {
-            MappingConfiguration.Configure();
+            _mapper = MappingConfiguration.Create();
             _tables = new ApplicationDbContext().GenerateDataTables();
 
             using (var source = new EdubaseSourceDataEntities())
@@ -57,32 +60,49 @@ namespace Edubase.Import
 
         private static void MigrateEstablishmentsData(SqlConnection connection, EdubaseSourceDataEntities source)
         {
-            /*
-             * 1) Convert list of source items into destination entity types
-             * 2) Convert entity type into DataTable equivalent
-             *      Find the equiv datatable, using col collection and reflection, populate DataTable rows.
-             * 3) Bulk copy into sql table
-             * 
-             * 
-             */
-
-            var svc = new CachedLookupService();
-            
-            source.Establishments.Batch(1000).ForEach(batch =>
-            {
-                batch.ForEach(e =>
-                {
-                    var entity = Mapper.Map<Establishments, Establishment>(e);
-                });
-            });
-
-
-
             Console.WriteLine("Importing establishments");
-            //var sw = Stopwatch.StartNew();
-            //var dataTable = CreateDataTable<Establishment>(source.Establishments, _tables);
+            var sw = Stopwatch.StartNew();
 
-            //Console.WriteLine($"...done in {sw.ElapsedMilliseconds}ms");
+            var dataTable = _tables.Get<Establishment>();
+            new SqlCommand($"DELETE FROM {dataTable.TableName}", connection).ExecuteNonQuery();
+
+            const int BATCH_SIZE = 1000;
+            int count = 0;
+            source.Establishments.Batch(BATCH_SIZE).ForEach(batch =>
+            {
+                var estabs = batch.Select(e => _mapper.Map<Establishments, Establishment>(e)).ToArray();
+                FillDataTable(estabs, dataTable);
+                Import(dataTable, connection, BulkCopyOptionPreserveIds);
+                dataTable.Clear();
+                count += batch.Count();
+                Console.WriteLine($"\t{count} imported");
+            });
+            
+            Console.WriteLine($"...done in {sw.ElapsedMilliseconds}ms");
+        }
+
+        private static void FillDataTable(IEnumerable<object> source, DataTable dataTable)
+        {
+            foreach (var item in source)
+            {
+                dataTable.CreateRow(x =>
+                {
+                    foreach (var column in dataTable.Columns.Cast<DataColumn>())
+                    {
+                        var name = column.ColumnName;
+                        var value = (name.Contains("_")
+                            ? item.GetPropertyValue(name.GetPart("_")).GetPropertyValue(name.GetPart("_", 1))
+                            : item.GetPropertyValue(name)).SQLify();
+
+                        if (value.GetType() == typeof(DbGeography))
+                        {
+                            value = (value as DbGeography).ToSqlGeography().SQLify();
+                        }
+
+                        x[column] = value;
+                    }
+                });
+            }
         }
 
         private static void MigrateAllLookupData(SqlConnection connection, EdubaseSourceDataEntities source)
@@ -163,7 +183,7 @@ namespace Edubase.Import
         }
         
         private static void MigrateLookup<TDest>(IEnumerable sourceData, SqlConnection connection)
-            where TDest : LookupBase, new() => Migrate(CreateDataTable<TDest>(sourceData, _tables), connection);
+            where TDest : LookupBase, new() => Migrate(CreateLookupDataTable<TDest>(sourceData, _tables), connection);
 
         private static void Migrate(DataTable table, SqlConnection connection) => Migrate(table, connection, BulkCopyOptionNewIds);
 
@@ -171,10 +191,15 @@ namespace Edubase.Import
         {
             if (new SqlCommand($"SELECT COUNT(1) FROM {table.TableName}", connection).ExecuteScalar()?.ToString().ToInteger().GetValueOrDefault() == 0)
             {
-                using (var bulkCopy = new SqlBulkCopy(connection, option, null) { DestinationTableName = table.TableName, BulkCopyTimeout = 900 })
-                    bulkCopy.WriteToServer(table);
+                Import(table, connection, option);
             }
             else Console.WriteLine($"\t >> Ignoring {table.TableName} as it has data in it.");
+        }
+
+        private static void Import(DataTable table, SqlConnection connection, SqlBulkCopyOptions option)
+        {
+            using (var bulkCopy = new SqlBulkCopy(connection, option, null) { DestinationTableName = table.TableName, BulkCopyTimeout = 900 })
+                bulkCopy.WriteToServer(table);
         }
 
         private static SqlConnection CreateSqlConnection() => new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString);
@@ -186,12 +211,22 @@ namespace Edubase.Import
         private static SqlBulkCopyOptions BulkCopyOptionNewIds => SqlBulkCopyOptions.TableLock
                         | SqlBulkCopyOptions.UseInternalTransaction;
 
+        private static DataTable CreateLookupDataTable<T>(IEnumerable data, Dictionary<Type, DataTable> tables) where T : LookupBase, new()
+        {
+            var items = data.Cast<object>().ToList().Select(x => ConvertToLookup<T>(x));
+            var table = ToLookupDataTable<T>(items, tables);
+            return table;
+        }
+
         private static DataTable CreateDataTable<T>(IEnumerable data, Dictionary<Type, DataTable> tables) where T : LookupBase, new()
         {
             var items = data.Cast<object>().ToList().Select(x => ConvertToLookup<T>(x));
             var table = ToLookupDataTable<T>(items, tables);
             return table;
         }
+
+
+
 
     }
 }

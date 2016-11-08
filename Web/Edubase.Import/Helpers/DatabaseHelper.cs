@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Edubase.Common;
 using MoreLinq;
+using Microsoft.SqlServer.Types;
 
 namespace Edubase.Import.Helpers
 {
@@ -32,8 +33,14 @@ namespace Edubase.Import.Helpers
             mappings.ForEach(x =>
             {
                 var sql = string.Concat(SQL, x.Value);
+                var dataTable = new DataTable() { TableName = x.Value };
                 using (var adapter = new SqlDataAdapter(sql, connection))
-                    adapter.Fill(retVal.Append(x.Key, new DataTable() { TableName = x.Value }));
+                    adapter.Fill(dataTable);
+
+                var geoColumn = dataTable.Columns.Cast<DataColumn>().Where(c => c.DataType.Name.Contains("SqlGeography")).FirstOrDefault();
+                if (geoColumn != null) geoColumn.DataType = typeof(SqlGeography);
+
+                retVal.Append(x.Key, dataTable);
             });
 
             return retVal;

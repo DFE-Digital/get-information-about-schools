@@ -31,11 +31,6 @@ namespace Edubase.Data.Entity.ComplexTypes
         [RequiresApproval]
         public string PostCode { get; set; }
 
-        public string Easting { get; set; }
-        public string Northing { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-
         public override string ToString() => StringUtil.ConcatNonEmpties(", ",
             Line1,
             Line2,
