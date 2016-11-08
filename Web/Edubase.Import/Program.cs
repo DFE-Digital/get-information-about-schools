@@ -34,7 +34,14 @@ namespace Edubase.Import
         {
             MigrateAllLookupData(connection, source);
 
-
+            // TODO:
+            /* - Import establishments
+             * - Import estab2estab links
+             * - Import trusts
+             * - Import trust2estab links
+             * - Import Governors
+             */
+             
         }
 
         private static void MigrateAllLookupData(SqlConnection connection, EdubaseSourceDataEntities source)
