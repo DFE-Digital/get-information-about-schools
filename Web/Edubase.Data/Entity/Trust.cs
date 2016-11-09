@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity.Lookups;
+﻿using Edubase.Data.Entity.ComplexTypes;
+using Edubase.Data.Entity.Lookups;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,15 +14,15 @@ namespace Edubase.Data.Entity
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int GroupUID { get; set; }
-        public string GroupId { get; set; }
         public string Name { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public LookupGroupType GroupType { get; set; }
         public int? GroupTypeId { get; set; }
         public DateTime? ClosedDate { get; set; }
-        public string GroupStatus { get; set; }
-        public string GroupStatusCode { get; set; }
+        public LookupEstablishmentStatus Status { get; set; }
+        public int? StatusId { get; set; }
         public DateTime? OpenDate { get; set; }
+        public Person Head { get; set; } = new Person();
         public string Address { get; set; }
 
         /// <summary>

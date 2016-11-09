@@ -14,6 +14,7 @@ namespace Edubase.Import
     
     public partial class Accomodationchanged
     {
+        public int autoid { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
     }

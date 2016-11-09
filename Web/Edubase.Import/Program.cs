@@ -1,25 +1,23 @@
-﻿using Edubase.Data.Entity;
+﻿using Edubase.Common;
+using Edubase.Data.Entity;
 using Edubase.Data.Entity.Lookups;
+using MoreLinq;
 using System;
-using System.Linq;
-using Edubase.Common;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
-using MoreLinq;
+using System.Linq;
 
 namespace Edubase.Import
 {
-    using Services;
-    using Helpers;
-    using System.Collections;
-    using System.Diagnostics;
-    using System.Linq.Expressions;
-    using Mapping;
     using AutoMapper;
+    using Helpers;
+    using Mapping;
+    using Migrations;
+    using System.Collections;
+    using System.Data.Entity;
     using System.Data.Entity.Spatial;
-    using Microsoft.SqlServer.Types;
 
     public class Program
     {
@@ -29,8 +27,13 @@ namespace Edubase.Import
         static void Main(string[] args)
         {
             _mapper = MappingConfiguration.Create();
-            _tables = new ApplicationDbContext().GenerateDataTables();
 
+            using (Disposer.Timed(() => Console.WriteLine("Recreating the DB"), ms => Console.WriteLine($"...done in {ms}ms")))
+            {
+                Database.SetInitializer(new DropRecreateDatabase());
+                _tables = ApplicationDbContext.Create().GenerateDataTables();
+            }
+            
             using (var source = new EdubaseSourceDataEntities())
             {
                 Disposer.Using(CreateSqlConnection, x => x.Open(), x => x.Close(), connection =>
@@ -43,7 +46,10 @@ namespace Edubase.Import
         private static void MigrateAllData(SqlConnection connection, EdubaseSourceDataEntities source)
         {
             MigrateAllLookupData(connection, source);
-            MigrateEstablishmentsData(connection, source);
+            MigrateDataInBatches<Data.Entity.LocalAuthority, LocalAuthority>("LAs", source.LocalAuthority, connection, 100);
+            MigrateDataInBatches<Establishment, Establishments>("Establishments", source.Establishments, connection, 10000);
+            MigrateDataInBatches<Trust, Groupdata>("Trusts", source.Groupdata, connection, 2000);
+
 
             // TODO:
             /* - Import establishments
@@ -58,27 +64,24 @@ namespace Edubase.Import
 
         }
 
-        private static void MigrateEstablishmentsData(SqlConnection connection, EdubaseSourceDataEntities source)
+        private static void MigrateDataInBatches<TDestEntity, TSourceEntity>(string label, IQueryable<TSourceEntity> sourceEntities, SqlConnection connection, int batchSize = 1000)
         {
-            Console.WriteLine("Importing establishments");
-            var sw = Stopwatch.StartNew();
-
-            var dataTable = _tables.Get<Establishment>();
-            new SqlCommand($"DELETE FROM {dataTable.TableName}", connection).ExecuteNonQuery();
-
-            const int BATCH_SIZE = 1000;
-            int count = 0;
-            source.Establishments.Batch(BATCH_SIZE).ForEach(batch =>
+            using (Timing(label))
             {
-                var estabs = batch.Select(e => _mapper.Map<Establishments, Establishment>(e)).ToArray();
-                FillDataTable(estabs, dataTable);
-                Import(dataTable, connection, BulkCopyOptionPreserveIds);
-                dataTable.Clear();
-                count += batch.Count();
-                Console.WriteLine($"\t{count} imported");
-            });
-            
-            Console.WriteLine($"...done in {sw.ElapsedMilliseconds}ms");
+                var dataTable = _tables.Get<TDestEntity>();
+                new SqlCommand($"DELETE FROM {dataTable.TableName}", connection).ExecuteNonQuery();
+                
+                int count = 0;
+                sourceEntities.Batch(batchSize).ForEach(batch =>
+                {
+                    var entities = batch.Select(l => _mapper.Map<TSourceEntity, TDestEntity>(l)).ToArray();
+                    FillDataTable(entities.Cast<object>(), dataTable);
+                    Import(dataTable, connection, BulkCopyOptionPreserveIds);
+                    dataTable.Clear();
+                    count += batch.Count();
+                    Console.WriteLine($"\t{count} imported");
+                });
+            }
         }
 
         private static void FillDataTable(IEnumerable<object> source, DataTable dataTable)
@@ -107,47 +110,48 @@ namespace Edubase.Import
 
         private static void MigrateAllLookupData(SqlConnection connection, EdubaseSourceDataEntities source)
         {
-            Console.WriteLine("Importing lookups");
-            var sw = Stopwatch.StartNew();
-            MigrateLookup<LookupAdmissionsPolicy>(source.Admissionspolicy, connection);
-            MigrateLookup<LookupAccommodationChanged>(source.Accomodationchanged, connection);
-            MigrateLookup<LookupGovernorAppointingBody>(source.Appointingbody, connection);
-            MigrateLookup<LookupProvisionBoarding>(source.Boarders, connection);
-            MigrateLookup<LookupBoardingEstablishment>(source.Boardingestablishment, connection);
-            MigrateLookup<LookupCCGovernance>(source.Ccgovernance, connection);
-            MigrateLookup<LookupCCOperationalHours>(source.Ccoperationalhours, connection);
-            MigrateLookup<LookupCCPhaseType>(source.Ccphasetype, connection);
-            MigrateLookup<LookupChildcareFacilities>(source.Childcarefacilities, connection);
-            MigrateLookup<LookupDiocese>(source.Diocese, connection);
-            MigrateLookup<LookupDirectProvisionOfEarlyYears>(source.Directprovisionofearlyyears, connection);
-            MigrateLookup<LookupEstablishmentStatus>(source.Establishmentstatus, connection);
-            MigrateLookup<LookupFurtherEducationType>(source.Furthereducationtype, connection);
-            MigrateLookup<LookupGender>(source.Gender, connection);
-            MigrateLookup<LookupGroupType>(source.GroupType, connection);
-            MigrateLookup<LookupHeadTitle>(source.Headtitle, connection);
-            MigrateLookup<LookupIndependentSchoolType>(source.Independentschooltype, connection);
-            MigrateLookup<LookupInspectorate>(source.Inspectorate, connection);
-            MigrateLookup<LookupInspectorateName>(source.Inspectoratename, connection);
-            MigrateLookup<LookupLocalGovernors>(source.Localgovernors, connection);
-            MigrateLookup<LookupNationality>(source.Nationality, connection);
-            MigrateLookup<LookupProvisionNursery>(source.Nurseryprovision, connection);
-            MigrateLookup<LookupProvisionOfficialSixthForm>(source.Officialsixthform, connection);
-            MigrateLookup<LookupEducationPhase>(source.Phaseofeducation, connection);
-            MigrateLookup<LookupPRUEBD>(source.PRUEBD, connection);
-            MigrateLookup<LookupPruEducatedByOthers>(source.Prueducatedbyothers, connection);
-            MigrateLookup<LookupPruFulltimeProvision>(source.Prufulltimeprovision, connection);
-            MigrateLookup<LookupPRUSEN>(source.PRUSEN, connection);
-            MigrateLookup<LookupReasonEstablishmentClosed>(source.Reasonestablishmentclosed, connection);
-            MigrateLookup<LookupReasonEstablishmentOpened>(source.Reasonestablishmentopened, connection);
-            MigrateLookup<LookupReligiousCharacter>(source.Religiouscharacter, connection);
-            MigrateLookup<LookupReligiousEthos>(source.Religiousethos, connection);
-            MigrateLookup<LookupResourcedProvision>(source.Resourcedprovision, connection);
-            MigrateLookup<LookupSection41Approved>(source.Section41approved, connection);
-            MigrateLookup<LookupProvisionSpecialClasses>(source.Specialclasses, connection);
-            MigrateLookup<LookupSpecialEducationNeeds>(source.Specialeducationaneeds, connection);
-            MigrateLookup<LookupTeenageMothersProvision>(source.Teenagemothers, connection);
-            MigrateLookup<LookupTypeOfResourcedProvision>(source.Typeofresourcedprovision, connection);
-            Console.WriteLine($"...done in {sw.ElapsedMilliseconds}ms");
+            using (Timing("lookup tables"))
+            {
+                MigrateLookup<LookupAdmissionsPolicy>(source.Admissionspolicy, connection);
+                MigrateLookup<LookupAccommodationChanged>(source.Accomodationchanged, connection);
+                MigrateLookup<LookupGovernorAppointingBody>(source.Appointingbody, connection);
+                MigrateLookup<LookupProvisionBoarding>(source.Boarders, connection);
+                MigrateLookup<LookupBoardingEstablishment>(source.Boardingestablishment, connection);
+                MigrateLookup<LookupCCGovernance>(source.Ccgovernance, connection);
+                MigrateLookup<LookupCCOperationalHours>(source.Ccoperationalhours, connection);
+                MigrateLookup<LookupCCPhaseType>(source.Ccphasetype, connection);
+                MigrateLookup<LookupChildcareFacilities>(source.Childcarefacilities, connection);
+                MigrateLookup<LookupDiocese>(source.Diocese, connection);
+                MigrateLookup<LookupDirectProvisionOfEarlyYears>(source.Directprovisionofearlyyears, connection);
+                MigrateLookup<LookupEstablishmentStatus>(source.Establishmentstatus, connection);
+                MigrateLookup<LookupFurtherEducationType>(source.Furthereducationtype, connection);
+                MigrateLookup<LookupGender>(source.Gender, connection);
+                MigrateLookup<LookupGroupType>(source.GroupType, connection);
+                MigrateLookup<LookupHeadTitle>(source.Headtitle, connection);
+                MigrateLookup<LookupIndependentSchoolType>(source.Independentschooltype, connection);
+                MigrateLookup<LookupInspectorate>(source.Inspectorate, connection);
+                MigrateLookup<LookupInspectorateName>(source.Inspectoratename, connection);
+                MigrateLookup<LookupLocalGovernors>(source.Localgovernors, connection);
+                MigrateLookup<LookupNationality>(source.Nationality, connection);
+                MigrateLookup<LookupProvisionNursery>(source.Nurseryprovision, connection);
+                MigrateLookup<LookupProvisionOfficialSixthForm>(source.Officialsixthform, connection);
+                MigrateLookup<LookupEducationPhase>(source.Phaseofeducation, connection);
+                MigrateLookup<LookupPRUEBD>(source.PRUEBD, connection);
+                MigrateLookup<LookupPruEducatedByOthers>(source.Prueducatedbyothers, connection);
+                MigrateLookup<LookupPruFulltimeProvision>(source.Prufulltimeprovision, connection);
+                MigrateLookup<LookupPRUSEN>(source.PRUSEN, connection);
+                MigrateLookup<LookupReasonEstablishmentClosed>(source.Reasonestablishmentclosed, connection);
+                MigrateLookup<LookupReasonEstablishmentOpened>(source.Reasonestablishmentopened, connection);
+                MigrateLookup<LookupReligiousCharacter>(source.Religiouscharacter, connection);
+                MigrateLookup<LookupReligiousEthos>(source.Religiousethos, connection);
+                MigrateLookup<LookupResourcedProvision>(source.Resourcedprovision, connection);
+                MigrateLookup<LookupSection41Approved>(source.Section41approved, connection);
+                MigrateLookup<LookupProvisionSpecialClasses>(source.Specialclasses, connection);
+                MigrateLookup<LookupSpecialEducationNeeds>(source.Specialeducationaneeds, connection);
+                MigrateLookup<LookupTeenageMothersProvision>(source.Teenagemothers, connection);
+                MigrateLookup<LookupTypeOfResourcedProvision>(source.Typeofresourcedprovision, connection);
+                MigrateLookup<LookupEstablishmentType>(source.Typeofestablishment, connection);
+            }
         }
 
         public static LookupBase ConvertToLookup<T>(dynamic source) where T : LookupBase, new()
@@ -225,7 +229,8 @@ namespace Edubase.Import
             return table;
         }
 
-
+        private static IDisposable Timing(string label)
+            => Disposer.Timed(() => Console.WriteLine($"Importing {label}"), ms => Console.WriteLine($"...done in {ms}ms"));
 
 
     }

@@ -168,6 +168,12 @@
     <Compile Include="Gender.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Governors.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Groupdata.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Grouplinks.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
@@ -196,6 +202,7 @@
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Mapping\MappingConfiguration.cs" />
+    <Compile Include="Migrations\DropRecreateDatabase.cs" />
     <Compile Include="Nationality.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
@@ -249,6 +256,9 @@
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Teenagemothers.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Typeofestablishment.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Typeofresourcedprovision.cs">

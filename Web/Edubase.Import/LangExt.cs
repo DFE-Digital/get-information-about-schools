@@ -1,4 +1,5 @@
-﻿using Edubase.Common;
+﻿using AutoMapper;
+using Edubase.Common;
 using Edubase.Data.Entity.Lookups;
 using Microsoft.SqlServer.Types;
 using MoreLinq;
@@ -69,6 +70,9 @@ namespace Edubase.Import
         public static int? Id<T>(this IEnumerable<T> items, string code)
             where T : LookupBase => items.FirstOrDefault(x => x.Code == code)?.Id;
 
+        public static int? IdFromName<T>(this IEnumerable<T> items, string name)
+            where T : LookupBase => items.FirstOrDefault(x => x.Name == name)?.Id;
+
         /// <summary>
         /// Ensures the email address is valid and if not, returns null.
         /// </summary>
@@ -82,6 +86,8 @@ namespace Edubase.Import
             var propInfo = type.GetProperty(propertyName);
             return propInfo?.GetValue(item, null);
         }
+        
+
     }
 
     public class DataRowChainableContext<T>

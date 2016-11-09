@@ -1,4 +1,4 @@
-<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+﻿<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
 <!-- EF Runtime content -->
 <edmx:Runtime>
 <!-- SSDL content -->
@@ -22,6 +22,8 @@
     <EntitySet Name="Establishmentstatus" EntityType="EdubaseSourceDataModel.Store.Establishmentstatus" store:Type="Tables" />
     <EntitySet Name="Furthereducationtype" EntityType="EdubaseSourceDataModel.Store.Furthereducationtype" store:Type="Tables" />
     <EntitySet Name="Gender" EntityType="EdubaseSourceDataModel.Store.Gender" store:Type="Tables" />
+    <EntitySet Name="Governors" EntityType="EdubaseSourceDataModel.Store.Governors" store:Type="Tables" />
+    <EntitySet Name="Groupdata" EntityType="EdubaseSourceDataModel.Store.Groupdata" store:Type="Tables" />
     <EntitySet Name="Grouplinks" EntityType="EdubaseSourceDataModel.Store.Grouplinks" store:Type="Tables" />
     <EntitySet Name="GroupType" EntityType="EdubaseSourceDataModel.Store.GroupType" store:Type="Tables" />
     <EntitySet Name="Headtitle" EntityType="EdubaseSourceDataModel.Store.Headtitle" store:Type="Tables" />
@@ -47,98 +49,111 @@
     <EntitySet Name="Specialclasses" EntityType="EdubaseSourceDataModel.Store.Specialclasses" store:Type="Tables" />
     <EntitySet Name="Specialeducationaneeds" EntityType="EdubaseSourceDataModel.Store.Specialeducationaneeds" store:Type="Tables" />
     <EntitySet Name="Teenagemothers" EntityType="EdubaseSourceDataModel.Store.Teenagemothers" store:Type="Tables" />
+    <EntitySet Name="Typeofestablishment" EntityType="EdubaseSourceDataModel.Store.Typeofestablishment" store:Type="Tables" />
     <EntitySet Name="Typeofresourcedprovision" EntityType="EdubaseSourceDataModel.Store.Typeofresourcedprovision" store:Type="Tables" />
   </EntityContainer>
   <EntityType Name="Accomodationchanged">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Admissionspolicy">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Appointingbody">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
     <Property Name="_Order" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Boarders">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Boardingestablishment">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Ccgovernance">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Ccoperationalhours">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Ccphasetype">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Childcarefacilities">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Diocese">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Directprovisionofearlyyears">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Edubasetrigger">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Establishmentlinks">
     <Key>
-      <PropertyRef Name="id" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="URN" Type="nvarchar" />
     <Property Name="LinkURN" Type="nvarchar" />
     <Property Name="LinkName" Type="nvarchar" />
@@ -147,9 +162,10 @@
   </EntityType>
   <EntityType Name="Establishments">
     <Key>
-      <PropertyRef Name="URN" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="URN" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="nvarchar" />
     <Property Name="LAcode" Type="nvarchar" />
     <Property Name="LAname" Type="nvarchar" />
     <Property Name="EstablishmentNumber" Type="nvarchar" />
@@ -409,212 +425,291 @@
   </EntityType>
   <EntityType Name="Establishmentstatus">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Furthereducationtype">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Gender">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Governors">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="GID" Type="nvarchar" />
+    <Property Name="URN" Type="nvarchar" />
+    <Property Name="UID" Type="nvarchar" />
+    <Property Name="CompaniesHouseNumber" Type="nvarchar" />
+    <Property Name="Deleted" Type="nvarchar" />
+    <Property Name="Role" Type="nvarchar" />
+    <Property Name="Title" Type="nvarchar" />
+    <Property Name="Forename1" Type="nvarchar" />
+    <Property Name="Forename2" Type="nvarchar" />
+    <Property Name="Surname" Type="nvarchar" />
+    <Property Name="Dateofappointment" Type="nvarchar" />
+    <Property Name="Datetermofofficeendsended" Type="nvarchar" />
+    <Property Name="Appointingbody" Type="nvarchar" />
+    <Property Name="Homepostcode" Type="nvarchar" />
+    <Property Name="Directemailaddress" Type="nvarchar" />
+    <Property Name="PreviousTitle" Type="nvarchar" />
+    <Property Name="PreviousForename1" Type="nvarchar" />
+    <Property Name="PreviousForename2" Type="nvarchar" />
+    <Property Name="PreviousSurname" Type="nvarchar" />
+    <Property Name="DateofBirth" Type="nvarchar" />
+    <Property Name="Nationality" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Groupdata">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="UID" Type="nvarchar" />
+    <Property Name="GroupName" Type="nvarchar" />
+    <Property Name="CompaniesHouseNumber" Type="nvarchar" />
+    <Property Name="GroupType" Type="nvarchar" />
+    <Property Name="ClosedDate" Type="nvarchar" />
+    <Property Name="Status" Type="nvarchar" />
+    <Property Name="HeadofGroupTitle" Type="nvarchar" />
+    <Property Name="HeadofGroupFirstName" Type="nvarchar" />
+    <Property Name="HeadofGroupLastName" Type="nvarchar" />
+    <Property Name="Address" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Grouplinks">
     <Key>
-      <PropertyRef Name="id" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="URN" Type="nvarchar" />
     <Property Name="LinkedUID" Type="nvarchar" />
   </EntityType>
   <EntityType Name="GroupType">
     <Key>
-      <PropertyRef Name="GroupTypecode" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="GroupTypecode" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="GroupTypecode" Type="nvarchar" />
     <Property Name="GroupType" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Headtitle">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Independentschooltype">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Inspectorate">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Inspectoratename">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
     <Property Name="_Order" Type="nvarchar" />
   </EntityType>
   <EntityType Name="LocalAuthority">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
     <Property Name="_Group" Type="nvarchar" />
     <Property Name="_Order" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Localgovernors">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
     <Property Name="_Order" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Nationality">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
     <Property Name="_Order" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Nurseryprovision">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Officialsixthform">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Phaseofeducation">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="PRUEBD">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Prueducatedbyothers">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Prufulltimeprovision">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="PRUSEN">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Reasonestablishmentclosed">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Reasonestablishmentopened">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Religiouscharacter">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Religiousethos">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Resourcedprovision">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Section41approved">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
     <Property Name="_Order" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Specialclasses">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Specialeducationaneeds">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Teenagemothers">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Typeofestablishment">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
+    <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Typeofresourcedprovision">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="nvarchar" Nullable="false" />
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
   </EntityType>
 </Schema>
@@ -640,6 +735,8 @@
     <EntitySet Name="Establishmentstatus" EntityType="EdubaseSourceDataModel.Establishmentstatus" />
     <EntitySet Name="Furthereducationtype" EntityType="EdubaseSourceDataModel.Furthereducationtype" />
     <EntitySet Name="Gender" EntityType="EdubaseSourceDataModel.Gender" />
+    <EntitySet Name="Governors" EntityType="EdubaseSourceDataModel.Governors" />
+    <EntitySet Name="Groupdata" EntityType="EdubaseSourceDataModel.Groupdata" />
     <EntitySet Name="Grouplinks" EntityType="EdubaseSourceDataModel.Grouplinks" />
     <EntitySet Name="GroupType" EntityType="EdubaseSourceDataModel.GroupType" />
     <EntitySet Name="Headtitle" EntityType="EdubaseSourceDataModel.Headtitle" />
@@ -665,98 +762,111 @@
     <EntitySet Name="Specialclasses" EntityType="EdubaseSourceDataModel.Specialclasses" />
     <EntitySet Name="Specialeducationaneeds" EntityType="EdubaseSourceDataModel.Specialeducationaneeds" />
     <EntitySet Name="Teenagemothers" EntityType="EdubaseSourceDataModel.Teenagemothers" />
+    <EntitySet Name="Typeofestablishment" EntityType="EdubaseSourceDataModel.Typeofestablishment" />
     <EntitySet Name="Typeofresourcedprovision" EntityType="EdubaseSourceDataModel.Typeofresourcedprovision" />
   </EntityContainer>
   <EntityType Name="Accomodationchanged">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Admissionspolicy">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Appointingbody">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Boarders">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Boardingestablishment">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Ccgovernance">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Ccoperationalhours">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Ccphasetype">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Childcarefacilities">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Diocese">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Directprovisionofearlyyears">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Edubasetrigger">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Establishmentlinks">
     <Key>
-      <PropertyRef Name="id" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
     <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="LinkURN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="LinkName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
@@ -765,9 +875,10 @@
   </EntityType>
   <EntityType Name="Establishments">
     <Key>
-      <PropertyRef Name="URN" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="URN" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="LAcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="LAname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="EstablishmentNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
@@ -1027,212 +1138,291 @@
   </EntityType>
   <EntityType Name="Establishmentstatus">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Furthereducationtype">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Gender">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Governors">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="GID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="UID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CompaniesHouseNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Deleted" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Role" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Title" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Forename1" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Forename2" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Surname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Dateofappointment" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Datetermofofficeendsended" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Appointingbody" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Homepostcode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Directemailaddress" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PreviousTitle" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PreviousForename1" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PreviousForename2" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="PreviousSurname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="DateofBirth" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Nationality" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Groupdata">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="UID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="CompaniesHouseNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupType" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ClosedDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Status" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadofGroupTitle" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadofGroupFirstName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="HeadofGroupLastName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Address" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Grouplinks">
     <Key>
-      <PropertyRef Name="id" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
     <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="LinkedUID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="GroupType">
     <Key>
-      <PropertyRef Name="GroupTypecode" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="GroupTypecode" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupTypecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="GroupType1" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Headtitle">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Independentschooltype">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Inspectorate">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Inspectoratename">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="LocalAuthority">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="C_Group" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Localgovernors">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Nationality">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Nurseryprovision">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Officialsixthform">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Phaseofeducation">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="PRUEBD">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Prueducatedbyothers">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Prufulltimeprovision">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="PRUSEN">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Reasonestablishmentclosed">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Reasonestablishmentopened">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Religiouscharacter">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Religiousethos">
     <Key>
-      <PropertyRef Name="code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Resourcedprovision">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Section41approved">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="C_Order" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Specialclasses">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Specialeducationaneeds">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Teenagemothers">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Typeofestablishment">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Typeofresourcedprovision">
     <Key>
-      <PropertyRef Name="Code" />
+      <PropertyRef Name="autoid" />
     </Key>
-    <Property Name="Code" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
 </Schema>
@@ -1244,6 +1434,7 @@
     <EntitySetMapping Name="Accomodationchanged">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Accomodationchanged">
         <MappingFragment StoreEntitySet="Accomodationchanged">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1252,6 +1443,7 @@
     <EntitySetMapping Name="Admissionspolicy">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Admissionspolicy">
         <MappingFragment StoreEntitySet="Admissionspolicy">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1260,6 +1452,7 @@
     <EntitySetMapping Name="Appointingbody">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Appointingbody">
         <MappingFragment StoreEntitySet="Appointingbody">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="C_Order" ColumnName="_Order" />
@@ -1269,6 +1462,7 @@
     <EntitySetMapping Name="Boarders">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Boarders">
         <MappingFragment StoreEntitySet="Boarders">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1277,6 +1471,7 @@
     <EntitySetMapping Name="Boardingestablishment">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Boardingestablishment">
         <MappingFragment StoreEntitySet="Boardingestablishment">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1285,6 +1480,7 @@
     <EntitySetMapping Name="Ccgovernance">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Ccgovernance">
         <MappingFragment StoreEntitySet="Ccgovernance">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1293,6 +1489,7 @@
     <EntitySetMapping Name="Ccoperationalhours">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Ccoperationalhours">
         <MappingFragment StoreEntitySet="Ccoperationalhours">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1301,6 +1498,7 @@
     <EntitySetMapping Name="Ccphasetype">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Ccphasetype">
         <MappingFragment StoreEntitySet="Ccphasetype">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1309,6 +1507,7 @@
     <EntitySetMapping Name="Childcarefacilities">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Childcarefacilities">
         <MappingFragment StoreEntitySet="Childcarefacilities">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1317,6 +1516,7 @@
     <EntitySetMapping Name="Diocese">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Diocese">
         <MappingFragment StoreEntitySet="Diocese">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1325,6 +1525,7 @@
     <EntitySetMapping Name="Directprovisionofearlyyears">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Directprovisionofearlyyears">
         <MappingFragment StoreEntitySet="Directprovisionofearlyyears">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1333,6 +1534,7 @@
     <EntitySetMapping Name="Edubasetrigger">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Edubasetrigger">
         <MappingFragment StoreEntitySet="Edubasetrigger">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1341,7 +1543,7 @@
     <EntitySetMapping Name="Establishmentlinks">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Establishmentlinks">
         <MappingFragment StoreEntitySet="Establishmentlinks">
-          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="URN" ColumnName="URN" />
           <ScalarProperty Name="LinkURN" ColumnName="LinkURN" />
           <ScalarProperty Name="LinkName" ColumnName="LinkName" />
@@ -1353,6 +1555,7 @@
     <EntitySetMapping Name="Establishments">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Establishments">
         <MappingFragment StoreEntitySet="Establishments">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="URN" ColumnName="URN" />
           <ScalarProperty Name="LAcode" ColumnName="LAcode" />
           <ScalarProperty Name="LAname" ColumnName="LAname" />
@@ -1616,6 +1819,7 @@
     <EntitySetMapping Name="Establishmentstatus">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Establishmentstatus">
         <MappingFragment StoreEntitySet="Establishmentstatus">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1624,6 +1828,7 @@
     <EntitySetMapping Name="Furthereducationtype">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Furthereducationtype">
         <MappingFragment StoreEntitySet="Furthereducationtype">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1632,15 +1837,61 @@
     <EntitySetMapping Name="Gender">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Gender">
         <MappingFragment StoreEntitySet="Gender">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Governors">
+      <EntityTypeMapping TypeName="EdubaseSourceDataModel.Governors">
+        <MappingFragment StoreEntitySet="Governors">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
+          <ScalarProperty Name="GID" ColumnName="GID" />
+          <ScalarProperty Name="URN" ColumnName="URN" />
+          <ScalarProperty Name="UID" ColumnName="UID" />
+          <ScalarProperty Name="CompaniesHouseNumber" ColumnName="CompaniesHouseNumber" />
+          <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Forename1" ColumnName="Forename1" />
+          <ScalarProperty Name="Forename2" ColumnName="Forename2" />
+          <ScalarProperty Name="Surname" ColumnName="Surname" />
+          <ScalarProperty Name="Dateofappointment" ColumnName="Dateofappointment" />
+          <ScalarProperty Name="Datetermofofficeendsended" ColumnName="Datetermofofficeendsended" />
+          <ScalarProperty Name="Appointingbody" ColumnName="Appointingbody" />
+          <ScalarProperty Name="Homepostcode" ColumnName="Homepostcode" />
+          <ScalarProperty Name="Directemailaddress" ColumnName="Directemailaddress" />
+          <ScalarProperty Name="PreviousTitle" ColumnName="PreviousTitle" />
+          <ScalarProperty Name="PreviousForename1" ColumnName="PreviousForename1" />
+          <ScalarProperty Name="PreviousForename2" ColumnName="PreviousForename2" />
+          <ScalarProperty Name="PreviousSurname" ColumnName="PreviousSurname" />
+          <ScalarProperty Name="DateofBirth" ColumnName="DateofBirth" />
+          <ScalarProperty Name="Nationality" ColumnName="Nationality" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Groupdata">
+      <EntityTypeMapping TypeName="EdubaseSourceDataModel.Groupdata">
+        <MappingFragment StoreEntitySet="Groupdata">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
+          <ScalarProperty Name="UID" ColumnName="UID" />
+          <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+          <ScalarProperty Name="CompaniesHouseNumber" ColumnName="CompaniesHouseNumber" />
+          <ScalarProperty Name="GroupType" ColumnName="GroupType" />
+          <ScalarProperty Name="ClosedDate" ColumnName="ClosedDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="HeadofGroupTitle" ColumnName="HeadofGroupTitle" />
+          <ScalarProperty Name="HeadofGroupFirstName" ColumnName="HeadofGroupFirstName" />
+          <ScalarProperty Name="HeadofGroupLastName" ColumnName="HeadofGroupLastName" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Grouplinks">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Grouplinks">
         <MappingFragment StoreEntitySet="Grouplinks">
-          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="URN" ColumnName="URN" />
           <ScalarProperty Name="LinkedUID" ColumnName="LinkedUID" />
         </MappingFragment>
@@ -1649,6 +1900,7 @@
     <EntitySetMapping Name="GroupType">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.GroupType">
         <MappingFragment StoreEntitySet="GroupType">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="GroupTypecode" ColumnName="GroupTypecode" />
           <ScalarProperty Name="GroupType1" ColumnName="GroupType" />
         </MappingFragment>
@@ -1657,6 +1909,7 @@
     <EntitySetMapping Name="Headtitle">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Headtitle">
         <MappingFragment StoreEntitySet="Headtitle">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1665,6 +1918,7 @@
     <EntitySetMapping Name="Independentschooltype">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Independentschooltype">
         <MappingFragment StoreEntitySet="Independentschooltype">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1673,6 +1927,7 @@
     <EntitySetMapping Name="Inspectorate">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Inspectorate">
         <MappingFragment StoreEntitySet="Inspectorate">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1681,6 +1936,7 @@
     <EntitySetMapping Name="Inspectoratename">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Inspectoratename">
         <MappingFragment StoreEntitySet="Inspectoratename">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="C_Order" ColumnName="_Order" />
@@ -1690,6 +1946,7 @@
     <EntitySetMapping Name="LocalAuthority">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.LocalAuthority">
         <MappingFragment StoreEntitySet="LocalAuthority">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="C_Group" ColumnName="_Group" />
@@ -1700,6 +1957,7 @@
     <EntitySetMapping Name="Localgovernors">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Localgovernors">
         <MappingFragment StoreEntitySet="Localgovernors">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="C_Order" ColumnName="_Order" />
@@ -1709,6 +1967,7 @@
     <EntitySetMapping Name="Nationality">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Nationality">
         <MappingFragment StoreEntitySet="Nationality">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="C_Order" ColumnName="_Order" />
@@ -1718,6 +1977,7 @@
     <EntitySetMapping Name="Nurseryprovision">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Nurseryprovision">
         <MappingFragment StoreEntitySet="Nurseryprovision">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1726,6 +1986,7 @@
     <EntitySetMapping Name="Officialsixthform">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Officialsixthform">
         <MappingFragment StoreEntitySet="Officialsixthform">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1734,6 +1995,7 @@
     <EntitySetMapping Name="Phaseofeducation">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Phaseofeducation">
         <MappingFragment StoreEntitySet="Phaseofeducation">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1742,6 +2004,7 @@
     <EntitySetMapping Name="PRUEBD">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.PRUEBD">
         <MappingFragment StoreEntitySet="PRUEBD">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1750,6 +2013,7 @@
     <EntitySetMapping Name="Prueducatedbyothers">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Prueducatedbyothers">
         <MappingFragment StoreEntitySet="Prueducatedbyothers">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1758,6 +2022,7 @@
     <EntitySetMapping Name="Prufulltimeprovision">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Prufulltimeprovision">
         <MappingFragment StoreEntitySet="Prufulltimeprovision">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1766,6 +2031,7 @@
     <EntitySetMapping Name="PRUSEN">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.PRUSEN">
         <MappingFragment StoreEntitySet="PRUSEN">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1774,6 +2040,7 @@
     <EntitySetMapping Name="Reasonestablishmentclosed">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Reasonestablishmentclosed">
         <MappingFragment StoreEntitySet="Reasonestablishmentclosed">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1782,6 +2049,7 @@
     <EntitySetMapping Name="Reasonestablishmentopened">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Reasonestablishmentopened">
         <MappingFragment StoreEntitySet="Reasonestablishmentopened">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1790,6 +2058,7 @@
     <EntitySetMapping Name="Religiouscharacter">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Religiouscharacter">
         <MappingFragment StoreEntitySet="Religiouscharacter">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1798,6 +2067,7 @@
     <EntitySetMapping Name="Religiousethos">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Religiousethos">
         <MappingFragment StoreEntitySet="Religiousethos">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
@@ -1806,6 +2076,7 @@
     <EntitySetMapping Name="Resourcedprovision">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Resourcedprovision">
         <MappingFragment StoreEntitySet="Resourcedprovision">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1814,6 +2085,7 @@
     <EntitySetMapping Name="Section41approved">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Section41approved">
         <MappingFragment StoreEntitySet="Section41approved">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="C_Order" ColumnName="_Order" />
@@ -1823,6 +2095,7 @@
     <EntitySetMapping Name="Specialclasses">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Specialclasses">
         <MappingFragment StoreEntitySet="Specialclasses">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1831,6 +2104,7 @@
     <EntitySetMapping Name="Specialeducationaneeds">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Specialeducationaneeds">
         <MappingFragment StoreEntitySet="Specialeducationaneeds">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1839,14 +2113,25 @@
     <EntitySetMapping Name="Teenagemothers">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Teenagemothers">
         <MappingFragment StoreEntitySet="Teenagemothers">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Typeofestablishment">
+      <EntityTypeMapping TypeName="EdubaseSourceDataModel.Typeofestablishment">
+        <MappingFragment StoreEntitySet="Typeofestablishment">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Typeofresourcedprovision">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Typeofresourcedprovision">
         <MappingFragment StoreEntitySet="Typeofresourcedprovision">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -1860,5 +2145,54 @@
 <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
 <Connection><DesignerInfoPropertySet><DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" /></DesignerInfoPropertySet></Connection>
 <edmx:Options><DesignerInfoPropertySet><DesignerProperty Name="ValidateOnBuild" Value="True" /><DesignerProperty Name="EnablePluralization" Value="False" /><DesignerProperty Name="IncludeForeignKeysInModel" Value="True" /><DesignerProperty Name="UseLegacyProvider" Value="False" /><DesignerProperty Name="CodeGenerationStrategy" Value="None" /></DesignerInfoPropertySet></edmx:Options>
-<edmx:Diagrams />
+<edmx:Diagrams >
+      <Diagram DiagramId="81d90e297c2d48c88824f8e93cfbb3fd" Name="Diagram1">
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Accomodationchanged" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Admissionspolicy" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Appointingbody" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Boarders" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Boardingestablishment" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ccgovernance" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ccoperationalhours" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ccphasetype" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Childcarefacilities" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Diocese" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Directprovisionofearlyyears" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Edubasetrigger" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Establishmentlinks" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Establishments" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Establishmentstatus" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Furthereducationtype" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Gender" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Governors" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Groupdata" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Grouplinks" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.GroupType" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Headtitle" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Independentschooltype" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Inspectorate" Width="1.5" PointX="12.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Inspectoratename" Width="1.5" PointX="4.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.LocalAuthority" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Localgovernors" Width="1.5" PointX="12.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Nationality" Width="1.5" PointX="12.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Nurseryprovision" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Officialsixthform" Width="1.5" PointX="14.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Phaseofeducation" Width="1.5" PointX="14.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.PRUEBD" Width="1.5" PointX="14.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Prueducatedbyothers" Width="1.5" PointX="14.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Prufulltimeprovision" Width="1.5" PointX="0.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.PRUSEN" Width="1.5" PointX="2.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Reasonestablishmentclosed" Width="1.5" PointX="4.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Reasonestablishmentopened" Width="1.5" PointX="10.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Religiouscharacter" Width="1.5" PointX="12.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Religiousethos" Width="1.5" PointX="14.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Resourcedprovision" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Section41approved" Width="1.5" PointX="16.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Specialclasses" Width="1.5" PointX="16.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Specialeducationaneeds" Width="1.5" PointX="16.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Teenagemothers" Width="1.5" PointX="16.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Typeofestablishment" Width="1.5" PointX="16.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EdubaseSourceDataModel.Typeofresourcedprovision" Width="1.5" PointX="18.75" PointY="0.75" IsExpanded="true" />
+      </Diagram>
+    </edmx:Diagrams>
 </edmx:Designer></edmx:Edmx>

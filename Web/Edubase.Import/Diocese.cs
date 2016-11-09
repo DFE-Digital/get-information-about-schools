@@ -14,6 +14,7 @@ namespace Edubase.Import
     
     public partial class Diocese
     {
+        public int autoid { get; set; }
         public string code { get; set; }
         public string name { get; set; }
     }

@@ -146,6 +146,7 @@
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="DbUtil.cs" />
+    <Compile Include="Entity\ComplexTypes\Person.cs" />
     <Compile Include="Entity\EstablishmentChangeHistory.cs" />
     <Compile Include="Entity\LogMessage.cs" />
     <Compile Include="Entity\EstablishmentApprovalQueue.cs" />
@@ -166,11 +167,12 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
-    <Compile Include="Identity\UserAccountSeeder.cs" />
-    <Compile Include="Migrations\201611081805513_InitialCreate.cs" />
-    <Compile Include="Migrations\201611081805513_InitialCreate.Designer.cs">
-      <DependentUpon>201611081805513_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201611091102509_Initial.cs" />
+    <Compile Include="Migrations\201611091102509_Initial.Designer.cs">
+      <DependentUpon>201611091102509_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DbSeeder.cs" />
+    <Compile Include="Migrations\UserAccountSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\LogMessageRepository.cs" />
@@ -187,8 +189,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611081805513_InitialCreate.resx">
-      <DependentUpon>201611081805513_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611091102509_Initial.resx">
+      <DependentUpon>201611091102509_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

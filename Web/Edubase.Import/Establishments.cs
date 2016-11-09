@@ -14,6 +14,7 @@ namespace Edubase.Import
     
     public partial class Establishments
     {
+        public int autoid { get; set; }
         public string URN { get; set; }
         public string LAcode { get; set; }
         public string LAname { get; set; }

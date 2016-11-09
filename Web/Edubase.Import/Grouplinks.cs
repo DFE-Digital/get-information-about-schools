@@ -14,7 +14,7 @@ namespace Edubase.Import
     
     public partial class Grouplinks
     {
-        public int id { get; set; }
+        public int autoid { get; set; }
         public string URN { get; set; }
         public string LinkedUID { get; set; }
     }

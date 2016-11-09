@@ -42,6 +42,8 @@ namespace Edubase.Import
         public virtual DbSet<Establishmentstatus> Establishmentstatus { get; set; }
         public virtual DbSet<Furthereducationtype> Furthereducationtype { get; set; }
         public virtual DbSet<Gender> Gender { get; set; }
+        public virtual DbSet<Governors> Governors { get; set; }
+        public virtual DbSet<Groupdata> Groupdata { get; set; }
         public virtual DbSet<Grouplinks> Grouplinks { get; set; }
         public virtual DbSet<GroupType> GroupType { get; set; }
         public virtual DbSet<Headtitle> Headtitle { get; set; }
@@ -67,6 +69,7 @@ namespace Edubase.Import
         public virtual DbSet<Specialclasses> Specialclasses { get; set; }
         public virtual DbSet<Specialeducationaneeds> Specialeducationaneeds { get; set; }
         public virtual DbSet<Teenagemothers> Teenagemothers { get; set; }
+        public virtual DbSet<Typeofestablishment> Typeofestablishment { get; set; }
         public virtual DbSet<Typeofresourcedprovision> Typeofresourcedprovision { get; set; }
     }
 }
