@@ -49,19 +49,9 @@ namespace Edubase.Import
             MigrateDataInBatches<Data.Entity.LocalAuthority, LocalAuthority>("LAs", source.LocalAuthority, connection, 100);
             MigrateDataInBatches<Establishment, Establishments>("Establishments", source.Establishments, connection, 10000);
             MigrateDataInBatches<Trust, Groupdata>("Trusts", source.Groupdata, connection, 2000);
-
-
-            // TODO:
-            /* - Import establishments
-             * - Import estab2estab links
-             * - Import trusts
-             * - Import trust2estab links
-             * - Import Governors
-             */
-
-
-
-
+            MigrateDataInBatches<Governor, Governors>("Governors", source.Governors, connection, 2000);
+            MigrateDataInBatches<EstablishmentLink, Establishmentlinks>("Establishment Links", source.Establishmentlinks, connection, 2000);
+            MigrateDataInBatches<EstablishmentTrust, Grouplinks>("Trust/Establishment Links", source.Grouplinks, connection, 2000);
         }
 
         private static void MigrateDataInBatches<TDestEntity, TSourceEntity>(string label, IQueryable<TSourceEntity> sourceEntities, SqlConnection connection, int batchSize = 1000)
@@ -151,6 +141,17 @@ namespace Edubase.Import
                 MigrateLookup<LookupTeenageMothersProvision>(source.Teenagemothers, connection);
                 MigrateLookup<LookupTypeOfResourcedProvision>(source.Typeofresourcedprovision, connection);
                 MigrateLookup<LookupEstablishmentType>(source.Typeofestablishment, connection);
+
+                var governorRoles = source.Governors.Where(x => !string.IsNullOrEmpty(x.Role))
+                    .Select(x => x.Role).Distinct().ToList()
+                    .Select(x => new { Name = x.Clean() }).ToList();
+                MigrateLookup<LookupGovernorRole>(governorRoles, connection);
+
+                var linkTypes = source.Establishmentlinks.Where(x => !string.IsNullOrEmpty(x.LinkType))
+                    .Select(x => x.LinkType).Distinct().ToList()
+                    .Select(x => new { Name = x.Clean() }).ToList();
+                MigrateLookup<LookupEstablishmentLinkType>(linkTypes, connection);
+
             }
         }
 

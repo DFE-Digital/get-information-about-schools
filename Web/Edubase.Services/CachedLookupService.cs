@@ -163,7 +163,9 @@ namespace Edubase.Services
         public async Task<List<LookupTypeOfResourcedProvision>> TypeOfResourcedProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.TypeOfResourcedProvisionsGetAllAsync);
         public List<LookupTypeOfResourcedProvision> TypeOfResourcedProvisionsGetAll() => Cacher.Auto(_svc.TypeOfResourcedProvisionsGetAll);
 
-
+        public async Task<List<LookupEstablishmentLinkType>> EstablishmentLinkTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentLinkTypesGetAllAsync);
+        public List<LookupEstablishmentLinkType> EstablishmentLinkTypesGetAll() => Cacher.Auto(_svc.EstablishmentLinkTypesGetAll);
+        
         public async Task<string> GetNameAsync(string lookupName, int id) => 
             await ApplicationDbContext.OperationAsync(async dc => await _mapping.Get(lookupName)?.Invoke(dc, id));
 

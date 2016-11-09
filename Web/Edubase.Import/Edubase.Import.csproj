@@ -216,7 +216,6 @@
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="Program_Old.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PRUEBD.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>

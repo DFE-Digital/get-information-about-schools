@@ -62,9 +62,10 @@ namespace Edubase.Data.Entity
         public IDbSet<LookupSpecialEducationNeeds> LookupSpecialEducationNeeds { get; set; }
         public IDbSet<LookupTeenageMothersProvision> LookupTeenageMothersProvisions { get; set; }
         public IDbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; }
+        public IDbSet<LookupEstablishmentLinkType> LookupEstablishmentLinkTypes { get; set; }
 
         #endregion
-        
+
 
         public ApplicationDbContext()
             : base("EdubaseSqlDb", throwIfV1Schema: false)

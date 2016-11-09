@@ -4,6 +4,7 @@
     public class LookupEducationPhase : LookupBase { }
     public class LookupEstablishmentStatus : LookupBase { }
     public class LookupEstablishmentType : LookupBase { }
+    public class LookupEstablishmentLinkType : LookupBase { }
     public class LookupGender : LookupBase { }
     public class LookupGroupType : LookupBase { }
     public class LookupHeadTitle : LookupBase { }

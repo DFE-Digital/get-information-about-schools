@@ -167,10 +167,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
-    <Compile Include="Migrations\201611091102509_Initial.cs" />
-    <Compile Include="Migrations\201611091102509_Initial.Designer.cs">
-      <DependentUpon>201611091102509_Initial.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\UserAccountSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -187,11 +183,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611091102509_Initial.resx">
-      <DependentUpon>201611091102509_Initial.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

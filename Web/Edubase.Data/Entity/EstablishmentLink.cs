@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Edubase.Data.Entity.Lookups;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,7 +22,9 @@ namespace Edubase.Data.Entity
 
         public string LinkName { get; set; }
 
-        public string LinkType { get; set; }
+        public LookupEstablishmentLinkType LinkType { get; set; }
+
+        public int? LinkTypeId { get; set; }
 
         public DateTime? LinkEstablishedDate { get; set; }
     }

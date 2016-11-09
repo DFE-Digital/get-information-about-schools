@@ -141,6 +141,9 @@ namespace Edubase.Services
 
         public async Task<List<LookupTypeOfResourcedProvision>> TypeOfResourcedProvisionsGetAllAsync() => await DataContext.LookupTypeOfResourcedProvisions.ToListAsync();
         public List<LookupTypeOfResourcedProvision> TypeOfResourcedProvisionsGetAll() => DataContext.LookupTypeOfResourcedProvisions.ToList();
+        
+        public async Task<List<LookupEstablishmentLinkType>> EstablishmentLinkTypesGetAllAsync() => await DataContext.LookupEstablishmentLinkTypes.ToListAsync();
+        public List<LookupEstablishmentLinkType> EstablishmentLinkTypesGetAll() => DataContext.LookupEstablishmentLinkTypes.ToList();
 
 
 
