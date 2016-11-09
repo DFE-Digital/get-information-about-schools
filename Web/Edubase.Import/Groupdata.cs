@@ -12,7 +12,7 @@ namespace Edubase.Import
     using System;
     using System.Collections.Generic;
     
-    public partial class Groupdata
+    public partial class GroupData
     {
         public int autoid { get; set; }
         public string UID { get; set; }

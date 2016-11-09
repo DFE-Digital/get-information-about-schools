@@ -117,7 +117,16 @@
     <Compile Include="Boardingestablishment.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Casward.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Ccdisadvantagedarea.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Ccgovernance.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Ccgrouplead.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Ccoperationalhours.cs">
@@ -129,10 +138,19 @@
     <Compile Include="Childcarefacilities.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contactpreference.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="County.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Diocese.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Directprovisionofearlyyears.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Districtadministrative.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="EdubaseSourceData.Context.cs">
@@ -150,9 +168,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EdubaseSourceData.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Edubasetrigger.cs">
-      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
-    </Compile>
     <Compile Include="Establishmentlinks.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
@@ -162,22 +177,37 @@
     <Compile Include="Establishmentstatus.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Establishmenttypegroup.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Federationflag.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Ftprov.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Furthereducationtype.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Gender.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="GOR.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Governors.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Groupdata.cs">
+    <Compile Include="GroupData.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
-    <Compile Include="Grouplinks.cs">
+    <Compile Include="GroupLinks.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="GroupType.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Gsslacode.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Headtitle.cs">
@@ -201,8 +231,17 @@
     <Compile Include="Localgovernors.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="LSOA.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Mapping\MappingConfiguration.cs" />
+    <Compile Include="Marketingoptinout.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DropRecreateDatabase.cs" />
+    <Compile Include="MSOA.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Nationality.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
@@ -210,6 +249,12 @@
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Officialsixthform.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Ofstedspecialmeasures.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Parliamentaryconstituency.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Phaseofeducation.cs">
@@ -235,6 +280,9 @@
     <Compile Include="Reasonestablishmentopened.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Reasonforchange.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Religiouscharacter.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
@@ -257,10 +305,16 @@
     <Compile Include="Teenagemothers.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Trustflag.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Typeofestablishment.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
     <Compile Include="Typeofresourcedprovision.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Urbanrural.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -310,13 +364,13 @@
       <LastGenOutput>EdubaseSourceData.Context.cs</LastGenOutput>
       <DependentUpon>EdubaseSourceData.edmx</DependentUpon>
     </Content>
-    <Content Include="EdubaseSourceData.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="EdubaseSourceData.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>EdubaseSourceData.cs</LastGenOutput>
       <DependentUpon>EdubaseSourceData.edmx</DependentUpon>
+    </Content>
+    <Content Include="EdubaseSourceData.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SqlServerTypes\readme.htm" />
   </ItemGroup>

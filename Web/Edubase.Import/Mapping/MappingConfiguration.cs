@@ -29,7 +29,7 @@ namespace Edubase.Import.Mapping
 
                 var groupPersonMapper = new MapperConfiguration(cfg2 =>
                 {
-                    cfg2.CreateMap<Groupdata, Person>()
+                    cfg2.CreateMap<GroupData, Person>()
                         .ForMember(x => x.FirstName, opt => opt.MapFrom(m => m.HeadofGroupFirstName.Clean()))
                         .ForMember(x => x.LastName, opt => opt.MapFrom(m => m.HeadofGroupLastName.Clean()))
                         .ForMember(x => x.Title, opt => opt.MapFrom(m => m.HeadofGroupTitle.Remove("Not-applicable", "Unknown").Clean()))
@@ -116,14 +116,14 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.Order, opt => opt.MapFrom(m => m.C_Order.ToInteger()))
                     .ForAllOtherMembers(opt => opt.Ignore());
 
-                cfg.CreateMap<Groupdata, Trust>()
+                cfg.CreateMap<GroupData, Trust>()
                     .ForMember(x => x.GroupUID, opt => opt.MapFrom(m => m.UID.ToInteger().Value))
                     .ForMember(x => x.Name, opt => opt.MapFrom(m => m.GroupName.Clean()))
                     .ForMember(x => x.CompaniesHouseNumber, opt => opt.MapFrom(m => m.CompaniesHouseNumber.Clean()))
                     .ForMember(x => x.GroupTypeId, opt => opt.MapFrom(m => L.GroupTypesGetAll().IdFromName(m.GroupType)))
                     .ForMember(x => x.ClosedDate, opt => opt.MapFrom(m => m.ClosedDate.ToDateTime(_dtFormats)))
                     .ForMember(x => x.StatusId, opt => opt.MapFrom(m => L.EstablishmentStatusesGetAll().IdFromName(m.Status)))
-                    .ForMember(x => x.Head, opt => opt.MapFrom(m => groupPersonMapper.Map<Groupdata, Person>(m)))
+                    .ForMember(x => x.Head, opt => opt.MapFrom(m => groupPersonMapper.Map<GroupData, Person>(m)))
                     .ForAllOtherMembers(opt => opt.Ignore());
 
                 cfg.CreateMap<Governors, Governor>()
@@ -145,14 +145,14 @@ namespace Edubase.Import.Mapping
 
 
                 cfg.CreateMap<Establishmentlinks, EstablishmentLink>()
-                    .ForMember(x => x.Establishment_Urn, opt => opt.MapFrom(m => m.URN.ToInteger()))
-                    .ForMember(x => x.LinkedEstablishment_Urn, opt => opt.MapFrom(m => m.LinkURN.ToInteger()))
+                    .ForMember(x => x.EstablishmentUrn, opt => opt.MapFrom(m => m.URN.ToInteger()))
+                    .ForMember(x => x.LinkedEstablishmentUrn, opt => opt.MapFrom(m => m.LinkURN.ToInteger()))
                     .ForMember(x => x.LinkName, opt => opt.MapFrom(m => m.LinkName))
                     .ForMember(x => x.LinkTypeId, opt => opt.MapFrom(m => L.EstablishmentLinkTypesGetAll().IdFromName(m.LinkType)))
                     .ForMember(x => x.LinkEstablishedDate, opt => opt.MapFrom(m => m.LinkEstablishedDate.ToDateTime(_dtFormats)))
                     .ForAllOtherMembers(opt => opt.Ignore());
 
-                cfg.CreateMap<Grouplinks, EstablishmentTrust>()
+                cfg.CreateMap<GroupLinks, EstablishmentTrust>()
                     .ForMember(x => x.EstablishmentUrn, opt => opt.MapFrom(m => m.URN.ToInteger()))
                     .ForMember(x => x.TrustGroupUID, opt => opt.MapFrom(m => m.LinkedUID.ToInteger()))
                     .ForAllOtherMembers(opt => opt.Ignore());

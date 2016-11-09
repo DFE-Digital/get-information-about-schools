@@ -34,7 +34,7 @@ namespace Edubase.Web.UI.Controllers
 
                 viewModel.Links = (await dc.EstablishmentLinks
                     .Include(x => x.LinkedEstablishment)
-                    .Where(x => x.Establishment_Urn == id)
+                    .Where(x => x.EstablishmentUrn == id)
                     .Select(x => x)
                     .ToArrayAsync())
                     .Select(x => new LinkedEstabViewModel(x)).ToList();
@@ -178,8 +178,8 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task AddOrRemoveEstablishmentLinks(ViewModel model, ApplicationDbContext dc)
         {
-            var linksInDb = dc.EstablishmentLinks.Where(x => x.Establishment_Urn == model.Urn).ToList();
-            var urnsInDb = linksInDb.Select(x => x.LinkedEstablishment_Urn).Cast<int?>().ToArray();
+            var linksInDb = dc.EstablishmentLinks.Where(x => x.EstablishmentUrn == model.Urn).ToList();
+            var urnsInDb = linksInDb.Select(x => x.LinkedEstablishmentUrn).Cast<int?>().ToArray();
             var urnsInModel = model.Links.Select(x => x.Urn).Cast<int?>().ToArray();
 
             var urnsToAdd = from e in urnsInModel
@@ -199,25 +199,25 @@ namespace Edubase.Web.UI.Controllers
                 var item = model.Links.Where(x => x.Urn == urn).First();
                 var link = new EstablishmentLink
                 {
-                    Establishment_Urn = model.Urn,
-                    LinkedEstablishment_Urn = urn,
+                    EstablishmentUrn = model.Urn,
+                    LinkedEstablishmentUrn = urn,
                     LinkEstablishedDate = item.LinkDate,
-                    LinkName = item.Name,
-                    LinkType = item.Type.ToString()
+                    LinkName = item.Name//,
+                    //LinkType = item.Type.ToString()
                 };
                 dc.EstablishmentLinks.Add(link);
 
                 var oppositeLinkType = (item.Type.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
-                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.Establishment_Urn == urn && x.LinkedEstablishment_Urn == model.Urn && x.LinkType == oppositeLinkType);
+                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkType);
                 if (oppositeLink == null)
                 {
                     oppositeLink = new EstablishmentLink
                     {
-                        Establishment_Urn = urn,
-                        LinkedEstablishment_Urn = model.Urn,
+                        EstablishmentUrn = urn,
+                        LinkedEstablishmentUrn = model.Urn,
                         LinkEstablishedDate = item.LinkDate,
                         LinkName = model.Name,
-                        LinkType = oppositeLinkType
+                        //LinkType = oppositeLinkType
                     };
                     dc.EstablishmentLinks.Add(oppositeLink);
                 }
@@ -225,11 +225,11 @@ namespace Edubase.Web.UI.Controllers
 
             foreach (var urn in urnsToRemove.Cast<int>())
             {
-                var linkDataModel = linksInDb.FirstOrDefault(x => x.LinkedEstablishment_Urn == urn);
+                var linkDataModel = linksInDb.FirstOrDefault(x => x.LinkedEstablishmentUrn == urn);
                 if (linkDataModel != null) dc.EstablishmentLinks.Remove(linkDataModel);
 
                 var oppositeLinkType = (linkDataModel.LinkType.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
-                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.Establishment_Urn == urn && x.LinkedEstablishment_Urn == model.Urn && x.LinkType == oppositeLinkType);
+                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkType);
                 if (oppositeLink != null) dc.EstablishmentLinks.Remove(oppositeLink);
             }
 

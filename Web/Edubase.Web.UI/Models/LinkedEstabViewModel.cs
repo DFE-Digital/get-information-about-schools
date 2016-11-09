@@ -22,8 +22,8 @@ namespace Edubase.Web.UI.Models
         public LinkedEstabViewModel(EstablishmentLink link)
         {
             Id = link.Id;
-            Urn = link.LinkedEstablishment_Urn;
-            Type = link.LinkType;
+            Urn = link.LinkedEstablishmentUrn;
+            Type = link.LinkType.Name;
             LinkDate = link.LinkEstablishedDate;
             Name = link.LinkedEstablishment.Name;
         }

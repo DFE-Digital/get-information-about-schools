@@ -12,7 +12,7 @@ namespace Edubase.Import
     using System;
     using System.Collections.Generic;
     
-    public partial class Grouplinks
+    public partial class GroupLinks
     {
         public int autoid { get; set; }
         public string URN { get; set; }

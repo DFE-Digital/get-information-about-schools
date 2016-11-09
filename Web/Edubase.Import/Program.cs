@@ -46,15 +46,15 @@ namespace Edubase.Import
         private static void MigrateAllData(SqlConnection connection, EdubaseSourceDataEntities source)
         {
             MigrateAllLookupData(connection, source);
-            MigrateDataInBatches<Data.Entity.LocalAuthority, LocalAuthority>("LAs", source.LocalAuthority, connection, 100);
-            MigrateDataInBatches<Establishment, Establishments>("Establishments", source.Establishments, connection, 10000);
-            MigrateDataInBatches<Trust, Groupdata>("Trusts", source.Groupdata, connection, 2000);
-            MigrateDataInBatches<Governor, Governors>("Governors", source.Governors, connection, 2000);
-            MigrateDataInBatches<EstablishmentLink, Establishmentlinks>("Establishment Links", source.Establishmentlinks, connection, 2000);
-            MigrateDataInBatches<EstablishmentTrust, Grouplinks>("Trust/Establishment Links", source.Grouplinks, connection, 2000);
+            MigrateDataInBatches<Data.Entity.LocalAuthority, LocalAuthority>("LAs", source.LocalAuthority, connection, 100, BulkCopyOptionPreserveIds);
+            MigrateDataInBatches<Establishment, Establishments>("Establishments", source.Establishments, connection, 10000, BulkCopyOptionPreserveIds);
+            MigrateDataInBatches<Trust, GroupData>("Trusts", source.GroupData, connection, 2000, BulkCopyOptionPreserveIds);
+            MigrateDataInBatches<Governor, Governors>("Governors", source.Governors, connection, 2000, BulkCopyOptionPreserveIds);
+            MigrateDataInBatches<EstablishmentLink, Establishmentlinks>("Establishment Links", source.Establishmentlinks, connection, 2000, BulkCopyOptionNewIds);
+            MigrateDataInBatches<EstablishmentTrust, GroupLinks>("Trust/Establishment Links", source.GroupLinks, connection, 2000, BulkCopyOptionNewIds);
         }
 
-        private static void MigrateDataInBatches<TDestEntity, TSourceEntity>(string label, IQueryable<TSourceEntity> sourceEntities, SqlConnection connection, int batchSize = 1000)
+        private static void MigrateDataInBatches<TDestEntity, TSourceEntity>(string label, IQueryable<TSourceEntity> sourceEntities, SqlConnection connection, int batchSize, SqlBulkCopyOptions options)
         {
             using (Timing(label))
             {
@@ -66,7 +66,7 @@ namespace Edubase.Import
                 {
                     var entities = batch.Select(l => _mapper.Map<TSourceEntity, TDestEntity>(l)).ToArray();
                     FillDataTable(entities.Cast<object>(), dataTable);
-                    Import(dataTable, connection, BulkCopyOptionPreserveIds);
+                    Import(dataTable, connection, options);
                     dataTable.Clear();
                     count += batch.Count();
                     Console.WriteLine($"\t{count} imported");
