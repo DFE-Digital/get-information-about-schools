@@ -34,7 +34,7 @@
         }
         else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.LocalAuthority)
         {
-            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges in Local Authority "@Model.LocalAuthoritySearchModel.Text".</p>
+            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges in the selected local authorities</p>
         }
 
 
@@ -68,11 +68,11 @@
                     @Selector("Phase of education", "p", Model.EducationPhases, Model.SelectedEducationPhaseIds)
                     <div class="filter-divider"></div>
 
-                    @if (Model.SearchType != AdvancedSearchViewModel.eSearchType.LocalAuthority)
-                    {
+                    @*@if (Model.SearchType != AdvancedSearchViewModel.eSearchType.LocalAuthority)
+                    {*@
                         @Selector("Local authority", "l", Model.LocalAuthorties, Model.SelectedLocalAuthorityIds)
                         <div class="filter-divider"></div>
-                    }
+                    @*}*@
 
                     @Selector("Religious character", "r", Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
                     <div class="filter-divider"></div>
@@ -91,8 +91,8 @@
                     }
                     else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.LocalAuthority)
                     {
-                        @Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.Text)
-                        @Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.AutoSuggestValue)
+                        @*@Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.Text)
+                        @Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.AutoSuggestValue)*@
                     }
 
                     @Html.HiddenFor(x => x.SearchType)

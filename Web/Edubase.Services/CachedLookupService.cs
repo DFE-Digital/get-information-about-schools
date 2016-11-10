@@ -14,30 +14,30 @@ namespace Edubase.Services
 {
     public class CachedLookupService
     {
-        private Dictionary<string, Func<ApplicationDbContext, object, Task<string>>> _mapping = null;
+        private Dictionary<string, Func<ApplicationDbContext, int, Task<string>>> _mapping = null;
 
         private LookupService _svc = new LookupService();
 
         public CachedLookupService()
         {
-            _mapping = new Dictionary<string, Func<ApplicationDbContext, object, Task<string>>>()
+            _mapping = new Dictionary<string, Func<ApplicationDbContext, int, Task<string>>>()
             {
-                { "LocalAuthorityId", async (dc, id) => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == (int) id)?.Name },
-                { "HeadTitleId", async (dc, id) => GetName((await HeadTitlesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "GenderId", async (dc, id) => GetName((await GendersGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "EducationPhaseId", async (dc, id) => GetName((await EducationPhasesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "AdmissionsPolicyId", async (dc, id) => GetName((await AdmissionsPoliciesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "StatusId", async (dc, id) => GetName((await EstablishmentStatusesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ReasonEstablishmentOpenedId", async (dc, id) => GetName((await ReasonEstablishmentOpenedGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ReasonEstablishmentClosedId", async (dc, id) => GetName((await ReasonEstablishmentClosedGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ProvisionBoardingId", async (dc, id) => GetName((await ProvisionBoardingGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ProvisionNurseryId", async (dc, id) => GetName((await ProvisionNurseriesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ProvisionOfficialSixthFormId", async (dc, id) => GetName((await ProvisionOfficialSixthFormsGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ReligiousCharacterId", async (dc, id) => GetName((await ReligiousCharactersGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ReligiousEthosId", async (dc, id) => GetName((await ReligiousEthosGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "DioceseId", async (dc, id) => GetName((await DiocesesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ProvisionSpecialClassesId", async (dc, id) => GetName((await ProvisionSpecialClassesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "TypeId", async (dc, id) => GetName((await EstablishmentTypesGetAllAsync()).Cast<LookupBase>(), (int) id) }
+                { "LocalAuthorityId", async (dc, id) => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "HeadTitleId", async (dc, id) => GetName((await HeadTitlesGetAllAsync()), id) },
+                { "GenderId", async (dc, id) => GetName((await GendersGetAllAsync()), id) },
+                { "EducationPhaseId", async (dc, id) => GetName((await EducationPhasesGetAllAsync()), id) },
+                { "AdmissionsPolicyId", async (dc, id) => GetName((await AdmissionsPoliciesGetAllAsync()), id) },
+                { "StatusId", async (dc, id) => GetName((await EstablishmentStatusesGetAllAsync()), id) },
+                { "ReasonEstablishmentOpenedId", async (dc, id) => GetName((await ReasonEstablishmentOpenedGetAllAsync()), id) },
+                { "ReasonEstablishmentClosedId", async (dc, id) => GetName((await ReasonEstablishmentClosedGetAllAsync()), id) },
+                { "ProvisionBoardingId", async (dc, id) => GetName((await ProvisionBoardingGetAllAsync()), id) },
+                { "ProvisionNurseryId", async (dc, id) => GetName((await ProvisionNurseriesGetAllAsync()), id) },
+                { "ProvisionOfficialSixthFormId", async (dc, id) => GetName((await ProvisionOfficialSixthFormsGetAllAsync()), id) },
+                { "ReligiousCharacterId", async (dc, id) => GetName((await ReligiousCharactersGetAllAsync()), id) },
+                { "ReligiousEthosId", async (dc, id) => GetName((await ReligiousEthosGetAllAsync()), id) },
+                { "DioceseId", async (dc, id) => GetName((await DiocesesGetAllAsync()), id) },
+                { "ProvisionSpecialClassesId", async (dc, id) => GetName((await ProvisionSpecialClassesGetAllAsync()), id) },
+                { "TypeId", async (dc, id) => GetName((await EstablishmentTypesGetAllAsync()), id) }
             };
         }
 
@@ -132,7 +132,7 @@ namespace Edubase.Services
 
         public bool IsLookupField(string name) => _mapping.ContainsKey(name);
 
-        private string GetName(IEnumerable<LookupBase> items, int id) => items.FirstOrDefault(x => x.Id == id)?.Name;
+        private string GetName(IEnumerable<LookupDto> items, int id) => items.FirstOrDefault(x => x.Id == id)?.Name;
 
         public void Dispose() => _svc.Dispose();
     }

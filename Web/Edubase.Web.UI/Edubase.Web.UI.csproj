@@ -659,6 +659,7 @@
     <Content Include="Areas\Governors\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Governors\Views\Search\Index.cshtml" />
     <Content Include="Areas\Governors\Views\Search\Results.cshtml" />
+    <Content Include="Assets\Sass\views\_search-page.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

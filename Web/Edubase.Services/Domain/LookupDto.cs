@@ -27,5 +27,7 @@ namespace Edubase.Services.Domain
             Name = entity.Name;
             DisplayOrder = entity.Order;
         }
+
+        public override string ToString() => Name;
     }
 }

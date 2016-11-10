@@ -1,0 +1,27 @@
+﻿
+.search-page {
+
+    div.local-authority-selector {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 200px;
+        width: 100%;
+        max-width: 400px;
+        border: 2px inset $grey-2;
+        padding: 5px;
+
+        label {
+            background-color: white;
+            border-bottom: 1px solid $grey-3;
+            width: 99%;
+            margin: 0 0px 0 0px;
+            font-size: 16px;
+            display: block;
+            float: none;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            padding:8px 12px 8px 12px;
+        }
+    }
+}

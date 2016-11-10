@@ -81,15 +81,7 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<ActionResult> SearchByLocalAuthority(ViewModel model)
         {
-            var query = GetEstablishmentsQuery();
-            var payload = model.LocalAuthoritySearchModel;
-            if (payload.AutoSuggestValue.IsInteger()) query = query.Where(x => x.LocalAuthorityId == payload.AutoSuggestValueAsInt).OrderBy(x => x.Name);
-            else
-            {
-                var la = new CachedLookupService().LocalAuthorityGetAll().FirstOrDefault(x => x.Name == payload.Text);
-                if (la != null) query = query.Where(x => x.LocalAuthorityId == la.Id);
-                else model.Error = "The local authority name was not found";
-            }
+            var query = GetEstablishmentsQuery().OrderBy(x => x.Name);
             return await ProcessResult(model, query);
         }
 

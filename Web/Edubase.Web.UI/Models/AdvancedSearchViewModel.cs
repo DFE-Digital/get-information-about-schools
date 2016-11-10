@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Models
         
         public Payload TextSearchModel { get; set; } = new Payload();
         public Payload LocationSearchModel { get; set; } = new Payload();
-        public Payload LocalAuthoritySearchModel { get; set; } = new Payload();
+        
         public Payload TrustSearchModel { get; set; } = new Payload();
 
         public eSearchType SearchType { get; set; }
