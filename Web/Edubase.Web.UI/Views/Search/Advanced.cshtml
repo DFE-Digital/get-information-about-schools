@@ -96,7 +96,7 @@
                             <li class="search-type-wrapper">
                                 @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                                 {
-                                    var las = new Edubase.Services.CachedLookupService().LocalAuthorityGetAll().Where(x => x.Id > 0);
+                                    var las = new Edubase.Services.CachedLookupService().LocalAuthorityGetAll().Where(x => x.Id > 0).OrderBy(x => x.Name);
                                     <label>
                                         <input type="radio" id="" class="panel-toggle" />
                                         <span class="label-text">Local Authority</span>

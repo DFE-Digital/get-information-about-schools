@@ -110,7 +110,7 @@ namespace Edubase.Web.UI.Controllers
                 model.EstablishmentStatuses = (await svc.EstablishmentStatusesGetAllAsync()).Select(x => new LookupItemViewModel(x));
                 model.EducationPhases = (await svc.EducationPhasesGetAllAsync()).Select(x => new LookupItemViewModel(x));
                 model.ReligiousCharacters = (await svc.ReligiousCharactersGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                model.LocalAuthorties = (await svc.LocalAuthorityGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                model.LocalAuthorties = (await svc.LocalAuthorityGetAllAsync()).OrderBy(x=>x.Name).Select(x => new LookupItemViewModel(x));
                 return View("AdvancedSearchResults", model);
             }
         }
@@ -291,7 +291,7 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpGet]
         public ActionResult SuggestTrust(string text) => Json(DataContext.Trusts.Where(x => x.Name.StartsWith(text))
-            .OrderBy(x=>x.Name).Take(10).Select(x => new { Name = x.Name, Id = x.GroupUID }));
+            .OrderBy(x=>x.Name).Take(10).Select(x => new { Text = x.Name, Id = x.GroupUID }));
 
         private IQueryable<Establishment> GetEstablishmentsQuery() => DataContext.Establishments.Include(x => x.Status);
 

@@ -162,7 +162,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        public ActionResult Details(short id)
+        public ActionResult Details(int id)
         {
             using (var dc = new ApplicationDbContext())
             {
