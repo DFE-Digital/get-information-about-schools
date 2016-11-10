@@ -41,7 +41,7 @@ namespace Edubase.Common
             if (!text.IsNullOrEmpty() && int.TryParse(text, out retVal)) return retVal;
             else return null;
         }
-
+        
         public static bool IsInteger(this string text) => text.ToInteger() != null;
 
         public static int ToInteger(this string text, int defaultValue)
@@ -174,6 +174,16 @@ namespace Edubase.Common
 
             return null;
         }
+
+        public static bool IsNullable(this Type type)
+        {
+            if (type == null) return true; // obvious
+            if (!type.IsValueType) return true; // ref-type
+            if (Nullable.GetUnderlyingType(type) != null) return true; // Nullable<T>
+            return false; // value-type
+        }
+
+        public static Type GetUnderlyingType(this Type type) => (type.IsNullable()) ? Nullable.GetUnderlyingType(type) : type;
 
     }
 }

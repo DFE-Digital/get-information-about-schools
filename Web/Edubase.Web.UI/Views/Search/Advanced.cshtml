@@ -147,7 +147,7 @@
 
                         <label for="roleid" class="bold-xsmall" style="margin-bottom:10px; display:block;">Role</label>
                         <div class="form-hint">e.g. Trustee</div>
-                        @Html.EduDropDownFor(x => x.GovernorSearchModel.RoleId, dc.GovernorRoles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                        @Html.EduDropDownFor(x => x.GovernorSearchModel.RoleId, dc.LookupGovernorRoles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
                             new { id = "roleid", @class = "form-control", style = "max-width:300px;" })
                         <br /><br />
 
@@ -183,7 +183,6 @@
     <script type="text/javascript">
 
         window.localAuthorities = @Html.Json(new Edubase.Services.CachedLookupService().LocalAuthorityGetAll())
-//AIzaSyD-0SGq9LJ8XjplKb7wnroq7uEomu2jvFs
     </script>
 }
 

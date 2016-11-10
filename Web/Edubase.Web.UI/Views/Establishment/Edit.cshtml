@@ -139,7 +139,7 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-                            @Html.EduLocalAuthorityDropDownFor(x => x.LocalAuthorityId)
+                            @Html.EduLookupDropDownFor(x => x.LocalAuthorityId, x => x.LocalAuthorityGetAll())
                         </div>
                     </td>
                 </tr>
@@ -278,7 +278,7 @@
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
                             @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
-                            @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.EstablishmentOpenedReasons.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-opened", @class = "form-control" })
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.LookupReasonEstablishmentOpened.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-opened", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -332,7 +332,7 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
-                            @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, dc.EstablishmentClosedReasons.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-closed", @class = "form-control" })
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, dc.LookupReasonEstablishmentClosed.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-closed", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -386,7 +386,7 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
-                            @Html.DropDownListFor(x => x.ProvisionBoardingId, dc.BoardingProvisions.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "boarders", @class = "form-control" })
+                            @Html.DropDownListFor(x => x.ProvisionBoardingId, dc.LookupProvisionBoarding.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "boarders", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -399,7 +399,7 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
-                            @Html.DropDownListFor(x => x.ProvisionNurseryId, dc.NurseryProvisions.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "nursery", @class = "form-control"})
+                            @Html.DropDownListFor(x => x.ProvisionNurseryId, dc.LookupProvisionNurseries.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "nursery", @class = "form-control"})
                         </div>
                     </td>
                 </tr>
@@ -412,7 +412,7 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
-                            @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, dc.OfficialSixthFormProvisions.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "sixthform", @class = "form-control" })
+                            @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, dc.LookupProvisionOfficialSixthForms.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "sixthform", @class = "form-control" })
                         </div>
                     </td>
                 </tr>
@@ -425,7 +425,7 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
-                            @Html.DropDownListFor(x => x.DioceseId, dc.Dioceses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "diocese", @class = "form-control" })
+                            @Html.DropDownListFor(x => x.DioceseId, dc.LookupDioceses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "diocese", @class = "form-control" })
                         </div>
                     </td>
                 </tr>

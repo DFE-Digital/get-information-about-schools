@@ -79,7 +79,10 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.Establishment = model;
                 if(User.Identity.IsAuthenticated) viewModel.ChangeHistory = await new EstablishmentService().GetChangeHistoryAsync(id, dc);
                 viewModel.Govs = await dc.Governors.Include(x => x.AppointingBody).Include(x => x.Role).Where(x => x.EstablishmentUrn == id).ToArrayAsync();
-                viewModel.LinkedEstablishments = (await dc.EstablishmentLinks.Include(x => x.LinkedEstablishment).Where(x => x.EstablishmentUrn == id).ToArrayAsync())
+                viewModel.LinkedEstablishments = (await dc.EstablishmentLinks
+                    .Include(x => x.LinkedEstablishment)
+                    .Include(x => x.LinkType)
+                    .Where(x => x.EstablishmentUrn == id).ToArrayAsync())
                     .Select(x => new LinkedEstabViewModel(x)).ToArray();
 
                 if (User.Identity.IsAuthenticated)

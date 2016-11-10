@@ -306,11 +306,11 @@ namespace Edubase.Web.UI.Controllers
 
         private IQueryable<Establishment> AddFilters(ViewModel viewModel, IQueryable<Establishment> query)
         {
-            var selectedEducationPhaseIds = viewModel.SelectedEducationPhaseIds.Select(p => p.ToInteger()).ToArray();
-            var selectedEstablishmentStatusIds = viewModel.SelectedEstablishmentStatusIds.Select(p => p.ToInteger()).ToArray();
-            var selectedEstablishmentTypeIds = viewModel.SelectedEstablishmentTypeIds.Select(p => p.ToInteger()).ToArray();
-            var selectedLocalAuthorityIds = viewModel.SelectedLocalAuthorityIds.Select(p => p.ToInteger()).ToArray();
-            var selectedReligiousCharacterIds = viewModel.SelectedReligiousCharacterIds.Select(p => p.ToInteger()).ToArray();
+            var selectedEducationPhaseIds = viewModel.SelectedEducationPhaseIds.Cast<int?>().ToArray();
+            var selectedEstablishmentStatusIds = viewModel.SelectedEstablishmentStatusIds.Cast<int?>().ToArray();
+            var selectedEstablishmentTypeIds = viewModel.SelectedEstablishmentTypeIds.Cast<int?>().ToArray();
+            var selectedLocalAuthorityIds = viewModel.SelectedLocalAuthorityIds.Cast<int?>().ToArray();
+            var selectedReligiousCharacterIds = viewModel.SelectedReligiousCharacterIds.Cast<int?>().ToArray();
             
             if (selectedEducationPhaseIds.Any()) query = query.Where(x => selectedEducationPhaseIds.Contains(x.EducationPhaseId));
             if (selectedEstablishmentStatusIds.Any()) query = query.Where(x => selectedEstablishmentStatusIds.Contains(x.StatusId));

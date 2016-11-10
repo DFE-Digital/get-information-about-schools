@@ -1,23 +1,23 @@
-﻿using Edubase.Common;
-using Edubase.Data.Entity;
-using Edubase.Data.Entity.Lookups;
+﻿using AutoMapper;
 using MoreLinq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Spatial;
 using System.Data.SqlClient;
 using System.Linq;
 
 namespace Edubase.Import
 {
-    using AutoMapper;
+    using Common;
+    using Data.Entity;
+    using Data.Entity.Lookups;
     using Helpers;
     using Mapping;
     using Migrations;
-    using System.Collections;
-    using System.Data.Entity;
-    using System.Data.Entity.Spatial;
 
     public class Program
     {

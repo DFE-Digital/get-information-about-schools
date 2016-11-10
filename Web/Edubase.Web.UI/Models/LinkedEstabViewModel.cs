@@ -23,7 +23,7 @@ namespace Edubase.Web.UI.Models
         {
             Id = link.Id;
             Urn = link.LinkedEstablishmentUrn;
-            Type = link.LinkType.Name;
+            Type = link.LinkType?.Name;
             LinkDate = link.LinkEstablishedDate;
             Name = link.LinkedEstablishment.Name;
         }

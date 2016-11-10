@@ -141,6 +141,7 @@
     <Compile Include="Domain\DomainException.cs" />
     <Compile Include="Domain\EstablishmentAutoSuggestionDto.cs" />
     <Compile Include="Domain\EstablishmentChangeDto.cs" />
+    <Compile Include="Domain\LookupDto.cs" />
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="EstablishmentService.cs" />

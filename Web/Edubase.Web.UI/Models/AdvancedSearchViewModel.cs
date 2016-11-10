@@ -79,23 +79,23 @@ namespace Edubase.Web.UI.Models
 
         public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
         [BindAlias("t")]
-        public List<string> SelectedEstablishmentTypeIds { get; set; } = new List<string>();
+        public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();
 
         public IEnumerable<LookupItemViewModel> EstablishmentStatuses { get; set; }
         [BindAlias("s")]
-        public List<string> SelectedEstablishmentStatusIds { get; set; } = new List<string>();
+        public List<int> SelectedEstablishmentStatusIds { get; set; } = new List<int>();
 
         public IEnumerable<LookupItemViewModel> EducationPhases { get; set; }
         [BindAlias("p")]
-        public List<string> SelectedEducationPhaseIds { get; set; } = new List<string>();
+        public List<int> SelectedEducationPhaseIds { get; set; } = new List<int>();
 
         public IEnumerable<LookupItemViewModel> LocalAuthorties { get; set; }
         [BindAlias("l")]
-        public List<string> SelectedLocalAuthorityIds { get; set; } = new List<string>();
+        public List<int> SelectedLocalAuthorityIds { get; set; } = new List<int>();
 
         public IEnumerable<LookupItemViewModel> ReligiousCharacters { get; set; }
         [BindAlias("r")]
-        public List<string> SelectedReligiousCharacterIds { get; set; } = new List<string>();
+        public List<int> SelectedReligiousCharacterIds { get; set; } = new List<int>();
 
 
 
