@@ -55,11 +55,13 @@ namespace Edubase.Data.Entity
 
         public LogMessage(DateTime when, Guid id)
         {
-            PartitionKey = when.ToString("yyyyMMdd");
+            PartitionKey = CreatePartitionKey(when);
             RowKey = id.ToString("N");
             DateUtc = when;
         }
 
+        public static string CreatePartitionKey(DateTime date) => date.ToString("yyyyMMdd");
+        
 
         public override string ToString()
         {

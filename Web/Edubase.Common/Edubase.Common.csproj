@@ -67,6 +67,7 @@
     <Compile Include="Spatial\OSGB36Converter.cs" />
     <Compile Include="Spatial\RefEll.cs" />
     <Compile Include="StringUtil.cs" />
+    <Compile Include="UriHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

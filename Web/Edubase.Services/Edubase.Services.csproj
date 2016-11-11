@@ -141,6 +141,7 @@
     <Compile Include="Domain\DomainException.cs" />
     <Compile Include="Domain\EstablishmentAutoSuggestionDto.cs" />
     <Compile Include="Domain\EstablishmentChangeDto.cs" />
+    <Compile Include="Domain\LogMessagesDto.cs" />
     <Compile Include="Domain\LookupDto.cs" />
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="EmailService.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Lucene\EstablishmentsIndex.cs" />
     <Compile Include="MessageLoggingService.cs" />
     <Compile Include="LookupService.cs" />
+    <Compile Include="LogMessageReadService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrustService.cs" />
   </ItemGroup>

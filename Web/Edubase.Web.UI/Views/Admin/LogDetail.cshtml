@@ -1,0 +1,75 @@
+﻿@using Edubase.Data.Entity;
+@model LogMessage
+@{
+    ViewBag.bodyClasses = "view-logs";
+}
+<h1 class="heading-medium">Log message detail</h1>
+
+<table>
+    <tr>
+        <td>Date/time</td>
+        <td>@Model.DateUtc.ToString("dd MMM yy HH:mm:ss")</td>
+    </tr>
+
+    <tr>
+        <td>Username</td>
+        <td>@Model.UserName</td>
+    </tr>
+
+    <tr>
+        <td>Url</td>
+        <td>@Model.Url</td>
+    </tr>
+
+    <tr>
+        <td>Referrer url</td>
+        <td>@Model.ReferrerUrl</td>
+    </tr>
+
+    <tr>
+        <td>Level</td>
+        <td>@Model.Level</td>
+    </tr>
+
+    <tr>
+        <td>Method</td>
+        <td>@Model.HttpMethod</td>
+    </tr>
+
+    <tr>
+        <td>Client IP address</td>
+        <td>@Model.ClientIPAddress</td>
+    </tr>
+
+    <tr>
+        <td>Environment</td>
+        <td>@Model.Environment</td>
+    </tr>
+
+
+    <tr>
+        <td>User name</td>
+        <td>@Model.UserName</td>
+    </tr>
+
+    <tr>
+        <td>User ID</td>
+        <td>@Model.UserId</td>
+    </tr>
+
+    <tr>
+        <td>User agent</td>
+        <td>@Model.UserAgent</td>
+    </tr>
+
+    <tr>
+        <td>Text</td>
+        <td class="plain">@FormatHelpers.HtmlizeNewLines(Model.Text)</td>
+    </tr>
+
+    <tr>
+        <td>Exception</td>
+        <td class="plain">@FormatHelpers.HtmlizeNewLines(Model.Exception)</td>
+    </tr>
+
+</table>

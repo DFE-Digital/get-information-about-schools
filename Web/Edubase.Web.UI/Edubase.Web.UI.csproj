@@ -264,6 +264,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
+    <Compile Include="Models\Admin\LogMessagesViewModel.cs" />
     <Compile Include="Models\ApprovalsViewModel.cs" />
     <Compile Include="Models\AdvancedSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
@@ -660,6 +661,7 @@
     <Content Include="Areas\Governors\Views\Search\Index.cshtml" />
     <Content Include="Areas\Governors\Views\Search\Results.cshtml" />
     <Content Include="Assets\Sass\views\_search-page.scss" />
+    <Content Include="Assets\Sass\views\_view-logs.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -715,6 +717,8 @@
     <Content Include="Views\Approval\Index.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
     <Content Include="Views\Establishment\Create.cshtml" />
+    <Content Include="Views\Admin\Logs.cshtml" />
+    <Content Include="Views\Admin\LogDetail.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <Content Include="Views\Search\Advanced.cshtml" />
