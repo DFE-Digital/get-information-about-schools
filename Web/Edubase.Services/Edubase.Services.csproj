@@ -107,10 +107,15 @@
       <HintPath>..\packages\Remotion.Linq.1.13.183.0\lib\net35\Remotion.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="StackExchange.Redis, Version=1.1.608.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.1.1.608\lib\net46\StackExchange.Redis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
@@ -134,6 +139,14 @@
     <Compile Include="BlobService.cs" />
     <Compile Include="BusMessagingService.cs" />
     <Compile Include="CachedLookupService.cs" />
+    <Compile Include="Cache\Cacheable.cs" />
+    <Compile Include="Cache\CacheAccessor.cs" />
+    <Compile Include="Cache\CacheAuditLogItem.cs" />
+    <Compile Include="Cache\CacheConfig.cs" />
+    <Compile Include="Cache\CacheResponseDto.cs" />
+    <Compile Include="Cache\DistributedCacheMessage.cs" />
+    <Compile Include="Cache\eCacheEvent.cs" />
+    <Compile Include="Cache\ICacheAccessor.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
     <Compile Include="Domain\CompanyProfileDto.cs" />
@@ -171,6 +184,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
