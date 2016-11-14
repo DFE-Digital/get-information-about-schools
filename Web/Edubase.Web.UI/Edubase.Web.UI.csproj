@@ -292,7 +292,8 @@
     <Compile Include="Utils\RequestContextWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Scripts\app.js" />
+    <Content Include="Assets\Scripts\analytics.js" />
+    <Content Include="Assets\Scripts\_application.js" />
     <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
     <Content Include="Assets\Scripts\map-interactions.js" />
     <Content Include="Assets\Scripts\tabs.js" />

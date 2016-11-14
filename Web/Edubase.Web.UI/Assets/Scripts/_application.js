@@ -30,4 +30,10 @@
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
     };
+
+
+    $(function () {
+        $(document).on("click", "a,.js-track", window.DfE.Util.Analytics.TrackClick);
+    });
+
 }());
