@@ -178,6 +178,8 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task AddOrRemoveEstablishmentLinks(ViewModel model, ApplicationDbContext dc)
         {
+            var svc = new CachedLookupService();
+
             var linksInDb = dc.EstablishmentLinks.Where(x => x.EstablishmentUrn == model.Urn).ToList();
             var urnsInDb = linksInDb.Select(x => x.LinkedEstablishmentUrn).Cast<int?>().ToArray();
             var urnsInModel = model.Links.Select(x => x.Urn).Cast<int?>().ToArray();
@@ -202,13 +204,14 @@ namespace Edubase.Web.UI.Controllers
                     EstablishmentUrn = model.Urn,
                     LinkedEstablishmentUrn = urn,
                     LinkEstablishedDate = item.LinkDate,
-                    LinkName = item.Name//,
-                    //LinkType = item.Type.ToString()
+                    LinkName = item.Name,
+                    LinkTypeId = (await svc.EstablishmentLinkTypesGetAllAsync()).Single(x => x.Name == item.Type).Id
                 };
                 dc.EstablishmentLinks.Add(link);
 
-                var oppositeLinkType = (item.Type.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
-                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkType);
+                var oppositeLinkType = (item.Type.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor);
+                var oppositeLinkTypeName = oppositeLinkType.ToString();
+                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkTypeName);
                 if (oppositeLink == null)
                 {
                     oppositeLink = new EstablishmentLink
@@ -217,7 +220,7 @@ namespace Edubase.Web.UI.Controllers
                         LinkedEstablishmentUrn = model.Urn,
                         LinkEstablishedDate = item.LinkDate,
                         LinkName = model.Name,
-                        //LinkType = oppositeLinkType
+                        LinkTypeId = (await svc.EstablishmentLinkTypesGetAllAsync()).Single(x => x.Name == oppositeLinkType.ToString()).Id
                     };
                     dc.EstablishmentLinks.Add(oppositeLink);
                 }

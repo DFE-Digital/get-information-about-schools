@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity.Migrations;
+using MoreLinq;
 
 namespace Edubase.Data.Migrations
 {
@@ -28,8 +29,24 @@ namespace Edubase.Data.Migrations
                 })).ToArray();
 
             context.Permissions.AddOrUpdate(permissions);
+
+            if (!context.LookupEstablishmentLinkTypes.Any(x => x.Name.Equals("Successor")))
+            {
+                context.LookupEstablishmentLinkTypes.Add(new Entity.Lookups.LookupEstablishmentLinkType
+                {
+                    Name = "Successor"
+                });
+            }
+
+            if (!context.LookupEstablishmentLinkTypes.Any(x => x.Name.Equals("Predecessor")))
+            {
+                context.LookupEstablishmentLinkTypes.Add(new Entity.Lookups.LookupEstablishmentLinkType
+                {
+                    Name = "Predecessor"
+                });
+            }
+
             context.SaveChanges();
-            
         }
     }
 }
