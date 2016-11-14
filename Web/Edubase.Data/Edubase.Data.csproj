@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="ApplicationDbConfiguration.cs" />
     <Compile Include="DbUtil.cs" />
     <Compile Include="Entity\ComplexTypes\Person.cs" />
     <Compile Include="Entity\EstablishmentChangeHistory.cs" />

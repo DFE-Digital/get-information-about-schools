@@ -16,6 +16,7 @@ namespace Edubase.Services
                 : Task.FromResult(null as string));
 
             var client = QueueClient.CreateFromConnectionString(ConfigurationManager.ConnectionStrings["ServiceBusConnectionString"].ConnectionString, "updates");
+
             var payload = JsonConvert.SerializeObject(new
             {
                 HeadTitle = title,

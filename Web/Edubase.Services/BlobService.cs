@@ -8,6 +8,7 @@
     using Microsoft.WindowsAzure.Storage.Blob;
     using System.Configuration;
     using Common;
+    using Microsoft.WindowsAzure.Storage.RetryPolicies;
 
     public class BlobService
     {
@@ -51,6 +52,7 @@
             {
                 _client = CloudStorageAccount.Parse(storageConnectionString).CreateCloudBlobClient();
                 _clients.Add(storageConnectionString, _client);
+                _client.DefaultRequestOptions.RetryPolicy = new ExponentialRetry();
             }
         }
 
