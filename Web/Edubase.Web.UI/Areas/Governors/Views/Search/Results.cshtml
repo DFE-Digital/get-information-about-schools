@@ -55,7 +55,7 @@
                 @foreach (var result in Model.Results)
                 {
                     <li>
-                        <h2 class="bold-small">@result.FullName &ndash; @result.Role.Name</h2>
+                        <h2 class="bold-small">@result.Person.FullName &ndash; @result.Role.Name</h2>
                         <dl>
                             <dt>URN:</dt>
                             <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Schools", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
@@ -71,10 +71,10 @@
                                 <dt>Date of appointment:</dt>
                                 <dd>@result.AppointmentStartDate.Value.ToString("dd/MM/yyyy")</dd>
                             }
-                            @if (result.GovernorAppointingBodyId.HasValue)
+                            @if (result.AppointingBodyId.HasValue)
                             {
                                 <dt>Appointing body:</dt>
-                                <dd>@result.GovernorAppointingBody</dd>
+                                <dd>@result.AppointingBody</dd>
                             }
 
                         </dl>
