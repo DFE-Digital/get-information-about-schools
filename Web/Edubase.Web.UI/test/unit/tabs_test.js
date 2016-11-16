@@ -70,7 +70,7 @@ describe('Tab tests', function tabCheck(){
             !$tabZero.hasClass('selected-tab') &&
             $('#tab1').is(':visible') &&
             !$('#tab0').is(':visible')
-        );
+        ).toBeTruthy();
     });
 
     it ('URL hash is updated after changing tabs', function(){
