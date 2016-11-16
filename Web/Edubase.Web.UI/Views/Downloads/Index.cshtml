@@ -18,7 +18,7 @@
     @foreach (var item in Model)
     {
         <li class="icon icon-download">
-            <a href="@item.Uri" target="_blank" rel="nofollow">@item.Name.Substring(4, item.Name.Length-8)</a>
+            <a href="@item.Uri" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Name.Substring(4, item.Name.Length-8)|download">@item.Name.Substring(4, item.Name.Length-8)</a>
             in ZIP format. @ConvertBytesToMegabytes(item.Properties.Length) MB
         </li>
     }

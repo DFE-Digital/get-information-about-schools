@@ -14,6 +14,13 @@ namespace Edubase.Common
             return Regex.IsMatch(text, @"\A\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b\Z", RegexOptions.IgnoreCase);
         }
 
+        public static string Remove(this string data, params string[] stringsToRemove)
+        {
+            if (data == null || string.IsNullOrWhiteSpace(data)) return null;
+            foreach (var item in stringsToRemove) data = data.Replace(item, string.Empty);
+            return data;
+        }
+
         public static string RemoveSubstring(this string data, string stringToRemove)
         {
             if (data == null || string.IsNullOrWhiteSpace(data)) return null;
@@ -34,7 +41,7 @@ namespace Edubase.Common
             if (!text.IsNullOrEmpty() && int.TryParse(text, out retVal)) return retVal;
             else return null;
         }
-
+        
         public static bool IsInteger(this string text) => text.ToInteger() != null;
 
         public static int ToInteger(this string text, int defaultValue)
@@ -42,6 +49,20 @@ namespace Edubase.Common
             int retVal;
             if (!text.IsNullOrEmpty() && int.TryParse(text, out retVal)) return retVal;
             else return defaultValue;
+        }
+
+        public static decimal? ToDecimal(this string text)
+        {
+            decimal temp;
+            if (!text.IsNullOrEmpty() && decimal.TryParse(text, out temp)) return temp;
+            else return null;
+        }
+
+        public static double? ToDouble(this string text)
+        {
+            double temp;
+            if (!text.IsNullOrEmpty() && double.TryParse(text, out temp)) return temp;
+            else return null;
         }
 
         /// <summary>
@@ -106,6 +127,21 @@ namespace Edubase.Common
         }
 
         /// <summary>
+        /// Alias of Add, but returns the value added.
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static TValue Append<TKey, TValue>(this IDictionary<TKey, TValue> data, TKey key, TValue value)
+        {
+            data.Add(key, value);
+            return value;
+        }
+
+        /// <summary>
         /// Truncates a string if necessary and appends an ellipsis
         /// </summary>
         /// <param name="text"></param>
@@ -138,6 +174,16 @@ namespace Edubase.Common
 
             return null;
         }
+
+        public static bool IsNullable(this Type type)
+        {
+            if (type == null) return true; // obvious
+            if (!type.IsValueType) return true; // ref-type
+            if (Nullable.GetUnderlyingType(type) != null) return true; // Nullable<T>
+            return false; // value-type
+        }
+
+        public static Type GetUnderlyingType(this Type type) => (type.IsNullable()) ? Nullable.GetUnderlyingType(type) : type;
 
     }
 }

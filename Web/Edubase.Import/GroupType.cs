@@ -14,6 +14,7 @@ namespace Edubase.Import
     
     public partial class GroupType
     {
+        public int autoid { get; set; }
         public string GroupTypecode { get; set; }
         public string GroupType1 { get; set; }
     }

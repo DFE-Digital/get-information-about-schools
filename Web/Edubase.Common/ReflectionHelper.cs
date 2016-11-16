@@ -17,6 +17,8 @@ namespace Edubase.Common
             return val?.ToString() ?? string.Empty;
         }
 
+
+
         public static void SetProperty(object item, string propertyName, object value)
         {
             Type type = null;

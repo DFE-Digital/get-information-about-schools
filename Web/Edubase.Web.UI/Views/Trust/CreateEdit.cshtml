@@ -77,7 +77,7 @@
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x=>x.TypeId)">
-                            @Html.EduDropDownFor(x => x.TypeId, dc.GroupTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), 
+                            @Html.EduDropDownFor(x => x.TypeId, dc.LookupGroupTypes.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), 
                                 new { id = "la", @class = "form-control" })
                         </div>
                     </td>

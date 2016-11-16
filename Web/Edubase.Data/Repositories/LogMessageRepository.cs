@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using MoreLinq;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using Microsoft.WindowsAzure.Storage.Table.Queryable;
 
 namespace Edubase.Data.Repositories
 {
@@ -39,5 +41,29 @@ namespace Edubase.Data.Repositories
         }
 
         public async Task CreateAsync(IEnumerable<LogMessage> messages) => await CreateAsync(messages.ToArray());
+
+        public async Task<Tuple<IEnumerable<LogMessage>, TableContinuationToken>> GetAllAsync(int take, TableContinuationToken skip = null, DateTime? date = null)
+        {
+            var query = Table.CreateQuery<LogMessage>().AsQueryable();
+            if (date.HasValue) query = query.Where(x => x.PartitionKey == LogMessage.CreatePartitionKey(date.Value));
+            query = query.Take(take);
+            var results = await Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), skip);
+            return new Tuple<IEnumerable<LogMessage>, TableContinuationToken>(results, results.ContinuationToken);
+        }
+
+        public async Task<LogMessage> GetAsync(string id)
+        {
+            var partitionKey = id.Substring(id.Length - 8);
+            var rowKey = id.Substring(0, id.Length - 8);
+            return await GetAsync(partitionKey, rowKey);
+        }
+
+        public async Task<LogMessage> GetAsync(string partitionKey, string rowKey)
+        {
+            var q = Table.CreateQuery<LogMessage>().Where(x => x.PartitionKey == partitionKey && x.RowKey == rowKey).AsTableQuery();
+            var results = await q.ExecuteSegmentedAsync(null);
+            return results.FirstOrDefault();
+        }
+
     }
 }

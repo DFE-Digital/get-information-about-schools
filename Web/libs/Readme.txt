@@ -1,0 +1,1 @@
+This folder contains dependencies that are not nuget packages, e.g., customised/forked packages or components

@@ -10,113 +10,73 @@ namespace Edubase.Data.Entity
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public IDbSet<AdmissionsPolicy> AdmissionsPolicies { get; set; }
-        public IDbSet<Diocese> Dioceses { get; set; }
-        public IDbSet<EducationPhase> EducationPhases { get; set; }
-        public IDbSet<EstablishmentStatus> EstablishmentStatuses { get; set; }
-        public IDbSet<EstablishmentType> EstablishmentTypes { get; set; }
-        public IDbSet<Gender> Genders { get; set; }
-        public IDbSet<GroupType> GroupTypes { get; set; }
-        public IDbSet<HeadTitle> HeadTitles { get; set; }
-        public IDbSet<ProvisionBoarding> BoardingProvisions { get; set; }
-        public IDbSet<ProvisionNursery> NurseryProvisions { get; set; }
-        public IDbSet<ProvisionOfficialSixthForm> OfficialSixthFormProvisions { get; set; }
-        public IDbSet<ProvisionSpecialClasses> SpecialClassesProvisions { get; set; }
-        public IDbSet<ReasonEstablishmentClosed> EstablishmentClosedReasons { get; set; }
-        public IDbSet<ReasonEstablishmentOpened> EstablishmentOpenedReasons { get; set; }
-        public IDbSet<ReligiousCharacter> ReligiousCharacters { get; set; }
-        public IDbSet<ReligiousEthos> ReligiousEthos { get; set; }
-        public IDbSet<Company> Companies { get; set; }
+        public IDbSet<Trust> Trusts { get; set; }
         public IDbSet<Establishment> Establishments { get; set; }
         public IDbSet<LocalAuthority> LocalAuthorities { get; set; }
-        public IDbSet<Estab2Estab> Estab2EstabLinks { get; set; }
-        public IDbSet<Establishment2Company> Establishment2CompanyLinks { get; set; }
+        public IDbSet<EstablishmentLink> EstablishmentLinks { get; set; }
+        public IDbSet<EstablishmentTrust> EstablishmentTrusts { get; set; }
         public IDbSet<EstablishmentPermission> Permissions { get; set; }
         public IDbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
         public IDbSet<Governor> Governors { get; set; }
-        public IDbSet<GovernorRole> GovernorRoles { get; set; }
-        public IDbSet<GovernorAppointingBody> GovernorAppointingBodies { get; set; }
         public IDbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; }
+        
 
-        private bool _enableIdentityInsert;
+        #region Lookups
+        public IDbSet<LookupAdmissionsPolicy> LookupAdmissionsPolicies { get; set; }
+        public IDbSet<LookupEducationPhase> LookupEducationPhases { get; set; }
+        public IDbSet<LookupEstablishmentStatus> LookupEstablishmentStatuses { get; set; }
+        public IDbSet<LookupEstablishmentType> LookupEstablishmentTypes { get; set; }
+        public IDbSet<LookupGender> LookupGenders { get; set; }
+        public IDbSet<LookupGroupType> LookupGroupTypes { get; set; }
+        public IDbSet<LookupHeadTitle> LookupHeadTitles { get; set; }
+        public IDbSet<LookupProvisionBoarding> LookupProvisionBoarding { get; set; }
+        public IDbSet<LookupProvisionNursery> LookupProvisionNurseries { get; set; }
+        public IDbSet<LookupProvisionOfficialSixthForm> LookupProvisionOfficialSixthForms { get; set; }
+        public IDbSet<LookupProvisionSpecialClasses> LookupProvisionSpecialClasses { get; set; }
+        public IDbSet<LookupReasonEstablishmentClosed> LookupReasonEstablishmentClosed { get; set; }
+        public IDbSet<LookupReasonEstablishmentOpened> LookupReasonEstablishmentOpened { get; set; }
+        public IDbSet<LookupReligiousCharacter> LookupReligiousCharacters { get; set; }
+        public IDbSet<LookupReligiousEthos> LookupReligiousEthos { get; set; }
+        public IDbSet<LookupGovernorRole> LookupGovernorRoles { get; set; }
+        public IDbSet<LookupGovernorAppointingBody> LookupGovernorAppointingBodies { get; set; }
+        public IDbSet<LookupAccommodationChanged> LookupAccommodationChanged { get; set; }
+        public IDbSet<LookupBoardingEstablishment> LookupBoardingEstablishment { get; set; }
+        public IDbSet<LookupCCGovernance> LookupCCGovernance { get; set; }
+        public IDbSet<LookupCCOperationalHours> LookupCCOperationalHours { get; set; }
+        public IDbSet<LookupCCPhaseType> LookupCCPhaseTypes { get; set; }
+        public IDbSet<LookupDiocese> LookupDioceses { get; set; }
+        public IDbSet<LookupChildcareFacilities> LookupChildcareFacilities { get; set; }
+        public IDbSet<LookupDirectProvisionOfEarlyYears> LookupDirectProvisionOfEarlyYears { get; set; }
+        public IDbSet<LookupFurtherEducationType> LookupFurtherEducationTypes { get; set; }
+        public IDbSet<LookupIndependentSchoolType> LookupIndependentSchoolTypes { get; set; }
+        public IDbSet<LookupInspectorate> LookupInspectorates { get; set; }
+        public IDbSet<LookupInspectorateName> LookupInspectorateNames { get; set; }
+        public IDbSet<LookupLocalGovernors> LookupLocalGovernors { get; set; }
+        public IDbSet<LookupNationality> LookupNationalities { get; set; }
+        public IDbSet<LookupPRUEBD> LookupPRUEBDs { get; set; }
+        public IDbSet<LookupPruEducatedByOthers> LookupPruEducatedByOthers { get; set; }
+        public IDbSet<LookupPruFulltimeProvision> LookupPruFulltimeProvisions { get; set; }
+        public IDbSet<LookupPRUSEN> LookupPRUSENs { get; set; }
+        public IDbSet<LookupResourcedProvision> LookupResourcedProvisions { get; set; }
+        public IDbSet<LookupSection41Approved> LookupSection41Approved { get; set; }
+        public IDbSet<LookupSpecialEducationNeeds> LookupSpecialEducationNeeds { get; set; }
+        public IDbSet<LookupTeenageMothersProvision> LookupTeenageMothersProvisions { get; set; }
+        public IDbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; }
+        public IDbSet<LookupEstablishmentLinkType> LookupEstablishmentLinkTypes { get; set; }
+
+        #endregion
+
 
         public ApplicationDbContext()
             : base("EdubaseSqlDb", throwIfV1Schema: false)
         {
             
         }
-
-        public ApplicationDbContext(bool enableIdentityInsert) 
-            : this()
-        {
-            _enableIdentityInsert = enableIdentityInsert;
-        }
-
+        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Properties<DateTime>().Configure(c => c.HasColumnType("datetime2"));
-
-            if (_enableIdentityInsert)
-            {
-                modelBuilder.Entity<AdmissionsPolicy>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<ProvisionBoarding>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<EducationPhase>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<EstablishmentType>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<EstablishmentStatus>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<Gender>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<GroupType>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<HeadTitle>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<ProvisionNursery>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<ProvisionOfficialSixthForm>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<ProvisionSpecialClasses>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<ReasonEstablishmentClosed>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<ReasonEstablishmentOpened>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<ReligiousCharacter>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<ReligiousEthos>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<Company>()
-                    .Property(x => x.GroupUID)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<LocalAuthority>()
-                    .Property(x => x.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-                modelBuilder.Entity<Establishment>()
-                    .Property(x => x.Urn)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
-            }
-
-
             base.OnModelCreating(modelBuilder);
         }
 
@@ -134,6 +94,19 @@ namespace Edubase.Data.Entity
                 }
             }
             else return await action(dc);
+        }
+        public static T Operation<T>(Func<ApplicationDbContext, T> action, ApplicationDbContext dc = null)
+        {
+            if (dc == null)
+            {
+                using (var dataContext = new ApplicationDbContext())
+                {
+                    T retVal = action(dataContext);
+                    dataContext.SaveChanges();
+                    return retVal;
+                }
+            }
+            else return action(dc);
         }
 
         public static async Task OperationAsync(Func<ApplicationDbContext, Task> action, ApplicationDbContext dc = null)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -35,6 +36,12 @@ namespace Edubase.Web.UI.Helpers
                 return retVal;
             }
             else return "/";
+        }
+
+        public static IHtmlString HtmlizeNewLines(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return null;
+            else return new MvcHtmlString(HttpUtility.HtmlEncode(text).Replace("\n", "<br/>"));
         }
     }
 }

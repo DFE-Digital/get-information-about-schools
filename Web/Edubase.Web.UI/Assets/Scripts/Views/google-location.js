@@ -53,7 +53,7 @@
         setLatLng: function (place) {
             if (place.geometry != null) {
                 var location = place.geometry.location;
-                $('#LocationCoordinates').val(location.lat() + ',' + location.lng());
+                $('#LocationSearchModel_AutoSuggestValue').val(location.lat() + ',' + location.lng());
             }
         },
 

@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using Newtonsoft.Json;
+using System.Linq;
+using System.Text;
+using System.Web;
 
 namespace Edubase.Common
 {
@@ -27,5 +30,8 @@ namespace Edubase.Common
             if (bool.TryParse(data, out retVal)) return retVal;
             else return defaultValue;
         }
+
+        
+
     }
 }

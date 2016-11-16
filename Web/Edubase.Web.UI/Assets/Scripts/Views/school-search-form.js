@@ -60,14 +60,12 @@
                 setTimeout(function () {
                     self.bindAutosuggest('#TextSearchModel_Text', '#TextSearchModel_AutoSuggestValue', self.getSchoolsSuggestionHandler);
                     self.bindAutosuggest('#TrustSearchModel_Text', '#TrustSearchModel_AutoSuggestValue', self.getTrustSuggestionHandler);
-                    self.bindAutosuggest('#LocalAuthoritySearchModel_Text', '#LocalAuthoritySearchModel_AutoSuggestValue', { data: window.localAuthorities, name: "name", value: "id" });
+                    //self.bindAutosuggest('#LocalAuthoritySearchModel_Text', '#LocalAuthoritySearchModel_AutoSuggestValue', { data: window.localAuthorities, name: "name", value: "id" });
                 }, 500);
                 
             });
-            
-
         },
-
+        
         getSchoolsSuggestionHandler: function (keywords, callback) {
             var dataSuggestionUrl = $("#TextSearchModel_Text").attr("data-suggestion-url");
             return $.get(encodeURI(dataSuggestionUrl + keywords), function (response) {
@@ -89,7 +87,7 @@
                 return;
             }
 
-            var field = "name";
+            var field = "text";
             var value = "id";
             var source = null;
             var minChars = 0;

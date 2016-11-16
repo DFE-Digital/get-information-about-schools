@@ -37,9 +37,5 @@ namespace Edubase.Data
             }
         }
         
-        public static PropertyInfo[] GetProperties<T>() => typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-       
-
-
     }
 }

@@ -155,8 +155,8 @@ namespace Edubase.Services
         {
             var retVal = new Dictionary<string, string>();
             var svc = new CachedLookupService();
-            var phases = svc.EducationPhasesGetAll().Select(x => x.Id);
-            var types = svc.EstablishmentTypesGetAll().Select(x => x.Id);
+            var phases = svc.EducationPhasesGetAll().Select(x => int.Parse(x.Code));
+            var types = svc.EstablishmentTypesGetAll().Select(x => int.Parse(x.Code));
             phases.ForEach(p => types.ForEach(t => retVal.Add(string.Concat(p, "-", t), GetEstabNumberEntryPolicy(t, p).ToString())));
             return retVal;
         }

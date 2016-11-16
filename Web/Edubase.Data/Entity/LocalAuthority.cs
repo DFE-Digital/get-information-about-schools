@@ -2,7 +2,7 @@
 
 namespace Edubase.Data.Entity
 {
-    public class LocalAuthority
+    public class LocalAuthority : EdubaseEntity
     {
         [Key]
         public int Id { get; set; }

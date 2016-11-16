@@ -63,7 +63,11 @@
     <Compile Include="RandomNumber.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="Retry.cs" />
+    <Compile Include="Spatial\LatLon.cs" />
+    <Compile Include="Spatial\OSGB36Converter.cs" />
+    <Compile Include="Spatial\RefEll.cs" />
     <Compile Include="StringUtil.cs" />
+    <Compile Include="UriHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

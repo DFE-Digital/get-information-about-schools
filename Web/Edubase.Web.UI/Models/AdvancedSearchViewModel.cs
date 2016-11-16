@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Edubase.Common;
+using Edubase.Data.Entity.Lookups;
+using Edubase.Web.UI.Helpers.ModelBinding;
 
 namespace Edubase.Web.UI.Models
 {
@@ -23,7 +25,7 @@ namespace Edubase.Web.UI.Models
             public string AutoSuggestValue { get; set; }
             public int? AutoSuggestValueAsInt => AutoSuggestValue.ToInteger();
         }
-        
+
 
         public enum eSearchType
         {
@@ -46,8 +48,8 @@ namespace Edubase.Web.UI.Models
         public List<Establishment> Results { get; set; }
         public string Error { get; set; }
 
-        public eTextSearchType TextSearchType => TextSearchModel.Text.IsInteger() 
-            ? _textSearchTypeMap.Get(TextSearchModel.Text.Length, eTextSearchType.Unknown) 
+        public eTextSearchType TextSearchType => TextSearchModel.Text.IsInteger()
+            ? _textSearchTypeMap.Get(TextSearchModel.Text.Length, eTextSearchType.Unknown)
             : eTextSearchType.EstablishmentName;
 
         public int Count { get; set; }
@@ -59,18 +61,43 @@ namespace Edubase.Web.UI.Models
         public AdvancedSearchViewModel()
         {
         }
-        
+
 
         public SearchModel GovernorSearchModel { get; set; } = new SearchModel();
 
+        
         public Payload TextSearchModel { get; set; } = new Payload();
         public Payload LocationSearchModel { get; set; } = new Payload();
-        public Payload LocalAuthoritySearchModel { get; set; } = new Payload();
+        
         public Payload TrustSearchModel { get; set; } = new Payload();
 
         public eSearchType SearchType { get; set; }
 
         public int Skip { get; set; }
         public int Take { get; set; }
+
+
+        public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
+        [BindAlias("t")]
+        public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();
+
+        public IEnumerable<LookupItemViewModel> EstablishmentStatuses { get; set; }
+        [BindAlias("s")]
+        public List<int> SelectedEstablishmentStatusIds { get; set; } = new List<int>();
+
+        public IEnumerable<LookupItemViewModel> EducationPhases { get; set; }
+        [BindAlias("p")]
+        public List<int> SelectedEducationPhaseIds { get; set; } = new List<int>();
+
+        public IEnumerable<LookupItemViewModel> LocalAuthorties { get; set; }
+        [BindAlias("l")]
+        public List<int> SelectedLocalAuthorityIds { get; set; } = new List<int>();
+
+        public IEnumerable<LookupItemViewModel> ReligiousCharacters { get; set; }
+        [BindAlias("r")]
+        public List<int> SelectedReligiousCharacterIds { get; set; } = new List<int>();
+
+
+
     }
 }

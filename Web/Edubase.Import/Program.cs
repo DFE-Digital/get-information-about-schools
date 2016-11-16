@@ -1,474 +1,238 @@
-﻿using Edubase.Data.Entity;
+﻿using AutoMapper;
 using MoreLinq;
-using Edubase.Data.Entity.Lookups;
-using System.Data.Entity.Migrations;
-using EdubaseDiocese = Edubase.Data.Entity.Lookups.Diocese;
-using EdubaseGender = Edubase.Data.Entity.Lookups.Gender;
-using EdubaseGroupType = Edubase.Data.Entity.Lookups.GroupType;
-using EdubaseLocalAuthority = Edubase.Data.Entity.LocalAuthority;
-using System.Transactions;
-using System.Data.Entity;
 using System;
-using System.Threading.Tasks;
-using System.Linq;
-using Edubase.Common;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.ComponentModel;
-using System.Data.Entity.Core.Metadata.Edm;
-using Edubase.Data.Entity.ComplexTypes;
-using System.Data.SqlClient;
 using System.Configuration;
+using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Spatial;
+using System.Data.SqlClient;
+using System.Linq;
 
 namespace Edubase.Import
 {
-    using GovMap = Tuple<string, Type, Func<Governor, object>>;
+    using Common;
+    using Data.Entity;
+    using Data.Entity.Lookups;
+    using Helpers;
+    using Mapping;
+    using Migrations;
 
-    class Program
+    public class Program
     {
+        private static Dictionary<Type, DataTable> _tables;
+        private static IMapper _mapper;
+
         static void Main(string[] args)
         {
-            ImportData();
+            _mapper = MappingConfiguration.Create();
+
+            using (Disposer.Timed(() => Console.WriteLine("Recreating the DB"), ms => Console.WriteLine($"...done in {ms}ms")))
+            {
+                Database.SetInitializer(new DropRecreateDatabase());
+                _tables = ApplicationDbContext.Create().GenerateDataTables();
+            }
+            
+            using (var source = new EdubaseSourceDataEntities())
+            {
+                Disposer.Using(CreateSqlConnection, x => x.Open(), x => x.Close(), connection =>
+                {
+                    MigrateAllData(connection, source);
+                });
+            }
         }
 
-        static void ImportData()
+        private static void MigrateAllData(SqlConnection connection, EdubaseSourceDataEntities source)
         {
-            Database.SetInitializer<ApplicationDbContext>(null); // disables data model compatibility checking, enabling ID insert
+            MigrateAllLookupData(connection, source);
+            MigrateDataInBatches<Data.Entity.LocalAuthority, LocalAuthority>("LAs", source.LocalAuthority, connection, 100, BulkCopyOptionPreserveIds);
+            MigrateDataInBatches<Establishment, Establishments>("Establishments", source.Establishments, connection, 10000, BulkCopyOptionPreserveIds);
+            MigrateDataInBatches<Trust, GroupData>("Trusts", source.GroupData, connection, 2000, BulkCopyOptionPreserveIds);
+            MigrateDataInBatches<Governor, Governors>("Governors", source.Governors, connection, 2000, BulkCopyOptionPreserveIds);
+            MigrateDataInBatches<EstablishmentLink, Establishmentlinks>("Establishment Links", source.Establishmentlinks, connection, 2000, BulkCopyOptionNewIds);
+            MigrateDataInBatches<EstablishmentTrust, GroupLinks>("Trust/Establishment Links", source.GroupLinks, connection, 2000, BulkCopyOptionNewIds);
+        }
 
-            using (var source = new EdubaseSourceEntities())
+        private static void MigrateDataInBatches<TDestEntity, TSourceEntity>(string label, IQueryable<TSourceEntity> sourceEntities, SqlConnection connection, int batchSize, SqlBulkCopyOptions options)
+        {
+            using (Timing(label))
             {
-                using (var dest = new ApplicationDbContext(true))
+                var dataTable = _tables.Get<TDestEntity>();
+                new SqlCommand($"DELETE FROM {dataTable.TableName}", connection).ExecuteNonQuery();
+                
+                int count = 0;
+                sourceEntities.Batch(batchSize).ForEach(batch =>
                 {
-                    //Console.WriteLine("Importing lookups...");
-
-                    //MigrateData(dest, "AdmissionsPolicy",
-                    //        () => source.Admissionspolicy.ForEach(x => dest.AdmissionsPolicies.AddOrUpdate(Map<AdmissionsPolicy>(x.code, x.name))));
-
-                    //MigrateData(dest, "Diocese",
-                    //    () => source.Diocese.ForEach(x => dest.Dioceses.AddOrUpdate(new EdubaseDiocese { Id = x.code, Name = x.name })), false);
-
-                    //MigrateData(dest, "ProvisionBoarding",
-                    //    () => source.Boarders.ForEach(x => dest.BoardingProvisions.AddOrUpdate(Map<ProvisionBoarding>(x.code, x.name))));
-
-                    //MigrateData(dest, "EducationPhase",
-                    //    () => source.Phaseofeducation.ForEach(x => dest.EducationPhases.AddOrUpdate(Map<EducationPhase>(x.code, x.name))));
-
-                    //MigrateData(dest, "EstablishmentStatus",
-                    //    () => source.Establishmentstatus.ForEach(x => dest.EstablishmentStatuses.AddOrUpdate(Map<EstablishmentStatus>(x.code, x.name))));
-
-                    //MigrateData(dest, "EstablishmentType",
-                    //    () => source.Typeofestablishment.ForEach(x => dest.EstablishmentTypes.AddOrUpdate(Map<EstablishmentType>(x.code, x.name))));
-
-                    //MigrateData(dest, "Gender",
-                    //    () => source.Gender.ForEach(x => dest.Genders.AddOrUpdate(Map<EdubaseGender>(x.code, x.name))));
-
-                    //MigrateData(dest, "GroupType",
-                    //    () => source.GroupType.ForEach(x => dest.GroupTypes.AddOrUpdate(Map<EdubaseGroupType>(x.GroupTypecode, x.GroupType1))));
-
-                    //MigrateData(dest, "HeadTitle",
-                    //    () => source.Headtitle.ForEach(x => dest.HeadTitles.AddOrUpdate(Map<HeadTitle>(x.code, x.name))));
-
-                    //Console.WriteLine("... half way through...");
-
-                    //MigrateData(dest, "ProvisionNursery",
-                    //    () => source.Nurseryprovision.ForEach(x => dest.NurseryProvisions.AddOrUpdate(Map<ProvisionNursery>(x.code, x.name))));
-
-                    //MigrateData(dest, "ProvisionOfficialSixthForm",
-                    //    () => source.Officialsixthform.ForEach(x => dest.OfficialSixthFormProvisions.AddOrUpdate(Map<ProvisionOfficialSixthForm>(x.code, x.name))));
-
-                    //MigrateData(dest, "ProvisionSpecialClasses",
-                    //    () => source.Specialclasses.ForEach(x => dest.SpecialClassesProvisions.AddOrUpdate(Map<ProvisionSpecialClasses>(x.code, x.name))));
-
-                    //MigrateData(dest, "ReasonEstablishmentClosed",
-                    //    () => source.Reasonestablishmentclosed.ForEach(x => dest.EstablishmentClosedReasons.AddOrUpdate(Map<ReasonEstablishmentClosed>(x.code, x.name))));
-
-                    //MigrateData(dest, "ReasonEstablishmentOpened",
-                    //    () => source.Reasonestablishmentopened.ForEach(x => dest.EstablishmentOpenedReasons.AddOrUpdate(Map<ReasonEstablishmentOpened>(x.code, x.name))));
-
-                    //MigrateData(dest, "ReligiousCharacter",
-                    //    () => source.Religiouscharacter.ForEach(x => dest.ReligiousCharacters.AddOrUpdate(Map<ReligiousCharacter>(x.code, x.name))));
-
-                    //MigrateData(dest, "ReligiousEthos",
-                    //    () => source.Religiousethos.ForEach(x => dest.ReligiousEthos.AddOrUpdate(Map<ReligiousEthos>(x.code, x.name))));
-
-                    //MigrateData(dest, "LocalAuthority",
-                    //    () => source.LocalAuthority.ForEach(x => dest.LocalAuthorities.AddOrUpdate(new EdubaseLocalAuthority
-                    //    {
-                    //        Group = x.C_Group,
-                    //        Id = x.Code.ToInteger().Value,
-                    //        Name = x.Name,
-                    //        Order = x.C_Order.ToInteger().Value
-                    //    })));
-
-                    //Console.WriteLine("..done");
-                    //Console.WriteLine();
-                    //Console.WriteLine();
-                    //Console.Write("Importing companies");
-                    //MigrateCompanies(source, dest);
-                    //Console.WriteLine("..done");
-                    //Console.WriteLine();
-                    //Console.WriteLine();
-
-                    //if (dest.Establishments.Count() == 0) MigrateEstablishments(source, dest);
-                    //else Console.WriteLine("NOT IMPORTING ESTABLISHMENTS as there is data already present");
-
-                    //if(dest.Estab2EstabLinks.Count() == 0) MigrateEstabLinks(source, dest);
-                    //else Console.WriteLine("NOT IMPORTING Estab2EstabLinks as there is data already present");
-
-                    //if (dest.Establishment2CompanyLinks.Count() == 0) MigrateEstablishment2CompanyLinks(source, dest);
-                    //else Console.WriteLine("NOT IMPORTING Establishment2CompanyLinks as there is data already present");
-
-                    if (dest.Governors.Count() == 0) MigrateGovernors(source, dest);
-                    else Console.WriteLine("NOT IMPORTING GOVERNORS as there is data already present");
-
-                }
+                    var entities = batch.Select(l => _mapper.Map<TSourceEntity, TDestEntity>(l)).ToArray();
+                    FillDataTable(entities.Cast<object>(), dataTable);
+                    Import(dataTable, connection, options);
+                    dataTable.Clear();
+                    count += batch.Count();
+                    Console.WriteLine($"\t{count} imported");
+                });
             }
+        }
+
+        private static void FillDataTable(IEnumerable<object> source, DataTable dataTable)
+        {
+            foreach (var item in source)
+            {
+                dataTable.CreateRow(x =>
+                {
+                    foreach (var column in dataTable.Columns.Cast<DataColumn>())
+                    {
+                        var name = column.ColumnName;
+                        var value = (name.Contains("_")
+                            ? item.GetPropertyValue(name.GetPart("_")).GetPropertyValue(name.GetPart("_", 1))
+                            : item.GetPropertyValue(name)).SQLify();
+
+                        if (value.GetType() == typeof(DbGeography))
+                        {
+                            value = (value as DbGeography).ToSqlGeography().SQLify();
+                        }
+
+                        x[column] = value;
+                    }
+                });
+            }
+        }
+
+        private static void MigrateAllLookupData(SqlConnection connection, EdubaseSourceDataEntities source)
+        {
+            using (Timing("lookup tables"))
+            {
+                MigrateLookup<LookupAdmissionsPolicy>(source.Admissionspolicy, connection);
+                MigrateLookup<LookupAccommodationChanged>(source.Accomodationchanged, connection);
+                MigrateLookup<LookupGovernorAppointingBody>(source.Appointingbody, connection);
+                MigrateLookup<LookupProvisionBoarding>(source.Boarders, connection);
+                MigrateLookup<LookupBoardingEstablishment>(source.Boardingestablishment, connection);
+                MigrateLookup<LookupCCGovernance>(source.Ccgovernance, connection);
+                MigrateLookup<LookupCCOperationalHours>(source.Ccoperationalhours, connection);
+                MigrateLookup<LookupCCPhaseType>(source.Ccphasetype, connection);
+                MigrateLookup<LookupChildcareFacilities>(source.Childcarefacilities, connection);
+                MigrateLookup<LookupDiocese>(source.Diocese, connection);
+                MigrateLookup<LookupDirectProvisionOfEarlyYears>(source.Directprovisionofearlyyears, connection);
+                MigrateLookup<LookupEstablishmentStatus>(source.Establishmentstatus, connection);
+                MigrateLookup<LookupFurtherEducationType>(source.Furthereducationtype, connection);
+                MigrateLookup<LookupGender>(source.Gender, connection);
+                MigrateLookup<LookupGroupType>(source.GroupType, connection);
+                MigrateLookup<LookupHeadTitle>(source.Headtitle, connection);
+                MigrateLookup<LookupIndependentSchoolType>(source.Independentschooltype, connection);
+                MigrateLookup<LookupInspectorate>(source.Inspectorate, connection);
+                MigrateLookup<LookupInspectorateName>(source.Inspectoratename, connection);
+                MigrateLookup<LookupLocalGovernors>(source.Localgovernors, connection);
+                MigrateLookup<LookupNationality>(source.Nationality, connection);
+                MigrateLookup<LookupProvisionNursery>(source.Nurseryprovision, connection);
+                MigrateLookup<LookupProvisionOfficialSixthForm>(source.Officialsixthform, connection);
+                MigrateLookup<LookupEducationPhase>(source.Phaseofeducation, connection);
+                MigrateLookup<LookupPRUEBD>(source.PRUEBD, connection);
+                MigrateLookup<LookupPruEducatedByOthers>(source.Prueducatedbyothers, connection);
+                MigrateLookup<LookupPruFulltimeProvision>(source.Prufulltimeprovision, connection);
+                MigrateLookup<LookupPRUSEN>(source.PRUSEN, connection);
+                MigrateLookup<LookupReasonEstablishmentClosed>(source.Reasonestablishmentclosed, connection);
+                MigrateLookup<LookupReasonEstablishmentOpened>(source.Reasonestablishmentopened, connection);
+                MigrateLookup<LookupReligiousCharacter>(source.Religiouscharacter, connection);
+                MigrateLookup<LookupReligiousEthos>(source.Religiousethos, connection);
+                MigrateLookup<LookupResourcedProvision>(source.Resourcedprovision, connection);
+                MigrateLookup<LookupSection41Approved>(source.Section41approved, connection);
+                MigrateLookup<LookupProvisionSpecialClasses>(source.Specialclasses, connection);
+                MigrateLookup<LookupSpecialEducationNeeds>(source.Specialeducationaneeds, connection);
+                MigrateLookup<LookupTeenageMothersProvision>(source.Teenagemothers, connection);
+                MigrateLookup<LookupTypeOfResourcedProvision>(source.Typeofresourcedprovision, connection);
+                MigrateLookup<LookupEstablishmentType>(source.Typeofestablishment, connection);
+
+                var governorRoles = source.Governors.Where(x => !string.IsNullOrEmpty(x.Role))
+                    .Select(x => x.Role).Distinct().ToList()
+                    .Select(x => new { Name = x.Clean() }).ToList();
+                MigrateLookup<LookupGovernorRole>(governorRoles, connection);
+
+                var linkTypes = source.Establishmentlinks.Where(x => !string.IsNullOrEmpty(x.LinkType))
+                    .Select(x => x.LinkType).Distinct().ToList()
+                    .Select(x => new { Name = x.Clean() }).ToList();
+                MigrateLookup<LookupEstablishmentLinkType>(linkTypes, connection);
+
+            }
+        }
+
+        public static LookupBase ConvertToLookup<T>(dynamic source) where T : LookupBase, new()
+        {
+            const string COL_CODE = "Code";
+            const string COL_ORDER = "C_Order";
+            const string COL_NAME = "Name";
+
+            var retVal = new T();
+
+            retVal.Code = Helper.GetPropertyValue(source, COL_CODE, "GroupTypecode");
+            retVal.Name = Helper.GetPropertyValue(source, COL_NAME, "GroupType1");
+            retVal.DisplayOrder = Helper.ToShort(Helper.GetPropertyValue(source, COL_ORDER));
+
+            return retVal;
         }
         
-
-        private static void MigrateData(ApplicationDbContext dc, string tableName, Action act, bool enableIdentityInsert = true)
+        public static DataTable ToLookupDataTable<T>(IEnumerable<LookupBase> data, Dictionary<Type, DataTable> tables)
         {
-            using (var tran = dc.Database.BeginTransaction())
-            {
-                if(enableIdentityInsert) dc.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + tableName + " ON");
-                act();
-                dc.SaveChanges();
-                if(enableIdentityInsert) dc.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + tableName + " OFF");
-                tran.Commit();
-            }
-        }
-
-        private static void MigrateCompanies(EdubaseSourceEntities source, ApplicationDbContext dc)
-        {
-            var groupTypes = dc.GroupTypes.ToArrayAsync().Result;
-            Action<string> toggle = theSwitch => dc.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + nameof(Company) + " " + theSwitch);
-            using (var tran = dc.Database.BeginTransaction())
-            {
-                toggle("ON");
-                source.CompanyTables.ForEach(x =>
+            var table = tables.Get<T>();
+            data.ForEach(lookup => {
+                table.CreateRow(x =>
                 {
-                    var groupType = groupTypes.FirstOrDefault(gt => gt.Id == int.Parse(x.GroupTypecode));
-                    var comp = new Company();
-                    comp.ClosedDate = x.ClosedDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
-                    comp.CompaniesHouseNumber = x.CompaniesHouseNumber.Clean();
-                    comp.GroupId = x.GroupID.Clean();
-                    comp.GroupStatus = x.GroupStatus.Clean();
-                    comp.GroupStatusCode = x.GroupStatuscode.Clean();
-                    comp.GroupTypeId = groupType.Id;
-                    comp.GroupUID = x.GroupUID.ToInteger().Value;
-                    comp.Name = x.GroupName.Clean();
-                    dc.Companies.AddOrUpdate(comp);
+                    lookup.Set(x, l => l.Code)
+                        .Set(l => l.Name)
+                        .Set(l => l.DisplayOrder)
+                        .Set(l => l.IsDeleted)
+                        .Set(l => l.CreatedUtc)
+                        .Set(l => l.LastUpdatedUtc);
                 });
-
-                dc.SaveChanges();
-                toggle("OFF");
-                tran.Commit();
-            }
-        }
-
-
-        private static void MigrateEstablishments(EdubaseSourceEntities source, ApplicationDbContext dc)
-        {
-            Console.WriteLine("Importing establishments");
-            Console.Write("Loading lookups...");
-            var admpol = dc.AdmissionsPolicies.ToList();
-            var dioceses = dc.Dioceses.ToList();
-            var educationPhases = dc.EducationPhases.ToList();
-            var establishmentTypes = dc.EstablishmentTypes.ToList();
-            var genders = dc.Genders.ToList();
-            var headTitles = dc.HeadTitles.ToList();
-            var localAuthorities = dc.LocalAuthorities.ToList();
-            var boardingProvisions = dc.BoardingProvisions.ToList();
-            var nurseryProvisions = dc.NurseryProvisions.ToList();
-            var officialSixthFormProvisions = dc.OfficialSixthFormProvisions.ToList();
-            var specialClassesProvisions = dc.SpecialClassesProvisions.ToList();
-            var establishmentClosedReasons = dc.EstablishmentClosedReasons.ToList();
-            var establishmentOpenedReasons = dc.EstablishmentOpenedReasons.ToList();
-            var religiousCharacters = dc.ReligiousCharacters.ToList();
-            var religiousEthos = dc.ReligiousEthos.ToList();
-            var establishmentStatuses = dc.EstablishmentStatuses.ToList();
-            Console.WriteLine("\rLoading lookups...done");
-
-            int count = 0;
-            var batchCount = 0;
-            var estabs = new List<Establishment>();
-            foreach (var batch in source.SchoolsTables.Batch(1000))
-            {
-                batchCount++;
-                Console.WriteLine("Loading batch #" + batchCount);
-                batch.ForEach(x =>
-                {
-                    var e = new Establishment();
-                    e.Address.CityOrTown = x.Town.Clean();
-                    e.Address.County = x.Countyname.Clean();
-                    e.Address.Line1 = x.Street.Clean();
-                    e.Address.Line2 = x.Address3.Clean();
-                    e.Address.Locality = x.Locality.Clean();
-                    e.Address.PostCode = x.Postcode.Clean();
-                    e.AdmissionsPolicyId = admpol.FirstOrDefault(a => a.Id == int.Parse(x.AdmissionsPolicycode))?.Id;
-                    e.Capacity = x.SchoolCapacity.ToInteger();
-                    e.CloseDate = x.CloseDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
-                    e.Contact.EmailAddress = x.MainEmail.Clean();
-                    e.Contact.TelephoneNumber = x.TelephoneNum.Clean();
-                    e.Contact.WebsiteAddress = x.SchoolWebsite.Clean();
-                    e.ContactAlt.EmailAddress = x.AlternativeEmail.Clean();
-                    e.DioceseId = dioceses.FirstOrDefault(a => a.Id == x.Diocesecode)?.Id;
-                    e.EducationPhaseId = educationPhases.FirstOrDefault(a => a.Id == int.Parse(x.PhaseOfEducationcode))?.Id;
-                    e.EstablishmentNumber = x.EstablishmentNumber.ToInteger();
-                    e.TypeId = establishmentTypes.FirstOrDefault(a => a.Id == int.Parse(x.TypeOfEstablishmentcode))?.Id;
-                    e.GenderId = genders.FirstOrDefault(a => a.Id == int.Parse(x.Gendercode))?.Id;
-                    e.HeadFirstName = x.HeadFirstName.Clean();
-                    e.HeadLastName = x.HeadLastName.Clean();
-                    e.HeadTitleId = headTitles.FirstOrDefault(a => a.Id == int.Parse(x.HeadTitlecode))?.Id;
-                    e.LastChangedDate = x.LastChangedDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
-                    e.LocalAuthorityId = localAuthorities.FirstOrDefault(a => a.Id == int.Parse(x.LAcode))?.Id;
-                    e.Name = x.EstablishmentName.Clean();
-                    e.OpenDate = x.OpenDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
-                    e.ProvisionBoardingId = boardingProvisions.FirstOrDefault(a => a.Id == int.Parse(x.Boarderscode))?.Id;
-                    e.ProvisionNurseryId = nurseryProvisions.FirstOrDefault(a => a.Id == int.Parse(x.NurseryProvisioncode))?.Id;
-                    e.ProvisionOfficialSixthFormId = officialSixthFormProvisions.FirstOrDefault(a => a.Id == int.Parse(x.OfficialSixthFormcode))?.Id;
-                    e.ProvisionSpecialClassesId = specialClassesProvisions.FirstOrDefault(a => a.Id == int.Parse(x.SpecialClassescode))?.Id;
-                    e.ReasonEstablishmentClosedId = establishmentClosedReasons.FirstOrDefault(a => a.Id == int.Parse(x.ReasonEstablishmentClosedcode))?.Id;
-                    e.ReasonEstablishmentOpenedId = establishmentOpenedReasons.FirstOrDefault(a => a.Id == int.Parse(x.ReasonEstablishmentOpenedcode))?.Id;
-                    e.ReligiousCharacterId = religiousCharacters.FirstOrDefault(a => a.Id == int.Parse(x.ReligiousCharactercode))?.Id;
-                    e.ReligiousEthosId = religiousEthos.FirstOrDefault(a => a.Id == int.Parse(x.ReligiousEthoscode))?.Id;
-                    e.StatusId = establishmentStatuses.FirstOrDefault(a => a.Id == int.Parse(x.EstablishmentStatuscode))?.Id;
-                    e.StatutoryHighAge = x.StatutoryHighAge.ToInteger();
-                    e.StatutoryLowAge = x.StatutoryLowAge.ToInteger();
-                    e.UKPRN = x.UKPRN.ToInteger();
-                    e.Urn = x.URN.ToInteger().Value;
-                    estabs.Add(e);
-                    count++;
-                    if (count % 1000 == 0) Console.WriteLine("Loaded up: " + count);
-                });
-            }
-
-            var dt = ToDataTable(estabs);
-
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString))
-            {
-                SqlBulkCopy bulkCopy = new SqlBulkCopy (connection, SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.FireTriggers | SqlBulkCopyOptions.KeepIdentity | SqlBulkCopyOptions.UseInternalTransaction, null );
-                bulkCopy.DestinationTableName = "Establishment";
-                connection.Open();
-                bulkCopy.WriteToServer(dt);
-                connection.Close();
-            }
-        }
-
-        private static void MigrateEstabLinks(EdubaseSourceEntities source, ApplicationDbContext dc)
-        {
-            Console.WriteLine("Importing establishments links");
-            
-            int count = 0;
-            var batchCount = 0;
-
-            var table = new DataTable();
-            table.Columns.Add("Id", typeof(int));
-            table.Columns.Add("LinkName", typeof(string));
-            table.Columns.Add("LinkType", typeof(string));
-            table.Columns.Add("LinkEstablishedDate", typeof(DateTime));
-            table.Columns.Add("Establishment_Urn", typeof(int));
-            table.Columns.Add("LinkedEstablishment_Urn", typeof(int));
-
-            foreach (var batch in source.SchoolToSchoolLinks.Batch(1000))
-            {
-                batchCount++;
-                Console.WriteLine("Loading batch #" + batchCount);
-                batch.ForEach(x =>
-                {
-                    var d = x.LinkEstablishedDate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
-                    var row = table.NewRow();
-                    row["LinkName"] = (object) x.LinkName.Clean() ?? DBNull.Value;
-                    row["LinkType"] = (object) x.LinkType.Clean() ?? DBNull.Value;
-                    row["LinkEstablishedDate"] = d.HasValue ? d.Value : (object) DBNull.Value;
-                    row["Establishment_Urn"] = x.URN.ToInteger().Value;
-                    row["LinkedEstablishment_Urn"] = x.LinkURN.ToInteger().Value;
-                    table.Rows.Add(row);
-                    count++;
-                    if (count % 1000 == 0) Console.WriteLine("Loaded up: " + count);
-                });
-            }
-            
-
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString))
-            {
-                SqlBulkCopy bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.UseInternalTransaction, null);
-                bulkCopy.DestinationTableName = "Estab2Estab";
-                connection.Open();
-                bulkCopy.WriteToServer(table);
-                connection.Close();
-            }
-
-            Console.WriteLine("DONE");
-        }
-
-        private static void MigrateGovernors(EdubaseSourceEntities source, ApplicationDbContext dc)
-        {
-            Console.WriteLine("Importing governors");
-
-            var bods = dc.GovernorAppointingBodies.ToList();
-            var roles = dc.GovernorRoles.ToList();
-
-            int count = 0;
-            var batchCount = 0;
-
-            var cols = new List<GovMap>()
-            {
-                new GovMap("Id", typeof(int), x => x.GID.ToInteger().Value),
-                new GovMap("EstablishmentUrn", typeof(int), x => x.URN.ToInteger().Value),
-                new GovMap("Title", typeof(string), x => x.Title.SQLify()),
-                new GovMap("Forename1", typeof(string), x=> x.Forename1.SQLify()),
-                new GovMap("Forename2", typeof(string), x=>x.Forename2.SQLify()),
-                new GovMap("Surname", typeof(string), x => x.Surname.SQLify()),
-                new GovMap("AppointmentStartDate", typeof(DateTime), x => x.Dateofappointment.ToDateTime("dd/MM/yyyy").SQLify()),
-                new GovMap("AppointmentEndDate", typeof(DateTime), x => x.Datetermofofficeendsended.ToDateTime("dd/MM/yyyy").SQLify()),
-                new GovMap("RoleId", typeof(int), x=> (object) roles.FirstOrDefault(r => r.Name == x.Role)?.Id ?? DBNull.Value),
-                new GovMap("GovernorAppointingBodyId", typeof(int), x=> (object) bods.FirstOrDefault(r => r.Name == x.Appointingbody)?.Id ?? DBNull.Value),
-                new GovMap("CreatedUtc", typeof(DateTime), x => DateTime.UtcNow),
-                new GovMap("LastUpdatedUtc", typeof(DateTime), x=>DateTime.UtcNow),
-                new GovMap("IsDeleted", typeof(bool), x=>false),
-            };
-
-            var table = new DataTable();
-            cols.ForEach(x => table.Columns.Add(x.Item1, x.Item2));
-
-            foreach (var batch in source.Governors.Batch(1000))
-            {
-                batchCount++;
-                Console.WriteLine("Loading batch #" + batchCount);
-                batch.ForEach(x =>
-                {
-                    var row = table.NewRow();
-                    cols.ForEach(c => row[c.Item1] = c.Item3(x));
-                    table.Rows.Add(row);
-                    count++;
-                    if (count % 1000 == 0) Console.WriteLine("Loaded up: " + count);
-                });
-            }
-
-
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString))
-            {
-                SqlBulkCopy bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock 
-                    | SqlBulkCopyOptions.KeepIdentity 
-                    | SqlBulkCopyOptions.UseInternalTransaction, null);
-                bulkCopy.DestinationTableName = "Governor";
-                connection.Open();
-                bulkCopy.BulkCopyTimeout = 900;
-                bulkCopy.WriteToServer(table);
-                connection.Close();
-            }
-
-            Console.WriteLine("DONE");
-        }
-
-        private static void MigrateEstablishment2CompanyLinks(EdubaseSourceEntities source, ApplicationDbContext dc)
-        {
-            Console.WriteLine("Importing Establishment2Company links");
-
-            int count = 0;
-            var batchCount = 0;
-
-            var table = new DataTable();
-            table.Columns.Add("Id", typeof(int));
-            table.Columns.Add("JoinedDate", typeof(DateTime));
-            table.Columns.Add("Establishment_Urn", typeof(int));
-            table.Columns.Add("Company_GroupUID", typeof(int));
-
-            foreach (var batch in source.SchoolToCompanyLinks.Batch(1000))
-            {
-                batchCount++;
-                Console.WriteLine("Loading batch #" + batchCount);
-                batch.ForEach(x =>
-                {
-                    var d = x.Joineddate.ToDateTime(new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" });
-                    var row = table.NewRow();
-                    row["JoinedDate"] = d.HasValue ? d.Value : (object)DBNull.Value;
-                    row["Establishment_Urn"] = x.URN.ToInteger().Value;
-                    row["Company_GroupUID"] = x.LinkedUID.ToInteger().Value;
-                    table.Rows.Add(row);
-                    count++;
-                    if (count % 1000 == 0) Console.WriteLine("Loaded up: " + count);
-                });
-            }
-
-
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString))
-            {
-                SqlBulkCopy bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.UseInternalTransaction, null);
-                bulkCopy.DestinationTableName = "Establishment2Company";
-                connection.Open();
-                bulkCopy.WriteToServer(table);
-                connection.Close();
-            }
-
-            Console.WriteLine("DONE");
-        }
-
-        private static T Map<T>(string id, string name) where T : LookupBase, new() => new T
-        {
-            Id = int.Parse(id),
-            Name = name,
-            CreatedUtc = DateTime.UtcNow,
-            LastUpdatedUtc = DateTime.UtcNow,
-            IsDeleted = false
-        };
-
-        public static DataTable ToDataTable<T>(IList<T> data)
-        {
-            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(T));
-            DataTable table = new DataTable();
-
-            List<string> cols = new List<string>();
-
-            foreach (PropertyDescriptor prop in properties)
-            {
-                if (prop.Name.Equals("LAESTAB") || prop.Name.Equals("TypeId")) continue;
-                if (!prop.PropertyType.IsClass || prop.PropertyType == typeof(string))
-                {
-                    var col = prop.Name;
-                    table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
-                    cols.Add(col);
-                }
-                else if (prop.PropertyType == typeof(ContactDetail) || prop.PropertyType == typeof(Address))
-                {
-                    PropertyDescriptorCollection properties2 = TypeDescriptor.GetProperties(prop.PropertyType);
-                    foreach (PropertyDescriptor prop2 in properties2)
-                    {
-                        var col = prop.Name + "_" + prop2.Name;
-                        table.Columns.Add(prop.Name + "_" + prop2.Name, Nullable.GetUnderlyingType(prop2.PropertyType) ?? prop2.PropertyType);
-                        cols.Add(col);
-                    }
-                }
-            }
-
-            table.Columns.Add("TypeId", typeof(int));
-
-            foreach (T item in data)
-            {
-                DataRow row = table.NewRow();
-
-                foreach (PropertyDescriptor prop in properties)
-                {
-                    if (prop.Name.Equals("LAESTAB")) continue;
-                    if (!prop.PropertyType.IsClass || prop.PropertyType == typeof(string))
-                    {
-                        row[prop.Name]= prop.GetValue(item) ?? DBNull.Value;
-                    }
-                    else if (prop.PropertyType == typeof(ContactDetail) || prop.PropertyType == typeof(Address))
-                    {
-                        var inner = prop.GetValue(item);
-                        PropertyDescriptorCollection properties2 = TypeDescriptor.GetProperties(prop.PropertyType);
-                        foreach (PropertyDescriptor prop2 in properties2)
-                        {
-                            var colName = prop.Name + "_" + prop2.Name;
-                            row[colName] = prop2.GetValue(inner) ?? DBNull.Value;
-                        }
-                    }
-                }
-                table.Rows.Add(row);
-            }
+            });
             return table;
         }
+        
+        private static void MigrateLookup<TDest>(IEnumerable sourceData, SqlConnection connection)
+            where TDest : LookupBase, new() => Migrate(CreateLookupDataTable<TDest>(sourceData, _tables), connection);
+
+        private static void Migrate(DataTable table, SqlConnection connection) => Migrate(table, connection, BulkCopyOptionNewIds);
+
+        private static void Migrate(DataTable table, SqlConnection connection, SqlBulkCopyOptions option)
+        {
+            if (new SqlCommand($"SELECT COUNT(1) FROM {table.TableName}", connection).ExecuteScalar()?.ToString().ToInteger().GetValueOrDefault() == 0)
+            {
+                Import(table, connection, option);
+            }
+            else Console.WriteLine($"\t >> Ignoring {table.TableName} as it has data in it.");
+        }
+
+        private static void Import(DataTable table, SqlConnection connection, SqlBulkCopyOptions option)
+        {
+            using (var bulkCopy = new SqlBulkCopy(connection, option, null) { DestinationTableName = table.TableName, BulkCopyTimeout = 900 })
+                bulkCopy.WriteToServer(table);
+        }
+
+        private static SqlConnection CreateSqlConnection() => new SqlConnection(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString);
+
+        private static SqlBulkCopyOptions BulkCopyOptionPreserveIds => SqlBulkCopyOptions.TableLock
+                        | SqlBulkCopyOptions.KeepIdentity
+                        | SqlBulkCopyOptions.UseInternalTransaction;
+
+        private static SqlBulkCopyOptions BulkCopyOptionNewIds => SqlBulkCopyOptions.TableLock
+                        | SqlBulkCopyOptions.UseInternalTransaction;
+
+        private static DataTable CreateLookupDataTable<T>(IEnumerable data, Dictionary<Type, DataTable> tables) where T : LookupBase, new()
+        {
+            var items = data.Cast<object>().ToList().Select(x => ConvertToLookup<T>(x));
+            var table = ToLookupDataTable<T>(items, tables);
+            return table;
+        }
+
+        private static DataTable CreateDataTable<T>(IEnumerable data, Dictionary<Type, DataTable> tables) where T : LookupBase, new()
+        {
+            var items = data.Cast<object>().ToList().Select(x => ConvertToLookup<T>(x));
+            var table = ToLookupDataTable<T>(items, tables);
+            return table;
+        }
+
+        private static IDisposable Timing(string label)
+            => Disposer.Timed(() => Console.WriteLine($"Importing {label}"), ms => Console.WriteLine($"...done in {ms}ms"));
+
+
     }
 }

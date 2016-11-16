@@ -1,4 +1,4 @@
-﻿@model AdvancedSearchViewModel
+﻿@model dynamic
 @{
     int startResult = @Model.StartIndex + 1;
     int endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;

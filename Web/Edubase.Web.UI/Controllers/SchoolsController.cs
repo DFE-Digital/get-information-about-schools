@@ -78,8 +78,11 @@ namespace Edubase.Web.UI.Controllers
 
                 viewModel.Establishment = model;
                 if(User.Identity.IsAuthenticated) viewModel.ChangeHistory = await new EstablishmentService().GetChangeHistoryAsync(id, dc);
-                viewModel.Govs = await dc.Governors.Include(x => x.GovernorAppointingBody).Include(x => x.Role).Where(x => x.EstablishmentUrn == id).ToArrayAsync();
-                viewModel.LinkedEstablishments = (await dc.Estab2EstabLinks.Include(x => x.LinkedEstablishment).Where(x => x.Establishment_Urn == id).ToArrayAsync())
+                viewModel.Govs = await dc.Governors.Include(x => x.AppointingBody).Include(x => x.Role).Where(x => x.EstablishmentUrn == id).ToArrayAsync();
+                viewModel.LinkedEstablishments = (await dc.EstablishmentLinks
+                    .Include(x => x.LinkedEstablishment)
+                    .Include(x => x.LinkType)
+                    .Where(x => x.EstablishmentUrn == id).ToArrayAsync())
                     .Select(x => new LinkedEstabViewModel(x)).ToArray();
 
                 if (User.Identity.IsAuthenticated)
@@ -98,23 +101,23 @@ namespace Edubase.Web.UI.Controllers
                                     change.OldValue = model.LocalAuthority?.ToString();
                                     break;
                                 case "HeadTitleId":
-                                    change.NewValue = dc.HeadTitles.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupHeadTitles.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.HeadTitle?.ToString();
                                     break;
                                 case "GenderId":
-                                    change.NewValue = dc.Genders.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupGenders.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.Gender?.ToString();
                                     break;
                                 case "EducationPhaseId":
-                                    change.NewValue = dc.EducationPhases.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupEducationPhases.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.EducationPhase?.ToString();
                                     break;
                                 case "AdmissionsPolicyId":
-                                    change.NewValue = dc.AdmissionsPolicies.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupAdmissionsPolicies.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.AdmissionsPolicy?.ToString();
                                     break;
                                 case "StatusId":
-                                    change.NewValue = dc.EstablishmentStatuses.FirstOrDefault(x => x.Id == number)?.Name;
+                                    change.NewValue = dc.LookupEstablishmentStatuses.FirstOrDefault(x => x.Id == number)?.Name;
                                     change.OldValue = model.Status?.ToString();
                                     break;
                                 default:

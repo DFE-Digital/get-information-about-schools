@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.Data.Entity
 {
-    public class EstablishmentPermission
+    public class EstablishmentPermission : EdubaseEntity
     {
         [Key, Column(Order = 1)]
         public string PropertyName { get; set; }

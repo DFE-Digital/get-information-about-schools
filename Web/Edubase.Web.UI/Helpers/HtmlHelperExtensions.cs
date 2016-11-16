@@ -2,6 +2,7 @@
 using Edubase.Data.Entity;
 using Edubase.Data.Entity.Lookups;
 using Edubase.Services;
+using Edubase.Services.Domain;
 using Edubase.Web.UI.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Caching;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -164,7 +166,7 @@ namespace Edubase.Web.UI.Helpers
         }
         
         public static MvcHtmlString EduHeadTitlesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.HeadTitleGetAll());
+            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.HeadTitlesGetAll());
 
         public static MvcHtmlString EduGendersDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
                     Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GendersGetAll());
@@ -182,7 +184,7 @@ namespace Edubase.Web.UI.Helpers
             Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.EstablishmentTypesGetAll());
 
         public static MvcHtmlString EduGroupTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GroupeTypesGetAll());
+            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GroupTypesGetAll());
 
         /// <summary>
         /// Group Types drop down but limited to just single and multi-academy trusts
@@ -194,7 +196,7 @@ namespace Edubase.Web.UI.Helpers
         /// <returns></returns>
         public static MvcHtmlString EduGroupTypesForCreateDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
                     Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(
-                        expression, _lookup.GroupeTypesGetAll().Where(x=>x.Name.Contains("Multi") 
+                        expression, _lookup.GroupTypesGetAll().Where(x=>x.Name.Contains("Multi") 
                         || x.Name.Contains("Single")));
 
         public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, 
@@ -205,9 +207,39 @@ namespace Edubase.Web.UI.Helpers
                 Value = x.Id.ToString()
             }));
 
+        public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
+            TProperty>> expression, IEnumerable<LookupDto> items) =>
+            htmlHelper.EduDropDownFor(expression, items.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }));
 
+
+        public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, TProperty>> modelExpression,
+            Expression<Func<CachedLookupService, IEnumerable<LookupDto>>> lookupSourceExpression)
+        {
+            var items = lookupSourceExpression.Compile()(_lookup);
+            return htmlHelper.EduDropDownFor(modelExpression, items.Select(x => new SelectListItem
+            {
+                Text = x.Name,
+                Value = x.Id.ToString()
+            }));
+        }
+        
         public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 
             new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
+
+
+        public static IHtmlString Conditional<TModel>(this HtmlHelper<TModel> htmlHelper, bool condition, string text)
+            => condition ? htmlHelper.Raw(text) : MvcHtmlString.Empty;
+
+
+        public static IHtmlString HiddenFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
+         => condition ? htmlHelper.HiddenFor(expression) : MvcHtmlString.Empty;
+
+
 
 
     }

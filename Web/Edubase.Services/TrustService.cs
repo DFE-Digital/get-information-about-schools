@@ -75,7 +75,7 @@ namespace Edubase.Services
             {
                 using (var dc = new ApplicationDbContext())
                 {
-                    var model = new Company
+                    var model = new Trust
                     {
                         CompaniesHouseNumber = companiesHouseNumber,
                         Name = dto.Name,
@@ -83,7 +83,7 @@ namespace Edubase.Services
                         GroupTypeId = groupTypeId,
                         Address = dto.Address
                     };
-                    dc.Companies.Add(model);
+                    dc.Trusts.Add(model);
                     await dc.SaveChangesAsync();
                     return model.GroupUID;
                 }

@@ -155,10 +155,6 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp">
-      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -254,6 +250,9 @@
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\IRedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\JsonCamelCaseResult.cs" />
+    <Compile Include="Helpers\ModelBinding\AliasedPropertyDescriptor.cs" />
+    <Compile Include="Helpers\ModelBinding\BindAliasAttribute.cs" />
+    <Compile Include="Helpers\ModelBinding\DefaultModelBinderEx.cs" />
     <Compile Include="Helpers\RedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\SchoolDetailsHelpers.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
@@ -265,12 +264,14 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
+    <Compile Include="Models\Admin\LogMessagesViewModel.cs" />
     <Compile Include="Models\ApprovalsViewModel.cs" />
     <Compile Include="Models\AdvancedSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateTrustModel.cs" />
     <Compile Include="Models\CreateEditTrustModel.cs" />
+    <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Models\SearchCompaniesHouseModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
     <Compile Include="Models\EstablishmentDetailViewModel.cs" />
@@ -291,7 +292,9 @@
     <Compile Include="Utils\RequestContextWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Scripts\app.js" />
+    <Content Include="Assets\Scripts\analytics.js" />
+    <Content Include="Assets\Scripts\_application.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
     <Content Include="Assets\Scripts\map-interactions.js" />
     <Content Include="Assets\Scripts\tabs.js" />
     <Content Include="Assets\Scripts\Views\create-edit-school.js" />
@@ -658,6 +661,8 @@
     <Content Include="Areas\Governors\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Governors\Views\Search\Index.cshtml" />
     <Content Include="Areas\Governors\Views\Search\Results.cshtml" />
+    <Content Include="Assets\Sass\views\_search-page.scss" />
+    <Content Include="Assets\Sass\views\_view-logs.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -713,6 +718,8 @@
     <Content Include="Views\Approval\Index.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
     <Content Include="Views\Establishment\Create.cshtml" />
+    <Content Include="Views\Admin\Logs.cshtml" />
+    <Content Include="Views\Admin\LogDetail.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <Content Include="Views\Search\Advanced.cshtml" />

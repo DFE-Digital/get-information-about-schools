@@ -1,4 +1,5 @@
 ﻿using Edubase.Common;
+using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Data.Entity.Lookups;
 using System;
 using System.Collections.Generic;
@@ -15,18 +16,18 @@ namespace Edubase.Data.Entity
         public int EstablishmentUrn { get; set; }
         [ForeignKey("EstablishmentUrn")]
         public Establishment Establishment { get; set; }
-        public string Title { get; set; }
-        public string Forename1 { get; set; }
-        public string Forename2 { get; set; }
-        public string Surname { get; set; }
+        public Person Person { get; set; } = new Person();
+        public Person PreviousPerson { get; set; } = new Person();
         public DateTime? AppointmentStartDate { get; set; }
         public DateTime? AppointmentEndDate { get; set; }
         public int? RoleId { get; set; }
-        public GovernorRole Role { get; set; }
-        public int? GovernorAppointingBodyId { get; set; }
-        public GovernorAppointingBody GovernorAppointingBody { get; set; }
-
-        [NotMapped]
-        public string FullName => StringUtil.ConcatNonEmpties(" ", Title, Forename1, Forename2, Surname);
+        public LookupGovernorRole Role { get; set; }
+        public int? AppointingBodyId { get; set; }
+        public LookupGovernorAppointingBody AppointingBody { get; set; }
+        public string EmailAddress { get; set; }
+        public DateTime? DOB { get; set; }
+        public string Nationality { get; set; }
+        public string PostCode { get; set; }
+        public int? UID { get; set; }
     }
 }

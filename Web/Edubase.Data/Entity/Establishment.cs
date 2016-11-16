@@ -6,6 +6,7 @@ using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Common;
 using Edubase.Data.Entity.Permissions;
 using Edubase.Data.Identity;
+using System.Data.Entity.Spatial;
 
 namespace Edubase.Data.Entity
 {
@@ -26,16 +27,16 @@ namespace Edubase.Data.Entity
         public string Name { get; set; }
 
         [Column("Type"), RestrictPermission]
-        public EstablishmentType EstablishmentType { get; set; }
+        public LookupEstablishmentType EstablishmentType { get; set; }
         
-        public EstablishmentStatus Status { get; set; }
+        public LookupEstablishmentStatus Status { get; set; }
 
         [RestrictPermission]
         public int? StatusId { get; set; }
 
-        public ReasonEstablishmentOpened ReasonEstablishmentOpened { get; set; }
+        public LookupReasonEstablishmentOpened ReasonEstablishmentOpened { get; set; }
 
-        public ReasonEstablishmentClosed ReasonEstablishmentClosed { get; set; }
+        public LookupReasonEstablishmentClosed ReasonEstablishmentClosed { get; set; }
 
         public int? ReasonEstablishmentOpenedId { get; set; }
 
@@ -47,7 +48,7 @@ namespace Edubase.Data.Entity
         [RestrictPermission]
         public DateTime? CloseDate { get; set; }
 
-        public EducationPhase EducationPhase { get; set; }
+        public LookupEducationPhase EducationPhase { get; set; }
 
         [RestrictPermission]
         public int? EducationPhaseId { get; set; }
@@ -58,30 +59,36 @@ namespace Edubase.Data.Entity
         [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? StatutoryHighAge { get; set; }
 
-        public ProvisionBoarding ProvisionBoarding { get; set; }
+        public LookupProvisionBoarding ProvisionBoarding { get; set; }
+
         public int? ProvisionBoardingId { get; set; }
 
-        public ProvisionNursery ProvisionNursery { get; set; }
+        public LookupProvisionNursery ProvisionNursery { get; set; }
+
         public int? ProvisionNurseryId { get; set; }
 
-        public ProvisionOfficialSixthForm ProvisionOfficialSixthForm { get; set; }
+        public LookupProvisionOfficialSixthForm ProvisionOfficialSixthForm { get; set; }
+
         public int? ProvisionOfficialSixthFormId { get; set; }
 
-        public Gender Gender { get; set; }
+        public LookupGender Gender { get; set; }
 
         [RestrictPermission]
         public int? GenderId { get; set; }
 
-        public ReligiousCharacter ReligiousCharacter { get; set; }
+        public LookupReligiousCharacter ReligiousCharacter { get; set; }
+
         public int? ReligiousCharacterId { get; set; }
 
-        public ReligiousEthos ReligiousEthos { get; set; }
+        public LookupReligiousEthos ReligiousEthos { get; set; }
+
         public int? ReligiousEthosId { get; set; }
 
-        public Diocese Diocese { get; set; }
-        public string DioceseId { get; set; }
+        public LookupDiocese Diocese { get; set; }
+        
+        public int? DioceseId { get; set; }
 
-        public AdmissionsPolicy AdmissionsPolicy { get; set; }
+        public LookupAdmissionsPolicy AdmissionsPolicy { get; set; }
 
         [RestrictPermission]
         public int? AdmissionsPolicyId { get; set; }
@@ -89,10 +96,12 @@ namespace Edubase.Data.Entity
         [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? Capacity { get; set; }
 
-        public ProvisionSpecialClasses ProvisionSpecialClasses { get; set; }
+        public LookupProvisionSpecialClasses ProvisionSpecialClasses { get; set; }
+
         public int? ProvisionSpecialClassesId { get; set; }
+
         public int? UKPRN { get; set; }
-        [Obsolete("This is potentially obsolete due to base.LastUpdatedUtc")]
+
         public DateTime? LastChangedDate { get; set; }
 
         public Address Address { get; set; }
@@ -103,7 +112,7 @@ namespace Edubase.Data.Entity
         [RequiresApproval]
         public string HeadLastName { get; set; }
 
-        public HeadTitle HeadTitle { get; set; }
+        public LookupHeadTitle HeadTitle { get; set; }
 
         [NotMapped]
         public string HeadteacherFullName => StringUtil.ConcatNonEmpties(" ", HeadTitle?.ToString(), HeadFirstName, HeadLastName);
@@ -136,6 +145,12 @@ namespace Edubase.Data.Entity
             }
         }
 
+        public int? Easting { get; set; }
+
+        public int? Northing { get; set; }
+        
+        public DbGeography Location { get; set; }
+
         private string _fullAddress = null;
 
         [NotMapped]
@@ -151,6 +166,8 @@ namespace Edubase.Data.Entity
             ContactAlt = new ContactDetail();
             Address = new Address();
         }
+
+        public override string ToString() => base.ToString() + $"({Name})";
 
     }
 }

@@ -56,8 +56,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Lucene.Net.Linq, Version=3.6.0.125, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.Linq.3.6.0\lib\net40\Lucene.Net.Linq.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Lucene.Net.Linq\Lucene.Net.Linq.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -145,88 +145,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="ApplicationDbConfiguration.cs" />
     <Compile Include="DbUtil.cs" />
+    <Compile Include="Entity\ComplexTypes\Person.cs" />
     <Compile Include="Entity\EstablishmentChangeHistory.cs" />
     <Compile Include="Entity\LogMessage.cs" />
     <Compile Include="Entity\EstablishmentApprovalQueue.cs" />
     <Compile Include="Entity\ComplexTypes\Address.cs" />
     <Compile Include="Entity\ApplicationUser.cs" />
-    <Compile Include="Entity\Company.cs" />
+    <Compile Include="Entity\Lookups\Lookups.cs" />
+    <Compile Include="Entity\Trust.cs" />
     <Compile Include="Entity\ComplexTypes\ContactDetail.cs" />
     <Compile Include="Entity\EdubaseEntity.cs" />
     <Compile Include="Entity\EstablishmentPermission.cs" />
     <Compile Include="Entity\Governor.cs" />
     <Compile Include="Entity\LocalAuthority.cs" />
-    <Compile Include="Entity\Lookups\Diocese.cs" />
     <Compile Include="Entity\Lookups\LookupBase.cs" />
     <Compile Include="Entity\Establishment.cs" />
-    <Compile Include="Entity\Establishment2Company.cs" />
-    <Compile Include="Entity\Estab2Estab.cs" />
+    <Compile Include="Entity\EstablishmentTrust.cs" />
+    <Compile Include="Entity\EstablishmentLink.cs" />
     <Compile Include="Entity\Permissions\Permission.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
-    <Compile Include="Identity\UserAccountSeeder.cs" />
-    <Compile Include="Migrations\201609291737582_InitialiseDB.cs" />
-    <Compile Include="Migrations\201609291737582_InitialiseDB.Designer.cs">
-      <DependentUpon>201609291737582_InitialiseDB.cs</DependentUpon>
+    <Compile Include="Migrations\201611091610379_Initial.cs" />
+    <Compile Include="Migrations\201611091610379_Initial.Designer.cs">
+      <DependentUpon>201611091610379_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201609291802369_AddedLinkTables.cs" />
-    <Compile Include="Migrations\201609291802369_AddedLinkTables.Designer.cs">
-      <DependentUpon>201609291802369_AddedLinkTables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609291804089_AddedLinkTables2.cs" />
-    <Compile Include="Migrations\201609291804089_AddedLinkTables2.Designer.cs">
-      <DependentUpon>201609291804089_AddedLinkTables2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609291822215_AlteredCompanyLinkTable.cs" />
-    <Compile Include="Migrations\201609291822215_AlteredCompanyLinkTable.Designer.cs">
-      <DependentUpon>201609291822215_AlteredCompanyLinkTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609291904537_RemovedOldTables.cs" />
-    <Compile Include="Migrations\201609291904537_RemovedOldTables.Designer.cs">
-      <DependentUpon>201609291904537_RemovedOldTables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609301054166_EstabTypeForeignKey.cs" />
-    <Compile Include="Migrations\201609301054166_EstabTypeForeignKey.Designer.cs">
-      <DependentUpon>201609301054166_EstabTypeForeignKey.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610041504493_AddedCompanyOpenDate.cs" />
-    <Compile Include="Migrations\201610041504493_AddedCompanyOpenDate.Designer.cs">
-      <DependentUpon>201610041504493_AddedCompanyOpenDate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610051956256_Permissions.cs" />
-    <Compile Include="Migrations\201610051956256_Permissions.Designer.cs">
-      <DependentUpon>201610051956256_Permissions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610070658424_ApprovalQueue.cs" />
-    <Compile Include="Migrations\201610070658424_ApprovalQueue.Designer.cs">
-      <DependentUpon>201610070658424_ApprovalQueue.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610101413260_AddedApprovalCols.cs" />
-    <Compile Include="Migrations\201610101413260_AddedApprovalCols.Designer.cs">
-      <DependentUpon>201610101413260_AddedApprovalCols.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610111043490_AddedRejectionCols.cs" />
-    <Compile Include="Migrations\201610111043490_AddedRejectionCols.Designer.cs">
-      <DependentUpon>201610111043490_AddedRejectionCols.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610111352104_Governors.cs" />
-    <Compile Include="Migrations\201610111352104_Governors.Designer.cs">
-      <DependentUpon>201610111352104_Governors.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.cs" />
-    <Compile Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.Designer.cs">
-      <DependentUpon>201610171337070_EstabCompanyLinkIdProperties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610250515442_AddEstabChangeHist.cs" />
-    <Compile Include="Migrations\201610250515442_AddEstabChangeHist.Designer.cs">
-      <DependentUpon>201610250515442_AddEstabChangeHist.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610261511592_AddTrustAddress.cs" />
-    <Compile Include="Migrations\201610261511592_AddTrustAddress.Designer.cs">
-      <DependentUpon>201610261511592_AddTrustAddress.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Migrations\DbSeeder.cs" />
+    <Compile Include="Migrations\UserAccountSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\LogMessageRepository.cs" />
@@ -243,53 +190,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609291737582_InitialiseDB.resx">
-      <DependentUpon>201609291737582_InitialiseDB.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609291802369_AddedLinkTables.resx">
-      <DependentUpon>201609291802369_AddedLinkTables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609291804089_AddedLinkTables2.resx">
-      <DependentUpon>201609291804089_AddedLinkTables2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609291822215_AlteredCompanyLinkTable.resx">
-      <DependentUpon>201609291822215_AlteredCompanyLinkTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609291904537_RemovedOldTables.resx">
-      <DependentUpon>201609291904537_RemovedOldTables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609301054166_EstabTypeForeignKey.resx">
-      <DependentUpon>201609301054166_EstabTypeForeignKey.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610041504493_AddedCompanyOpenDate.resx">
-      <DependentUpon>201610041504493_AddedCompanyOpenDate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610051956256_Permissions.resx">
-      <DependentUpon>201610051956256_Permissions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610070658424_ApprovalQueue.resx">
-      <DependentUpon>201610070658424_ApprovalQueue.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610101413260_AddedApprovalCols.resx">
-      <DependentUpon>201610101413260_AddedApprovalCols.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610111043490_AddedRejectionCols.resx">
-      <DependentUpon>201610111043490_AddedRejectionCols.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610111352104_Governors.resx">
-      <DependentUpon>201610111352104_Governors.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610171337070_EstabCompanyLinkIdProperties.resx">
-      <DependentUpon>201610171337070_EstabCompanyLinkIdProperties.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610250515442_AddEstabChangeHist.resx">
-      <DependentUpon>201610250515442_AddEstabChangeHist.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610261511592_AddTrustAddress.resx">
-      <DependentUpon>201610261511592_AddTrustAddress.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611091610379_Initial.resx">
+      <DependentUpon>201611091610379_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

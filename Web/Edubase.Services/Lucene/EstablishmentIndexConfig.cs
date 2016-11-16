@@ -1,19 +1,9 @@
-﻿using Edubase.Data.Entity;
-using Lucene.Net.Analysis.Standard;
-using Lucene.Net.Linq.Fluent;
-using Lucene.Net.Util;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Globalization;
-using System;
-using Ver = Lucene.Net.Util.Version;
-using Lucene.Net.Linq.Mapping;
-using Lucene.Net.Analysis;
-using Edubase.Common.Formatting.Json;
+﻿using Edubase.Common.Formatting.Json;
+using Edubase.Data.Entity;
 using Edubase.Data.Entity.ComplexTypes;
+using Lucene.Net.Linq.Fluent;
+using Lucene.Net.Linq.Mapping;
+using Ver = Lucene.Net.Util.Version;
 
 namespace Edubase.Services.Lucene
 {

@@ -8,112 +8,131 @@ using Edubase.Data.Entity;
 using Edubase.Data.Entity.Lookups;
 using System.Runtime.Caching;
 using Edubase.Common;
+using Edubase.Services.Domain;
 
 namespace Edubase.Services
 {
-    public class CachedLookupService : ILookupService
+    public class CachedLookupService
     {
-        private Dictionary<string, Func<ApplicationDbContext, object, Task<string>>> _mapping = null;
+        private Dictionary<string, Func<ApplicationDbContext, int, Task<string>>> _mapping = null;
 
         private LookupService _svc = new LookupService();
 
         public CachedLookupService()
         {
-            _mapping = new Dictionary<string, Func<ApplicationDbContext, object, Task<string>>>()
+            _mapping = new Dictionary<string, Func<ApplicationDbContext, int, Task<string>>>()
             {
-                { "LocalAuthorityId", async (dc, id) => GetName((await LocalAuthorityGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "HeadTitleId", async (dc, id) => GetName((await HeadTitleGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "GenderId", async (dc, id) => GetName((await GendersGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "EducationPhaseId", async (dc, id) => GetName((await EducationPhasesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "AdmissionsPolicyId", async (dc, id) => GetName((await AdmissionsPoliciesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "StatusId", async (dc, id) => GetName((await EstablishmentStatusesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ReasonEstablishmentOpenedId", async (dc, id) => GetName((await ReasonEstablishmentOpenedGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ReasonEstablishmentClosedId", async (dc, id) => GetName((await ReasonEstablishmentClosedGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ProvisionBoardingId", async (dc, id) => GetName((await BoardingProvisionsGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ProvisionNurseryId", async (dc, id) => GetName((await NurseryProvisionsGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ProvisionOfficialSixthFormId", async (dc, id) => GetName((await OfficialSixthFormProvisionsGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ReligiousCharacterId", async (dc, id) => GetName((await ReligiousCharactersGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ReligiousEthosId", async (dc, id) => GetName((await ReligiousEthosGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "DioceseId", async (dc, id) => GetName((await DiocesesGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "ProvisionSpecialClassesId", async (dc, id) => GetName((await SpecialClassesProvisionsGetAllAsync()).Cast<LookupBase>(), (int) id) },
-                { "TypeId", async (dc, id) => GetName((await EstablishmentTypesGetAllAsync()).Cast<LookupBase>(), (int) id) }
+                { "LocalAuthorityId", async (dc, id) => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "HeadTitleId", async (dc, id) => GetName((await HeadTitlesGetAllAsync()), id) },
+                { "GenderId", async (dc, id) => GetName((await GendersGetAllAsync()), id) },
+                { "EducationPhaseId", async (dc, id) => GetName((await EducationPhasesGetAllAsync()), id) },
+                { "AdmissionsPolicyId", async (dc, id) => GetName((await AdmissionsPoliciesGetAllAsync()), id) },
+                { "StatusId", async (dc, id) => GetName((await EstablishmentStatusesGetAllAsync()), id) },
+                { "ReasonEstablishmentOpenedId", async (dc, id) => GetName((await ReasonEstablishmentOpenedGetAllAsync()), id) },
+                { "ReasonEstablishmentClosedId", async (dc, id) => GetName((await ReasonEstablishmentClosedGetAllAsync()), id) },
+                { "ProvisionBoardingId", async (dc, id) => GetName((await ProvisionBoardingGetAllAsync()), id) },
+                { "ProvisionNurseryId", async (dc, id) => GetName((await ProvisionNurseriesGetAllAsync()), id) },
+                { "ProvisionOfficialSixthFormId", async (dc, id) => GetName((await ProvisionOfficialSixthFormsGetAllAsync()), id) },
+                { "ReligiousCharacterId", async (dc, id) => GetName((await ReligiousCharactersGetAllAsync()), id) },
+                { "ReligiousEthosId", async (dc, id) => GetName((await ReligiousEthosGetAllAsync()), id) },
+                { "DioceseId", async (dc, id) => GetName((await DiocesesGetAllAsync()), id) },
+                { "ProvisionSpecialClassesId", async (dc, id) => GetName((await ProvisionSpecialClassesGetAllAsync()), id) },
+                { "TypeId", async (dc, id) => GetName((await EstablishmentTypesGetAllAsync()), id) }
             };
         }
 
-        public List<AdmissionsPolicy> AdmissionsPoliciesGetAll() => Cacher.Auto(_svc.AdmissionsPoliciesGetAll);
+        public async Task<IEnumerable<LookupDto>> LocalAuthorityGetAllAsync() => await Cacher.AutoAsync(_svc.LocalAuthorityGetAllAsync);
+        public IEnumerable<LookupDto> LocalAuthorityGetAll() => Cacher.Auto(_svc.LocalAuthorityGetAll);
+        public async Task<IEnumerable<LookupDto>> AdmissionsPoliciesGetAllAsync() => await Cacher.AutoAsync(_svc.AdmissionsPoliciesGetAllAsync);
+        public IEnumerable<LookupDto> AdmissionsPoliciesGetAll() => Cacher.Auto(_svc.AdmissionsPoliciesGetAll);
+        public async Task<IEnumerable<LookupDto>> EducationPhasesGetAllAsync() => await Cacher.AutoAsync(_svc.EducationPhasesGetAllAsync);
+        public IEnumerable<LookupDto> EducationPhasesGetAll() => Cacher.Auto(_svc.EducationPhasesGetAll);
+        public async Task<IEnumerable<LookupDto>> EstablishmentStatusesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentStatusesGetAllAsync);
+        public IEnumerable<LookupDto> EstablishmentStatusesGetAll() => Cacher.Auto(_svc.EstablishmentStatusesGetAll);
+        public async Task<IEnumerable<LookupDto>> EstablishmentTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentTypesGetAllAsync);
+        public IEnumerable<LookupDto> EstablishmentTypesGetAll() => Cacher.Auto(_svc.EstablishmentTypesGetAll);
+        public async Task<IEnumerable<LookupDto>> GendersGetAllAsync() => await Cacher.AutoAsync(_svc.GendersGetAllAsync);
+        public IEnumerable<LookupDto> GendersGetAll() => Cacher.Auto(_svc.GendersGetAll);
+        public async Task<IEnumerable<LookupDto>> GroupTypesGetAllAsync() => await Cacher.AutoAsync(_svc.GroupTypesGetAllAsync);
+        public IEnumerable<LookupDto> GroupTypesGetAll() => Cacher.Auto(_svc.GroupTypesGetAll);
+        public async Task<IEnumerable<LookupDto>> HeadTitlesGetAllAsync() => await Cacher.AutoAsync(_svc.HeadTitlesGetAllAsync);
+        public IEnumerable<LookupDto> HeadTitlesGetAll() => Cacher.Auto(_svc.HeadTitlesGetAll);
+        public async Task<IEnumerable<LookupDto>> ProvisionBoardingGetAllAsync() => await Cacher.AutoAsync(_svc.ProvisionBoardingGetAllAsync);
+        public IEnumerable<LookupDto> ProvisionBoardingGetAll() => Cacher.Auto(_svc.ProvisionBoardingGetAll);
+        public async Task<IEnumerable<LookupDto>> ProvisionNurseriesGetAllAsync() => await Cacher.AutoAsync(_svc.ProvisionNurseriesGetAllAsync);
+        public IEnumerable<LookupDto> ProvisionNurseriesGetAll() => Cacher.Auto(_svc.ProvisionNurseriesGetAll);
+        public async Task<IEnumerable<LookupDto>> ProvisionOfficialSixthFormsGetAllAsync() => await Cacher.AutoAsync(_svc.ProvisionOfficialSixthFormsGetAllAsync);
+        public IEnumerable<LookupDto> ProvisionOfficialSixthFormsGetAll() => Cacher.Auto(_svc.ProvisionOfficialSixthFormsGetAll);
+        public async Task<IEnumerable<LookupDto>> ProvisionSpecialClassesGetAllAsync() => await Cacher.AutoAsync(_svc.ProvisionSpecialClassesGetAllAsync);
+        public IEnumerable<LookupDto> ProvisionSpecialClassesGetAll() => Cacher.Auto(_svc.ProvisionSpecialClassesGetAll);
+        public async Task<IEnumerable<LookupDto>> ReasonEstablishmentClosedGetAllAsync() => await Cacher.AutoAsync(_svc.ReasonEstablishmentClosedGetAllAsync);
+        public IEnumerable<LookupDto> ReasonEstablishmentClosedGetAll() => Cacher.Auto(_svc.ReasonEstablishmentClosedGetAll);
+        public async Task<IEnumerable<LookupDto>> ReasonEstablishmentOpenedGetAllAsync() => await Cacher.AutoAsync(_svc.ReasonEstablishmentOpenedGetAllAsync);
+        public IEnumerable<LookupDto> ReasonEstablishmentOpenedGetAll() => Cacher.Auto(_svc.ReasonEstablishmentOpenedGetAll);
+        public async Task<IEnumerable<LookupDto>> ReligiousCharactersGetAllAsync() => await Cacher.AutoAsync(_svc.ReligiousCharactersGetAllAsync);
+        public IEnumerable<LookupDto> ReligiousCharactersGetAll() => Cacher.Auto(_svc.ReligiousCharactersGetAll);
+        public async Task<IEnumerable<LookupDto>> ReligiousEthosGetAllAsync() => await Cacher.AutoAsync(_svc.ReligiousEthosGetAllAsync);
+        public IEnumerable<LookupDto> ReligiousEthosGetAll() => Cacher.Auto(_svc.ReligiousEthosGetAll);
+        public async Task<IEnumerable<LookupDto>> GovernorRolesGetAllAsync() => await Cacher.AutoAsync(_svc.GovernorRolesGetAllAsync);
+        public IEnumerable<LookupDto> GovernorRolesGetAll() => Cacher.Auto(_svc.GovernorRolesGetAll);
+        public async Task<IEnumerable<LookupDto>> GovernorAppointingBodiesGetAllAsync() => await Cacher.AutoAsync(_svc.GovernorAppointingBodiesGetAllAsync);
+        public IEnumerable<LookupDto> GovernorAppointingBodiesGetAll() => Cacher.Auto(_svc.GovernorAppointingBodiesGetAll);
+        public async Task<IEnumerable<LookupDto>> AccommodationChangedGetAllAsync() => await Cacher.AutoAsync(_svc.AccommodationChangedGetAllAsync);
+        public IEnumerable<LookupDto> AccommodationChangedGetAll() => Cacher.Auto(_svc.AccommodationChangedGetAll);
+        public async Task<IEnumerable<LookupDto>> BoardingEstablishmentGetAllAsync() => await Cacher.AutoAsync(_svc.BoardingEstablishmentGetAllAsync);
+        public IEnumerable<LookupDto> BoardingEstablishmentGetAll() => Cacher.Auto(_svc.BoardingEstablishmentGetAll);
+        public async Task<IEnumerable<LookupDto>> CCGovernanceGetAllAsync() => await Cacher.AutoAsync(_svc.CCGovernanceGetAllAsync);
+        public IEnumerable<LookupDto> CCGovernanceGetAll() => Cacher.Auto(_svc.CCGovernanceGetAll);
+        public async Task<IEnumerable<LookupDto>> CCOperationalHoursGetAllAsync() => await Cacher.AutoAsync(_svc.CCOperationalHoursGetAllAsync);
+        public IEnumerable<LookupDto> CCOperationalHoursGetAll() => Cacher.Auto(_svc.CCOperationalHoursGetAll);
+        public async Task<IEnumerable<LookupDto>> CCPhaseTypesGetAllAsync() => await Cacher.AutoAsync(_svc.CCPhaseTypesGetAllAsync);
+        public IEnumerable<LookupDto> CCPhaseTypesGetAll() => Cacher.Auto(_svc.CCPhaseTypesGetAll);
+        public async Task<IEnumerable<LookupDto>> DiocesesGetAllAsync() => await Cacher.AutoAsync(_svc.DiocesesGetAllAsync);
+        public IEnumerable<LookupDto> DiocesesGetAll() => Cacher.Auto(_svc.DiocesesGetAll);
+        public async Task<IEnumerable<LookupDto>> ChildcareFacilitiesGetAllAsync() => await Cacher.AutoAsync(_svc.ChildcareFacilitiesGetAllAsync);
+        public IEnumerable<LookupDto> ChildcareFacilitiesGetAll() => Cacher.Auto(_svc.ChildcareFacilitiesGetAll);
+        public async Task<IEnumerable<LookupDto>> DirectProvisionOfEarlyYearsGetAllAsync() => await Cacher.AutoAsync(_svc.DirectProvisionOfEarlyYearsGetAllAsync);
+        public IEnumerable<LookupDto> DirectProvisionOfEarlyYearsGetAll() => Cacher.Auto(_svc.DirectProvisionOfEarlyYearsGetAll);
+        public async Task<IEnumerable<LookupDto>> FurtherEducationTypesGetAllAsync() => await Cacher.AutoAsync(_svc.FurtherEducationTypesGetAllAsync);
+        public IEnumerable<LookupDto> FurtherEducationTypesGetAll() => Cacher.Auto(_svc.FurtherEducationTypesGetAll);
+        public async Task<IEnumerable<LookupDto>> IndependentSchoolTypesGetAllAsync() => await Cacher.AutoAsync(_svc.IndependentSchoolTypesGetAllAsync);
+        public IEnumerable<LookupDto> IndependentSchoolTypesGetAll() => Cacher.Auto(_svc.IndependentSchoolTypesGetAll);
+        public async Task<IEnumerable<LookupDto>> InspectoratesGetAllAsync() => await Cacher.AutoAsync(_svc.InspectoratesGetAllAsync);
+        public IEnumerable<LookupDto> InspectoratesGetAll() => Cacher.Auto(_svc.InspectoratesGetAll);
+        public async Task<IEnumerable<LookupDto>> InspectorateNamesGetAllAsync() => await Cacher.AutoAsync(_svc.InspectorateNamesGetAllAsync);
+        public IEnumerable<LookupDto> InspectorateNamesGetAll() => Cacher.Auto(_svc.InspectorateNamesGetAll);
+        public async Task<IEnumerable<LookupDto>> LocalGovernorsGetAllAsync() => await Cacher.AutoAsync(_svc.LocalGovernorsGetAllAsync);
+        public IEnumerable<LookupDto> LocalGovernorsGetAll() => Cacher.Auto(_svc.LocalGovernorsGetAll);
+        public async Task<IEnumerable<LookupDto>> NationalitiesGetAllAsync() => await Cacher.AutoAsync(_svc.NationalitiesGetAllAsync);
+        public IEnumerable<LookupDto> NationalitiesGetAll() => Cacher.Auto(_svc.NationalitiesGetAll);
+        public async Task<IEnumerable<LookupDto>> PRUEBDsGetAllAsync() => await Cacher.AutoAsync(_svc.PRUEBDsGetAllAsync);
+        public IEnumerable<LookupDto> PRUEBDsGetAll() => Cacher.Auto(_svc.PRUEBDsGetAll);
+        public async Task<IEnumerable<LookupDto>> PruEducatedByOthersGetAllAsync() => await Cacher.AutoAsync(_svc.PruEducatedByOthersGetAllAsync);
+        public IEnumerable<LookupDto> PruEducatedByOthersGetAll() => Cacher.Auto(_svc.PruEducatedByOthersGetAll);
+        public async Task<IEnumerable<LookupDto>> PruFulltimeProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.PruFulltimeProvisionsGetAllAsync);
+        public IEnumerable<LookupDto> PruFulltimeProvisionsGetAll() => Cacher.Auto(_svc.PruFulltimeProvisionsGetAll);
+        public async Task<IEnumerable<LookupDto>> PRUSENsGetAllAsync() => await Cacher.AutoAsync(_svc.PRUSENsGetAllAsync);
+        public IEnumerable<LookupDto> PRUSENsGetAll() => Cacher.Auto(_svc.PRUSENsGetAll);
+        public async Task<IEnumerable<LookupDto>> ResourcedProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.ResourcedProvisionsGetAllAsync);
+        public IEnumerable<LookupDto> ResourcedProvisionsGetAll() => Cacher.Auto(_svc.ResourcedProvisionsGetAll);
+        public async Task<IEnumerable<LookupDto>> Section41ApprovedGetAllAsync() => await Cacher.AutoAsync(_svc.Section41ApprovedGetAllAsync);
+        public IEnumerable<LookupDto> Section41ApprovedGetAll() => Cacher.Auto(_svc.Section41ApprovedGetAll);
+        public async Task<IEnumerable<LookupDto>> SpecialEducationNeedsGetAllAsync() => await Cacher.AutoAsync(_svc.SpecialEducationNeedsGetAllAsync);
+        public IEnumerable<LookupDto> SpecialEducationNeedsGetAll() => Cacher.Auto(_svc.SpecialEducationNeedsGetAll);
+        public async Task<IEnumerable<LookupDto>> TeenageMothersProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.TeenageMothersProvisionsGetAllAsync);
+        public IEnumerable<LookupDto> TeenageMothersProvisionsGetAll() => Cacher.Auto(_svc.TeenageMothersProvisionsGetAll);
+        public async Task<IEnumerable<LookupDto>> TypeOfResourcedProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.TypeOfResourcedProvisionsGetAllAsync);
+        public IEnumerable<LookupDto> TypeOfResourcedProvisionsGetAll() => Cacher.Auto(_svc.TypeOfResourcedProvisionsGetAll);
+        public async Task<IEnumerable<LookupDto>> EstablishmentLinkTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentLinkTypesGetAllAsync);
+        public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll() => Cacher.Auto(_svc.EstablishmentLinkTypesGetAll);
 
-        public async Task<List<AdmissionsPolicy>> AdmissionsPoliciesGetAllAsync() => await Cacher.AutoAsync(_svc.AdmissionsPoliciesGetAllAsync);
-
-        public List<EducationPhase> EducationPhasesGetAll() => Cacher.Auto(_svc.EducationPhasesGetAll);
-
-        public async Task<List<EducationPhase>> EducationPhasesGetAllAsync() => await Cacher.AutoAsync(_svc.EducationPhasesGetAllAsync);
-
-        public List<EstablishmentStatus> EstablishmentStatusesGetAll() => Cacher.Auto(_svc.EstablishmentStatusesGetAll);
-
-        public async Task<List<EstablishmentStatus>> EstablishmentStatusesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentStatusesGetAllAsync);
-
-        public List<ReasonEstablishmentOpened> ReasonEstablishmentOpenedGetAll() => Cacher.Auto(_svc.EstablishmentOpenedReasonsGetAll);
-
-        public async Task<List<ReasonEstablishmentOpened>> ReasonEstablishmentOpenedGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentOpenedReasonsGetAllAsync);
-
-        public List<ReasonEstablishmentClosed> ReasonEstablishmentClosedGetAll() => Cacher.Auto(_svc.EstablishmentClosedReasonsGetAll);
-
-        public async Task<List<ReasonEstablishmentClosed>> ReasonEstablishmentClosedGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentClosedReasonsGetAllAsync);
-
-        public List<Gender> GendersGetAll() => Cacher.Auto(_svc.GendersGetAll);
-
-        public async Task<List<Gender>> GendersGetAllAsync() => await Cacher.AutoAsync(_svc.GendersGetAllAsync);
-        
-        public List<HeadTitle> HeadTitleGetAll() => Cacher.Auto(_svc.HeadTitleGetAll);
-
-        public async Task<List<HeadTitle>> HeadTitleGetAllAsync() => await Cacher.AutoAsync(_svc.HeadTitleGetAllAsync);
-        
-        public List<LocalAuthority> LocalAuthorityGetAll() => Cacher.Auto(_svc.LocalAuthorityGetAll);
-
-        public async Task<List<LocalAuthority>> LocalAuthorityGetAllAsync() => await Cacher.AutoAsync(_svc.LocalAuthorityGetAllAsync);
-
-        public List<EstablishmentType> EstablishmentTypesGetAll() => Cacher.Auto(_svc.EstablishmentTypesGetAll);
-
-        public async Task<List<EstablishmentType>> EstablishmentTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentTypesGetAllAsync);
-
-        public List<GroupType> GroupeTypesGetAll() => Cacher.Auto(_svc.GroupeTypesGetAll);
-
-        public async Task<List<GroupType>> GroupeTypesGetAllAsync() => await Cacher.AutoAsync(_svc.GroupeTypesGetAllAsync);
-
-
-        public List<ProvisionBoarding> BoardingProvisionsGetAll() => Cacher.Auto(_svc.BoardingProvisionsGetAll);
-        public async Task<List<ProvisionBoarding>> BoardingProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.BoardingProvisionsGetAllAsync);
-
-
-        public List<ProvisionNursery> NurseryProvisionsGetAll() => Cacher.Auto(_svc.NurseryProvisionsGetAll);
-        public async Task<List<ProvisionNursery>> NurseryProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.NurseryProvisionsGetAllAsync);
-
-
-        public List<ProvisionOfficialSixthForm> OfficialSixthFormProvisionsGetAll() => Cacher.Auto(_svc.OfficialSixthFormProvisionsGetAll);
-        public async Task<List<ProvisionOfficialSixthForm>> OfficialSixthFormProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.OfficialSixthFormProvisionsGetAllAsync);
-
-
-        public List<ReligiousCharacter> ReligiousCharactersGetAll() => Cacher.Auto(_svc.ReligiousCharactersGetAll);
-        public async Task<List<ReligiousCharacter>> ReligiousCharactersGetAllAsync() => await Cacher.AutoAsync(_svc.ReligiousCharactersGetAllAsync);
-
-
-        public List<ReligiousEthos> ReligiousEthosGetAll() => Cacher.Auto(_svc.ReligiousEthosGetAll);
-        public async Task<List<ReligiousEthos>> ReligiousEthosGetAllAsync() => await Cacher.AutoAsync(_svc.ReligiousEthosGetAllAsync);
-
-
-        public List<Diocese> DiocesesGetAll() => Cacher.Auto(_svc.DiocesesGetAll);
-        public async Task<List<Diocese>> DiocesesGetAllAsync() => await Cacher.AutoAsync(_svc.DiocesesGetAllAsync);
-
-
-        public List<ProvisionSpecialClasses> SpecialClassesProvisionsGetAll() => Cacher.Auto(_svc.SpecialClassesProvisionsGetAll);
-        public async Task<List<ProvisionSpecialClasses>> SpecialClassesProvisionsGetAllAsync() => await Cacher.AutoAsync(_svc.SpecialClassesProvisionsGetAllAsync);
 
         public async Task<string> GetNameAsync(string lookupName, int id) => 
             await ApplicationDbContext.OperationAsync(async dc => await _mapping.Get(lookupName)?.Invoke(dc, id));
 
         public bool IsLookupField(string name) => _mapping.ContainsKey(name);
 
-        private string GetName(IEnumerable<LookupBase> items, int id) => items.FirstOrDefault(x => x.Id == id)?.Name;
+        private string GetName(IEnumerable<LookupDto> items, int id) => items.FirstOrDefault(x => x.Id == id)?.Name;
 
         public void Dispose() => _svc.Dispose();
     }
