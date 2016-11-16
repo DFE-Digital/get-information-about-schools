@@ -32,7 +32,7 @@
 
             <label for="roleid" class="bold-xsmall" style="margin-bottom:10px; display:block;">Role</label>
             <div class="form-hint">e.g. Trustee</div>
-            @Html.EduDropDownFor(x => x.RoleId, dc.GovernorRoles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+            @Html.EduDropDownFor(x => x.RoleId, dc.LookupGovernorRoles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
                     new { id = "roleid", @class = "form-control" })
             <br /><br />
 
