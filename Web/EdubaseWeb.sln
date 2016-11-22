@@ -25,7 +25,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{D22B5186-4
 	ProjectSection(SolutionItems) = preProject
 		Application Integration EndPoints.txt = Application Integration EndPoints.txt
 		Security.txt = Security.txt
-		stubidp.json = stubidp.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Util", "Util", "{45BD8978-96E9-434E-95A2-45A5C1185F5C}"

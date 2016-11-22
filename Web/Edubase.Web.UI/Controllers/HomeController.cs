@@ -17,8 +17,8 @@ namespace Edubase.Web.UI.Controllers
         {
             var model = new Models.HomepageViewModel();
             model.AllowApprovals = User.Identity.IsAuthenticated;
-            model.AllowSchoolCreation = User.IsInRole(Roles.Admin) || User.IsInRole(Roles.LA);
-            model.AllowTrustCreation = User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Academy);
+            model.AllowSchoolCreation = User.Identity.IsAuthenticated;
+            model.AllowTrustCreation = User.Identity.IsAuthenticated;
             return View(model);
         }
 

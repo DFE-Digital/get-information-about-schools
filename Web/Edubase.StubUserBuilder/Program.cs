@@ -433,6 +433,47 @@ namespace Edubase.StubUserBuilder
             });
 
 
+            config.UserList.Add(new User
+            {
+                DisplayName = "Backoffice",
+                Description = "Administrator",
+                Assertion = new Assertion
+                {
+                    NameId = "administrator.user",
+                    AttributeStatements = new List<AttributeStatement>
+                    {
+                        new AttributeStatement(ClaimTypes.Role, EdubaseRoles.Admin),
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.EditEstablishment,
+                            ValueObject = new EditEstablishmentPermissions
+                            {
+                                AllUrns = true
+                            }
+                        },
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.CreateEstablishment,
+                            ValueObject = new CreateEstablishmentPermissions()
+                        },
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.EditGroup,
+                            ValueObject = new EditGroupPermissions
+                            {
+                                AllGroups = true
+                            }
+                        },
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.CreateGroup,
+                            ValueObject = new CreateGroupPermissions()
+                        }
+                    }
+                }
+            });
+
+
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(config, new Newtonsoft.Json.JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented

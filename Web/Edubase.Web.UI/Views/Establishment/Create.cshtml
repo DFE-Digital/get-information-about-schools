@@ -152,7 +152,7 @@
             <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
                 <label for="reason-establishment-opened" class="form-label">Reason establishment opened</label>
                 @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
-                @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.EstablishmentOpenedReasons.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-opened", @class = "form-control" })
+                @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.LookupReasonEstablishmentOpened.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-opened", @class = "form-control" })
             </div>
 
             <div class="form-group @Html.ValidationCssClassFor(x => x.OpenDate)">

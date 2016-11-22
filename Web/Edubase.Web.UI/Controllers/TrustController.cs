@@ -16,7 +16,7 @@ namespace Edubase.Web.UI.Controllers
     {
         private const string VIEWNAME = "CreateEdit";
         
-        [Authorize(Roles = "Admin,Academy")]
+        [Authorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
             if (!viewModel.SearchText.IsNullOrEmpty())
@@ -29,14 +29,14 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, Authorize(Roles = "Admin,Academy")]
+        [HttpGet, Authorize]
         public async Task<ActionResult> Create(string id)
         {
             var companyProfile = await new TrustService().SearchByCompaniesHouseNumber(id);
             return View("Create", new CreateTrustModel(companyProfile.Items.First()));
         }
         
-        [HttpPost, Authorize(Roles = "Admin,Academy")]
+        [HttpPost, Authorize]
         public async Task<ActionResult> Create(CreateTrustModel viewModel)
         {
             if (ModelState.IsValid)
@@ -47,7 +47,7 @@ namespace Edubase.Web.UI.Controllers
             else return View(viewModel);
         }
 
-        [HttpGet, Authorize(Roles = "Admin,Academy")]
+        [HttpGet, Authorize]
         public async Task<ActionResult> Edit(int id)
         {
             var viewModel = new CreateEditTrustModel();
@@ -72,7 +72,7 @@ namespace Edubase.Web.UI.Controllers
             return View(VIEWNAME, viewModel);
         }
 
-        [HttpPost, Authorize(Roles = "Admin,Academy")]
+        [HttpPost, Authorize]
         public async Task<ActionResult> Edit(CreateEditTrustModel viewModel)
         {
             if (viewModel.Action == "Search")
