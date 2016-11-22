@@ -63,6 +63,7 @@ namespace Edubase.Data.Entity
         public IDbSet<LookupTeenageMothersProvision> LookupTeenageMothersProvisions { get; set; }
         public IDbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; }
         public IDbSet<LookupEstablishmentLinkType> LookupEstablishmentLinkTypes { get; set; }
+        public IDbSet<LookupEstablishmentTypeGroup> LookupEstablishmentTypeGroups { get; set; }
 
         #endregion
 

@@ -28,6 +28,11 @@ namespace Edubase.Services.Domain
             DisplayOrder = entity.Order;
         }
 
+        public LookupDto()
+        {
+
+        }
+
         public override string ToString() => Name;
     }
 }

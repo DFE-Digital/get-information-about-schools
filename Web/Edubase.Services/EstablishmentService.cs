@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using MoreLinq;
 using Edubase.Services.Lucene;
+using Edubase.Services.Establishments;
+using System.Security.Claims;
 
 namespace Edubase.Services
 {
@@ -232,6 +234,10 @@ namespace Edubase.Services
                 .Select(x => new EstablishmentAutoSuggestionDto(x.Urn, x.Name, 
                 x.FullAddress, x.Address.CityOrTown, x.Address.PostCode)).ToArray();
         }
+
+        
+        
+
 
     }
 }

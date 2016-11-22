@@ -53,8 +53,10 @@
   <ItemGroup>
     <Compile Include="Cacher.cs" />
     <Compile Include="ChangeDescriptor.cs" />
+    <Compile Include="Invoker.cs" />
     <Compile Include="Disposer.cs" />
     <Compile Include="Formatting\Json\JsonTypeConverter.cs" />
+    <Compile Include="Guard.cs" />
     <Compile Include="IO\DirectoryHelper.cs" />
     <Compile Include="IO\FileHelper.cs" />
     <Compile Include="IO\LogTextWriter.cs" />

@@ -125,6 +125,8 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> TypeOfResourcedProvisionsGetAll() => Cacher.Auto(_svc.TypeOfResourcedProvisionsGetAll);
         public async Task<IEnumerable<LookupDto>> EstablishmentLinkTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentLinkTypesGetAllAsync);
         public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll() => Cacher.Auto(_svc.EstablishmentLinkTypesGetAll);
+        public async Task<IEnumerable<LookupDto>> EstablishmentGroupTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentGroupTypesGetAllAsync);
+        public IEnumerable<LookupDto> EstablishmentGroupTypesGetAll() => Cacher.Auto(_svc.EstablishmentGroupTypesGetAll);
 
 
         public async Task<string> GetNameAsync(string lookupName, int id) => 

@@ -11,6 +11,7 @@ using Edubase.Common;
 using Edubase.Services;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Edubase.Services.Security;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -85,6 +86,11 @@ namespace Edubase.Web.UI.Controllers
                     .Where(x => x.EstablishmentUrn == id).ToArrayAsync())
                     .Select(x => new LinkedEstabViewModel(x)).ToArray();
 
+
+
+                var pred = new SecurityService().GetEditEstablishmentPermission(User);
+                viewModel.UserCanEdit = pred.CanEdit(model.Urn, model.TypeId, null, model.LocalAuthorityId, model.EstablishmentTypeGroupId);
+
                 if (User.Identity.IsAuthenticated)
                 {
                     var pending = await dc.EstablishmentApprovalQueue.Where(x => x.Urn == id && x.IsApproved == false && x.IsDeleted == false && x.IsRejected == false).ToListAsync();
@@ -131,8 +137,9 @@ namespace Edubase.Web.UI.Controllers
                 }
 
                 if (viewModel.IsUserLoggedOn)
+                {
                     viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
-                
+                }
                 return View(viewModel);
             }
         }

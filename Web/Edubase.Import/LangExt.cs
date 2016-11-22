@@ -87,7 +87,13 @@ namespace Edubase.Import
             var propInfo = type.GetProperty(propertyName);
             return propInfo?.GetValue(item, null);
         }
-        
+
+        public static string AsEnumName(this string text)
+        {
+            var retVal = text.CleanOfNonChars(true).ToTitleCase().Replace(" ", "");
+            if (retVal.IsInteger()) retVal = "v_" + retVal;
+            return retVal;
+        }
 
     }
 

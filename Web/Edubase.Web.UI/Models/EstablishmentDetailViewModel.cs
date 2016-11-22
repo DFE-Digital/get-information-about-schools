@@ -38,6 +38,8 @@ namespace Edubase.Web.UI.Models
 
         public bool IsUserLoggedOn { get; set; }
 
+        public bool UserCanEdit { get; set; }
+
         public Governor[] Govs { get; set; }
 
         public Governor[] AccountingOfficers => Govs.Where(x => x.RoleId == (int)GovRole.AccountingOfficer).ToArray();

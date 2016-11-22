@@ -104,6 +104,7 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.StatutoryHighAge, opt => opt.MapFrom(m => m.StatutoryHighAge.ToInteger()))
                     .ForMember(x => x.StatutoryLowAge, opt => opt.MapFrom(m => m.StatutoryLowAge.ToInteger()))
                     .ForMember(x => x.TypeId, opt => opt.MapFrom(m => L.EstablishmentTypesGetAll().Id(m.TypeOfEstablishmentcode)))
+                    .ForMember(x => x.EstablishmentTypeGroupId, opt => opt.MapFrom(m => L.EstablishmentGroupTypesGetAll().Id(m.EstablishmentTypeGroupcode)))
                     .ForMember(x => x.UKPRN, opt => opt.MapFrom(m => m.UKPRN.ToInteger()))
                     .ForMember(x => x.Urn, opt => opt.MapFrom(m => m.URN.ToInteger()))
                     .ForAllOtherMembers(opt => opt.Ignore());

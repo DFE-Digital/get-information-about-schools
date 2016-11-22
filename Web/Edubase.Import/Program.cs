@@ -15,14 +15,19 @@ namespace Edubase.Import
     using Common;
     using Data.Entity;
     using Data.Entity.Lookups;
+    using Data.Migrations;
     using Helpers;
     using Mapping;
     using Migrations;
+    using Services.Domain;
+    using System.IO;
 
     public class Program
     {
         private static Dictionary<Type, DataTable> _tables;
         private static IMapper _mapper;
+        
+        private static List<string> _lookupTableNames = new List<string>();
 
         static void Main(string[] args)
         {
@@ -33,13 +38,56 @@ namespace Edubase.Import
                 Database.SetInitializer(new DropRecreateDatabase());
                 _tables = ApplicationDbContext.Create().GenerateDataTables();
             }
-            
+
             using (var source = new EdubaseSourceDataEntities())
             {
                 Disposer.Using(CreateSqlConnection, x => x.Open(), x => x.Close(), connection =>
                 {
                     MigrateAllData(connection, source);
                 });
+            }
+
+            using (Disposer.Timed(() => Console.WriteLine("Seeding DB with app data"), ms => Console.WriteLine($"...done in {ms}ms")))
+            {
+                using (var context = new ApplicationDbContext())
+                    new DbSeeder().Seed(context);
+            }
+
+            using (Disposer.Timed(() => Console.WriteLine("Auto-generating Enum constructs"), ms => Console.WriteLine($"...done in {ms}ms")))
+            {
+                GenerateEnumConstructs();
+            }
+
+        }
+
+        private static void GenerateEnumConstructs()
+        {
+            #region Template
+            const string TEMPLATE =
+            @"
+namespace Edubase.Data.Entity.Lookups
+{
+    public enum [NAME]
+    {
+        [ITEMS]
+    }
+}   
+";
+            #endregion
+
+            _lookupTableNames.Add(_tables.Get<Data.Entity.LocalAuthority>().TableName);
+            
+            using (var dc = new ApplicationDbContext())
+            {
+                foreach (var tableName in _lookupTableNames)
+                {
+                    var query = dc.Database.SqlQuery<LookupDto>($"SELECT Id, Name FROM {tableName}");
+                    var items = query.ToList();
+                    string enumName = string.Concat("e", tableName);
+                    string body = string.Join("\r\n\t\t", items.Select(x => string.Concat(x.Name.AsEnumName(), " = ", x.Id, ",")));
+                    var code = TEMPLATE.Replace("[NAME]", enumName).Replace("[ITEMS]", body);
+                    File.WriteAllText(string.Concat(enumName, ".cs"), code);
+                }
             }
         }
 
@@ -51,8 +99,9 @@ namespace Edubase.Import
             MigrateDataInBatches<Trust, GroupData>("Trusts", source.GroupData, connection, 2000, BulkCopyOptionPreserveIds);
             MigrateDataInBatches<Governor, Governors>("Governors", source.Governors, connection, 2000, BulkCopyOptionPreserveIds);
             MigrateDataInBatches<EstablishmentLink, Establishmentlinks>("Establishment Links", source.Establishmentlinks, connection, 2000, BulkCopyOptionNewIds);
-            MigrateDataInBatches<EstablishmentTrust, GroupLinks>("Trust/Establishment Links", source.GroupLinks, connection, 2000, BulkCopyOptionNewIds);
+            MigrateDataInBatches<EstablishmentTrust, GroupLinks>("Trust/Establishment Links", source.GroupLinks, connection, 2000, BulkCopyOptionNewIds);    
         }
+        
 
         private static void MigrateDataInBatches<TDestEntity, TSourceEntity>(string label, IQueryable<TSourceEntity> sourceEntities, SqlConnection connection, int batchSize, SqlBulkCopyOptions options)
         {
@@ -141,6 +190,7 @@ namespace Edubase.Import
                 MigrateLookup<LookupTeenageMothersProvision>(source.Teenagemothers, connection);
                 MigrateLookup<LookupTypeOfResourcedProvision>(source.Typeofresourcedprovision, connection);
                 MigrateLookup<LookupEstablishmentType>(source.Typeofestablishment, connection);
+                MigrateLookup<LookupEstablishmentTypeGroup>(source.Establishmenttypegroup, connection);
 
                 var governorRoles = source.Governors.Where(x => !string.IsNullOrEmpty(x.Role))
                     .Select(x => x.Role).Distinct().ToList()
@@ -151,7 +201,6 @@ namespace Edubase.Import
                     .Select(x => x.LinkType).Distinct().ToList()
                     .Select(x => new { Name = x.Clean() }).ToList();
                 MigrateLookup<LookupEstablishmentLinkType>(linkTypes, connection);
-
             }
         }
 
@@ -184,6 +233,9 @@ namespace Edubase.Import
                         .Set(l => l.LastUpdatedUtc);
                 });
             });
+
+            _lookupTableNames.Add(table.TableName);
+
             return table;
         }
         

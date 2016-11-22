@@ -153,6 +153,49 @@
     <Compile Include="Entity\EstablishmentApprovalQueue.cs" />
     <Compile Include="Entity\ComplexTypes\Address.cs" />
     <Compile Include="Entity\ApplicationUser.cs" />
+    <Compile Include="Entity\Lookups\eLocalAuthority.cs" />
+    <Compile Include="Entity\Lookups\eLookupAccommodationChanged.cs" />
+    <Compile Include="Entity\Lookups\eLookupAdmissionsPolicy.cs" />
+    <Compile Include="Entity\Lookups\eLookupBoardingEstablishment.cs" />
+    <Compile Include="Entity\Lookups\eLookupCCGovernance.cs" />
+    <Compile Include="Entity\Lookups\eLookupCCOperationalHours.cs" />
+    <Compile Include="Entity\Lookups\eLookupCCPhaseType.cs" />
+    <Compile Include="Entity\Lookups\eLookupChildcareFacilities.cs" />
+    <Compile Include="Entity\Lookups\eLookupDiocese.cs" />
+    <Compile Include="Entity\Lookups\eLookupDirectProvisionOfEarlyYears.cs" />
+    <Compile Include="Entity\Lookups\eLookupEducationPhase.cs" />
+    <Compile Include="Entity\Lookups\eLookupEstablishmentLinkType.cs" />
+    <Compile Include="Entity\Lookups\eLookupEstablishmentStatus.cs" />
+    <Compile Include="Entity\Lookups\eLookupEstablishmentType.cs" />
+    <Compile Include="Entity\Lookups\eLookupEstablishmentTypeGroup.cs" />
+    <Compile Include="Entity\Lookups\eLookupFurtherEducationType.cs" />
+    <Compile Include="Entity\Lookups\eLookupGender.cs" />
+    <Compile Include="Entity\Lookups\eLookupGovernorAppointingBody.cs" />
+    <Compile Include="Entity\Lookups\eLookupGovernorRole.cs" />
+    <Compile Include="Entity\Lookups\eLookupGroupType.cs" />
+    <Compile Include="Entity\Lookups\eLookupHeadTitle.cs" />
+    <Compile Include="Entity\Lookups\eLookupIndependentSchoolType.cs" />
+    <Compile Include="Entity\Lookups\eLookupInspectorate.cs" />
+    <Compile Include="Entity\Lookups\eLookupInspectorateName.cs" />
+    <Compile Include="Entity\Lookups\eLookupLocalGovernors.cs" />
+    <Compile Include="Entity\Lookups\eLookupNationality.cs" />
+    <Compile Include="Entity\Lookups\eLookupProvisionBoarding.cs" />
+    <Compile Include="Entity\Lookups\eLookupProvisionNursery.cs" />
+    <Compile Include="Entity\Lookups\eLookupProvisionOfficialSixthForm.cs" />
+    <Compile Include="Entity\Lookups\eLookupProvisionSpecialClasses.cs" />
+    <Compile Include="Entity\Lookups\eLookupPRUEBD.cs" />
+    <Compile Include="Entity\Lookups\eLookupPruEducatedByOthers.cs" />
+    <Compile Include="Entity\Lookups\eLookupPruFulltimeProvision.cs" />
+    <Compile Include="Entity\Lookups\eLookupPRUSEN.cs" />
+    <Compile Include="Entity\Lookups\eLookupReasonEstablishmentClosed.cs" />
+    <Compile Include="Entity\Lookups\eLookupReasonEstablishmentOpened.cs" />
+    <Compile Include="Entity\Lookups\eLookupReligiousCharacter.cs" />
+    <Compile Include="Entity\Lookups\eLookupReligiousEthos.cs" />
+    <Compile Include="Entity\Lookups\eLookupResourcedProvision.cs" />
+    <Compile Include="Entity\Lookups\eLookupSection41Approved.cs" />
+    <Compile Include="Entity\Lookups\eLookupSpecialEducationNeeds.cs" />
+    <Compile Include="Entity\Lookups\eLookupTeenageMothersProvision.cs" />
+    <Compile Include="Entity\Lookups\eLookupTypeOfResourcedProvision.cs" />
     <Compile Include="Entity\Lookups\Lookups.cs" />
     <Compile Include="Entity\Trust.cs" />
     <Compile Include="Entity\ComplexTypes\ContactDetail.cs" />
@@ -171,6 +214,10 @@
     <Compile Include="Migrations\201611091610379_Initial.cs" />
     <Compile Include="Migrations\201611091610379_Initial.Designer.cs">
       <DependentUpon>201611091610379_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611220735098_EstabTypeGroupLookup.cs" />
+    <Compile Include="Migrations\201611220735098_EstabTypeGroupLookup.Designer.cs">
+      <DependentUpon>201611220735098_EstabTypeGroupLookup.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\UserAccountSeeder.cs" />
@@ -192,6 +239,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201611091610379_Initial.resx">
       <DependentUpon>201611091610379_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611220735098_EstabTypeGroupLookup.resx">
+      <DependentUpon>201611220735098_EstabTypeGroupLookup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

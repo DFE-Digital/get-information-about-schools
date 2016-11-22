@@ -1,0 +1,7 @@
+1) User requests logon
+2) User redirected to SA
+3) After auth, redirected back to Edubase
+4) Kentor.authservices converts the SAML2 response into a claimsprincipal
+5) The claims are converted again into a different set of claims (as, at the point of development, we cannot know what the original set of claims from SA are)
+
+
