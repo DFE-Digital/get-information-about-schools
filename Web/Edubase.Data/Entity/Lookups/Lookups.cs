@@ -41,4 +41,5 @@
     public class LookupSpecialEducationNeeds : LookupBase { }
     public class LookupTeenageMothersProvision : LookupBase { }
     public class LookupTypeOfResourcedProvision : LookupBase { }
+    public class LookupEstablishmentTypeGroup : LookupBase { }
 }

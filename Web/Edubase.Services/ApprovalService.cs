@@ -171,12 +171,12 @@ namespace Edubase.Services
                 .Include(x => x.OriginatorUser)
                 .AsQueryable();
 
-            if (!currentUser.IsInRole(Roles.Admin))
-            {
-                var roleName = GetUserRestrictiveRole(currentUser);
-                if (roleName == null) throw new SecurityException("The current user is not in a restrictive role or admin role; cannot determine permissions for this operation");
-                q = q.Join(dc.Permissions, eaq => new { PropertyName = eaq.Name, RoleName = roleName, AllowApproval = true }, p => new { p.PropertyName, p.RoleName, p.AllowApproval }, (x, y) => x);
-            }
+            //if (!currentUser.IsInRole(Roles.Admin))
+            //{
+            //    var roleName = GetUserRestrictiveRole(currentUser);
+            //    if (roleName == null) throw new SecurityException("The current user is not in a restrictive role or admin role; cannot determine permissions for this operation");
+            //    q = q.Join(dc.Permissions, eaq => new { PropertyName = eaq.Name, RoleName = roleName, AllowApproval = true }, p => new { p.PropertyName, p.RoleName, p.AllowApproval }, (x, y) => x);
+            //}
 
             q = q.Where(x => x.IsDeleted == false 
                 && (establishmentUrn == null || x.Urn == establishmentUrn) 

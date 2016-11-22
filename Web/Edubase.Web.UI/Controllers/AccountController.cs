@@ -9,6 +9,11 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Data.Entity;
 using Edubase.Data.Identity;
+using System;
+using System.Security.Claims;
+using MoreLinq;
+using Edubase.Services.Security;
+using Edubase.Services.Security.ClaimsIdentityConverters;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -57,9 +62,38 @@ namespace Edubase.Web.UI.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return new ChallengeResult(Request.GetOwinContext().Authentication.GetExternalAuthenticationTypes().First().AuthenticationType, 
+                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = "/test" }));
+            //ViewBag.ReturnUrl = returnUrl;
+            //return View();
         }
+
+        //
+        // GET: /Account/ExternalLoginCallback
+        [AllowAnonymous]
+        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            var id = loginInfo.ExternalIdentity;
+
+            id = new StubClaimsIdConverter().Convert(id); // todo: SecureAccessClaimsIdConverter
+
+            // todo: when SA is enabled, convert to our json based claim tokens
+            AuthenticationManager.SignIn(id);
+            return RedirectToAction("Index", "Home");
+        }
+
+        private ApplicationSignInManager _signInManager;
+
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+            private set { _signInManager = value; }
+        }
+
 
         private ApplicationSignInManager _helper;
 
@@ -498,5 +532,36 @@ namespace Edubase.Web.UI.Controllers
             }
         }
         #endregion
+    }
+
+    internal class ChallengeResult : HttpUnauthorizedResult
+    {
+        private const string XsrfKey = "XsrfId";
+
+        public ChallengeResult(string provider, string redirectUri)
+            : this(provider, redirectUri, null)
+        {
+        }
+
+        public ChallengeResult(string provider, string redirectUri, string userId)
+        {
+            LoginProvider = provider;
+            RedirectUri = redirectUri;
+            UserId = userId;
+        }
+
+        public string LoginProvider { get; set; }
+        public string RedirectUri { get; set; }
+        public string UserId { get; set; }
+
+        public override void ExecuteResult(ControllerContext context)
+        {
+            var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+            if (UserId != null)
+            {
+                properties.Dictionary[XsrfKey] = UserId;
+            }
+            context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+        }
     }
 }

@@ -21,6 +21,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{9313FD19-2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.IntegrationTest", "Edubase.IntegrationTest\Edubase.IntegrationTest.csproj", "{4309E8AC-70FB-4B9B-88EA-15139156078C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{D22B5186-47D8-494D-AD44-3046980C85C9}"
+	ProjectSection(SolutionItems) = preProject
+		Application Integration EndPoints.txt = Application Integration EndPoints.txt
+		Security.txt = Security.txt
+		stubidp.json = stubidp.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Util", "Util", "{45BD8978-96E9-434E-95A2-45A5C1185F5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.StubUserBuilder", "Edubase.StubUserBuilder\Edubase.StubUserBuilder.csproj", "{0C900C37-A5FA-4A79-A2B9-66D372890FDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,12 +70,18 @@ Global
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC} = {45BD8978-96E9-434E-95A2-45A5C1185F5C}
 		{13E16127-6989-497C-83A2-0127B407468E} = {9313FD19-2FDE-4C58-B0DE-E469E160CCDE}
 		{4309E8AC-70FB-4B9B-88EA-15139156078C} = {9313FD19-2FDE-4C58-B0DE-E469E160CCDE}
+		{0C900C37-A5FA-4A79-A2B9-66D372890FDA} = {45BD8978-96E9-434E-95A2-45A5C1185F5C}
 	EndGlobalSection
 EndGlobal

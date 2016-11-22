@@ -151,6 +151,10 @@ namespace Edubase.Data.Entity
         
         public DbGeography Location { get; set; }
 
+        public LookupEstablishmentTypeGroup EstablishmentTypeGroup { get; set; }
+        public int? EstablishmentTypeGroupId { get; set; }
+
+
         private string _fullAddress = null;
 
         [NotMapped]

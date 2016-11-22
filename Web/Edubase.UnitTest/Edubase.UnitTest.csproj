@@ -74,6 +74,7 @@
     <Compile Include="Helpers\Disposable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Cache\CacheAccessorTest.cs" />
+    <Compile Include="Services\Security\SecurityServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

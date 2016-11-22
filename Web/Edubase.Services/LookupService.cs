@@ -101,6 +101,8 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> TypeOfResourcedProvisionsGetAll() => DataContext.LookupTypeOfResourcedProvisions.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> EstablishmentLinkTypesGetAllAsync() => (await DataContext.LookupEstablishmentLinkTypes.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll() => DataContext.LookupEstablishmentLinkTypes.ToArray().Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> EstablishmentGroupTypesGetAllAsync() => (await DataContext.LookupEstablishmentTypeGroups.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> EstablishmentGroupTypesGetAll() => DataContext.LookupEstablishmentTypeGroups.ToArray().Select(x => new LookupDto(x));
 
 
 
