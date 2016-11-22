@@ -9,6 +9,6 @@ namespace Edubase.Services.Security.ClaimsIdentityConverters
 {
     public interface IClaimsIdConverter
     {
-        ClaimsIdentity Convert(ClaimsIdentity id);
+        ClaimsIdentity Convert(ClaimsIdentity id, string userId);
     }
 }

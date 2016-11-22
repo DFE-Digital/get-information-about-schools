@@ -76,9 +76,12 @@ namespace Edubase.Web.UI.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             var id = loginInfo.ExternalIdentity;
 
-            id = new StubClaimsIdConverter().Convert(id); // todo: SecureAccessClaimsIdConverter
-
             // todo: when SA is enabled, convert to our json based claim tokens
+            id = await new SecurityService().LoginAsync(id, new StubClaimsIdConverter(), UserManager); // todo: SecureAccessClaimsIdConverter
+            
+            var uid = id.GetUserId();
+            var uname = id.GetUserName();
+
             AuthenticationManager.SignIn(id);
             return RedirectToAction("Index", "Home");
         }

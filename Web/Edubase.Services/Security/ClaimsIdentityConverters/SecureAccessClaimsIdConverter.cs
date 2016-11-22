@@ -9,7 +9,7 @@ namespace Edubase.Services.Security.ClaimsIdentityConverters
 {
     public class SecureAccessClaimsIdConverter : IClaimsIdConverter
     {
-        public ClaimsIdentity Convert(ClaimsIdentity id)
+        public ClaimsIdentity Convert(ClaimsIdentity id, string userId)
         {
             // Converts the ClaimsIdentity data sent by Secure Access into 
             // a new one supported by this application.
