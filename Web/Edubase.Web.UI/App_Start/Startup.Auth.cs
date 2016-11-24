@@ -61,13 +61,11 @@ namespace Edubase.Web.UI
                 ExpireTimeSpan = ConfiguredExpireTimeSpan
             });
 
-            
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+            app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
 
-            //app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
-
-            //AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
         }
 
 
@@ -151,7 +149,7 @@ namespace Edubase.Web.UI
             spOptions.AttributeConsumingServices.Add(attributeConsumingService);
 
             spOptions.ServiceCertificates.Add(new X509Certificate2(
-                AppDomain.CurrentDomain.SetupInformation.ApplicationBase + "/App_Data/Kentor.AuthServices.Tests.pfx"));
+                HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.Tests.pfx")));
 
             return spOptions;
         }
