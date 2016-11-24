@@ -2,6 +2,7 @@
 @using Edubase.Web.UI.Models
 @using Edubase.Common
 @using Edubase.Data.Entity
+@using Edubase.Services.Enums
 @model EstablishmentDetailViewModel
 @{
     ViewBag.Title = Model.Establishment.Name;
@@ -53,11 +54,11 @@ else if (Model.UserHasPendingApprovals)
         <table class="borderless">
             <caption class="visually-hidden">@Model.Establishment.Name information</caption>
             <tr>
-                <th scope="row">Address</th>
-                <td>@SchoolDetailsHelpers.GetAddress(Model.Establishment)</td>
+                <th scope="row">Address:</th>
+                <td>@Model.Establishment.Address</td>
             </tr>
             <tr>
-                <th scope="row">Local authority</th>
+                <th scope="row">Local authority:</th>
                 <td>
                     @Html.PendingUpdateFor(x => x.LocalAuthorityId)
                     @if (Model.Establishment.LocalAuthorityId.HasValue)
@@ -69,30 +70,40 @@ else if (Model.UserHasPendingApprovals)
                     }
                 </td>
             </tr>
+
+            @if (Model.DisplayProfile.HeadteacherDetails)
+            {
+                <tr>
+                    <th scope="row">Headteacher/Principal:</th>
+                    <td>
+                        @(Html.PendingUpdatesFor("HeadTitleId", "HeadFirstName", "HeadLastName"))
+                        @Model.Establishment.HeadTitle @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
+                    </td>
+                </tr>
+            }
+            
+            @if (Model.DisplayProfile.AgeRange)
+            {
+                <tr>
+                    <th scope="col">Age range:</th>
+                    <td>
+                        @(Html.PendingUpdatesFor("StatutoryLowAge", "StatutoryHighAge"))
+                        @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
+                        {
+                            <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
+                        }
+                    </td>
+                </tr>
+            }
+            
             <tr>
-                <th scope="row">Headteacher/Principal</th>
-                <td>
-                    @(Html.PendingUpdatesFor("HeadTitleId", "HeadFirstName", "HeadLastName"))
-                    @Model.Establishment.HeadTitle @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
-                </td>
-            </tr>
-            <tr>
-                <th scope="col">Age range</th>
-                <td>
-                    @(Html.PendingUpdatesFor("StatutoryLowAge", "StatutoryHighAge"))
-                    @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
-                    {
-                        <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
-                    }
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Phase of education</th>
+                <th scope="row">Phase of education:</th>
                 <td>
                     @(Html.PendingUpdatesFor(x=>x.EducationPhaseId))
                     @Model.Establishment.EducationPhase
                 </td>
             </tr>
+            
             <tr>
                 <th scope="row">School type</th>
                 <td>
@@ -100,38 +111,114 @@ else if (Model.UserHasPendingApprovals)
                     @Model.Establishment.EstablishmentType
                 </td>
             </tr>
+            
+            @if (Model.DisplayProfile.FurtherEducationType)
+            {
+                <tr>
+                    <th scope="row">Further Education type:</th>
+                    <td>
+                        @Model.Establishment.FurtherEducationType
+                    </td>
+                </tr>
+            }
+
+            @if (Model.DisplayProfile.GroupDetails && Model.Group != null)
+            {
+                <tr>
+                    <th scope="row">@(Model.GroupFieldLabel):</th>
+                    <td>
+                        @Html.ActionLink(Model.Group.Name, "Detail", "Trust", new { id = Model.Group.GroupUID })
+                    </td>
+                </tr>
+            }
+
+            @if (Model.DisplayProfile.GenderOfEntry)
+            {
+                <tr>
+                    <th scope="row">Gender of entry:</th>
+                    <td>
+                        @(Html.PendingUpdatesFor(x => x.GenderId))
+                        @Model.Establishment.Gender
+                    </td>
+                </tr>
+            }
+
             <tr>
-                <th scope="row">Gender of entry</th>
+                <th scope="row">ID:</th>
                 <td>
-                    @(Html.PendingUpdatesFor(x => x.GenderId))
-                    @Model.Establishment.Gender
+                    URN: @Model.Establishment.Urn, 
+                    @if (Model.DisplayProfile.LAESTAB)
+                    {
+                        <text>DfE number: @Model.Establishment.LAESTAB<br /></text>
+                    }
+                    UKPRN: @Model.Establishment.UKPRN
                 </td>
             </tr>
+
             <tr>
-                <th scope="row">URN</th>
-                <td>@Model.Establishment.Urn</td>
-            </tr>
-            <tr>
-                <th scope="row">LAESTAB</th>
-                <td>
-                    @(Html.PendingUpdatesFor(x => x.EstablishmentNumber))
-                    @Model.Establishment.LAESTAB
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Establishment status</th>
+                <th scope="row">Establishment status:</th>
                 <td>
                     @(Html.PendingUpdatesFor(x => x.StatusId))
-                    @Model.Establishment.Status
+                    @if (Model.IsClosed)
+                    {
+                        <span style="color:red;">@Model.Establishment.Status</span>
+                    }
+                    else
+                    {
+                        @Model.Establishment.Status
+                    }
                 </td>
             </tr>
-            <tr>
-                <th scope="row">Admissions policy</th>
-                <td>
-                    @(Html.PendingUpdatesFor(x => x.AdmissionsPolicyId))
-                    @Model.Establishment.AdmissionsPolicy
-                </td>
-            </tr>
+
+            @if (Model.DisplayProfile.AdmissionsPolicy)
+            {
+                <tr>
+                    <th scope="row">Admissions policy:</th>
+                    <td>
+                        @(Html.PendingUpdatesFor(x => x.AdmissionsPolicyId))
+                        @Model.Establishment.AdmissionsPolicy
+                    </td>
+                </tr>
+            }
+
+            @if (Model.DisplayProfile.WebsiteAddress)
+            {
+                <tr>
+                    <th scope="row">Website:</th>
+                    <td>
+                        <a href="@Model.Establishment.Contact.WebsiteAddress" target="_blank">@Model.Establishment.Contact.WebsiteAddress</a>
+                    </td>
+                </tr>
+            }
+
+             <tr><th scope="row">Telephone:</th><td>@Model.Establishment.Contact.TelephoneNumber</td></tr>
+            
+            @if (Model.DisplayProfile.OfstedRatingDetails)
+            {
+                <tr>
+                    <th scope="row">Ofsted rating:</th>
+                    <td>
+                        @Model.Establishment.OfstedRating  
+                        @if (Model.Establishment.OfstedInspectionDate.HasValue)
+                        {
+                            <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
+                        }
+                        <br />
+                        <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report</a>
+                    </td>
+                </tr>
+            }
+
+            @if (Model.DisplayProfile.Inspectorate)
+            {
+                <tr><th scope="row">Inspectorate:</th><td>@Model.Establishment.Inspectorate</td></tr>
+            }
+
+            @if (Model.DisplayProfile.Proprietor)
+            {
+                <tr><th scope="row">Proprietor's name:</th><td>@Model.Establishment.ProprietorName</td></tr>
+            }
+
         </table>
 
         <div class="map-container">
@@ -139,7 +226,7 @@ else if (Model.UserHasPendingApprovals)
             <div id="map" class="school-detail-map"
                  data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
                  data-school-name="@Model.Establishment.Name"
-                 data-school-address="@SchoolDetailsHelpers.GetAddress(Model.Establishment)"></div>
+                 data-school-address="@Model.Establishment.Address"></div>
         </div>
     </div>
 
@@ -158,7 +245,12 @@ else if (Model.UserHasPendingApprovals)
                 <li>
                     <a href="#school-links" class="horizontal-tab">Links</a>
                 </li>
-                @if (Model.ChangeHistory != null)
+                @if (Model.DisplayProfile.LocationDetails)
+                {
+                    <li>
+                        <a href="#school-location" class="horizontal-tab">Location</a>
+                    </li>
+                }@if (Model.ChangeHistory != null)
                 {
                     <li>
                         <a href="#school-change-history" class="horizontal-tab">Changes</a>
@@ -172,76 +264,330 @@ else if (Model.UserHasPendingApprovals)
             <div id="school-dashboard" class="tab-content">
                 <table class="borderless">
                     <caption class="visually-hidden">@Model.Establishment.Name details</caption>
+                    
+                    @if (Model.DisplayProfile.ReligiousCharacter)
+                    {
+                        <tr>
+                            <th scope="row">Religious character:</th>
+                            <td>@Model.Establishment.ReligiousCharacter</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.Diocese)
+                    {
+                        <tr>
+                            <th scope="row">Diocese:</th>
+                            <td>@Model.Establishment.Diocese</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.ReligiousEhtos)
+                    {
+                        <tr>
+                            <th scope="row">Religious ehtos:</th>
+                            <td>@Model.Establishment.ReligiousEthos</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.BoardingProvision)
+                    {
+                        <tr>
+                            <th scope="row">Boarders:</th>
+                            <td>@Model.Establishment.ProvisionBoarding</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.BoardingProvision)
+                    {
+                        <tr>
+                            <th scope="row">Nursery provision:</th>
+                            <td>@Model.Establishment.ProvisionNursery</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.OfficialSixthFormProvision)
+                    {
+                        <tr>
+                            <th scope="row">Official sixth form:</th>
+                            <td>@Model.Establishment.ProvisionOfficialSixthForm</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.Capacity)
+                    {
+                        <tr>
+                            <th scope="row">School capacity:</th>
+                            <td>@Model.Establishment.Capacity</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.Section41Approved)
+                    {
+                        <tr>
+                            <th scope="row">Section 41 approved:</th>
+                            <td>@Model.Establishment.Section41Approved</td>
+                        </tr>
+                    }
+                    
                     <tr>
-                        <th scope="row">Reason establishment opened</th>
-                        <td>@Model.Establishment.ReasonEstablishmentOpened</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Establishment open date</th>
+                        <th scope="row">Open date / Reason:</th>
                         <td>
-                            @(Html.PendingUpdatesFor(x => x.OpenDate))
-                            @(Model.Establishment.OpenDate.HasValue ? Model.Establishment.OpenDate.Value.ToString("dd/MM/yyyy") : "---")
+                            @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
+                            @Model.Establishment.ReasonEstablishmentOpened
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row">Reason establishment closed</th>
-                        <td>@Model.Establishment.ReasonEstablishmentClosed</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Date establishment closed</th>
-                        <td>
-                            @(Html.PendingUpdatesFor(x => x.CloseDate))
-                            @(Model.Establishment.CloseDate.HasValue ? Model.Establishment.CloseDate.Value.ToString("dd/MM/yyyy") : "---")
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Boarders</th>
-                        <td>@Model.Establishment.ProvisionBoarding</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Nursery provision</th>
-                        <td>@Model.Establishment.ProvisionNursery</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Official sixth form</th>
-                        <td>@Model.Establishment.ProvisionOfficialSixthForm</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Diocese</th>
-                        <td>@(Model.Establishment.Diocese?.Name ?? "---")</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">School capacity</th>
-                        <td>@Html.PendingUpdateFor(x => x.Capacity) @Model.Establishment.Capacity</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">UK provider reference number</th>
-                        <td>@Model.Establishment.UKPRN</td>
-                    </tr>
+
+                    @if (Model.DisplayProfile.CloseDate)
+                    {
+                        <tr>
+                            <th scope="row">Close date / Reason:</th>
+                            <td>
+                                @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy"))<br />
+                                @Model.Establishment.ReasonEstablishmentClosed
+                            </td>
+                        </tr>
+                    }
+
+
+                    @if (Model.DisplayProfile.SpecialClasses)
+                    {
+                        <tr>
+                            <th scope="row">Special classes:</th>
+                            <td>@Model.Establishment.ProvisionSpecialClasses</td>
+                        </tr>
+                    }
+
+
+                    @if (Model.DisplayProfile.SENStat)
+                    {
+                        <tr>
+                            <th scope="row">Number of Special Pupils Under a SEN Statement/EHCP:</th>
+                            <td>@Model.Establishment.SENStat</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.SENNoStat)
+                    {
+                        <tr>
+                            <th scope="row">Number of Special Pupils Not Under a SEN Statement/EHCP:</th>
+                            <td>@Model.Establishment.SENNoStat</td>
+                        </tr>
+                    }
+
+
+                    @if (Model.DisplayProfile.MainEmailAddress)
+                    {
+                        <tr>
+                            <th scope="row">Email:</th>
+                            <td>@Model.Establishment.Contact.EmailAddress</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.AlternativeEmailAddress)
+                    {
+                        <tr>
+                            <th scope="row">Email:</th>
+                            <td>@Model.Establishment.ContactAlt.EmailAddress</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.LastChangedDate)
+                    {
+                        <tr>
+                            <th scope="row">Last Change:</th>
+                            <td>@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.SENProvisions)
+                    {
+                        <tr>
+                            <th scope="row">Type of SEN provision:</th>
+                            <td>
+                                @if (Model.Establishment.SEN1Id.HasValue)
+                                {
+                                    <text>@Model.Establishment.SEN1<br /></text>
+                                }
+                                @if (Model.Establishment.SEN2Id.HasValue)
+                                {
+                                    <text>@Model.Establishment.SEN2<br /></text>
+                                }
+                                @if (Model.Establishment.SEN3Id.HasValue)
+                                {
+                                    <text>@Model.Establishment.SEN3<br /></text>
+                                }
+                                @if (Model.Establishment.SEN4Id.HasValue)
+                                {
+                                    <text>@Model.Establishment.SEN4<br /></text>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.TeenageMothers)
+                    {
+                        <tr>
+                            <th scope="row">Teenage mothers:</th>
+                            <td>@Model.Establishment.TeenageMothersProvision</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.TeenageMothersCapacity)
+                    {
+                        <tr>
+                            <th scope="row">Teenage mothers places:</th>
+                            <td>@Model.Establishment.TeenageMothersCapacity</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.ChildcareFacilities)
+                    {
+                        <tr>
+                            <th scope="row">Childcare facilities:</th>
+                            <td>@Model.Establishment.ChildcareFacilities</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.SENFacilities)
+                    {
+                        <tr>
+                            <th scope="row">SEN facilities:</th>
+                            <td>@Model.Establishment.PRUSEN</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.PupilsWithEBD)
+                    {
+                        <tr>
+                            <th scope="row">Pupils with EBD:</th>
+                            <td>@Model.Establishment.PRUEBD</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.PRUNumberOfPlaces)
+                    {
+                        <tr>
+                            <th scope="row">Number of places:</th>
+                            <td>@Model.Establishment.PlacesPRU</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.PRUFullTimeProvision)
+                    {
+                        <tr>
+                            <th scope="row">Full time provision :</th>
+                            <td>@Model.Establishment.PruFulltimeProvision</td>
+                        </tr>
+                    }
+
+
+                    @if (Model.DisplayProfile.PRUPupilsEducatedByOthers)
+                    {
+                        <tr>
+                            <th scope="row">Pupils educated by other providers:</th>
+                            <td>@Model.Establishment.PruEducatedByOthers</td>
+                        </tr>
+                    }
+
+
+                    @if (Model.DisplayProfile.TypeOfResourcedProvision)
+                    {
+                        <tr>
+                            <th scope="row">Type of resourced provision:</th>
+                            <td>@Model.Establishment.TypeOfResourcedProvision</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.ResourcedProvisionOnRoll)
+                    {
+                        <tr>
+                            <th scope="row">Resourced provision number on roll:</th>
+                            <td>@Model.Establishment.ResourcedProvisionOnRoll</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.ResourcedProvisionCapacity)
+                    {
+                        <tr>
+                            <th scope="row">Resourced provision capacity:</th>
+                            <td>@Model.Establishment.ResourcedProvisionCapacity</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.SenUnitOnRoll)
+                    {
+                        <tr>
+                            <th scope="row">SEN Unit number on roll:</th>
+                            <td>@Model.Establishment.SenUnitOnRoll</td>
+                        </tr>
+                    }
+                    
+                    @if (Model.DisplayProfile.SenUnitCapacity)
+                    {
+                        <tr>
+                            <th scope="row">SEN Unit capacity:</th>
+                            <td>@Model.Establishment.SenUnitCapacity</td>
+                        </tr>
+                    }
+
+
+                    @if (Model.DisplayProfile.BSOInspectorate)
+                    {
+                        <tr>
+                            <th scope="row">Inspectorate name:</th>
+                            <td>@Model.Establishment.BSOInspectorate</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.BSOInspectorateReport)
+                    {
+                        <tr>
+                            <th scope="row">Inspectorate report:</th>
+                            <td>@Model.Establishment.BSOInspectorateReportUrl</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.BSODateOfLastInspectionVisit)
+                    {
+                        <tr>
+                            <th scope="row">Date of Last Inspection Visit:</th>
+                            <td>@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("dd/MM/yyyy"))</td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayProfile.BSODateOfNextInspectionVisit)
+                    {
+                        <tr>
+                            <th scope="row">Date of Next Inspection Visit:</th>
+                            <td>@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("dd/MM/yyyy"))</td>
+                        </tr>
+                    }
+
+
                 </table>
 
             </div>
             <div id="school-contact" class="tab-content">
                 <table class="borderless">
                     <caption class="visually-hidden">Contact information for @Model.Establishment.Name</caption>
-                <tr>
-                    <th scope="row">School website</th>
-                    <td>@Model.Establishment.Contact.WebsiteAddress</td>
-                </tr>
-                <tr>
-                    <th scope="row">Main email</th>
-                    <td>@Model.Establishment.Contact.EmailAddress</td>
-                </tr>
-                <tr>
-                    <th scope="row">Alternative email</th>
-                    <td>@Model.Establishment.ContactAlt.EmailAddress</td>
-                </tr>
-                <tr>
-                    <th scope="row">Telephone number</th>
-                    <td>@Model.Establishment.Contact.TelephoneNumber</td>
-                </tr>
-            </table>
-        </div>
+                    <tr>
+                        <th scope="row">School website</th>
+                        <td>@Model.Establishment.Contact.WebsiteAddress</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Main email</th>
+                        <td>@Model.Establishment.Contact.EmailAddress</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Alternative email</th>
+                        <td>@Model.Establishment.ContactAlt.EmailAddress</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Telephone number</th>
+                        <td>@Model.Establishment.Contact.TelephoneNumber</td>
+                    </tr>
+                </table>
+            </div>
             <div id="school-governance" class="tab-content">
 
                 @if (!Model.Govs.Any())
@@ -340,6 +686,64 @@ else if (Model.UserHasPendingApprovals)
                         <p>There are no linked establishments</p>
                     }
             </div>
+
+            @if (Model.DisplayProfile.LocationDetails)
+            {
+                <div id="school-location" class="tab-content">
+                    <table class="borderless">
+                        <caption class="visually-hidden">Location information for @Model.Establishment.Name</caption>
+                        <tr>
+                            <th scope="row">RSC Region:</th>
+                            <td>@Model.Establishment.RSCRegion</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Government Office Region:</th>
+                            <td>@Model.Establishment.GovernmentOfficeRegion</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">District:</th>
+                            <td>@Model.Establishment.AdministrativeDistrict</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Ward:</th>
+                            <td>@Model.Establishment.AdministrativeWard</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Parliamentary Constituency:</th>
+                            <td>@Model.Establishment.ParliamentaryConstituency</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Urban/Rural Description:</th>
+                            <td>@Model.Establishment.UrbanRural</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">GSS LA Code:</th>
+                            <td>@Model.Establishment.GSSLA</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Easting:</th>
+                            <td>@Model.Establishment.Easting</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Northing:</th>
+                            <td>@Model.Establishment.Northing</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Census Ward: </th>
+                            <td>@Model.Establishment.CASWard</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Middle Super Output Area (MSOA): </th>
+                            <td>@Model.Establishment.MSOA</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Lower Super Output Area (LSOA):</th>
+                            <td>@Model.Establishment.LSOA</td>
+                        </tr>
+                    </table>
+                </div>
+            }
+
             @if (Model.ChangeHistory != null)
             {
             <div id="school-change-history" class="tab-content approval-data">

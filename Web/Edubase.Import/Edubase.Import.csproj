@@ -105,6 +105,9 @@
     <Compile Include="Accomodationchanged.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Administrativeward.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Admissionspolicy.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
@@ -251,6 +254,9 @@
     <Compile Include="Officialsixthform.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Ofstedratings.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Ofstedspecialmeasures.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
@@ -364,13 +370,13 @@
       <LastGenOutput>EdubaseSourceData.Context.cs</LastGenOutput>
       <DependentUpon>EdubaseSourceData.edmx</DependentUpon>
     </Content>
+    <Content Include="EdubaseSourceData.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="EdubaseSourceData.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>EdubaseSourceData.cs</LastGenOutput>
       <DependentUpon>EdubaseSourceData.edmx</DependentUpon>
-    </Content>
-    <Content Include="EdubaseSourceData.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SqlServerTypes\readme.htm" />
   </ItemGroup>

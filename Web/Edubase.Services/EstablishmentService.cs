@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using MoreLinq;
 using Edubase.Services.Lucene;
-using Edubase.Services.Establishments;
 using System.Security.Claims;
 
 namespace Edubase.Services

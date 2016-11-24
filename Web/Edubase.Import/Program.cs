@@ -31,9 +31,7 @@ namespace Edubase.Import
 
         static void Main(string[] args)
         {
-            _mapper = MappingConfiguration.Create();
-
-            using (Disposer.Timed(() => Console.WriteLine("Recreating the DB"), ms => Console.WriteLine($"...done in {ms}ms")))
+            using (Timing("Recreating the DB"))
             {
                 Database.SetInitializer(new DropRecreateDatabase());
                 _tables = ApplicationDbContext.Create().GenerateDataTables();
@@ -41,22 +39,24 @@ namespace Edubase.Import
 
             using (var source = new EdubaseSourceDataEntities())
             {
+                using (Timing("Loading Ofsted ratings and mapping configuration"))
+                {
+                    var ofstedRatings = source.Ofstedratings.ToDictionary(x => x.URN.ToInteger().Value);
+                    _mapper = MappingConfiguration.Create(ofstedRatings);
+                }
+
                 Disposer.Using(CreateSqlConnection, x => x.Open(), x => x.Close(), connection =>
                 {
                     MigrateAllData(connection, source);
                 });
             }
 
-            using (Disposer.Timed(() => Console.WriteLine("Seeding DB with app data"), ms => Console.WriteLine($"...done in {ms}ms")))
-            {
-                using (var context = new ApplicationDbContext())
-                    new DbSeeder().Seed(context);
-            }
+            using (Timing("Seeding DB with app data"))
+            using (var context = new ApplicationDbContext())
+                new DbSeeder().Seed(context);
 
-            using (Disposer.Timed(() => Console.WriteLine("Auto-generating Enum constructs"), ms => Console.WriteLine($"...done in {ms}ms")))
-            {
+            using (Timing("Auto-generating Enum constructs"))
                 GenerateEnumConstructs();
-            }
 
         }
 
@@ -65,7 +65,7 @@ namespace Edubase.Import
             #region Template
             const string TEMPLATE =
             @"
-namespace Edubase.Data.Entity.Lookups
+namespace Edubase.Services.Enums
 {
     public enum [NAME]
     {
@@ -81,14 +81,20 @@ namespace Edubase.Data.Entity.Lookups
             {
                 foreach (var tableName in _lookupTableNames)
                 {
-                    var query = dc.Database.SqlQuery<LookupDto>($"SELECT Id, Name FROM {tableName}");
-                    var items = query.ToList();
-                    string enumName = string.Concat("e", tableName);
-                    string body = string.Join("\r\n\t\t", items.Select(x => string.Concat(x.Name.AsEnumName(), " = ", x.Id, ",")));
-                    var code = TEMPLATE.Replace("[NAME]", enumName).Replace("[ITEMS]", body);
-                    File.WriteAllText(string.Concat(enumName, ".cs"), code);
+                    var count = dc.Database.SqlQuery<int>($"SELECT COUNT(1) FROM {tableName}").FirstOrDefault();
+                    if (count < 700)
+                    {
+                        var query = dc.Database.SqlQuery<LookupDto>($"SELECT Id, Name FROM {tableName}");
+                        var items = query.ToList();
+                        string enumName = string.Concat("e", tableName);
+                        string body = string.Join("\r\n\t\t", items.Select(x => string.Concat(x.Name.AsEnumName(), " = ", x.Id, ",")));
+                        var code = TEMPLATE.Replace("[NAME]", enumName).Replace("[ITEMS]", body);
+                        File.WriteAllText(string.Concat(enumName, ".cs"), code);
+                    }
                 }
             }
+
+            Console.WriteLine("REMEMBER TO IMPORT THE ENUMS INTO THE CODEBASE! bye.");
         }
 
         private static void MigrateAllData(SqlConnection connection, EdubaseSourceDataEntities source)
@@ -191,6 +197,15 @@ namespace Edubase.Data.Entity.Lookups
                 MigrateLookup<LookupTypeOfResourcedProvision>(source.Typeofresourcedprovision, connection);
                 MigrateLookup<LookupEstablishmentType>(source.Typeofestablishment, connection);
                 MigrateLookup<LookupEstablishmentTypeGroup>(source.Establishmenttypegroup, connection);
+                MigrateLookup<LookupGovernmentOfficeRegion>(source.GOR, connection);
+                MigrateLookup<LookupDistrictAdministrative>(source.Districtadministrative, connection);
+                MigrateLookup<LookupParliamentaryConstituency>(source.Parliamentaryconstituency, connection);
+                MigrateLookup<LookupUrbanRural>(source.Urbanrural, connection);
+                MigrateLookup<LookupGSSLA>(source.Gsslacode, connection);
+                MigrateLookup<LookupCASWard>(source.Casward, connection);
+                MigrateLookup<LookupMSOA>(source.MSOA, connection);
+                MigrateLookup<LookupLSOA>(source.LSOA, connection);
+                MigrateLookup<LookupAdministrativeWard>(source.Administrativeward, connection);
 
                 var governorRoles = source.Governors.Where(x => !string.IsNullOrEmpty(x.Role))
                     .Select(x => x.Role).Distinct().ToList()

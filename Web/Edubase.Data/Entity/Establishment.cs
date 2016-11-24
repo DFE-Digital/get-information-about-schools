@@ -115,7 +115,7 @@ namespace Edubase.Data.Entity
         public LookupHeadTitle HeadTitle { get; set; }
 
         [NotMapped]
-        public string HeadteacherFullName => StringUtil.ConcatNonEmpties(" ", HeadTitle?.ToString(), HeadFirstName, HeadLastName);
+        public string HeadteacherFullName => StringUtil.ConcatNonEmpties(" ", HeadTitle?.ToString()?.RemoveSubstring("Unknown"), HeadFirstName, HeadLastName);
 
         [RequiresApproval]
         public int? HeadTitleId { get; set; }
@@ -154,6 +154,105 @@ namespace Edubase.Data.Entity
         public LookupEstablishmentTypeGroup EstablishmentTypeGroup { get; set; }
         public int? EstablishmentTypeGroupId { get; set; }
 
+        public byte? OfstedRating { get; set; }
+        public DateTime? OfstedInspectionDate { get; set; }
+
+        public LookupInspectorate Inspectorate { get; set; }
+        public int? InspectorateId { get; set; }
+
+        public LookupSection41Approved Section41Approved { get; set; }
+        public int? Section41ApprovedId { get; set; }
+
+
+
+        public string ProprietorName { get; set; }
+
+
+        public int? SENStat { get; set; }
+        public int? SENNoStat { get; set; }
+
+
+        public LookupSpecialEducationNeeds SEN1 { get; set; }
+        public LookupSpecialEducationNeeds SEN2 { get; set; }
+        public LookupSpecialEducationNeeds SEN3 { get; set; }
+        public LookupSpecialEducationNeeds SEN4 { get; set; }
+        public int? SEN1Id { get; set; }
+        public int? SEN2Id { get; set; }
+        public int? SEN3Id { get; set; }
+        public int? SEN4Id { get; set; }
+
+        public LookupTeenageMothersProvision TeenageMothersProvision { get; set; }
+        public int? TeenageMothersProvisionId { get; set; }
+        public int? TeenageMothersCapacity { get; set; }
+
+        public LookupChildcareFacilities ChildcareFacilities { get; set; }
+        public int? ChildcareFacilitiesId { get; set; }
+
+        public LookupPRUSEN PRUSEN { get; set; }
+        public int? PRUSENId { get; set; }
+
+        public LookupPRUEBD PRUEBD { get; set; }
+        public int? PRUEBDId { get; set; }
+
+        public int? PlacesPRU { get; set; }
+
+        public LookupPruFulltimeProvision PruFulltimeProvision { get; set; }
+        public int? PruFulltimeProvisionId { get; set; }
+
+        public LookupPruEducatedByOthers PruEducatedByOthers { get; set; }
+        public int? PruEducatedByOthersId { get; set; }
+
+        public LookupTypeOfResourcedProvision TypeOfResourcedProvision { get; set; }
+        public int? TypeOfResourcedProvisionId { get; set; }
+
+        public int? ResourcedProvisionOnRoll { get; set; }
+        public int? ResourcedProvisionCapacity { get; set; }
+
+        public LookupGovernmentOfficeRegion GovernmentOfficeRegion { get; set; }
+        public int? GovernmentOfficeRegionId { get; set; }
+
+        public LookupDistrictAdministrative AdministrativeDistrict { get; set; }
+        public int? AdministrativeDistrictId { get; set; }
+
+        public LookupAdministrativeWard AdministrativeWard { get; set; }
+        public int? AdministrativeWardId { get; set; }
+
+        public LookupParliamentaryConstituency ParliamentaryConstituency { get; set; }
+        public int? ParliamentaryConstituencyId { get; set; }
+
+        public LookupUrbanRural UrbanRural { get; set; }
+        public int? UrbanRuralId { get; set; }
+
+        public LookupGSSLA GSSLA { get; set; }
+        public int? GSSLAId { get; set; }
+
+
+        public LookupCASWard CASWard { get; set; }
+        public int? CASWardId { get; set; }
+
+
+        public LookupMSOA MSOA { get; set; }
+        public int? MSOAId { get; set; }
+        public LookupLSOA LSOA { get; set; }
+        public int? LSOAId { get; set; }
+
+        public LookupFurtherEducationType FurtherEducationType { get; set; }
+        public int? FurtherEducationTypeId { get; set; }
+
+        public int? SenUnitOnRoll { get; set; }
+        public int? SenUnitCapacity { get; set; }
+
+        /// <summary>
+        /// Regional School Comissioner
+        /// </summary>
+        public LocalAuthority RSCRegion { get; set; }
+        public int? RSCRegionId { get; set; }
+
+        public LookupInspectorateName BSOInspectorate { get; set; }
+        public int? BSOInspectorateId { get; set; }
+        public string BSOInspectorateReportUrl { get; set; }
+        public DateTime? BSODateOfLastInspectionVisit { get; set; }
+        public DateTime? BSODateOfNextInspectionVisit { get; set; }
 
         private string _fullAddress = null;
 

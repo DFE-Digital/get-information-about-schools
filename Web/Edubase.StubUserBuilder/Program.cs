@@ -1,4 +1,5 @@
 ﻿using Edubase.Data.Entity.Lookups;
+using Edubase.Services.Enums;
 using Edubase.Services.Security;
 using Edubase.Services.Security.Permissions;
 using System;

@@ -92,6 +92,7 @@ namespace Edubase.Import
         {
             var retVal = text.CleanOfNonChars(true).ToTitleCase().Replace(" ", "");
             if (retVal.IsInteger()) retVal = "v_" + retVal;
+            if (char.IsNumber(retVal[0])) retVal = "_" + retVal;
             return retVal;
         }
 

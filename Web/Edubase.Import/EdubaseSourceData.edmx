@@ -1,4 +1,4 @@
-﻿<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
 <!-- EF Runtime content -->
 <edmx:Runtime>
 <!-- SSDL content -->
@@ -6,6 +6,7 @@
 <Schema Namespace="EdubaseSourceDataModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityContainer Name="EdubaseSourceDataModelStoreContainer">
     <EntitySet Name="Accomodationchanged" EntityType="EdubaseSourceDataModel.Store.Accomodationchanged" store:Type="Tables" />
+    <EntitySet Name="Administrativeward" EntityType="EdubaseSourceDataModel.Store.Administrativeward" store:Type="Tables" />
     <EntitySet Name="Admissionspolicy" EntityType="EdubaseSourceDataModel.Store.Admissionspolicy" store:Type="Tables" />
     <EntitySet Name="Appointingbody" EntityType="EdubaseSourceDataModel.Store.Appointingbody" store:Type="Tables" />
     <EntitySet Name="Boarders" EntityType="EdubaseSourceDataModel.Store.Boarders" store:Type="Tables" />
@@ -48,6 +49,7 @@
     <EntitySet Name="Nationality" EntityType="EdubaseSourceDataModel.Store.Nationality" store:Type="Tables" />
     <EntitySet Name="Nurseryprovision" EntityType="EdubaseSourceDataModel.Store.Nurseryprovision" store:Type="Tables" />
     <EntitySet Name="Officialsixthform" EntityType="EdubaseSourceDataModel.Store.Officialsixthform" store:Type="Tables" />
+    <EntitySet Name="Ofstedratings" EntityType="EdubaseSourceDataModel.Store.Ofstedratings" store:Type="Tables" />
     <EntitySet Name="Ofstedspecialmeasures" EntityType="EdubaseSourceDataModel.Store.Ofstedspecialmeasures" store:Type="Tables" />
     <EntitySet Name="Parliamentaryconstituency" EntityType="EdubaseSourceDataModel.Store.Parliamentaryconstituency" store:Type="Tables" />
     <EntitySet Name="Phaseofeducation" EntityType="EdubaseSourceDataModel.Store.Phaseofeducation" store:Type="Tables" />
@@ -77,6 +79,14 @@
     <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Administrativeward">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
+    <Property Name="name" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Admissionspolicy">
     <Key>
@@ -705,6 +715,16 @@
     <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
+  <EntityType Name="Ofstedratings">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="nvarchar" />
+    <Property Name="Inspectiondate" Type="nvarchar" />
+    <Property Name="Overalleffectiveness" Type="nvarchar" />
+    <Property Name="REPORTURL" Type="nvarchar" />
+  </EntityType>
   <EntityType Name="Ofstedspecialmeasures">
     <Key>
       <PropertyRef Name="autoid" />
@@ -881,6 +901,7 @@
 <Schema Namespace="EdubaseSourceDataModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
   <EntityContainer Name="EdubaseSourceDataEntities" p1:LazyLoadingEnabled="true">
     <EntitySet Name="Accomodationchanged" EntityType="EdubaseSourceDataModel.Accomodationchanged" />
+    <EntitySet Name="Administrativeward" EntityType="EdubaseSourceDataModel.Administrativeward" />
     <EntitySet Name="Admissionspolicy" EntityType="EdubaseSourceDataModel.Admissionspolicy" />
     <EntitySet Name="Appointingbody" EntityType="EdubaseSourceDataModel.Appointingbody" />
     <EntitySet Name="Boarders" EntityType="EdubaseSourceDataModel.Boarders" />
@@ -923,6 +944,7 @@
     <EntitySet Name="Nationality" EntityType="EdubaseSourceDataModel.Nationality" />
     <EntitySet Name="Nurseryprovision" EntityType="EdubaseSourceDataModel.Nurseryprovision" />
     <EntitySet Name="Officialsixthform" EntityType="EdubaseSourceDataModel.Officialsixthform" />
+    <EntitySet Name="Ofstedratings" EntityType="EdubaseSourceDataModel.Ofstedratings" />
     <EntitySet Name="Ofstedspecialmeasures" EntityType="EdubaseSourceDataModel.Ofstedspecialmeasures" />
     <EntitySet Name="Parliamentaryconstituency" EntityType="EdubaseSourceDataModel.Parliamentaryconstituency" />
     <EntitySet Name="Phaseofeducation" EntityType="EdubaseSourceDataModel.Phaseofeducation" />
@@ -952,6 +974,14 @@
     <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
     <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Administrativeward">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Admissionspolicy">
     <Key>
@@ -1580,6 +1610,16 @@
     <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
+  <EntityType Name="Ofstedratings">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="URN" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Inspectiondate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Overalleffectiveness" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="REPORTURL" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
   <EntityType Name="Ofstedspecialmeasures">
     <Key>
       <PropertyRef Name="autoid" />
@@ -1761,6 +1801,15 @@
           <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Administrativeward">
+      <EntityTypeMapping TypeName="EdubaseSourceDataModel.Administrativeward">
+        <MappingFragment StoreEntitySet="Administrativeward">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -2433,6 +2482,17 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Ofstedratings">
+      <EntityTypeMapping TypeName="EdubaseSourceDataModel.Ofstedratings">
+        <MappingFragment StoreEntitySet="Ofstedratings">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
+          <ScalarProperty Name="URN" ColumnName="URN" />
+          <ScalarProperty Name="Inspectiondate" ColumnName="Inspectiondate" />
+          <ScalarProperty Name="Overalleffectiveness" ColumnName="Overalleffectiveness" />
+          <ScalarProperty Name="REPORTURL" ColumnName="REPORTURL" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Ofstedspecialmeasures">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Ofstedspecialmeasures">
         <MappingFragment StoreEntitySet="Ofstedspecialmeasures">
@@ -2631,72 +2691,5 @@
 <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
 <Connection><DesignerInfoPropertySet><DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" /></DesignerInfoPropertySet></Connection>
 <edmx:Options><DesignerInfoPropertySet><DesignerProperty Name="ValidateOnBuild" Value="True" /><DesignerProperty Name="EnablePluralization" Value="False" /><DesignerProperty Name="IncludeForeignKeysInModel" Value="True" /><DesignerProperty Name="UseLegacyProvider" Value="False" /><DesignerProperty Name="CodeGenerationStrategy" Value="None" /></DesignerInfoPropertySet></edmx:Options>
-<edmx:Diagrams >
-      <Diagram DiagramId="203e2b56b975485cab77e270fff22682" Name="Diagram1">
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Accomodationchanged" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Admissionspolicy" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Appointingbody" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Boarders" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Boardingestablishment" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Casward" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ccdisadvantagedarea" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ccgovernance" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ccgrouplead" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ccoperationalhours" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ccphasetype" Width="1.5" PointX="4.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Childcarefacilities" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Contactpreference" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.County" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Diocese" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Directprovisionofearlyyears" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Districtadministrative" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Establishmentlinks" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Establishments" Width="1.5" PointX="6.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Establishmentstatus" Width="1.5" PointX="8.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Establishmenttypegroup" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Federationflag" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ftprov" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Furthereducationtype" Width="1.5" PointX="10.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Gender" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.GOR" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Governors" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.GroupData" Width="1.5" PointX="12.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.GroupLinks" Width="1.5" PointX="12.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.GroupType" Width="1.5" PointX="8.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Gsslacode" Width="1.5" PointX="12.75" PointY="10.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Headtitle" Width="1.5" PointX="10.75" PointY="13.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Independentschooltype" Width="1.5" PointX="12.75" PointY="13.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Inspectorate" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Inspectoratename" Width="1.5" PointX="14.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.LocalAuthority" Width="1.5" PointX="14.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Localgovernors" Width="1.5" PointX="14.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.LSOA" Width="1.5" PointX="14.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Marketingoptinout" Width="1.5" PointX="14.75" PointY="15.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.MSOA" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Nationality" Width="1.5" PointX="16.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Nurseryprovision" Width="1.5" PointX="16.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Officialsixthform" Width="1.5" PointX="8.75" PointY="16.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Ofstedspecialmeasures" Width="1.5" PointX="16.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Parliamentaryconstituency" Width="1.5" PointX="10.75" PointY="16.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Phaseofeducation" Width="1.5" PointX="16.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.PRUEBD" Width="1.5" PointX="16.75" PointY="15.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Prueducatedbyothers" Width="1.5" PointX="18.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Prufulltimeprovision" Width="1.5" PointX="0.75" PointY="18.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.PRUSEN" Width="1.5" PointX="2.75" PointY="18.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Reasonestablishmentclosed" Width="1.5" PointX="18.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Reasonestablishmentopened" Width="1.5" PointX="18.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Reasonforchange" Width="1.5" PointX="18.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Religiouscharacter" Width="1.5" PointX="18.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Religiousethos" Width="1.5" PointX="12.75" PointY="18.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Resourcedprovision" Width="1.5" PointX="14.75" PointY="18.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Section41approved" Width="1.5" PointX="18.75" PointY="15.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Specialclasses" Width="1.5" PointX="16.75" PointY="18.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Specialeducationaneeds" Width="1.5" PointX="18.75" PointY="18.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Teenagemothers" Width="1.5" PointX="8.75" PointY="19.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Trustflag" Width="1.5" PointX="20.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Typeofestablishment" Width="1.5" PointX="20.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Typeofresourcedprovision" Width="1.5" PointX="20.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EdubaseSourceDataModel.Urbanrural" Width="1.5" PointX="20.75" PointY="9.75" IsExpanded="true" />
-      </Diagram>
-    </edmx:Diagrams>
+<edmx:Diagrams />
 </edmx:Designer></edmx:Edmx>

@@ -23,7 +23,7 @@ namespace Edubase.Web.UI.Models
         {
             Urn = establishment.Urn;
             Name = establishment.Name;
-            Address = Helpers.SchoolDetailsHelpers.GetAddress(establishment);
+            Address = establishment.Address.ToString();
             HeadteacherName = establishment.HeadteacherFullName;
             Type = establishment.EstablishmentType?.Name;
         }

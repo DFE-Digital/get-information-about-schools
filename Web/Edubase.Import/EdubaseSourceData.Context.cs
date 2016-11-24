@@ -26,6 +26,7 @@ namespace Edubase.Import
         }
     
         public virtual DbSet<Accomodationchanged> Accomodationchanged { get; set; }
+        public virtual DbSet<Administrativeward> Administrativeward { get; set; }
         public virtual DbSet<Admissionspolicy> Admissionspolicy { get; set; }
         public virtual DbSet<Appointingbody> Appointingbody { get; set; }
         public virtual DbSet<Boarders> Boarders { get; set; }
@@ -68,6 +69,7 @@ namespace Edubase.Import
         public virtual DbSet<Nationality> Nationality { get; set; }
         public virtual DbSet<Nurseryprovision> Nurseryprovision { get; set; }
         public virtual DbSet<Officialsixthform> Officialsixthform { get; set; }
+        public virtual DbSet<Ofstedratings> Ofstedratings { get; set; }
         public virtual DbSet<Ofstedspecialmeasures> Ofstedspecialmeasures { get; set; }
         public virtual DbSet<Parliamentaryconstituency> Parliamentaryconstituency { get; set; }
         public virtual DbSet<Phaseofeducation> Phaseofeducation { get; set; }

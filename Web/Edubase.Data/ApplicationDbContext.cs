@@ -64,6 +64,16 @@ namespace Edubase.Data.Entity
         public IDbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; }
         public IDbSet<LookupEstablishmentLinkType> LookupEstablishmentLinkTypes { get; set; }
         public IDbSet<LookupEstablishmentTypeGroup> LookupEstablishmentTypeGroups { get; set; }
+        public IDbSet<LookupGovernmentOfficeRegion> LookupGovernmentOfficeRegions { get; set; }
+        public IDbSet<LookupDistrictAdministrative> LookupAdministrativeDistricts { get; set; }
+        public IDbSet<LookupAdministrativeWard> LookupAdministrativeWards { get; set; }
+        public IDbSet<LookupParliamentaryConstituency> LookupParliamentaryConstituencies { get; set; }
+        public IDbSet<LookupUrbanRural> LookupUrbanRural { get; set; }
+        public IDbSet<LookupGSSLA> LookupGSSLA { get; set; }
+        public IDbSet<LookupCASWard> LookupCASWards { get; set; }
+
+        public IDbSet<LookupMSOA> LookupMSOAs { get; set; }
+        public IDbSet<LookupLSOA> LookupLSOAs { get; set; }
 
         #endregion
 

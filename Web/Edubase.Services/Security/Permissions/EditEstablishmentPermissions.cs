@@ -1,4 +1,4 @@
-﻿using Edubase.Data.Entity.Lookups;
+﻿using Edubase.Services.Enums;
 using Edubase.Services.Domain;
 using Newtonsoft.Json;
 using System;

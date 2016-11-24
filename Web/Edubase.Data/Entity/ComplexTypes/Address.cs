@@ -37,6 +37,7 @@ namespace Edubase.Data.Entity.ComplexTypes
             Line3,
             Locality,
             CityOrTown,
+            County,
             PostCode);
     }
 }

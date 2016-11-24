@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Edubase.Data.Entity.Lookups;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Security.Permissions
 {

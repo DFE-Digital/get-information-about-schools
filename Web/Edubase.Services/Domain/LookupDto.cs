@@ -1,7 +1,8 @@
-﻿using Edubase.Data.Entity.Lookups;
+﻿using Edubase.Services.Enums;
 using Edubase.Common;
 using System;
 using Edubase.Data.Entity;
+using Edubase.Data.Entity.Lookups;
 
 namespace Edubase.Services.Domain
 {

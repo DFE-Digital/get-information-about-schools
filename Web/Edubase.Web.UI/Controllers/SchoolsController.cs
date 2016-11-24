@@ -49,7 +49,7 @@ namespace Edubase.Web.UI.Controllers
 
         public async Task<ActionResult> Details(int id, bool? pendingUpdates)
         {
-            var viewModel = new EstablishmentDetailViewModel
+            var viewModel = new EstablishmentDetailViewModel(User)
             {
                 ShowPendingMessage = pendingUpdates.GetValueOrDefault(),
                 IsUserLoggedOn = User.Identity.IsAuthenticated
@@ -74,7 +74,32 @@ namespace Edubase.Web.UI.Controllers
                     .Include(x => x.ReligiousCharacter)
                     .Include(x => x.ReligiousEthos)
                     .Include(x => x.Status)
-                    .Include(x => x.EstablishmentType)
+                    .Include(x => x.EstablishmentTypeGroup)
+                    .Include(x => x.Inspectorate)
+                    .Include(x => x.Section41Approved)
+                    .Include(x => x.SEN1)
+                    .Include(x => x.SEN2)
+                    .Include(x => x.SEN3)
+                    .Include(x => x.SEN4)
+                    .Include(x => x.TeenageMothersProvision)
+                    .Include(x => x.ChildcareFacilities)
+                    .Include(x => x.PRUSEN)
+                    .Include(x => x.PRUEBD)
+                    .Include(x => x.PruFulltimeProvision)
+                    .Include(x => x.PruEducatedByOthers)
+                    .Include(x => x.TypeOfResourcedProvision)
+                    .Include(x => x.GovernmentOfficeRegion)
+                    .Include(x => x.AdministrativeDistrict)
+                    .Include(x => x.AdministrativeWard)
+                    .Include(x => x.ParliamentaryConstituency)
+                    .Include(x => x.UrbanRural)
+                    .Include(x => x.GSSLA)
+                    .Include(x => x.CASWard)
+                    .Include(x => x.MSOA)
+                    .Include(x => x.LSOA)
+                    .Include(x => x.FurtherEducationType)
+                    .Include(x => x.RSCRegion)
+                    .Include(x => x.BSOInspectorate)
                     .FirstOrDefaultAsync(x => x.Urn == id);
 
                 viewModel.Establishment = model;
@@ -86,7 +111,7 @@ namespace Edubase.Web.UI.Controllers
                     .Where(x => x.EstablishmentUrn == id).ToArrayAsync())
                     .Select(x => new LinkedEstabViewModel(x)).ToArray();
 
-
+                viewModel.Group = (await dc.EstablishmentTrusts.Include(x => x.Trust).FirstOrDefaultAsync(x => x.EstablishmentUrn == id))?.Trust;
 
                 var pred = new SecurityService().GetEditEstablishmentPermission(User);
                 viewModel.UserCanEdit = pred.CanEdit(model.Urn, model.TypeId, null, model.LocalAuthorityId, model.EstablishmentTypeGroupId);
