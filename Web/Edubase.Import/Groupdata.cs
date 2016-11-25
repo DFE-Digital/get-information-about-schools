@@ -15,12 +15,15 @@ namespace Edubase.Import
     public partial class GroupData
     {
         public int autoid { get; set; }
-        public string UID { get; set; }
+        public string GroupUID { get; set; }
+        public string GroupID { get; set; }
         public string GroupName { get; set; }
         public string CompaniesHouseNumber { get; set; }
+        public string GroupTypecode { get; set; }
         public string GroupType { get; set; }
         public string ClosedDate { get; set; }
-        public string Status { get; set; }
+        public string GroupStatuscode { get; set; }
+        public string GroupStatus { get; set; }
         public string HeadofGroupTitle { get; set; }
         public string HeadofGroupFirstName { get; set; }
         public string HeadofGroupLastName { get; set; }

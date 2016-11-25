@@ -41,7 +41,7 @@ namespace Edubase.Web.UI.Models
 
         public Establishment Establishment { get; set; }
 
-        public Trust Group { get; set; }
+        public GroupCollection Group { get; set; }
 
         public EstablishmentChangeDto[] ChangeHistory { get; set; }
 

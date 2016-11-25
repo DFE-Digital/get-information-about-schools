@@ -102,6 +102,8 @@ namespace Edubase.Web.UI.Controllers
                     .Include(x => x.BSOInspectorate)
                     .FirstOrDefaultAsync(x => x.Urn == id);
 
+                if (model == null) return HttpNotFound();
+
                 viewModel.Establishment = model;
                 if(User.Identity.IsAuthenticated) viewModel.ChangeHistory = await new EstablishmentService().GetChangeHistoryAsync(id, dc);
                 viewModel.Govs = await dc.Governors.Include(x => x.AppointingBody).Include(x => x.Role).Where(x => x.EstablishmentUrn == id).ToArrayAsync();

@@ -1,4 +1,5 @@
 ﻿using Edubase.Data.Entity;
+using Edubase.Services.Domain;
 using System.Collections.Generic;
 
 namespace Edubase.Web.UI.Models
@@ -6,16 +7,18 @@ namespace Edubase.Web.UI.Models
     public class MATDetailViewModel
     {
 
-        public List<EstablishmentTrust> Establishments { get; set; }
-        public Trust MAT { get; set; }
+        public List<EstablishmentGroup> Establishments { get; set; }
+        public GroupCollection Group { get; set; }
         public bool IsUserLoggedOn { get; set; }
+        public LookupDto LocalAuthority { get; set; }
 
-        public MATDetailViewModel(List<EstablishmentTrust> estabs, Trust mat, bool isUserLoggedOn)
+        public MATDetailViewModel(List<EstablishmentGroup> estabs, GroupCollection mat, bool isUserLoggedOn, LookupDto localAuthority)
         {
-            MAT = mat;
+            Group = mat;
             Establishments = estabs;
             mat.EstablishmentCount = estabs.Count;
             IsUserLoggedOn = isUserLoggedOn;
+            LocalAuthority = localAuthority;
         }
     }
 }

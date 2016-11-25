@@ -49,6 +49,7 @@
     public class LookupUrbanRural : LookupBase { }
     public class LookupGSSLA : LookupBase { }
     public class LookupCASWard : LookupBase { }
+    public class LookupGroupStatus : LookupBase { }
 
     /// <summary>
     /// Middle Super Output Area

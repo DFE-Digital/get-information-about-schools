@@ -127,7 +127,7 @@ else if (Model.UserHasPendingApprovals)
                 <tr>
                     <th scope="row">@(Model.GroupFieldLabel):</th>
                     <td>
-                        @Html.ActionLink(Model.Group.Name, "Detail", "Trust", new { id = Model.Group.GroupUID })
+                        @Html.ActionLink(Model.Group.Name, "Details", "Trust", new { id = Model.Group.GroupUID }, null)
                     </td>
                 </tr>
             }

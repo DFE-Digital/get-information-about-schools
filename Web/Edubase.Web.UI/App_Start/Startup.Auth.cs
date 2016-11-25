@@ -22,6 +22,7 @@ using System.Security.Claims;
 using System.Linq;
 using MoreLinq;
 using Edubase.Common;
+using System.Threading.Tasks;
 
 namespace Edubase.Web.UI
 {
@@ -63,6 +64,7 @@ namespace Edubase.Web.UI
                 },
                 ExpireTimeSpan = ConfiguredExpireTimeSpan
             });
+            
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
@@ -70,6 +72,7 @@ namespace Edubase.Web.UI
 
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
         }
+        
 
 
         private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
@@ -113,8 +116,9 @@ namespace Edubase.Web.UI
 
             var spOptions = new SPOptions
             {
-                EntityId = new EntityId("http://localhost:55600/AuthServices"),
-                ReturnUrl = new Uri("http://localhost:55600/Account/ExternalLoginCallback"),
+                EntityId = new EntityId("http://edubase.gov"),
+                //EntityId = new EntityId("http://localhost:55600/AuthServices"),
+                //ReturnUrl = new Uri("http://localhost:55600/Account/ExternalLoginCallback"),
                 //DiscoveryServiceUrl = new Uri("http://secure-access-simulator.azurewebsites.net/DiscoveryService"),
                 Organization = organization
             };
@@ -150,7 +154,7 @@ namespace Edubase.Web.UI
                 new RequestedAttribute("Minimal"));
 
             spOptions.AttributeConsumingServices.Add(attributeConsumingService);
-            spOptions.ServiceCertificates.Add(GetCert());
+            //spOptions.ServiceCertificates.Add(GetCert());
 
             return spOptions;
         }

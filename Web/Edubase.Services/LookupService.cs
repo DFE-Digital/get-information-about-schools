@@ -128,7 +128,10 @@ namespace Edubase.Services
 
         public async Task<IEnumerable<LookupDto>> LSOAsGetAllAsync() => (await DataContext.LookupLSOAs.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> LSOAsGetAll() => DataContext.LookupLSOAs.ToArray().Select(x => new LookupDto(x));
-        
+
+        public async Task<IEnumerable<LookupDto>> GroupStatusesGetAllAsync() => (await DataContext.LookupGroupStatuses.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> GroupStatusesGetAll() => DataContext.LookupGroupStatuses.ToArray().Select(x => new LookupDto(x));
+
 
         public void Dispose()
         {

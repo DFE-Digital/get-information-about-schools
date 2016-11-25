@@ -20,7 +20,7 @@ namespace Edubase.Web.UI.Models.DisplayProfiles
             new ChildrensCentresDisplayProfile()
         };
 
-        public EstablishmentDisplayProfile Get(IPrincipal principal, Establishment establishment, Trust group) 
+        public EstablishmentDisplayProfile Get(IPrincipal principal, Establishment establishment, GroupCollection group) 
             => _profiles.Single(x => x.IsMatch(establishment)).Configure(principal, establishment, group);
     }
 }

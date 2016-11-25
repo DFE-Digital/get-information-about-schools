@@ -8,7 +8,7 @@ namespace Edubase.Web.UI.Models
     public class MATASSearchResultsModel
     {
         public string SearchTerm { get; set; }
-        public List<Trust> Results { get; set; }
+        public List<GroupCollection> Results { get; set; }
         public string Error { get; set; }
         public string SearchType { get; set; }
         public int Count { get; set; }

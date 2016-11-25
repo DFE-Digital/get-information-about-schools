@@ -154,7 +154,7 @@
     <Compile Include="Entity\ComplexTypes\Address.cs" />
     <Compile Include="Entity\ApplicationUser.cs" />
     <Compile Include="Entity\Lookups\Lookups.cs" />
-    <Compile Include="Entity\Trust.cs" />
+    <Compile Include="Entity\GroupCollection.cs" />
     <Compile Include="Entity\ComplexTypes\ContactDetail.cs" />
     <Compile Include="Entity\EdubaseEntity.cs" />
     <Compile Include="Entity\EstablishmentPermission.cs" />
@@ -162,43 +162,15 @@
     <Compile Include="Entity\LocalAuthority.cs" />
     <Compile Include="Entity\Lookups\LookupBase.cs" />
     <Compile Include="Entity\Establishment.cs" />
-    <Compile Include="Entity\EstablishmentTrust.cs" />
+    <Compile Include="Entity\EstablishmentGroup.cs" />
     <Compile Include="Entity\EstablishmentLink.cs" />
     <Compile Include="Entity\Permissions\Permission.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
-    <Compile Include="Migrations\201611091610379_Initial.cs" />
-    <Compile Include="Migrations\201611091610379_Initial.Designer.cs">
-      <DependentUpon>201611091610379_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611220735098_EstabTypeGroupLookup.cs" />
-    <Compile Include="Migrations\201611220735098_EstabTypeGroupLookup.Designer.cs">
-      <DependentUpon>201611220735098_EstabTypeGroupLookup.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611221337207_AddEstabOftedRating.cs" />
-    <Compile Include="Migrations\201611221337207_AddEstabOftedRating.Designer.cs">
-      <DependentUpon>201611221337207_AddEstabOftedRating.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611221338261_AddEstabOftedRating2.cs" />
-    <Compile Include="Migrations\201611221338261_AddEstabOftedRating2.Designer.cs">
-      <DependentUpon>201611221338261_AddEstabOftedRating2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611230915527_AddedEstabInspectorate.cs" />
-    <Compile Include="Migrations\201611230915527_AddedEstabInspectorate.Designer.cs">
-      <DependentUpon>201611230915527_AddedEstabInspectorate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611231215053_AddedALotMoreLookups.cs" />
-    <Compile Include="Migrations\201611231215053_AddedALotMoreLookups.Designer.cs">
-      <DependentUpon>201611231215053_AddedALotMoreLookups.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611231550244_AddedALotMoreLookups1.cs" />
-    <Compile Include="Migrations\201611231550244_AddedALotMoreLookups1.Designer.cs">
-      <DependentUpon>201611231550244_AddedALotMoreLookups1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611241159237_MoreCols.cs" />
-    <Compile Include="Migrations\201611241159237_MoreCols.Designer.cs">
-      <DependentUpon>201611241159237_MoreCols.cs</DependentUpon>
+    <Compile Include="Migrations\201611251321291_InitialCreate.cs" />
+    <Compile Include="Migrations\201611251321291_InitialCreate.Designer.cs">
+      <DependentUpon>201611251321291_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\UserAccountSeeder.cs" />
@@ -218,29 +190,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611091610379_Initial.resx">
-      <DependentUpon>201611091610379_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611220735098_EstabTypeGroupLookup.resx">
-      <DependentUpon>201611220735098_EstabTypeGroupLookup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611221337207_AddEstabOftedRating.resx">
-      <DependentUpon>201611221337207_AddEstabOftedRating.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611221338261_AddEstabOftedRating2.resx">
-      <DependentUpon>201611221338261_AddEstabOftedRating2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611230915527_AddedEstabInspectorate.resx">
-      <DependentUpon>201611230915527_AddedEstabInspectorate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611231215053_AddedALotMoreLookups.resx">
-      <DependentUpon>201611231215053_AddedALotMoreLookups.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611231550244_AddedALotMoreLookups1.resx">
-      <DependentUpon>201611231550244_AddedALotMoreLookups1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611241159237_MoreCols.resx">
-      <DependentUpon>201611241159237_MoreCols.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611251321291_InitialCreate.resx">
+      <DependentUpon>201611251321291_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,9 +15,7 @@ namespace Edubase.Web.UI.Controllers
     using Areas.Governors.Models;
     using Common.Spatial;
     using System.Threading.Tasks;
-    using Data.Entity.Lookups;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
+    using Services.Enums;
 
     public class SearchController : EduBaseController
     {
@@ -255,9 +253,15 @@ namespace Edubase.Web.UI.Controllers
 
             using (var dc = new ApplicationDbContext())
             {
-                IQueryable<Trust> query = null;
-                if (searchTerm.IsInteger()) query = dc.Trusts.Where(x => x.CompaniesHouseNumber == searchTerm);
-                else query = dc.Trusts.Where(x => x.Name.Contains(searchTerm));
+                IQueryable<GroupCollection> query = dc.Groups.Include(x => x.GroupType);
+                if (!User.Identity.IsAuthenticated)
+                {
+                    int statusId = (int)eLookupGroupStatus.Open;
+                    query = query.Where(x => x.StatusId == statusId);
+                }
+
+                if (searchTerm.IsInteger()) query = query.Where(x => x.CompaniesHouseNumber == searchTerm);
+                else query = query.Where(x => x.Name.Contains(searchTerm));
 
                 viewModel.Count = query.Count();
                 viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
@@ -265,7 +269,7 @@ namespace Edubase.Web.UI.Controllers
                 foreach (var result in viewModel.Results)
                 {
                     result.EstablishmentCount = dc.Database
-                        .SqlQuery<int>("SELECT COUNT(1) FROM Establishment2Company WHERE CompanyGroupUID = " + result.GroupUID).Single();
+                        .SqlQuery<int>("SELECT COUNT(1) FROM EstablishmentGroup WHERE TrustGroupUID = " + result.GroupUID).Single();
                 }
 
             }
@@ -290,7 +294,7 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult Suggest(string text) => Json(new EstablishmentService().Autosuggest(text));
 
         [HttpGet]
-        public ActionResult SuggestTrust(string text) => Json(DataContext.Trusts.Where(x => x.Name.StartsWith(text))
+        public ActionResult SuggestTrust(string text) => Json(DataContext.Groups.Where(x => x.Name.StartsWith(text))
             .OrderBy(x=>x.Name).Take(10).Select(x => new { Text = x.Name, Id = x.GroupUID }));
 
         private IQueryable<Establishment> GetEstablishmentsQuery() => DataContext.Establishments.Include(x => x.Status);

@@ -181,6 +181,7 @@
     <Compile Include="Enums\eLookupGovernmentOfficeRegion.cs" />
     <Compile Include="Enums\eLookupGovernorAppointingBody.cs" />
     <Compile Include="Enums\eLookupGovernorRole.cs" />
+    <Compile Include="Enums\eLookupGroupStatus.cs" />
     <Compile Include="Enums\eLookupGroupType.cs" />
     <Compile Include="Enums\eLookupGSSLA.cs" />
     <Compile Include="Enums\eLookupHeadTitle.cs" />

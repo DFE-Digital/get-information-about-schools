@@ -82,14 +82,14 @@ namespace Edubase.Web.UI.Models.DisplayProfiles
 
         protected Establishment Establishment { get; private set; }
 
-        protected Trust Group { get; private set; }
+        protected GroupCollection Group { get; private set; }
         protected IPrincipal Principal { get; private set; }
         
 
         internal bool IsMatch(Establishment establishment)
             => IsMatchInternal((eLookupEstablishmentType)establishment.TypeId, (eLookupEstablishmentTypeGroup)establishment.EstablishmentTypeGroupId);
 
-        internal EstablishmentDisplayProfile Configure(IPrincipal principal, Establishment establishment, Trust group)
+        internal EstablishmentDisplayProfile Configure(IPrincipal principal, Establishment establishment, GroupCollection group)
         {
             Establishment = establishment;
             Group = group;

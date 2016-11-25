@@ -102,10 +102,10 @@ namespace Edubase.Services.Enums
             MigrateAllLookupData(connection, source);
             MigrateDataInBatches<Data.Entity.LocalAuthority, LocalAuthority>("LAs", source.LocalAuthority, connection, 100, BulkCopyOptionPreserveIds);
             MigrateDataInBatches<Establishment, Establishments>("Establishments", source.Establishments, connection, 10000, BulkCopyOptionPreserveIds);
-            MigrateDataInBatches<Trust, GroupData>("Trusts", source.GroupData, connection, 2000, BulkCopyOptionPreserveIds);
+            MigrateDataInBatches<GroupCollection, GroupData>("Trusts", source.GroupData, connection, 2000, BulkCopyOptionPreserveIds);
             MigrateDataInBatches<Governor, Governors>("Governors", source.Governors, connection, 2000, BulkCopyOptionPreserveIds);
             MigrateDataInBatches<EstablishmentLink, Establishmentlinks>("Establishment Links", source.Establishmentlinks, connection, 2000, BulkCopyOptionNewIds);
-            MigrateDataInBatches<EstablishmentTrust, GroupLinks>("Trust/Establishment Links", source.GroupLinks, connection, 2000, BulkCopyOptionNewIds);    
+            MigrateDataInBatches<EstablishmentGroup, GroupLinks>("Trust/Establishment Links", source.GroupLinks, connection, 2000, BulkCopyOptionNewIds);    
         }
         
 
@@ -216,6 +216,11 @@ namespace Edubase.Services.Enums
                     .Select(x => x.LinkType).Distinct().ToList()
                     .Select(x => new { Name = x.Clean() }).ToList();
                 MigrateLookup<LookupEstablishmentLinkType>(linkTypes, connection);
+
+                var groupStatuses = source.GroupData.Where(x => !string.IsNullOrEmpty(x.GroupStatuscode))
+                    .Select(x => new { Name = x.GroupStatus, Code = x.GroupStatuscode }).Distinct().ToList()
+                    .Select(x => new { Name = x.Name.Clean(), Code = x.Code.Clean() }).ToList();
+                MigrateLookup<LookupGroupStatus>(groupStatuses, connection);
             }
         }
 

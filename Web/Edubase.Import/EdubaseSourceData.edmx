@@ -579,12 +579,15 @@
       <PropertyRef Name="autoid" />
     </Key>
     <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-    <Property Name="UID" Type="nvarchar" />
+    <Property Name="GroupUID" Type="nvarchar" />
+    <Property Name="GroupID" Type="nvarchar" />
     <Property Name="GroupName" Type="nvarchar" />
     <Property Name="CompaniesHouseNumber" Type="nvarchar" />
+    <Property Name="GroupTypecode" Type="nvarchar" />
     <Property Name="GroupType" Type="nvarchar" />
     <Property Name="ClosedDate" Type="nvarchar" />
-    <Property Name="Status" Type="nvarchar" />
+    <Property Name="GroupStatuscode" Type="nvarchar" />
+    <Property Name="GroupStatus" Type="nvarchar" />
     <Property Name="HeadofGroupTitle" Type="nvarchar" />
     <Property Name="HeadofGroupFirstName" Type="nvarchar" />
     <Property Name="HeadofGroupLastName" Type="nvarchar" />
@@ -1474,12 +1477,15 @@
       <PropertyRef Name="autoid" />
     </Key>
     <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-    <Property Name="UID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupUID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupID" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="GroupName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="CompaniesHouseNumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupTypecode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="GroupType" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="ClosedDate" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
-    <Property Name="Status" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupStatuscode" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="GroupStatus" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="HeadofGroupTitle" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="HeadofGroupFirstName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="HeadofGroupLastName" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
@@ -2329,12 +2335,15 @@
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.GroupData">
         <MappingFragment StoreEntitySet="GroupData">
           <ScalarProperty Name="autoid" ColumnName="autoid" />
-          <ScalarProperty Name="UID" ColumnName="UID" />
+          <ScalarProperty Name="GroupUID" ColumnName="GroupUID" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
           <ScalarProperty Name="GroupName" ColumnName="GroupName" />
           <ScalarProperty Name="CompaniesHouseNumber" ColumnName="CompaniesHouseNumber" />
+          <ScalarProperty Name="GroupTypecode" ColumnName="GroupTypecode" />
           <ScalarProperty Name="GroupType" ColumnName="GroupType" />
           <ScalarProperty Name="ClosedDate" ColumnName="ClosedDate" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="GroupStatuscode" ColumnName="GroupStatuscode" />
+          <ScalarProperty Name="GroupStatus" ColumnName="GroupStatus" />
           <ScalarProperty Name="HeadofGroupTitle" ColumnName="HeadofGroupTitle" />
           <ScalarProperty Name="HeadofGroupFirstName" ColumnName="HeadofGroupFirstName" />
           <ScalarProperty Name="HeadofGroupLastName" ColumnName="HeadofGroupLastName" />

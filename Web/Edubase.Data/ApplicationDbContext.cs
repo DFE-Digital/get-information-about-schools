@@ -10,11 +10,11 @@ namespace Edubase.Data.Entity
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public IDbSet<Trust> Trusts { get; set; }
+        public IDbSet<GroupCollection> Groups { get; set; }
         public IDbSet<Establishment> Establishments { get; set; }
         public IDbSet<LocalAuthority> LocalAuthorities { get; set; }
         public IDbSet<EstablishmentLink> EstablishmentLinks { get; set; }
-        public IDbSet<EstablishmentTrust> EstablishmentTrusts { get; set; }
+        public IDbSet<EstablishmentGroup> EstablishmentTrusts { get; set; }
         public IDbSet<EstablishmentPermission> Permissions { get; set; }
         public IDbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
         public IDbSet<Governor> Governors { get; set; }
@@ -74,6 +74,7 @@ namespace Edubase.Data.Entity
 
         public IDbSet<LookupMSOA> LookupMSOAs { get; set; }
         public IDbSet<LookupLSOA> LookupLSOAs { get; set; }
+        public IDbSet<LookupGroupStatus> LookupGroupStatuses { get; set; }
 
         #endregion
 

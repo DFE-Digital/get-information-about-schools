@@ -33,6 +33,7 @@ namespace Edubase.Import.Mapping
                     cfg2.CreateMap<GroupData, Person>()
                         .ForMember(x => x.FirstName, opt => opt.MapFrom(m => m.HeadofGroupFirstName.Clean()))
                         .ForMember(x => x.LastName, opt => opt.MapFrom(m => m.HeadofGroupLastName.Clean()))
+                        //.ForMember(x => x.LastName, opt => opt.MapFrom(m => m.email.ToCleanEmail()))
                         .ForMember(x => x.Title, opt => opt.MapFrom(m => m.HeadofGroupTitle.Remove("Not-applicable", "Unknown").Clean()))
                         .ForAllOtherMembers(opt => opt.Ignore());
                 }).CreateMapper();
@@ -163,13 +164,14 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.Order, opt => opt.MapFrom(m => m.C_Order.ToInteger()))
                     .ForAllOtherMembers(opt => opt.Ignore());
 
-                cfg.CreateMap<GroupData, Trust>()
-                    .ForMember(x => x.GroupUID, opt => opt.MapFrom(m => m.UID.ToInteger().Value))
+                cfg.CreateMap<GroupData, GroupCollection>()
+                    .ForMember(x => x.GroupUID, opt => opt.MapFrom(m => m.GroupUID.ToInteger().Value))
                     .ForMember(x => x.Name, opt => opt.MapFrom(m => m.GroupName.Clean()))
                     .ForMember(x => x.CompaniesHouseNumber, opt => opt.MapFrom(m => m.CompaniesHouseNumber.Clean()))
+                    .ForMember(x => x.GroupId, opt => opt.MapFrom(m => m.GroupID.Clean()))
                     .ForMember(x => x.GroupTypeId, opt => opt.MapFrom(m => L.GroupTypesGetAll().IdFromName(m.GroupType)))
                     .ForMember(x => x.ClosedDate, opt => opt.MapFrom(m => m.ClosedDate.ToDateTime(_dtFormats)))
-                    .ForMember(x => x.StatusId, opt => opt.MapFrom(m => L.EstablishmentStatusesGetAll().IdFromName(m.Status)))
+                    .ForMember(x => x.StatusId, opt => opt.MapFrom(m => L.GroupStatusesGetAll().Id(m.GroupStatuscode)))
                     .ForMember(x => x.Head, opt => opt.MapFrom(m => groupPersonMapper.Map<GroupData, Person>(m)))
                     .ForAllOtherMembers(opt => opt.Ignore());
 
@@ -199,7 +201,7 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.LinkEstablishedDate, opt => opt.MapFrom(m => m.LinkEstablishedDate.ToDateTime(_dtFormats)))
                     .ForAllOtherMembers(opt => opt.Ignore());
 
-                cfg.CreateMap<GroupLinks, EstablishmentTrust>()
+                cfg.CreateMap<GroupLinks, EstablishmentGroup>()
                     .ForMember(x => x.EstablishmentUrn, opt => opt.MapFrom(m => m.URN.ToInteger()))
                     .ForMember(x => x.TrustGroupUID, opt => opt.MapFrom(m => m.LinkedUID.ToInteger()))
                     .ForAllOtherMembers(opt => opt.Ignore());

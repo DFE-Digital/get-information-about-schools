@@ -157,7 +157,9 @@ namespace Edubase.Services
         public async Task<IEnumerable<LookupDto>> LSOAsGetAllAsync() => await Cacher.AutoAsync(_svc.LSOAsGetAllAsync);
         public IEnumerable<LookupDto> LSOAsGetAll() => Cacher.Auto(_svc.LSOAsGetAll);
 
-
+        public async Task<IEnumerable<LookupDto>> GroupStatusesGetAllAsync() => await Cacher.AutoAsync(_svc.GroupStatusesGetAllAsync);
+        public IEnumerable<LookupDto> GroupStatusesGetAll() => Cacher.Auto(_svc.GroupStatusesGetAll);
+        
         public async Task<string> GetNameAsync(string lookupName, int id) => 
             await ApplicationDbContext.OperationAsync(async dc => await _mapping.Get(lookupName)?.Invoke(dc, id));
 
