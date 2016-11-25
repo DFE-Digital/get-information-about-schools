@@ -19,6 +19,9 @@ using Kentor.AuthServices.WebSso;
 using System.Web.Hosting;
 using System.Web.Helpers;
 using System.Security.Claims;
+using System.Linq;
+using MoreLinq;
+using Edubase.Common;
 
 namespace Edubase.Web.UI
 {
@@ -42,7 +45,7 @@ namespace Edubase.Web.UI
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
-            
+
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             // Configure the sign in cookie
@@ -148,10 +151,22 @@ namespace Edubase.Web.UI
 
             spOptions.AttributeConsumingServices.Add(attributeConsumingService);
 
-            spOptions.ServiceCertificates.Add(new X509Certificate2(
-                HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.Tests.pfx")));
+            //spOptions.ServiceCertificates.Add(new X509Certificate2(
+            //    HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.Tests.pfx")));
+
+            spOptions.ServiceCertificates.Add(GetCert());
 
             return spOptions;
+        }
+
+        private static X509Certificate2 GetCert()
+        {
+            var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            certStore.Open(OpenFlags.ReadOnly);
+            var certCollection = certStore.Certificates.Find(X509FindType.FindByThumbprint,
+                                 ConfigurationManager.AppSettings["Kentor.AuthServices.Certificate.Thumbprint"], false);
+
+            return certCollection.Cast<X509Certificate2>().FirstOrThrow(() => new Exception("Certificate not found"));
         }
     }
 }

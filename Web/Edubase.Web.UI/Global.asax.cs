@@ -56,5 +56,7 @@ namespace Edubase.Web.UI
                 if (ctx != null && ex != null) new ExceptionHandler().Log(new HttpContextWrapper(ctx), ex);
             }
         }
+
+        public static bool IsRunningOnAzure => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
     }
 }

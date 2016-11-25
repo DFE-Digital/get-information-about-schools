@@ -208,6 +208,14 @@ namespace Edubase.Common
                 if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || (allowSpaces && c == ' ')) sb.Append(c);
             return sb.ToString();
         }
-        
+
+
+        public static TSource FirstOrThrow<TSource>(this IEnumerable<TSource> source, Func<Exception> exceptionFactory)
+        {
+            var item = source.FirstOrDefault();
+            if (item == null) throw exceptionFactory();
+            return item;
+        }
+
     }
 }
