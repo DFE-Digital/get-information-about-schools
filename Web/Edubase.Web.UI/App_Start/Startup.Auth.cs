@@ -150,23 +150,22 @@ namespace Edubase.Web.UI
                 new RequestedAttribute("Minimal"));
 
             spOptions.AttributeConsumingServices.Add(attributeConsumingService);
-
-            //spOptions.ServiceCertificates.Add(new X509Certificate2(
-            //    HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.Tests.pfx")));
-
             spOptions.ServiceCertificates.Add(GetCert());
 
             return spOptions;
         }
 
-        private static X509Certificate2 GetCert()
+        private static X509Certificate2 GetCert() => MvcApplication.IsRunningOnAzure ? GetCertWhenHostedOnAzure() : GetCertWhenNotHostedOnAzure();
+
+        private static X509Certificate2 GetCertWhenHostedOnAzure()
         {
             var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
             certStore.Open(OpenFlags.ReadOnly);
             var certCollection = certStore.Certificates.Find(X509FindType.FindByThumbprint,
                                  ConfigurationManager.AppSettings["Kentor.AuthServices.Certificate.Thumbprint"], false);
-
             return certCollection.Cast<X509Certificate2>().FirstOrThrow(() => new Exception("Certificate not found"));
         }
+
+        private static X509Certificate2 GetCertWhenNotHostedOnAzure() => new X509Certificate2(HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.Tests.pfx"));
     }
 }
