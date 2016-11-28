@@ -13,7 +13,7 @@ namespace Edubase.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201611251321291_InitialCreate"; }
+            get { return "201611281050558_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

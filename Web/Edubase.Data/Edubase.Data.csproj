@@ -168,9 +168,9 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
-    <Compile Include="Migrations\201611251321291_InitialCreate.cs" />
-    <Compile Include="Migrations\201611251321291_InitialCreate.Designer.cs">
-      <DependentUpon>201611251321291_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201611281050558_InitialCreate.cs" />
+    <Compile Include="Migrations\201611281050558_InitialCreate.Designer.cs">
+      <DependentUpon>201611281050558_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\UserAccountSeeder.cs" />
@@ -190,8 +190,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611251321291_InitialCreate.resx">
-      <DependentUpon>201611251321291_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611281050558_InitialCreate.resx">
+      <DependentUpon>201611281050558_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

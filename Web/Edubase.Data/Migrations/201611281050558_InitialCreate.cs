@@ -993,7 +993,7 @@ namespace Edubase.Data.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        EstablishmentUrn = c.Int(nullable: false),
+                        EstablishmentUrn = c.Int(),
                         Person_Title = c.String(),
                         Person_FirstName = c.String(),
                         Person_MiddleName = c.String(),
@@ -1010,7 +1010,7 @@ namespace Edubase.Data.Migrations
                         DOB = c.DateTime(precision: 7, storeType: "datetime2"),
                         Nationality = c.String(),
                         PostCode = c.String(),
-                        UID = c.Int(),
+                        GroupUID = c.Int(),
                         CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         IsDeleted = c.Boolean(nullable: false),
@@ -1018,11 +1018,13 @@ namespace Edubase.Data.Migrations
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.LookupGovernorAppointingBody", t => t.AppointingBodyId)
-                .ForeignKey("dbo.Establishment", t => t.EstablishmentUrn, cascadeDelete: true)
+                .ForeignKey("dbo.Establishment", t => t.EstablishmentUrn)
+                .ForeignKey("dbo.GroupCollection", t => t.GroupUID)
                 .ForeignKey("dbo.LookupGovernorRole", t => t.RoleId)
                 .Index(t => t.EstablishmentUrn)
                 .Index(t => t.RoleId)
-                .Index(t => t.AppointingBodyId);
+                .Index(t => t.AppointingBodyId)
+                .Index(t => t.GroupUID);
             
             CreateTable(
                 "dbo.LookupGovernorAppointingBody",
@@ -1235,6 +1237,7 @@ namespace Edubase.Data.Migrations
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.Governor", "RoleId", "dbo.LookupGovernorRole");
+            DropForeignKey("dbo.Governor", "GroupUID", "dbo.GroupCollection");
             DropForeignKey("dbo.Governor", "EstablishmentUrn", "dbo.Establishment");
             DropForeignKey("dbo.Governor", "AppointingBodyId", "dbo.LookupGovernorAppointingBody");
             DropForeignKey("dbo.EstablishmentGroup", "TrustGroupUID", "dbo.GroupCollection");
@@ -1296,6 +1299,7 @@ namespace Edubase.Data.Migrations
             DropForeignKey("dbo.Establishment", "AdministrativeWardId", "dbo.LookupAdministrativeWard");
             DropForeignKey("dbo.Establishment", "AdministrativeDistrictId", "dbo.LookupDistrictAdministrative");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.Governor", new[] { "GroupUID" });
             DropIndex("dbo.Governor", new[] { "AppointingBodyId" });
             DropIndex("dbo.Governor", new[] { "RoleId" });
             DropIndex("dbo.Governor", new[] { "EstablishmentUrn" });

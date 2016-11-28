@@ -183,7 +183,7 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.AppointmentStartDate, opt => opt.MapFrom(m => m.Dateofappointment.ToDateTime(_dtFormats)))
                     .ForMember(x => x.DOB, opt => opt.MapFrom(m => m.DateofBirth.ToDateTime(_dtFormats)))
                     .ForMember(x => x.EmailAddress, opt => opt.MapFrom(m => m.Directemailaddress.ToCleanEmail()))
-                    .ForMember(x => x.UID, opt => opt.MapFrom(m => m.UID.ToInteger()))
+                    .ForMember(x => x.GroupUID, opt => opt.MapFrom(m => m.UID.ToInteger()))
                     .ForMember(x => x.IsDeleted, opt => opt.MapFrom(m => m.Deleted == "yes"))
                     .ForMember(x => x.Nationality, opt => opt.MapFrom(m => m.Nationality.Remove("N/A")))
                     .ForMember(x => x.PostCode, opt => opt.MapFrom(m => m.Homepostcode))

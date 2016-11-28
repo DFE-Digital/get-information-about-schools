@@ -13,7 +13,8 @@ namespace Edubase.Data.Entity
     public class Governor : EdubaseEntity
     {
         public int Id { get; set; }
-        public int EstablishmentUrn { get; set; }
+        public int? EstablishmentUrn { get; set; }
+
         [ForeignKey("EstablishmentUrn")]
         public Establishment Establishment { get; set; }
         public Person Person { get; set; } = new Person();
@@ -28,6 +29,9 @@ namespace Edubase.Data.Entity
         public DateTime? DOB { get; set; }
         public string Nationality { get; set; }
         public string PostCode { get; set; }
-        public int? UID { get; set; }
+
+        public int? GroupUID { get; set; }
+        [ForeignKey("GroupUID")]
+        public GroupCollection Group { get; set; }
     }
 }
