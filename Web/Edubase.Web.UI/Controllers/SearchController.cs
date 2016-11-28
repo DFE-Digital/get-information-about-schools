@@ -30,7 +30,7 @@ namespace Edubase.Web.UI.Controllers
             if (model.SearchType == ViewModel.eSearchType.Text) return await SearchByTextSearch(model);
             else if (model.SearchType == ViewModel.eSearchType.Location) return await SearchByLocation(model);
             else if (model.SearchType == ViewModel.eSearchType.LocalAuthority) return await SearchByLocalAuthority(model);
-            else if (model.SearchType == ViewModel.eSearchType.Trust) return SearchTrusts(model);
+            else if (model.SearchType == ViewModel.eSearchType.Trust) return await SearchTrusts(model);
             else if (model.SearchType == ViewModel.eSearchType.Governor) return SearchGovernors(model.GovernorSearchModel);
             else throw new Exception("Unrecognised action");
         }
@@ -126,7 +126,7 @@ namespace Edubase.Web.UI.Controllers
             return await ProcessResult(model, query);
         }
 
-        private ActionResult SearchTrusts(ViewModel model)
+        private async Task<ActionResult> SearchTrusts(ViewModel model)
         {
             if (model.TrustSearchModel.AutoSuggestValueAsInt.HasValue)
             {
@@ -139,112 +139,112 @@ namespace Edubase.Web.UI.Controllers
             }
             else
             {
-                return SearchByMATAS(model.TrustSearchModel.Text, model.StartIndex);
+                return await SearchByMATAS(model.TrustSearchModel.Text, model.StartIndex);
             }
         }
 
-        public ActionResult Search(string searchTerm, int startIndex = 0, int pageSize = 50)
-        {
-            if (searchTerm.Clean() == null) return RedirectToAction("Index");
+        //public ActionResult Search(string searchTerm, int startIndex = 0, int pageSize = 50)
+        //{
+        //    if (searchTerm.Clean() == null) return RedirectToAction("Index");
 
-            var viewModel = new SearchResultsModel(searchTerm);
-            viewModel.StartIndex = startIndex;
+        //    var viewModel = new SearchResultsModel(searchTerm);
+        //    viewModel.StartIndex = startIndex;
 
-            if (searchTerm.IsInteger())
-            {
-                var id = searchTerm.ToInteger().Value;
-                if (searchTerm.Length == 6)
-                {
-                    using (var dc = new ApplicationDbContext())
-                    {
-                        viewModel.Results = dc.Establishments.Include(x => x.Status)
-                            .Where(x => x.Urn == id).ToList();
-                        viewModel.Count = viewModel.Results.Count;
-                    }
-                    viewModel.SearchType = SearchResultsModel.eSearchType.URN;
-                }
-                else if (searchTerm.Length == 7)
-                {
-                    var localAuthorityId = int.Parse(searchTerm.Substring(0, 3));
-                    var estabNo = int.Parse(searchTerm.Substring(3, 4));
-                    using (var dc = new ApplicationDbContext())
-                    {
-                        var query = dc.Establishments.Include(x => x.Status)
-                            .Where(x => x.LocalAuthorityId == localAuthorityId && x.EstablishmentNumber == estabNo);
-                        viewModel.Count = query.Count();
-                        viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
-                    }
-                    viewModel.SearchType = SearchResultsModel.eSearchType.LAESTAB;
-                }
-                else viewModel.Error = "The LAESTAB or URN was invalid.";
-            }
-            else
-            {
-                using (var dc = new ApplicationDbContext())
-                {
-                    var query = dc.Establishments.Include(x => x.Status)
-                        .Where(x => x.Name.Contains(searchTerm));
-                    viewModel.Count = query.Count();
-                    viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
-                }
-                viewModel.SearchType = SearchResultsModel.eSearchType.SchoolName;
-            }
+        //    if (searchTerm.IsInteger())
+        //    {
+        //        var id = searchTerm.ToInteger().Value;
+        //        if (searchTerm.Length == 6)
+        //        {
+        //            using (var dc = new ApplicationDbContext())
+        //            {
+        //                viewModel.Results = dc.Establishments.Include(x => x.Status)
+        //                    .Where(x => x.Urn == id).ToList();
+        //                viewModel.Count = viewModel.Results.Count;
+        //            }
+        //            viewModel.SearchType = SearchResultsModel.eSearchType.URN;
+        //        }
+        //        else if (searchTerm.Length == 7)
+        //        {
+        //            var localAuthorityId = int.Parse(searchTerm.Substring(0, 3));
+        //            var estabNo = int.Parse(searchTerm.Substring(3, 4));
+        //            using (var dc = new ApplicationDbContext())
+        //            {
+        //                var query = dc.Establishments.Include(x => x.Status)
+        //                    .Where(x => x.LocalAuthorityId == localAuthorityId && x.EstablishmentNumber == estabNo);
+        //                viewModel.Count = query.Count();
+        //                viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
+        //            }
+        //            viewModel.SearchType = SearchResultsModel.eSearchType.LAESTAB;
+        //        }
+        //        else viewModel.Error = "The LAESTAB or URN was invalid.";
+        //    }
+        //    else
+        //    {
+        //        using (var dc = new ApplicationDbContext())
+        //        {
+        //            var query = dc.Establishments.Include(x => x.Status)
+        //                .Where(x => x.Name.Contains(searchTerm));
+        //            viewModel.Count = query.Count();
+        //            viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
+        //        }
+        //        viewModel.SearchType = SearchResultsModel.eSearchType.SchoolName;
+        //    }
 
-            if (viewModel.Count == 1)
-            {
-                return new RedirectToRouteResult(null, new RouteValueDictionary
-                                {
-                                    { "action", "Details" },
-                                    { "controller", "Schools" },
-                                    { "id", viewModel.Results.Single().Urn }
-                                });
-            }
+        //    if (viewModel.Count == 1)
+        //    {
+        //        return new RedirectToRouteResult(null, new RouteValueDictionary
+        //                        {
+        //                            { "action", "Details" },
+        //                            { "controller", "Schools" },
+        //                            { "id", viewModel.Results.Single().Urn }
+        //                        });
+        //    }
 
-            viewModel.CalculatePageStats(pageSize);
+        //    viewModel.CalculatePageStats(pageSize);
             
-            return View("Results", viewModel);
-        }
+        //    return View("Results", viewModel);
+        //}
 
-        public ActionResult SearchByLaName(string searchTerm, int startIndex = 0, int pageSize = 50)
-        {
-            if (searchTerm.Clean() == null) return RedirectToAction("Index");
+        //public ActionResult SearchByLaName(string searchTerm, int startIndex = 0, int pageSize = 50)
+        //{
+        //    if (searchTerm.Clean() == null) return RedirectToAction("Index");
 
-            var viewModel = new SearchResultsModel(searchTerm);
-            viewModel.StartIndex = startIndex;
+        //    var viewModel = new SearchResultsModel(searchTerm);
+        //    viewModel.StartIndex = startIndex;
             
-            using (var dc = new ApplicationDbContext())
-            {
-                var la = dc.LocalAuthorities.Where(x => x.Name.Equals(searchTerm)).FirstOrDefault();
-                if (la != null)
-                {
-                    var query = dc.Establishments.Include(x => x.Status)
-                        .Where(x => x.LocalAuthorityId == la.Id);
-                    viewModel.Count = query.Count();
-                    viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
-                }
-                else
-                {
-                    viewModel.Error = "The local authority name was not found";
-                }
-            }
-            viewModel.SearchType = SearchResultsModel.eSearchType.LA;
+        //    using (var dc = new ApplicationDbContext())
+        //    {
+        //        var la = dc.LocalAuthorities.Where(x => x.Name.Equals(searchTerm)).FirstOrDefault();
+        //        if (la != null)
+        //        {
+        //            var query = dc.Establishments.Include(x => x.Status)
+        //                .Where(x => x.LocalAuthorityId == la.Id);
+        //            viewModel.Count = query.Count();
+        //            viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
+        //        }
+        //        else
+        //        {
+        //            viewModel.Error = "The local authority name was not found";
+        //        }
+        //    }
+        //    viewModel.SearchType = SearchResultsModel.eSearchType.LA;
         
-            if (viewModel.Count == 1)
-            {
-                return new RedirectToRouteResult(null, new RouteValueDictionary
-                                {
-                                    { "action", "Details" },
-                                    { "controller", "Schools" },
-                                    { "id", viewModel.Results.Single().Urn }
-                                });
-            }
+        //    if (viewModel.Count == 1)
+        //    {
+        //        return new RedirectToRouteResult(null, new RouteValueDictionary
+        //                        {
+        //                            { "action", "Details" },
+        //                            { "controller", "Schools" },
+        //                            { "id", viewModel.Results.Single().Urn }
+        //                        });
+        //    }
 
-            viewModel.CalculatePageStats(pageSize);
+        //    viewModel.CalculatePageStats(pageSize);
 
-            return View("Results", viewModel);
-        }
+        //    return View("Results", viewModel);
+        //}
 
-        public ActionResult SearchByMATAS(string searchTerm, int startIndex = 0, int pageSize = 50)
+        public async Task<ActionResult> SearchByMATAS(string searchTerm, int startIndex = 0, int pageSize = 50)
         {
             if (searchTerm.Clean() == null) return RedirectToAction("Index");
 
@@ -260,19 +260,32 @@ namespace Edubase.Web.UI.Controllers
                     query = query.Where(x => x.StatusId == statusId);
                 }
 
-                if (searchTerm.IsInteger()) query = query.Where(x => x.CompaniesHouseNumber == searchTerm);
-                else query = query.Where(x => x.Name.Contains(searchTerm));
-
-                viewModel.Count = query.Count();
-                viewModel.Results = query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToList();
-
-                foreach (var result in viewModel.Results)
+                var group = await query.FirstOrDefaultAsync(x => x.GroupId == searchTerm);
+                if (group != null)
                 {
-                    result.EstablishmentCount = dc.Database
-                        .SqlQuery<int>("SELECT COUNT(1) FROM EstablishmentGroup WHERE TrustGroupUID = " + result.GroupUID).Single();
+                    viewModel.Count = 1;
+                    viewModel.Results.Add(group);
                 }
+                else
+                {
+                    if (searchTerm.IsInteger())
+                    {
+                        var id = searchTerm.ToInteger();
+                        query = query.Where(x => x.CompaniesHouseNumber == searchTerm ||x.GroupUID == id);
+                    }
+                    else query = query.Where(x => x.Name.Contains(searchTerm));
 
+                    viewModel.Count = query.Count();
+                    viewModel.Results = await query.OrderBy(x => x.Name).Skip(startIndex).Take(pageSize).ToListAsync();
+
+                    foreach (var result in viewModel.Results)
+                    {
+                        result.EstablishmentCount = dc.Database
+                            .SqlQuery<int>("SELECT COUNT(1) FROM EstablishmentGroup WHERE TrustGroupUID = " + result.GroupUID).Single();
+                    }
+                }
             }
+
             viewModel.SearchType = "MAT/AS";
 
             if (viewModel.Count == 1)
@@ -284,8 +297,7 @@ namespace Edubase.Web.UI.Controllers
                     { "id", viewModel.Results.Single().GroupUID }
                 });
             }
-
-            viewModel.CalculatePageStats(pageSize);
+            else viewModel.CalculatePageStats(pageSize);
 
             return View("MATASResults", viewModel);
         }

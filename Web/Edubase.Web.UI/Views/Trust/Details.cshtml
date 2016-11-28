@@ -6,7 +6,9 @@
     ViewBag.Title = Model.Group.Name;
     ViewBag.PageClass = "mat-details";
 }
-<p>@Html.ActionLink("Search", "Index", "Search", null, null)</p>
+<p style="margin-top:15px;">
+    <a class="font-xsmall" href="/Search/Advanced#groups">Back to search</a>
+</p>
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 
@@ -20,10 +22,10 @@
         <table class="borderless no-padding">
             @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
             {
-            <tr>
-                <th scope="row">Companies House Number</th>
-                <td>@Model.Group.CompaniesHouseNumber</td>
-            </tr>
+                <tr>
+                    <th scope="row">Companies House Number</th>
+                    <td>@Model.Group.CompaniesHouseNumber</td>
+                </tr>
             }
             <tr>
                 <th scope="row">Type</th>
@@ -38,10 +40,11 @@
                     @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust))
                     {
                         <text>Incorporated on</text>
-                    }else
+                    }
+                    else
                     {
                         <text>Open date</text>
-}
+                    }
                 </th>
                 <td>@(Model.Group.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
             </tr>
@@ -49,34 +52,34 @@
 
             @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
             {
-            <tr>
-                <th scope="col">Address</th>
-                <td>@(Model.Group.Address ?? "Not recorded")</td>
-            </tr>
+                <tr>
+                    <th scope="col">Address</th>
+                    <td>@(Model.Group.Address ?? "Not recorded")</td>
+                </tr>
             }
 
             @if (Model.Group.GroupTypeId == (int) eLookupGroupType.ChildrensCentresGroup)
             {
-            <tr>
-                <th scope="col">Group manager email</th>
-                <td>@(Model.Group.ManagerEmailAddress ?? "Not recorded")</td>
-            </tr>
+                <tr>
+                    <th scope="col">Group manager email</th>
+                    <td>@(Model.Group.ManagerEmailAddress ?? "Not recorded")</td>
+                </tr>
             }
 
             @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration))
             {
-            <tr>
-                <th scope="col">Local authority</th>
-                <td>@(Model.LocalAuthority)</td>
-            </tr>
+                <tr>
+                    <th scope="col">Local authority</th>
+                    <td>@(Model.LocalAuthority)</td>
+                </tr>
             }
 
             @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
             {
-            <tr>
-                <th scope="col">Group ID</th>
-                <td>@Model.Group.GroupId</td>
-            </tr>
+                <tr>
+                    <th scope="col">Group ID</th>
+                    <td>@Model.Group.GroupId</td>
+                </tr>
             }
 
         </table>
