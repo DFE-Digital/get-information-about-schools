@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Edubase.Web.UI.Helpers;
 using Edubase.Services.Enums;
 
+
 namespace Edubase.Web.UI.Controllers
 {
     public class TrustController : Controller
@@ -180,7 +181,15 @@ namespace Edubase.Web.UI.Controllers
                     la = (await new CachedLookupService().LocalAuthorityGetAllAsync()).First(x => x.Id == estabs.First().Establishment.LocalAuthorityId);
                 }
 
-                return View(new MATDetailViewModel(estabs, mat, User.Identity.IsAuthenticated, la));
+                var gsvc = new GovernorService();
+                var historicGovernors = await gsvc.GetHistoricalByGroupUID(id);
+                var currentGovernors = await gsvc.GetCurrentByGroupUID(id);
+
+                return View(new MATDetailViewModel(estabs, mat, User.Identity.IsAuthenticated, la)
+                {
+                    HistoricalGovernors = historicGovernors,
+                    Governors = currentGovernors
+                });
             }
         }
 

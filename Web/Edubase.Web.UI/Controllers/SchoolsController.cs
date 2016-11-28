@@ -106,7 +106,7 @@ namespace Edubase.Web.UI.Controllers
 
                 viewModel.Establishment = model;
                 if(User.Identity.IsAuthenticated) viewModel.ChangeHistory = await new EstablishmentService().GetChangeHistoryAsync(id, dc);
-                viewModel.Govs = await dc.Governors.Include(x => x.AppointingBody).Include(x => x.Role).Where(x => x.EstablishmentUrn == id).ToArrayAsync();
+
                 viewModel.LinkedEstablishments = (await dc.EstablishmentLinks
                     .Include(x => x.LinkedEstablishment)
                     .Include(x => x.LinkType)
@@ -117,6 +117,12 @@ namespace Edubase.Web.UI.Controllers
 
                 var pred = new SecurityService().GetEditEstablishmentPermission(User);
                 viewModel.UserCanEdit = pred.CanEdit(model.Urn, model.TypeId, null, model.LocalAuthorityId, model.EstablishmentTypeGroupId);
+
+
+                var gsvc = new GovernorService();
+                viewModel.HistoricalGovernors = await gsvc.GetHistoricalByUrn(id);
+                viewModel.Governors = await gsvc.GetCurrentByUrn(id);
+                
 
                 if (User.Identity.IsAuthenticated)
                 {

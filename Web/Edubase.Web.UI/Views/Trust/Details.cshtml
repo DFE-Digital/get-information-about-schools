@@ -151,25 +151,32 @@
 
             </div>
             <div id="governance" class="tab-content">
-                <table class="borderless">
-                    @*<caption class="visually-hidden">Contact information for @Model.Establishment.Name</caption>
-                    <tr>
-                        <th scope="row">School website</th>
-                        <td>@Model.Establishment.Contact.WebsiteAddress</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Main email</th>
-                        <td>@Model.Establishment.Contact.EmailAddress</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Alternative email</th>
-                        <td>@Model.Establishment.ContactAlt.EmailAddress</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Telephone number</th>
-                        <td>@Model.Establishment.Contact.TelephoneNumber</td>
-                    </tr>*@
-                </table>
+                
+                @if (!Model.Governors.Any() && !Model.HistoricalGovernors.Any())
+                {
+                    <p>There is no governance information for this establishment</p>
+                }
+                else
+                {
+                    if (Model.Governors.Any())
+                    {
+                        @Html.Partial("_Governors", Model.Governors)
+                        if (Model.HistoricalGovernors.Any())
+                        {
+                            <br />
+                            <hr />
+                            <br />
+                        }
+                    }
+
+                    if (Model.HistoricalGovernors.Any())
+                    {
+                        <h3 class="bold-xsmall">Historic (left with past 12 months)</h3>
+                        @Html.Partial("_Governors", Model.HistoricalGovernors)
+                    }
+                }
+
+
             </div>
         </div>
     </div>

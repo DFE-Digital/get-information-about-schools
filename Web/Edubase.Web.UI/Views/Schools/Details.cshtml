@@ -590,39 +590,28 @@ else if (Model.UserHasPendingApprovals)
             </div>
             <div id="school-governance" class="tab-content">
 
-                @if (!Model.Govs.Any())
+                @if (!Model.Governors.Any() && !Model.HistoricalGovernors.Any())
                 {
                     <p>There is no governance information for this establishment</p>
                 }
-
-                @RenderGovernors("Chair[s] of Trustees", Model.NonHistoric(Model.ChairsOfTrustees))
-                @RenderGovernors("Trustee[s]", Model.NonHistoric(Model.Trustees))
-                @RenderGovernors("Member[s]", Model.NonHistoric(Model.Members))
-                @RenderGovernors("Accounting Officer[s]", Model.NonHistoric(Model.AccountingOfficers))
-                @RenderGovernors("Chief Financial Officer[s]", Model.NonHistoric(Model.ChiefFinancialOfficers))
-                @RenderGovernors("Chair[s] of Governors", Model.NonHistoric(Model.ChairsOfGovernors))
-                @RenderGovernors("Chair[s] of Local Governing Body", Model.NonHistoric(Model.ChairsOfLocalGoverningBody))
-                @RenderGovernors("Local Governor[s]", Model.NonHistoric(Model.LocalGovernors))
-                @RenderGovernors("Governor[s]", Model.NonHistoric(Model.Governors))
-
-                @if (Model.Historic(Model.Govs).Any())
+                else
                 {
-                    if (Model.NonHistoric(Model.Govs).Any())
+                    if (Model.Governors.Any())
                     {
-                        <hr />
+                        @Html.Partial("_Governors", Model.Governors)
+                        if (Model.HistoricalGovernors.Any())
+                        {
+                            <br />
+                            <hr />
+                            <br />
+                        }
                     }
-                    <h3 class="bold-xsmall" style="padding-top:5px;">Historic (left within the past 12 months)</h3>
-                    <table class="borderless" style="max-width:500px;">
-                        @RenderHistoricGovernors("Chair[s] of Trustees", Model.Historic(Model.ChairsOfTrustees))
-                        @RenderHistoricGovernors("Trustee[s]", Model.Historic(Model.Trustees))
-                        @RenderHistoricGovernors("Member[s]", Model.Historic(Model.Members))
-                        @RenderHistoricGovernors("Accounting Officer[s]", Model.Historic(Model.AccountingOfficers))
-                        @RenderHistoricGovernors("Chief Financial Officer[s]", Model.Historic(Model.ChiefFinancialOfficers))
-                        @RenderHistoricGovernors("Chair[s] of Governors", Model.Historic(Model.ChairsOfGovernors))
-                        @RenderHistoricGovernors("Chair[s] of Local Governing Body", Model.Historic(Model.ChairsOfLocalGoverningBody))
-                        @RenderHistoricGovernors("Local Governor[s]", Model.Historic(Model.LocalGovernors))
-                        @RenderHistoricGovernors("Governor[s]", Model.Historic(Model.Governors))
-                    </table>
+
+                    if (Model.HistoricalGovernors.Any())
+                    {
+                        <h3 class="bold-xsmall">Historic (left with past 12 months)</h3>
+                        @Html.Partial("_Governors", Model.HistoricalGovernors)
+                    }
                 }
 
             </div>
@@ -816,89 +805,3 @@ else if (Model.UserHasPendingApprovals)
     </div>
 
 </div>
-
-@helper RenderGovernors(string label, Governor[] governors)
-{
-    if (governors.Any())
-    {
-        <div class="bold-xsmall" style="padding-bottom:6px;">@label.Replace("[s]", (governors.Length > 1 ? "s" : ""))</div>
-        foreach (var gov in governors)
-        {
-            <details style="padding-bottom:3px;padding-left:6px;">
-                <summary class="font-xsmall" style="text-decoration:underline;">@(gov.Person.FullName).
-                    @if (gov.AppointmentStartDate.HasValue)
-                    {
-                        <text>Appointed on: @(gov.AppointmentStartDate.Value.ToString("dd/MM/yyyy")).</text>
-                    }
-                    @if (gov.AppointmentEndDate.HasValue)
-                    {
-                        <text>Term of office ends: @(gov.AppointmentEndDate.Value.ToString("dd/MM/yyyy")).</text>
-                    }
-                </summary>
-                <table class="borderless" style="max-width:500px; margin-bottom:10px; float:none; clear:both;">
-                    <tr>
-                        <td>Title</td>
-                        <td>@gov.Person.Title</td>
-                    </tr>
-                    <tr>
-                        <td>Forename 1</td>
-                        <td>@gov.Person.FirstName</td>
-                    </tr>
-                    @if (gov.Person.MiddleName != null)
-                    {
-                        <tr>
-                            <td>Forename 2</td>
-                            <td>@gov.Person.MiddleName</td>
-                        </tr>
-                    }
-                    <tr>
-                        <td>Surname</td>
-                        <td>@gov.Person.LastName</td>
-                    </tr>
-                    <tr>
-                        <td>Role</td>
-                        <td>@gov.Role</td>
-                    </tr>
-                    @if (gov.AppointmentStartDate.HasValue)
-                    {
-                        <tr>
-                            <td>Date of appointment</td>
-                            <td>@gov.AppointmentStartDate.Value.ToString("dd/MM/yyyy")</td>
-                        </tr>
-                    }
-                    @if (gov.AppointmentEndDate.HasValue)
-                    {
-                        <tr>
-                            <td>Date term of office ends/ended</td>
-                            <td>@gov.AppointmentEndDate.Value.ToString("dd/MM/yyyy")</td>
-                        </tr>
-                    }
-                    <tr>
-                        <td>Apponting body</td>
-                        <td>@gov.AppointingBody</td>
-                    </tr>
-                </table>
-                <div style="clear:both;"></div>
-            </details>
-        }
-        <div style="height:15px;float:none;clear:both;"><br /></div>
-    }
-}
-
-
-
-@helper RenderHistoricGovernors(string label, Governor[] governors)
-{
-    if (governors.Any())
-    {
-        <tr>
-            <td>@label.Replace("[s]", (governors.Length > 1 ? "s" : ""))</td>
-            <td>
-                @foreach (var item in governors)
-                {
-                    <div>@item.Person.FullName</div>
-                }
-            </td>
-        </tr>
-    }
-}

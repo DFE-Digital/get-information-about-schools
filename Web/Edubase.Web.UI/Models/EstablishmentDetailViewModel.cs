@@ -57,28 +57,8 @@ namespace Edubase.Web.UI.Models
 
         public bool UserCanEdit { get; set; }
 
-        public Governor[] Govs { get; set; }
-
-        public Governor[] AccountingOfficers => Govs.Where(x => x.RoleId == (int)GovRole.AccountingOfficer).ToArray();
-        public Governor[] ChairsOfGovernors => Govs.Where(x => x.RoleId == (int)GovRole.ChairOfGovernors).ToArray();
-        public Governor[] ChairsOfLocalGoverningBody => Govs.Where(x => x.RoleId == (int)GovRole.ChairOfLocalGoverningBody).ToArray();
-        public Governor[] ChairsOfTrustees => Govs.Where(x => x.RoleId == (int)GovRole.ChairOfTrustees).ToArray();
-        public Governor[] ChiefFinancialOfficers => Govs.Where(x => x.RoleId == (int)GovRole.ChiefFinancialOfficer).ToArray();
-        public Governor[] Governors => Govs.Where(x => x.RoleId == (int)GovRole.Governor).ToArray();
-        public Governor[] LocalGovernors => Govs.Where(x => x.RoleId == (int)GovRole.LocalGovernor).ToArray();
-        public Governor[] Members => Govs.Where(x => x.RoleId == (int)GovRole.Member).ToArray();
-        public Governor[] Trustees => Govs.Where(x => x.RoleId == (int)GovRole.Trustee).ToArray();
-
-        public Governor[] Historic(Governor[] govs) => 
-            govs.Where(x => x.AppointmentEndDate != null 
-            && x.AppointmentEndDate.Value > DateTime.UtcNow.Date.AddYears(-1) 
-            && x.AppointmentEndDate < DateTime.UtcNow.Date).ToArray();
-
-        public Governor[] NonHistoric(Governor[] govs) => govs.Where(x => 
-            !x.AppointmentEndDate.HasValue 
-            || x.AppointmentEndDate.IsInFuture()).ToArray();
-
-
+        public IEnumerable<Governor> Governors { get; set; }
+        public IEnumerable<Governor> HistoricalGovernors { get; set; }
 
 
         public string GroupFieldLabel => Group != null ? _groupType2FieldLabelMappings.Get(Group.GroupTypeId.GetValueOrDefault()) : string.Empty;

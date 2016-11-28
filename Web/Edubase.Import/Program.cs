@@ -219,7 +219,7 @@ namespace Edubase.Services.Enums
 
                 var groupStatuses = source.GroupData.Where(x => !string.IsNullOrEmpty(x.GroupStatuscode))
                     .Select(x => new { Name = x.GroupStatus, Code = x.GroupStatuscode }).Distinct().ToList()
-                    .Select(x => new { Name = x.Name.Clean(), Code = x.Code.Clean() }).ToList();
+                    .Select(x => new { Name = x.Name.Clean(), Code = ProcessCode(x.Code.Clean()) }).ToList();
                 MigrateLookup<LookupGroupStatus>(groupStatuses, connection);
             }
         }
@@ -232,7 +232,7 @@ namespace Edubase.Services.Enums
 
             var retVal = new T();
 
-            retVal.Code = Helper.GetPropertyValue(source, COL_CODE, "GroupTypecode");
+            retVal.Code = ProcessCode(Helper.GetPropertyValue(source, COL_CODE, "GroupTypecode"));
             retVal.Name = Helper.GetPropertyValue(source, COL_NAME, "GroupType1");
             retVal.DisplayOrder = Helper.ToShort(Helper.GetPropertyValue(source, COL_ORDER));
 
@@ -305,6 +305,7 @@ namespace Edubase.Services.Enums
         private static IDisposable Timing(string label)
             => Disposer.Timed(() => Console.WriteLine($"Importing {label}"), ms => Console.WriteLine($"...done in {ms}ms"));
 
+        public static string ProcessCode(string code) => code.IsInteger() ? code.ToInteger().ToString() : code; 
 
     }
 }

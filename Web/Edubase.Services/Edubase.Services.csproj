@@ -217,6 +217,7 @@
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Exceptions\PermissionDeniedException.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="GovernorService.cs" />
     <Compile Include="Lucene\EstablishmentIndexConfig.cs" />
     <Compile Include="Lucene\EstablishmentsIndex.cs" />
     <Compile Include="MessageLoggingService.cs" />

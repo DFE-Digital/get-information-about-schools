@@ -69,7 +69,7 @@ namespace Edubase.Import
         }
         
         public static int? Id<T>(this IEnumerable<T> items, string code)
-            where T : LookupDto => items.FirstOrDefault(x => x.Code == code)?.Id;
+            where T : LookupDto => items.FirstOrDefault(x => x.Code == Program.ProcessCode(code))?.Id;
 
         public static int? IdFromName<T>(this IEnumerable<T> items, string name)
             where T : LookupDto => items.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase) )?.Id;

@@ -87,7 +87,9 @@ namespace Edubase.Web.UI.Models.DisplayProfiles
         
 
         internal bool IsMatch(Establishment establishment)
-            => IsMatchInternal((eLookupEstablishmentType)establishment.TypeId, (eLookupEstablishmentTypeGroup)establishment.EstablishmentTypeGroupId);
+            => establishment.TypeId.HasValue 
+            && establishment.EstablishmentTypeGroupId.HasValue 
+            && IsMatchInternal((eLookupEstablishmentType)establishment.TypeId, (eLookupEstablishmentTypeGroup)establishment.EstablishmentTypeGroupId);
 
         internal EstablishmentDisplayProfile Configure(IPrincipal principal, Establishment establishment, GroupCollection group)
         {

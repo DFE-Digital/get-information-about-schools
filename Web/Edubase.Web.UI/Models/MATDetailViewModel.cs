@@ -12,6 +12,9 @@ namespace Edubase.Web.UI.Models
         public bool IsUserLoggedOn { get; set; }
         public LookupDto LocalAuthority { get; set; }
 
+        public IEnumerable<Governor> Governors { get; set; }
+        public IEnumerable<Governor> HistoricalGovernors { get; set; }
+
         public MATDetailViewModel(List<EstablishmentGroup> estabs, GroupCollection mat, bool isUserLoggedOn, LookupDto localAuthority)
         {
             Group = mat;
