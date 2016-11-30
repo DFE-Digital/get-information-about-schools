@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Edubase.Web.UI.Models
 {
-    [Validator(typeof(CreateEditTrustModelValidator))]
-    public class CreateEditTrustModel
+    [Validator(typeof(CreateEditGroupModelValidator))]
+    public class CreateEditGroupModel
     {
         public int? GroupUID { get; set; }
         public string Name { get; set; }
@@ -23,6 +23,6 @@ namespace Edubase.Web.UI.Models
         
         public string Action { get; set; }
 
-        public List<TrustEstabViewModel> Establishments { get; set; } = new List<TrustEstabViewModel>();
+        public List<GroupEstabViewModel> Establishments { get; set; } = new List<GroupEstabViewModel>();
     }
 }

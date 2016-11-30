@@ -5,76 +5,102 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Edubase.Data.Entity
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
     {
-        public IDbSet<GroupCollection> Groups { get; set; }
-        public IDbSet<Establishment> Establishments { get; set; }
-        public IDbSet<LocalAuthority> LocalAuthorities { get; set; }
-        public IDbSet<EstablishmentLink> EstablishmentLinks { get; set; }
-        public IDbSet<EstablishmentGroup> EstablishmentTrusts { get; set; }
-        public IDbSet<EstablishmentPermission> Permissions { get; set; }
-        public IDbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
-        public IDbSet<Governor> Governors { get; set; }
-        public IDbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; }
-        
+        public DbSet<GroupCollection> Groups { get; set; }
+        public DbSet<Establishment> Establishments { get; set; }
+        public DbSet<LocalAuthority> LocalAuthorities { get; set; }
+        public DbSet<EstablishmentLink> EstablishmentLinks { get; set; }
+        public DbSet<EstablishmentGroup> EstablishmentTrusts { get; set; }
+        public DbSet<EstablishmentPermission> Permissions { get; set; }
+        public DbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
+        public DbSet<Governor> Governors { get; set; }
+        public DbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; }
+
+        public override IDbSet<ApplicationUser> Users
+        {
+            get
+            {
+                return base.Users;
+            }
+
+            set
+            {
+                base.Users = value;
+            }
+        }
+
+        public override IDbSet<IdentityRole> Roles
+        {
+            get
+            {
+                return base.Roles;
+            }
+
+            set
+            {
+                base.Roles = value;
+            }
+        }
 
         #region Lookups
-        public IDbSet<LookupAdmissionsPolicy> LookupAdmissionsPolicies { get; set; }
-        public IDbSet<LookupEducationPhase> LookupEducationPhases { get; set; }
-        public IDbSet<LookupEstablishmentStatus> LookupEstablishmentStatuses { get; set; }
-        public IDbSet<LookupEstablishmentType> LookupEstablishmentTypes { get; set; }
-        public IDbSet<LookupGender> LookupGenders { get; set; }
-        public IDbSet<LookupGroupType> LookupGroupTypes { get; set; }
-        public IDbSet<LookupHeadTitle> LookupHeadTitles { get; set; }
-        public IDbSet<LookupProvisionBoarding> LookupProvisionBoarding { get; set; }
-        public IDbSet<LookupProvisionNursery> LookupProvisionNurseries { get; set; }
-        public IDbSet<LookupProvisionOfficialSixthForm> LookupProvisionOfficialSixthForms { get; set; }
-        public IDbSet<LookupProvisionSpecialClasses> LookupProvisionSpecialClasses { get; set; }
-        public IDbSet<LookupReasonEstablishmentClosed> LookupReasonEstablishmentClosed { get; set; }
-        public IDbSet<LookupReasonEstablishmentOpened> LookupReasonEstablishmentOpened { get; set; }
-        public IDbSet<LookupReligiousCharacter> LookupReligiousCharacters { get; set; }
-        public IDbSet<LookupReligiousEthos> LookupReligiousEthos { get; set; }
-        public IDbSet<LookupGovernorRole> LookupGovernorRoles { get; set; }
-        public IDbSet<LookupGovernorAppointingBody> LookupGovernorAppointingBodies { get; set; }
-        public IDbSet<LookupAccommodationChanged> LookupAccommodationChanged { get; set; }
-        public IDbSet<LookupBoardingEstablishment> LookupBoardingEstablishment { get; set; }
-        public IDbSet<LookupCCGovernance> LookupCCGovernance { get; set; }
-        public IDbSet<LookupCCOperationalHours> LookupCCOperationalHours { get; set; }
-        public IDbSet<LookupCCPhaseType> LookupCCPhaseTypes { get; set; }
-        public IDbSet<LookupDiocese> LookupDioceses { get; set; }
-        public IDbSet<LookupChildcareFacilities> LookupChildcareFacilities { get; set; }
-        public IDbSet<LookupDirectProvisionOfEarlyYears> LookupDirectProvisionOfEarlyYears { get; set; }
-        public IDbSet<LookupFurtherEducationType> LookupFurtherEducationTypes { get; set; }
-        public IDbSet<LookupIndependentSchoolType> LookupIndependentSchoolTypes { get; set; }
-        public IDbSet<LookupInspectorate> LookupInspectorates { get; set; }
-        public IDbSet<LookupInspectorateName> LookupInspectorateNames { get; set; }
-        public IDbSet<LookupLocalGovernors> LookupLocalGovernors { get; set; }
-        public IDbSet<LookupNationality> LookupNationalities { get; set; }
-        public IDbSet<LookupPRUEBD> LookupPRUEBDs { get; set; }
-        public IDbSet<LookupPruEducatedByOthers> LookupPruEducatedByOthers { get; set; }
-        public IDbSet<LookupPruFulltimeProvision> LookupPruFulltimeProvisions { get; set; }
-        public IDbSet<LookupPRUSEN> LookupPRUSENs { get; set; }
-        public IDbSet<LookupResourcedProvision> LookupResourcedProvisions { get; set; }
-        public IDbSet<LookupSection41Approved> LookupSection41Approved { get; set; }
-        public IDbSet<LookupSpecialEducationNeeds> LookupSpecialEducationNeeds { get; set; }
-        public IDbSet<LookupTeenageMothersProvision> LookupTeenageMothersProvisions { get; set; }
-        public IDbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; }
-        public IDbSet<LookupEstablishmentLinkType> LookupEstablishmentLinkTypes { get; set; }
-        public IDbSet<LookupEstablishmentTypeGroup> LookupEstablishmentTypeGroups { get; set; }
-        public IDbSet<LookupGovernmentOfficeRegion> LookupGovernmentOfficeRegions { get; set; }
-        public IDbSet<LookupDistrictAdministrative> LookupAdministrativeDistricts { get; set; }
-        public IDbSet<LookupAdministrativeWard> LookupAdministrativeWards { get; set; }
-        public IDbSet<LookupParliamentaryConstituency> LookupParliamentaryConstituencies { get; set; }
-        public IDbSet<LookupUrbanRural> LookupUrbanRural { get; set; }
-        public IDbSet<LookupGSSLA> LookupGSSLA { get; set; }
-        public IDbSet<LookupCASWard> LookupCASWards { get; set; }
+        public DbSet<LookupAdmissionsPolicy> LookupAdmissionsPolicies { get; set; }
+        public DbSet<LookupEducationPhase> LookupEducationPhases { get; set; }
+        public DbSet<LookupEstablishmentStatus> LookupEstablishmentStatuses { get; set; }
+        public DbSet<LookupEstablishmentType> LookupEstablishmentTypes { get; set; }
+        public DbSet<LookupGender> LookupGenders { get; set; }
+        public DbSet<LookupGroupType> LookupGroupTypes { get; set; }
+        public DbSet<LookupHeadTitle> LookupHeadTitles { get; set; }
+        public DbSet<LookupProvisionBoarding> LookupProvisionBoarding { get; set; }
+        public DbSet<LookupProvisionNursery> LookupProvisionNurseries { get; set; }
+        public DbSet<LookupProvisionOfficialSixthForm> LookupProvisionOfficialSixthForms { get; set; }
+        public DbSet<LookupProvisionSpecialClasses> LookupProvisionSpecialClasses { get; set; }
+        public DbSet<LookupReasonEstablishmentClosed> LookupReasonEstablishmentClosed { get; set; }
+        public DbSet<LookupReasonEstablishmentOpened> LookupReasonEstablishmentOpened { get; set; }
+        public DbSet<LookupReligiousCharacter> LookupReligiousCharacters { get; set; }
+        public DbSet<LookupReligiousEthos> LookupReligiousEthos { get; set; }
+        public DbSet<LookupGovernorRole> LookupGovernorRoles { get; set; }
+        public DbSet<LookupGovernorAppointingBody> LookupGovernorAppointingBodies { get; set; }
+        public DbSet<LookupAccommodationChanged> LookupAccommodationChanged { get; set; }
+        public DbSet<LookupBoardingEstablishment> LookupBoardingEstablishment { get; set; }
+        public DbSet<LookupCCGovernance> LookupCCGovernance { get; set; }
+        public DbSet<LookupCCOperationalHours> LookupCCOperationalHours { get; set; }
+        public DbSet<LookupCCPhaseType> LookupCCPhaseTypes { get; set; }
+        public DbSet<LookupDiocese> LookupDioceses { get; set; }
+        public DbSet<LookupChildcareFacilities> LookupChildcareFacilities { get; set; }
+        public DbSet<LookupDirectProvisionOfEarlyYears> LookupDirectProvisionOfEarlyYears { get; set; }
+        public DbSet<LookupFurtherEducationType> LookupFurtherEducationTypes { get; set; }
+        public DbSet<LookupIndependentSchoolType> LookupIndependentSchoolTypes { get; set; }
+        public DbSet<LookupInspectorate> LookupInspectorates { get; set; }
+        public DbSet<LookupInspectorateName> LookupInspectorateNames { get; set; }
+        public DbSet<LookupLocalGovernors> LookupLocalGovernors { get; set; }
+        public DbSet<LookupNationality> LookupNationalities { get; set; }
+        public DbSet<LookupPRUEBD> LookupPRUEBDs { get; set; }
+        public DbSet<LookupPruEducatedByOthers> LookupPruEducatedByOthers { get; set; }
+        public DbSet<LookupPruFulltimeProvision> LookupPruFulltimeProvisions { get; set; }
+        public DbSet<LookupPRUSEN> LookupPRUSENs { get; set; }
+        public DbSet<LookupResourcedProvision> LookupResourcedProvisions { get; set; }
+        public DbSet<LookupSection41Approved> LookupSection41Approved { get; set; }
+        public DbSet<LookupSpecialEducationNeeds> LookupSpecialEducationNeeds { get; set; }
+        public DbSet<LookupTeenageMothersProvision> LookupTeenageMothersProvisions { get; set; }
+        public DbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; }
+        public DbSet<LookupEstablishmentLinkType> LookupEstablishmentLinkTypes { get; set; }
+        public DbSet<LookupEstablishmentTypeGroup> LookupEstablishmentTypeGroups { get; set; }
+        public DbSet<LookupGovernmentOfficeRegion> LookupGovernmentOfficeRegions { get; set; }
+        public DbSet<LookupDistrictAdministrative> LookupAdministrativeDistricts { get; set; }
+        public DbSet<LookupAdministrativeWard> LookupAdministrativeWards { get; set; }
+        public DbSet<LookupParliamentaryConstituency> LookupParliamentaryConstituencies { get; set; }
+        public DbSet<LookupUrbanRural> LookupUrbanRural { get; set; }
+        public DbSet<LookupGSSLA> LookupGSSLA { get; set; }
+        public DbSet<LookupCASWard> LookupCASWards { get; set; }
 
-        public IDbSet<LookupMSOA> LookupMSOAs { get; set; }
-        public IDbSet<LookupLSOA> LookupLSOAs { get; set; }
-        public IDbSet<LookupGroupStatus> LookupGroupStatuses { get; set; }
+        public DbSet<LookupMSOA> LookupMSOAs { get; set; }
+        public DbSet<LookupLSOA> LookupLSOAs { get; set; }
+        public DbSet<LookupGroupStatus> LookupGroupStatuses { get; set; }
 
         #endregion
 
@@ -133,5 +159,21 @@ namespace Edubase.Data.Entity
             }
             else await action(dc);
         }
+
+        public override int SaveChanges()
+        {
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public override Task<int> SaveChangesAsync()
+        {
+            return base.SaveChangesAsync();
+        }
+
     }
 }

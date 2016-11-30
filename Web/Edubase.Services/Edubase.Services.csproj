@@ -218,6 +218,12 @@
     <Compile Include="Exceptions\PermissionDeniedException.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GovernorService.cs" />
+    <Compile Include="IntegrationEndPoints\AzureSearchEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\BlobStorageEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\RedisEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\ServiceBusEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\SmtpEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\TableStorageEndPoint.cs" />
     <Compile Include="Lucene\EstablishmentIndexConfig.cs" />
     <Compile Include="Lucene\EstablishmentsIndex.cs" />
     <Compile Include="MessageLoggingService.cs" />

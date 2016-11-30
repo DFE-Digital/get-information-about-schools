@@ -2,9 +2,6 @@
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
-using Edubase.Web.UI.Helpers;
-using Edubase.Web.UI.Utils;
-using Edubase.Web.UI.Identity;
 
 namespace Edubase.Web.UI
 {
@@ -39,10 +36,10 @@ namespace Edubase.Web.UI
 
         private static void RegisterTypes(ContainerBuilder builder)
         {
-            builder.RegisterType<SchoolPermissions>().As<ISchoolPermissions>();
-            builder.RegisterType<UserIdentity>().As<IUserIdentity>();
-            builder.RegisterType<RedirectAfterLoginHelper>().As<IRedirectAfterLoginHelper>();
-            builder.RegisterType<RequestContextWrapper>().As<IRequestContext>();
+            //builder.RegisterType<SchoolPermissions>().As<ISchoolPermissions>();
+            //builder.RegisterType<UserIdentity>().As<IUserIdentity>();
+            //builder.RegisterType<RedirectAfterLoginHelper>().As<IRedirectAfterLoginHelper>();
+            //builder.RegisterType<RequestContextWrapper>().As<IRequestContext>();
         }
     }
 }

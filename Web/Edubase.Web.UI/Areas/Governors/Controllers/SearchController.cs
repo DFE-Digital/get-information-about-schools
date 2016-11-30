@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using Edubase.Common;
-using System.Web.Routing;
 using Edubase.Data.Entity;
 using System.Data.Entity;
-using Edubase.Web.UI.Identity;
 using Edubase.Web.UI.Areas.Governors.Models;
 using System;
 

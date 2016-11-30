@@ -132,6 +132,9 @@
     <Compile Include="Ccgrouplead.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Cclacontacts.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Ccoperationalhours.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>

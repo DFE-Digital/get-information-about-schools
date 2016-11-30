@@ -7,6 +7,7 @@ using Edubase.Data.Entity.ComplexTypes;
 using AutoMapper;
 using Edubase.Data;
 using System.Collections.Generic;
+using System;
 
 namespace Edubase.Import.Mapping
 {
@@ -17,7 +18,7 @@ namespace Edubase.Import.Mapping
         private static CachedLookupService L { get; set; } = new CachedLookupService();
         private static IMapper _mapper = null;
 
-        public static IMapper Create(Dictionary<int, Ofstedratings> ofstedRatings)
+        public static IMapper Create(Dictionary<int, Ofstedratings> ofstedRatings, Dictionary<int, Cclacontacts> laContacts)
         {
             return _mapper = new MapperConfiguration(cfg =>
             {
@@ -33,7 +34,6 @@ namespace Edubase.Import.Mapping
                     cfg2.CreateMap<GroupData, Person>()
                         .ForMember(x => x.FirstName, opt => opt.MapFrom(m => m.HeadofGroupFirstName.Clean()))
                         .ForMember(x => x.LastName, opt => opt.MapFrom(m => m.HeadofGroupLastName.Clean()))
-                        //.ForMember(x => x.LastName, opt => opt.MapFrom(m => m.email.ToCleanEmail()))
                         .ForMember(x => x.Title, opt => opt.MapFrom(m => m.HeadofGroupTitle.Remove("Not-applicable", "Unknown").Clean()))
                         .ForAllOtherMembers(opt => opt.Ignore());
                 }).CreateMapper();
@@ -162,6 +162,16 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.Name, opt => opt.MapFrom(m => m.Name.Clean()))
                     .ForMember(x => x.Group, opt => opt.MapFrom(m => m.C_Group))
                     .ForMember(x => x.Order, opt => opt.MapFrom(m => m.C_Order.ToInteger()))
+                    .AfterMap((source, dest) =>
+                    {
+                        var contact = laContacts.Get(dest.Id);
+                        if (contact != null)
+                        {
+                            dest.FirstName = contact.Firstname.Clean();
+                            dest.LastName = contact.Lastname.Clean();
+                            dest.EmailAddress = contact.Email.ToCleanEmail();
+                        }
+                    })
                     .ForAllOtherMembers(opt => opt.Ignore());
 
                 cfg.CreateMap<GroupData, GroupCollection>()
@@ -208,7 +218,6 @@ namespace Edubase.Import.Mapping
 
             }).CreateMapper();
         }
-        
         
     }
 }

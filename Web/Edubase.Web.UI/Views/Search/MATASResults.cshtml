@@ -48,7 +48,7 @@
                 @foreach (var result in Model.Results)
                 {
                     <li>
-                        <h2>@Html.ActionLink(result.Name, "Details", "Trust", new { id = result.GroupUID }, new { @class = "bold-small" })</h2>
+                        <h2>@Html.ActionLink(result.Name, "Details", "Group", new { id = result.GroupUID }, new { @class = "bold-small" })</h2>
                         <dl>
                             @if (result.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                             {

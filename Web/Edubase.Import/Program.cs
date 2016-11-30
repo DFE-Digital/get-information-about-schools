@@ -42,7 +42,8 @@ namespace Edubase.Import
                 using (Timing("Loading Ofsted ratings and mapping configuration"))
                 {
                     var ofstedRatings = source.Ofstedratings.ToDictionary(x => x.URN.ToInteger().Value);
-                    _mapper = MappingConfiguration.Create(ofstedRatings);
+                    var laContacts = source.Cclacontacts.ToDictionary(x => x.code.ToInteger().Value);
+                    _mapper = MappingConfiguration.Create(ofstedRatings, laContacts);
                 }
 
                 Disposer.Using(CreateSqlConnection, x => x.Open(), x => x.Close(), connection =>

@@ -122,7 +122,7 @@
                 @foreach (var result in Model.Results)
                 {
                     <li>
-                        <h2>@Html.ActionLink(result.Name, "Details", "Schools", new { id = result.Urn }, new { @class = "bold-small" })</h2>
+                        <h2>@Html.ActionLink(result.Name, "Details", "Establishment", new { id = result.Urn }, new { @class = "bold-small" })</h2>
                         <dl>
                             <dt>Address:</dt>
                             <dd>@result.Address</dd>

@@ -13,11 +13,10 @@ namespace Edubase.Web.UI.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IRedirectAfterLoginHelper _redirectAfterLoginHelper;
-
-        public AccountController(IRedirectAfterLoginHelper redirectAfterLoginHelper)
+        
+        public AccountController()
         {
-            _redirectAfterLoginHelper = redirectAfterLoginHelper;
+
         }
 
         public AccountController(ApplicationUserManager userManager)

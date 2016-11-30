@@ -15,6 +15,7 @@
     <EntitySet Name="Ccdisadvantagedarea" EntityType="EdubaseSourceDataModel.Store.Ccdisadvantagedarea" store:Type="Tables" />
     <EntitySet Name="Ccgovernance" EntityType="EdubaseSourceDataModel.Store.Ccgovernance" store:Type="Tables" />
     <EntitySet Name="Ccgrouplead" EntityType="EdubaseSourceDataModel.Store.Ccgrouplead" store:Type="Tables" />
+    <EntitySet Name="Cclacontacts" EntityType="EdubaseSourceDataModel.Store.Cclacontacts" store:Type="Tables" />
     <EntitySet Name="Ccoperationalhours" EntityType="EdubaseSourceDataModel.Store.Ccoperationalhours" store:Type="Tables" />
     <EntitySet Name="Ccphasetype" EntityType="EdubaseSourceDataModel.Store.Ccphasetype" store:Type="Tables" />
     <EntitySet Name="Childcarefacilities" EntityType="EdubaseSourceDataModel.Store.Childcarefacilities" store:Type="Tables" />
@@ -152,6 +153,17 @@
     <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Cclacontacts">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
+    <Property Name="LocalAuthority" Type="nvarchar" />
+    <Property Name="Firstname" Type="nvarchar" />
+    <Property Name="Lastname" Type="nvarchar" />
+    <Property Name="Email" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Ccoperationalhours">
     <Key>
@@ -913,6 +925,7 @@
     <EntitySet Name="Ccdisadvantagedarea" EntityType="EdubaseSourceDataModel.Ccdisadvantagedarea" />
     <EntitySet Name="Ccgovernance" EntityType="EdubaseSourceDataModel.Ccgovernance" />
     <EntitySet Name="Ccgrouplead" EntityType="EdubaseSourceDataModel.Ccgrouplead" />
+    <EntitySet Name="Cclacontacts" EntityType="EdubaseSourceDataModel.Cclacontacts" />
     <EntitySet Name="Ccoperationalhours" EntityType="EdubaseSourceDataModel.Ccoperationalhours" />
     <EntitySet Name="Ccphasetype" EntityType="EdubaseSourceDataModel.Ccphasetype" />
     <EntitySet Name="Childcarefacilities" EntityType="EdubaseSourceDataModel.Childcarefacilities" />
@@ -1050,6 +1063,17 @@
     <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
     <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Cclacontacts">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LocalAuthority" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Firstname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Lastname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Ccoperationalhours">
     <Key>
@@ -1889,6 +1913,18 @@
           <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="code" ColumnName="code" />
           <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cclacontacts">
+      <EntityTypeMapping TypeName="EdubaseSourceDataModel.Cclacontacts">
+        <MappingFragment StoreEntitySet="Cclacontacts">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="LocalAuthority" ColumnName="LocalAuthority" />
+          <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+          <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

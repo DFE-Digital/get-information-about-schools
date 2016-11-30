@@ -246,7 +246,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SchoolsController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\TrustController.cs" />
+    <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
     <Compile Include="Filters\ExceptionFilter.cs" />
     <Compile Include="Filters\PendingApprovalsFilter.cs" />
@@ -256,19 +256,12 @@
     <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Helpers\FormatHelpers.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
-    <Compile Include="Helpers\IRedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\JsonCamelCaseResult.cs" />
     <Compile Include="Helpers\LangExt.cs" />
     <Compile Include="Helpers\ModelBinding\AliasedPropertyDescriptor.cs" />
     <Compile Include="Helpers\ModelBinding\BindAliasAttribute.cs" />
     <Compile Include="Helpers\ModelBinding\DefaultModelBinderEx.cs" />
-    <Compile Include="Helpers\RedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
-    <Compile Include="Identity\Constants.cs" />
-    <Compile Include="Identity\ISchoolPermissions.cs" />
-    <Compile Include="Identity\IUserIdentity.cs" />
-    <Compile Include="Identity\SchoolPermissions.cs" />
-    <Compile Include="Identity\UserIdentity.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
@@ -302,14 +295,11 @@
     <Compile Include="Models\MATASSearchResultsModel.cs" />
     <Compile Include="Models\PendingChangeViewModel.cs" />
     <Compile Include="Models\SearchResultsModel.cs" />
-    <Compile Include="Models\TrustEstabViewModel.cs" />
-    <Compile Include="Models\Validators\CreateEditTrustModelValidator.cs" />
+    <Compile Include="Models\GroupEstabViewModel.cs" />
+    <Compile Include="Models\Validators\CreateEditGroupModelValidator.cs" />
     <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
-    <Compile Include="Models\Validators\EstablishmentNumber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utils\IRequestContext.cs" />
-    <Compile Include="Utils\RequestContextWrapper.cs" />
     <Compile Include="ValueConverters\Governor2StringValueConverter.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -732,7 +722,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Account\RegisterSucceeded.cshtml" />
     <Content Include="Views\Account\Lockout.cshtml" />
-    <Content Include="Views\Trust\Details.cshtml" />
+    <Content Include="Views\Group\Details.cshtml" />
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
@@ -746,8 +736,7 @@
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Shared\Secure.cshtml" />
     <Content Include="Views\Admin\PersonaBuilder.cshtml" />
-    <None Include="Views\Schools\Details.cshtml" />
-    <None Include="Views\Schools\Index.cshtml" />
+    <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Advanced.cshtml" />
     <None Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Search\MATASResults.cshtml" />
@@ -757,11 +746,11 @@
     <Content Include="Views\Shared\Placeholder.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Areas\Governors\Views\Shared\_ResultsPagination.cshtml" />
-    <Content Include="Views\Trust\CreateEdit.cshtml" />
+    <Content Include="Views\Group\CreateEdit.cshtml" />
     <Content Include="Views\Shared\_ResultsPagination2.cshtml" />
     <Content Include="Views\Shared\_ResultsPagination.cshtml" />
-    <Content Include="Views\Trust\SearchCompaniesHouse.cshtml" />
-    <Content Include="Views\Trust\Create.cshtml" />
+    <Content Include="Views\Group\SearchCompaniesHouse.cshtml" />
+    <Content Include="Views\Group\Create.cshtml" />
     <Content Include="Views\Shared\_ResultsPagination3.cshtml" />
     <Content Include="Views\Shared\_ResultsPaginationAdvSearch.cshtml" />
     <Content Include="Views\Shared\_Governors.cshtml" />

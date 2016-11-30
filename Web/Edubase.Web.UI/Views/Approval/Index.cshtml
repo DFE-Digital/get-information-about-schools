@@ -50,8 +50,8 @@
                 @foreach (var item in Model.Items)
                 {
                     <tr>
-                        <td>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Schools", new { id = item.EstablishmentUrn }, null)</td>
-                        <td>@Html.ActionLink(item.EstablishmentName, "Details", "Schools", new { id = item.EstablishmentUrn }, null)</td>
+                        <td>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = item.EstablishmentUrn }, null)</td>
+                        <td>@Html.ActionLink(item.EstablishmentName, "Details", "Establishment", new { id = item.EstablishmentUrn }, null)</td>
                         <td class="bb">@item.UpdatedFieldName</td>
                         <td>@item.OldValue</td>
                         <td>@item.NewValue</td>
@@ -92,7 +92,7 @@
                 <li>
                     <dl>
                         <dt>URN:</dt>
-                        <dd>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Schools", new { id = item.EstablishmentUrn }, null)</dd>
+                        <dd>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = item.EstablishmentUrn }, null)</dd>
                         <dt>Establishment name:</dt>
                         <dd>@item.EstablishmentName</dd>
                         <dt>Updated field:</dt>

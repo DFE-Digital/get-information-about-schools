@@ -56,10 +56,17 @@ namespace Edubase.Web.UI.Models.DisplayProfiles
             LastChangedDate = isUserLoggedIn;
             SENProvisions = true;
             TypeOfResourcedProvision = true;
-            ResourcedProvisionOnRoll = true;
-            ResourcedProvisionCapacity = true;
-            SenUnitOnRoll = true;
-            SenUnitCapacity = true;
+
+            if(Establishment.TypeOfResourcedProvisionId
+                .OneOfThese(eLookupTypeOfResourcedProvision.ResourceProvisionAndSENUnit,
+                eLookupTypeOfResourcedProvision.SENUnit))
+            {
+                ResourcedProvisionOnRoll = true;
+                ResourcedProvisionCapacity = true;
+                SenUnitOnRoll = true;
+                SenUnitCapacity = true;
+            }
+
         }
     }
 }

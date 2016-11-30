@@ -166,11 +166,16 @@
     <Compile Include="Entity\EstablishmentLink.cs" />
     <Compile Include="Entity\Permissions\Permission.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IApplicationDbContext.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
     <Compile Include="Migrations\201611281050558_InitialCreate.cs" />
     <Compile Include="Migrations\201611281050558_InitialCreate.Designer.cs">
       <DependentUpon>201611281050558_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611290929561_AddedCCLAContacts.cs" />
+    <Compile Include="Migrations\201611290929561_AddedCCLAContacts.Designer.cs">
+      <DependentUpon>201611290929561_AddedCCLAContacts.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\UserAccountSeeder.cs" />
@@ -192,6 +197,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201611281050558_InitialCreate.resx">
       <DependentUpon>201611281050558_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611290929561_AddedCCLAContacts.resx">
+      <DependentUpon>201611290929561_AddedCCLAContacts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
