@@ -12,32 +12,105 @@ using Edubase.Services.Domain;
 
 namespace Edubase.Services
 {
-    public class CachedLookupService
+    public class CachedLookupService : ICachedLookupService
     {
-        private Dictionary<string, Func<ApplicationDbContext, int, Task<string>>> _mapping = null;
+        private Dictionary<string, Func<ApplicationDbContext, int, Task<string>>> _mappingAsync = null;
+        private Dictionary<string, Func<ApplicationDbContext, int, string>> _mapping = null;
 
         private LookupService _svc = new LookupService();
 
         public CachedLookupService()
         {
-            _mapping = new Dictionary<string, Func<ApplicationDbContext, int, Task<string>>>()
+            _mappingAsync = new Dictionary<string, Func<ApplicationDbContext, int, Task<string>>>()
             {
                 { "LocalAuthorityId", async (dc, id) => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "HeadTitleId", async (dc, id) => GetName((await HeadTitlesGetAllAsync()), id) },
-                { "GenderId", async (dc, id) => GetName((await GendersGetAllAsync()), id) },
-                { "EducationPhaseId", async (dc, id) => GetName((await EducationPhasesGetAllAsync()), id) },
-                { "AdmissionsPolicyId", async (dc, id) => GetName((await AdmissionsPoliciesGetAllAsync()), id) },
-                { "StatusId", async (dc, id) => GetName((await EstablishmentStatusesGetAllAsync()), id) },
-                { "ReasonEstablishmentOpenedId", async (dc, id) => GetName((await ReasonEstablishmentOpenedGetAllAsync()), id) },
-                { "ReasonEstablishmentClosedId", async (dc, id) => GetName((await ReasonEstablishmentClosedGetAllAsync()), id) },
-                { "ProvisionBoardingId", async (dc, id) => GetName((await ProvisionBoardingGetAllAsync()), id) },
-                { "ProvisionNurseryId", async (dc, id) => GetName((await ProvisionNurseriesGetAllAsync()), id) },
-                { "ProvisionOfficialSixthFormId", async (dc, id) => GetName((await ProvisionOfficialSixthFormsGetAllAsync()), id) },
-                { "ReligiousCharacterId", async (dc, id) => GetName((await ReligiousCharactersGetAllAsync()), id) },
-                { "ReligiousEthosId", async (dc, id) => GetName((await ReligiousEthosGetAllAsync()), id) },
-                { "DioceseId", async (dc, id) => GetName((await DiocesesGetAllAsync()), id) },
-                { "ProvisionSpecialClassesId", async (dc, id) => GetName((await ProvisionSpecialClassesGetAllAsync()), id) },
-                { "TypeId", async (dc, id) => GetName((await EstablishmentTypesGetAllAsync()), id) }
+                { "RSCRegionId", async (dc, id) => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "TypeId", async (dc, id) => (await EstablishmentTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "StatusId", async (dc, id) => (await EstablishmentStatusesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ReasonEstablishmentOpenedId", async (dc, id) => (await ReasonEstablishmentOpenedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ReasonEstablishmentClosedId", async (dc, id) => (await ReasonEstablishmentClosedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "EducationPhaseId", async (dc, id) => (await EducationPhasesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ProvisionBoardingId", async (dc, id) => (await ProvisionBoardingGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ProvisionNurseryId", async (dc, id) => (await ProvisionNurseriesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ProvisionOfficialSixthFormId", async (dc, id) => (await ProvisionOfficialSixthFormsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "GenderId", async (dc, id) => (await GendersGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ReligiousCharacterId", async (dc, id) => (await ReligiousCharactersGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ReligiousEthosId", async (dc, id) => (await ReligiousEthosGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "DioceseId", async (dc, id) => (await DiocesesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "AdmissionsPolicyId", async (dc, id) => (await AdmissionsPoliciesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ProvisionSpecialClassesId", async (dc, id) => (await ProvisionSpecialClassesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "HeadTitleId", async (dc, id) => (await HeadTitlesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "EstablishmentTypeGroupId", async (dc, id) => (await EstablishmentTypeGroupsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "InspectorateId", async (dc, id) => (await InspectoratesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "Section41ApprovedId", async (dc, id) => (await Section41ApprovedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "SEN1Id", async (dc, id) => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "SEN2Id", async (dc, id) => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "SEN3Id", async (dc, id) => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "SEN4Id", async (dc, id) => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "TeenageMothersProvisionId", async (dc, id) => (await TeenageMothersProvisionsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ChildcareFacilitiesId", async (dc, id) => (await ChildcareFacilitiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "PRUSENId", async (dc, id) => (await PRUSENsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "PRUEBDId", async (dc, id) => (await PRUEBDsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "PruFulltimeProvisionId", async (dc, id) => (await PruFulltimeProvisionsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "PruEducatedByOthersId", async (dc, id) => (await PruEducatedByOthersGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "TypeOfResourcedProvisionId", async (dc, id) => (await TypeOfResourcedProvisionsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "GovernmentOfficeRegionId", async (dc, id) => (await GovernmentOfficeRegionsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "AdministrativeDistrictId", async (dc, id) => (await AdministrativeDistrictsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "AdministrativeWardId", async (dc, id) => (await AdministrativeWardsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ParliamentaryConstituencyId", async (dc, id) => (await ParliamentaryConstituenciesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "UrbanRuralId", async (dc, id) => (await UrbanRuralGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "GSSLAId", async (dc, id) => (await GSSLAGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CASWardId", async (dc, id) => (await CASWardsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "MSOAId", async (dc, id) => (await MSOAsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "LSOAId", async (dc, id) => (await LSOAsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "FurtherEducationTypeId", async (dc, id) => (await FurtherEducationTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "InspectorateNameId", async (dc, id) => (await InspectorateNamesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+            };
+
+            _mapping = new Dictionary<string, Func<ApplicationDbContext, int, string>>()
+            {
+                { "LocalAuthorityId",  (dc, id) => ( LocalAuthorityGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "RSCRegionId",  (dc, id) => ( LocalAuthorityGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "TypeId",  (dc, id) => ( EstablishmentTypesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "StatusId",  (dc, id) => ( EstablishmentStatusesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ReasonEstablishmentOpenedId",  (dc, id) => ( ReasonEstablishmentOpenedGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ReasonEstablishmentClosedId",  (dc, id) => ( ReasonEstablishmentClosedGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "EducationPhaseId",  (dc, id) => ( EducationPhasesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ProvisionBoardingId",  (dc, id) => ( ProvisionBoardingGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ProvisionNurseryId",  (dc, id) => ( ProvisionNurseriesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ProvisionOfficialSixthFormId",  (dc, id) => ( ProvisionOfficialSixthFormsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "GenderId",  (dc, id) => ( GendersGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ReligiousCharacterId",  (dc, id) => ( ReligiousCharactersGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ReligiousEthosId",  (dc, id) => ( ReligiousEthosGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "DioceseId",  (dc, id) => ( DiocesesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "AdmissionsPolicyId",  (dc, id) => ( AdmissionsPoliciesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ProvisionSpecialClassesId",  (dc, id) => ( ProvisionSpecialClassesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "HeadTitleId",  (dc, id) => ( HeadTitlesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "EstablishmentTypeGroupId",  (dc, id) => ( EstablishmentTypeGroupsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "InspectorateId",  (dc, id) => ( InspectoratesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "Section41ApprovedId",  (dc, id) => ( Section41ApprovedGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "SEN1Id",  (dc, id) => ( SpecialEducationNeedsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "SEN2Id",  (dc, id) => ( SpecialEducationNeedsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "SEN3Id",  (dc, id) => ( SpecialEducationNeedsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "SEN4Id",  (dc, id) => ( SpecialEducationNeedsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "TeenageMothersProvisionId",  (dc, id) => ( TeenageMothersProvisionsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ChildcareFacilitiesId",  (dc, id) => ( ChildcareFacilitiesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "PRUSENId",  (dc, id) => ( PRUSENsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "PRUEBDId",  (dc, id) => ( PRUEBDsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "PruFulltimeProvisionId",  (dc, id) => ( PruFulltimeProvisionsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "PruEducatedByOthersId",  (dc, id) => ( PruEducatedByOthersGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "TypeOfResourcedProvisionId",  (dc, id) => ( TypeOfResourcedProvisionsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "GovernmentOfficeRegionId",  (dc, id) => ( GovernmentOfficeRegionsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "AdministrativeDistrictId",  (dc, id) => ( AdministrativeDistrictsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "AdministrativeWardId",  (dc, id) => ( AdministrativeWardsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ParliamentaryConstituencyId",  (dc, id) => ( ParliamentaryConstituenciesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "UrbanRuralId",  (dc, id) => ( UrbanRuralGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "GSSLAId",  (dc, id) => ( GSSLAGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CASWardId",  (dc, id) => ( CASWardsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "MSOAId",  (dc, id) => ( MSOAsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "LSOAId",  (dc, id) => ( LSOAsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "FurtherEducationTypeId",  (dc, id) => ( FurtherEducationTypesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "InspectorateNameId",  (dc, id) => ( InspectorateNamesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
             };
         }
 
@@ -125,8 +198,8 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> TypeOfResourcedProvisionsGetAll() => Cacher.Auto(_svc.TypeOfResourcedProvisionsGetAll);
         public async Task<IEnumerable<LookupDto>> EstablishmentLinkTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentLinkTypesGetAllAsync);
         public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll() => Cacher.Auto(_svc.EstablishmentLinkTypesGetAll);
-        public async Task<IEnumerable<LookupDto>> EstablishmentGroupTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentGroupTypesGetAllAsync);
-        public IEnumerable<LookupDto> EstablishmentGroupTypesGetAll() => Cacher.Auto(_svc.EstablishmentGroupTypesGetAll);
+        public async Task<IEnumerable<LookupDto>> EstablishmentTypeGroupsGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentTypeGroupsGetAllAsync);
+        public IEnumerable<LookupDto> EstablishmentTypeGroupsGetAll() => Cacher.Auto(_svc.EstablishmentTypeGroupsGetAll);
 
         public async Task<IEnumerable<LookupDto>> GovernmentOfficeRegionsGetAllAsync() => await Cacher.AutoAsync(_svc.GovernmentOfficeRegionsGetAllAsync);
         public IEnumerable<LookupDto> GovernmentOfficeRegionsGetAll() => Cacher.Auto(_svc.GovernmentOfficeRegionsGetAll);
@@ -161,7 +234,8 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> GroupStatusesGetAll() => Cacher.Auto(_svc.GroupStatusesGetAll);
         
         public async Task<string> GetNameAsync(string lookupName, int id) => 
-            await ApplicationDbContext.OperationAsync(async dc => await _mapping.Get(lookupName)?.Invoke(dc, id));
+            await ApplicationDbContext.OperationAsync(async dc => await _mappingAsync.Get(lookupName)?.Invoke(dc, id));
+        public string GetName(string lookupName, int id) => ApplicationDbContext.Operation(dc => _mapping.Get(lookupName)?.Invoke(dc, id));
 
         public bool IsLookupField(string name) => _mapping.ContainsKey(name);
 

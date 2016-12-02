@@ -3,7 +3,7 @@ namespace Edubase.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class Initial : DbMigration
     {
         public override void Up()
         {
@@ -465,6 +465,9 @@ namespace Edubase.Data.Migrations
                         Name = c.String(),
                         Group = c.String(),
                         Order = c.Int(nullable: false),
+                        FirstName = c.String(),
+                        LastName = c.String(),
+                        EmailAddress = c.String(),
                         CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
                         IsDeleted = c.Boolean(nullable: false),
@@ -872,44 +875,6 @@ namespace Edubase.Data.Migrations
                 .Index(t => t.ApproverUserId);
             
             CreateTable(
-                "dbo.EstablishmentLink",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        EstablishmentUrn = c.Int(),
-                        LinkedEstablishmentUrn = c.Int(),
-                        LinkName = c.String(),
-                        LinkTypeId = c.Int(),
-                        LinkEstablishedDate = c.DateTime(precision: 7, storeType: "datetime2"),
-                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        IsDeleted = c.Boolean(nullable: false),
-                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Establishment", t => t.EstablishmentUrn)
-                .ForeignKey("dbo.Establishment", t => t.LinkedEstablishmentUrn)
-                .ForeignKey("dbo.LookupEstablishmentLinkType", t => t.LinkTypeId)
-                .Index(t => t.EstablishmentUrn)
-                .Index(t => t.LinkedEstablishmentUrn)
-                .Index(t => t.LinkTypeId);
-            
-            CreateTable(
-                "dbo.LookupEstablishmentLinkType",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(nullable: false),
-                        DisplayOrder = c.Short(),
-                        Code = c.String(),
-                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        IsDeleted = c.Boolean(nullable: false),
-                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
                 "dbo.EstablishmentGroup",
                 c => new
                     {
@@ -975,6 +940,44 @@ namespace Edubase.Data.Migrations
             
             CreateTable(
                 "dbo.LookupGroupStatus",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false),
+                        DisplayOrder = c.Short(),
+                        Code = c.String(),
+                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        IsDeleted = c.Boolean(nullable: false),
+                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.EstablishmentLink",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        EstablishmentUrn = c.Int(),
+                        LinkedEstablishmentUrn = c.Int(),
+                        LinkName = c.String(),
+                        LinkTypeId = c.Int(),
+                        LinkEstablishedDate = c.DateTime(precision: 7, storeType: "datetime2"),
+                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        IsDeleted = c.Boolean(nullable: false),
+                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Establishment", t => t.EstablishmentUrn)
+                .ForeignKey("dbo.Establishment", t => t.LinkedEstablishmentUrn)
+                .ForeignKey("dbo.LookupEstablishmentLinkType", t => t.LinkTypeId)
+                .Index(t => t.EstablishmentUrn)
+                .Index(t => t.LinkedEstablishmentUrn)
+                .Index(t => t.LinkTypeId);
+            
+            CreateTable(
+                "dbo.LookupEstablishmentLinkType",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -1240,13 +1243,13 @@ namespace Edubase.Data.Migrations
             DropForeignKey("dbo.Governor", "GroupUID", "dbo.GroupCollection");
             DropForeignKey("dbo.Governor", "EstablishmentUrn", "dbo.Establishment");
             DropForeignKey("dbo.Governor", "AppointingBodyId", "dbo.LookupGovernorAppointingBody");
+            DropForeignKey("dbo.EstablishmentLink", "LinkTypeId", "dbo.LookupEstablishmentLinkType");
+            DropForeignKey("dbo.EstablishmentLink", "LinkedEstablishmentUrn", "dbo.Establishment");
+            DropForeignKey("dbo.EstablishmentLink", "EstablishmentUrn", "dbo.Establishment");
             DropForeignKey("dbo.EstablishmentGroup", "TrustGroupUID", "dbo.GroupCollection");
             DropForeignKey("dbo.GroupCollection", "StatusId", "dbo.LookupGroupStatus");
             DropForeignKey("dbo.GroupCollection", "GroupTypeId", "dbo.LookupGroupType");
             DropForeignKey("dbo.EstablishmentGroup", "EstablishmentUrn", "dbo.Establishment");
-            DropForeignKey("dbo.EstablishmentLink", "LinkTypeId", "dbo.LookupEstablishmentLinkType");
-            DropForeignKey("dbo.EstablishmentLink", "LinkedEstablishmentUrn", "dbo.Establishment");
-            DropForeignKey("dbo.EstablishmentLink", "EstablishmentUrn", "dbo.Establishment");
             DropForeignKey("dbo.EstablishmentChangeHistory", "OriginatorUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.EstablishmentChangeHistory", "Urn", "dbo.Establishment");
             DropForeignKey("dbo.EstablishmentChangeHistory", "ApproverUserId", "dbo.AspNetUsers");
@@ -1303,14 +1306,14 @@ namespace Edubase.Data.Migrations
             DropIndex("dbo.Governor", new[] { "AppointingBodyId" });
             DropIndex("dbo.Governor", new[] { "RoleId" });
             DropIndex("dbo.Governor", new[] { "EstablishmentUrn" });
+            DropIndex("dbo.EstablishmentLink", new[] { "LinkTypeId" });
+            DropIndex("dbo.EstablishmentLink", new[] { "LinkedEstablishmentUrn" });
+            DropIndex("dbo.EstablishmentLink", new[] { "EstablishmentUrn" });
             DropIndex("dbo.GroupCollection", new[] { "GroupId" });
             DropIndex("dbo.GroupCollection", new[] { "StatusId" });
             DropIndex("dbo.GroupCollection", new[] { "GroupTypeId" });
             DropIndex("dbo.EstablishmentGroup", new[] { "EstablishmentUrn" });
             DropIndex("dbo.EstablishmentGroup", new[] { "TrustGroupUID" });
-            DropIndex("dbo.EstablishmentLink", new[] { "LinkTypeId" });
-            DropIndex("dbo.EstablishmentLink", new[] { "LinkedEstablishmentUrn" });
-            DropIndex("dbo.EstablishmentLink", new[] { "EstablishmentUrn" });
             DropIndex("dbo.EstablishmentChangeHistory", new[] { "ApproverUserId" });
             DropIndex("dbo.EstablishmentChangeHistory", new[] { "OriginatorUserId" });
             DropIndex("dbo.EstablishmentChangeHistory", new[] { "Urn" });
@@ -1379,12 +1382,12 @@ namespace Edubase.Data.Migrations
             DropTable("dbo.LookupGovernorRole");
             DropTable("dbo.LookupGovernorAppointingBody");
             DropTable("dbo.Governor");
+            DropTable("dbo.LookupEstablishmentLinkType");
+            DropTable("dbo.EstablishmentLink");
             DropTable("dbo.LookupGroupStatus");
             DropTable("dbo.LookupGroupType");
             DropTable("dbo.GroupCollection");
             DropTable("dbo.EstablishmentGroup");
-            DropTable("dbo.LookupEstablishmentLinkType");
-            DropTable("dbo.EstablishmentLink");
             DropTable("dbo.EstablishmentChangeHistory");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");

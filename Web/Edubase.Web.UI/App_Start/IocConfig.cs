@@ -2,6 +2,12 @@
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
+using Edubase.Services.Establishments;
+using Edubase.Services.Groups;
+using Edubase.Services;
+using AutoMapper;
+using Edubase.Services.Mapping;
+using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI
 {
@@ -36,10 +42,11 @@ namespace Edubase.Web.UI
 
         private static void RegisterTypes(ContainerBuilder builder)
         {
-            //builder.RegisterType<SchoolPermissions>().As<ISchoolPermissions>();
-            //builder.RegisterType<UserIdentity>().As<IUserIdentity>();
-            //builder.RegisterType<RedirectAfterLoginHelper>().As<IRedirectAfterLoginHelper>();
-            //builder.RegisterType<RequestContextWrapper>().As<IRequestContext>();
+            builder.RegisterType<ApplicationDbContext>().As<IApplicationDbContext>();
+            builder.RegisterInstance(AutoMapperConfiguration.CreateMapper()).As<IMapper>();
+            builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
+            builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
+            builder.RegisterType<GroupReadService>().As<IGroupReadService>();
         }
     }
 }

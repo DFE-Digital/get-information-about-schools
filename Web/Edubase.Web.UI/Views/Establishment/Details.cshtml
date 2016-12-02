@@ -1,8 +1,6 @@
 ﻿@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
 @using Edubase.Common
-@using Edubase.Data.Entity
-@using Edubase.Services.Enums
 @model EstablishmentDetailViewModel
 @{
     ViewBag.Title = Model.Establishment.Name;
@@ -63,26 +61,26 @@ else if (Model.UserHasPendingApprovals)
                     @Html.PendingUpdateFor(x => x.LocalAuthorityId)
                     @if (Model.Establishment.LocalAuthorityId.HasValue)
                     {
-                        <a href="/Search/SearchByLaName?searchTerm=@Model.Establishment.LocalAuthority">
-                            @Model.Establishment.LocalAuthority
+                        <a href="/Search/SearchByLaName?searchTerm=@Model.Establishment.LocalAuthorityId">
+                            @Html.NameFor(x => x.Establishment.LocalAuthorityId)
                         </a> 
                         <text>(@Model.Establishment.LocalAuthorityId)</text>
                     }
                 </td>
             </tr>
 
-            @if (Model.DisplayProfile.HeadteacherDetails)
+            @if (Model.DisplayPolicy.HeadteacherDetails)
             {
                 <tr>
                     <th scope="row">Headteacher/Principal:</th>
                     <td>
                         @(Html.PendingUpdatesFor("HeadTitleId", "HeadFirstName", "HeadLastName"))
-                        @Model.Establishment.HeadTitle @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
+                        @Html.NameFor(x => x.Establishment.HeadTitleId) @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
                     </td>
                 </tr>
             }
             
-            @if (Model.DisplayProfile.AgeRange)
+            @if (Model.DisplayPolicy.AgeRange)
             {
                 <tr>
                     <th scope="col">Age range:</th>
@@ -100,7 +98,7 @@ else if (Model.UserHasPendingApprovals)
                 <th scope="row">Phase of education:</th>
                 <td>
                     @(Html.PendingUpdatesFor(x=>x.EducationPhaseId))
-                    @Model.Establishment.EducationPhase
+                    @Html.NameFor(x => x.Establishment.EducationPhaseId)
                 </td>
             </tr>
             
@@ -108,21 +106,21 @@ else if (Model.UserHasPendingApprovals)
                 <th scope="row">School type</th>
                 <td>
                     @(Html.PendingUpdatesFor(x => x.TypeId))
-                    @Model.Establishment.EstablishmentType
+                    @Html.NameFor(x => x.Establishment.TypeId)
                 </td>
             </tr>
             
-            @if (Model.DisplayProfile.FurtherEducationType)
+            @if (Model.DisplayPolicy.FurtherEducationType)
             {
                 <tr>
                     <th scope="row">Further Education type:</th>
                     <td>
-                        @Model.Establishment.FurtherEducationType
+                        @Html.NameFor(x => x.Establishment.FurtherEducationTypeId)
                     </td>
                 </tr>
             }
 
-            @if (Model.DisplayProfile.GroupDetails && Model.Group != null)
+            @if (Model.DisplayPolicy.GroupDetails && Model.Group != null)
             {
                 <tr>
                     <th scope="row">@(Model.GroupFieldLabel):</th>
@@ -132,13 +130,13 @@ else if (Model.UserHasPendingApprovals)
                 </tr>
             }
 
-            @if (Model.DisplayProfile.GenderOfEntry)
+            @if (Model.DisplayPolicy.GenderOfEntry)
             {
                 <tr>
                     <th scope="row">Gender of entry:</th>
                     <td>
                         @(Html.PendingUpdatesFor(x => x.GenderId))
-                        @Model.Establishment.Gender
+                        @Html.NameFor(x => x.Establishment.GenderId)
                     </td>
                 </tr>
             }
@@ -147,7 +145,7 @@ else if (Model.UserHasPendingApprovals)
                 <th scope="row">ID:</th>
                 <td>
                     URN: @Model.Establishment.Urn, 
-                    @if (Model.DisplayProfile.LAESTAB)
+                    @if (Model.DisplayPolicy.LAESTAB)
                     {
                         <text>DfE number: @Model.Establishment.LAESTAB<br /></text>
                     }
@@ -161,27 +159,29 @@ else if (Model.UserHasPendingApprovals)
                     @(Html.PendingUpdatesFor(x => x.StatusId))
                     @if (Model.IsClosed)
                     {
-                        <span style="color:red;">@Model.Establishment.Status</span>
+                        <span style="color:red;">
+                            @Html.NameFor(x => x.Establishment.StatusId)
+                        </span>
                     }
                     else
                     {
-                        @Model.Establishment.Status
+                        @Html.NameFor(x => x.Establishment.StatusId)
                     }
                 </td>
             </tr>
 
-            @if (Model.DisplayProfile.AdmissionsPolicy)
+            @if (Model.DisplayPolicy.AdmissionsPolicy)
             {
                 <tr>
                     <th scope="row">Admissions policy:</th>
                     <td>
                         @(Html.PendingUpdatesFor(x => x.AdmissionsPolicyId))
-                        @Model.Establishment.AdmissionsPolicy
+                        @Html.NameFor(x => x.Establishment.AdmissionsPolicyId)
                     </td>
                 </tr>
             }
 
-            @if (Model.DisplayProfile.WebsiteAddress)
+            @if (Model.DisplayPolicy.WebsiteAddress)
             {
                 <tr>
                     <th scope="row">Website:</th>
@@ -193,7 +193,7 @@ else if (Model.UserHasPendingApprovals)
 
              <tr><th scope="row">Telephone:</th><td>@Model.Establishment.Contact.TelephoneNumber</td></tr>
             
-            @if (Model.DisplayProfile.OfstedRatingDetails)
+            @if (Model.DisplayPolicy.OfstedRatingDetails)
             {
                 <tr>
                     <th scope="row">Ofsted rating:</th>
@@ -209,12 +209,17 @@ else if (Model.UserHasPendingApprovals)
                 </tr>
             }
 
-            @if (Model.DisplayProfile.Inspectorate)
+            @if (Model.DisplayPolicy.Inspectorate)
             {
-                <tr><th scope="row">Inspectorate:</th><td>@Model.Establishment.Inspectorate</td></tr>
+                <tr>
+                    <th scope="row">Inspectorate:</th>
+                    <td>
+                        @Html.NameFor(x => x.Establishment.InspectorateId)
+                    </td>
+                </tr>
             }
 
-            @if (Model.DisplayProfile.Proprietor)
+            @if (Model.DisplayPolicy.Proprietor)
             {
                 <tr><th scope="row">Proprietor's name:</th><td>@Model.Establishment.ProprietorName</td></tr>
             }
@@ -245,7 +250,7 @@ else if (Model.UserHasPendingApprovals)
                 <li>
                     <a href="#school-links" class="horizontal-tab">Links</a>
                 </li>
-                @if (Model.DisplayProfile.LocationDetails)
+                @if (Model.DisplayPolicy.LocationDetails)
                 {
                     <li>
                         <a href="#school-location" class="horizontal-tab">Location</a>
@@ -265,55 +270,61 @@ else if (Model.UserHasPendingApprovals)
                 <table class="borderless">
                     <caption class="visually-hidden">@Model.Establishment.Name details</caption>
                     
-                    @if (Model.DisplayProfile.ReligiousCharacter)
+                    @if (Model.DisplayPolicy.ReligiousCharacter)
                     {
                         <tr>
                             <th scope="row">Religious character:</th>
-                            <td>@Model.Establishment.ReligiousCharacter</td>
+                            <td>
+                                @Html.NameFor(x => x.Establishment.ReligiousCharacterId)
+                            </td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.Diocese)
+                    @if (Model.DisplayPolicy.Diocese)
                     {
                         <tr>
                             <th scope="row">Diocese:</th>
-                            <td>@Model.Establishment.Diocese</td>
+                            <td>
+                                @Html.NameFor(x => x.Establishment.DioceseId)
+                            </td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.ReligiousEhtos)
+                    @if (Model.DisplayPolicy.ReligiousEhtos)
                     {
                         <tr>
                             <th scope="row">Religious ehtos:</th>
-                            <td>@Model.Establishment.ReligiousEthos</td>
+                            <td>
+                                @Html.NameFor(x => x.Establishment.ReligiousEthosId)
+                            </td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.BoardingProvision)
+                    @if (Model.DisplayPolicy.BoardingProvision)
                     {
                         <tr>
                             <th scope="row">Boarders:</th>
-                            <td>@Model.Establishment.ProvisionBoarding</td>
+                            <td>@Html.NameFor(x => x.Establishment.ProvisionBoardingId)</td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.BoardingProvision)
+                    @if (Model.DisplayPolicy.BoardingProvision)
                     {
                         <tr>
                             <th scope="row">Nursery provision:</th>
-                            <td>@Model.Establishment.ProvisionNursery</td>
+                            <td>@Html.NameFor(x => x.Establishment.ProvisionNurseryId)</td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.OfficialSixthFormProvision)
+                    @if (Model.DisplayPolicy.OfficialSixthFormProvision)
                     {
                         <tr>
                             <th scope="row">Official sixth form:</th>
-                            <td>@Model.Establishment.ProvisionOfficialSixthForm</td>
+                            <td>@Html.NameFor(x => x.Establishment.ProvisionOfficialSixthFormId)</td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.Capacity)
+                    @if (Model.DisplayPolicy.Capacity)
                     {
                         <tr>
                             <th scope="row">School capacity:</th>
@@ -321,11 +332,11 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.Section41Approved)
+                    @if (Model.DisplayPolicy.Section41Approved)
                     {
                         <tr>
                             <th scope="row">Section 41 approved:</th>
-                            <td>@Model.Establishment.Section41Approved</td>
+                            <td>@Html.NameFor(x => x.Establishment.Section41ApprovedId)</td>
                         </tr>
                     }
                     
@@ -333,32 +344,32 @@ else if (Model.UserHasPendingApprovals)
                         <th scope="row">Open date / Reason:</th>
                         <td>
                             @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
-                            @Model.Establishment.ReasonEstablishmentOpened
+                            @Html.NameFor(x => x.Establishment.ReasonEstablishmentOpenedId)
                         </td>
                     </tr>
 
-                    @if (Model.DisplayProfile.CloseDate)
+                    @if (Model.DisplayPolicy.CloseDate)
                     {
                         <tr>
                             <th scope="row">Close date / Reason:</th>
                             <td>
                                 @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy"))<br />
-                                @Model.Establishment.ReasonEstablishmentClosed
+                                @Html.NameFor(x => x.Establishment.ReasonEstablishmentClosedId)
                             </td>
                         </tr>
                     }
 
 
-                    @if (Model.DisplayProfile.SpecialClasses)
+                    @if (Model.DisplayPolicy.SpecialClasses)
                     {
                         <tr>
                             <th scope="row">Special classes:</th>
-                            <td>@Model.Establishment.ProvisionSpecialClasses</td>
+                            <td>@Html.NameFor(x => x.Establishment.ProvisionSpecialClassesId)</td>
                         </tr>
                     }
 
 
-                    @if (Model.DisplayProfile.SENStat)
+                    @if (Model.DisplayPolicy.SENStat)
                     {
                         <tr>
                             <th scope="row">Number of Special Pupils Under a SEN Statement/EHCP:</th>
@@ -366,7 +377,7 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.SENNoStat)
+                    @if (Model.DisplayPolicy.SENNoStat)
                     {
                         <tr>
                             <th scope="row">Number of Special Pupils Not Under a SEN Statement/EHCP:</th>
@@ -375,7 +386,7 @@ else if (Model.UserHasPendingApprovals)
                     }
 
 
-                    @if (Model.DisplayProfile.MainEmailAddress)
+                    @if (Model.DisplayPolicy.MainEmailAddress)
                     {
                         <tr>
                             <th scope="row">Email:</th>
@@ -383,7 +394,7 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.AlternativeEmailAddress)
+                    @if (Model.DisplayPolicy.AlternativeEmailAddress)
                     {
                         <tr>
                             <th scope="row">Email:</th>
@@ -391,7 +402,7 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.LastChangedDate)
+                    @if (Model.DisplayPolicy.LastChangedDate)
                     {
                         <tr>
                             <th scope="row">Last Change:</th>
@@ -399,40 +410,40 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.SENProvisions)
+                    @if (Model.DisplayPolicy.SENProvisions)
                     {
                         <tr>
                             <th scope="row">Type of SEN provision:</th>
                             <td>
                                 @if (Model.Establishment.SEN1Id.HasValue)
                                 {
-                                    <text>@Model.Establishment.SEN1<br /></text>
+                                    <text>@Html.NameFor(x => x.Establishment.SEN1Id)<br /></text>
                                 }
                                 @if (Model.Establishment.SEN2Id.HasValue)
                                 {
-                                    <text>@Model.Establishment.SEN2<br /></text>
+                                    <text>@Html.NameFor(x => x.Establishment.SEN2Id)<br /></text>
                                 }
                                 @if (Model.Establishment.SEN3Id.HasValue)
                                 {
-                                    <text>@Model.Establishment.SEN3<br /></text>
+                                    <text>@Html.NameFor(x => x.Establishment.SEN3Id)<br /></text>
                                 }
                                 @if (Model.Establishment.SEN4Id.HasValue)
                                 {
-                                    <text>@Model.Establishment.SEN4<br /></text>
+                                    <text>@Html.NameFor(x => x.Establishment.SEN4Id)<br /></text>
                                 }
                             </td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.TeenageMothers)
+                    @if (Model.DisplayPolicy.TeenageMothers)
                     {
                         <tr>
                             <th scope="row">Teenage mothers:</th>
-                            <td>@Model.Establishment.TeenageMothersProvision</td>
+                            <td>@Html.NameFor(x => x.Establishment.TeenageMothersProvisionId)</td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.TeenageMothersCapacity)
+                    @if (Model.DisplayPolicy.TeenageMothersCapacity)
                     {
                         <tr>
                             <th scope="row">Teenage mothers places:</th>
@@ -440,31 +451,31 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.ChildcareFacilities)
+                    @if (Model.DisplayPolicy.ChildcareFacilities)
                     {
                         <tr>
                             <th scope="row">Childcare facilities:</th>
-                            <td>@Model.Establishment.ChildcareFacilities</td>
+                            <td>@Html.NameFor(x => x.Establishment.ChildcareFacilitiesId)</td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.SENFacilities)
+                    @if (Model.DisplayPolicy.SENFacilities)
                     {
                         <tr>
                             <th scope="row">SEN facilities:</th>
-                            <td>@Model.Establishment.PRUSEN</td>
+                            <td>@Html.NameFor(x => x.Establishment.PRUSENId)</td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.PupilsWithEBD)
+                    @if (Model.DisplayPolicy.PupilsWithEBD)
                     {
                         <tr>
                             <th scope="row">Pupils with EBD:</th>
-                            <td>@Model.Establishment.PRUEBD</td>
+                            <td>@Html.NameFor(x => x.Establishment.PRUEBDId)</td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.PRUNumberOfPlaces)
+                    @if (Model.DisplayPolicy.PRUNumberOfPlaces)
                     {
                         <tr>
                             <th scope="row">Number of places:</th>
@@ -472,33 +483,33 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.PRUFullTimeProvision)
+                    @if (Model.DisplayPolicy.PRUFullTimeProvision)
                     {
                         <tr>
                             <th scope="row">Full time provision :</th>
-                            <td>@Model.Establishment.PruFulltimeProvision</td>
+                            <td>@Html.NameFor(x => x.Establishment.PruFulltimeProvisionId)</td>
                         </tr>
                     }
 
 
-                    @if (Model.DisplayProfile.PRUPupilsEducatedByOthers)
+                    @if (Model.DisplayPolicy.PRUPupilsEducatedByOthers)
                     {
                         <tr>
                             <th scope="row">Pupils educated by other providers:</th>
-                            <td>@Model.Establishment.PruEducatedByOthers</td>
+                            <td>@Model.Establishment.PruEducatedByOthersId</td>
                         </tr>
                     }
 
 
-                    @if (Model.DisplayProfile.TypeOfResourcedProvision)
+                    @if (Model.DisplayPolicy.TypeOfResourcedProvision)
                     {
                         <tr>
                             <th scope="row">Type of resourced provision:</th>
-                            <td>@Model.Establishment.TypeOfResourcedProvision</td>
+                            <td>@Html.NameFor(x => x.Establishment.TypeOfResourcedProvisionId)</td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.ResourcedProvisionOnRoll)
+                    @if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
                     {
                         <tr>
                             <th scope="row">Resourced provision number on roll:</th>
@@ -506,7 +517,7 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.ResourcedProvisionCapacity)
+                    @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
                     {
                         <tr>
                             <th scope="row">Resourced provision capacity:</th>
@@ -514,7 +525,7 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.SenUnitOnRoll)
+                    @if (Model.DisplayPolicy.SenUnitOnRoll)
                     {
                         <tr>
                             <th scope="row">SEN Unit number on roll:</th>
@@ -522,7 +533,7 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
                     
-                    @if (Model.DisplayProfile.SenUnitCapacity)
+                    @if (Model.DisplayPolicy.SenUnitCapacity)
                     {
                         <tr>
                             <th scope="row">SEN Unit capacity:</th>
@@ -531,15 +542,15 @@ else if (Model.UserHasPendingApprovals)
                     }
 
 
-                    @if (Model.DisplayProfile.BSOInspectorate)
+                    @if (Model.DisplayPolicy.BSOInspectorate)
                     {
                         <tr>
                             <th scope="row">Inspectorate name:</th>
-                            <td>@Model.Establishment.BSOInspectorate</td>
+                            <td>@Html.NameFor(x => x.Establishment.BSOInspectorateId)</td>
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.BSOInspectorateReport)
+                    @if (Model.DisplayPolicy.BSOInspectorateReport)
                     {
                         <tr>
                             <th scope="row">Inspectorate report:</th>
@@ -547,7 +558,7 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.BSODateOfLastInspectionVisit)
+                    @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
                     {
                         <tr>
                             <th scope="row">Date of Last Inspection Visit:</th>
@@ -555,7 +566,7 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                     }
 
-                    @if (Model.DisplayProfile.BSODateOfNextInspectionVisit)
+                    @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
                     {
                         <tr>
                             <th scope="row">Date of Next Inspection Visit:</th>
@@ -616,7 +627,7 @@ else if (Model.UserHasPendingApprovals)
 
             </div>
             <div id="school-links" class="tab-content">
-                    @if (Model.LinkedEstablishments.Length > 0)
+                    @if (Model.LinkedEstablishments.Any())
                     {
                         <table class="estab-links mi">
                             <thead>
@@ -628,9 +639,8 @@ else if (Model.UserHasPendingApprovals)
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (int i = 0; i < Model.LinkedEstablishments.Length; i++)
+                                @foreach (var l in Model.LinkedEstablishments)
                                 {
-                                    var l = Model.LinkedEstablishments[i];
                                     <tr>
                                         <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
                                         <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
@@ -640,11 +650,10 @@ else if (Model.UserHasPendingApprovals)
                                 }
                             </tbody>
                         </table>
-                    
+
                         <div class="mvo">
-                            @for (int i = 0; i < Model.LinkedEstablishments.Length; i++)
+                            @foreach (var l in Model.LinkedEstablishments)
                             {
-                                var l = Model.LinkedEstablishments[i];
                                 <table class="estab-links">
                                     <tbody>
                                         <tr>
@@ -676,38 +685,38 @@ else if (Model.UserHasPendingApprovals)
                     }
             </div>
 
-            @if (Model.DisplayProfile.LocationDetails)
+            @if (Model.DisplayPolicy.LocationDetails)
             {
                 <div id="school-location" class="tab-content">
                     <table class="borderless">
                         <caption class="visually-hidden">Location information for @Model.Establishment.Name</caption>
                         <tr>
                             <th scope="row">RSC Region:</th>
-                            <td>@Model.Establishment.RSCRegion</td>
+                            <td>@Html.NameFor(x => x.Establishment.RSCRegionId)</td>
                         </tr>
                         <tr>
                             <th scope="row">Government Office Region:</th>
-                            <td>@Model.Establishment.GovernmentOfficeRegion</td>
+                            <td>@Html.NameFor(x => x.Establishment.GovernmentOfficeRegionId)</td>
                         </tr>
                         <tr>
                             <th scope="row">District:</th>
-                            <td>@Model.Establishment.AdministrativeDistrict</td>
+                            <td>@Html.NameFor(x => x.Establishment.AdministrativeDistrictId)</td>
                         </tr>
                         <tr>
                             <th scope="row">Ward:</th>
-                            <td>@Model.Establishment.AdministrativeWard</td>
+                            <td>@Html.NameFor(x => x.Establishment.AdministrativeWardId)</td>
                         </tr>
                         <tr>
                             <th scope="row">Parliamentary Constituency:</th>
-                            <td>@Model.Establishment.ParliamentaryConstituency</td>
+                            <td>@Html.NameFor(x => x.Establishment.ParliamentaryConstituencyId)</td>
                         </tr>
                         <tr>
                             <th scope="row">Urban/Rural Description:</th>
-                            <td>@Model.Establishment.UrbanRural</td>
+                            <td>@Html.NameFor(x => x.Establishment.UrbanRuralId)</td>
                         </tr>
                         <tr>
                             <th scope="row">GSS LA Code:</th>
-                            <td>@Model.Establishment.GSSLA</td>
+                            <td>@Html.NameFor(x => x.Establishment.GSSLAId)</td>
                         </tr>
                         <tr>
                             <th scope="row">Easting:</th>
@@ -719,15 +728,15 @@ else if (Model.UserHasPendingApprovals)
                         </tr>
                         <tr>
                             <th scope="row">Census Ward: </th>
-                            <td>@Model.Establishment.CASWard</td>
+                            <td>@Html.NameFor(x => x.Establishment.CASWardId)</td>
                         </tr>
                         <tr>
                             <th scope="row">Middle Super Output Area (MSOA): </th>
-                            <td>@Model.Establishment.MSOA</td>
+                            <td>@Html.NameFor(x => x.Establishment.MSOAId)</td>
                         </tr>
                         <tr>
                             <th scope="row">Lower Super Output Area (LSOA):</th>
-                            <td>@Model.Establishment.LSOA</td>
+                            <td>@Html.NameFor(x => x.Establishment.LSOAId)</td>
                         </tr>
                     </table>
                 </div>
@@ -737,7 +746,7 @@ else if (Model.UserHasPendingApprovals)
             {
             <div id="school-change-history" class="tab-content approval-data">
                 <h2 class="bold-small" style="margin-bottom:8px;">Change History</h2>
-                @if (Model.ChangeHistory.Length == 0)
+                @if (!Model.ChangeHistory.Any())
                 {
                     <p>There are no change records available at the moment</p>
                 }
@@ -759,7 +768,7 @@ else if (Model.UserHasPendingApprovals)
                             @foreach (var item in Model.ChangeHistory)
                             {
                                 <tr>
-                                    <td>@item.Name</td>
+                                    <td>@item.PropertyName</td>
                                     <td>@item.OldValue</td>
                                     <td>@item.NewValue</td>
                                     <td>@item.EffectiveDateUtc</td>
@@ -777,7 +786,7 @@ else if (Model.UserHasPendingApprovals)
                             <li>
                                 <dl>
                                     <dt>Updated field:</dt>
-                                    <dd>@item.Name</dd>
+                                    <dd>@item.PropertyName</dd>
                                     <dt>Old value:</dt>
                                     <dd>@item.OldValue</dd>
                                     <dt>New value:</dt>
@@ -794,11 +803,7 @@ else if (Model.UserHasPendingApprovals)
                             </li>
                         }
                     </ul>
-
                 }
-
-                
-
             </div>
             }
         </div>

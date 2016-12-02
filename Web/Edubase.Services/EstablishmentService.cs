@@ -197,7 +197,7 @@ namespace Edubase.Services
                     .OrderByDescending(x => x.EffectiveDateUtc)
                     .Select(x => new EstablishmentChangeDto
                     {
-                        Name = x.Name,
+                        PropertyName = x.Name,
                         ApproverUserId = x.ApproverUserId,
                         EffectiveDateUtc = x.EffectiveDateUtc,
                         Id = x.Id,
@@ -214,13 +214,13 @@ namespace Edubase.Services
             var cachedLookupService = new CachedLookupService();
             changes.ForEach(async x =>
             {
-                if (cachedLookupService.IsLookupField(x.Name))
+                if (cachedLookupService.IsLookupField(x.PropertyName))
                 {
                     if (x.OldValue.IsInteger())
-                        x.OldValue = await cachedLookupService.GetNameAsync(x.Name, x.OldValue.ToInteger().Value);
+                        x.OldValue = await cachedLookupService.GetNameAsync(x.PropertyName, x.OldValue.ToInteger().Value);
                     
                     if (x.NewValue.IsInteger())
-                        x.NewValue = await cachedLookupService.GetNameAsync(x.Name, x.NewValue.ToInteger().Value);
+                        x.NewValue = await cachedLookupService.GetNameAsync(x.PropertyName, x.NewValue.ToInteger().Value);
                 }
             });
             return changes;

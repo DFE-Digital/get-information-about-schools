@@ -15,7 +15,7 @@ namespace Edubase.Data.Entity
         public DbSet<Establishment> Establishments { get; set; }
         public DbSet<LocalAuthority> LocalAuthorities { get; set; }
         public DbSet<EstablishmentLink> EstablishmentLinks { get; set; }
-        public DbSet<EstablishmentGroup> EstablishmentTrusts { get; set; }
+        public DbSet<EstablishmentGroup> EstablishmentGroups { get; set; }
         public DbSet<EstablishmentPermission> Permissions { get; set; }
         public DbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
         public DbSet<Governor> Governors { get; set; }

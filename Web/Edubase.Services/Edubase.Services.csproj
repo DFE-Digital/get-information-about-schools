@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -151,6 +155,7 @@
     <Compile Include="Domain\ApprovalItemDto.cs" />
     <Compile Include="Domain\CompanyProfileDto.cs" />
     <Compile Include="Domain\CompanySearchDto.cs" />
+    <Compile Include="Domain\ContactDetailDto.cs" />
     <Compile Include="Domain\DomainException.cs" />
     <Compile Include="Domain\EstablishmentAutoSuggestionDto.cs" />
     <Compile Include="Domain\EstablishmentChangeDto.cs" />
@@ -158,7 +163,8 @@
     <Compile Include="Domain\LogMessagesDto.cs" />
     <Compile Include="Domain\LookupDto.cs" />
     <Compile Include="Domain\PagedResultDto.cs" />
-    <Compile Include="Domain\SecurityDto.cs" />
+    <Compile Include="Domain\ChangeDescriptor.cs" />
+    <Compile Include="Domain\PersonDto.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="Enums\eLocalAuthority.cs" />
     <Compile Include="Enums\eLookupAccommodationChanged.cs" />
@@ -210,14 +216,34 @@
     <Compile Include="Enums\eLookupTypeOfResourcedProvision.cs" />
     <Compile Include="Enums\eLookupUrbanRural.cs" />
     <Compile Include="EstablishmentService.cs" />
+    <Compile Include="Establishments\DisplayPolicies\AcademyDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\BSODisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\ChildrensCentresDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\DisplayPolicyFactory.cs" />
+    <Compile Include="Establishments\DisplayPolicies\EstablishmentDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\FEHEDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\IndependentNMSSDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\LAMaintainedDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\OtherDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\PRUDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\SpecialPost16InstitutionDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\WelshDisplayPolicy.cs" />
     <Compile Include="Establishments\EstablishmentReadService.cs" />
     <Compile Include="Establishments\EstablishmentWriteService.cs" />
+    <Compile Include="Establishments\IEstablishmentReadService.cs" />
+    <Compile Include="Establishments\Models\EstablishmentAddressModel.cs" />
+    <Compile Include="Establishments\Models\EstablishmentModel.cs" />
+    <Compile Include="Establishments\Models\LinkedEstablishmentModel.cs" />
     <Compile Include="Exceptions\EdubaseException.cs" />
     <Compile Include="Exceptions\EduSecurityException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Exceptions\PermissionDeniedException.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GovernorService.cs" />
+    <Compile Include="Groups\GroupReadService.cs" />
+    <Compile Include="Groups\IGroupReadService.cs" />
+    <Compile Include="Groups\Models\GroupModel.cs" />
+    <Compile Include="ICachedLookupService.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearchEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorageEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\RedisEndPoint.cs" />
@@ -226,6 +252,7 @@
     <Compile Include="IntegrationEndPoints\TableStorageEndPoint.cs" />
     <Compile Include="Lucene\EstablishmentIndexConfig.cs" />
     <Compile Include="Lucene\EstablishmentsIndex.cs" />
+    <Compile Include="Mapping\AutoMapperConfiguration.cs" />
     <Compile Include="MessageLoggingService.cs" />
     <Compile Include="LookupService.cs" />
     <Compile Include="LogMessageReadService.cs" />

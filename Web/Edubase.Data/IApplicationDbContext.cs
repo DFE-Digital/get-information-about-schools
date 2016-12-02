@@ -12,7 +12,7 @@ namespace Edubase.Data.Entity
         DbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; }
         DbSet<EstablishmentLink> EstablishmentLinks { get; set; }
         DbSet<Establishment> Establishments { get; set; }
-        DbSet<EstablishmentGroup> EstablishmentTrusts { get; set; }
+        DbSet<EstablishmentGroup> EstablishmentGroups { get; set; }
         DbSet<Governor> Governors { get; set; }
         DbSet<GroupCollection> Groups { get; set; }
         DbSet<LocalAuthority> LocalAuthorities { get; set; }

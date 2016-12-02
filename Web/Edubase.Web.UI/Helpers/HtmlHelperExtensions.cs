@@ -227,7 +227,28 @@ namespace Edubase.Web.UI.Helpers
                 Value = x.Id.ToString()
             }));
         }
-        
+
+        /// <summary>
+        /// Gets the name of the item associated with a Lookup item id
+        /// </summary>
+        /// <typeparam name="EstablishmentDetailViewModel"></typeparam>
+        /// <param name="htmlHelper"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static IHtmlString NameFor<EstablishmentDetailViewModel>(this HtmlHelper<EstablishmentDetailViewModel> htmlHelper,
+            Expression<Func<EstablishmentDetailViewModel, int?>> expression)
+        {
+            var expressionText = ExpressionHelper.GetExpressionText(expression).Split('.').Last();
+            var id = expression.Compile()(htmlHelper.ViewData.Model);
+            if (_lookup.IsLookupField(expressionText))
+            {
+                if (id.HasValue) return new MvcHtmlString(_lookup.GetName(expressionText, id.Value));
+                else return MvcHtmlString.Empty;
+            }
+            else return new MvcHtmlString("__LOOKUP_NOT_RECOGNISED__");
+        }
+
+
         public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 
             new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
 

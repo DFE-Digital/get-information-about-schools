@@ -1,9 +1,9 @@
-﻿using Edubase.Services.Enums;
-using Edubase.Web.UI.Helpers;
+﻿using Edubase.Common;
+using Edubase.Services.Enums;
 
-namespace Edubase.Web.UI.Models.DisplayProfiles
+namespace Edubase.Services.Establishments.DisplayPolicies
 {
-    public class AcademyDisplayProfile : EstablishmentDisplayProfile
+    public class AcademyDisplayPolicy : EstablishmentDisplayPolicy
     {
         protected override bool IsMatchInternal(eLookupEstablishmentType type, eLookupEstablishmentTypeGroup typeGroup)
         {

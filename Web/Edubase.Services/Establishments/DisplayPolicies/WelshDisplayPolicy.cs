@@ -1,9 +1,8 @@
 ﻿using Edubase.Services.Enums;
-using Edubase.Web.UI.Helpers;
 
-namespace Edubase.Web.UI.Models.DisplayProfiles
+namespace Edubase.Services.Establishments.DisplayPolicies
 {
-    public class WelshDisplayProfile : EstablishmentDisplayProfile
+    public class WelshDisplayPolicy : EstablishmentDisplayPolicy
     {
         protected override bool IsMatchInternal(eLookupEstablishmentType type, eLookupEstablishmentTypeGroup typeGroup)
             => typeGroup == eLookupEstablishmentTypeGroup.WelshSchools && type == eLookupEstablishmentType.WelshEstablishment;

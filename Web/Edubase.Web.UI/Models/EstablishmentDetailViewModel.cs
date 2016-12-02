@@ -5,8 +5,10 @@ using System.Linq;
 using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
-using Edubase.Web.UI.Models.DisplayProfiles;
 using System.Security.Principal;
+using Edubase.Services.Groups.Models;
+using Edubase.Services.Establishments.DisplayPolicies;
+using Edubase.Services.Establishments.Models;
 
 namespace Edubase.Web.UI.Models
 {
@@ -22,9 +24,7 @@ namespace Edubase.Web.UI.Models
             [(int)eLookupGroupType.Federation] = "Federation"
         };
 
-        private Lazy<EstablishmentDisplayProfile> _displayProfile = null;
-
-        public EstablishmentDisplayProfile DisplayProfile => _displayProfile.Value;
+        public EstablishmentDisplayPolicy DisplayPolicy { get; set; }
 
         public enum GovRole
         {
@@ -39,13 +39,13 @@ namespace Edubase.Web.UI.Models
             Trustee
         }
 
-        public Establishment Establishment { get; set; }
+        public EstablishmentModel Establishment { get; set; }
 
-        public GroupCollection Group { get; set; }
+        public GroupModel Group { get; set; }
 
-        public EstablishmentChangeDto[] ChangeHistory { get; set; }
+        public IEnumerable<EstablishmentChangeDto> ChangeHistory { get; set; }
 
-        public LinkedEstabViewModel[] LinkedEstablishments { get; set; }
+        public IEnumerable<LinkedEstabViewModel> LinkedEstablishments { get; set; }
 
         public List<PendingChangeViewModel> PendingChanges { get; set; } = new List<PendingChangeViewModel>();
         public bool ShowPendingMessage { get; set; }
@@ -59,15 +59,14 @@ namespace Edubase.Web.UI.Models
 
         public IEnumerable<Governor> Governors { get; set; }
         public IEnumerable<Governor> HistoricalGovernors { get; set; }
-
-
+        
         public string GroupFieldLabel => Group != null ? _groupType2FieldLabelMappings.Get(Group.GroupTypeId.GetValueOrDefault()) : string.Empty;
 
         public bool IsClosed => Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
 
-        public EstablishmentDetailViewModel(IPrincipal user)
+        public EstablishmentDetailViewModel()
         {
-            _displayProfile = new Lazy<EstablishmentDisplayProfile>(() => new DisplayProfileFactory().Get(user, Establishment, Group));
+
         }
 
         public string OfstedRatingReportUrl => (Establishment.OfstedRating.HasValue ? $"http://www.ofsted.gov.uk/oxedu_providers/full/(urn)/{Establishment.Urn}" : null as string);

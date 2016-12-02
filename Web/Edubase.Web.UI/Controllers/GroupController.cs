@@ -63,11 +63,11 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.OpenDate = new DateTimeViewModel(company.OpenDate);
                 viewModel.CompaniesHouseNumber = company.CompaniesHouseNumber;
 
-                viewModel.Establishments = (await dc.EstablishmentTrusts
+                viewModel.Establishments = (await dc.EstablishmentGroups
                     .Include(x => x.Establishment)
                     .Include(x => x.Establishment.EstablishmentType)
                     .Include(x => x.Establishment.HeadTitle)
-                    .Where(x => x.Trust.GroupUID == company.GroupUID)
+                    .Where(x => x.Group.GroupUID == company.GroupUID)
                     .Select(x => x.Establishment)
                     .ToArrayAsync())
                     .Select(x => new GroupEstabViewModel(x)).ToList();
@@ -121,7 +121,7 @@ namespace Edubase.Web.UI.Controllers
                         company.GroupTypeId = viewModel.TypeId;
                         company.CompaniesHouseNumber = viewModel.CompaniesHouseNumber.Clean();
                         
-                        var links = dc.EstablishmentTrusts.Where(x => x.TrustGroupUID == viewModel.GroupUID).ToList();
+                        var links = dc.EstablishmentGroups.Where(x => x.TrustGroupUID == viewModel.GroupUID).ToList();
                         var urnsInDb = links.Select(x => x.EstablishmentUrn).Cast<int?>().ToArray();
                         var urnsInModel = viewModel.Establishments.Select(x => x.Urn).Cast<int?>().ToArray();
                         
@@ -145,13 +145,13 @@ namespace Edubase.Web.UI.Controllers
                                 EstablishmentUrn = urn,
                                 JoinedDate = DateTime.UtcNow
                             };
-                            dc.EstablishmentTrusts.Add(link);
+                            dc.EstablishmentGroups.Add(link);
                         }
 
                         foreach (var urn in urnsToRemove.Cast<int>())
                         {
                             var o = links.FirstOrDefault(x => x.EstablishmentUrn == urn);
-                            if (o != null) dc.EstablishmentTrusts.Remove(o);
+                            if (o != null) dc.EstablishmentGroups.Remove(o);
                         }
                         
                         await dc.SaveChangesAsync();
@@ -170,10 +170,10 @@ namespace Edubase.Web.UI.Controllers
             using (var dc = new ApplicationDbContext())
             {
                 var mat = dc.Groups.Include(x => x.GroupType).FirstOrDefault(x => x.GroupUID == id);
-                var estabs = dc.EstablishmentTrusts.Include(x => x.Establishment)
+                var estabs = dc.EstablishmentGroups.Include(x => x.Establishment)
                     .Include(x => x.Establishment.EstablishmentType)
                     .Include(x => x.Establishment.HeadTitle)
-                    .Where(x => x.Trust.GroupUID == id).ToList();
+                    .Where(x => x.Group.GroupUID == id).ToList();
 
                 LookupDto la = null;
                 if(mat.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresCollaboration, eLookupGroupType.ChildrensCentresGroup))

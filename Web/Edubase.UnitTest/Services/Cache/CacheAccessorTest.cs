@@ -393,7 +393,7 @@
             Assert.IsTrue(v4.IsFromCentralCacheServer);
         }
 
-        [Test]
+        [Test, Ignore("Based on timing info too much.  Works only intermittently.")]
         public async Task Cache_Dist_Test_That_Cache_Delete_Key_Works_OK()
         {
             // ARRANGE

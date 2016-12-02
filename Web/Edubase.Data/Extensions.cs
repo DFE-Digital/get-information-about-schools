@@ -14,6 +14,11 @@ namespace Edubase.Data
 
         public static DbGeography ToDBGeography(this LatLon coord) 
             => coord != null ? DbGeography.PointFromText(string.Format("POINT({0} {1})", coord.Longitude, coord.Latitude), 4326) : null;
+
+        public static LatLon ToLatLon(this DbGeography geo) 
+            => geo != null && geo.Latitude.HasValue && geo.Longitude.HasValue 
+            ? new LatLon(geo.Latitude.Value, geo.Longitude.Value) 
+            : null as LatLon;
     }
     
 }

@@ -1,4 +1,5 @@
 ﻿using Edubase.Data.Entity;
+using Edubase.Services.Establishments.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ namespace Edubase.Web.UI.Models
 {
     public class LinkedEstabViewModel
     {
+        private EstablishmentLink x;
+
         public int? Id { get; set; }
         public int? Urn { get; set; }
         public string Type { get; set; }
@@ -19,13 +22,22 @@ namespace Edubase.Web.UI.Models
 
         }
 
+        public LinkedEstabViewModel(LinkedEstablishmentModel link)
+        {
+            Id = link.Id;
+            Urn = link.Urn;
+            Type = link.Type;
+            LinkDate = link.LinkDate;
+            Name = link.Name;
+        }
+
         public LinkedEstabViewModel(EstablishmentLink link)
         {
             Id = link.Id;
-            Urn = link.LinkedEstablishmentUrn;
+            Urn = link.EstablishmentUrn;
             Type = link.LinkType?.Name;
             LinkDate = link.LinkEstablishedDate;
-            Name = link.LinkedEstablishment.Name;
+            Name = link.LinkName;
         }
     }
 }

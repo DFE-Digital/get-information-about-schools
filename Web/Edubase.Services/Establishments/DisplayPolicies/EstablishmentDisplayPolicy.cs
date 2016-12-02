@@ -1,14 +1,16 @@
 ﻿using Edubase.Data.Entity;
 using Edubase.Services.Enums;
+using Edubase.Services.Establishments.Models;
+using Edubase.Services.Groups.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
 
-namespace Edubase.Web.UI.Models.DisplayProfiles
+namespace Edubase.Services.Establishments.DisplayPolicies
 {
-    public abstract class EstablishmentDisplayProfile
+    public abstract class EstablishmentDisplayPolicy
     {
         public bool HeadteacherDetails { get; set; }
         public bool AgeRange { get; set; }
@@ -80,18 +82,18 @@ namespace Edubase.Web.UI.Models.DisplayProfiles
         //public bool MSOA { get; set; }
         //public bool LSOA { get; set; }
 
-        protected Establishment Establishment { get; private set; }
+        protected EstablishmentModel Establishment { get; private set; }
 
-        protected GroupCollection Group { get; private set; }
+        protected GroupModel Group { get; private set; }
         protected IPrincipal Principal { get; private set; }
         
 
-        internal bool IsMatch(Establishment establishment)
+        internal bool IsMatch(EstablishmentModel establishment)
             => establishment.TypeId.HasValue 
             && establishment.EstablishmentTypeGroupId.HasValue 
             && IsMatchInternal((eLookupEstablishmentType)establishment.TypeId, (eLookupEstablishmentTypeGroup)establishment.EstablishmentTypeGroupId);
 
-        internal EstablishmentDisplayProfile Configure(IPrincipal principal, Establishment establishment, GroupCollection group)
+        internal EstablishmentDisplayPolicy Configure(IPrincipal principal, EstablishmentModel establishment, GroupModel group)
         {
             Establishment = establishment;
             Group = group;

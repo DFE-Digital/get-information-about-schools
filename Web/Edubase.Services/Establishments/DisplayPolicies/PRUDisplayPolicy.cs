@@ -1,9 +1,8 @@
 ﻿using Edubase.Services.Enums;
-using Edubase.Web.UI.Helpers;
 
-namespace Edubase.Web.UI.Models.DisplayProfiles
+namespace Edubase.Services.Establishments.DisplayPolicies
 {
-    public class PRUDisplayProfile : EstablishmentDisplayProfile
+    public class PRUDisplayPolicy : EstablishmentDisplayPolicy
     {
         protected override bool IsMatchInternal(eLookupEstablishmentType type, eLookupEstablishmentTypeGroup typeGroup)
             => typeGroup == eLookupEstablishmentTypeGroup.LAMaintainedSchools && type == eLookupEstablishmentType.PupilReferralUnit;

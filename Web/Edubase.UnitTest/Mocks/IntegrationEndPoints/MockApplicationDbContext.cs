@@ -14,7 +14,7 @@ namespace Edubase.UnitTest.Mocks.IntegrationEndPoints
         public DbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; } = new MockDbSet<EstablishmentChangeHistory>();
         public DbSet<EstablishmentLink> EstablishmentLinks { get; set; } = new MockDbSet<EstablishmentLink>();
         public DbSet<Establishment> Establishments { get; set; } = new MockDbSet<Establishment>();
-        public DbSet<EstablishmentGroup> EstablishmentTrusts { get; set; } = new MockDbSet<EstablishmentGroup>();
+        public DbSet<EstablishmentGroup> EstablishmentGroups { get; set; } = new MockDbSet<EstablishmentGroup>();
         public DbSet<Governor> Governors { get; set; } = new MockDbSet<Governor>();
         public DbSet<GroupCollection> Groups { get; set; } = new MockDbSet<GroupCollection>();
         public DbSet<LocalAuthority> LocalAuthorities { get; set; } = new MockDbSet<LocalAuthority>();
@@ -71,8 +71,8 @@ namespace Edubase.UnitTest.Mocks.IntegrationEndPoints
         public DbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; } = new MockDbSet<LookupTypeOfResourcedProvision>();
         public DbSet<LookupUrbanRural> LookupUrbanRural { get; set; } = new MockDbSet<LookupUrbanRural>();
         public DbSet<EstablishmentPermission> Permissions { get; set; } = new MockDbSet<EstablishmentPermission>();
-        public DbSet<IdentityRole> Roles { get; set; } = new MockDbSet<IdentityRole>();
-        public DbSet<ApplicationUser> Users { get; set; } = new MockDbSet<ApplicationUser>();
+        public IDbSet<IdentityRole> Roles { get; set; } = new MockDbSet<IdentityRole>();
+        public IDbSet<ApplicationUser> Users { get; set; } = new MockDbSet<ApplicationUser>();
 
         public int SaveChangesCalledCount { get; set; }
 

@@ -272,18 +272,6 @@
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateTrustModel.cs" />
     <Compile Include="Models\CreateEditTrustModel.cs" />
-    <Compile Include="Models\DisplayProfiles\ChildrensCentresDisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\OtherDisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\SpecialPost16InstitutionDisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\WelshDisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\PRUDisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\FEHEDisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\BSODisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\IndependentNMSSDisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\LAMaintainedDisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\AcademyDisplayProfile.cs" />
-    <Compile Include="Models\DisplayProfiles\DisplayProfileFactory.cs" />
-    <Compile Include="Models\DisplayProfiles\EstablishmentDisplayProfile.cs" />
     <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Models\SearchCompaniesHouseModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
@@ -757,7 +745,6 @@
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\Governors\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
   </ItemGroup>

@@ -2,13 +2,11 @@
 
 namespace Edubase.Services.Domain
 {
-    public class EstablishmentChangeDto
+    public class EstablishmentChangeDto : ChangeDescriptorDto
     {
         public int Id { get; set; }
         public int Urn { get; set; }
-        public string Name { get; set; }
-        public string NewValue { get; set; }
-        public string OldValue { get; set; }
+        
         public string OriginatorUserId { get; set; }
         public string OriginatorUserName { get; set; }
         public string ApproverUserName { get; set; }

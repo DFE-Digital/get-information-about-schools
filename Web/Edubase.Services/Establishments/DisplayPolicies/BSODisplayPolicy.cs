@@ -1,17 +1,12 @@
 ﻿using Edubase.Services.Enums;
-using Edubase.Web.UI.Helpers;
 
-namespace Edubase.Web.UI.Models.DisplayProfiles
+namespace Edubase.Services.Establishments.DisplayPolicies
 {
-    public class FEHEDisplayProfile : EstablishmentDisplayProfile
+    public class BSODisplayPolicy : EstablishmentDisplayPolicy
     {
         protected override bool IsMatchInternal(eLookupEstablishmentType type, eLookupEstablishmentTypeGroup typeGroup)
-        {
-            return typeGroup.OneOfThese(eLookupEstablishmentTypeGroup.Colleges, eLookupEstablishmentTypeGroup.Universities)
-            &&
-            type.OneOfThese(eLookupEstablishmentType.FurtherEducation, eLookupEstablishmentType.HigherEducationInstitutions);
-        }
-
+            => typeGroup == eLookupEstablishmentTypeGroup.OtherTypes && type == eLookupEstablishmentType.BritishSchoolsOverseas;
+        
         protected override void ConfigureInternal()
         {
             var isUserLoggedIn = Principal.Identity.IsAuthenticated;
@@ -20,13 +15,15 @@ namespace Edubase.Web.UI.Models.DisplayProfiles
             HeadteacherDetails = true;
             AgeRange = true;
             GenderOfEntry = true;
+            LAESTAB = true;
             WebsiteAddress = true;
-            CloseDate = isSchoolClosed;
-            ReasonEstablishmentClosed = isSchoolClosed;
+            CloseDate = true;
+            ReasonEstablishmentClosed = true;
             MainEmailAddress = isUserLoggedIn;
             AlternativeEmailAddress = MainEmailAddress;
             LastChangedDate = isUserLoggedIn;
-            FurtherEducationType = true;
+            BSODateOfLastInspectionVisit = BSODateOfNextInspectionVisit = BSOInspectorate = BSOInspectorateReport = true;
+            LocationDetails = false;
         }
     }
 }
