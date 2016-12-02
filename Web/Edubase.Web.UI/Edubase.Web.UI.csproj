@@ -78,6 +78,14 @@
       <HintPath>..\packages\FluentValidation.MVC5.6.2.1.0\lib\Net45\FluentValidation.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Kentor.AuthServices, Version=0.19.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kentor.AuthServices.0.19.0\lib\net45\Kentor.AuthServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Kentor.AuthServices.Owin, Version=0.19.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kentor.AuthServices.Owin.0.19.0\lib\net45\Kentor.AuthServices.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
@@ -250,11 +258,11 @@
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\IRedirectAfterLoginHelper.cs" />
     <Compile Include="Helpers\JsonCamelCaseResult.cs" />
+    <Compile Include="Helpers\LangExt.cs" />
     <Compile Include="Helpers\ModelBinding\AliasedPropertyDescriptor.cs" />
     <Compile Include="Helpers\ModelBinding\BindAliasAttribute.cs" />
     <Compile Include="Helpers\ModelBinding\DefaultModelBinderEx.cs" />
     <Compile Include="Helpers\RedirectAfterLoginHelper.cs" />
-    <Compile Include="Helpers\SchoolDetailsHelpers.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
     <Compile Include="Identity\Constants.cs" />
     <Compile Include="Identity\ISchoolPermissions.cs" />
@@ -271,6 +279,18 @@
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateTrustModel.cs" />
     <Compile Include="Models\CreateEditTrustModel.cs" />
+    <Compile Include="Models\DisplayProfiles\ChildrensCentresDisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\OtherDisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\SpecialPost16InstitutionDisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\WelshDisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\PRUDisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\FEHEDisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\BSODisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\IndependentNMSSDisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\LAMaintainedDisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\AcademyDisplayProfile.cs" />
+    <Compile Include="Models\DisplayProfiles\DisplayProfileFactory.cs" />
+    <Compile Include="Models\DisplayProfiles\EstablishmentDisplayProfile.cs" />
     <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Models\SearchCompaniesHouseModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
@@ -290,6 +310,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\IRequestContext.cs" />
     <Compile Include="Utils\RequestContextWrapper.cs" />
+    <Compile Include="ValueConverters\Governor2StringValueConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Scripts\analytics.js" />
@@ -663,6 +684,8 @@
     <Content Include="Areas\Governors\Views\Search\Results.cshtml" />
     <Content Include="Assets\Sass\views\_search-page.scss" />
     <Content Include="Assets\Sass\views\_view-logs.scss" />
+    <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
+    <Content Include="App_Data\Kentor.AuthServices.Tests.pfx" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -720,6 +743,9 @@
     <Content Include="Views\Establishment\Create.cshtml" />
     <Content Include="Views\Admin\Logs.cshtml" />
     <Content Include="Views\Admin\LogDetail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Shared\Secure.cshtml" />
+    <Content Include="Views\Admin\PersonaBuilder.cshtml" />
     <None Include="Views\Schools\Details.cshtml" />
     <None Include="Views\Schools\Index.cshtml" />
     <Content Include="Views\Search\Advanced.cshtml" />
@@ -738,10 +764,11 @@
     <Content Include="Views\Trust\Create.cshtml" />
     <Content Include="Views\Shared\_ResultsPagination3.cshtml" />
     <Content Include="Views\Shared\_ResultsPaginationAdvSearch.cshtml" />
+    <Content Include="Views\Shared\_Governors.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="Models\Governors\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
   </ItemGroup>

@@ -69,7 +69,7 @@ namespace Edubase.Import
         }
         
         public static int? Id<T>(this IEnumerable<T> items, string code)
-            where T : LookupDto => items.FirstOrDefault(x => x.Code == code || x.CodeAsInt == code.ToInteger())?.Id;
+            where T : LookupDto => items.FirstOrDefault(x => x.Code == Program.ProcessCode(code))?.Id;
 
         public static int? IdFromName<T>(this IEnumerable<T> items, string name)
             where T : LookupDto => items.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase) )?.Id;
@@ -87,7 +87,14 @@ namespace Edubase.Import
             var propInfo = type.GetProperty(propertyName);
             return propInfo?.GetValue(item, null);
         }
-        
+
+        public static string AsEnumName(this string text)
+        {
+            var retVal = text.CleanOfNonChars(true).ToTitleCase().Replace(" ", "");
+            if (retVal.IsInteger()) retVal = "v_" + retVal;
+            if (char.IsNumber(retVal[0])) retVal = "_" + retVal;
+            return retVal;
+        }
 
     }
 

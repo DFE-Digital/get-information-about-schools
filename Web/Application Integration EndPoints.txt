@@ -1,0 +1,6 @@
+SMTP
+SQL Server
+Azure Service Bus
+Redis cache
+Azure Blob Storage
+Azure Table Storage

@@ -9,6 +9,9 @@ using System;
 using Edubase.Services;
 using Edubase.Services.Domain;
 using System.Security.Claims;
+using Edubase.Web.UI.Helpers;
+using Edubase.Services.Enums;
+
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -16,7 +19,7 @@ namespace Edubase.Web.UI.Controllers
     {
         private const string VIEWNAME = "CreateEdit";
         
-        [Authorize(Roles = "Admin,Academy")]
+        [Authorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
             if (!viewModel.SearchText.IsNullOrEmpty())
@@ -29,14 +32,14 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, Authorize(Roles = "Admin,Academy")]
+        [HttpGet, Authorize]
         public async Task<ActionResult> Create(string id)
         {
             var companyProfile = await new TrustService().SearchByCompaniesHouseNumber(id);
             return View("Create", new CreateTrustModel(companyProfile.Items.First()));
         }
         
-        [HttpPost, Authorize(Roles = "Admin,Academy")]
+        [HttpPost, Authorize]
         public async Task<ActionResult> Create(CreateTrustModel viewModel)
         {
             if (ModelState.IsValid)
@@ -47,13 +50,13 @@ namespace Edubase.Web.UI.Controllers
             else return View(viewModel);
         }
 
-        [HttpGet, Authorize(Roles = "Admin,Academy")]
+        [HttpGet, Authorize]
         public async Task<ActionResult> Edit(int id)
         {
             var viewModel = new CreateEditTrustModel();
             using (var dc = new ApplicationDbContext())
             {
-                var company = await dc.Trusts.FirstOrDefaultAsync(x => x.GroupUID == id);
+                var company = await dc.Groups.FirstOrDefaultAsync(x => x.GroupUID == id);
                 viewModel.GroupUID = company.GroupUID;
                 viewModel.Name = company.Name;
                 viewModel.TypeId = company.GroupTypeId;
@@ -72,7 +75,7 @@ namespace Edubase.Web.UI.Controllers
             return View(VIEWNAME, viewModel);
         }
 
-        [HttpPost, Authorize(Roles = "Admin,Academy")]
+        [HttpPost, Authorize]
         public async Task<ActionResult> Edit(CreateEditTrustModel viewModel)
         {
             if (viewModel.Action == "Search")
@@ -112,7 +115,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     using (var dc = new ApplicationDbContext())
                     {
-                        var company = await dc.Trusts.SingleAsync(x => x.GroupUID == viewModel.GroupUID.Value);
+                        var company = await dc.Groups.SingleAsync(x => x.GroupUID == viewModel.GroupUID.Value);
                         company.Name = viewModel.Name;
                         company.OpenDate = viewModel.OpenDate.ToDateTime();
                         company.GroupTypeId = viewModel.TypeId;
@@ -136,7 +139,7 @@ namespace Edubase.Web.UI.Controllers
 
                         foreach (var urn in urnsToAdd.Cast<int>())
                         {
-                            var link = new EstablishmentTrust
+                            var link = new EstablishmentGroup
                             {
                                 TrustGroupUID = company.GroupUID,
                                 EstablishmentUrn = urn,
@@ -162,16 +165,31 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
             using (var dc = new ApplicationDbContext())
             {
-                var mat = dc.Trusts.Include(x => x.GroupType).FirstOrDefault(x => x.GroupUID == id);
+                var mat = dc.Groups.Include(x => x.GroupType).FirstOrDefault(x => x.GroupUID == id);
                 var estabs = dc.EstablishmentTrusts.Include(x => x.Establishment)
                     .Include(x => x.Establishment.EstablishmentType)
                     .Include(x => x.Establishment.HeadTitle)
                     .Where(x => x.Trust.GroupUID == id).ToList();
-                return View(new MATDetailViewModel(estabs, mat, User.Identity.IsAuthenticated));
+
+                LookupDto la = null;
+                if(mat.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresCollaboration, eLookupGroupType.ChildrensCentresGroup))
+                {
+                    la = (await new CachedLookupService().LocalAuthorityGetAllAsync()).First(x => x.Id == estabs.First().Establishment.LocalAuthorityId);
+                }
+
+                var gsvc = new GovernorService();
+                var historicGovernors = await gsvc.GetHistoricalByGroupUID(id);
+                var currentGovernors = await gsvc.GetCurrentByGroupUID(id);
+
+                return View(new MATDetailViewModel(estabs, mat, User.Identity.IsAuthenticated, la)
+                {
+                    HistoricalGovernors = historicGovernors,
+                    Governors = currentGovernors
+                });
             }
         }
 

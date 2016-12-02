@@ -10,11 +10,11 @@ namespace Edubase.Data.Entity
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public IDbSet<Trust> Trusts { get; set; }
+        public IDbSet<GroupCollection> Groups { get; set; }
         public IDbSet<Establishment> Establishments { get; set; }
         public IDbSet<LocalAuthority> LocalAuthorities { get; set; }
         public IDbSet<EstablishmentLink> EstablishmentLinks { get; set; }
-        public IDbSet<EstablishmentTrust> EstablishmentTrusts { get; set; }
+        public IDbSet<EstablishmentGroup> EstablishmentTrusts { get; set; }
         public IDbSet<EstablishmentPermission> Permissions { get; set; }
         public IDbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
         public IDbSet<Governor> Governors { get; set; }
@@ -63,6 +63,18 @@ namespace Edubase.Data.Entity
         public IDbSet<LookupTeenageMothersProvision> LookupTeenageMothersProvisions { get; set; }
         public IDbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; }
         public IDbSet<LookupEstablishmentLinkType> LookupEstablishmentLinkTypes { get; set; }
+        public IDbSet<LookupEstablishmentTypeGroup> LookupEstablishmentTypeGroups { get; set; }
+        public IDbSet<LookupGovernmentOfficeRegion> LookupGovernmentOfficeRegions { get; set; }
+        public IDbSet<LookupDistrictAdministrative> LookupAdministrativeDistricts { get; set; }
+        public IDbSet<LookupAdministrativeWard> LookupAdministrativeWards { get; set; }
+        public IDbSet<LookupParliamentaryConstituency> LookupParliamentaryConstituencies { get; set; }
+        public IDbSet<LookupUrbanRural> LookupUrbanRural { get; set; }
+        public IDbSet<LookupGSSLA> LookupGSSLA { get; set; }
+        public IDbSet<LookupCASWard> LookupCASWards { get; set; }
+
+        public IDbSet<LookupMSOA> LookupMSOAs { get; set; }
+        public IDbSet<LookupLSOA> LookupLSOAs { get; set; }
+        public IDbSet<LookupGroupStatus> LookupGroupStatuses { get; set; }
 
         #endregion
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Linq;
+using MoreLinq;
+using System.Text;
 
 namespace Edubase.Common
 {
@@ -25,6 +27,13 @@ namespace Edubase.Common
         {
             if (data == null || string.IsNullOrWhiteSpace(data)) return null;
             data = data.Replace(stringToRemove, string.Empty);
+            return data;
+        }
+
+        public static string RemoveSubstrings(this string data, params string[] stringsToRemove)
+        {
+            if (data == null || string.IsNullOrWhiteSpace(data)) return null;
+            stringsToRemove.ForEach(x => data = data.Replace(x, string.Empty));
             return data;
         }
 
@@ -184,6 +193,29 @@ namespace Edubase.Common
         }
 
         public static Type GetUnderlyingType(this Type type) => (type.IsNullable()) ? Nullable.GetUnderlyingType(type) : type;
+
+
+        /// <summary>
+        /// Returns a string safe to use as a filename
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string CleanOfNonChars(this string text, bool allowSpaces = false)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return null;
+            var sb = new StringBuilder();
+            foreach (var c in text)
+                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || (allowSpaces && c == ' ')) sb.Append(c);
+            return sb.ToString();
+        }
+
+
+        public static TSource FirstOrThrow<TSource>(this IEnumerable<TSource> source, Func<Exception> exceptionFactory)
+        {
+            var item = source.FirstOrDefault();
+            if (item == null) throw exceptionFactory();
+            return item;
+        }
 
     }
 }

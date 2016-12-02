@@ -38,12 +38,12 @@
     '../node_modules/govuk_frontend_toolkit/javascripts/*.js',
     '../node_modules/govuk_frontend_toolkit/javascripts/govuk/*.js',
     '../node_modules/govuk_frontend_toolkit/javascripts/govuk/analytics/*.js',
-    '../Server/Assets/Scripts/*.js',
-    '../Server/Assets/Scripts/Behaviours/Collapsible/*.js',
-    '../Server/Assets/Scripts/Behaviours/Accordion/*.js',
-    '../Server/Assets/Scripts/Behaviours/PartialRequest/*.js',
-    '../Server/Assets/Scripts/Elements/**/*.js',
-    '../Server/Assets/Scripts/Views/**/*.js',
+    '../Assets/Scripts/*.js',
+    // '../Server/Assets/Scripts/Behaviours/Collapsible/*.js',
+    // '../Server/Assets/Scripts/Behaviours/Accordion/*.js',
+    // '../Server/Assets/Scripts/Behaviours/PartialRequest/*.js',
+    '../Assets/Scripts/Elements/**/*.js',
+    '../Assets/Scripts/Views/**/*.js',
       // tests
       'unit/**/*.js'
     ],

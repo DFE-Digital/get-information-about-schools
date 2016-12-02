@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Edubase.Data.Entity
 {
-    public class EstablishmentTrust : EdubaseEntity
+    public class EstablishmentGroup : EdubaseEntity
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -17,7 +17,7 @@ namespace Edubase.Data.Entity
         [ForeignKey("Establishment")]
         public int EstablishmentUrn { get; set; }
 
-        public Trust Trust { get; set; }
+        public GroupCollection Trust { get; set; }
 
         public DateTime? JoinedDate { get; set; }
     }

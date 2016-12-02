@@ -5,6 +5,7 @@ using Edubase.Services.Lucene;
 using Edubase.Web.UI.Helpers;
 using Newtonsoft.Json;
 using System.IO;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -16,8 +17,8 @@ namespace Edubase.Web.UI.Controllers
         {
             var model = new Models.HomepageViewModel();
             model.AllowApprovals = User.Identity.IsAuthenticated;
-            model.AllowSchoolCreation = User.IsInRole(Roles.Admin) || User.IsInRole(Roles.LA);
-            model.AllowTrustCreation = User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Academy);
+            model.AllowSchoolCreation = User.Identity.IsAuthenticated;
+            model.AllowTrustCreation = User.Identity.IsAuthenticated;
             return View(model);
         }
 
@@ -61,6 +62,12 @@ namespace Edubase.Web.UI.Controllers
             return Content(log.ToString(), "text/plain");
         }
 
+        [Authorize]
+        public ActionResult Secure()
+        {
+            var identity = System.Web.HttpContext.Current.User.Identity as ClaimsIdentity;
+            return View(identity.Claims);
+        }
 
 
         public async Task FlushErrors() => await MessageLoggingService.Instance.FlushAsync();

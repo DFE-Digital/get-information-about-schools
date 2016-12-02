@@ -1,5 +1,5 @@
 ﻿using Edubase.Data.Entity;
-using Edubase.Data.Entity.Lookups;
+using Edubase.Services.Enums;
 using Edubase.Services.Domain;
 using System;
 using System.Collections.Generic;
@@ -101,7 +101,36 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> TypeOfResourcedProvisionsGetAll() => DataContext.LookupTypeOfResourcedProvisions.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> EstablishmentLinkTypesGetAllAsync() => (await DataContext.LookupEstablishmentLinkTypes.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll() => DataContext.LookupEstablishmentLinkTypes.ToArray().Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> EstablishmentGroupTypesGetAllAsync() => (await DataContext.LookupEstablishmentTypeGroups.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> EstablishmentGroupTypesGetAll() => DataContext.LookupEstablishmentTypeGroups.ToArray().Select(x => new LookupDto(x));
 
+        public async Task<IEnumerable<LookupDto>> GovernmentOfficeRegionsGetAllAsync() => (await DataContext.LookupGovernmentOfficeRegions.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> GovernmentOfficeRegionsGetAll() => DataContext.LookupGovernmentOfficeRegions.ToArray().Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> AdministrativeDistrictsGetAllAsync() => (await DataContext.LookupAdministrativeDistricts.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> AdministrativeDistrictsGetAll() => DataContext.LookupAdministrativeDistricts.ToArray().Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> AdministrativeWardsGetAllAsync() => (await DataContext.LookupAdministrativeDistricts.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> AdministrativeWardsGetAll() => DataContext.LookupAdministrativeDistricts.ToArray().Select(x => new LookupDto(x));
+
+        public async Task<IEnumerable<LookupDto>> ParliamentaryConstituenciesGetAllAsync() => (await DataContext.LookupParliamentaryConstituencies.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> ParliamentaryConstituenciesGetAll() => DataContext.LookupParliamentaryConstituencies.ToArray().Select(x => new LookupDto(x));
+
+        public async Task<IEnumerable<LookupDto>> UrbanRuralGetAllAsync() => (await DataContext.LookupUrbanRural.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> UrbanRuralGetAll() => DataContext.LookupUrbanRural.ToArray().Select(x => new LookupDto(x));
+
+        public async Task<IEnumerable<LookupDto>> GSSLAGetAllAsync() => (await DataContext.LookupGSSLA.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> GSSLAGetAll() => DataContext.LookupGSSLA.ToArray().Select(x => new LookupDto(x));
+
+        public async Task<IEnumerable<LookupDto>> CASWardsGetAllAsync() => (await DataContext.LookupCASWards.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> CASWardsGetAll() => DataContext.LookupCASWards.ToArray().Select(x => new LookupDto(x));
+
+        public async Task<IEnumerable<LookupDto>> MSOAsGetAllAsync() => (await DataContext.LookupMSOAs.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> MSOAsGetAll() => DataContext.LookupMSOAs.ToArray().Select(x => new LookupDto(x));
+
+        public async Task<IEnumerable<LookupDto>> LSOAsGetAllAsync() => (await DataContext.LookupLSOAs.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> LSOAsGetAll() => DataContext.LookupLSOAs.ToArray().Select(x => new LookupDto(x));
+
+        public async Task<IEnumerable<LookupDto>> GroupStatusesGetAllAsync() => (await DataContext.LookupGroupStatuses.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> GroupStatusesGetAll() => DataContext.LookupGroupStatuses.ToArray().Select(x => new LookupDto(x));
 
 
         public void Dispose()

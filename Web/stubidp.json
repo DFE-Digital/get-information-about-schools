@@ -1,0 +1,311 @@
+{
+  "HideDetails": false,
+  "UserList": [
+    {
+      "DisplayName": "Estab user (urn:100053)",
+      "Description": "Establishment (excludes children's centres)",
+      "Assertion": {
+        "NameId": "estab.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "Establishment"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:100053"
+          }
+        ]
+      }
+    },
+
+
+    {
+      "DisplayName": "MAT user (uid:1578)",
+      "Description": "Updating own governance information and details for academies belonging to the trust",
+      "Assertion": {
+        "NameId": "mat.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "MAT"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;groupuid:1578"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditGroup",
+            "Value": "uid:1578"
+          }
+        ]
+      }
+    },
+
+
+    {
+      "DisplayName": "Local authority (Westminster) (code:213)",
+      "Description": "Updating LA maintained school records within own authority.",
+      "Assertion": {
+        "NameId": "la.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "LA"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;lacode:213;oftype:lamaintained"
+          }
+        ]
+      }
+    },
+
+
+
+    {
+      "DisplayName": "Local authority CC (Kent) (code:886)",
+      "Description": "Creating and updating children's centre records within own authority.",
+      "Assertion": {
+        "NameId": "la.cc.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "LAChildrensCentre"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;lacode:886;oftype:childrenscentre"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateEstablishment",
+            "Value": "lacode:886;oftype:childrenscentre"
+          }
+        ]
+      }
+    },
+
+
+
+    {
+      "DisplayName": "Education Funding Agency",
+      "Description": "Creating and update academy records",
+      "Assertion": {
+        "NameId": "efa.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "EFA"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;oftype:[freeschools,academies]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateEstablishment",
+            "Value": "oftype:[freeschools,academies]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditGroup",
+            "Value": "uid:*;oftype:[mat,sat,sponsor]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateGroup",
+            "Value": "oftype:[mat,sat,sponsor]"
+          }
+        ]
+      }
+    },
+
+
+
+
+    {
+      "DisplayName": "AOS - Data owner",
+      "Description": "Creating new academy records, creating MAT, SAT and Sponsor records, assigning academies to MATs.",
+      "Assertion": {
+        "NameId": "aos.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "AOS"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;oftype:[academies]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateEstablishment",
+            "Value": "oftype:[academies]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditGroup",
+            "Value": "uid:*;oftype:[mat,sat,sponsor]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateGroup",
+            "Value": "oftype:[mat,sat]"
+          }
+        ]
+      }
+    },
+
+
+
+
+    {
+      "DisplayName": "Free Schools Group",
+      "Description": "Creating and updating new free school records.",
+      "Assertion": {
+        "NameId": "fsg.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "FSG"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;oftype:[freeschools]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateEstablishment",
+            "Value": "oftype:[freeschools]"
+          }
+        ]
+      }
+    },
+
+
+
+    {
+      "DisplayName": "Independent Education and Boarding Schools Team user",
+      "Description": "Creating and updating independent school, non-maintained special school and British Schools Overseas records.",
+      "Assertion": {
+        "NameId": "iebt.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "IEBT"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;oftype:[independent,non-maintained special,british schools overseas]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateEstablishment",
+            "Value": "oftype:[independent,non-maintained special,british schools overseas]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditGroup",
+            "Value": "uid:*;oftype:[mat,sat,sponsor]"
+          }
+        ]
+      }
+    },
+
+
+
+
+    {
+      "DisplayName": "School Organisation",
+      "Description": "Creating and updating la maintained school records.",
+      "Assertion": {
+        "NameId": "school.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "School"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;oftype:lamaintained"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateEstablishment",
+            "Value": "oftype:lamaintained"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditGroup",
+            "Value": "uid:*;oftype:[federation,trust]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateGroup",
+            "Value": "oftype:[federation,trust]"
+          }
+        ]
+      }
+    },
+
+
+
+    {
+      "DisplayName": "Pupil Referral Unit (PRU)/Alternative Provision (AP) Team",
+      "Description": "Creating and updating PRU records.",
+      "Assertion": {
+        "NameId": "pru.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "PRU"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;oftype:pru"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateEstablishment",
+            "Value": "oftype:pru"
+          }
+        ]
+      }
+    },
+
+
+    {
+      "DisplayName": "Children's centre",
+      "Description": "Creating and updating all children's centre and children's centre group records.",
+      "Assertion": {
+        "NameId": "cc.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "CC"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditEstablishment",
+            "Value": "urn:*;oftype:childrenscentre"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateEstablishment",
+            "Value": "oftype:childrenscentre"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/EditGroup",
+            "Value": "uid:*;oftype:[childrenscentre]"
+          },
+          {
+            "Type": "http://www.edubase.gov.uk/CreateGroup",
+            "Value": "oftype:[childrenscentre]"
+          }
+        ]
+      }
+    },
+
+    {
+      "DisplayName": "Backoffice",
+      "Description": "Backoffice user",
+      "Assertion": {
+        "NameId": "backoffice.user",
+        "AttributeStatements": [
+          {
+            "Type": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            "Value": "Administrator"
+          }
+        ]
+      }
+    }
+  ],
+  "DefaultAssertionConsumerServiceUrl": "http://www.example.com/AuthServices/Acs (optional, you may remove this line)",
+  "DefaultAudience": "http://www.example.com/AuthServices (optional, but usually a good idea to set to Entity ID of SP)",
+  "IdpDescription": "This is my custom IDP description"
+}

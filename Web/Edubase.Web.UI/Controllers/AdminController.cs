@@ -11,10 +11,11 @@ using System.Web;
 using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Web.UI.Models.Admin;
+using Edubase.Services.Security;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = EdubaseRoles.Admin)]
     public class AdminController : EduBaseController
     {
         // GET: Admin

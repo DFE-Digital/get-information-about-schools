@@ -41,4 +41,23 @@
     public class LookupSpecialEducationNeeds : LookupBase { }
     public class LookupTeenageMothersProvision : LookupBase { }
     public class LookupTypeOfResourcedProvision : LookupBase { }
+    public class LookupEstablishmentTypeGroup : LookupBase { }
+    public class LookupGovernmentOfficeRegion : LookupBase { }
+    public class LookupDistrictAdministrative : LookupBase { }
+    public class LookupAdministrativeWard : LookupBase { }
+    public class LookupParliamentaryConstituency : LookupBase { }
+    public class LookupUrbanRural : LookupBase { }
+    public class LookupGSSLA : LookupBase { }
+    public class LookupCASWard : LookupBase { }
+    public class LookupGroupStatus : LookupBase { }
+
+    /// <summary>
+    /// Middle Super Output Area
+    /// </summary>
+    public class LookupMSOA : LookupBase { }
+    /// <summary>
+    /// Lower Super Output Area
+    /// </summary>
+    public class LookupLSOA : LookupBase { }
+
 }

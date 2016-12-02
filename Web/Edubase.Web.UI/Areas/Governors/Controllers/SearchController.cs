@@ -26,7 +26,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     if(model.RoleId.HasValue) model.RoleName = dc.LookupGovernorRoles.FirstOrDefault(x => x.Id == model.RoleId)?.Name;
 
-                    var query = dc.Governors.Include(x => x.Role).Include(x => x.AppointingBody).Include(x=>x.Establishment);
+                    var query = dc.Governors
+                        .Include(x => x.Role)
+                        .Include(x => x.AppointingBody)
+                        .Include(x => x.Establishment)
+                        .Include(x => x.Group);
 
                     if (model.Forename.Clean() != null) query = query.Where(x => x.Person.FirstName == model.Forename);
                     if (model.Surname.Clean() != null) query = query.Where(x => x.Person.LastName == model.Surname);

@@ -125,7 +125,7 @@
                         <h2>@Html.ActionLink(result.Name, "Details", "Schools", new { id = result.Urn }, new { @class = "bold-small" })</h2>
                         <dl>
                             <dt>Address:</dt>
-                            <dd>@SchoolDetailsHelpers.GetAddress(result)</dd>
+                            <dd>@result.Address</dd>
                             <dt>URN:</dt>
                             <dd> @result.Urn</dd>
                             <dt>LAESTAB:</dt>

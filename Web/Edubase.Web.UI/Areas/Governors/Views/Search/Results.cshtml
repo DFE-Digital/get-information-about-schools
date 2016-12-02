@@ -57,10 +57,21 @@
                     <li>
                         <h2 class="bold-small">@result.Person.FullName &ndash; @result.Role.Name</h2>
                         <dl>
-                            <dt>URN:</dt>
-                            <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Schools", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
-                            <dt>Establishment:</dt>
-                            <dd>@Html.ActionLink(result.Establishment.Name, "Details", "Schools", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
+                            @if (result.EstablishmentUrn.HasValue)
+                            {
+                                <dt>URN:</dt>
+                                <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Schools", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
+                                <dt>Establishment:</dt>
+                                <dd>@Html.ActionLink(result.Establishment.Name, "Details", "Schools", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
+                            }
+                            else
+                            {
+                                <dt>UID:</dt>
+                                <dd>@Html.ActionLink(result.GroupUID.ToString(), "Details", "Trust", new { id = result.GroupUID, area = "" }, null)</dd>
+                                <dt>Group:</dt>
+                                <dd>@Html.ActionLink(result.Group.Name, "Details", "Trust", new { id = result.GroupUID, area = "" }, null)</dd>
+                            }
+                            
                             <dt>GID:</dt>
                             <dd>@result.Id</dd>
                             <dt>Date term of office ends/ended:</dt>

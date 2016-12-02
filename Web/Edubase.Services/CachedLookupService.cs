@@ -5,7 +5,7 @@ using System.Text;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using Edubase.Data.Entity;
-using Edubase.Data.Entity.Lookups;
+using Edubase.Services.Enums;
 using System.Runtime.Caching;
 using Edubase.Common;
 using Edubase.Services.Domain;
@@ -125,8 +125,41 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> TypeOfResourcedProvisionsGetAll() => Cacher.Auto(_svc.TypeOfResourcedProvisionsGetAll);
         public async Task<IEnumerable<LookupDto>> EstablishmentLinkTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentLinkTypesGetAllAsync);
         public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll() => Cacher.Auto(_svc.EstablishmentLinkTypesGetAll);
+        public async Task<IEnumerable<LookupDto>> EstablishmentGroupTypesGetAllAsync() => await Cacher.AutoAsync(_svc.EstablishmentGroupTypesGetAllAsync);
+        public IEnumerable<LookupDto> EstablishmentGroupTypesGetAll() => Cacher.Auto(_svc.EstablishmentGroupTypesGetAll);
+
+        public async Task<IEnumerable<LookupDto>> GovernmentOfficeRegionsGetAllAsync() => await Cacher.AutoAsync(_svc.GovernmentOfficeRegionsGetAllAsync);
+        public IEnumerable<LookupDto> GovernmentOfficeRegionsGetAll() => Cacher.Auto(_svc.GovernmentOfficeRegionsGetAll);
+
+        public async Task<IEnumerable<LookupDto>> AdministrativeDistrictsGetAllAsync() => await Cacher.AutoAsync(_svc.AdministrativeDistrictsGetAllAsync);
+        public IEnumerable<LookupDto> AdministrativeDistrictsGetAll() => Cacher.Auto(_svc.AdministrativeDistrictsGetAll);
+
+        public async Task<IEnumerable<LookupDto>> AdministrativeWardsGetAllAsync() => await Cacher.AutoAsync(_svc.AdministrativeWardsGetAllAsync);
+        public IEnumerable<LookupDto> AdministrativeWardsGetAll() => Cacher.Auto(_svc.AdministrativeWardsGetAll);
 
 
+        public async Task<IEnumerable<LookupDto>> ParliamentaryConstituenciesGetAllAsync() => await Cacher.AutoAsync(_svc.ParliamentaryConstituenciesGetAllAsync);
+        public IEnumerable<LookupDto> ParliamentaryConstituenciesGetAll() => Cacher.Auto(_svc.ParliamentaryConstituenciesGetAll);
+
+
+        public async Task<IEnumerable<LookupDto>> UrbanRuralGetAllAsync() => await Cacher.AutoAsync(_svc.UrbanRuralGetAllAsync);
+        public IEnumerable<LookupDto> UrbanRuralGetAll() => Cacher.Auto(_svc.UrbanRuralGetAll);
+
+        public async Task<IEnumerable<LookupDto>> GSSLAGetAllAsync() => await Cacher.AutoAsync(_svc.GSSLAGetAllAsync);
+        public IEnumerable<LookupDto> GSSLAGetAll() => Cacher.Auto(_svc.GSSLAGetAll);
+        public async Task<IEnumerable<LookupDto>> CASWardsGetAllAsync() => await Cacher.AutoAsync(_svc.CASWardsGetAllAsync);
+        public IEnumerable<LookupDto> CASWardsGetAll() => Cacher.Auto(_svc.CASWardsGetAll);
+
+
+        public async Task<IEnumerable<LookupDto>> MSOAsGetAllAsync() => await Cacher.AutoAsync(_svc.MSOAsGetAllAsync);
+        public IEnumerable<LookupDto> MSOAsGetAll() => Cacher.Auto(_svc.MSOAsGetAll);
+
+        public async Task<IEnumerable<LookupDto>> LSOAsGetAllAsync() => await Cacher.AutoAsync(_svc.LSOAsGetAllAsync);
+        public IEnumerable<LookupDto> LSOAsGetAll() => Cacher.Auto(_svc.LSOAsGetAll);
+
+        public async Task<IEnumerable<LookupDto>> GroupStatusesGetAllAsync() => await Cacher.AutoAsync(_svc.GroupStatusesGetAllAsync);
+        public IEnumerable<LookupDto> GroupStatusesGetAll() => Cacher.Auto(_svc.GroupStatusesGetAll);
+        
         public async Task<string> GetNameAsync(string lookupName, int id) => 
             await ApplicationDbContext.OperationAsync(async dc => await _mapping.Get(lookupName)?.Invoke(dc, id));
 

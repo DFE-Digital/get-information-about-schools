@@ -238,11 +238,11 @@ namespace Edubase.Web.UI.Controllers
 
         }
 
-        [HttpGet, Authorize(Roles="Admin,LA")]
+        [HttpGet, Authorize]
         public ActionResult Create() => View(new ViewModel());
 
 
-        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Admin,LA")]
+        [HttpPost, ValidateAntiForgeryToken, Authorize]
         public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] ViewModel model)
         {
             if (ModelState.IsValid)
