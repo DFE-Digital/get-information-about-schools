@@ -28,11 +28,13 @@ namespace Edubase.Web.UI.Controllers
     {
         private IEstablishmentReadService _establishmentReadService;
         private IGroupReadService _groupReadService;
+        private IMapper _mapper;
 
-        public EstablishmentController(IEstablishmentReadService establishmentReadService, IGroupReadService groupReadService)
+        public EstablishmentController(IEstablishmentReadService establishmentReadService, IGroupReadService groupReadService, IMapper mapper)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
+            _mapper = mapper;
         }
 
         [HttpGet, Authorize]
@@ -41,7 +43,7 @@ namespace Edubase.Web.UI.Controllers
             using (var dc = ApplicationDbContext.Create())
             {
                 var dataModel = dc.Establishments.FirstOrDefault(x => x.Urn == id);
-                var viewModel = Mapper.Map<Establishment, ViewModel>(dataModel);
+                var viewModel = _mapper.Map<Establishment, ViewModel>(dataModel);
 
                 viewModel.Links = (await dc.EstablishmentLinks
                     .Include(x => x.LinkedEstablishment)
@@ -140,7 +142,7 @@ namespace Edubase.Web.UI.Controllers
                 var changes = ReflectionHelper.DetectChanges(estabTemp, dataModel, typeof(Address), typeof(ContactDetail));
                 mapper.Map(model, dataModel);
 
-                var establishment = Mapper.Map<ViewModel, Establishment>(model);
+                var establishment = _mapper.Map<ViewModel, Establishment>(model);
                 var permPropertiesThatChanged = new List<ChangeDescriptor>();
                 permissions.ForEach(p =>
                 {
@@ -259,7 +261,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 using (var dc = ApplicationDbContext.Create())
                 {
-                    var dataModel = Mapper.Map<Establishment>(model);
+                    var dataModel = _mapper.Map<Establishment>(model);
 
                     var svc = new EstablishmentService();
                     var pol = svc.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);

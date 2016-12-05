@@ -79,6 +79,10 @@
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Azure.Search, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Search.3.0.1\lib\net45\Microsoft.Azure.Search.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Edm.5.6.4\lib\net40\Microsoft.Data.Edm.dll</HintPath>
       <Private>True</Private>
@@ -91,8 +95,20 @@
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.4\lib\net45\Microsoft.Rest.ClientRuntime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Rest.ClientRuntime.Azure, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.4\lib\net45\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.ServiceBus, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.ServiceBus.3.4.0\lib\net45-full\Microsoft.ServiceBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Spatial, Version=6.15.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -120,10 +136,12 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -157,7 +175,6 @@
     <Compile Include="Domain\CompanySearchDto.cs" />
     <Compile Include="Domain\ContactDetailDto.cs" />
     <Compile Include="Domain\DomainException.cs" />
-    <Compile Include="Domain\EstablishmentAutoSuggestionDto.cs" />
     <Compile Include="Domain\EstablishmentChangeDto.cs" />
     <Compile Include="Domain\EstablishmentDto.cs" />
     <Compile Include="Domain\LogMessagesDto.cs" />
@@ -229,11 +246,20 @@
     <Compile Include="Establishments\DisplayPolicies\SpecialPost16InstitutionDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\WelshDisplayPolicy.cs" />
     <Compile Include="Establishments\EstablishmentReadService.cs" />
+    <Compile Include="Establishments\Search\EstablishmentsSearchIndex.cs" />
     <Compile Include="Establishments\EstablishmentWriteService.cs" />
     <Compile Include="Establishments\IEstablishmentReadService.cs" />
     <Compile Include="Establishments\Models\EstablishmentAddressModel.cs" />
     <Compile Include="Establishments\Models\EstablishmentModel.cs" />
     <Compile Include="Establishments\Models\LinkedEstablishmentModel.cs" />
+    <Compile Include="Establishments\Search\EstablishmentSuggestionItem.cs" />
+    <Compile Include="Governors\Search\GovernorsSearchIndex.cs" />
+    <Compile Include="Governors\Search\GovernorSuggestionItem.cs" />
+    <Compile Include="Groups\Search\GroupSuggestionItem.cs" />
+    <Compile Include="Groups\Search\GroupsSearchIndex.cs" />
+    <Compile Include="IntegrationEndPoints\IAzureSearchEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\Models\SearchIndex.cs" />
+    <Compile Include="IntegrationEndPoints\Models\SearchIndexField.cs" />
     <Compile Include="Exceptions\EdubaseException.cs" />
     <Compile Include="Exceptions\EduSecurityException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
@@ -250,9 +276,7 @@
     <Compile Include="IntegrationEndPoints\ServiceBusEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\SmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\TableStorageEndPoint.cs" />
-    <Compile Include="Lucene\EstablishmentIndexConfig.cs" />
-    <Compile Include="Lucene\EstablishmentsIndex.cs" />
-    <Compile Include="Mapping\AutoMapperConfiguration.cs" />
+    <Compile Include="Mapping\AutoMapperServicesProfile.cs" />
     <Compile Include="MessageLoggingService.cs" />
     <Compile Include="LookupService.cs" />
     <Compile Include="LogMessageReadService.cs" />

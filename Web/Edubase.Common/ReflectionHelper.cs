@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -28,13 +29,15 @@ namespace Edubase.Common
             propInfo.SetValue(item, value, null);
         }
 
-        public static List<string> GetProperties(object item)
+        public static List<string> GetProperties(object item, Type ignoreAttributeType = null, bool writeableOnly = false)
         {
             Type type = null;
             if (item is Type) type = (Type)item;
             else type = item.GetType();
-            PropertyInfo[] props = type.GetProperties();
-            return props.Select(p => p.Name).ToList();
+            var props = type.GetProperties();
+            return props.Where(x => (ignoreAttributeType == null || !x.CustomAttributes.Any(a => a.AttributeType == ignoreAttributeType))
+                && (writeableOnly == false || x.CanWrite))
+                .Select(p => p.Name).ToList();
         }
 
         public static List<ChangeDescriptor> DetectChanges(object obj, object obj2, params Type[] types)

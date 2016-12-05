@@ -1,0 +1,40 @@
+﻿using Edubase.Services.IntegrationEndPoints.Models;
+using Microsoft.Azure.Search.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace [NAMESPACE]
+{
+    public class [CLASSNAME]
+    {
+		public const string INDEX_NAME = "[INDEXNAME]";
+        public const string SUGGESTER_NAME = "[SUGGESTERNAME]";
+
+        public SearchIndex CreateModel()
+        {
+            var retVal = new SearchIndex();
+            retVal.Name = INDEX_NAME;
+            retVal.SuggesterName = SUGGESTER_NAME;
+
+			[subtemplate:addfield]
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "[FIELDNAME]",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof([TYPE])
+            });
+            [/subtemplate:addfield]
+
+            return retVal;
+        }
+    }
+}

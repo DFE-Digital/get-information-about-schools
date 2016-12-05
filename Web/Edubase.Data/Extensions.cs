@@ -1,5 +1,9 @@
-﻿using Edubase.Common.Spatial;
+﻿using Edubase.Common;
+using Edubase.Common.Spatial;
 using MoreLinq;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Spatial;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -19,6 +23,8 @@ namespace Edubase.Data
             => geo != null && geo.Latitude.HasValue && geo.Longitude.HasValue 
             ? new LatLon(geo.Latitude.Value, geo.Longitude.Value) 
             : null as LatLon;
+
+        public static DataTable Get<T>(this Dictionary<Type, DataTable> dictionary) => dictionary.Get(typeof(T));
     }
     
 }

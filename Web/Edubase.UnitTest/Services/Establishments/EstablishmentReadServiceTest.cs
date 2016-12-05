@@ -1,8 +1,10 @@
-﻿using Edubase.Data.Entity;
+﻿using AutoMapper;
+using Edubase.Data.Entity;
 using Edubase.Services;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Exceptions;
+using Edubase.Services.IntegrationEndPoints;
 using Edubase.Services.Mapping;
 using Edubase.Services.Security;
 using Edubase.UnitTest.Mocks.IntegrationEndPoints;
@@ -25,10 +27,10 @@ namespace Edubase.UnitTest.Services.Establishments
         {
             // Arrange
             var mockDbContext = new MockApplicationDbContext();
-            mockDbContext.Establishments.Add(new Data.Entity.Establishment { Urn = 1, StatusId = (int)eLookupEstablishmentStatus.Quarantine });
+            mockDbContext.Establishments.Add(new Establishment { Urn = 1, StatusId = (int)eLookupEstablishmentStatus.Quarantine });
             var fullAccessRoles = new[] { EdubaseRoles.EFA, EdubaseRoles.AOS, EdubaseRoles.FSG, EdubaseRoles.IEBT, EdubaseRoles.School, EdubaseRoles.PRU };
 
-            var subject = new EstablishmentReadService(mockDbContext, AutoMapperConfiguration.CreateMapper(), new Mock<ICachedLookupService>().Object);
+            var subject = new EstablishmentReadService(mockDbContext, CreateMapper(), new Mock<ICachedLookupService>().Object, new Mock<IAzureSearchEndPoint>().Object);
 
             foreach (var role in fullAccessRoles)
             {
@@ -47,9 +49,9 @@ namespace Edubase.UnitTest.Services.Establishments
         {
             // Arrange
             var mockDbContext = new MockApplicationDbContext();
-            mockDbContext.Establishments.Add(new Data.Entity.Establishment { Urn = 1, StatusId = (int)eLookupEstablishmentStatus.Open });
+            mockDbContext.Establishments.Add(new Establishment { Urn = 1, StatusId = (int)eLookupEstablishmentStatus.Open });
 
-            var subject = new EstablishmentReadService(mockDbContext, AutoMapperConfiguration.CreateMapper(), new Mock<ICachedLookupService>().Object);
+            var subject = new EstablishmentReadService(mockDbContext, CreateMapper(), new Mock<ICachedLookupService>().Object, new Mock<IAzureSearchEndPoint>().Object);
 
             foreach (var role in EdubaseRoles.AllRoles)
             {
@@ -64,10 +66,10 @@ namespace Edubase.UnitTest.Services.Establishments
         {
             // Arrange
             var mockDbContext = new MockApplicationDbContext();
-            mockDbContext.Establishments.Add(new Data.Entity.Establishment { Urn = 1, StatusId = (int)eLookupEstablishmentStatus.Open, IsDeleted = true });
+            mockDbContext.Establishments.Add(new Establishment { Urn = 1, StatusId = (int)eLookupEstablishmentStatus.Open, IsDeleted = true });
             var fullAccessRoles = new[] { EdubaseRoles.EFA, EdubaseRoles.AOS, EdubaseRoles.FSG, EdubaseRoles.IEBT, EdubaseRoles.School, EdubaseRoles.PRU };
 
-            var subject = new EstablishmentReadService(mockDbContext, AutoMapperConfiguration.CreateMapper(), new Mock<ICachedLookupService>().Object);
+            var subject = new EstablishmentReadService(mockDbContext, CreateMapper(), new Mock<ICachedLookupService>().Object, new Mock<IAzureSearchEndPoint>().Object);
 
             foreach (var role in fullAccessRoles)
             {
@@ -86,7 +88,7 @@ namespace Edubase.UnitTest.Services.Establishments
         {
             var mockDbContext = new MockApplicationDbContext();
             var user = new GenericPrincipal(new GenericIdentity(string.Empty), new string[0]);
-            var subject = new EstablishmentReadService(mockDbContext, AutoMapperConfiguration.CreateMapper(), new Mock<ICachedLookupService>().Object);
+            var subject = new EstablishmentReadService(mockDbContext, CreateMapper(), new Mock<ICachedLookupService>().Object, new Mock<IAzureSearchEndPoint>().Object);
             Assert.ThrowsAsync<PermissionDeniedException>(async () 
                 => await subject.GetChangeHistoryAsync(1, 1, user));
         }
@@ -113,7 +115,9 @@ namespace Edubase.UnitTest.Services.Establishments
             
             var user = new GenericPrincipal(new GenericIdentity("test.user"), new string[0]);
 
-            var subject = new EstablishmentReadService(mockDbContext, AutoMapperConfiguration.CreateMapper(), cacheLookupSvc.Object);
+            
+
+            var subject = new EstablishmentReadService(mockDbContext, CreateMapper(), cacheLookupSvc.Object, new Mock<IAzureSearchEndPoint>().Object);
 
             var set = await subject.GetChangeHistoryAsync(1, 1, user);
             var model = set.First();
@@ -122,5 +126,7 @@ namespace Edubase.UnitTest.Services.Establishments
             Assert.AreEqual(eLocalAuthority.BarkingAndDagenham.ToString(), model.NewValue);
             
         }
+
+        private IMapper CreateMapper()=> new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<AutoMapperServicesProfile>()).CreateMapper();
     }
 }

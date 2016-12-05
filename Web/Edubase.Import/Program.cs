@@ -13,6 +13,7 @@ using System.Linq;
 namespace Edubase.Import
 {
     using Common;
+    using Data;
     using Data.Entity;
     using Data.Entity.Lookups;
     using Data.Migrations;

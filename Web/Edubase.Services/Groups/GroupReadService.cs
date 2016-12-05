@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using Edubase.Services.Establishments.Search;
+using Edubase.Services.Groups.Search;
+using Edubase.Services.IntegrationEndPoints;
 
 namespace Edubase.Services.Groups
 {
@@ -14,11 +17,13 @@ namespace Edubase.Services.Groups
     {
         private IApplicationDbContext _dbContext;
         private IMapper _mapper;
+        private IAzureSearchEndPoint _azureSearchService;
 
-        public GroupReadService(IApplicationDbContext dc, IMapper mapper)
+        public GroupReadService(IApplicationDbContext dc, IMapper mapper, IAzureSearchEndPoint azureSearchService)
         {
             _dbContext = dc;
             _mapper = mapper;
+            _azureSearchService = azureSearchService;
         }
 
         public async Task<GroupModel> GetByEstablishmentUrnAsync(int urn)
@@ -28,5 +33,9 @@ namespace Edubase.Services.Groups
             if (g != null) return _mapper.Map<GroupCollection, GroupModel>(g);
             else return null;
         }
+
+        public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, int take = 10)
+            => await _azureSearchService.SuggestAsync<GroupSuggestionItem>(GroupsSearchIndex.INDEX_NAME, GroupsSearchIndex.SUGGESTER_NAME, text, take);
+
     }
 }

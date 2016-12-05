@@ -8,6 +8,8 @@ using Edubase.Services;
 using AutoMapper;
 using Edubase.Services.Mapping;
 using Edubase.Data.Entity;
+using Edubase.Services.IntegrationEndPoints;
+using System.Configuration;
 
 namespace Edubase.Web.UI
 {
@@ -42,8 +44,11 @@ namespace Edubase.Web.UI
 
         private static void RegisterTypes(ContainerBuilder builder)
         {
+            builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
+                ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString).As<IAzureSearchEndPoint>();
+
             builder.RegisterType<ApplicationDbContext>().As<IApplicationDbContext>();
-            builder.RegisterInstance(AutoMapperConfiguration.CreateMapper()).As<IMapper>();
+            builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
             builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();

@@ -226,7 +226,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\AutoMapperConfig.cs" />
+    <Compile Include="App_Start\AutoMapperWebProfile.cs" />
+    <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Areas\Governors\Controllers\SearchController.cs" />
     <Compile Include="Areas\Governors\GovernorsAreaRegistration.cs" />
@@ -244,7 +245,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\SchoolsController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />

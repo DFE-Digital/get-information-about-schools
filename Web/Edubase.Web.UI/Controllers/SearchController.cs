@@ -16,9 +16,20 @@ namespace Edubase.Web.UI.Controllers
     using Common.Spatial;
     using System.Threading.Tasks;
     using Services.Enums;
+    using Services.Establishments;
+    using Services.Groups;
 
     public class SearchController : EduBaseController
     {
+        private IEstablishmentReadService _establishmentReadService;
+        private IGroupReadService _groupReadService;
+
+        public SearchController(IEstablishmentReadService establishmentReadService, IGroupReadService groupReadService)
+        {
+            _establishmentReadService = establishmentReadService;
+            _groupReadService = groupReadService;
+        }
+
         public ActionResult Index() => View();
 
         [HttpGet]
@@ -201,11 +212,10 @@ namespace Edubase.Web.UI.Controllers
         }
         
         [HttpGet]
-        public ActionResult Suggest(string text) => Json(new EstablishmentService().Autosuggest(text));
+        public async Task<ActionResult> Suggest(string text) => Json(await _establishmentReadService.SuggestAsync(text));
 
         [HttpGet]
-        public ActionResult SuggestTrust(string text) => Json(DataContext.Groups.Where(x => x.Name.StartsWith(text))
-            .OrderBy(x=>x.Name).Take(10).Select(x => new { Text = x.Name, Id = x.GroupUID }));
+        public async Task<ActionResult> SuggestTrust(string text) => Json(await _groupReadService.SuggestAsync(text));
 
         private IQueryable<Establishment> GetEstablishmentsQuery() => DataContext.Establishments.Include(x => x.Status);
 

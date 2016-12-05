@@ -2,7 +2,6 @@
 using Edubase.Data.Entity;
 using Edubase.Data.Migrations;
 using Edubase.Services;
-using Edubase.Services.Lucene;
 using Edubase.Web.UI.Filters;
 using FluentValidation.Mvc;
 using System;
@@ -19,7 +18,6 @@ namespace Edubase.Web.UI
     {
         protected void Application_Start()
         {
-            AutoMapperConfig.Configure();
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -30,7 +28,6 @@ namespace Edubase.Web.UI
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
             Database.SetInitializer(m);
             FluentValidationModelValidatorProvider.Configure();
-            EstablishmentsIndex.Instance.InitialiseAsync().Wait();
             
             FlushLogMessages();
 

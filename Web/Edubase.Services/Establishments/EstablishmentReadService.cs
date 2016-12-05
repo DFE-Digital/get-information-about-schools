@@ -17,6 +17,8 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Exceptions;
 using MoreLinq;
 using Edubase.Common;
+using Edubase.Services.Establishments.Search;
+using Edubase.Services.IntegrationEndPoints;
 
 namespace Edubase.Services.Establishments
 {
@@ -25,12 +27,14 @@ namespace Edubase.Services.Establishments
         private IApplicationDbContext _dbContext;
         private IMapper _mapper;
         private ICachedLookupService _cachedLookupService;
+        private IAzureSearchEndPoint _azureSearchService;
 
-        public EstablishmentReadService(IApplicationDbContext dbContext, IMapper mapper, ICachedLookupService cachedLookupService)
+        public EstablishmentReadService(IApplicationDbContext dbContext, IMapper mapper, ICachedLookupService cachedLookupService, IAzureSearchEndPoint azureSearchService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _cachedLookupService = cachedLookupService;
+            _azureSearchService = azureSearchService;
         }
 
         /// <summary>
@@ -132,5 +136,8 @@ namespace Edubase.Services.Establishments
             return query;
         }
 
+        public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, int take = 10) 
+            => await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text, take);
+        
     }
 }

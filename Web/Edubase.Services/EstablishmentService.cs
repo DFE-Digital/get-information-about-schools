@@ -1,15 +1,12 @@
-﻿using Edubase.Data.Entity;
-using Edubase.Common;
-using System.Data.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Edubase.Common;
+using Edubase.Data.Entity;
 using Edubase.Services.Domain;
 using MoreLinq;
-using Edubase.Services.Lucene;
-using System.Security.Claims;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Edubase.Services
 {
@@ -225,16 +222,6 @@ namespace Edubase.Services
             });
             return changes;
         }
-
-        public EstablishmentAutoSuggestionDto[] Autosuggest(string text)
-        {
-            return EstablishmentsIndex.Instance.Establishments
-                .Where(x => x.Name.StartsWith(text)).Take(10)
-                .Select(x => new EstablishmentAutoSuggestionDto(x.Urn, x.Name, 
-                x.FullAddress, x.Address.CityOrTown, x.Address.PostCode)).ToArray();
-        }
-
-        
         
 
 
