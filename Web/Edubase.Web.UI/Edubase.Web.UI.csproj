@@ -672,10 +672,7 @@
     <Content Include="public\jquery\bower.json" />
     <Content Include="public\jquery\dist\jquery.min.map" />
     <Content Include="public\jquery\src\sizzle\dist\sizzle.min.map" />
-    <Content Include="Assets\Sass\elements\_school-details.scss" />
-    <Content Include="Assets\Sass\elements\_search-results.scss" />
     <Content Include="packages.config" />
-    <Content Include="Assets\Sass\elements\_school-search.scss" />
     <Content Include="Areas\Governors\Views\web.config" />
     <Content Include="Areas\Governors\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Governors\Views\Search\Index.cshtml" />
@@ -684,6 +681,9 @@
     <Content Include="Assets\Sass\views\_view-logs.scss" />
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
     <Content Include="App_Data\Kentor.AuthServices.Tests.pfx" />
+    <Content Include="Assets\Sass\views\_school-details.scss" />
+    <Content Include="Assets\Sass\views\_school-search.scss" />
+    <Content Include="Assets\Sass\views\_search-results.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
