@@ -1,21 +1,19 @@
 
-$tabheight:60px;
+$tabheight: 60px;
 
-nav.tabs 
-{
+nav.tabs {
     background-color: white;
     z-index: 1000;
-    ol 
-    {
+
+    ol {
         margin-top: 14px;
         padding-left: 0;
-        @include media(desktop) 
-        {
+
+        @include media(desktop) {
             border-bottom: 1px solid $grey-2;
         }
 
-        li 
-        {
+        li {
             font-family: "nta",Arial,sans-serif;
             font-size: 16px;
             line-height: 1.25;
@@ -30,49 +28,46 @@ nav.tabs
             //min-width: 114px;
             height: $tabheight;
             text-align: center;
-            @include media(mobile)
-            {
+
+            @include media(mobile) {
                 line-height: 1.1428571429;
                 min-width: 0;
                 width: 47%;
             }
 
-            &:hover
-            {
+            &:hover {
                 text-decoration: underline;
             }
 
 
-            &.active
-            {
+            &.active {
                 background-color: $white;
                 cursor: default;
-                @include media(mobile)
-                {
+
+                @include media(mobile) {
                     background-color: $grey-3;
                 }
-                @include media(desktop)
-                {
+
+                @include media(desktop) {
                     margin: -1px 3px 0 -2px;
                 }
-                &:hover
-                {
+
+                &:hover {
                     text-decoration: none;
                 }
 
-                a
-                {
+                a {
                     color: $black;
                     border: 1px solid $grey-2;
                     margin: 0 0 -2px -1px;
                     display: block;
-                    @include media(mobile)
-                    {
+
+                    @include media(mobile) {
                         border-color: $grey-1;
                     }
-                    @include media(desktop)
-                    {
-                        background-color:$white;
+
+                    @include media(desktop) {
+                        background-color: $white;
                         border-bottom-width: 0;
                         margin-right: -4px;
                         margin-bottom: -2px;
@@ -81,8 +76,7 @@ nav.tabs
                 }
             }
 
-            a
-            {
+            a {
                 border: 1px solid transparent;
                 text-decoration: none;
                 display: block;
@@ -90,27 +84,25 @@ nav.tabs
                 -moz-box-sizing: border-box;
                 -webkit-box-sizing: border-box;
                 box-sizing: border-box;
-                padding:10px 25px 0 25px;
-                white-space:nowrap;
-                color:$black;
+                padding: 10px 25px 0 25px;
+                white-space: nowrap;
+                color: $black;
+
                 &:visited {
-                    color:$black;
+                    color: $black;
                 }
-                @include media(mobile)
-                {
-                    padding:10px 10px 0 10px;
+
+                @include media(mobile) {
+                    padding: 10px 10px 0 10px;
                 }
             }
 
-            &.one-line a
-            {
-                padding-top:20px;
+            &.one-line a {
+                padding-top: 20px;
             }
-
         }
-        
-        &:after
-        {
+
+        &:after {
             display: block;
             clear: left;
             content: ' ';
@@ -138,7 +130,7 @@ nav.tabs
     position: relative;
 
     li {
-        float:left;
+        float: left;
 
         @include media(mobile) {
             width: 48%;
@@ -149,7 +141,6 @@ nav.tabs
                 clear: left;
             }
         }
-
     }
 
     .horizontal-tab {
@@ -166,8 +157,9 @@ nav.tabs
         }
 
         span.sub {
-            font-size:16px;
-            font-weight:normal;
+            font-size: 16px;
+            font-weight: normal;
+
             @include media(mobile) {
                 font-size: 12px;
             }
@@ -178,7 +170,7 @@ nav.tabs
             text-align: left;
             padding-left: 8px;
         }
-        
+
 
         &.selected-tab {
             color: $black;
@@ -199,9 +191,14 @@ nav.tabs
 }
 
 .horizontal-tabs-content {
+    margin: 0 1%;
+    @include media(tablet) {
+        margin: 0;
+    }
+
     .tab-content {
         margin: 0;
-        padding: 24px 0;
+        padding: 48px 0 24px;
 
         &.hidden-tab-content {
             display: none;

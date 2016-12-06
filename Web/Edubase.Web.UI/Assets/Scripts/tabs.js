@@ -26,6 +26,18 @@
                 }),
                 intialTabSelection = $.inArray(window.location.hash, validHashes);
 
+            function setTabHeight() {
+                var maxHeight = 0;
+                $tabs.each(function() {
+                    var tabHeight = $(this).height();
+                    if (tabHeight > maxHeight) {
+                        maxHeight = tabHeight;
+                    }
+                });
+                return maxHeight;
+            }
+
+            $tabs.height(setTabHeight());
             $tabbedContent.attr('tab-index', 0);
             $tabbedContent.addClass('hidden-tab-content').attr('aria-hidden', true);
 
