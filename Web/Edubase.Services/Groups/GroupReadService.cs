@@ -1,15 +1,11 @@
 ﻿using AutoMapper;
 using Edubase.Data.Entity;
 using Edubase.Services.Groups.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity;
-using Edubase.Services.Establishments.Search;
 using Edubase.Services.Groups.Search;
-using Edubase.Services.IntegrationEndPoints;
+using Edubase.Services.IntegrationEndPoints.AzureSearch;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace Edubase.Services.Groups
 {

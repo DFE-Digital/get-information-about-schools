@@ -4,7 +4,7 @@ using Edubase.Services;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Exceptions;
-using Edubase.Services.IntegrationEndPoints;
+using Edubase.Services.IntegrationEndPoints.AzureSearch;
 using Edubase.Services.Mapping;
 using Edubase.Services.Security;
 using Edubase.UnitTest.Mocks.IntegrationEndPoints;

@@ -1,0 +1,8 @@
+﻿namespace [NAMESPACE]
+{
+    public class [CLASSNAME]
+    {
+		[subtemplate:prop]
+        public [TYPE] [FIELDNAME] { get; set; }[PROPINIT][/subtemplate:prop]
+    }
+}

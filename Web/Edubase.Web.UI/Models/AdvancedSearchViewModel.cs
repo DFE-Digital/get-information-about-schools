@@ -7,6 +7,7 @@ using System.Web;
 using Edubase.Common;
 using Edubase.Data.Entity.Lookups;
 using Edubase.Web.UI.Helpers.ModelBinding;
+using Edubase.Services.Establishments.Search;
 
 namespace Edubase.Web.UI.Models
 {
@@ -45,14 +46,14 @@ namespace Edubase.Web.UI.Models
             UKPRN
         }
 
-        public List<Establishment> Results { get; set; }
+        public IList<SearchEstablishmentDocument> Results { get; set; }
         public string Error { get; set; }
 
         public eTextSearchType TextSearchType => TextSearchModel.Text.IsInteger()
             ? _textSearchTypeMap.Get(TextSearchModel.Text.Length, eTextSearchType.Unknown)
             : eTextSearchType.EstablishmentName;
 
-        public int Count { get; set; }
+        public long Count { get; set; }
         public int PageCount => (int)Math.Ceiling(Count / (double)PageSize);
         public int PageSize { get; set; } = 50;
         public int StartIndex { get; set; }

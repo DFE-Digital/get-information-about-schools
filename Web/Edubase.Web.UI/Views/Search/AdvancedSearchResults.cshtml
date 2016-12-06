@@ -1,16 +1,17 @@
 ﻿@using Edubase.Web.UI.Models
 @using Edubase.Web.UI.Helpers
-@using Edubase.Data.Entity.Lookups
 @model AdvancedSearchViewModel
 @{
     ViewBag.Title = string.Format("Search results for '{0}'", Model.TextSearchModel.Text);
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
+
+    var cache = new Edubase.Services.CachedLookupService();
 }
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        @Html.ActionLink("Go back", "Advanced", null, new { @class = "home-link" })
+        @Html.ActionLink("Go back", "Index", null, new { @class = "home-link" })
 
         <h1 class="heading-xlarge">Search results</h1>
         @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
@@ -125,13 +126,13 @@
                         <h2>@Html.ActionLink(result.Name, "Details", "Establishment", new { id = result.Urn }, new { @class = "bold-small" })</h2>
                         <dl>
                             <dt>Address:</dt>
-                            <dd>@result.Address</dd>
+                            <dd>@result.GetAddress()</dd>
                             <dt>URN:</dt>
                             <dd> @result.Urn</dd>
                             <dt>LAESTAB:</dt>
-                            <dd>@result.LAESTAB</dd>
+                            <dd>@result.GetLAESTAB()</dd>
                             <dt>Status:</dt>
-                            <dd>@result.Status</dd>
+                            <dd>@(cache.EstablishmentStatusesGetAll().FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "--")</dd>
                         </dl>
                     </li>
                 }

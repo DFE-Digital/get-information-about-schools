@@ -8,7 +8,7 @@ using Edubase.Services;
 using AutoMapper;
 using Edubase.Services.Mapping;
 using Edubase.Data.Entity;
-using Edubase.Services.IntegrationEndPoints;
+using Edubase.Services.IntegrationEndPoints.AzureSearch;
 using System.Configuration;
 
 namespace Edubase.Web.UI

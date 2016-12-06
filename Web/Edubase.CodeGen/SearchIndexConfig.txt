@@ -1,4 +1,4 @@
-﻿using Edubase.Services.IntegrationEndPoints.Models;
+﻿using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using Microsoft.Azure.Search.Models;
 using System;
 using System.Collections.Generic;

@@ -38,17 +38,11 @@
 
         #region Constructors
 
-        public BlobService()
-        {
-            CreateClient(ConfigurationManager.ConnectionStrings["DataConnectionString"]?.ConnectionString);
-        }
-        
-        private void CreateClient(string storageConnectionString)
+        public BlobService(string storageConnectionString)
         {
             if (storageConnectionString.IsNullOrEmpty()) throw new ArgumentNullException(nameof(storageConnectionString));
-
-            if (_clients.ContainsKey(storageConnectionString)) _client = _clients[storageConnectionString];
-            else
+            _client = _clients.Get(storageConnectionString);
+            if (_client == null)
             {
                 _client = CloudStorageAccount.Parse(storageConnectionString).CreateCloudBlobClient();
                 _clients.Add(storageConnectionString, _client);
@@ -268,27 +262,21 @@
         /// <returns></returns>
         private PathComponents ExtractPathComponents(string absolutePathWithContainerNameAndPrependingSlash)
         {
+            var path = absolutePathWithContainerNameAndPrependingSlash.Clean();
+            var argName = nameof(absolutePathWithContainerNameAndPrependingSlash);
             const string FORWARD_SLASH = "/";
-            absolutePathWithContainerNameAndPrependingSlash = absolutePathWithContainerNameAndPrependingSlash.Clean();
+            
+            if (path == null) throw new ArgumentNullException(argName);
+            if (!path.StartsWith(FORWARD_SLASH)) throw new ArgumentException($"The argument '{argName}' does not have a prepending slash.  Are you sure this is an absolute path?");
 
-            if (absolutePathWithContainerNameAndPrependingSlash == null)
-                throw new ArgumentNullException("absolutePathWithContainerNameAndPrependingSlash");
+            path = path.Substring(1);
 
-            if (!absolutePathWithContainerNameAndPrependingSlash.StartsWith(FORWARD_SLASH))
-                throw new ArgumentException("The argument 'absolutePathWithContainerNameAndPrependingSlash' does not have a prepending slash.  Are you sure this is an absolute path?");
+            if (path.Length == 0) throw new ArgumentException($"Argument '{argName}' is not valid");
+            if (path.Split(new[] { FORWARD_SLASH }, StringSplitOptions.RemoveEmptyEntries).Length <= 1)
+                throw new ArgumentException($"Argument '{argName}' doesn't have a path component after the container name component");
 
-            absolutePathWithContainerNameAndPrependingSlash = absolutePathWithContainerNameAndPrependingSlash.Substring(1);
-
-            if (absolutePathWithContainerNameAndPrependingSlash.Length == 0)
-                throw new ArgumentException("Argument 'absolutePathWithContainerNameAndPrependingSlash' is not valid");
-
-            if (absolutePathWithContainerNameAndPrependingSlash.Split(new[] { FORWARD_SLASH }, StringSplitOptions.RemoveEmptyEntries).Length <= 1)
-            {
-                throw new ArgumentException("Argument 'absolutePathWithContainerNameAndPrependingSlash' doesn't have a path component after the container name component");
-            }
-
-            string containerName = absolutePathWithContainerNameAndPrependingSlash.Substring(0, absolutePathWithContainerNameAndPrependingSlash.IndexOf(FORWARD_SLASH));
-            string blobName = absolutePathWithContainerNameAndPrependingSlash.Substring(absolutePathWithContainerNameAndPrependingSlash.IndexOf(FORWARD_SLASH) + 1);
+            string containerName = path.Substring(0, path.IndexOf(FORWARD_SLASH));
+            string blobName = path.Substring(path.IndexOf(FORWARD_SLASH) + 1);
 
             return new PathComponents { Path = blobName, ContainerName = containerName };
         }

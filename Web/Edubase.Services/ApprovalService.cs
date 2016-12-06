@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 using System.Configuration;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Edubase.Common.Reflection;
 
 namespace Edubase.Services
 {

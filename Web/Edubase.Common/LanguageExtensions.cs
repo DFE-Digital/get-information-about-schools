@@ -133,6 +133,21 @@ namespace Edubase.Common
         }
 
         /// <summary>
+        /// Gets data from a dictionary or sets it using the supplied factory; either way, returns the value.
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <param name="factory"></param>
+        /// <returns></returns>
+        public static T2 Get<T1, T2>(this IDictionary<T1, T2> data, T1 key, Func<T2> factory)
+        {
+            if (data.ContainsKey(key)) return data[key];
+            else return data.Set(key, factory());
+        }
+
+        /// <summary>
         /// Sets a value to the dictionary and returns it
         /// </summary>
         /// <typeparam name="T1"></typeparam>

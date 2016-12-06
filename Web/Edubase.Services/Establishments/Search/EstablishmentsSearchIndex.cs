@@ -1,4 +1,4 @@
-﻿using Edubase.Services.IntegrationEndPoints.Models;
+﻿using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System;
 using System.Data.Entity.Spatial;
 

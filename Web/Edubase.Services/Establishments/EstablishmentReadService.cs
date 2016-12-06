@@ -18,7 +18,8 @@ using Edubase.Services.Exceptions;
 using MoreLinq;
 using Edubase.Common;
 using Edubase.Services.Establishments.Search;
-using Edubase.Services.IntegrationEndPoints;
+using Edubase.Services.IntegrationEndPoints.AzureSearch;
+using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 
 namespace Edubase.Services.Establishments
 {
@@ -139,5 +140,14 @@ namespace Edubase.Services.Establishments
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, int take = 10) 
             => await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text, take);
         
+
+        public async Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload)
+        {
+            return await _azureSearchService.SearchAsync<SearchEstablishmentDocument>(EstablishmentsSearchIndex.INDEX_NAME, 
+                payload.Text, payload.Filters.ToString().Clean(),payload.Skip, payload.Take, EstablishmentSearchPayload.FullTextSearchFields, payload.OrderBy); 
+        }
+
+        public async Task<bool> ExistsAsync(int urn, IPrincipal principal) => await GetQuery(principal).AnyAsync(x => x.Urn == urn && x.IsDeleted == false);
+
     }
 }
