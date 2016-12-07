@@ -14,18 +14,15 @@ namespace Edubase.Services.Establishments.DisplayPolicies
 
         protected override void ConfigureInternal()
         {
-            var isUserLoggedIn = Principal.Identity.IsAuthenticated;
-            var isSchoolClosed = Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
-
             HeadteacherDetails = true;
             AgeRange = true;
             GenderOfEntry = true;
             WebsiteAddress = true;
-            CloseDate = isSchoolClosed;
-            ReasonEstablishmentClosed = isSchoolClosed;
-            MainEmailAddress = isUserLoggedIn;
+            CloseDate = IsSchoolClosed;
+            ReasonEstablishmentClosed = IsSchoolClosed;
+            MainEmailAddress = IsUserLoggedIn;
             AlternativeEmailAddress = MainEmailAddress;
-            LastChangedDate = isUserLoggedIn;
+            LastChangedDate = IsUserLoggedIn;
             FurtherEducationType = true;
         }
     }

@@ -171,6 +171,7 @@
     <Compile Include="Cache\ICacheAccessor.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
+    <Compile Include="Domain\ChildrensCentreLocalAuthorityDto.cs" />
     <Compile Include="Domain\CompanyProfileDto.cs" />
     <Compile Include="Domain\CompanySearchDto.cs" />
     <Compile Include="Domain\ContactDetailDto.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Enums\eLookupAccommodationChanged.cs" />
     <Compile Include="Enums\eLookupAdmissionsPolicy.cs" />
     <Compile Include="Enums\eLookupBoardingEstablishment.cs" />
+    <Compile Include="Enums\eLookupCCDisadvantagedArea.cs" />
     <Compile Include="Enums\eLookupCCGovernance.cs" />
     <Compile Include="Enums\eLookupCCOperationalHours.cs" />
     <Compile Include="Enums\eLookupCCPhaseType.cs" />
@@ -236,6 +238,7 @@
     <Compile Include="EstablishmentService.cs" />
     <Compile Include="Establishments\DisplayPolicies\AcademyDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\BSODisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\ChildrensCentreLinkedSitesDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\ChildrensCentresDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\DisplayPolicyFactory.cs" />
     <Compile Include="Establishments\DisplayPolicies\EstablishmentDisplayPolicy.cs" />
@@ -246,7 +249,10 @@
     <Compile Include="Establishments\DisplayPolicies\PRUDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\SpecialPost16InstitutionDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\WelshDisplayPolicy.cs" />
+    <Compile Include="Establishments\Enums\EstabNumberEntryPolicy.cs" />
     <Compile Include="Establishments\EstablishmentReadService.cs" />
+    <Compile Include="Establishments\ILAESTABService.cs" />
+    <Compile Include="Establishments\LAESTABService.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchFilters.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchPayload.cs" />
     <Compile Include="Establishments\Search\EstablishmentsSearchIndex.cs" />

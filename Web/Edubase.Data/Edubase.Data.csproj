@@ -169,9 +169,9 @@
     <Compile Include="IApplicationDbContext.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
-    <Compile Include="Migrations\201612020946200_Initial.cs" />
-    <Compile Include="Migrations\201612020946200_Initial.Designer.cs">
-      <DependentUpon>201612020946200_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201612071339339_Initial.cs" />
+    <Compile Include="Migrations\201612071339339_Initial.Designer.cs">
+      <DependentUpon>201612071339339_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\UserAccountSeeder.cs" />
@@ -191,8 +191,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612020946200_Initial.resx">
-      <DependentUpon>201612020946200_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612071339339_Initial.resx">
+      <DependentUpon>201612071339339_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

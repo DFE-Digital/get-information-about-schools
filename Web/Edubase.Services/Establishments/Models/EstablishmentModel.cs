@@ -40,6 +40,7 @@ namespace Edubase.Services.Establishments.Models
         public string HeadFirstName { get; set; }
         public string HeadLastName { get; set; }
         public int? HeadTitleId { get; set; }
+        public string HeadEmailAddress { get; set; }
         public ContactDetailDto Contact { get; set; }
         public ContactDetailDto ContactAlt { get; set; }
         public int? TypeId { get; set; }
@@ -80,6 +81,14 @@ namespace Edubase.Services.Establishments.Models
         public int? MSOAId { get; set; }
         public int? LSOAId { get; set; }
         public int? FurtherEducationTypeId { get; set; }
+        public int? CCOperationalHoursId { get; set; }
+        public int? CCUnder5YearsOfAgeCount { get; set; }
+        public int? CCGovernanceId { get; set; }
+        public int? CCPhaseTypeId { get; set; }
+        public int? CCDisadvantagedAreaId { get; set; }
+        public int? CCDirectProvisionOfEarlyYearsId { get; set; }
+        public string CCGovernanceDetail { get; set; }
+
         public int? SenUnitOnRoll { get; set; }
         public int? SenUnitCapacity { get; set; }
         /// <summary>
@@ -90,5 +99,7 @@ namespace Edubase.Services.Establishments.Models
         public string BSOInspectorateReportUrl { get; set; }
         public DateTime? BSODateOfLastInspectionVisit { get; set; }
         public DateTime? BSODateOfNextInspectionVisit { get; set; }
+
+        public ChildrensCentreLocalAuthorityDto CCLAContactDetail { get; set; }
     }
 }

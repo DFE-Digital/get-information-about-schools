@@ -61,6 +61,8 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> CCGovernanceGetAll() => DataContext.LookupCCGovernance.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> CCOperationalHoursGetAllAsync() => (await DataContext.LookupCCOperationalHours.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> CCOperationalHoursGetAll() => DataContext.LookupCCOperationalHours.ToArray().Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> CCDisadvantagedAreasGetAllAsync() => (await DataContext.LookupCCDisadvantagedAreas.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> CCDisadvantagedAreasGetAll() => DataContext.LookupCCDisadvantagedAreas.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> CCPhaseTypesGetAllAsync() => (await DataContext.LookupCCPhaseTypes.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> CCPhaseTypesGetAll() => DataContext.LookupCCPhaseTypes.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> DiocesesGetAllAsync() => (await DataContext.LookupDioceses.ToArrayAsync()).Select(x => new LookupDto(x));

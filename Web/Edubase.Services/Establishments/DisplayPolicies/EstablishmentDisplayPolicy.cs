@@ -1,18 +1,20 @@
-﻿using Edubase.Data.Entity;
-using Edubase.Services.Enums;
+﻿using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
-using System.Web;
 
 namespace Edubase.Services.Establishments.DisplayPolicies
 {
     public abstract class EstablishmentDisplayPolicy
     {
         public bool HeadteacherDetails { get; set; }
+
+        public string HeadteacherLabel { get; set; } = "Headteacher/Principal";
+
+        public bool HeadEmailAddress { get; set; }
+
+        public string HeadEmailAddressLabel { get; set; } = "Headteacher/Principal email";
+
         public bool AgeRange { get; set; }
 
         public bool GenderOfEntry { get; set; }
@@ -21,8 +23,14 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         public bool LAESTAB { get; set; }
 
         public bool AdmissionsPolicy { get; set; }
+
+        public bool EstablishmentType { get; set; } = true;
+
+        public string EstablishmentTypeLabel { get; set; } = "School type";
+
         public bool FurtherEducationType { get; set; }
 
+        public bool TelephoneNumber { get; set; } = true;
         public bool WebsiteAddress { get; set; }
 
         public bool OfstedRatingDetails { get; set; }
@@ -44,6 +52,7 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         public bool SENStat { get; set; }
         public bool SENNoStat { get; set; }
         public bool MainEmailAddress { get; set; }
+        public string MainEmailAddressLabel { get; set; } = "Email";
         public bool AlternativeEmailAddress { get; set; }
         public bool HeadPreferredJobTitle { get; set; }
         public bool LastChangedDate { get; set; }
@@ -71,6 +80,7 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         public bool BSODateOfNextInspectionVisit { get; set; }
         public bool LocationDetails { get; set; } = true;
 
+
         //public bool RSCRegion { get; set; }
         //public bool GovernmentOfficeRegion { get; set; }
         //public bool AdministrativeDistrict { get; set; }
@@ -82,11 +92,34 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         //public bool MSOA { get; set; }
         //public bool LSOA { get; set; }
 
+
+
+        public bool CCOperationalHours { get; set; }
+        public bool CCGovernance { get; set; }
+        public bool CCUnder5YearsOfAgeCount { get; set; }
+        public bool CCPhaseType { get; set; }
+
+        public bool CCGovernanceDetail { get; set; }
+        public bool CCLAContactDetail { get; set; }
+
+        public bool DeliveryModel { get; set; }
+
+        public bool GroupCollaborationName { get; set; }
+        public bool GroupLeadCentre { get; set; }
+
+        public bool CCDisadvantagedArea { get; set; }
+
+        public bool CCDirectProvisionOfEarlyYears { get; set; }
+
         protected EstablishmentModel Establishment { get; private set; }
 
+    
         protected GroupModel Group { get; private set; }
         protected IPrincipal Principal { get; private set; }
-        
+
+        public bool IsUserLoggedIn { get; set; }
+        public bool IsSchoolClosed { get; set; }
+
 
         internal bool IsMatch(EstablishmentModel establishment)
             => establishment.TypeId.HasValue 
@@ -98,6 +131,10 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             Establishment = establishment;
             Group = group;
             Principal = principal;
+
+            IsUserLoggedIn = Principal.Identity.IsAuthenticated;
+            IsSchoolClosed = Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
+
             ConfigureInternal();
             return this;
         }

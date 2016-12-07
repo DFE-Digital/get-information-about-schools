@@ -52,6 +52,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
             builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();
+            builder.RegisterType<LAESTABService>().As<ILAESTABService>();
         }
     }
 }

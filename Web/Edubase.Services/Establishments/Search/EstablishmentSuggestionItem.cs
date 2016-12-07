@@ -1,4 +1,6 @@
-﻿namespace Edubase.Services.Establishments.Search
+﻿using Edubase.Common;
+
+namespace Edubase.Services.Establishments.Search
 {
     public class EstablishmentSuggestionItem
     {
@@ -7,6 +9,8 @@
         public string Name { get; set; }
         public string Address_CityOrTown { get; set; }
         public string Address_PostCode { get; set; }
-        public string Text => $"{Name} ({Address_CityOrTown}, {Address_PostCode})";
+        public string Text => Name + (Address_CityOrTown.Clean() == null && Address_PostCode.Clean() == null 
+            ? string.Empty 
+            : string.Concat("(", StringUtil.ConcatNonEmpties(", ", Address_CityOrTown, Address_PostCode), ")"));
     }
 }

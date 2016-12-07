@@ -120,6 +120,8 @@ namespace Edubase.Data.Entity
         [RequiresApproval]
         public int? HeadTitleId { get; set; }
 
+        public string HeadEmailAddress { get; set; }
+
         public ContactDetail Contact { get; set; }
 
         public ContactDetail ContactAlt { get; set; }
@@ -238,6 +240,25 @@ namespace Edubase.Data.Entity
 
         public LookupFurtherEducationType FurtherEducationType { get; set; }
         public int? FurtherEducationTypeId { get; set; }
+
+        public LookupCCGovernance CCGovernance { get; set; }
+        public int? CCGovernanceId { get; set; }
+
+        public string CCGovernanceDetail { get; set; }
+
+        public LookupCCOperationalHours CCOperationalHours { get; set; }
+        public int? CCOperationalHoursId { get; set; }
+
+        public LookupCCPhaseType CCPhaseType { get; set; }
+        public int? CCPhaseTypeId { get; set; }
+
+        public int? CCDisadvantagedAreaId { get; set; }
+        public LookupCCDisadvantagedArea CCDisadvantagedArea { get; set; }
+
+        public LookupDirectProvisionOfEarlyYears CCDirectProvisionOfEarlyYears { get; set; }
+        public int? CCDirectProvisionOfEarlyYearsId { get; set; }
+        
+        public int? CCUnder5YearsOfAgeCount { get; set; }
 
         public int? SenUnitOnRoll { get; set; }
         public int? SenUnitCapacity { get; set; }

@@ -18,17 +18,14 @@ namespace Edubase.Services.Establishments.DisplayPolicies
 
         protected override void ConfigureInternal()
         {
-            var isUserLoggedIn = Principal.Identity.IsAuthenticated;
-            var isSchoolClosed = Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
-
             CloseDate = true;
             ReasonEstablishmentClosed = true;
             LAESTAB = true;
             HeadteacherDetails = true;
             GenderOfEntry = true;
-            MainEmailAddress = isUserLoggedIn;
+            MainEmailAddress = IsUserLoggedIn;
             AlternativeEmailAddress = MainEmailAddress;
-            LastChangedDate = isUserLoggedIn;
+            LastChangedDate = IsUserLoggedIn;
         }
     }
 }

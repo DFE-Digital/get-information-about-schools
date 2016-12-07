@@ -45,8 +45,16 @@ namespace Edubase.Services.Establishments
         /// <returns></returns>
         public async Task<EstablishmentModel> GetAsync(int urn, IPrincipal principal)
         {
-            var establishment = await GetQuery(principal).FirstOrDefaultAsync(x => x.Urn == urn && x.IsDeleted == false);
-            var model = _mapper.Map<EstablishmentModel>(establishment);
+            var query = GetQuery(principal);
+            var dataModel = await query.FirstOrDefaultAsync(x => x.Urn == urn);
+            var model = _mapper.Map<EstablishmentModel>(dataModel);
+
+            if(model.TypeId == (int)eLookupEstablishmentType.ChildrensCentre) // supply LA contact details
+            {
+                var la = await _dbContext.LocalAuthorities.FirstOrDefaultAsync(x => x.Id == model.LocalAuthorityId);
+                model.CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(la);
+            }
+
             return model;
         }
 

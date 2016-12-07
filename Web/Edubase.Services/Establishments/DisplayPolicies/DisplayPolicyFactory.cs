@@ -19,7 +19,8 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             new WelshDisplayPolicy(),
             new SpecialPost16InstitutionDisplayPolicy(),
             new OtherDisplayPolicy(),
-            new ChildrensCentresDisplayPolicy()
+            new ChildrensCentresDisplayPolicy(),
+            new ChildrensCentreLinkedSitesDisplayPolicy()
         };
 
         public EstablishmentDisplayPolicy Create(IPrincipal principal, EstablishmentModel establishment, GroupModel group) 

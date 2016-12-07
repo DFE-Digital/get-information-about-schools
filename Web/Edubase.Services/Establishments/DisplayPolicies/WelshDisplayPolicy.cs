@@ -9,13 +9,10 @@ namespace Edubase.Services.Establishments.DisplayPolicies
 
         protected override void ConfigureInternal()
         {
-            var isUserLoggedIn = Principal.Identity.IsAuthenticated;
-            var isSchoolClosed = Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
-
-            CloseDate = isSchoolClosed;
-            ReasonEstablishmentClosed = isSchoolClosed;
+            CloseDate = IsSchoolClosed;
+            ReasonEstablishmentClosed = IsSchoolClosed;
             ReligiousCharacter = true;
-            LastChangedDate = isUserLoggedIn;
+            LastChangedDate = IsUserLoggedIn;
             LAESTAB = true;
             Section41Approved = true;
         }

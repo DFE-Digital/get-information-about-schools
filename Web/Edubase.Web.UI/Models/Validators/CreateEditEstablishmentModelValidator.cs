@@ -1,4 +1,6 @@
 ﻿using Edubase.Services;
+using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Enums;
 using FluentValidation;
 
 namespace Edubase.Web.UI.Models.Validators
@@ -41,7 +43,7 @@ namespace Edubase.Web.UI.Models.Validators
         {
             When(x => x.TypeId.HasValue && x.EducationPhaseId.HasValue, () =>
             {
-                When(x => new EstablishmentService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstablishmentService.EstabNumberEntryPolicy.UserDefined, () =>
+                When(x => new LAESTABService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstabNumberEntryPolicy.UserDefined, () =>
                 {
                     RuleFor(x => x.LAESTAB)
                     .Cascade(CascadeMode.StopOnFirstFailure)
@@ -53,7 +55,7 @@ namespace Edubase.Web.UI.Models.Validators
                     .WithMessage("The LAESTAB should be 7 characters long");
                 });
 
-                When(x => new EstablishmentService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstablishmentService.EstabNumberEntryPolicy.NonePermitted, () =>
+                When(x => new LAESTABService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstabNumberEntryPolicy.NonePermitted, () =>
                 {
                     RuleFor(x => x.LAESTAB).Empty().WithMessage("The LAESTAB should be empty for this combination of phase and establishment type.");
                 });

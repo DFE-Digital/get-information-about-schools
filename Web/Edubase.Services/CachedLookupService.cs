@@ -65,6 +65,11 @@ namespace Edubase.Services
                 { "LSOAId", async (dc, id) => (await LSOAsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "FurtherEducationTypeId", async (dc, id) => (await FurtherEducationTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "InspectorateNameId", async (dc, id) => (await InspectorateNamesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCOperationalHoursId", async (dc, id) => (await CCOperationalHoursGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCGovernanceId", async (dc, id) => (await CCGovernanceGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCPhaseTypeId", async (dc, id) => (await CCPhaseTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCDisadvantagedAreaId", async (dc, id) => (await CCDisadvantagedAreasGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCDirectProvisionOfEarlyYearsId", async (dc, id) => (await DirectProvisionOfEarlyYearsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
             };
 
             _mapping = new Dictionary<string, Func<ApplicationDbContext, int, string>>()
@@ -111,6 +116,11 @@ namespace Edubase.Services
                 { "LSOAId",  (dc, id) => ( LSOAsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "FurtherEducationTypeId",  (dc, id) => ( FurtherEducationTypesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "InspectorateNameId",  (dc, id) => ( InspectorateNamesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCOperationalHoursId",  (dc, id) => ( CCOperationalHoursGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCGovernanceId",  (dc, id) => ( CCGovernanceGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCPhaseTypeId",  (dc, id) => ( CCPhaseTypesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCDisadvantagedAreaId",  (dc, id) => ( CCDisadvantagedAreasGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCDirectProvisionOfEarlyYearsId",  (dc, id) => ( DirectProvisionOfEarlyYearsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
             };
         }
 
@@ -158,6 +168,8 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> CCGovernanceGetAll() => Cacher.Auto(_svc.CCGovernanceGetAll);
         public async Task<IEnumerable<LookupDto>> CCOperationalHoursGetAllAsync() => await Cacher.AutoAsync(_svc.CCOperationalHoursGetAllAsync);
         public IEnumerable<LookupDto> CCOperationalHoursGetAll() => Cacher.Auto(_svc.CCOperationalHoursGetAll);
+        public async Task<IEnumerable<LookupDto>> CCDisadvantagedAreasGetAllAsync() => await Cacher.AutoAsync(_svc.CCDisadvantagedAreasGetAllAsync);
+        public IEnumerable<LookupDto> CCDisadvantagedAreasGetAll() => Cacher.Auto(_svc.CCDisadvantagedAreasGetAll);
         public async Task<IEnumerable<LookupDto>> CCPhaseTypesGetAllAsync() => await Cacher.AutoAsync(_svc.CCPhaseTypesGetAllAsync);
         public IEnumerable<LookupDto> CCPhaseTypesGetAll() => Cacher.Auto(_svc.CCPhaseTypesGetAll);
         public async Task<IEnumerable<LookupDto>> DiocesesGetAllAsync() => await Cacher.AutoAsync(_svc.DiocesesGetAllAsync);

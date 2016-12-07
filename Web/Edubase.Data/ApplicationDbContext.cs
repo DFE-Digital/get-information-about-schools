@@ -69,6 +69,7 @@ namespace Edubase.Data.Entity
         public DbSet<LookupBoardingEstablishment> LookupBoardingEstablishment { get; set; }
         public DbSet<LookupCCGovernance> LookupCCGovernance { get; set; }
         public DbSet<LookupCCOperationalHours> LookupCCOperationalHours { get; set; }
+        public DbSet<LookupCCDisadvantagedArea> LookupCCDisadvantagedAreas { get; set; }
         public DbSet<LookupCCPhaseType> LookupCCPhaseTypes { get; set; }
         public DbSet<LookupDiocese> LookupDioceses { get; set; }
         public DbSet<LookupChildcareFacilities> LookupChildcareFacilities { get; set; }

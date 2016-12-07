@@ -6,6 +6,7 @@ using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Data.Identity;
 using Edubase.Services;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Enums;
 using Edubase.Services.Groups;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Models;
@@ -30,12 +31,15 @@ namespace Edubase.Web.UI.Controllers
         private IEstablishmentReadService _establishmentReadService;
         private IGroupReadService _groupReadService;
         private IMapper _mapper;
+        private ILAESTABService _laEstabService;
 
-        public EstablishmentController(IEstablishmentReadService establishmentReadService, IGroupReadService groupReadService, IMapper mapper)
+        public EstablishmentController(IEstablishmentReadService establishmentReadService, 
+            IGroupReadService groupReadService, IMapper mapper, ILAESTABService laEstabService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _mapper = mapper;
+            _laEstabService = laEstabService;
         }
 
         [HttpGet, Authorize]
@@ -263,12 +267,10 @@ namespace Edubase.Web.UI.Controllers
                 using (var dc = ApplicationDbContext.Create())
                 {
                     var dataModel = _mapper.Map<Establishment>(model);
-
-                    var svc = new EstablishmentService();
-                    var pol = svc.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);
-                    if(pol == EstablishmentService.EstabNumberEntryPolicy.SystemGenerated)
+                    var pol = _laEstabService.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);
+                    if(pol == EstabNumberEntryPolicy.SystemGenerated)
                     {
-                        dataModel.EstablishmentNumber = svc.GenerateEstablishmentNumber(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value, dataModel.LocalAuthorityId.Value);
+                        dataModel.EstablishmentNumber = _laEstabService.GenerateEstablishmentNumber(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value, dataModel.LocalAuthorityId.Value);
                     }
 
                     dc.Establishments.Add(dataModel);

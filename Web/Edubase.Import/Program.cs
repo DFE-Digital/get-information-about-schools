@@ -198,6 +198,7 @@ namespace Edubase.Services.Enums
                 MigrateLookup<LookupTeenageMothersProvision>(source.Teenagemothers, connection);
                 MigrateLookup<LookupTypeOfResourcedProvision>(source.Typeofresourcedprovision, connection);
                 MigrateLookup<LookupEstablishmentType>(source.Typeofestablishment, connection);
+                MigrateLookup<LookupCCDisadvantagedArea>(source.Ccdisadvantagedarea, connection);
                 MigrateLookup<LookupEstablishmentTypeGroup>(source.Establishmenttypegroup, connection);
                 MigrateLookup<LookupGovernmentOfficeRegion>(source.GOR, connection);
                 MigrateLookup<LookupDistrictAdministrative>(source.Districtadministrative, connection);

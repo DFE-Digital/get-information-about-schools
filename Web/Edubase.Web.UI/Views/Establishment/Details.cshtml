@@ -72,10 +72,20 @@ else if (Model.UserHasPendingApprovals)
             @if (Model.DisplayPolicy.HeadteacherDetails)
             {
                 <tr>
-                    <th scope="row">Headteacher/Principal:</th>
+                    <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel):</th>
                     <td>
                         @(Html.PendingUpdatesFor("HeadTitleId", "HeadFirstName", "HeadLastName"))
                         @Html.NameFor(x => x.Establishment.HeadTitleId) @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
+                    </td>
+                </tr>
+            }
+
+            @if (Model.DisplayPolicy.HeadEmailAddress)
+            {
+                <tr>
+                    <th scope="row">@(Model.DisplayPolicy.HeadEmailAddressLabel):</th>
+                    <td>
+                        @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
                     </td>
                 </tr>
             }
@@ -102,14 +112,17 @@ else if (Model.UserHasPendingApprovals)
                 </td>
             </tr>
             
-            <tr>
-                <th scope="row">School type</th>
-                <td>
-                    @(Html.PendingUpdatesFor(x => x.TypeId))
-                    @Html.NameFor(x => x.Establishment.TypeId)
-                </td>
-            </tr>
-            
+            @if (Model.DisplayPolicy.EstablishmentType)
+            {
+                <tr>
+                    <th scope="row">@(Model.DisplayPolicy.EstablishmentTypeLabel):</th>
+                    <td>
+                        @(Html.PendingUpdatesFor(x => x.TypeId))
+                        @Html.NameFor(x => x.Establishment.TypeId)
+                    </td>
+                </tr>
+            }
+
             @if (Model.DisplayPolicy.FurtherEducationType)
             {
                 <tr>
@@ -191,8 +204,11 @@ else if (Model.UserHasPendingApprovals)
                 </tr>
             }
 
-             <tr><th scope="row">Telephone:</th><td>@Model.Establishment.Contact.TelephoneNumber</td></tr>
-            
+            @if (Model.DisplayPolicy.TelephoneNumber)
+            {
+                <tr><th scope="row">Telephone:</th><td>@Model.Establishment.Contact.TelephoneNumber</td></tr>
+            }
+
             @if (Model.DisplayPolicy.OfstedRatingDetails)
             {
                 <tr>
@@ -353,12 +369,133 @@ else if (Model.UserHasPendingApprovals)
                         <tr>
                             <th scope="row">Close date / Reason:</th>
                             <td>
-                                @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy"))<br />
+                                @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
                                 @Html.NameFor(x => x.Establishment.ReasonEstablishmentClosedId)
                             </td>
                         </tr>
                     }
 
+                    @if (Model.DisplayPolicy.CCOperationalHours)
+                    {
+                        <tr>
+                            <th scope="row">Operational hours:</th>
+                            <td>
+                                @Html.NameFor(x => x.Establishment.CCOperationalHoursId)
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayPolicy.CCUnder5YearsOfAgeCount)
+                    {
+                        <tr>
+                            <th scope="row">Number of under 5s:</th>
+                            <td>
+                                @Model.Establishment.CCUnder5YearsOfAgeCount
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayPolicy.CCGovernance)
+                    {
+                        <tr>
+                            <th scope="row">Governance:</th>
+                            <td>
+                                @Html.NameFor(x => x.Establishment.CCGovernanceId)
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayPolicy.CCGovernanceDetail)
+                    {
+                        <tr>
+                            <th scope="row">Governance detail:</th>
+                            <td>
+                                @(Model.Establishment.CCGovernanceDetail ?? "Not recorded")
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayPolicy.CCLAContactDetail)
+                    {
+                        <tr>
+                            <th scope="row">Local authority contact name:</th>
+                            <td>
+                                @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded" )
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Local authority contact email:</th>
+                            <td>
+                                @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded" )
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Local authority contact telephone number:</th>
+                            <td>
+                                @(Model.Establishment?.CCLAContactDetail?.TelephoneNumber ?? "Not recorded")
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayPolicy.DeliveryModel)
+                    {
+                        <tr>
+                            <th scope="row">Delivery model:</th>
+                            <td>
+                                [NOT_MAPPED]
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayPolicy.GroupCollaborationName)
+                    {
+                        <tr>
+                            <th scope="row">Group/Collaboration name:</th>
+                            <td>
+                                [NOT_MAPPED]
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayPolicy.GroupLeadCentre)
+                    {
+                        <tr>
+                            <th scope="row">Group/Collaboration name:</th>
+                            <td>
+                                [NOT_MAPPED]
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayPolicy.CCPhaseType)
+                    {
+                        <tr>
+                            <th scope="row">Phase:</th>
+                            <td>
+                                @Html.NameFor(x => x.Establishment.CCPhaseTypeId)
+                            </td>
+                        </tr>
+                    }
+                    
+                    @if (Model.DisplayPolicy.CCDisadvantagedArea)
+                    {
+                        <tr>
+                            <th scope="row">Disadvantaged area:</th>
+                            <td>
+                                @Html.NameFor(x => x.Establishment.CCDisadvantagedAreaId)
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.DisplayPolicy.CCDirectProvisionOfEarlyYears)
+                    {
+                        <tr>
+                            <th scope="row">Direct provision of early years:</th>
+                            <td>
+                                @Html.NameFor(x => x.Establishment.CCDirectProvisionOfEarlyYearsId)
+                            </td>
+                        </tr>
+                    }
 
                     @if (Model.DisplayPolicy.SpecialClasses)
                     {
@@ -389,8 +526,8 @@ else if (Model.UserHasPendingApprovals)
                     @if (Model.DisplayPolicy.MainEmailAddress)
                     {
                         <tr>
-                            <th scope="row">Email:</th>
-                            <td>@Model.Establishment.Contact.EmailAddress</td>
+                            <th scope="row">@Model.DisplayPolicy.MainEmailAddressLabel:</th>
+                            <td>@(Model.Establishment.Contact.EmailAddress ?? "Not recorded")</td>
                         </tr>
                     }
 

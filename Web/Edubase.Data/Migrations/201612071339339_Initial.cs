@@ -74,6 +74,7 @@ namespace Edubase.Data.Migrations
                         HeadFirstName = c.String(),
                         HeadLastName = c.String(),
                         HeadTitleId = c.Int(),
+                        HeadEmailAddress = c.String(),
                         Contact_TelephoneNumber = c.String(),
                         Contact_EmailAddress = c.String(),
                         Contact_WebsiteAddress = c.String(),
@@ -119,6 +120,13 @@ namespace Edubase.Data.Migrations
                         MSOAId = c.Int(),
                         LSOAId = c.Int(),
                         FurtherEducationTypeId = c.Int(),
+                        CCGovernanceId = c.Int(),
+                        CCGovernanceDetail = c.String(),
+                        CCOperationalHoursId = c.Int(),
+                        CCPhaseTypeId = c.Int(),
+                        CCDisadvantagedAreaId = c.Int(),
+                        CCDirectProvisionOfEarlyYearsId = c.Int(),
+                        CCUnder5YearsOfAgeCount = c.Int(),
                         SenUnitOnRoll = c.Int(),
                         SenUnitCapacity = c.Int(),
                         RSCRegionId = c.Int(),
@@ -137,6 +145,11 @@ namespace Edubase.Data.Migrations
                 .ForeignKey("dbo.LookupAdmissionsPolicy", t => t.AdmissionsPolicyId)
                 .ForeignKey("dbo.LookupInspectorateName", t => t.BSOInspectorateId)
                 .ForeignKey("dbo.LookupCASWard", t => t.CASWardId)
+                .ForeignKey("dbo.LookupDirectProvisionOfEarlyYears", t => t.CCDirectProvisionOfEarlyYearsId)
+                .ForeignKey("dbo.LookupCCDisadvantagedArea", t => t.CCDisadvantagedAreaId)
+                .ForeignKey("dbo.LookupCCGovernance", t => t.CCGovernanceId)
+                .ForeignKey("dbo.LookupCCOperationalHours", t => t.CCOperationalHoursId)
+                .ForeignKey("dbo.LookupCCPhaseType", t => t.CCPhaseTypeId)
                 .ForeignKey("dbo.LookupChildcareFacilities", t => t.ChildcareFacilitiesId)
                 .ForeignKey("dbo.LookupDiocese", t => t.DioceseId)
                 .ForeignKey("dbo.LookupEducationPhase", t => t.EducationPhaseId)
@@ -214,6 +227,11 @@ namespace Edubase.Data.Migrations
                 .Index(t => t.MSOAId)
                 .Index(t => t.LSOAId)
                 .Index(t => t.FurtherEducationTypeId)
+                .Index(t => t.CCGovernanceId)
+                .Index(t => t.CCOperationalHoursId)
+                .Index(t => t.CCPhaseTypeId)
+                .Index(t => t.CCDisadvantagedAreaId)
+                .Index(t => t.CCDirectProvisionOfEarlyYearsId)
                 .Index(t => t.RSCRegionId)
                 .Index(t => t.BSOInspectorateId);
             
@@ -279,6 +297,81 @@ namespace Edubase.Data.Migrations
             
             CreateTable(
                 "dbo.LookupCASWard",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false),
+                        DisplayOrder = c.Short(),
+                        Code = c.String(),
+                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        IsDeleted = c.Boolean(nullable: false),
+                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.LookupDirectProvisionOfEarlyYears",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false),
+                        DisplayOrder = c.Short(),
+                        Code = c.String(),
+                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        IsDeleted = c.Boolean(nullable: false),
+                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.LookupCCDisadvantagedArea",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false),
+                        DisplayOrder = c.Short(),
+                        Code = c.String(),
+                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        IsDeleted = c.Boolean(nullable: false),
+                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.LookupCCGovernance",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false),
+                        DisplayOrder = c.Short(),
+                        Code = c.String(),
+                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        IsDeleted = c.Boolean(nullable: false),
+                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.LookupCCOperationalHours",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(nullable: false),
+                        DisplayOrder = c.Short(),
+                        Code = c.String(),
+                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
+                        IsDeleted = c.Boolean(nullable: false),
+                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.LookupCCPhaseType",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -1090,66 +1183,6 @@ namespace Edubase.Data.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.LookupCCGovernance",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(nullable: false),
-                        DisplayOrder = c.Short(),
-                        Code = c.String(),
-                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        IsDeleted = c.Boolean(nullable: false),
-                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "dbo.LookupCCOperationalHours",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(nullable: false),
-                        DisplayOrder = c.Short(),
-                        Code = c.String(),
-                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        IsDeleted = c.Boolean(nullable: false),
-                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "dbo.LookupCCPhaseType",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(nullable: false),
-                        DisplayOrder = c.Short(),
-                        Code = c.String(),
-                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        IsDeleted = c.Boolean(nullable: false),
-                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "dbo.LookupDirectProvisionOfEarlyYears",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(nullable: false),
-                        DisplayOrder = c.Short(),
-                        Code = c.String(),
-                        CreatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        LastUpdatedUtc = c.DateTime(nullable: false, precision: 7, storeType: "datetime2"),
-                        IsDeleted = c.Boolean(nullable: false),
-                        RowVersion = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion"),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
                 "dbo.LookupIndependentSchoolType",
                 c => new
                     {
@@ -1296,6 +1329,11 @@ namespace Edubase.Data.Migrations
             DropForeignKey("dbo.Establishment", "EducationPhaseId", "dbo.LookupEducationPhase");
             DropForeignKey("dbo.Establishment", "DioceseId", "dbo.LookupDiocese");
             DropForeignKey("dbo.Establishment", "ChildcareFacilitiesId", "dbo.LookupChildcareFacilities");
+            DropForeignKey("dbo.Establishment", "CCPhaseTypeId", "dbo.LookupCCPhaseType");
+            DropForeignKey("dbo.Establishment", "CCOperationalHoursId", "dbo.LookupCCOperationalHours");
+            DropForeignKey("dbo.Establishment", "CCGovernanceId", "dbo.LookupCCGovernance");
+            DropForeignKey("dbo.Establishment", "CCDisadvantagedAreaId", "dbo.LookupCCDisadvantagedArea");
+            DropForeignKey("dbo.Establishment", "CCDirectProvisionOfEarlyYearsId", "dbo.LookupDirectProvisionOfEarlyYears");
             DropForeignKey("dbo.Establishment", "CASWardId", "dbo.LookupCASWard");
             DropForeignKey("dbo.Establishment", "BSOInspectorateId", "dbo.LookupInspectorateName");
             DropForeignKey("dbo.Establishment", "AdmissionsPolicyId", "dbo.LookupAdmissionsPolicy");
@@ -1324,6 +1362,11 @@ namespace Edubase.Data.Migrations
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.Establishment", new[] { "BSOInspectorateId" });
             DropIndex("dbo.Establishment", new[] { "RSCRegionId" });
+            DropIndex("dbo.Establishment", new[] { "CCDirectProvisionOfEarlyYearsId" });
+            DropIndex("dbo.Establishment", new[] { "CCDisadvantagedAreaId" });
+            DropIndex("dbo.Establishment", new[] { "CCPhaseTypeId" });
+            DropIndex("dbo.Establishment", new[] { "CCOperationalHoursId" });
+            DropIndex("dbo.Establishment", new[] { "CCGovernanceId" });
             DropIndex("dbo.Establishment", new[] { "FurtherEducationTypeId" });
             DropIndex("dbo.Establishment", new[] { "LSOAId" });
             DropIndex("dbo.Establishment", new[] { "MSOAId" });
@@ -1373,10 +1416,6 @@ namespace Edubase.Data.Migrations
             DropTable("dbo.LookupNationality");
             DropTable("dbo.LookupLocalGovernors");
             DropTable("dbo.LookupIndependentSchoolType");
-            DropTable("dbo.LookupDirectProvisionOfEarlyYears");
-            DropTable("dbo.LookupCCPhaseType");
-            DropTable("dbo.LookupCCOperationalHours");
-            DropTable("dbo.LookupCCGovernance");
             DropTable("dbo.LookupBoardingEstablishment");
             DropTable("dbo.LookupAccommodationChanged");
             DropTable("dbo.LookupGovernorRole");
@@ -1426,6 +1465,11 @@ namespace Edubase.Data.Migrations
             DropTable("dbo.LookupEducationPhase");
             DropTable("dbo.LookupDiocese");
             DropTable("dbo.LookupChildcareFacilities");
+            DropTable("dbo.LookupCCPhaseType");
+            DropTable("dbo.LookupCCOperationalHours");
+            DropTable("dbo.LookupCCGovernance");
+            DropTable("dbo.LookupCCDisadvantagedArea");
+            DropTable("dbo.LookupDirectProvisionOfEarlyYears");
             DropTable("dbo.LookupCASWard");
             DropTable("dbo.LookupInspectorateName");
             DropTable("dbo.LookupAdmissionsPolicy");

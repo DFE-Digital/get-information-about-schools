@@ -127,6 +127,7 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.PruEducatedByOthersId, opt => opt.MapFrom(m => L.PruEducatedByOthersGetAll().Id(m.EdByOthercode)))
                     .ForMember(x => x.TypeOfResourcedProvisionId, opt => opt.MapFrom(m => L.TypeOfResourcedProvisionsGetAll().Id(m.TypeOfResourcedProvisioncode)))
                     .ForMember(x => x.Urn, opt => opt.MapFrom(m => m.URN.ToInteger()))
+                    .ForMember(x => x.HeadEmailAddress, opt => opt.MapFrom(m => m.HeadEmail.ToCleanEmail()))
                     .ForMember(x => x.ResourcedProvisionCapacity, opt => opt.MapFrom(m => m.ResourcedProvisionCapacity.ToInteger()))
                     .ForMember(x => x.ResourcedProvisionOnRoll, opt => opt.MapFrom(m => m.ResourcedProvisionOnRoll.ToInteger()))
                     .ForMember(x => x.SenUnitCapacity, opt => opt.MapFrom(m => m.SenUnitCapacity.ToInteger()))
@@ -141,6 +142,13 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.MSOAId, opt => opt.MapFrom(m => L.MSOAsGetAll().Id(m.MSOAcode)))
                     .ForMember(x => x.LSOAId, opt => opt.MapFrom(m => L.LSOAsGetAll().Id(m.LSOAcode)))
                     .ForMember(x => x.FurtherEducationTypeId, opt => opt.MapFrom(m => L.FurtherEducationTypesGetAll().Id(m.FurtherEducationTypecode)))
+                    .ForMember(x => x.CCGovernanceId, opt => opt.MapFrom(m => L.CCGovernanceGetAll().Id(m.CCGovernancecode)))
+                    .ForMember(x => x.CCGovernanceDetail, opt => opt.MapFrom(m => m.CCGovernanceDetail.Clean()))
+                    .ForMember(x => x.CCOperationalHoursId, opt => opt.MapFrom(m => L.CCOperationalHoursGetAll().Id(m.CCOperationalHourscode)))
+                    .ForMember(x => x.CCDirectProvisionOfEarlyYearsId, opt => opt.MapFrom(m => L.DirectProvisionOfEarlyYearsGetAll().Id(m.CCDirectProvisionOfEarlyYearscode)))
+                    .ForMember(x => x.CCPhaseTypeId, opt => opt.MapFrom(m => L.CCPhaseTypesGetAll().Id(m.ChildrensCentresPhaseTypecode)))
+                    .ForMember(x => x.CCDisadvantagedAreaId, opt => opt.MapFrom(m => L.CCDisadvantagedAreasGetAll().Id(m.CCDisadvantagedAreacode)))
+                    .ForMember(x => x.CCUnder5YearsOfAgeCount, opt => opt.MapFrom(m => m.CCNumberOfUnder5s.ToInteger()))
                     .ForMember(x => x.BSOInspectorateId, opt => opt.MapFrom(m => L.InspectorateNamesGetAll().Id(m.InspectorateNamecode)))
                     .ForMember(x => x.BSODateOfLastInspectionVisit, opt => opt.MapFrom(m => m.DateOfLastInspectionVisit.ToDateTime(_dtFormats)))
                     .ForMember(x => x.BSODateOfNextInspectionVisit, opt => opt.MapFrom(m => m.NextInspectionVisit.ToDateTime(_dtFormats)))
@@ -151,7 +159,7 @@ namespace Edubase.Import.Mapping
                         if (rating != null)
                         {
                             dest.OfstedInspectionDate = rating.Inspectiondate.ToDateTime(_dtFormats);
-                            dest.OfstedRating = System.Convert.ToByte(rating.Overalleffectiveness);
+                            dest.OfstedRating = Convert.ToByte(rating.Overalleffectiveness);
                         }
                     })
                     .ForAllOtherMembers(opt => opt.Ignore());

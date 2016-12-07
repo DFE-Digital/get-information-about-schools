@@ -23,6 +23,7 @@
     public class LookupCCGovernance : LookupBase { }
     public class LookupCCOperationalHours : LookupBase { }
     public class LookupCCPhaseType : LookupBase { }
+    public class LookupCCDisadvantagedArea : LookupBase { }
     public class LookupDiocese : LookupBase { }
     public class LookupChildcareFacilities : LookupBase { }
     public class LookupDirectProvisionOfEarlyYears : LookupBase { }

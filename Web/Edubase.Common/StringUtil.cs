@@ -8,7 +8,7 @@ namespace Edubase.Common
     public class StringUtil
     {
         public static string ConcatNonEmpties(string separator, params string[] items) => 
-            string.Join(separator, items.Where(x => x.Clean() != null));
+            string.Join(separator, items.Where(x => x.Clean() != null)).Clean();
 
         /// <summary>
         /// Takes a string array and converts it into a sentence

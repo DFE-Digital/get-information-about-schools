@@ -9,9 +9,6 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         
         protected override void ConfigureInternal()
         {
-            var isUserLoggedIn = Principal.Identity.IsAuthenticated;
-            var isSchoolClosed = Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
-
             HeadteacherDetails = true;
             AgeRange = true;
             GenderOfEntry = true;
@@ -19,9 +16,9 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             WebsiteAddress = true;
             CloseDate = true;
             ReasonEstablishmentClosed = true;
-            MainEmailAddress = isUserLoggedIn;
+            MainEmailAddress = IsUserLoggedIn;
             AlternativeEmailAddress = MainEmailAddress;
-            LastChangedDate = isUserLoggedIn;
+            LastChangedDate = IsUserLoggedIn;
             BSODateOfLastInspectionVisit = BSODateOfNextInspectionVisit = BSOInspectorate = BSOInspectorateReport = true;
             LocationDetails = false;
         }
