@@ -33,7 +33,7 @@ namespace Edubase.Web.UI.Controllers.Api
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: odata/Groups
-        [EnableQuery]
+        [EnableQuery(MaxTop = 100, PageSize = 10)]
         public IQueryable<GroupCollection> GetGroups()
         {
             return db.Groups;

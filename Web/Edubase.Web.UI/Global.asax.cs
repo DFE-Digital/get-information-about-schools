@@ -8,6 +8,7 @@ using System;
 using System.Data.Entity;
 using System.Runtime.Caching;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -18,10 +19,10 @@ namespace Edubase.Web.UI
     {
         protected void Application_Start()
         {
+            GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
             IocConfig.Register();
 
             // REMOVE WHEN IN WEBFARM!!!!!
