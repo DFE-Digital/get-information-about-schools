@@ -1,0 +1,25 @@
+﻿
+
+.create-edit-form-group {
+    margin-bottom: 23px;
+
+    label {
+        margin-bottom: 2px;
+    }
+}
+
+select#headtitleid {
+    width: 70px;
+}
+
+.create-edit-section-break {
+    margin-bottom: 1em;
+    padding-bottom: 0.4em;
+    border-bottom: $grey-3 3px solid;
+}
+
+.drop-down-date {
+    select {
+        width: 70px;
+    }
+}

@@ -122,6 +122,14 @@
             background-repeat: no-repeat;
             background-size: contain;
             cursor: pointer;
+            
+            &:active {
+                border: 0;
+                outline: none;
+            }
+            &:focus {
+                background-color: transparent;
+            }
         }
 
         a {
@@ -416,3 +424,10 @@ table.mvo { // mobile-visible-only
 }
 
 
+.pending-closure {
+    color: $red;
+}
+
+#school-change-history h2 {
+    margin-bottom: 8px;
+}

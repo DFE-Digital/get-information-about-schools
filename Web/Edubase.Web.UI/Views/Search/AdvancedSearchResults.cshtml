@@ -85,7 +85,7 @@
                     @Selector("Religious character", "r", Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
                     <div class="filter-divider"></div>
 
-                    <input type="submit" value="Update" class="button" style="font-size:19px;" />
+                    <input type="submit" value="Update" class="button edubase-filter-submit" />
 
                     @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
                     {
@@ -195,8 +195,15 @@
     <script>
         $(function () {
             var $clearLinks = $('#EditSearchCollapse').find('.clear-selections');
+
             $('.govuk-option-select').map(function () {
                 return new GOVUK.OptionSelect({ $el: $(this) });
+            });
+
+            $('.govuk-option-select').each(function() {
+                if ($(this).find('.js-selected-counter').text().length) {
+                    $(this).find('.clear-selections').addClass('active-clear');
+                }
             });
 
             $clearLinks.on('click', function (e) {
