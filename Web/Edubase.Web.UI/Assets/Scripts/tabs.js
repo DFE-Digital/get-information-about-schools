@@ -44,7 +44,7 @@
             $tabs.on('click', function (e) {
                 e.preventDefault();
                 var targetContent = $(this).attr('href');
-                window.location.hash = targetContent.replace('#', '');
+                location.replace(targetContent);
                 
                 // undo previous selection
                 $tabs.removeClass(opts.selectedTabClass);

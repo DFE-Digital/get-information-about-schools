@@ -1,11 +1,12 @@
 ﻿// styles for the schools search view
 
-// 'radio button' that opens the searh field
+// 'radio button' that opens the search field
 .panel-toggle {
     display: none;
     width: 29px;
     height: 29px;
     vertical-align: middle;
+    
 
     .js-enabled & {
         display: inline-block;
@@ -20,6 +21,7 @@
         padding: 12px;
         margin-bottom: 12px;
         width: 50%;
+        overflow: hidden;
 
         @media(max-width:640px) {
             min-width: 94%;
@@ -31,6 +33,11 @@
         }
     }
 
+    .label-text {
+        display: inline-block;
+        max-width: 80%;
+        vertical-align: middle;
+    }
     .search-hint {
         display: block;
         clear: left;
@@ -48,9 +55,7 @@
             display: none;
         }
 
-
-
-
+        
         .form-control {
             width: 60%;
             float: left;
@@ -130,5 +135,5 @@
 
 .search-all-shortcut {
     clear: both;
-    margin: 24px 0 0;
+    margin: 36px 0 0;
 }
