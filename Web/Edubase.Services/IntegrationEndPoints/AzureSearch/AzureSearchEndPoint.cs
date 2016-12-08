@@ -14,7 +14,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch
 {
     public class AzureSearchEndPoint : IAzureSearchEndPoint
     {
-        private const string ODATA_FILTER_DELETED = "IsDeleted eq false";
+        public const string ODATA_FILTER_DELETED = "IsDeleted eq false";
         private string _connectionString;
         private Dictionary<Type, IList<string>> _fieldLists = new Dictionary<Type, IList<string>>();
         

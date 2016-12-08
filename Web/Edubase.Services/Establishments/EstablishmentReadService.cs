@@ -30,6 +30,19 @@ namespace Edubase.Services.Establishments
         private ICachedLookupService _cachedLookupService;
         private IAzureSearchEndPoint _azureSearchService;
 
+        /// <summary>
+        /// Allow these roles to see establishments of all statuses
+        /// </summary>
+        private readonly string[] _nonStatusRestrictiveRoles = new[] { EdubaseRoles.EFA, EdubaseRoles.AOS, EdubaseRoles.FSG,
+            EdubaseRoles.IEBT, EdubaseRoles.School, EdubaseRoles.PRU, EdubaseRoles.Admin };
+        private readonly int[] _restrictedStatuses = new[]
+        {
+            eLookupEstablishmentStatus.Closed,
+            eLookupEstablishmentStatus.Open,
+            eLookupEstablishmentStatus.OpenButProposedToClose,
+            eLookupEstablishmentStatus.ProposedToOpen
+        }.Select(x => (int)x).ToArray();
+
         public EstablishmentReadService(IApplicationDbContext dbContext, IMapper mapper, ICachedLookupService cachedLookupService, IAzureSearchEndPoint azureSearchService)
         {
             _dbContext = dbContext;
@@ -47,15 +60,19 @@ namespace Edubase.Services.Establishments
         {
             var query = GetQuery(principal);
             var dataModel = await query.FirstOrDefaultAsync(x => x.Urn == urn);
-            var model = _mapper.Map<EstablishmentModel>(dataModel);
-
-            if(model.TypeId == (int)eLookupEstablishmentType.ChildrensCentre) // supply LA contact details
+            if (dataModel != null)
             {
-                var la = await _dbContext.LocalAuthorities.FirstOrDefaultAsync(x => x.Id == model.LocalAuthorityId);
-                model.CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(la);
-            }
+                var model = _mapper.Map<EstablishmentModel>(dataModel);
 
-            return model;
+                if (model.TypeId == (int)eLookupEstablishmentType.ChildrensCentre) // supply LA contact details
+                {
+                    var la = await _dbContext.LocalAuthorities.FirstOrDefaultAsync(x => x.Id == model.LocalAuthorityId);
+                    model.CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(la);
+                }
+
+                return model;
+            }
+            else return null;
         }
 
         public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment, GroupModel group) 
@@ -130,16 +147,9 @@ namespace Edubase.Services.Establishments
         private IQueryable<Establishment> GetQuery(IPrincipal principal)
         {
             var query = _dbContext.Establishments.Where(x => x.IsDeleted == false);
-            if(!new[] { EdubaseRoles.EFA, EdubaseRoles.AOS, EdubaseRoles.FSG, EdubaseRoles.IEBT, EdubaseRoles.School, EdubaseRoles.PRU, EdubaseRoles.Admin }
-            .Any(x => principal.IsInRole(x)))
+            if(IsRoleRestrictedOnStatus(principal))
             {
-                var statusIds = new[]
-                {
-                    eLookupEstablishmentStatus.Closed,
-                    eLookupEstablishmentStatus.Open,
-                    eLookupEstablishmentStatus.OpenButProposedToClose,
-                    eLookupEstablishmentStatus.ProposedToOpen
-                }.Select(x => new int?((int)x));
+                var statusIds = _restrictedStatuses.Select(x => new int?(x));
                 query = query.Where(x => statusIds.Contains(x.StatusId));
             }
             return query;
@@ -149,12 +159,21 @@ namespace Edubase.Services.Establishments
             => await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text, take);
         
 
-        public async Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload)
+        public async Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
         {
+            if (IsRoleRestrictedOnStatus(principal))
+                payload.Filters.StatusIds = _restrictedStatuses.Concat(payload.Filters.StatusIds).Distinct().ToArray();
+            
+            var odataFilter = payload.Filters.ToString();
+            odataFilter = StringUtil.ConcatNonEmpties(" and ", odataFilter, AzureSearchEndPoint.ODATA_FILTER_DELETED);
+            
             return await _azureSearchService.SearchAsync<SearchEstablishmentDocument>(EstablishmentsSearchIndex.INDEX_NAME, 
-                payload.Text, payload.Filters.ToString().Clean(),payload.Skip, payload.Take, EstablishmentSearchPayload.FullTextSearchFields, payload.OrderBy); 
+                payload.Text, odataFilter, payload.Skip, payload.Take, EstablishmentSearchPayload.FullTextSearchFields, payload.OrderBy); 
         }
 
+        private bool IsRoleRestrictedOnStatus(IPrincipal principal)
+            => !_nonStatusRestrictiveRoles.Any(x => principal.IsInRole(x));
+        
         public async Task<bool> ExistsAsync(int urn, IPrincipal principal) => await GetQuery(principal).AnyAsync(x => x.Urn == urn && x.IsDeleted == false);
 
     }

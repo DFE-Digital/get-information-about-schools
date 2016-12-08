@@ -19,6 +19,6 @@ namespace Edubase.Services.Establishments
         Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn);
         Task<IEnumerable<ChangeDescriptorDto>> GetPendingChangesAsync(int urn, IPrincipal principal);
         Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, int take = 10);
-        Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload);
+        Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
     }
 }

@@ -31,6 +31,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         public ActionResult Index() => View();
+        
 
         [HttpGet]
         public async Task<ActionResult> Results(ViewModel model)
@@ -76,7 +77,7 @@ namespace Edubase.Web.UI.Controllers
         {
             if (!model.HasError)
             {
-                var results = await _establishmentReadService.SearchAsync(payload);
+                var results = await _establishmentReadService.SearchAsync(payload, User);
                 if (payload.Skip == 0) model.Count = results.Count.GetValueOrDefault();
                 model.Results = results.Items;
             }

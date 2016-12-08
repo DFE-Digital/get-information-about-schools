@@ -16,26 +16,33 @@
         <h1 class="heading-xlarge">Search results</h1>
         @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
         {
-            if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.EstablishmentName || Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.Unknown)
+            if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.EstablishmentName
+                || Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.Unknown)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges for the search term "@Model.TextSearchModel.Text".</p>
+                <p>
+                    We found <span class="heading-xlarge">@Model.Count</span> establishments
+                    @if (!Model.TextSearchModel.Text.IsEmpty())
+                    {
+                        <text>for the search term "@Model.TextSearchModel.Text".</text>
+                    }
+                </p>
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.LAESTAB)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the LAESTAB "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</p>
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.UKPRN)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the UKPRN "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the UKPRN "@Model.TextSearchModel.Text".</p>
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.URN)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the URN "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the URN "@Model.TextSearchModel.Text".</p>
             }
         }
         else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.LocalAuthority)
         {
-            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges in the selected local authorities</p>
+            <p>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</p>
         }
 
 
