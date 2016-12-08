@@ -1,39 +1,19 @@
-﻿@model AdvancedSearchViewModel 
+﻿@model AdvancedSearchViewModel
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
     var dc = new Edubase.Data.Entity.ApplicationDbContext();
 }
 
-@helper SearchElement(
-    string label,
-    string hint,
-    string componentId,
-    string componentName,
-    string placeholder = "")
-{
-    <li class="search-type-wrapper">
-        <label>
-            <input type="radio" id="@componentId" class="panel-toggle" />
-            <span class="label-text">@label</span>
-        </label>
-        <div class="expanding-search-field">
-            <span class="search-hint">@hint</span>
-            <input type="text" class="form-control" placeholder="@placeholder" id="@componentId" name="@componentName" required="" autocomplete="off">
-            <button type="submit" class="button button-next">Search</button>
-        </div>
-    </li>
-}
-
-
 <div class="grid-row">
     <div class="column-full">
         <h1 class="heading-xlarge">Search Edubase</h1>
     </div>
 
-    <div class="column-full">
+    
 
-        <div class="grid-row horizontal-tabs-wrapper">
+    <div class="horizontal-tabs-wrapper">        
+        <div class="column-full">
             <div class="tab-wrap">
                 <ul class="horizontal-tabs">
                     <li>
@@ -43,7 +23,7 @@
                     </li>
                     <li>
                         <a href="#groups" class="horizontal-tab group">
-                            Find an establishment group<br />
+                            Find an establishment group<br/>
                             <span class="sub">e.g. Trust, Sponsor or Federation</span>
                         </a>
                     </li>
@@ -65,12 +45,12 @@
                                 @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                                 {
                                     <label>
-                                        <input type="radio" id="" class="panel-toggle" />
+                                        <input type="radio" id="" class="panel-toggle"/>
                                         <span class="label-text">Establishment name or reference number</span>
                                     </label>
                                     <div class="expanding-search-field">
                                         <span class="search-hint">Enter name, URN, LAESTAB or UKPRN</span>
-                                        @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=" })
+                                        @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text="})
                                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                         <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Text">Search</button>
                                     </div>
@@ -81,16 +61,16 @@
                                 @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                                 {
                                     <label>
-                                        <input type="radio" id="" class="panel-toggle" />
+                                        <input type="radio" id="" class="panel-toggle"/>
                                         <span class="label-text">Location</span>
                                     </label>
                                     <div class="expanding-search-field">
                                         <span class="search-hint">Enter postcode, town or city</span>
-                                        @Html.TextBoxFor(x => x.LocationSearchModel.Text, new { @class = "form-control", autocomplete = "off" })
+                                        @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "form-control", autocomplete = "off"})
                                         @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
                                         <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Location">Search</button>
                                     </div>
-                                    
+
                                 }
                             </li>
                             <li class="search-type-wrapper">
@@ -98,7 +78,7 @@
                                 {
                                     var las = new Edubase.Services.CachedLookupService().LocalAuthorityGetAll().Where(x => x.Id > 0).OrderBy(x => x.Name);
                                     <label>
-                                        <input type="radio" id="" class="panel-toggle" />
+                                        <input type="radio" id="" class="panel-toggle"/>
                                         <span class="label-text">Local authority</span>
                                     </label>
                                     <div class="expanding-search-field">
@@ -107,19 +87,22 @@
                                             @foreach (var item in las)
                                             {
                                                 <label for="la_@item.Id">
-                                                    <input name="l" value="@item.Id" id="la_@item.Id" type="checkbox" class="" />
+                                                    <input name="l" value="@item.Id" id="la_@item.Id" type="checkbox" class=""/>
                                                     @item
                                                 </label>
                                             }
-                                               
+
                                         </div>
-                                        <br />
-                                        <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.LocalAuthority">Search</button>
+                                        
+                                        <button type="submit" class="button button-next button-below" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.LocalAuthority">Search</button>
                                     </div>
                                 }
                             </li>
-
                         </ul>
+                        <p class="search-all-shortcut">
+                            @* TODO actionlink to real results page *@
+                            <a href="/Search/Results?TextSearchModel.Text=a&amp;SearchType=Text">Show all establishments</a>
+                        </p>
                     </fieldset>
 
                 </div>
@@ -127,49 +110,48 @@
 
                     @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                     {
-                        <div class="form-group">
-                            <label class="form-label" style="font-weight:bold;">
+                        <div class="edubase-search-element">
+                            <label class="bold-small">
                                 Establishment group
                                 <span class="form-hint">Can include multi academy trust/single academy trust name, companies house number or local authority name</span>
                             </label>
-                            @Html.TextBoxFor(x => x.TrustSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggesttrust?text=" })
+                            @Html.TextBoxFor(x => x.TrustSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggesttrust?text="})
                             @Html.HiddenFor(x => x.TrustSearchModel.AutoSuggestValue)
                         </div>
                         <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Trust">Search</button>
                     }
-                    
+
                 </div>
                 <div id="governors" class="tab-content">
 
                     @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                     {
-                        @Html.ValidationSummary(null, new { @class = "error-summary" })
-
-                        <label for="forename" class="bold-small" style="margin-bottom:10px; display:block;">Forename</label>
-                        <div class="form-hint">e.g. John</div>
-                        @Html.EduTextBoxFor(x => x.GovernorSearchModel.Forename, new { maxlength = 120, id = "forename", @class = "form-control", style="max-width:300px;" })
-                        <br /><br />
-
-                        <label for="surname" class="bold-small" style="margin-bottom:10px; display:block;">Surname</label>
-                        <div class="form-hint">e.g. Evans</div>
-                        @Html.EduTextBoxFor(x => x.GovernorSearchModel.Surname, new { maxlength = 120, id = "surname", @class = "form-control", style = "max-width:300px;" })
-                        <br /><br />
-
-                        <label for="roleid" class="bold-small" style="margin-bottom:10px; display:block;">Role</label>
-                        <div class="form-hint">e.g. Trustee</div>
-                        @Html.EduDropDownFor(x => x.GovernorSearchModel.RoleId, dc.LookupGovernorRoles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
-                            new { id = "roleid", @class = "form-control", style = "max-width:300px;" })
-                        <br /><br />
-
-                        <label class="form-checkbox" for="IncludeHistoric">
-                            @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric)
-                            <span class="font-small">Include historic records (Governors stepped down in the last 12 months)</span>
-                        </label>
-
-                        <br /><br />
-                        <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Governor">Search</button>
-
-                        <br /><br />
+                        @Html.ValidationSummary(null, new {@class = "error-summary"})
+                        <div class="edubase-search-element">
+                            <label for="forename" class="bold-small">Forename</label>
+                            <span class="form-hint">e.g. John</span>
+                            @Html.EduTextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control"})
+                        </div>
+                        <div class="edubase-search-element">
+                            <label for="surname" class="bold-small">Surname</label>
+                            <span class="form-hint">e.g. Evans</span>
+                            @Html.EduTextBoxFor(x => x.GovernorSearchModel.Surname, new {maxlength = 120, id = "surname", @class = "form-control"})
+                        </div>
+                        <div class="edubase-search-element">
+                            <label for="roleid" class="bold-small">Role</label>
+                            <span class="form-hint">e.g. Trustee</span>
+                            @Html.EduDropDownFor(x => x.GovernorSearchModel.RoleId, dc.LookupGovernorRoles.Select(x => new SelectListItem {Text = x.Name, Value = x.Id.ToString()}),
+                                new {id = "roleid", @class = "form-control"})
+                        </div>
+                        <div class="edubase-search-element">
+                            <label class="form-checkbox" for="IncludeHistoric">
+                                @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new {id = "IncludeHistoric"})
+                                <span class="font-small">Include historic records (Governors stepped down in the last 12 months)</span>
+                            </label>
+                        </div>
+                        <div class="edubase-search-element">
+                            <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Governor">Search</button>
+                        </div>
                     }
 
 
@@ -180,7 +162,15 @@
 
 
 
-        
+
+
+
+
+
+
+
+
+
 
 
 

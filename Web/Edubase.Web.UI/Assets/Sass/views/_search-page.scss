@@ -25,3 +25,19 @@
         }
     }
 }
+
+.edubase-search-element {
+    display: block;
+    margin-bottom: 20px;
+    width: 100%;
+
+
+    @include media(tablet) {
+       .form-control {
+            width: 50%;
+        }
+    }
+
+}
+
+

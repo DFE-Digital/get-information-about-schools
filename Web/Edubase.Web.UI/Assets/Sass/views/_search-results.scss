@@ -188,3 +188,16 @@ input.link-button
 
         a { color:white; }
     }
+
+.clear-selections {
+    display: none;
+    position: absolute;
+    right: 30px;
+    top: 9px;
+    z-index: 98;
+    font-size: 14px;
+
+    &.active-clear {
+        display: block;
+    }
+}

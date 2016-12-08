@@ -160,7 +160,9 @@
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter"></div>
+            
         </div>
+        <a href="#" class="clear-selections">Clear</a>
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 <fieldset>
@@ -185,8 +187,29 @@
     
     <script>
         $(function () {
+            var $clearLinks = $('#EditSearchCollapse').find('.clear-selections');
             $('.govuk-option-select').map(function () {
                 return new GOVUK.OptionSelect({ $el: $(this) });
+            });
+
+            $clearLinks.on('click', function (e) {
+                e.preventDefault();
+                var selectedFilters = $(this)
+                    .next('.options-container')
+                    .find('input')
+                    .filter(function(n,item) {
+                        return $(item).prop('checked');
+                    })
+                    .click();
+                    $(this).removeClass('active-clear');
+                });
+
+            $('.govuk-option-select').on('countUpdated', function(e, d) {
+                if (d.selectedCount) {
+                    $(this).find('.clear-selections').addClass('active-clear');
+                } else {
+                    $(this).find('.clear-selections').removeClass('active-clear');
+                }
             });
         })
     </script>
