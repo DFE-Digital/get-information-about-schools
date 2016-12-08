@@ -314,6 +314,7 @@
   <ItemGroup>
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
+    <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\_application.js" />
     <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
     <Content Include="Assets\Scripts\map-interactions.js" />
@@ -677,7 +678,6 @@
     <Content Include="packages.config" />
     <Content Include="Areas\Governors\Views\web.config" />
     <Content Include="Areas\Governors\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Governors\Views\Search\Index.cshtml" />
     <Content Include="Areas\Governors\Views\Search\Results.cshtml" />
     <Content Include="Assets\Sass\views\_search-page.scss" />
     <Content Include="Assets\Sass\views\_view-logs.scss" />
