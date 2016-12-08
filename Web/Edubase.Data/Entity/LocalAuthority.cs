@@ -13,6 +13,7 @@ namespace Edubase.Data.Entity
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string EmailAddress { get; set; }
+        public string TelephoneNumber { get; set; }
 
         public override string ToString() => Name;
     }

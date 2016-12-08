@@ -144,6 +144,9 @@
     <Compile Include="Childcarefacilities.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>
+    <Compile Include="Childrenscentresgroupflag.cs">
+      <DependentUpon>EdubaseSourceData.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contactpreference.cs">
       <DependentUpon>EdubaseSourceData.tt</DependentUpon>
     </Compile>

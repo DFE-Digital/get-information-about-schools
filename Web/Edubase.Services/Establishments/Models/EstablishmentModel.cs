@@ -87,6 +87,8 @@ namespace Edubase.Services.Establishments.Models
         public int? CCPhaseTypeId { get; set; }
         public int? CCDisadvantagedAreaId { get; set; }
         public int? CCDirectProvisionOfEarlyYearsId { get; set; }
+        public int? CCDeliveryModelId { get; set; }
+        public int? CCGroupLeadId { get; set; }
         public string CCGovernanceDetail { get; set; }
 
         public int? SenUnitOnRoll { get; set; }

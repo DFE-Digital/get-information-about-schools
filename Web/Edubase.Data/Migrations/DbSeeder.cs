@@ -15,7 +15,6 @@ namespace Edubase.Data.Migrations
     {
         public void Seed(ApplicationDbContext context)
         {
-            UserAccountSeeder.Seed(context);
             // Seed permissions data on the Establishment properties
             var cols = PermissionUtil.GetRestrictiveColumns<Establishment>(context);
 

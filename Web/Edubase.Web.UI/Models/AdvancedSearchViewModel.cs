@@ -15,6 +15,7 @@ namespace Edubase.Web.UI.Models
     {
         private Dictionary<int, eTextSearchType> _textSearchTypeMap = new Dictionary<int, eTextSearchType>
         {
+            { 5, eTextSearchType.URN },
             { 6, eTextSearchType.URN },
             { 7, eTextSearchType.LAESTAB },
             { 8, eTextSearchType.UKPRN }

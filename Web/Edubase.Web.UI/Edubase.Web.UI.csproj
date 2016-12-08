@@ -292,6 +292,7 @@
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateTrustModel.cs" />
     <Compile Include="Models\CreateEditTrustModel.cs" />
+    <Compile Include="Models\Establishments\TabDisplayPolicy.cs" />
     <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Models\SearchCompaniesHouseModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
@@ -748,6 +749,13 @@
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Search\MATASResults.cshtml" />
     <Content Include="Views\Search\AdvancedSearchResults.cshtml" />
+    <Content Include="Views\Establishment\Partials\TabDetails.cshtml" />
+    <Content Include="Views\Establishment\Partials\TabIEBT.cshtml" />
+    <Content Include="Views\Establishment\Partials\TabLinks.cshtml" />
+    <Content Include="Views\Establishment\Partials\TabGovernance.cshtml" />
+    <Content Include="Views\Establishment\Partials\TabLocation.cshtml" />
+    <Content Include="Views\Establishment\Partials\TabChangeHistory.cshtml" />
+    <Content Include="Views\Establishment\Partials\Header.cshtml" />
     <None Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />

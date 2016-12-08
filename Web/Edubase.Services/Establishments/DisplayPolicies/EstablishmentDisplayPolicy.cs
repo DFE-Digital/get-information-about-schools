@@ -102,10 +102,10 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         public bool CCGovernanceDetail { get; set; }
         public bool CCLAContactDetail { get; set; }
 
-        public bool DeliveryModel { get; set; }
+        public bool CCDeliveryModel { get; set; }
 
         public bool GroupCollaborationName { get; set; }
-        public bool GroupLeadCentre { get; set; }
+        public bool CCGroupLeadCentre { get; set; }
 
         public bool CCDisadvantagedArea { get; set; }
 

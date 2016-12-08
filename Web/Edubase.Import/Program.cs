@@ -209,6 +209,11 @@ namespace Edubase.Services.Enums
                 MigrateLookup<LookupMSOA>(source.MSOA, connection);
                 MigrateLookup<LookupLSOA>(source.LSOA, connection);
                 MigrateLookup<LookupAdministrativeWard>(source.Administrativeward, connection);
+                MigrateLookup<LookupCCGroupLead>(source.Ccgrouplead, connection);
+                
+                var childrensCentresGroupflags = source.Childrenscentresgroupflag.ToList()
+                    .Select(x => new { Name = x.ChildrensCentresGroupFlag1.Clean(), Code = x.code }).ToList();
+                MigrateLookup<LookupDeliveryModel>(childrensCentresGroupflags, connection);
 
                 var governorRoles = source.Governors.Where(x => !string.IsNullOrEmpty(x.Role))
                     .Select(x => x.Role).Distinct().ToList()

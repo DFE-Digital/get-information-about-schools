@@ -252,12 +252,18 @@ namespace Edubase.Data.Entity
         public LookupCCPhaseType CCPhaseType { get; set; }
         public int? CCPhaseTypeId { get; set; }
 
+        public LookupCCGroupLead CCGroupLead { get; set; }
+        public int? CCGroupLeadId { get; set; }
+
         public int? CCDisadvantagedAreaId { get; set; }
         public LookupCCDisadvantagedArea CCDisadvantagedArea { get; set; }
 
         public LookupDirectProvisionOfEarlyYears CCDirectProvisionOfEarlyYears { get; set; }
         public int? CCDirectProvisionOfEarlyYearsId { get; set; }
-        
+
+        public LookupDeliveryModel CCDeliveryModel { get; set; }
+        public int? CCDeliveryModelId { get; set; }
+
         public int? CCUnder5YearsOfAgeCount { get; set; }
 
         public int? SenUnitOnRoll { get; set; }

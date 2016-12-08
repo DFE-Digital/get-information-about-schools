@@ -9,6 +9,7 @@ using System.Security.Principal;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
+using Edubase.Web.UI.Models.Establishments;
 
 namespace Edubase.Web.UI.Models
 {
@@ -25,6 +26,8 @@ namespace Edubase.Web.UI.Models
         };
 
         public EstablishmentDisplayPolicy DisplayPolicy { get; set; }
+
+        public TabDisplayPolicy TabDisplayPolicy { get; set; }
 
         public enum GovRole
         {

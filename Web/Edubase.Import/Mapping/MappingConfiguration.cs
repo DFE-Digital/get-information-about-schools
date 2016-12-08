@@ -147,7 +147,9 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.CCOperationalHoursId, opt => opt.MapFrom(m => L.CCOperationalHoursGetAll().Id(m.CCOperationalHourscode)))
                     .ForMember(x => x.CCDirectProvisionOfEarlyYearsId, opt => opt.MapFrom(m => L.DirectProvisionOfEarlyYearsGetAll().Id(m.CCDirectProvisionOfEarlyYearscode)))
                     .ForMember(x => x.CCPhaseTypeId, opt => opt.MapFrom(m => L.CCPhaseTypesGetAll().Id(m.ChildrensCentresPhaseTypecode)))
+                    .ForMember(x => x.CCDeliveryModelId, opt => opt.MapFrom(m => L.CCDeliveryModelsGetAll().Id(m.ChildrensCentresGroupFlagcode)))
                     .ForMember(x => x.CCDisadvantagedAreaId, opt => opt.MapFrom(m => L.CCDisadvantagedAreasGetAll().Id(m.CCDisadvantagedAreacode)))
+                    .ForMember(x => x.CCGroupLeadId, opt => opt.MapFrom(m => L.CCGroupLeadsGetAll().Id(m.CCGroupLeadcode)))
                     .ForMember(x => x.CCUnder5YearsOfAgeCount, opt => opt.MapFrom(m => m.CCNumberOfUnder5s.ToInteger()))
                     .ForMember(x => x.BSOInspectorateId, opt => opt.MapFrom(m => L.InspectorateNamesGetAll().Id(m.InspectorateNamecode)))
                     .ForMember(x => x.BSODateOfLastInspectionVisit, opt => opt.MapFrom(m => m.DateOfLastInspectionVisit.ToDateTime(_dtFormats)))
@@ -178,6 +180,7 @@ namespace Edubase.Import.Mapping
                             dest.FirstName = contact.Firstname.Clean();
                             dest.LastName = contact.Lastname.Clean();
                             dest.EmailAddress = contact.Email.ToCleanEmail();
+                            dest.TelephoneNumber = contact.Telephonenumber.Clean();
                         }
                     })
                     .ForAllOtherMembers(opt => opt.Ignore());

@@ -70,6 +70,8 @@ namespace Edubase.Services
                 { "CCPhaseTypeId", async (dc, id) => (await CCPhaseTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CCDisadvantagedAreaId", async (dc, id) => (await CCDisadvantagedAreasGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CCDirectProvisionOfEarlyYearsId", async (dc, id) => (await DirectProvisionOfEarlyYearsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCDeliveryModelId", async (dc, id) => (await CCDeliveryModelsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCGroupLeadId", async (dc, id) => (await CCGroupLeadsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
             };
 
             _mapping = new Dictionary<string, Func<ApplicationDbContext, int, string>>()
@@ -121,6 +123,8 @@ namespace Edubase.Services
                 { "CCPhaseTypeId",  (dc, id) => ( CCPhaseTypesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CCDisadvantagedAreaId",  (dc, id) => ( CCDisadvantagedAreasGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CCDirectProvisionOfEarlyYearsId",  (dc, id) => ( DirectProvisionOfEarlyYearsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCDeliveryModelId",  (dc, id) => ( CCDeliveryModelsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CCGroupLeadId",  (dc, id) => ( CCGroupLeadsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
             };
         }
 
@@ -172,6 +176,10 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> CCDisadvantagedAreasGetAll() => Cacher.Auto(_svc.CCDisadvantagedAreasGetAll);
         public async Task<IEnumerable<LookupDto>> CCPhaseTypesGetAllAsync() => await Cacher.AutoAsync(_svc.CCPhaseTypesGetAllAsync);
         public IEnumerable<LookupDto> CCPhaseTypesGetAll() => Cacher.Auto(_svc.CCPhaseTypesGetAll);
+        public async Task<IEnumerable<LookupDto>> CCGroupLeadsGetAllAsync() => await Cacher.AutoAsync(_svc.CCGroupLeadsGetAllAsync);
+        public IEnumerable<LookupDto> CCGroupLeadsGetAll() => Cacher.Auto(_svc.CCGroupLeadsGetAll);
+        public async Task<IEnumerable<LookupDto>> CCDeliveryModelsGetAllAsync() => await Cacher.AutoAsync(_svc.CCDeliveryModelsGetAllAsync);
+        public IEnumerable<LookupDto> CCDeliveryModelsGetAll() => Cacher.Auto(_svc.CCDeliveryModelsGetAll);
         public async Task<IEnumerable<LookupDto>> DiocesesGetAllAsync() => await Cacher.AutoAsync(_svc.DiocesesGetAllAsync);
         public IEnumerable<LookupDto> DiocesesGetAll() => Cacher.Auto(_svc.DiocesesGetAll);
         public async Task<IEnumerable<LookupDto>> ChildcareFacilitiesGetAllAsync() => await Cacher.AutoAsync(_svc.ChildcareFacilitiesGetAllAsync);

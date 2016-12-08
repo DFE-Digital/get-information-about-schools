@@ -10,6 +10,7 @@ using Edubase.Services.Establishments.Enums;
 using Edubase.Services.Groups;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models.Establishments;
 using FluentValidation.Mvc;
 using Microsoft.ServiceBus.Messaging;
 using MoreLinq;
@@ -308,6 +309,7 @@ namespace Edubase.Web.UI.Controllers
             viewModel.Governors = await gsvc.GetCurrentByUrn(id);
 
             viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment, viewModel.Group);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
 
             return View(viewModel);
         }

@@ -51,6 +51,8 @@
     public class LookupGSSLA : LookupBase { }
     public class LookupCASWard : LookupBase { }
     public class LookupGroupStatus : LookupBase { }
+    public class LookupDeliveryModel : LookupBase { }
+    public class LookupCCGroupLead : LookupBase { }
 
     /// <summary>
     /// Middle Super Output Area

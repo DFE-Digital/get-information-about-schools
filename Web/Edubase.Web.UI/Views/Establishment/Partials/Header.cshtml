@@ -1,0 +1,194 @@
+﻿@model EstablishmentDetailViewModel
+
+<table class="borderless">
+    <caption class="visually-hidden">@Model.Establishment.Name information</caption>
+    <tr>
+        <th scope="row">Address:</th>
+        <td>@Model.Establishment.Address</td>
+    </tr>
+    <tr>
+        <th scope="row">Local authority:</th>
+        <td>
+            @Html.PendingUpdateFor(x => x.LocalAuthorityId)
+            @if (Model.Establishment.LocalAuthorityId.HasValue)
+            {
+                <a href="/Search/SearchByLaName?searchTerm=@Model.Establishment.LocalAuthorityId">
+                    @Html.NameFor(x => x.Establishment.LocalAuthorityId)
+                </a>
+                        <text>(@Model.Establishment.LocalAuthorityId)</text>
+            }
+        </td>
+    </tr>
+
+    @if (Model.DisplayPolicy.HeadteacherDetails)
+            {
+        <tr>
+            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel):</th>
+            <td>
+                @(Html.PendingUpdatesFor("HeadTitleId", "HeadFirstName", "HeadLastName"))
+                @Html.Raw(Html.NameFor(x => x.Establishment.HeadTitleId).ToString().Replace("Unknown", "")) @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
+            </td>
+        </tr>
+    }
+
+    @if (Model.DisplayPolicy.HeadEmailAddress)
+            {
+        <tr>
+            <th scope="row">@(Model.DisplayPolicy.HeadEmailAddressLabel):</th>
+            <td>
+                @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
+            </td>
+        </tr>
+    }
+
+    @if (Model.DisplayPolicy.AgeRange)
+            {
+        <tr>
+            <th scope="col">Age range:</th>
+            <td>
+                @(Html.PendingUpdatesFor("StatutoryLowAge", "StatutoryHighAge"))
+                @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
+                {
+                    <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
+                }
+            </td>
+        </tr>
+    }
+
+    <tr>
+        <th scope="row">Phase of education:</th>
+        <td>
+            @(Html.PendingUpdatesFor(x => x.EducationPhaseId))
+            @Html.NameFor(x => x.Establishment.EducationPhaseId)
+        </td>
+    </tr>
+
+    @if (Model.DisplayPolicy.EstablishmentType)
+            {
+        <tr>
+            <th scope="row">@(Model.DisplayPolicy.EstablishmentTypeLabel):</th>
+            <td>
+                @(Html.PendingUpdatesFor(x => x.TypeId))
+                @Html.NameFor(x => x.Establishment.TypeId)
+            </td>
+        </tr>
+    }
+
+    @if (Model.DisplayPolicy.FurtherEducationType)
+            {
+        <tr>
+            <th scope="row">Further Education type:</th>
+            <td>
+                @Html.NameFor(x => x.Establishment.FurtherEducationTypeId)
+            </td>
+        </tr>
+    }
+
+    @if (Model.DisplayPolicy.GroupDetails && Model.Group != null)
+            {
+        <tr>
+            <th scope="row">@(Model.GroupFieldLabel):</th>
+            <td>
+                @Html.ActionLink(Model.Group.Name, "Details", "Group", new { id = Model.Group.GroupUID }, null)
+            </td>
+        </tr>
+    }
+
+    @if (Model.DisplayPolicy.GenderOfEntry)
+            {
+        <tr>
+            <th scope="row">Gender of entry:</th>
+            <td>
+                @(Html.PendingUpdatesFor(x => x.GenderId))
+                @Html.NameFor(x => x.Establishment.GenderId)
+            </td>
+        </tr>
+    }
+
+    <tr>
+        <th scope="row">ID:</th>
+        <td>
+            URN: @Model.Establishment.Urn,
+            @if (Model.DisplayPolicy.LAESTAB)
+            {
+                <text>DfE number: @Model.Establishment.LAESTAB<br /></text>
+            }
+            UKPRN: @Model.Establishment.UKPRN
+        </td>
+    </tr>
+
+    <tr>
+        <th scope="row">Establishment status:</th>
+        <td>
+            @(Html.PendingUpdatesFor(x => x.StatusId))
+            @if (Model.IsClosed)
+            {
+                <span style="color:red;">
+                    @Html.NameFor(x => x.Establishment.StatusId)
+                </span>
+            }
+            else
+            {
+                @Html.NameFor(x => x.Establishment.StatusId)
+            }
+        </td>
+    </tr>
+
+    @if (Model.DisplayPolicy.AdmissionsPolicy)
+            {
+        <tr>
+            <th scope="row">Admissions policy:</th>
+            <td>
+                @(Html.PendingUpdatesFor(x => x.AdmissionsPolicyId))
+                @Html.NameFor(x => x.Establishment.AdmissionsPolicyId)
+            </td>
+        </tr>
+    }
+
+    @if (Model.DisplayPolicy.WebsiteAddress)
+            {
+        <tr>
+            <th scope="row">Website:</th>
+            <td>
+                <a href="@Model.Establishment.Contact.WebsiteAddress" target="_blank">@Model.Establishment.Contact.WebsiteAddress</a>
+            </td>
+        </tr>
+    }
+
+    @if (Model.DisplayPolicy.TelephoneNumber)
+            {
+        <tr><th scope="row">Telephone:</th><td>@Model.Establishment.Contact.TelephoneNumber</td></tr>
+    }
+
+    @if (Model.DisplayPolicy.OfstedRatingDetails)
+            {
+        <tr>
+            <th scope="row">Ofsted rating:</th>
+            <td>
+                @Model.Establishment.OfstedRating
+                @if (Model.Establishment.OfstedInspectionDate.HasValue)
+                {
+                    <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
+                }
+                <br />
+                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report</a>
+            </td>
+        </tr>
+    }
+
+    @if (Model.DisplayPolicy.Inspectorate)
+            {
+        <tr>
+            <th scope="row">Inspectorate:</th>
+            <td>
+                @Html.NameFor(x => x.Establishment.InspectorateId)
+            </td>
+        </tr>
+    }
+
+    @if (Model.DisplayPolicy.Proprietor)
+            {
+        <tr><th scope="row">Proprietor's name:</th><td>@Model.Establishment.ProprietorName</td></tr>
+    }
+
+</table>

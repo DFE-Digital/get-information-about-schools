@@ -30,11 +30,12 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             CCGovernanceDetail = IsUserLoggedIn;
             CCLAContactDetail = IsUserLoggedIn;
             CCPhaseType = IsUserLoggedIn;
-            DeliveryModel = IsUserLoggedIn;
+            CCDeliveryModel = IsUserLoggedIn;
             GroupCollaborationName = IsUserLoggedIn;
-            GroupLeadCentre = IsUserLoggedIn;
+            CCGroupLeadCentre = IsUserLoggedIn;
             CCDisadvantagedArea = IsUserLoggedIn;
             CCDirectProvisionOfEarlyYears = IsUserLoggedIn;
+            CCUnder5YearsOfAgeCount = IsUserLoggedIn;
         }
     }
 }

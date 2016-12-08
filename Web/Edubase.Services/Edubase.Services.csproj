@@ -191,9 +191,11 @@
     <Compile Include="Enums\eLookupBoardingEstablishment.cs" />
     <Compile Include="Enums\eLookupCCDisadvantagedArea.cs" />
     <Compile Include="Enums\eLookupCCGovernance.cs" />
+    <Compile Include="Enums\eLookupCCGroupLead.cs" />
     <Compile Include="Enums\eLookupCCOperationalHours.cs" />
     <Compile Include="Enums\eLookupCCPhaseType.cs" />
     <Compile Include="Enums\eLookupChildcareFacilities.cs" />
+    <Compile Include="Enums\eLookupDeliveryModel.cs" />
     <Compile Include="Enums\eLookupDiocese.cs" />
     <Compile Include="Enums\eLookupDirectProvisionOfEarlyYears.cs" />
     <Compile Include="Enums\eLookupDistrictAdministrative.cs" />

@@ -1,0 +1,60 @@
+﻿@model EstablishmentDetailViewModel
+
+<div id="school-links" class="tab-content">
+    @if (Model.LinkedEstablishments.Any())
+    {
+        <table class="estab-links mi">
+            <thead>
+                <tr>
+                    <th>URN</th>
+                    <th>Establishment name</th>
+                    <th>Type of link</th>
+                    <th>Date linked</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var l in Model.LinkedEstablishments)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
+                        <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
+                        <td>@l.Type</td>
+                        <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+                        <div class="mvo">
+                            @foreach (var l in Model.LinkedEstablishments)
+                            {
+                                <table class="estab-links">
+                                    <tbody>
+                                        <tr>
+                                            <th>URN</th>
+                                            <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Establishment name</th>
+                                            <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Type of link</th>
+                                            <td>@l.Type</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Date linked</th>
+                                            <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br />
+                            }
+                        </div>
+
+    }
+    else
+    {
+        <p>There are no linked establishments</p>
+    }
+</div>

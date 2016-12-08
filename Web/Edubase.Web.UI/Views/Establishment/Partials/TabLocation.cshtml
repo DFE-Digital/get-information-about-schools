@@ -1,0 +1,55 @@
+﻿@model EstablishmentDetailViewModel
+
+<div id="school-location" class="tab-content">
+    <table class="borderless">
+        <caption class="visually-hidden">Location information for @Model.Establishment.Name</caption>
+        <tr>
+            <th scope="row">RSC Region:</th>
+            <td>@Html.NameFor(x => x.Establishment.RSCRegionId)</td>
+        </tr>
+        <tr>
+            <th scope="row">Government Office Region:</th>
+            <td>@Html.NameFor(x => x.Establishment.GovernmentOfficeRegionId)</td>
+        </tr>
+        <tr>
+            <th scope="row">District:</th>
+            <td>@Html.NameFor(x => x.Establishment.AdministrativeDistrictId)</td>
+        </tr>
+        <tr>
+            <th scope="row">Ward:</th>
+            <td>@Html.NameFor(x => x.Establishment.AdministrativeWardId)</td>
+        </tr>
+        <tr>
+            <th scope="row">Parliamentary Constituency:</th>
+            <td>@Html.NameFor(x => x.Establishment.ParliamentaryConstituencyId)</td>
+        </tr>
+        <tr>
+            <th scope="row">Urban/Rural Description:</th>
+            <td>@Html.NameFor(x => x.Establishment.UrbanRuralId)</td>
+        </tr>
+        <tr>
+            <th scope="row">GSS LA Code:</th>
+            <td>@Html.NameFor(x => x.Establishment.GSSLAId)</td>
+        </tr>
+        <tr>
+            <th scope="row">Easting:</th>
+            <td>@Model.Establishment.Easting</td>
+        </tr>
+        <tr>
+            <th scope="row">Northing:</th>
+            <td>@Model.Establishment.Northing</td>
+        </tr>
+        <tr>
+            <th scope="row">Census Ward: </th>
+            <td>@Html.NameFor(x => x.Establishment.CASWardId)</td>
+        </tr>
+        <tr>
+            <th scope="row">Middle Super Output Area (MSOA): </th>
+            <td>@Html.NameFor(x => x.Establishment.MSOAId)</td>
+        </tr>
+        <tr>
+            <th scope="row">Lower Super Output Area (LSOA):</th>
+            <td>@Html.NameFor(x => x.Establishment.LSOAId)</td>
+        </tr>
+    </table>
+</div>

@@ -25,7 +25,7 @@ namespace Edubase.Services.Domain
             FirstName = la.FirstName;
             Surname = la.LastName;
             EmailAddress = la.EmailAddress;
-            //TelephoneNumber=la.telephonenumber//todo, not in source data at dev time.
+            TelephoneNumber = la.TelephoneNumber;
         }
     }
 }

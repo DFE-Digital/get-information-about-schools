@@ -39,6 +39,7 @@ namespace Edubase.Import
         public virtual DbSet<Ccoperationalhours> Ccoperationalhours { get; set; }
         public virtual DbSet<Ccphasetype> Ccphasetype { get; set; }
         public virtual DbSet<Childcarefacilities> Childcarefacilities { get; set; }
+        public virtual DbSet<Childrenscentresgroupflag> Childrenscentresgroupflag { get; set; }
         public virtual DbSet<Contactpreference> Contactpreference { get; set; }
         public virtual DbSet<County> County { get; set; }
         public virtual DbSet<Diocese> Diocese { get; set; }
