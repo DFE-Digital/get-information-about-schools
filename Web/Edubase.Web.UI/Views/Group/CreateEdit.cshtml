@@ -38,8 +38,8 @@
             {
                 
                 <div class="header-submit">
-                    @Html.ActionLink("Cancel", "Details", "Group", new { id = Model.GroupUID }, new { @class = "button button-grey", style= "margin-top:80px;" })
-                    <button type="submit" class="button" style="margin-top:80px;" name="action" value="save">Submit</button>
+                    @Html.ActionLink("Cancel", "Details", "Group", new { id = Model.GroupUID }, new { @class = "button button-grey" })
+                    <button type="submit" class="button" name="action" value="save">Submit</button>
                 </div>
                 
 
@@ -90,22 +90,19 @@
                         @FormHint("open-date")
                     </th>
                     <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x=>x.OpenDate)">
+                        <div class="form-group drop-down-date @Html.ValidationCssClassFor(x=>x.OpenDate)">
                             @Html.ValidationMessageFor(x=>x.OpenDate)
                             @Html.DropDownListFor(x => x.OpenDate.Day,
                                 Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "DD",
-                                new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day",
-                                    style = "width:70px;" })
+                                new { id = "opendate-day", @class = "form-control", aria_describedby = "help-opendate-day" })
 
                             @Html.DropDownListFor(x => x.OpenDate.Month,
                                 Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "MM",
-                                new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month",
-                                    style = "width:70px;" })
+                                new { id = "opendate-month", @class = "form-control", aria_describedby = "help-opendate-month" })
 
                             @Html.DropDownListFor(x => x.OpenDate.Year,
                                 Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), "YYYY",
-                                new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year",
-                                    style = "width:70px;" })
+                                new { id = "opendate-year", @class = "form-control", aria_describedby = "help-opendate-year" })
                         </div>
                     </td>
                 </tr>
@@ -133,23 +130,22 @@
     {
         <div class="grid-row">
             <div class="column-half">
-                <br /><br />
                 <span class="bold-xsmall">Add establishment to this Academy Trust</span>
-                <p style="margin-bottom:8px;" class="font-xsmall">Enter the establishment URN</p>
-                <div style="white-space:nowrap;" class="form-group">
+                <p  class="font-xsmall">Enter the establishment URN</p>
+                <div class="form-group">
                     @Html.TextBoxFor(x => x.SearchURN, new { @class = "form-control form-control-1-2 search-box" })
                     <input type="submit" name="action" value="Search" class="button button-next" autocomplete="off" />
                 </div>
                 @if (Model.EstablishmentName != null)
                 {
                     <p class="bold-xsmall">Establishment found</p>
-                    <table class="borderless" style="width:100%;max-width:305px;">
+                    <table class="borderless">
                         <tr>
-                            <td style="width:90%;">
+                            <td>
                                 @Model.EstablishmentName
                             </td>
-                            <td style="width:5%;">
-                                <input type="submit" name="action" value="Add" class="button" style="float:right; font-size:19px;" />
+                            <td>
+                                <input type="submit" name="action" value="Add" class="button" />
                                 @Html.HiddenFor(x => x.EstablishmentUrn)
                             </td>
                         </tr>
@@ -167,8 +163,7 @@
 
             @if (Model.Establishments.Count > 0)
             {
-                <hr />
-                <h2 class="heading-large" style="margin-top:18px;">List of establisments (@Model.Establishments.Count)</h2>
+                <h2 class="heading-large">List of establisments (@Model.Establishments.Count)</h2>
             }
 
             @Html.HiddenFor(x => x.EstabUrnToRemove)
@@ -177,7 +172,7 @@
                 @for (int i = 0; i < Model.Establishments.Count; i++)
                 {
                     <li>
-                        <input type="submit" class="button button-grey" name="action" style="background-color:#e6e6e6;float:right;" value="Remove" onclick="$('#EstabUrnToRemove').val(@Model.Establishments[i].Urn);" />
+                        <input type="submit" class="button button-grey" name="action"  value="Remove" onclick="$('#EstabUrnToRemove').val(@Model.Establishments[i].Urn);" />
                         <h2>@Html.ActionLink(Model.Establishments[i].Name, "Details", "Establishment", new { id = Model.Establishments[i].Urn }, new { @class = "bold-small", target = "_blank" })</h2>
                         <dl>
                             <dt>Address:</dt>

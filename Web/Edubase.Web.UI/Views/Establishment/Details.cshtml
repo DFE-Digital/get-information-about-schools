@@ -25,6 +25,26 @@ else if (Model.UserHasPendingApprovals)
     </div>
 }
 
+
+<div class="pending-updates">
+    <div class="icon">!</div>
+    <h3>Data update@(Model.PendingChanges.Count > 1 ? "s" : "") pending Data Owner approval</h3>
+    @foreach (var item in Model.PendingChanges)
+    {
+        <div class="group">
+            <div>Data field: @item.DataField</div>
+            <div>Old: @(item.OldValue.Clean() ?? "(nothing)")</div>
+            <div>New: @(item.NewValue.Clean() ?? "(nothing)")</div>
+        </div>
+    }
+</div>
+
+
+
+
+
+
+
 @if (Model.PendingChanges.Any())
 {
     <div class="pending-updates">

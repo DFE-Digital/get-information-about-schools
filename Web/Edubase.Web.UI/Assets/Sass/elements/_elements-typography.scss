@@ -111,6 +111,13 @@ main {
 
 }
 
+.heading-intro {
+  @include bold-48();
+
+  margin-top: em(15, 32);
+  margin-bottom: 0;
+  }
+
 .heading-large {
   @include bold-36();
 

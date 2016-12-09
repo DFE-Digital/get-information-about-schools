@@ -18,15 +18,14 @@
     table.borderless.estab-links {
         
         th, td {
-            border: none !important;
+            border: none;
         }
     }
 
-    table.borderless.estab-links.add-linked-estab
-    {
+    table.borderless.estab-links.add-linked-estab  {
         th, td {
-            border: none !important;
-            padding:3px 0px 3px 0px !important;
+            border: none;
+            padding:3px 0px 3px 0px ;
         }
     }
     
@@ -37,18 +36,6 @@
         }
     }
 
-    @mixin pending-update {
-        background-color: $turquoise;
-        color: white;
-        -moz-border-radius: 12px;
-        -webkit-border-radius: 12px;
-        border-radius: 12px;
-        margin: 0;
-        width: 24px;
-        font-weight: bold;
-        font-size: 20px;
-        text-align: center;
-    }
 
     td {
         position: relative;
@@ -154,6 +141,7 @@
             left: 6px;
             top: 6px;
             @include pending-update;
+            width: 24px;
         }
 
         div.group {

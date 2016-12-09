@@ -146,10 +146,10 @@
                         @FormHint("headteacher")
                     </th>
                     <td>
-                        <div class="form-group">
+                        <div class="form-group full-name-inline">
                             @Html.EduHeadTitlesDropDownFor(x => x.HeadTitleId)
-                            @Html.EduTextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", aria_describedby = "help-headfirstname", placeholder = "First name", style = "width:120px;" })
-                            @Html.EduTextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", aria_describedby = "help-headlastname", placeholder = "Last name", style = "width:120px;" })
+                            @Html.EduTextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control inline-name", aria_describedby = "help-headfirstname", placeholder = "First name" })
+                            @Html.EduTextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control inline-name", aria_describedby = "help-headlastname", placeholder = "Last name" })
                         </div>
                     </td>
                 </tr>
@@ -161,9 +161,9 @@
                     </th>
                     <td>
                         <div class="form-group">
-                            @Html.EduTextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control", aria_describedby = "help-agerange-from", placeholder = "From", type = "number", min = 1, max = 99, style = "width:70px;" })
+                            @Html.EduTextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control age-field", aria_describedby = "help-agerange-from", placeholder = "From", type = "number", min = 1, max = 99 })
                             to
-                            @Html.EduTextBoxFor(x => x.StatutoryHighAge, new { maxlength = 120, id = "agerange-to", @class = "form-control", aria_describedby = "help-agerange-to", placeholder = "To", type = "number", min = 1, max = 99, style = "width:70px;" })
+                            @Html.EduTextBoxFor(x => x.StatutoryHighAge, new { maxlength = 120, id = "agerange-to", @class = "form-control age-field", aria_describedby = "help-agerange-to", placeholder = "To", type = "number", min = 1, max = 99 })
                         </div>
                     </td>
                 </tr>
@@ -258,12 +258,9 @@
 
                 <tr>
                     <td colspan="2">
-                        <h2 class="heading-medium" style="margin-bottom:0;">Details</h2>
-                        <hr />
-                        <br />
+                        <h2 class="heading-medium  create-edit-section-break">Details</h2>                        
                     </td>
                 </tr>
-
 
                 <tr>
                     <th scope="row">
@@ -457,9 +454,7 @@
 
                 <tr>
                     <td colspan="2">
-                        <h2 class="heading-medium" style="margin-bottom:0;">Governance</h2>
-                        <hr />
-                        <br />
+                        <h2 class="heading-medium  create-edit-section-break">Governance</h2>                       
                         <h3>Placeholder</h3>
                     </td>
                 </tr>
@@ -468,48 +463,46 @@
                 <tr>
                     @if (Model.Urn.HasValue)
                     {
-                    <td colspan="2">
-                        <a name="addlinkedschool"></a>
-                        <h2 class="heading-medium create-edit-section-break" style="margin-bottom:0;">Links</h2>
-                        
-                        <h2 class="bold-xsmall">Link new school</h2>
-                        <p style="margin-bottom:10px; margin-top:10px;" class="font-xsmall">Enter the Establishment URN</p>
-                        @Html.EduTextBoxFor(x => x.LinkedSearchUrn, new { maxlength = 120, id = "linkedsearchurn", @class = "form-control fotn-xsmall", style = "width:150px; padding:5.5px; " })
-                        &nbsp;&nbsp;
-                        <button type="submit" class="button button-next font-xsmall" style="float:none; font-size:16px; padding-top:4px; padding-bottom:4px;" name="action" value="@ViewModel.eAction.FindEstablishment">Search</button>
+                        <td colspan="2">
+                            <a name="addlinkedschool"></a>
+                            <h2 class="heading-medium create-edit-section-break">Links</h2>
+                            <div class="link-establishment-form">
+                                <h2 class="bold-xsmall">Link new school</h2>
+                                <p class="font-xsmall">Enter the Establishment URN</p>
+                                @Html.EduTextBoxFor(x => x.LinkedSearchUrn, new { maxlength = 120, id = "linkedsearchurn", @class = "form-control " })
+                                &nbsp;&nbsp;
+                                <button type="submit" class="button button-next font-xsmall" name="action" value="@ViewModel.eAction.FindEstablishment">Search</button>
+                            </div>
+                            @if (Model.LinkedUrnToAdd.HasValue)
+                            {
+                                <div class="establishment-link-results">
 
-                        @if (Model.LinkedUrnToAdd.HasValue)
-                        {
-                            <br />
-                            <br />
-
-                            <h3 class="bold-xsmall" style="margin-bottom:12px;">Establishment found</h3>
-                            <p class="font-xsmall">@Model.LinkedEstabNameToAdd</p>
-                            @Html.HiddenFor(x => x.LinkedEstabNameToAdd)
-                            @Html.HiddenFor(x => x.LinkedUrnToAdd)
-                            <table class="borderless estab-links add-linked-estab">
-                                <tr>
-                                    <td style="padding-top:4px;">Link type</td>
-                                    <td>
-                                        <div class="form-group @Html.ValidationCssClassFor(x => x.LinkTypeToAdd)">
-                                            @Html.ValidationMessageFor(x => x.LinkTypeToAdd)
-                                            @Html.EnumDropDownListFor(x => x.LinkTypeToAdd, new { @class = "form-control"})
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-top:4px;">Date linked</td>
-                                    <td style="white-space:nowrap;">
-                                        <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedDateToAdd)">
-                                            @Html.ValidationMessageFor(x => x.LinkedDateToAdd)
-                                            @Html.EduDropDownFor(x => x.LinkedDateToAdd.Day,
+                                    <h3 class="bold-xsmall">Establishment found</h3>
+                                    <p class="font-xsmall">@Model.LinkedEstabNameToAdd</p>
+                                    @Html.HiddenFor(x => x.LinkedEstabNameToAdd)
+                                    @Html.HiddenFor(x => x.LinkedUrnToAdd)
+                                    <table class="borderless estab-links add-linked-estab">
+                                        <tr>
+                                            <td>Link type</td>
+                                            <td>
+                                                <div class="form-group @Html.ValidationCssClassFor(x => x.LinkTypeToAdd)">
+                                                    @Html.ValidationMessageFor(x => x.LinkTypeToAdd)
+                                                    @Html.EnumDropDownListFor(x => x.LinkTypeToAdd, new { @class = "form-control" })
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Date linked</td>
+                                            <td>
+                                                <div class="form-group drop-down-date @Html.ValidationCssClassFor(x => x.LinkedDateToAdd)">
+                                                    @Html.ValidationMessageFor(x => x.LinkedDateToAdd)
+                                                    @Html.EduDropDownFor(x => x.LinkedDateToAdd.Day,
                                              Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
                                                  new
                                                  {
                                                      id = "LinkedDateToAdd-day",
                                                      @class = "form-control",
-                                                     aria_describedby = "help-LinkedDateToAdd-day",
-                                                     style = "width:70px;"
+                                                     aria_describedby = "help-LinkedDateToAdd-day"
                                                  }, label: "DD", fieldName: "LinkedDateToAdd")
 
                                                     @Html.EduDropDownFor(x => x.LinkedDateToAdd.Month,
@@ -518,8 +511,7 @@
                                                  {
                                                      id = "LinkedDateToAdd-month",
                                                      @class = "form-control",
-                                                     aria_describedby = "help-Closedate-month",
-                                                     style = "width:70px;"
+                                                     aria_describedby = "help-Closedate-month"
                                                  }, label: "MM", fieldName: "LinkedDateToAdd")
 
                                                     @Html.EduDropDownFor(x => x.LinkedDateToAdd.Year,
@@ -528,19 +520,20 @@
                                                  {
                                                      id = "LinkedDateToAdd-year",
                                                      @class = "form-control",
-                                                     aria_describedby = "help-LinkedDateToAdd-year",
-                                                     style = "width:70px;"
+                                                     aria_describedby = "help-LinkedDateToAdd-year"
                                                  }, label: "YYYY", fieldName: "LinkedDateToAdd")
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" style="text-align:right;">
-                                        <button type="submit" class="button mobile-full-width" name="action" style="font-size:16px;" value="@ViewModel.eAction.AddLinkedSchool">Add</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        }
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="linked-establishment-submit-wrapper">
+                                                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.AddLinkedSchool">Add</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            }
 
 
                         @if (Model.Links.Count > 0)
@@ -566,7 +559,7 @@
                                             <td>@l.Type</td>
                                             <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
                                             <td>
-                                                <button type="submit" name="action" style="background:none; padding:0; color:#005ea5;cursor:pointer; border:none; text-decoration:underline;" class="font-xsmall"
+                                                <button type="submit" name="action"  class="link-button font-xsmall"
                                                        value="RemoveLinkedSchool" onclick="$('#LinkedItemPositionToRemove').val(@i);" >
                                                     Remove
                                                 </button>
@@ -605,7 +598,7 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <button type="submit" name="action" style="background:none; padding:0; color:#005ea5;cursor:pointer; border:none; text-decoration:underline;" class="font-xsmall"
+                                                    <button type="submit" name="action" class="link-button font-xsmall"
                                                             value="RemoveLinkedSchool" onclick="$('#LinkedItemPositionToRemove').val(@i);">
                                                         Remove
                                                     </button>
@@ -623,9 +616,8 @@
                     else
                     {
                         <td colspan="2">
-                            <h2 class="heading-medium" style="margin-bottom:0;">Links</h2>
-                            <hr />
-                            <br />
+                            <h2 class="heading-medium create-edit-section-break">Links</h2>
+                            
                             <h3>Placeholder</h3>
                         </td>
                     }

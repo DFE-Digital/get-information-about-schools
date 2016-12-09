@@ -116,22 +116,23 @@
                                 <input type="submit" value="Approve" class="link-button" />
                             }
                         </dd>
-                        <div style="clear:left;">
-                            @using (Html.BeginForm("Reject", "Approval", FormMethod.Post))
-                            {
-                                @Html.Hidden("skip", Model.Skip)
-                                @Html.Hidden("take", Model.Take)
-                                @Html.Hidden("id", item.Id)
-                                @Html.Hidden("urn", Model.EstablishmentUrn)
-                                <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().children(':first').focus(); $(this).hide()" />
-                                <div style="display:none;" class="form-group">
-                                    <input type="text" name="reason" placeholder="Reason" autocomplete="off" class="form-control" style="margin:4px; width:90%" /><br />
-                                    <input type="submit" value="Save" class="button" style="font-size:16px; margin-top:10px; width:100%;" />
-                                </div>
-                            }
-                        </div>
-
                     </dl>
+                    <div>
+                        @using (Html.BeginForm("Reject", "Approval", FormMethod.Post))
+                        {
+                            @Html.Hidden("skip", Model.Skip)
+                            @Html.Hidden("take", Model.Take)
+                            @Html.Hidden("id", item.Id)
+                            @Html.Hidden("urn", Model.EstablishmentUrn)
+                            <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().children(':first').focus(); $(this).hide()" />
+                            <div class="form-group hidden">
+                                <input type="text" name="reason" placeholder="Reason" autocomplete="off" class="form-control" style="margin:4px; width:90%" /><br />
+                                <input type="submit" value="Save" class="button"  />
+                            </div>
+                        }
+                    </div>
+
+                    
                 </li>
             }
         </ul>

@@ -23,3 +23,40 @@ select#headtitleid {
         width: 70px;
     }
 }
+
+.inline-name {
+    width: 120px;
+}
+
+.age-field {
+    width: 70px;
+}
+
+.link-establishment-form {
+    .form-control {
+        width: 150px; 
+        padding: 5px;
+    }
+
+    .button {
+        float:none;
+        font-size:16px; 
+        padding:4px inherit;
+    }
+}
+
+.establishment-link-results {
+    white-space: nowrap;
+    padding-top: 2em;
+    h3 {
+        margin-bottom: 12px;
+    }
+}
+
+.linked-establishment-submit-wrapper {
+    text-align: right;
+
+    .button {
+        font-size: 16px;
+    }
+}
