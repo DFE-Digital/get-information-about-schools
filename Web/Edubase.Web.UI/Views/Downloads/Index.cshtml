@@ -7,19 +7,16 @@
 
 <h1 class="heading-large">Downloads</h1>
 <p>Select a file to download</p>
-<style>
-    li.icon-download {
-        width: auto;
-        padding: 10px 0 0 40px;
-    }
-</style>
 
 <ul class="lis">
     @foreach (var item in Model)
     {
-        <li class="icon icon-download">
-            <a href="@item.Uri" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Name.Substring(4, item.Name.Length-8)|download">@item.Name.Substring(4, item.Name.Length-8)</a>
-            in ZIP format. @ConvertBytesToMegabytes(item.Properties.Length) MB
+        <li class="download-list-item">
+           <span class="icon-link-copy">
+                <a href="@item.Uri" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Name.Substring(4, item.Name.Length - 8)|download">@item.Name.Substring(4, item.Name.Length - 8)</a>
+                in ZIP format. @ConvertBytesToMegabytes(item.Properties.Length) MB
+            </span>
+
         </li>
     }
 

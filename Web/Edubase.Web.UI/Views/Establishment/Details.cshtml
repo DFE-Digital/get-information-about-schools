@@ -10,20 +10,40 @@
 
 @if (Model.ShowPendingMessage)
 {
-    <div class="pending-updates-message">
+    <div class="pending-updates-message dismissable-message">
         <div class="tick"></div>
         Updates require approval. The Data Owner has been notified.
-        <div class="cross" onclick="$(this).parent().hide();"></div>
+        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
     </div>
 }
 else if (Model.UserHasPendingApprovals)
 {
-    <div class="pending-updates-message">
+    <div class="pending-updates-message dismissable-message">
         <div class="exclaim"></div>
         You have pending approvals awaiting for this school. @Html.ActionLink("Approve now.", "Index", "Approval", new { urn = Model.Establishment.Urn }, null)
-        <div class="cross" onclick="$(this).parent().hide();"></div>
+        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
     </div>
 }
+
+
+<div class="pending-updates">
+    <div class="icon">!</div>
+    <h3>Data update@(Model.PendingChanges.Count > 1 ? "s" : "") pending Data Owner approval</h3>
+    @foreach (var item in Model.PendingChanges)
+    {
+        <div class="group">
+            <div>Data field: @item.DataField</div>
+            <div>Old: @(item.OldValue.Clean() ?? "(nothing)")</div>
+            <div>New: @(item.NewValue.Clean() ?? "(nothing)")</div>
+        </div>
+    }
+</div>
+
+
+
+
+
+
 
 @if (Model.PendingChanges.Any())
 {
@@ -51,7 +71,6 @@ else if (Model.UserHasPendingApprovals)
     <div class="grid-row summary">
         
         @{Html.RenderPartial(@"Partials\Header");}
-
         <div class="map-container">
             <a href="#map" id="map-toggle" class="expanding-content-trigger map-toggle">Show map</a>
             <div id="map" class="school-detail-map"
@@ -103,6 +122,7 @@ else if (Model.UserHasPendingApprovals)
                 }
 
                 if (Model.TabDisplayPolicy.Links)
+
                 {
                     Html.RenderPartial(@"Partials\TabLinks");
                 }

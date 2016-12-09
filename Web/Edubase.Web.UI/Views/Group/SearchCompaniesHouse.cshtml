@@ -25,9 +25,9 @@
         <div class="column-two-thirds">
 
             <div class="form-group">
-                <label class="form-label" style="padding-bottom:5px;">Enter Companies House number OR Company name</label>
+                <label class="form-label">Enter Companies House number OR Company name</label>
 
-                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control", style = "max-width:300px; margin-bottom:5px;" })
+                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control"})
                 <button type="submit" class="button button-next">Search</button>
             </div>
 

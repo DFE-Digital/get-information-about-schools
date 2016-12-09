@@ -60,6 +60,10 @@
 // Help icon
 @import "elements/_helpicon";
 
+//edubase mixins
+
+@import "utils/_edubase-mixins";
+
 // Components
 // ==========================================================================
 
@@ -112,3 +116,4 @@
 @import "views/_school-search";
 @import "views/_search-page";
 @import "views/_view-logs";
+@import "views/_create-edit-establishment";

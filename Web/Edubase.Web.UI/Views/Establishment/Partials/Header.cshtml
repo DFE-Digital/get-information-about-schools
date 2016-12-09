@@ -123,7 +123,7 @@
             @(Html.PendingUpdatesFor(x => x.StatusId))
             @if (Model.IsClosed)
             {
-                <span style="color:red;">
+                <span class="pending-closure">
                     @Html.NameFor(x => x.Establishment.StatusId)
                 </span>
             }

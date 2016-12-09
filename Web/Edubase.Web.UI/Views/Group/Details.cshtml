@@ -6,7 +6,7 @@
     ViewBag.Title = Model.Group.Name;
     ViewBag.PageClass = "mat-details";
 }
-<p style="margin-top:15px;">
+<p>
     <a class="font-xsmall" href="/Search#groups">Back to search</a>
 </p>
 
@@ -116,7 +116,7 @@
         }
         <div class="tab-content-wrapper horizontal-tabs-content">
             <div id="list" class="tab-content">
-                <h3 class="heading-medium" style="margin-top:0;">
+                <h3 class="heading-medium">
                     List of
                     @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
                     {
