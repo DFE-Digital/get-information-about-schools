@@ -30,6 +30,13 @@ namespace Edubase.Web.UI
             builder.EntitySet<LookupAdmissionsPolicy>("LookupAdmissionsPolicies");
             builder.EntitySet<LookupInspectorateName>("LookupInspectorateNames");
             builder.EntitySet<LookupCASWard>("LookupCASWards");
+            builder.EntitySet<LookupDeliveryModel>("LookupCCDeliveryModels");
+            builder.EntitySet<LookupDirectProvisionOfEarlyYears>("LookupDirectProvisionOfEarlyYears");
+            builder.EntitySet<LookupCCDisadvantagedArea>("LookupCCDisadvantagedAreas");
+            builder.EntitySet<LookupCCGovernance>("LookupCCGovernance");
+            builder.EntitySet<LookupCCGroupLead>("LookupCCGroupLeads");
+            builder.EntitySet<LookupCCOperationalHours>("LookupCCOperationalHours");
+            builder.EntitySet<LookupCCPhaseType>("LookupCCPhaseTypes");
             builder.EntitySet<LookupChildcareFacilities>("LookupChildcareFacilities");
             builder.EntitySet<LookupDiocese>("LookupDioceses");
             builder.EntitySet<LookupEducationPhase>("LookupEducationPhases");
