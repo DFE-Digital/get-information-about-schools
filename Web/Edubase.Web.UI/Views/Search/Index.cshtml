@@ -179,7 +179,20 @@
 
 @section ViewScripts{
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw"></script>
+    <script>
+        var jScriptVersion;
+        /*@@cc_on
+            jScriptVersion = @@_jscript_version;
+
+        @@*/
+        console.log(jScriptVersion);
+        if (typeof jScriptVersion === 'undefined' || jScriptVersion >= 9) {
+            var s = document.createElement("script");
+            s.src = "https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw";
+            document.getElementsByTagName('body')[0].appendChild(s);
+        }
+    </script>
+    @*<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw"></script>*@
     <script type="text/javascript">
 
         window.localAuthorities = @Html.Json(cache.LocalAuthorityGetAll())
