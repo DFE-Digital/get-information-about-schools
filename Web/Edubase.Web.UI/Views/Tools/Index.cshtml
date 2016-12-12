@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Edubase";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-intro">Tools</h1>
+    </div>
+</div>
+
+<div class="grid-row">
+    
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="column-half">
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <h2 class="heading-medium">Approvals</h2>
+                <ul>
+                    <li>@Html.ActionLink("View my approval items" + (ViewBag.PendingApprovalItemsCount > 0 ? " (" + ViewBag.PendingApprovalItemsCount + ")" : "") as string, "Index", "Approval")</li>
+                </ul>
+            }
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <h2 class="heading-medium">Create</h2>
+                <ul>
+                        <li>@Html.ActionLink("Create new school", "Create", "Establishment")</li>
+                        <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group")</li>
+                </ul>
+            }
+
+        </div>
+    }
+</div>

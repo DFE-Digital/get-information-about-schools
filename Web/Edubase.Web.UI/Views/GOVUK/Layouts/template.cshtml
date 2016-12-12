@@ -130,8 +130,11 @@
                         
                         @Html.AntiForgeryToken()
                         <ul id="proposition-links">
+                            <li><a href="/Search">Search</a></li>
+                            <li><a href="/Downloads">Downloads</a></li>
                             @if (Request.IsAuthenticated)
                             {
+                                <li><a href="/Tools">Tools</a></li>
                                 <li>
                                     @Html.ActionLink("Log off", "LogOff", "Account")
                                 </li>
@@ -140,23 +143,6 @@
                             {
                                 <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "" }, null)</li>
                             }
-                            @*else
-                            {
-                                <li><a href="/Search">Search</a></li>
-                                <li><a href="/Schools">Schools</a></li>
-
-                                if (User.Identity.IsAuthenticated)
-                                {
-                                    <li>@Html.ActionLink("View approval items" + (ViewBag.PendingApprovalItemsCount > 0 ? " (" + ViewBag.PendingApprovalItemsCount + ")" : "") as string, "Index", "Approval", new { area = "" }, null)</li>
-                                }
-
-                                if (User.IsInRole("Admin"))
-                                {
-                                    <li><a href="/Admin">Admin</a></li>
-                                }
-                                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-                            }*@
-
                         </ul>
                         
                     </nav>

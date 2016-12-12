@@ -44,7 +44,7 @@ namespace Edubase.Web.UI.Controllers
         {
             return new ChallengeResult(AuthenticationManager.GetExternalAuthenticationTypes()
                 .First().AuthenticationType, 
-                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = "/" }));
+                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = "/Search" }));
         }
 
         //
@@ -65,15 +65,15 @@ namespace Edubase.Web.UI.Controllers
             {
                 return Redirect(returnUrl);
             }
-            else return RedirectToAction("Index", "Home");
+            else return RedirectToAction("Index", "Search");
         }
         
         
         [HttpGet]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = "/" });
-            return RedirectToAction("Index", "Home");
+            AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = "/Search" });
+            return RedirectToAction("Index", "Search");
         }
 
         protected override void Dispose(bool disposing)

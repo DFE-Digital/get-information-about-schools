@@ -1,35 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Edubase.Data.Entity;
+using Edubase.Data.Entity.Lookups;
 using System.Data;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
-using System.Web.Http.OData.Routing;
-using Edubase.Data.Entity;
-using Edubase.Data.Entity.Lookups;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
-    /*
-    The WebApiConfig class may require additional changes to add a route for this controller. Merge these statements into the Register method of the WebApiConfig class as applicable. Note that OData URLs are case sensitive.
-
-    using System.Web.Http.OData.Builder;
-    using System.Web.Http.OData.Extensions;
-    using Edubase.Data.Entity;
-    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-    builder.EntitySet<Governor>("Governors");
-    builder.EntitySet<LookupGovernorAppointingBody>("LookupGovernorAppointingBodies"); 
-    builder.EntitySet<Establishment>("Establishments"); 
-    builder.EntitySet<GroupCollection>("Groups"); 
-    builder.EntitySet<LookupGovernorRole>("LookupGovernorRoles"); 
-    config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
-    */
     public class GovernorsController : ODataController
     {
         private ApplicationDbContext db = new ApplicationDbContext();

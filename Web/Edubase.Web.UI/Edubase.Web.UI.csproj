@@ -264,9 +264,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\SearchControllerNEW.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
+    <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
     <Compile Include="Filters\ExceptionFilter.cs" />
     <Compile Include="Filters\PendingApprovalsFilter.cs" />
@@ -771,6 +771,7 @@
     <Content Include="Views\Shared\_ResultsPagination3.cshtml" />
     <Content Include="Views\Shared\_ResultsPaginationAdvSearch.cshtml" />
     <Content Include="Views\Shared\_Governors.cshtml" />
+    <Content Include="Views\Tools\Index.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
