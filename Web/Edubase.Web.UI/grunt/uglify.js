@@ -6,7 +6,8 @@
                 sourceMap: false,
                 beautify: true,
                 compress: false,
-                mangle: false
+                mangle: false,
+                preserveComments: 'some' // allow jScript conditional compilation
             },
             src: [
               // couldn't use /**/*.js as govuk/analytics/error-tracking.js causes an error with GOVUK undefined
