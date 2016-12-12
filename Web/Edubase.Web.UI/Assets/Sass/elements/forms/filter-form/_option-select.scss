@@ -197,11 +197,17 @@ category: Forms
         cursor: pointer;
         margin-bottom: -1px;
         padding: 5px 0;
-        background: file-url('../assets/images/option-select-toggle-sprite.png') no-repeat right 5px;
+        
         background-color: $grey-3;
-
-        @include device-pixel-ratio() {
-          background-size: 32px 50px;
+       
+        &:after {
+            position: absolute;
+            background: file-url('../assets/images/option-select-toggle-sprite.png') no-repeat right 5px;
+            width: 24px;
+            height: 25px;
+            content: "";
+            right: 0;
+            top: 0;
         }
 
         &:hover {
@@ -219,7 +225,7 @@ category: Forms
       }
 
       &.js-closed {
-        button {
+        button:after {
           background-position: right -75px;
         }
 
