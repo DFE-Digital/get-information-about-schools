@@ -10,6 +10,7 @@ using Edubase.Services.Mapping;
 using Edubase.Data.Entity;
 using Edubase.Services.IntegrationEndPoints.AzureSearch;
 using System.Configuration;
+using Edubase.Services.Cache;
 
 namespace Edubase.Web.UI
 {
@@ -47,9 +48,16 @@ namespace Edubase.Web.UI
             builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
                 ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString).As<IAzureSearchEndPoint>();
 
+            var cacheAccessor = new CacheAccessor(new CacheConfig());
+            var t = cacheAccessor.InitialiseIfNecessaryAsync();
+            builder.RegisterInstance(cacheAccessor).As<ICacheAccessor>().AsSelf();
+
             builder.RegisterType<ApplicationDbContext>().As<IApplicationDbContext>();
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
+
+            builder.RegisterType<GroupsWriteService>().As<IGroupsWriteService>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
+            builder.RegisterType<CachedEstablishmentsReadService>().As<ICachedEstablishmentsReadService>();
             builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();

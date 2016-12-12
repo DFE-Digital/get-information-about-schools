@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Establishments.Models;
+﻿using Edubase.Common.Spatial;
+using Edubase.Services.Establishments.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +17,26 @@ namespace Edubase.Services.Establishments.Search
 
         public EstablishmentSearchPayload(string orderBy, int skip, int take)
         {
-            OrderBy = new List<string> { nameof(SearchEstablishmentDocument.Name) };
+            OrderBy = new List<string> { orderBy };
             Skip = skip;
             Take = take;
         }
+
         public string Text { get; set; }
+
         public EstablishmentSearchFilters Filters { get; set; } = new EstablishmentSearchFilters();
+
         public int Skip { get; set; }
+
         public int Take { get; set; } = 10;
 
-        public static readonly IList<string> FullTextSearchFields = new[] { nameof(EstablishmentModel.Name) }.ToList();
-        public IList<string> OrderBy { get; set; }
+        public int? GeoSearchMaxRadiusInKilometres { get; set; } = 10;
+
+        public LatLon GeoSearchLocation { get; set; }
+
+        public bool GeoSearchOrderByDistance { get; set; }
+        
+
+        public IList<string> OrderBy { get; set; } = new List<string>();
     }
 }

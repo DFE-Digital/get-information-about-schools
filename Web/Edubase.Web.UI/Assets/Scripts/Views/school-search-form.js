@@ -59,7 +59,7 @@
             $(function () {
                 setTimeout(function () {
                     self.bindAutosuggest('#TextSearchModel_Text', '#TextSearchModel_AutoSuggestValue', self.getSchoolsSuggestionHandler);
-                    self.bindAutosuggest('#TrustSearchModel_Text', '#TrustSearchModel_AutoSuggestValue', self.getTrustSuggestionHandler);
+                    self.bindAutosuggest('#GroupSearchModel_Text', '#GroupSearchModel_AutoSuggestValue', self.getTrustSuggestionHandler);
                     //self.bindAutosuggest('#LocalAuthoritySearchModel_Text', '#LocalAuthoritySearchModel_AutoSuggestValue', { data: window.localAuthorities, name: "name", value: "id" });
                 }, 500);
                 
@@ -74,7 +74,7 @@
         },
 
         getTrustSuggestionHandler: function (keywords, callback) {
-            var dataSuggestionUrl = $("#TrustSearchModel_Text").attr("data-suggestion-url");
+            var dataSuggestionUrl = $("#GroupSearchModel_Text").attr("data-suggestion-url");
             return $.get(encodeURI(dataSuggestionUrl + keywords), function (response) {
                 return callback(response);
             });

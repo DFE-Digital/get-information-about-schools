@@ -1,6 +1,11 @@
 ﻿using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
+using Microsoft.Azure.Search.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity.Spatial;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Edubase.Services.Establishments.Search
 {
@@ -14,7 +19,8 @@ namespace Edubase.Services.Establishments.Search
             var retVal = new SearchIndex();
             retVal.Name = INDEX_NAME;
             retVal.SuggesterName = SUGGESTER_NAME;
-            
+
+
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Urn",
@@ -27,7 +33,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -41,7 +47,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -55,7 +61,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -69,7 +75,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = true,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -83,7 +89,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -97,7 +103,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -111,7 +117,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -120,12 +126,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(DateTime)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -134,12 +140,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(DateTime)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -153,7 +159,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -162,12 +168,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -176,12 +182,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -195,7 +201,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -209,7 +215,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -223,7 +229,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -237,7 +243,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -251,7 +257,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -265,7 +271,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -279,7 +285,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -293,7 +299,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -302,12 +308,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -321,7 +327,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -335,7 +341,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -344,54 +350,54 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(DateTime)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Address_Line1",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Address_Line2",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Address_Line3",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -400,12 +406,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -414,12 +420,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -428,12 +434,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -447,7 +453,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -461,7 +467,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -470,12 +476,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -484,12 +490,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -503,119 +509,133 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "HeadEmailAddress",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(string)
+            });
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Contact_TelephoneNumber",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Contact_EmailAddress",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Contact_WebsiteAddress",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Contact_FaxNumber",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "ContactAlt_TelephoneNumber",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "ContactAlt_EmailAddress",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "ContactAlt_WebsiteAddress",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "ContactAlt_FaxNumber",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -629,35 +649,35 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Easting",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "Northing",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -666,12 +686,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(DbGeography)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -685,7 +705,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -694,12 +714,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(byte)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -708,12 +728,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(DateTime)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -727,7 +747,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -741,7 +761,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -750,12 +770,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -764,12 +784,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -778,12 +798,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -797,7 +817,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -811,7 +831,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -825,7 +845,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -839,7 +859,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -853,7 +873,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -862,12 +882,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -881,7 +901,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -895,7 +915,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -909,7 +929,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -918,12 +938,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -937,7 +957,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -951,7 +971,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -965,7 +985,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -974,12 +994,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -988,12 +1008,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1007,7 +1027,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1021,7 +1041,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1035,7 +1055,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1049,7 +1069,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1063,7 +1083,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1077,7 +1097,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1091,7 +1111,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1105,7 +1125,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1119,7 +1139,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1133,7 +1153,133 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "CCGovernanceId",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "CCGovernanceDetail",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(string)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "CCOperationalHoursId",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "CCPhaseTypeId",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "CCGroupLeadId",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "CCDisadvantagedAreaId",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "CCDirectProvisionOfEarlyYearsId",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "CCDeliveryModelId",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "CCUnder5YearsOfAgeCount",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = true,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1142,12 +1288,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1156,12 +1302,12 @@ namespace Edubase.Services.Establishments.Search
                 IsSearchable = false,
                 IsFilterable = true,
                 IsRetrievable = true,
-                IsSortable = false,
+                IsSortable = true,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1175,7 +1321,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1189,21 +1335,21 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(int)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "BSOInspectorateReportUrl",
                 IsFacetable = false,
                 IsSearchable = false,
-                IsFilterable = true,
+                IsFilterable = false,
                 IsRetrievable = true,
                 IsSortable = false,
                 IsKey = false,
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1217,7 +1363,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(DateTime)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1231,7 +1377,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(DateTime)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1245,7 +1391,7 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(DateTime)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1260,6 +1406,7 @@ namespace Edubase.Services.Establishments.Search
                 ClrType = typeof(DateTime)
             });
 
+
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "IsDeleted",
@@ -1272,6 +1419,8 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(bool)
             });
+            
+
 
             return retVal;
         }

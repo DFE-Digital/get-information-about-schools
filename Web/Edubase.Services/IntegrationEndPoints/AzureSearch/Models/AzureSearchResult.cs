@@ -31,6 +31,12 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch.Models
             Items = result.Results.Select(x => x.Document).ToList();
         }
 
+        public AzureSearchResult(long? count, IList<T> items)
+        {
+            Count = count;
+            Items = items;
+        }
+
 
     }
 }

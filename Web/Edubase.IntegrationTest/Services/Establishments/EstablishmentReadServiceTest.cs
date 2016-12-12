@@ -1,4 +1,5 @@
-﻿using Edubase.IntegrationTest.Services.IntegrationEndPoints.AzureSearch;
+﻿using Edubase.Common.Spatial;
+using Edubase.IntegrationTest.Services.IntegrationEndPoints.AzureSearch;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Search;
@@ -27,5 +28,21 @@ namespace Edubase.IntegrationTest.Services.Establishments
             Assert.IsTrue(result.Items.All(x => x.Name.IndexOf("Academy", StringComparison.OrdinalIgnoreCase) > -1));
             Assert.IsTrue(result.Items.All(x => x.EstablishmentTypeGroupId == (int)eLookupEstablishmentTypeGroup.Academies));
         }
+
+        [Test]
+        public async Task SearchAsync_WithLocation_Test()
+        {
+            var payload = new EstablishmentSearchPayload(nameof(SearchEstablishmentDocument.Name), 0, 200);
+
+            payload.GeoSearchLocation = new LatLon(50.5811800, -3.4664400);
+            payload.GeoSearchOrderByDistance = true;
+            payload.GeoSearchMaxRadiusInKilometres = 20;
+
+            var svc = new EstablishmentReadService(null, null, null, new AzureSearchEndPoint(AzureSearchEndPointTest.GetAZSConnStr()));
+            var result = await svc.SearchAsync(payload, new GenericPrincipal(new GenericIdentity(""), new string[0]));
+            Assert.IsTrue(result.Count > 10);
+        }
+
+
     }
 }

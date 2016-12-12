@@ -1,3 +1,4 @@
+using Edubase.Data.Entity;
 using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System;
 
@@ -16,7 +17,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "GroupUID",
+                Name = nameof(GroupCollection.GroupUID),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -30,7 +31,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "Name",
+                Name = nameof(GroupCollection.Name),
                 IsFacetable = false,
                 IsSearchable = true,
                 IsFilterable = true,
@@ -44,7 +45,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "CompaniesHouseNumber",
+                Name = nameof(GroupCollection.CompaniesHouseNumber),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -58,7 +59,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "GroupTypeId",
+                Name = nameof(GroupCollection.GroupTypeId),
                 IsFacetable = true,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -72,7 +73,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "ClosedDate",
+                Name = nameof(GroupCollection.ClosedDate),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -86,7 +87,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "StatusId",
+                Name = nameof(GroupCollection.StatusId),
                 IsFacetable = true,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -100,7 +101,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "OpenDate",
+                Name = nameof(GroupCollection.OpenDate),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -170,7 +171,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "Address",
+                Name = nameof(GroupCollection.Address),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -184,7 +185,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "ManagerEmailAddress",
+                Name = nameof(GroupCollection.ManagerEmailAddress),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -198,7 +199,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "GroupId",
+                Name = nameof(GroupCollection.GroupId),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -212,7 +213,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "CreatedUtc",
+                Name = nameof(GroupCollection.CreatedUtc),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -226,7 +227,7 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "LastUpdatedUtc",
+                Name = nameof(GroupCollection.LastUpdatedUtc),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -239,7 +240,20 @@ namespace Edubase.Services.Groups.Search
 
             retVal.Fields.Add(new SearchIndexField
             {
-                Name = "IsDeleted",
+                Name = nameof(GroupCollection.EstablishmentCount),
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = true,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = nameof(GroupCollection.IsDeleted),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,

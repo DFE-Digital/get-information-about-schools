@@ -224,7 +224,7 @@ namespace Edubase.Import.Mapping
 
                 cfg.CreateMap<GroupLinks, EstablishmentGroup>()
                     .ForMember(x => x.EstablishmentUrn, opt => opt.MapFrom(m => m.URN.ToInteger()))
-                    .ForMember(x => x.TrustGroupUID, opt => opt.MapFrom(m => m.LinkedUID.ToInteger()))
+                    .ForMember(x => x.GroupUID, opt => opt.MapFrom(m => m.LinkedUID.ToInteger()))
                     .ForAllOtherMembers(opt => opt.Ignore());
 
             }).CreateMapper();

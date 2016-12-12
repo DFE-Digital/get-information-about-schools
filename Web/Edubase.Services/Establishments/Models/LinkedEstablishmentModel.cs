@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.Establishments.Models
 {
+    [Serializable]
     public class LinkedEstablishmentModel
     {
         public int? Id { get; set; }

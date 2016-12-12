@@ -114,10 +114,10 @@
                                 Establishment group
                                 <span class="form-hint">Can include multi academy trust/single academy trust name, companies house number or local authority name</span>
                             </label>
-                            @Html.TextBoxFor(x => x.TrustSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggesttrust?text="})
-                            @Html.HiddenFor(x => x.TrustSearchModel.AutoSuggestValue)
+                            @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text="})
+                            @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
                         </div>
-                        <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Trust">Search</button>
+                        <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Group">Search</button>
                     }
 
                 </div>

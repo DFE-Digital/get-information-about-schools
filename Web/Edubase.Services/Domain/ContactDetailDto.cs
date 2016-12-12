@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.Domain
 {
+    [Serializable]
     public class ContactDetailDto
     {
         public string TelephoneNumber { get; set; }

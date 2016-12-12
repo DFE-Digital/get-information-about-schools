@@ -46,6 +46,26 @@ namespace Edubase.Data.Migrations
             }
 
             context.SaveChanges();
+
+
+            if(!context.Groups.Any(x => x.EstablishmentCount > 0))
+            {
+                var sql = $@"UPDATE G
+                             SET G.{nameof(GroupCollection.EstablishmentCount)} = 
+                                            (SELECT COUNT(1) 
+                                             FROM {nameof(EstablishmentGroup)} EG 
+                                             WHERE EG.{nameof(EstablishmentGroup.GroupUID)} = G.{nameof(GroupCollection.GroupUID)} 
+                                             AND EG.IsDeleted = 0)
+                             FROM {nameof(GroupCollection)} G
+                             WHERE G.IsDeleted = 0";
+
+                context.Database.ExecuteSqlCommand(sql);
+            }
+
+            var commands = new[] { "ALTER DATABASE CURRENT SET CHANGE_TRACKING = ON (CHANGE_RETENTION = 2 DAYS, AUTO_CLEANUP = ON)" }
+            .Concat(new[] { "Establishment", "Governor", "GroupCollection" }
+                .Select(x => $@"ALTER TABLE {x} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = ON)"));
+            commands.ForEach(x => Common.Invoker.IgnoringException(() => context.Database.ExecuteSqlCommand(x)));
         }
     }
 }

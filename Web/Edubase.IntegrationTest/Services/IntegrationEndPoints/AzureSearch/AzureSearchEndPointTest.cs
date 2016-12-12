@@ -77,7 +77,7 @@ namespace Edubase.IntegrationTest.Services.IntegrationEndPoints.AzureSearch
             Assert.IsTrue(r.Count > 1000);
             Assert.IsTrue(r.Items.All(x => x.Name != null));
         }
-        
+
         private async Task SetupAzureSearch(SearchIndex index, string tableName)
         {
             var subject = new AzureSearchEndPoint(GetAZSConnStr());

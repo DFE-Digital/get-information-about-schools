@@ -18,6 +18,9 @@ namespace Edubase.Web.UI.Controllers
     using Services.Domain;
     using System.Collections.Generic;
     using Services;
+    using Common.Spatial;
+    using Services.Groups.Search;
+    using Services.Groups.Models;
 
     public class SearchController : EduBaseController
     {
@@ -37,12 +40,91 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Results(ViewModel model)
         {
             if (model.SearchType == ViewModel.eSearchType.Text) return await SearchByTextSearch(model);
-            //else if (model.SearchType == ViewModel.eSearchType.Location) return await SearchByLocation(model);
-            //else if (model.SearchType == ViewModel.eSearchType.LocalAuthority) return await SearchByLocalAuthority(model);
-            //else if (model.SearchType == ViewModel.eSearchType.Trust) return await SearchTrusts(model);
-            //else if (model.SearchType == ViewModel.eSearchType.Governor) return SearchGovernors(model.GovernorSearchModel);
-            //else throw new Exception("Unrecognised action");
+            else if (model.SearchType == ViewModel.eSearchType.Location) return await SearchByLocation(model);
+            else if (model.SearchType == ViewModel.eSearchType.LocalAuthority) return await SearchByLocalAuthority(model);
+            else if (model.SearchType == ViewModel.eSearchType.Group) return await SearchGroups(model);
+            else if (model.SearchType == ViewModel.eSearchType.Governor) return SearchGovernors(model.GovernorSearchModel);
             throw new NotImplementedException();
+        }
+
+        private ActionResult SearchGovernors(Areas.Governors.Models.SearchModel governorSearchModel)
+        {
+            return Redirect("/Governors/Search?Forename=" + governorSearchModel.Forename + "&Surname=" + governorSearchModel.Surname + "&RoleId=" + governorSearchModel.RoleId + "&IncludeHistoric=" + governorSearchModel.IncludeHistoric);
+        }
+
+
+        private async Task<ActionResult> SearchGroups(ViewModel model)
+        {
+            if (model.GroupSearchModel.AutoSuggestValueAsInt.HasValue)
+            {
+                return new RedirectToRouteResult(null, new RouteValueDictionary
+                {
+                    { "action", "Details" },
+                    { "controller", "Group" },
+                    { "id", model.GroupSearchModel.AutoSuggestValueAsInt }
+                });
+            }
+            else
+            {
+                var text = model.GroupSearchModel.Text.Clean();
+                var viewModel = new GroupSearchResultsModel(text) { StartIndex = model.StartIndex, Count = model.Count };
+                var results  = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
+
+                if (results.Count > 0)
+                {
+                    viewModel.Results.Add(results.Items[0]);
+                    viewModel.Count = 1;
+                }
+                else
+                {
+                    var payload = new GroupSearchPayload(nameof(GroupModel.Name), model.StartIndex, model.PageSize) { Text = text };
+                    results = await _groupReadService.SearchAsync(payload, User);
+                    viewModel.Results = results.Items;
+                    if (model.StartIndex == 0) viewModel.Count = results.Count.Value;
+                }
+                
+                viewModel.SearchType = "Groups";
+
+                if (viewModel.Count == 1)
+                {
+                    return new RedirectToRouteResult(null, new RouteValueDictionary
+                                {
+                                    { "action", "Details" },
+                                    { "controller", "Group" },
+                                    { "id", viewModel.Results.Single().GroupUID }
+                                });
+                }
+                else viewModel.CalculatePageStats(model.PageSize);
+
+                return View("GroupResults", viewModel);
+
+            }
+        }
+        
+        private async Task<ActionResult> SearchByLocalAuthority(ViewModel model)
+        {
+            var payload = new EstablishmentSearchPayload(nameof(SearchEstablishmentDocument.Name), model.StartIndex, model.PageSize);
+            AddFilters(model, payload.Filters);
+            return await ProcessSearch(model, payload);
+        }
+
+        private async Task<ActionResult> SearchByLocation(ViewModel model)
+        {
+            var payload = new EstablishmentSearchPayload(nameof(SearchEstablishmentDocument.Name), model.StartIndex, model.PageSize);
+            var filters = payload.Filters;
+
+            var coord = LatLon.Parse(model.LocationSearchModel.AutoSuggestValue);
+            if (coord != null)
+            {
+                payload.GeoSearchLocation = coord;
+                payload.GeoSearchMaxRadiusInKilometres = 10;
+                payload.GeoSearchOrderByDistance = true;
+            }
+            else model.Error = "The co-ordinate could not be parsed.";
+
+            AddFilters(model, filters);
+
+            return await ProcessSearch(model, payload);
         }
 
         private async Task<ActionResult> SearchByTextSearch(ViewModel model)
@@ -85,9 +167,11 @@ namespace Edubase.Web.UI.Controllers
             if (model.Count == 1) return RedirectToEstabDetail(model.Results.First().Urn.GetValueOrDefault());
             else
             {
+                var permittedStatusIds = _establishmentReadService.GetPermittedStatusIds(User);
+
                 var svc = new CachedLookupService();
                 model.EstablishmentTypes = (await svc.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                model.EstablishmentStatuses = (await svc.EstablishmentStatusesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                model.EstablishmentStatuses = (await svc.EstablishmentStatusesGetAllAsync()).Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id)).Select(x => new LookupItemViewModel(x));
                 model.EducationPhases = (await svc.EducationPhasesGetAllAsync()).Select(x => new LookupItemViewModel(x));
                 model.ReligiousCharacters = (await svc.ReligiousCharactersGetAllAsync()).Select(x => new LookupItemViewModel(x));
                 model.LocalAuthorties = (await svc.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
@@ -115,18 +199,12 @@ namespace Edubase.Web.UI.Controllers
             }
             return null;
         }
-
-
-        public async Task<ActionResult> SearchByMATAS(string searchTerm, int startIndex = 0, int pageSize = 50)
-        {
-            return null;
-        }
+        
+        [HttpGet]
+        public async Task<ActionResult> Suggest(string text) => Json(await _establishmentReadService.SuggestAsync(text, User));
 
         [HttpGet]
-        public async Task<ActionResult> Suggest(string text) => Json(await _establishmentReadService.SuggestAsync(text));
-
-        [HttpGet]
-        public async Task<ActionResult> SuggestTrust(string text) => Json(await _groupReadService.SuggestAsync(text));
+        public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text, User));
 
 
         private ActionResult RedirectToEstabDetail(int urn)

@@ -25,6 +25,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     if(model.RoleId.HasValue) model.RoleName = dc.LookupGovernorRoles.FirstOrDefault(x => x.Id == model.RoleId)?.Name;
 
                     var query = dc.Governors
+                        .Where(x=>x.IsDeleted == false)
                         .Include(x => x.Role)
                         .Include(x => x.AppointingBody)
                         .Include(x => x.Establishment)

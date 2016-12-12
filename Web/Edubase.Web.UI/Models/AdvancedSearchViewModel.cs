@@ -34,7 +34,7 @@ namespace Edubase.Web.UI.Models
             Text,
             Location,
             LocalAuthority,
-            Trust,
+            Group,
             Governor
         }
 
@@ -71,13 +71,10 @@ namespace Edubase.Web.UI.Models
         public Payload TextSearchModel { get; set; } = new Payload();
         public Payload LocationSearchModel { get; set; } = new Payload();
         
-        public Payload TrustSearchModel { get; set; } = new Payload();
+        public Payload GroupSearchModel { get; set; } = new Payload();
 
         public eSearchType SearchType { get; set; }
-
-        public int Skip { get; set; }
-        public int Take { get; set; }
-
+        
 
         public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
         [BindAlias("t")]

@@ -1,5 +1,8 @@
-﻿namespace Edubase.Common.Spatial
+﻿using System;
+
+namespace Edubase.Common.Spatial
 {
+    [Serializable]
     public class LatLon
     {
         public double Latitude;

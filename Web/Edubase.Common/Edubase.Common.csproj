@@ -70,6 +70,7 @@
     <Compile Include="Reflection\ReflectionHelper.cs" />
     <Compile Include="Reflection\PropInfo.cs" />
     <Compile Include="Retry.cs" />
+    <Compile Include="Spatial\DistanceCalculator.cs" />
     <Compile Include="Spatial\LatLon.cs" />
     <Compile Include="Spatial\OSGB36Converter.cs" />
     <Compile Include="Spatial\RefEll.cs" />

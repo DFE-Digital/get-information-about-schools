@@ -101,12 +101,12 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch
         public async Task CreateOrUpdateIndexAsync(SearchIndex index) => await CreateOrUpdateIndexAsync(index.Name, index.Fields, index.SuggesterName);
 
 
-        public async Task<IEnumerable<T>> SuggestAsync<T>(string indexName, string suggesterName, string text, int take = 5) where T : class
+        public async Task<IEnumerable<T>> SuggestAsync<T>(string indexName, string suggesterName, string text, string odataFilter = null, int take = 5) where T : class
         {
             var fields = _fieldLists.Get(typeof(T), () => ReflectionHelper.GetProperties(typeof(T), writeableOnly: true));
             
             var c = GetIndexClient(indexName);
-            var result = await c.Documents.SuggestAsync<T>(text, suggesterName, new SuggestParameters() { Select = fields, Top = take, Filter = ODATA_FILTER_DELETED });
+            var result = await c.Documents.SuggestAsync<T>(text, suggesterName, new SuggestParameters() { Select = fields, Top = take, Filter = odataFilter ?? ODATA_FILTER_DELETED });
             return result.Results.Select(x => x.Document);
         }
 

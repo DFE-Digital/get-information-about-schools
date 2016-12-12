@@ -12,6 +12,7 @@ using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Services.Establishments.Models;
 using Edubase.Data.Entity;
 using Edubase.Services.Groups.Models;
+using Newtonsoft.Json.Linq;
 
 namespace Edubase.Services.Mapping
 {

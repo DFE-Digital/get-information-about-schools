@@ -20,6 +20,7 @@ using Edubase.Common;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.IntegrationEndPoints.AzureSearch;
 using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
+using Edubase.Data;
 
 namespace Edubase.Services.Establishments
 {
@@ -35,6 +36,8 @@ namespace Edubase.Services.Establishments
         /// </summary>
         private readonly string[] _nonStatusRestrictiveRoles = new[] { EdubaseRoles.EFA, EdubaseRoles.AOS, EdubaseRoles.FSG,
             EdubaseRoles.IEBT, EdubaseRoles.School, EdubaseRoles.PRU, EdubaseRoles.Admin };
+
+
         private readonly int[] _restrictedStatuses = new[]
         {
             eLookupEstablishmentStatus.Closed,
@@ -155,20 +158,53 @@ namespace Edubase.Services.Establishments
             return query;
         }
 
-        public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, int take = 10) 
-            => await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text, take);
-        
+        public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
+        {
+            var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
+            if (IsRoleRestrictedOnStatus(principal))
+            {
+                oDataFilters.Add(ODataUtil.Or(nameof(SearchEstablishmentDocument.StatusId), _restrictedStatuses));
+            }
+            return await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text,oDataFilters.ToString() , take);
+        }
+
+        public int[] GetPermittedStatusIds(IPrincipal principal)
+        {
+            if (IsRoleRestrictedOnStatus(principal)) return _restrictedStatuses;
+            else return null;
+        }
+
 
         public async Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
         {
             if (IsRoleRestrictedOnStatus(principal))
-                payload.Filters.StatusIds = _restrictedStatuses.Concat(payload.Filters.StatusIds).Distinct().ToArray();
+            {
+                if (payload.Filters.StatusIds.Any())
+                {
+                    if (!payload.Filters.StatusIds.All(x => _restrictedStatuses.Any(s => s == x)))
+                        throw new Exception("One or more of the status ids requested are outside the permissions of the current principal");
+                }
+                else payload.Filters.StatusIds = _restrictedStatuses.ToArray();
+            }
+
+            var predicates = payload.Filters.ToODataPredicateList(AzureSearchEndPoint.ODATA_FILTER_DELETED);
             
-            var odataFilter = payload.Filters.ToString();
-            odataFilter = StringUtil.ConcatNonEmpties(" and ", odataFilter, AzureSearchEndPoint.ODATA_FILTER_DELETED);
-            
+            if (payload.GeoSearchLocation != null)
+            {
+                var geoPredicate = new ODataGeographyExpression(payload.GeoSearchLocation);
+                predicates.Add(geoPredicate.ToFilterODataExpression(nameof(SearchEstablishmentDocument.Location), payload.GeoSearchMaxRadiusInKilometres.Value));
+                if (payload.GeoSearchOrderByDistance) payload.OrderBy.Insert(0, geoPredicate.ToODataExpression(nameof(SearchEstablishmentDocument.Location)));
+            }
+
+            var oDataFilterExpression = string.Join(" and ", predicates);
+
             return await _azureSearchService.SearchAsync<SearchEstablishmentDocument>(EstablishmentsSearchIndex.INDEX_NAME, 
-                payload.Text, odataFilter, payload.Skip, payload.Take, EstablishmentSearchPayload.FullTextSearchFields, payload.OrderBy); 
+                payload.Text, 
+                oDataFilterExpression, 
+                payload.Skip, 
+                payload.Take, 
+                new[] { nameof(SearchEstablishmentDocument.Name) }.ToList(), 
+                payload.OrderBy); 
         }
 
         private bool IsRoleRestrictedOnStatus(IPrincipal principal)

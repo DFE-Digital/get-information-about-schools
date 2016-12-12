@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.Domain
 {
+    [Serializable]
     public class ChildrensCentreLocalAuthorityDto
     {
         public string FirstName { get; set; }

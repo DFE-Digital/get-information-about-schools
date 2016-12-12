@@ -24,12 +24,12 @@ namespace [NAMESPACE]
             {
                 Name = "[FIELDNAME]",
                 IsFacetable = false,
-                IsSearchable = false,
-                IsFilterable = true,
+                IsSearchable = [ISSEARCHABLE],
+                IsFilterable = [ISFILTERABLE],
                 IsRetrievable = true,
-                IsSortable = false,
-                IsKey = false,
-                IncludeInSuggester = false,
+                IsSortable = [ISSORTABLE],
+                IsKey = [ISKEY],
+                IncludeInSuggester = [INCLUDEINSUGGESTER],
                 ClrType = typeof([TYPE])
             });
             [/subtemplate:addfield]

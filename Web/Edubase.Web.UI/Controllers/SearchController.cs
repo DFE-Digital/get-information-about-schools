@@ -153,6 +153,7 @@
 //                return await SearchByMATAS(model.TrustSearchModel.Text, model.StartIndex);
 //            }
 //        }
+
 //        public async Task<ActionResult> SearchByMATAS(string searchTerm, int startIndex = 0, int pageSize = 50)
 //        {
 //            if (searchTerm.Clean() == null) return RedirectToAction("Index");

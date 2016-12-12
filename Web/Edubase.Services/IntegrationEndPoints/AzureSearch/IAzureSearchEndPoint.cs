@@ -13,7 +13,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch
         Task DeleteDataSourceAsync(string name);
         Task DeleteIndexAsync(string name);
         Task DeleteIndexerAsync(string name);
-        Task<IEnumerable<T>> SuggestAsync<T>(string indexName, string suggesterName, string text, int take = 5) where T : class;
+        Task<IEnumerable<T>> SuggestAsync<T>(string indexName, string suggesterName, string text, string odataFilter = null, int take = 5) where T : class;
 
         /// <summary>
         /// Searches the index according to the parameters specified

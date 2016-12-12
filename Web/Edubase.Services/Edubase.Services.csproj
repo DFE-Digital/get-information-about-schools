@@ -165,6 +165,7 @@
     <Compile Include="Cache\CacheAccessor.cs" />
     <Compile Include="Cache\CacheAuditLogItem.cs" />
     <Compile Include="Cache\CacheConfig.cs" />
+    <Compile Include="Cache\CachedServiceBase.cs" />
     <Compile Include="Cache\CacheResponseDto.cs" />
     <Compile Include="Cache\DistributedCacheMessage.cs" />
     <Compile Include="Cache\eCacheEvent.cs" />
@@ -238,6 +239,7 @@
     <Compile Include="Enums\eLookupTypeOfResourcedProvision.cs" />
     <Compile Include="Enums\eLookupUrbanRural.cs" />
     <Compile Include="EstablishmentService.cs" />
+    <Compile Include="Establishments\CachedEstablishmentsReadService.cs" />
     <Compile Include="Establishments\DisplayPolicies\AcademyDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\BSODisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\ChildrensCentreLinkedSitesDisplayPolicy.cs" />
@@ -253,8 +255,10 @@
     <Compile Include="Establishments\DisplayPolicies\WelshDisplayPolicy.cs" />
     <Compile Include="Establishments\Enums\EstabNumberEntryPolicy.cs" />
     <Compile Include="Establishments\EstablishmentReadService.cs" />
+    <Compile Include="Establishments\ICachedEstablishmentsReadService.cs" />
     <Compile Include="Establishments\ILAESTABService.cs" />
     <Compile Include="Establishments\LAESTABService.cs" />
+    <Compile Include="Establishments\Search\EstablishmentSearchFiltersLookups.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchFilters.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchPayload.cs" />
     <Compile Include="Establishments\Search\EstablishmentsSearchIndex.cs" />
@@ -265,12 +269,19 @@
     <Compile Include="Establishments\Models\LinkedEstablishmentModel.cs" />
     <Compile Include="Establishments\Search\EstablishmentSuggestionItem.cs" />
     <Compile Include="Establishments\Search\SearchEstablishmentDocument.cs" />
+    <Compile Include="Establishments\Search\SearchEstablishmentDocumentBase.cs" />
+    <Compile Include="Governors\GovernorsReadService.cs" />
     <Compile Include="Governors\Search\GovernorsSearchIndex.cs" />
     <Compile Include="Governors\Search\GovernorSuggestionItem.cs" />
+    <Compile Include="Groups\GroupsWriteService.cs" />
+    <Compile Include="Groups\IGroupsWriteService.cs" />
+    <Compile Include="Groups\Search\SearchGroupDocument.cs" />
+    <Compile Include="Groups\Search\GroupSearchPayload.cs" />
     <Compile Include="Groups\Search\GroupSuggestionItem.cs" />
     <Compile Include="Groups\Search\GroupsSearchIndex.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\IAzureSearchEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\Models\AzureSearchResult.cs" />
+    <Compile Include="IntegrationEndPoints\AzureSearch\Models\ODataGeography.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\Models\SearchIndex.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\Models\SearchIndexField.cs" />
     <Compile Include="Exceptions\EdubaseException.cs" />

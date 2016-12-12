@@ -121,7 +121,7 @@ namespace Edubase.Web.UI.Controllers
                         company.GroupTypeId = viewModel.TypeId;
                         company.CompaniesHouseNumber = viewModel.CompaniesHouseNumber.Clean();
                         
-                        var links = dc.EstablishmentGroups.Where(x => x.TrustGroupUID == viewModel.GroupUID).ToList();
+                        var links = dc.EstablishmentGroups.Where(x => x.GroupUID == viewModel.GroupUID).ToList();
                         var urnsInDb = links.Select(x => x.EstablishmentUrn).Cast<int?>().ToArray();
                         var urnsInModel = viewModel.Establishments.Select(x => x.Urn).Cast<int?>().ToArray();
                         
@@ -141,7 +141,7 @@ namespace Edubase.Web.UI.Controllers
                         {
                             var link = new EstablishmentGroup
                             {
-                                TrustGroupUID = company.GroupUID,
+                                GroupUID = company.GroupUID,
                                 EstablishmentUrn = urn,
                                 JoinedDate = DateTime.UtcNow
                             };

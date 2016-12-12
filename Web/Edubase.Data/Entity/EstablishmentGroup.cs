@@ -12,7 +12,7 @@ namespace Edubase.Data.Entity
         public Establishment Establishment { get; set; }
 
         [ForeignKey("Group")]
-        public int TrustGroupUID { get; set; }
+        public int GroupUID { get; set; }
 
         [ForeignKey("Establishment")]
         public int EstablishmentUrn { get; set; }

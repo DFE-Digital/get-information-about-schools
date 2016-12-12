@@ -1,4 +1,5 @@
 ﻿using Edubase.Services;
+using Edubase.Services.Cache;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -7,6 +8,13 @@ namespace Edubase.Web.UI.Controllers
 {
     public class HomeController : EduBaseController
     {
+        private CacheAccessor _cacheAccessor;
+
+        public HomeController(CacheAccessor cacheAccessor)
+        {
+            _cacheAccessor = cacheAccessor;
+        }
+
         public ActionResult Index()
         {
             var model = new Models.HomepageViewModel();
@@ -47,6 +55,11 @@ namespace Edubase.Web.UI.Controllers
             return View(identity.Claims);
         }
 
+        [HttpGet]
+        public ActionResult RedisStatus()
+        {
+            return Content($"Redis status: {_cacheAccessor.Status}");
+        }
 
         public async Task FlushErrors() => await MessageLoggingService.Instance.FlushAsync();
 

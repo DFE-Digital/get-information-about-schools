@@ -173,8 +173,18 @@
     <Compile Include="Migrations\201612081432298_Initial.Designer.cs">
       <DependentUpon>201612081432298_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612120829468_AddedEstabCountCol.cs" />
+    <Compile Include="Migrations\201612120829468_AddedEstabCountCol.Designer.cs">
+      <DependentUpon>201612120829468_AddedEstabCountCol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612120857427_RenamedCols.cs" />
+    <Compile Include="Migrations\201612120857427_RenamedCols.Designer.cs">
+      <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ODataFilterList.cs" />
+    <Compile Include="ODataUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\LogMessageRepository.cs" />
     <Compile Include="Repositories\TableStorage\TableStorageBase.cs" />
@@ -192,6 +202,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201612081432298_Initial.resx">
       <DependentUpon>201612081432298_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612120829468_AddedEstabCountCol.resx">
+      <DependentUpon>201612120829468_AddedEstabCountCol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612120857427_RenamedCols.resx">
+      <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

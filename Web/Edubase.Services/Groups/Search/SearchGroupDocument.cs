@@ -1,28 +1,28 @@
-﻿using Edubase.Data.Entity.ComplexTypes;
-using Edubase.Data.Entity.Lookups;
+﻿using Edubase.Common;
+using Edubase.Services.Domain;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Edubase.Data.Entity
+namespace Edubase.Services.Groups.Models
 {
-    public class GroupCollection : EdubaseEntity
+
+    public class SearchGroupDocument
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int GroupUID { get; set; }
         public string Name { get; set; }
         public string CompaniesHouseNumber { get; set; }
-        public LookupGroupType GroupType { get; set; }
         public int? GroupTypeId { get; set; }
         public DateTime? ClosedDate { get; set; }
-        public LookupGroupStatus Status { get; set; }
         public int? StatusId { get; set; }
         public DateTime? OpenDate { get; set; }
-        public Person Head { get; set; } = new Person();
         public string Address { get; set; }
         public string ManagerEmailAddress { get; set; }
-        [Index(IsUnique=false), StringLength(400)]
         public string GroupId { get; set; }
         public int EstablishmentCount { get; set; }
+
+        public string Head_Title { get; set; }
+        public string Head_FirstName { get; set; }
+        public string Head_MiddleName { get; set; }
+        public string Head_LastName { get; set; }
+        public string Head_FullName => StringUtil.ConcatNonEmpties(" ", Head_Title, Head_FirstName, Head_LastName);
     }
 }

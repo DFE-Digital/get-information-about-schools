@@ -18,7 +18,8 @@ namespace Edubase.Services.Establishments
         EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment, GroupModel group);
         Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn);
         Task<IEnumerable<ChangeDescriptorDto>> GetPendingChangesAsync(int urn, IPrincipal principal);
-        Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, int take = 10);
+        Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10);
         Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
+        int[] GetPermittedStatusIds(IPrincipal principal);
     }
 }

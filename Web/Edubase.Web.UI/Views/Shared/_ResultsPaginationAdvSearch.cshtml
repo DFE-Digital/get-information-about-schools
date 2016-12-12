@@ -1,12 +1,12 @@
 ﻿@model dynamic
 @{
-    int startResult = @Model.StartIndex + 1;
-    int endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
-    int currentPage = @Model.StartIndex / @Model.PageSize;
-    int totalPages = @Model.Results.Count / @Model.PageSize;
-    int maxPages = 10;
-    int paginationStart = 0;
-    int paginationFinish = @Model.PageCount;
+    var startResult = @Model.StartIndex + 1;
+    var endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
+    var currentPage = @Model.StartIndex / @Model.PageSize;
+    var totalPages = @Model.Results.Count / @Model.PageSize;
+    var maxPages = 10;
+    var paginationStart = 0;
+    var paginationFinish = @Model.PageCount;
 
 }
 
