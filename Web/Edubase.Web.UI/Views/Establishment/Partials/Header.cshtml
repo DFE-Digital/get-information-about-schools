@@ -1,4 +1,5 @@
-﻿@model EstablishmentDetailViewModel
+﻿@using Edubase.Web.UI.ValueConverters;
+@model EstablishmentDetailViewModel
 
 <table class="borderless">
     <caption class="visually-hidden">@Model.Establishment.Name information</caption>
@@ -150,7 +151,9 @@
         <tr>
             <th scope="row">Website:</th>
             <td>
-                <a href="@Model.Establishment.Contact.WebsiteAddress" target="_blank">@Model.Establishment.Contact.WebsiteAddress</a>
+                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact.WebsiteAddress)" target="_blank">
+                    @WeblinkConverter.Convert(Model.Establishment.Contact.WebsiteAddress)
+                </a>
             </td>
         </tr>
     }
