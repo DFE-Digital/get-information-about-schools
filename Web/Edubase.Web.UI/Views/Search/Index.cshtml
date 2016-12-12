@@ -169,14 +169,16 @@
     <script>
         var jScriptVersion;
         /*@@cc_on
+        // only IE <= 10 enter this block
             jScriptVersion = @@_jscript_version;
-
         @@*/
-        console.log(jScriptVersion);
         if (typeof jScriptVersion === 'undefined' || jScriptVersion >= 9) {
-            var s = document.createElement("script");
-            s.src = "https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw";
-            document.getElementsByTagName('body')[0].appendChild(s);
+            window.setTimeout(function() {
+                var s = document.createElement("script");
+                s.src = "https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw";
+                document.getElementsByTagName('body')[0].appendChild(s);
+            },0);
+            
         }
     </script>
     @*<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw"></script>*@
