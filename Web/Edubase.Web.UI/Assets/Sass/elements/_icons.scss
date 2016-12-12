@@ -256,3 +256,28 @@
   display: inline-block;
   vertical-align: bottom;
 }
+
+.download-list-item {
+    width: auto;
+    padding: 8px 0 16px 40px;
+    position: relative;
+
+    &:before {
+        position: absolute;
+        content: '';
+        width: 30px;
+        height: 39px;
+        background-image: file-url("icons/icon-file-download.png");
+        background-size:30px 39px;
+        left: 0;
+        top: 0;
+
+         @include device-pixel-ratio() {
+            background-image: file-url("icons/icon-file-download-2x.png");
+          } 
+    }
+    .icon-link-copy {
+        vertical-align: middle;
+    }
+    
+}

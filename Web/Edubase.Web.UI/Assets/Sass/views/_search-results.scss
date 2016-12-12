@@ -144,8 +144,7 @@ ul.approval-items{
     }
 }
 
-input.link-button
-{
+.link-button {
     padding:0;
     background-color:transparent;
     color:$link-colour;
@@ -200,4 +199,9 @@ input.link-button
     &.active-clear {
         display: block;
     }
+}
+
+.filter-form .edubase-filter-submit {
+    font-size:19px;
+
 }
