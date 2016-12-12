@@ -1,8 +1,9 @@
-﻿@model AdvancedSearchViewModel
+﻿@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
+@model AdvancedSearchViewModel
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
-    var dc = new Edubase.Data.Entity.ApplicationDbContext();
+    var cache = new Edubase.Services.CachedLookupService();
 }
 
 <div class="grid-row">
@@ -76,7 +77,7 @@
                             <li class="search-type-wrapper">
                                 @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                                 {
-                                    var las = new Edubase.Services.CachedLookupService().LocalAuthorityGetAll().Where(x => x.Id > 0).OrderBy(x => x.Name);
+                                    var las = cache.LocalAuthorityGetAll().Where(x => x.Id > 0).OrderBy(x => x.Name);
                                     <label>
                                         <input type="radio" id="" class="panel-toggle"/>
                                         <span class="label-text">Local authority</span>
@@ -100,7 +101,7 @@
                             </li>
                         </ul>
                         <p class="search-all-shortcut">
-                            <a href="/Search/Results">Show all establishments</a>
+                            <a href="/Search/Results?@(QueryStringHelper.ToQueryString("s", (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all establishments</a>
                         </p>
                     </fieldset>
 
@@ -139,7 +140,7 @@
                         <div class="edubase-search-element">
                             <label for="roleid" class="bold-small">Role</label>
                             <span class="form-hint">e.g. Trustee</span>
-                            @Html.EduDropDownFor(x => x.GovernorSearchModel.RoleId, dc.LookupGovernorRoles.Select(x => new SelectListItem {Text = x.Name, Value = x.Id.ToString()}),
+                            @Html.EduDropDownFor(x => x.GovernorSearchModel.RoleId, cache.GovernorRolesGetAll().Select(x => new SelectListItem {Text = x.Name, Value = x.Id.ToString()}),
                                 new {id = "roleid", @class = "form-control"})
                         </div>
                         <div class="edubase-search-element">
