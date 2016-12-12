@@ -14,6 +14,8 @@
               'node_modules/govuk_frontend_toolkit/javascripts/govuk/*.js',
               'node_modules/govuk_frontend_toolkit/javascripts/govuk/analytics/*.js',
               'Assets/Scripts/*.js',
+              'Scripts/jquery.validate.js',
+              'Scripts/jquery.validate.unobtrusive.js',
               'Assets/Scripts/Behaviours/Collapsible/*.js',
               'Assets/Scripts/Behaviours/Accordion/*.js',
               'Assets/Scripts/Behaviours/PartialRequest/*.js',
