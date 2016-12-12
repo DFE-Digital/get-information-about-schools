@@ -3,8 +3,10 @@ using Edubase.Data.Entity;
 using Edubase.Services;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Search;
 using Edubase.Services.Exceptions;
 using Edubase.Services.IntegrationEndPoints.AzureSearch;
+using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using Edubase.Services.Mapping;
 using Edubase.Services.Security;
 using Edubase.UnitTest.Mocks.IntegrationEndPoints;
@@ -124,9 +126,64 @@ namespace Edubase.UnitTest.Services.Establishments
 
             Assert.AreEqual(eLocalAuthority.Westminster.ToString(), model.OldValue);
             Assert.AreEqual(eLocalAuthority.BarkingAndDagenham.ToString(), model.NewValue);
-            
         }
 
-        private IMapper CreateMapper()=> new AutoMapper.MapperConfiguration(cfg => cfg.AddProfile<AutoMapperServicesProfile>()).CreateMapper();
+
+        [Test]
+        public async Task SearchEstablishment_AnonUserIsProvidedRestrictedResults()
+        {
+            var cacheLookupSvc = new Mock<ICachedLookupService>();
+            var azs = new Mock<IAzureSearchEndPoint>(MockBehavior.Strict);
+            var user = new GenericPrincipal(new GenericIdentity(""), new string[0]);
+            azs.Setup(x => x.SearchAsync<SearchEstablishmentDocument>(It.IsAny<string>(), 
+                It.IsAny<string>(), It.IsAny<string>(), 
+                It.IsAny<int>(), It.IsAny<int>(), It.IsAny<IList<string>>(), 
+                It.IsAny<IList<string>>())).Returns(Task.FromResult(null as AzureSearchResult<SearchEstablishmentDocument>));
+                
+
+            var subject = new EstablishmentReadService(new MockApplicationDbContext(), CreateMapper(), cacheLookupSvc.Object, azs.Object);
+
+            var result = await subject.SearchAsync(new EstablishmentSearchPayload("Name", 10, 20), user);
+
+            var p = new EstablishmentSearchPayload();
+            p.Filters.StatusIds = new[]
+            {
+                eLookupEstablishmentStatus.Closed,
+                eLookupEstablishmentStatus.Open,
+                eLookupEstablishmentStatus.OpenButProposedToClose,
+                eLookupEstablishmentStatus.ProposedToOpen
+            }.Select(x => (int)x).ToArray();
+
+            azs.Verify(x => x.SearchAsync<SearchEstablishmentDocument>(EstablishmentsSearchIndex.INDEX_NAME, null,
+                It.Is<string>(y => y.Contains(p.Filters.ToString())), 10, 20, 
+                It.Is<IList<string>>(y => y.Contains("Name")), 
+                It.Is<IList<string>>(y => y.Contains("Name"))));
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public async Task SearchEstablishment_FSGUserIsProvidedUnrestrictedResults()
+        {
+            var cacheLookupSvc = new Mock<ICachedLookupService>();
+            var azs = new Mock<IAzureSearchEndPoint>(MockBehavior.Strict);
+            var user = new GenericPrincipal(new GenericIdentity("fsg"), new [] { EdubaseRoles.FSG });
+            azs.Setup(x => x.SearchAsync<SearchEstablishmentDocument>(It.IsAny<string>(),
+                It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<int>(), It.IsAny<int>(), It.IsAny<IList<string>>(),
+                It.IsAny<IList<string>>())).Returns(Task.FromResult(null as AzureSearchResult<SearchEstablishmentDocument>));
+
+            var subject = new EstablishmentReadService(new MockApplicationDbContext(), CreateMapper(), cacheLookupSvc.Object, azs.Object);
+            var result = await subject.SearchAsync(new EstablishmentSearchPayload("Name", 10, 20), user);
+
+            azs.Verify(x => x.SearchAsync<SearchEstablishmentDocument>(EstablishmentsSearchIndex.INDEX_NAME, null,
+                It.Is<string>(y => y.Equals(AzureSearchEndPoint.ODATA_FILTER_DELETED)), 10, 20,
+                It.Is<IList<string>>(y => y.Contains("Name")),
+                It.Is<IList<string>>(y => y.Contains("Name"))));
+
+            Assert.IsNull(result);
+        }
+
+        private IMapper CreateMapper()=> new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperServicesProfile>()).CreateMapper();
     }
 }

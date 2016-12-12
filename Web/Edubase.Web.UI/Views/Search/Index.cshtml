@@ -182,7 +182,7 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw"></script>
     <script type="text/javascript">
 
-        window.localAuthorities = @Html.Json(new Edubase.Services.CachedLookupService().LocalAuthorityGetAll())
+        window.localAuthorities = @Html.Json(cache.LocalAuthorityGetAll())
     </script>
 }
 
