@@ -51,11 +51,12 @@ namespace Edubase.Common
             }
         }
 
-        public static IDisposable Timed(Action before, Action<long> after)
+        public static IDisposable Timed(Action before = null, Action<long> after = null)
         {
-            before();
+            before?.Invoke();
             return new Disposer(after);
         }
+        
 
         public static void Using<T>(Func<T> factory, Action<T> before, Action<T> after, Action<T> meat) where T : IDisposable
         {

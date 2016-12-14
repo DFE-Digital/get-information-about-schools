@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Edubase.Data.Entity.Lookups
 {
+    [Serializable]
     public abstract class LookupBase : EdubaseEntity
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

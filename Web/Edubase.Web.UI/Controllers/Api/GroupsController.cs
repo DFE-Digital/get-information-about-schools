@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity;
+﻿#if (QA)
+using Edubase.Data.Entity;
 using Edubase.Data.Entity.Lookups;
 using System.Data;
 using System.Data.Entity.Infrastructure;
@@ -161,3 +162,4 @@ namespace Edubase.Web.UI.Controllers.Api
         }
     }
 }
+#endif

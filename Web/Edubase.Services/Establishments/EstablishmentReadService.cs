@@ -1,35 +1,38 @@
 ﻿using AutoMapper;
+using Edubase.Common;
+using Edubase.Data;
 using Edubase.Data.Entity;
-using Edubase.Services.Domain;
-using Edubase.Services.Establishments.Models;
+using Edubase.Data.Repositories.Establishments;
+using Edubase.Data.Repositories.LocalAuthorities;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Data.Entity;
-using System.Security.Claims;
+using System.Linq;
 using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
-using Edubase.Services.Security;
-using Edubase.Services.Enums;
-using Edubase.Services.Establishments.DisplayPolicies;
-using Edubase.Services.Groups.Models;
-using Edubase.Services.Exceptions;
-using MoreLinq;
-using Edubase.Common;
-using Edubase.Services.Establishments.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
-using Edubase.Data;
 
 namespace Edubase.Services.Establishments
 {
+    using Domain;
+    using Services.Enums;
+    using DisplayPolicies;
+    using Models;
+    using Search;
+    using Exceptions;
+    using Groups.Models;
+    using IntegrationEndPoints.AzureSearch;
+    using IntegrationEndPoints.AzureSearch.Models;
+    using Security;
+
     public class EstablishmentReadService : IEstablishmentReadService
     {
         private IApplicationDbContext _dbContext;
         private IMapper _mapper;
         private ICachedLookupService _cachedLookupService;
         private IAzureSearchEndPoint _azureSearchService;
+        private IEstablishmentReadRepository _establishmentRepository;
+        private ILAReadRepository _laRepository;
 
         /// <summary>
         /// Allow these roles to see establishments of all statuses
@@ -46,36 +49,50 @@ namespace Edubase.Services.Establishments
             eLookupEstablishmentStatus.ProposedToOpen
         }.Select(x => (int)x).ToArray();
 
-        public EstablishmentReadService(IApplicationDbContext dbContext, IMapper mapper, ICachedLookupService cachedLookupService, IAzureSearchEndPoint azureSearchService)
+        public EstablishmentReadService(
+            IApplicationDbContext dbContext, 
+            IMapper mapper, 
+            ICachedLookupService cachedLookupService, 
+            IAzureSearchEndPoint azureSearchService,
+            ICachedEstablishmentReadRepository establishmentRepository,
+            ICachedLAReadRepository laRepository)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _cachedLookupService = cachedLookupService;
+            _establishmentRepository = establishmentRepository;
             _azureSearchService = azureSearchService;
+            _laRepository = laRepository;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="urn"></param>
-        /// <returns></returns>
-        public async Task<EstablishmentModel> GetAsync(int urn, IPrincipal principal)
+        
+        public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
         {
-            var query = GetQuery(principal);
-            var dataModel = await query.FirstOrDefaultAsync(x => x.Urn == urn);
+            var dataModel = await _establishmentRepository.GetAsync(urn);
+
             if (dataModel != null)
             {
-                var model = _mapper.Map<EstablishmentModel>(dataModel);
-
-                if (model.TypeId == (int)eLookupEstablishmentType.ChildrensCentre) // supply LA contact details
+                if (HasAccess(principal, dataModel.StatusId))
                 {
-                    var la = await _dbContext.LocalAuthorities.FirstOrDefaultAsync(x => x.Id == model.LocalAuthorityId);
-                    model.CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(la);
+                    var domainModel = _mapper.Map<EstablishmentModel>(dataModel);
+                    if (domainModel.TypeId == (int)eLookupEstablishmentType.ChildrensCentre
+                        && domainModel.LocalAuthorityId.HasValue) // supply LA contact details
+                    {
+                        var la = await _laRepository.GetAsync(domainModel.LocalAuthorityId.Value);
+                        domainModel.CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(la);
+                    }
+                    return new ServiceResultDto<EstablishmentModel>(domainModel);
                 }
-
-                return model;
+                else return new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.PermissionDenied);
             }
-            else return null;
+            else return new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound);
+        }
+
+        private bool HasAccess(IPrincipal principal, int? statusId)
+        {
+            var isRestricted = IsRoleRestrictedOnStatus(principal);
+            if (isRestricted && !statusId.HasValue) throw new Exception("StatusId is null but the principal has restricted access; impossible to acertain permissions");
+            return !IsRoleRestrictedOnStatus(principal)
+              || GetPermittedStatusIds(principal).Any(x => x == statusId.Value);
         }
 
         public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment, GroupModel group) 
@@ -147,17 +164,8 @@ namespace Edubase.Services.Establishments
             });
         }
 
-        private IQueryable<Establishment> GetQuery(IPrincipal principal)
-        {
-            var query = _dbContext.Establishments.Where(x => x.IsDeleted == false);
-            if(IsRoleRestrictedOnStatus(principal))
-            {
-                var statusIds = _restrictedStatuses.Select(x => new int?(x));
-                query = query.Where(x => statusIds.Contains(x.StatusId));
-            }
-            return query;
-        }
-
+        private IQueryable<Establishment> GetEstablishmentsQuery() => _dbContext.Establishments.Where(x => x.IsDeleted == false);
+        
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
@@ -210,7 +218,17 @@ namespace Edubase.Services.Establishments
         private bool IsRoleRestrictedOnStatus(IPrincipal principal)
             => !_nonStatusRestrictiveRoles.Any(x => principal.IsInRole(x));
         
-        public async Task<bool> ExistsAsync(int urn, IPrincipal principal) => await GetQuery(principal).AnyAsync(x => x.Urn == urn && x.IsDeleted == false);
+        public async Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
+        {
+            var statusId = await _establishmentRepository.GetStatusAsync(urn);
+            if (statusId.HasValue)
+            {
+                if (HasAccess(principal, statusId)) return new ServiceResultDto<bool>(true);
+                else return new ServiceResultDto<bool>(eServiceResultStatus.PermissionDenied);
+            }
+            else return new ServiceResultDto<bool>(eServiceResultStatus.NotFound);
+        }
+
 
     }
 }

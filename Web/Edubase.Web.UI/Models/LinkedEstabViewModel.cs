@@ -9,8 +9,6 @@ namespace Edubase.Web.UI.Models
 {
     public class LinkedEstabViewModel
     {
-        private EstablishmentLink x;
-
         public int? Id { get; set; }
         public int? Urn { get; set; }
         public string Type { get; set; }

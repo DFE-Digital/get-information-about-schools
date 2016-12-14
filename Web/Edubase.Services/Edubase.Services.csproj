@@ -30,6 +30,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28QA%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug %28QA%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
@@ -161,15 +170,6 @@
     <Compile Include="BlobService.cs" />
     <Compile Include="BusMessagingService.cs" />
     <Compile Include="CachedLookupService.cs" />
-    <Compile Include="Cache\Cacheable.cs" />
-    <Compile Include="Cache\CacheAccessor.cs" />
-    <Compile Include="Cache\CacheAuditLogItem.cs" />
-    <Compile Include="Cache\CacheConfig.cs" />
-    <Compile Include="Cache\CachedServiceBase.cs" />
-    <Compile Include="Cache\CacheResponseDto.cs" />
-    <Compile Include="Cache\DistributedCacheMessage.cs" />
-    <Compile Include="Cache\eCacheEvent.cs" />
-    <Compile Include="Cache\ICacheAccessor.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
     <Compile Include="Domain\ChildrensCentreLocalAuthorityDto.cs" />
@@ -185,7 +185,7 @@
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="Domain\ChangeDescriptor.cs" />
     <Compile Include="Domain\PersonDto.cs" />
-    <Compile Include="EmailService.cs" />
+    <Compile Include="Domain\ServiceResultDto.cs" />
     <Compile Include="Enums\eLocalAuthority.cs" />
     <Compile Include="Enums\eLookupAccommodationChanged.cs" />
     <Compile Include="Enums\eLookupAdmissionsPolicy.cs" />
@@ -239,7 +239,6 @@
     <Compile Include="Enums\eLookupTypeOfResourcedProvision.cs" />
     <Compile Include="Enums\eLookupUrbanRural.cs" />
     <Compile Include="EstablishmentService.cs" />
-    <Compile Include="Establishments\CachedEstablishmentsReadService.cs" />
     <Compile Include="Establishments\DisplayPolicies\AcademyDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\BSODisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\ChildrensCentreLinkedSitesDisplayPolicy.cs" />
@@ -255,7 +254,6 @@
     <Compile Include="Establishments\DisplayPolicies\WelshDisplayPolicy.cs" />
     <Compile Include="Establishments\Enums\EstabNumberEntryPolicy.cs" />
     <Compile Include="Establishments\EstablishmentReadService.cs" />
-    <Compile Include="Establishments\ICachedEstablishmentsReadService.cs" />
     <Compile Include="Establishments\ILAESTABService.cs" />
     <Compile Include="Establishments\LAESTABService.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchFiltersLookups.cs" />
@@ -279,6 +277,7 @@
     <Compile Include="Groups\Search\GroupSearchPayload.cs" />
     <Compile Include="Groups\Search\GroupSuggestionItem.cs" />
     <Compile Include="Groups\Search\GroupsSearchIndex.cs" />
+    <Compile Include="IMessageLoggingService.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\IAzureSearchEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\Models\AzureSearchResult.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\Models\ODataGeography.cs" />
@@ -300,7 +299,9 @@
     <Compile Include="IntegrationEndPoints\BlobStorage\PathComponents.cs" />
     <Compile Include="IntegrationEndPoints\RedisEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBusEndPoint.cs" />
-    <Compile Include="IntegrationEndPoints\SmtpEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\Smtp\ISmtpEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\Smtp\MockSmtpEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\Smtp\SmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\TableStorageEndPoint.cs" />
     <Compile Include="Mapping\AutoMapperServicesProfile.cs" />
     <Compile Include="MessageLoggingService.cs" />

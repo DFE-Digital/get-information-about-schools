@@ -10,6 +10,7 @@ using System.Data.Entity.Spatial;
 
 namespace Edubase.Data.Entity
 {
+    [Serializable]
     public class Establishment : EdubaseEntity
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

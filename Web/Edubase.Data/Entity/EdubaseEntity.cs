@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Edubase.Data.Entity
 {
+    [Serializable]
     public abstract class EdubaseEntity
     {
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;

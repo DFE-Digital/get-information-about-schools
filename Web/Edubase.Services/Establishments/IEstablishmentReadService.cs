@@ -12,8 +12,8 @@ namespace Edubase.Services.Establishments
 {
     public interface IEstablishmentReadService
     {
-        Task<EstablishmentModel> GetAsync(int urn, IPrincipal principal);
-        Task<bool> ExistsAsync(int urn, IPrincipal principal);
+        Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal);
+        Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal);
         Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user);
         EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment, GroupModel group);
         Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn);

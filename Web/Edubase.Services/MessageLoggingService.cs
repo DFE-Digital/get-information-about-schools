@@ -1,16 +1,16 @@
-﻿using Edubase.Data.Entity;
+﻿using Edubase.Common;
+using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
+using Edubase.Services.IntegrationEndPoints.Smtp;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MoreLinq;
-using System.Configuration;
-using Edubase.Common;
-using System.Net.Mail;
 
 namespace Edubase.Services
 {
@@ -22,19 +22,13 @@ namespace Edubase.Services
     /// This prevents overloading the message storage medium.
     /// To increase the number of messages stored, called FlushAsync more frequently or change the value of [MaximumMessagesCacheableCount].
     /// </summary>
-    public class MessageLoggingService
+    public class MessageLoggingService : IExceptionLogger, IMessageLoggingService
     {
         public class FlushReport
         {
             public int OstracismsCount { get; set; }
             public int ProcessedCount { get; set; }
         }
-
-
-        #region Singleton pattern
-        private static readonly Lazy<MessageLoggingService> _inst = new Lazy<MessageLoggingService>(() => new MessageLoggingService(), LazyThreadSafetyMode.PublicationOnly);
-        public static MessageLoggingService Instance { get { return _inst.Value; } }
-        #endregion
 
         private const int DEFAULT_MAX_ERRORS_IN_CACHE = 500;
 
@@ -48,6 +42,9 @@ namespace Edubase.Services
         private long _totalNumberOfTimesPushCalled = 0;
         private SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private readonly object _mutex2 = new object();
+        private readonly string _instanceId = Guid.NewGuid().ToString();
+        private ISmtpEndPoint _smtpEndPoint;
+        public string InstanceId => _instanceId;
 
         public int OstracizedCount => _ostracizedCount;
         public long TotalOstrasizedCount => _totalOstrasizedCount;
@@ -78,7 +75,10 @@ namespace Edubase.Services
         /// <summary>
         /// .ctor
         /// </summary>
-        private MessageLoggingService() { }
+        public MessageLoggingService(ISmtpEndPoint smtpEndPoint)
+        {
+            _smtpEndPoint = smtpEndPoint;
+        }
 
         /// <summary>
         /// Files a tex-based error report for reporting later
@@ -241,6 +241,7 @@ namespace Edubase.Services
                 sb.AppendLine();
                 sb.AppendLine();
                 sb.AppendLine();
+                sb.AppendLine("InstanceId: " + InstanceId);
                 sb.AppendLine("[END]");
 
 
@@ -254,12 +255,14 @@ namespace Edubase.Services
 
                 msg.To.Add(recipientEmailAddress);
 
-                await new EmailService().SendAsync(msg);
+                await _smtpEndPoint.SendAsync(msg);
             }
             catch (Exception ex)
             {
                 Push(ex);
             }
         }
+
+        void IExceptionLogger.Log(Exception ex) => Push(ex);
     }
 }

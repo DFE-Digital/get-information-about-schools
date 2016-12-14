@@ -18,18 +18,21 @@ namespace Edubase.Data.Entity.Permissions
     /// Flags a column as requiring an approval process.
     /// Used on its own, it means the field can be changed by any role, but still requires approval.
     /// </summary>
+    [Obsolete]
     public class RequiresApprovalAttribute : Attribute { }
 
     /// <summary>
     /// Prevents restrictive roles from updating or approving changes on this property
     /// Also, flags a column as requiring an approval process
     /// </summary>
+    [Obsolete]
     public class RestrictPermissionAttribute : RequiresApprovalAttribute { }
 
     /// <summary>
     /// Restricts a specific role from performing a specific action
     /// Also, flags a column as requiring an approval process
     /// </summary>
+    [Obsolete]
     public class RestrictActionAttribute : RequiresApprovalAttribute
     {
         public ActionType ActionType { get; set; }
@@ -41,6 +44,7 @@ namespace Edubase.Data.Entity.Permissions
         }
     }
 
+    [Obsolete]
     public static class PermissionUtil
     {
         public static bool AllowUpdate(string role, RequiresApprovalAttribute attribute)

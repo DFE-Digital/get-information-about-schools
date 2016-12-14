@@ -194,7 +194,7 @@ namespace Edubase.Web.UI.Controllers
             var urn = model.TextSearchModel.AutoSuggestValueAsInt ?? (model.TextSearchType == ViewModel.eTextSearchType.URN ? model.TextSearchModel.Text.ToInteger() : null);
             if (urn.HasValue)
             {
-                if (await _establishmentReadService.ExistsAsync(urn.Value, User))
+                if ((await _establishmentReadService.CanAccess(urn.Value, User)).ReturnValue)
                     return RedirectToEstabDetail(urn.Value);
             }
             return null;

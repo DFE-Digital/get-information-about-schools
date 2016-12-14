@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Edubase.Data.Entity
 {
+    [Serializable]
     public class LocalAuthority : EdubaseEntity
     {
         [Key]

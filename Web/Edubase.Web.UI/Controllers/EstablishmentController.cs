@@ -33,9 +33,9 @@ namespace Edubase.Web.UI.Controllers
         private IGroupReadService _groupReadService;
         private IMapper _mapper;
         private ILAESTABService _laEstabService;
-        private ICachedEstablishmentsReadService _cachedEstablishmentsReadService;
+        private IEstablishmentReadService _cachedEstablishmentsReadService;
 
-        public EstablishmentController(IEstablishmentReadService establishmentReadService, ICachedEstablishmentsReadService cachedEstablishmentsReadService, 
+        public EstablishmentController(IEstablishmentReadService establishmentReadService, IEstablishmentReadService cachedEstablishmentsReadService, 
             IGroupReadService groupReadService, IMapper mapper, ILAESTABService laEstabService)
         {
             _establishmentReadService = establishmentReadService;
@@ -293,7 +293,11 @@ namespace Edubase.Web.UI.Controllers
                 IsUserLoggedOn = User.Identity.IsAuthenticated
             };
 
-            viewModel.Establishment = await _cachedEstablishmentsReadService.GetAsync(id, User);
+            var result = await _cachedEstablishmentsReadService.GetAsync(id, User);
+
+            if (!result.Success) return HttpNotFound();
+
+            viewModel.Establishment = result.ReturnValue;
             if (viewModel.Establishment == null) return HttpNotFound();
 
             viewModel.LinkedEstablishments = (await _cachedEstablishmentsReadService.GetLinkedEstablishments(id)).Select(x => new LinkedEstabViewModel(x));

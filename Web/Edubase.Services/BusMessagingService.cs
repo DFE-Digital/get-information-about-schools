@@ -28,11 +28,11 @@ namespace Edubase.Services
             var message = new BrokeredMessage(payload);
             await client.SendAsync(message);
 
-            MessageLoggingService.Instance.Push(new LogMessage
-            {
-                Level = LogMessage.eLevel.Information,
-                Text = "Estab upd msg sent: " + payload
-            });
+            //MessageLoggingService.Instance.Push(new LogMessage
+            //{
+            //    Level = LogMessage.eLevel.Information,
+            //    Text = "Estab upd msg sent: " + payload
+            //});
         }
 
         /// <summary>

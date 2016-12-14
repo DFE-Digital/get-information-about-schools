@@ -1,10 +1,11 @@
 ﻿using Edubase.Common;
 using Edubase.Data.Entity.Permissions;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Edubase.Data.Entity.ComplexTypes
 {
-    [ComplexType]
+    [ComplexType, Serializable]
     public class Address
     {
         [RequiresApproval]

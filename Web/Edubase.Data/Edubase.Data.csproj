@@ -30,6 +30,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28QA%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug %28QA%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
@@ -167,6 +176,8 @@
     <Compile Include="Entity\Permissions\Permission.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IApplicationDbContext.cs" />
+    <Compile Include="ApplicationDbContextFactory.cs" />
+    <Compile Include="IApplicationDbContextFactory.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
     <Compile Include="Migrations\201612081432298_Initial.cs" />
@@ -186,7 +197,14 @@
     <Compile Include="ODataFilterList.cs" />
     <Compile Include="ODataUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Establishments\CachedEstablishmentReadRepository.cs" />
+    <Compile Include="Repositories\Establishments\EstablishmentReadRepository.cs" />
+    <Compile Include="Repositories\Establishments\IEstablishmentReadRepository.cs" />
+    <Compile Include="Repositories\LocalAuthorities\CachedLAReadRepository.cs" />
+    <Compile Include="Repositories\LocalAuthorities\LAReadRepository.cs" />
+    <Compile Include="Repositories\LocalAuthorities\ILAReadRepository.cs" />
     <Compile Include="Repositories\LogMessageRepository.cs" />
+    <Compile Include="Repositories\RepositoryBase.cs" />
     <Compile Include="Repositories\TableStorage\TableStorageBase.cs" />
   </ItemGroup>
   <ItemGroup>
