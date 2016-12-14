@@ -17,6 +17,7 @@ using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Common.Cache;
 using Edubase.Data.Repositories.Establishments;
 using System.Security.Claims;
+using System.Configuration;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -32,6 +33,12 @@ namespace Edubase.Web.UI.Controllers
             ViewBag.SmtpEndPointName = DependencyResolver.Current.GetService<ISmtpEndPoint>().GetType().FullName;
             ViewBag.RedisStatus = cache.Status.ToString();
             ViewBag.MemoryCacheSize = cache.GetMemoryCacheApproximateSize().ToString();
+
+            var lines = cache.GetRedisMemoryUsage().SelectMany(x => x.Select(v => string.Concat(v.Key, " = ", v.Value)));
+            ViewBag.RedisReport = string.Join("<br/>", lines);
+
+            ViewBag.DbName = new System.Data.SqlClient.SqlConnectionStringBuilder(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString).InitialCatalog;
+            
             return View();   
         }
 

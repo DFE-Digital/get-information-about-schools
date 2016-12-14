@@ -809,6 +809,11 @@
         }
 
 
+        public IGrouping<string, KeyValuePair<string, string>>[] GetRedisMemoryUsage()
+        {
+            return _connection.GetServer(_connection.GetEndPoints()[0]).Info("Memory");
+        }
+
     }
 
 
