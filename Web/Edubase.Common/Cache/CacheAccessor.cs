@@ -460,6 +460,11 @@
         {
             if (_config.IsCentralCacheEnabled && Status == State.Connected)
             {
+                if (_config.IsPayloadCompressionEnabled)
+                {
+                    buffer = new IO.Compression().Compress(buffer);
+                }
+
                 // Set the item into the central cache
                 await _cacheDatabase.StringSetAsync(key, buffer, expiry);
                 Log(eCacheEvent.KeySetCentrally, key);
@@ -604,7 +609,12 @@
         /// <param name="byteBuffer"></param>
         private void PostProcessRedisBuffer<T>(string key, ref CacheResponseDto<T> dto, byte[] byteBuffer)
         {
-            Cacheable item = Deserialize<Cacheable>(byteBuffer);
+            if (_config.IsPayloadCompressionEnabled)
+            {
+                byteBuffer = new IO.Compression().Decompress(byteBuffer);
+            }
+
+            var item = Deserialize<Cacheable>(byteBuffer);
             if (item != null) dto.Data = (T)item.Payload;
             dto.IsFromCentralCacheServer = true;
             if (item != null) Log(eCacheEvent.KeyValueGotFromCentral, key);

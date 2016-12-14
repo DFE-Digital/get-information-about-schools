@@ -28,6 +28,8 @@ namespace Edubase.Common.Cache
         /// </summary>
         public bool IsExceptionPropagationEnabled { get; set; }
 
+        public bool IsPayloadCompressionEnabled { get; set; } = true;
+
         public CacheConfig()
         {
             ConnectionString = ConfigurationManager.ConnectionStrings["Redis"]?.ConnectionString;
