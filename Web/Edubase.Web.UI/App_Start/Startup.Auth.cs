@@ -156,7 +156,7 @@ namespace Edubase.Web.UI
 
             spOptions.AttributeConsumingServices.Add(attributeConsumingService);
             //spOptions.ServiceCertificates.Add(GetCert());
-
+            
             return spOptions;
         }
 

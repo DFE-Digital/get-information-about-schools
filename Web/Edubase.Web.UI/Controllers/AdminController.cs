@@ -1,27 +1,20 @@
-﻿using Edubase.Data.Repositories;
-using Edubase.Services;
-using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using Edubase.Common;
-using Edubase.Web.UI.Models.Admin;
-using Edubase.Services.Security;
-using Autofac;
-using Edubase.Services.IntegrationEndPoints.Smtp;
+﻿using Edubase.Common;
 using Edubase.Common.Cache;
 using Edubase.Data.Repositories.Establishments;
-using System.Security.Claims;
+using Edubase.Services;
+using Edubase.Services.IntegrationEndPoints.Smtp;
+using Edubase.Services.Security;
+using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Models.Admin;
 using System.Configuration;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [Authorize(Roles = EdubaseRoles.Admin)]
+    [EdubaseAuthorize(Roles = EdubaseRoles.Admin)]
     public class AdminController : EduBaseController
     {
         // GET: Admin

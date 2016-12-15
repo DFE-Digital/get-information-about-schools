@@ -11,7 +11,7 @@ using Edubase.Services.Domain;
 using System.Security.Claims;
 using Edubase.Web.UI.Helpers;
 using Edubase.Services.Enums;
-
+using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -19,7 +19,7 @@ namespace Edubase.Web.UI.Controllers
     {
         private const string VIEWNAME = "CreateEdit";
         
-        [Authorize]
+        [EdubaseAuthorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
             if (!viewModel.SearchText.IsNullOrEmpty())
@@ -32,14 +32,14 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> Create(string id)
         {
             var companyProfile = await new TrustService().SearchByCompaniesHouseNumber(id);
             return View("Create", new CreateGroupModel(companyProfile.Items.First()));
         }
         
-        [HttpPost, Authorize]
+        [HttpPost, EdubaseAuthorize]
         public async Task<ActionResult> Create(CreateGroupModel viewModel)
         {
             if (ModelState.IsValid)
@@ -50,7 +50,7 @@ namespace Edubase.Web.UI.Controllers
             else return View(viewModel);
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> Edit(int id)
         {
             var viewModel = new CreateEditGroupModel();
@@ -75,7 +75,7 @@ namespace Edubase.Web.UI.Controllers
             return View(VIEWNAME, viewModel);
         }
 
-        [HttpPost, Authorize]
+        [HttpPost, EdubaseAuthorize]
         public async Task<ActionResult> Edit(CreateEditGroupModel viewModel)
         {
             if (viewModel.Action == "Search")

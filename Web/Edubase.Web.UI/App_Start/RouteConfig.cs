@@ -18,7 +18,7 @@ namespace Edubase.Web.UI
             routes.MapRoute(
                 name: "Main",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                defaults: new { controller = "Search", action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { "Edubase.Web.UI.Controllers" }
             );
 

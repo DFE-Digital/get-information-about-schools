@@ -9,6 +9,7 @@ using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Enums;
 using Edubase.Services.Groups;
 using Edubase.Services.Security;
+using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
 using FluentValidation.Mvc;
@@ -43,7 +44,7 @@ namespace Edubase.Web.UI.Controllers
             _laEstabService = laEstabService;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> Edit(int id)
         {
             using (var dc = ApplicationDbContext.Create())
@@ -62,7 +63,7 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Authorize]
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
         public async Task<ActionResult> Edit(ViewModel model)
         {
             if (model.Action == ViewModel.eAction.Save)
@@ -257,10 +258,10 @@ namespace Edubase.Web.UI.Controllers
 
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, EdubaseAuthorize]
         public ActionResult Create() => View(new ViewModel());
         
-        [HttpPost, ValidateAntiForgeryToken, Authorize]
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
         public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] ViewModel model)
         {
             if (ModelState.IsValid)
