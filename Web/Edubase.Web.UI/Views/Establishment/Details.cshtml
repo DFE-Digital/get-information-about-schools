@@ -69,6 +69,11 @@ else if (Model.UserHasPendingApprovals)
                     <li><a href="#school-dashboard" class="horizontal-tab">Details</a></li>
                 }
                 
+                @if (Model.TabDisplayPolicy.IEBT)
+                {
+                    <li><a href="#school-iebt" class="horizontal-tab">IEBT</a></li>
+                }
+
                 @if (Model.TabDisplayPolicy.Governance)
                 {
                     <li><a href="#school-governance" class="horizontal-tab">Governance</a></li>
@@ -97,13 +102,17 @@ else if (Model.UserHasPendingApprovals)
                     Html.RenderPartial(@"Partials\TabDetails");
                 }
 
+                if (Model.TabDisplayPolicy.IEBT)
+                {
+                    Html.RenderPartial(@"Partials\TabIEBT");
+                }
+
                 if (Model.TabDisplayPolicy.Governance)
                 {
                     Html.RenderPartial(@"Partials\TabGovernance");
                 }
 
                 if (Model.TabDisplayPolicy.Links)
-
                 {
                     Html.RenderPartial(@"Partials\TabLinks");
                 }

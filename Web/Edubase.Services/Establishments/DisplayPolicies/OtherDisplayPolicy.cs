@@ -13,7 +13,8 @@ namespace Edubase.Services.Establishments.DisplayPolicies
                             eLookupEstablishmentType.OffshoreSchools,
                             eLookupEstablishmentType.SecureUnits,
                             eLookupEstablishmentType.ServiceChildrensEducation,
-                            eLookupEstablishmentType.SixthFormCentres);
+                            eLookupEstablishmentType.SixthFormCentres,
+                            eLookupEstablishmentType.Miscellaneous);
         }
 
         protected override void ConfigureInternal()

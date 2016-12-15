@@ -7,11 +7,13 @@ namespace Edubase.Web.UI
     {
         public static IMapper CreateMapper()
         {
-            return new MapperConfiguration(cfg =>
+            var mapper = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<AutoMapperWebProfile>();
                 cfg.AddProfile<AutoMapperServicesProfile>();
             }).CreateMapper();
+
+            return mapper;
         }
     }
 }

@@ -22,7 +22,6 @@ namespace Edubase.Web.UI.Helpers
 {
     public static class HtmlHelperExtensions
     {
-        private static CachedLookupService _lookup = new CachedLookupService();
 
         public static MvcHtmlString ValidationCssClassFor<TModel, TProperty>(
             this HtmlHelper<TModel> htmlHelper,
@@ -159,7 +158,7 @@ namespace Edubase.Web.UI.Helpers
 
         public static MvcHtmlString EduLocalAuthorityDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
         {
-            return htmlHelper.EduDropDownFor(expression, _lookup.LocalAuthorityGetAll().Select(x => new SelectListItem
+            return htmlHelper.EduDropDownFor(expression,  new CachedLookupService().LocalAuthorityGetAll().Select(x => new SelectListItem
             {
                 Text = string.Concat(x.Name, "(", x.Id, ")"),
                 Value = x.Id.ToString()
@@ -167,25 +166,25 @@ namespace Edubase.Web.UI.Helpers
         }
         
         public static MvcHtmlString EduHeadTitlesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.HeadTitlesGetAll());
+            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().HeadTitlesGetAll());
 
         public static MvcHtmlString EduGendersDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GendersGetAll());
+                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().GendersGetAll());
 
         public static MvcHtmlString EduEducationPhasesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.EducationPhasesGetAll());
+                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().EducationPhasesGetAll());
 
         public static MvcHtmlString EduAdmissionsPoliciesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-                            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.AdmissionsPoliciesGetAll());
+                            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().AdmissionsPoliciesGetAll());
 
         public static MvcHtmlString EduStatusesPoliciesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-                                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.EstablishmentStatusesGetAll());
+                                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().EstablishmentStatusesGetAll());
 
         public static MvcHtmlString EduEstablishmentTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, 
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.EstablishmentTypesGetAll());
+            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().EstablishmentTypesGetAll());
 
         public static MvcHtmlString EduGroupTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression, _lookup.GroupTypesGetAll());
+            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().GroupTypesGetAll());
 
         /// <summary>
         /// Group Types drop down but limited to just single and multi-academy trusts
@@ -197,7 +196,7 @@ namespace Edubase.Web.UI.Helpers
         /// <returns></returns>
         public static MvcHtmlString EduGroupTypesForCreateDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
                     Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(
-                        expression, _lookup.GroupTypesGetAll().Where(x=>x.Name.Contains("Multi") 
+                        expression,  new CachedLookupService().GroupTypesGetAll().Where(x=>x.Name.Contains("Multi") 
                         || x.Name.Contains("Single")));
 
         public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, 
@@ -221,7 +220,7 @@ namespace Edubase.Web.UI.Helpers
             Expression<Func<TModel, TProperty>> modelExpression,
             Expression<Func<CachedLookupService, IEnumerable<LookupDto>>> lookupSourceExpression)
         {
-            var items = lookupSourceExpression.Compile()(_lookup);
+            var items = lookupSourceExpression.Compile()( new CachedLookupService());
             return htmlHelper.EduDropDownFor(modelExpression, items.Select(x => new SelectListItem
             {
                 Text = x.Name,
@@ -241,12 +240,12 @@ namespace Edubase.Web.UI.Helpers
         {
             var expressionText = ExpressionHelper.GetExpressionText(expression).Split('.').Last();
             var id = expression.Compile()(htmlHelper.ViewData.Model);
-            if (_lookup.IsLookupField(expressionText))
+            if ( new CachedLookupService().IsLookupField(expressionText))
             {
-                if (id.HasValue) return new MvcHtmlString(_lookup.GetName(expressionText, id.Value));
+                if (id.HasValue) return new MvcHtmlString( new CachedLookupService().GetName(expressionText, id.Value));
                 else return MvcHtmlString.Empty;
             }
-            else return new MvcHtmlString("__LOOKUP_NOT_RECOGNISED__");
+            else return new MvcHtmlString("_ new CachedLookupService()_NOT_RECOGNISED__");
         }
 
 

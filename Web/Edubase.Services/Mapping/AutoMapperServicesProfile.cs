@@ -1,18 +1,13 @@
 ﻿using AutoMapper;
+using Edubase.Common;
 using Edubase.Common.Spatial;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Spatial;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Edubase.Data;
-using Edubase.Services.Domain;
-using Edubase.Data.Entity.ComplexTypes;
-using Edubase.Services.Establishments.Models;
 using Edubase.Data.Entity;
+using Edubase.Data.Entity.ComplexTypes;
+using Edubase.Services.Domain;
+using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
-using Newtonsoft.Json.Linq;
+using System.Data.Entity.Spatial;
 
 namespace Edubase.Services.Mapping
 {

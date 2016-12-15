@@ -33,16 +33,14 @@ namespace Edubase.Web.UI.Controllers
         private IGroupReadService _groupReadService;
         private IMapper _mapper;
         private ILAESTABService _laEstabService;
-        private IEstablishmentReadService _cachedEstablishmentsReadService;
 
-        public EstablishmentController(IEstablishmentReadService establishmentReadService, IEstablishmentReadService cachedEstablishmentsReadService, 
+        public EstablishmentController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService, IMapper mapper, ILAESTABService laEstabService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _mapper = mapper;
             _laEstabService = laEstabService;
-            _cachedEstablishmentsReadService = cachedEstablishmentsReadService;
         }
 
         [HttpGet, Authorize]
@@ -293,18 +291,18 @@ namespace Edubase.Web.UI.Controllers
                 IsUserLoggedOn = User.Identity.IsAuthenticated
             };
 
-            var result = await _cachedEstablishmentsReadService.GetAsync(id, User);
+            var result = await _establishmentReadService.GetAsync(id, User);
 
             if (!result.Success) return HttpNotFound();
 
             viewModel.Establishment = result.ReturnValue;
             if (viewModel.Establishment == null) return HttpNotFound();
 
-            viewModel.LinkedEstablishments = (await _cachedEstablishmentsReadService.GetLinkedEstablishments(id)).Select(x => new LinkedEstabViewModel(x));
+            viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishments(id)).Select(x => new LinkedEstabViewModel(x));
 
             if (User.Identity.IsAuthenticated)
             {
-                viewModel.ChangeHistory = await _cachedEstablishmentsReadService.GetChangeHistoryAsync(id, 20, User);
+                viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
                 viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
             }
 
@@ -314,7 +312,7 @@ namespace Edubase.Web.UI.Controllers
             viewModel.HistoricalGovernors = await gsvc.GetHistoricalByUrn(id);
             viewModel.Governors = await gsvc.GetCurrentByUrn(id);
 
-            viewModel.DisplayPolicy = _cachedEstablishmentsReadService.GetDisplayPolicy(User, viewModel.Establishment, viewModel.Group);
+            viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment, viewModel.Group);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
 
             return View(viewModel);

@@ -4,7 +4,6 @@ using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Web.UI.Models;
 using System;
 using Edubase.Common;
-using Edubase.Data.Entity.Permissions;
 
 namespace Edubase.Web.UI
 {
@@ -13,7 +12,7 @@ namespace Edubase.Web.UI
         public AutoMapperWebProfile()
         {
             CreateMap<AddressViewModel, Address>().ReverseMap();
-            
+
             var estabVm2DmMap = CreateMap<CreateEditEstablishmentModel, Establishment>()
                 //.ForMember(x => x.Name, opt => opt.Ignore())
                 .AfterMap((s, d) =>
@@ -31,8 +30,6 @@ namespace Edubase.Web.UI
                 if (s.EstablishmentNumber.HasValue && s.LocalAuthorityId.HasValue)
                     d.LAESTAB = int.Parse(string.Concat(s.LocalAuthorityId, s.EstablishmentNumber));
             });
-
-
 
             CreateMap<ContactDetailsViewModel, ContactDetail>().ReverseMap();
             CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();
