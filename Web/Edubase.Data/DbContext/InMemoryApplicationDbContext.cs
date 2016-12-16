@@ -93,5 +93,10 @@ namespace Edubase.Data.DbContext
             SaveChangesCalledCount++;
             return Task.FromResult(0);
         }
+
+        public void Dispose()
+        {
+            
+        }
     }
 }

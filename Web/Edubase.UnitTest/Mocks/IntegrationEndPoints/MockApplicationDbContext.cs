@@ -95,5 +95,9 @@ namespace Edubase.UnitTest.Mocks.IntegrationEndPoints
             SaveChangesCalledCount++;
             return Task.FromResult(0);
         }
+
+        public void Dispose()
+        {
+        }
     }
 }

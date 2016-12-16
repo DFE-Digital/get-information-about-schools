@@ -52,7 +52,7 @@ namespace Edubase.Data.Repositories.Establishments
             var processedCount = 0;
             var currentSkip = 0;
             Func<IEnumerable<Establishment>> getBatch = ()
-                => realDbContext.Establishments
+                => realDbContext.Establishments.AsNoTracking()
                 .Where(x => x.IsDeleted == false)
                 .OrderBy(x => x.Urn).Skip(currentSkip).Take(maxBatchSize).ToArray();
             
@@ -69,6 +69,8 @@ namespace Edubase.Data.Repositories.Establishments
                 }
                 
                 ((InMemoryDbSet<Establishment>)inMemContext.Establishments).Clear();
+                inMemContext = _inMemoryDbContextFactory.ObtainNew();
+                realDbContext = _dbContextFactory.Obtain();
 
                 currentSkip += maxBatchSize;
                 if (maxTotalRecords.HasValue && currentSkip >= maxTotalRecords.Value) break;

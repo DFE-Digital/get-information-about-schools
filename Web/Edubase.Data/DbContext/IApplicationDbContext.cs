@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Edubase.Data.Entity.Lookups;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Edubase.Data.Entity;
+using System;
 
 namespace Edubase.Data.DbContext
 {
-    public interface IApplicationDbContext
+    public interface IApplicationDbContext : IDisposable
     {
         DbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
         DbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; }
