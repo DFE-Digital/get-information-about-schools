@@ -24,6 +24,7 @@ namespace Edubase.Services.Establishments
     using IntegrationEndPoints.AzureSearch;
     using IntegrationEndPoints.AzureSearch.Models;
     using Security;
+    using Data.DbContext;
 
     public class EstablishmentReadService : IEstablishmentReadService
     {
@@ -73,7 +74,7 @@ namespace Edubase.Services.Establishments
             {
                 if (HasAccess(principal, dataModel.StatusId))
                 {
-                    var domainModel = _mapper.Map<EstablishmentModel>(dataModel);
+                    var domainModel = _mapper.Map<Establishment, EstablishmentModel>(dataModel);
                     if (domainModel.TypeId == (int)eLookupEstablishmentType.ChildrensCentre
                         && domainModel.LocalAuthorityId.HasValue) // supply LA contact details
                     {

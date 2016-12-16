@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity.Migrations;
 using MoreLinq;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Data.Migrations
 {
@@ -16,18 +17,18 @@ namespace Edubase.Data.Migrations
         public void Seed(ApplicationDbContext context)
         {
             // Seed permissions data on the Establishment properties
-            var cols = PermissionUtil.GetRestrictiveColumns<Establishment>(context);
+            //var cols = PermissionUtil.GetRestrictiveColumns<Establishment>(context);
 
-            var permissions = cols.SelectMany(x =>
-                Roles.RestrictiveRoles.Select(role => new EstablishmentPermission
-                {
-                    PropertyName = x.Name,
-                    RoleName = role,
-                    AllowApproval = PermissionUtil.AllowApproval(role, x.Attribute),
-                    AllowUpdate = PermissionUtil.AllowUpdate(role, x.Attribute)
-                })).ToArray();
+            //var permissions = cols.SelectMany(x =>
+            //    Roles.RestrictiveRoles.Select(role => new EstablishmentPermission
+            //    {
+            //        PropertyName = x.Name,
+            //        RoleName = role,
+            //        AllowApproval = PermissionUtil.AllowApproval(role, x.Attribute),
+            //        AllowUpdate = PermissionUtil.AllowUpdate(role, x.Attribute)
+            //    })).ToArray();
 
-            context.Permissions.AddOrUpdate(permissions);
+            //context.Permissions.AddOrUpdate(permissions);
 
             if (!context.LookupEstablishmentLinkTypes.Any(x => x.Name.Equals("Successor")))
             {

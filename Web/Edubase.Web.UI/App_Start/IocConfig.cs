@@ -15,6 +15,7 @@ using Edubase.Data.Repositories.Establishments;
 using Edubase.Data.Repositories.LocalAuthorities;
 using Edubase.Data;
 using Edubase.Services.IntegrationEndPoints.Smtp;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Web.UI
 {
@@ -68,7 +69,12 @@ namespace Edubase.Web.UI
             builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
                 ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString).As<IAzureSearchEndPoint>();
 
-            builder.RegisterType<ApplicationDbContextFactory>().As<IApplicationDbContextFactory>();
+            builder.RegisterType<ApplicationDbContextFactory<ApplicationDbContext>>()
+                .As<IApplicationDbContextFactory>();
+
+            builder.RegisterType<ApplicationDbContextFactory<InMemoryApplicationDbContext>>()
+                .As<IInMemoryApplicationDbContextFactory>();
+
             builder.RegisterType<ApplicationDbContext>().As<IApplicationDbContext>();
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
 

@@ -13,6 +13,8 @@
     using System.Threading.Tasks;
     using MoreLinq;
     using System.Reflection;
+    using Newtonsoft.Json.Bson;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Responsibilies:
@@ -712,33 +714,30 @@
 
         private byte[] Serialize(object o)
         {
-            if (o == null)
-            {
-                return null;
-            }
-
-            var binaryFormatter = new BinaryFormatter();
+            if (o == null) return null;
+    
             using (var memoryStream = new MemoryStream())
             {
-                binaryFormatter.Serialize(memoryStream, o);
-                byte[] objectDataAsStream = memoryStream.ToArray();
-                return objectDataAsStream;
+                using (var writer = new BsonWriter(memoryStream))
+                {
+                    new JsonSerializer().Serialize(writer, o);
+                }
+                return memoryStream.ToArray();
             }
         }
 
-        private T Deserialize<T>(byte[] stream)
+        private T Deserialize<T>(byte[] buffer)
         {
-            if (stream == null)
+            if (buffer == null) return default(T);
+            
+            using (var memoryStream = new MemoryStream(buffer))
             {
-                return default(T);
+                using (var reader = new BsonReader(memoryStream))
+                {
+                    return new JsonSerializer().Deserialize<T>(reader);
+                }
             }
 
-            var binaryFormatter = new BinaryFormatter();
-            using (var memoryStream = new MemoryStream(stream))
-            {
-                T result = (T)binaryFormatter.Deserialize(memoryStream);
-                return result;
-            }
         }
 
         /// <summary>

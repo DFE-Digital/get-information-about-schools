@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MoreLinq;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace Edubase.Common
 {
@@ -68,7 +69,6 @@ namespace Edubase.Common
                 after(obj);
             }
         }
-        
 
         public void Dispose() => Dispose(true);
     }

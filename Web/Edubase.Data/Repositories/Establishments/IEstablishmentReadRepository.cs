@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Edubase.Data.Entity;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Data.Repositories.Establishments
 {
@@ -8,6 +9,11 @@ namespace Edubase.Data.Repositories.Establishments
         Task<Establishment> GetAsync(int urn);
         Task<int?> GetStatusAsync(int urn);
         Task<int[]> GetUrns(int skip, int take);
+    }
+    
+
+    public interface IInMemoryEstablishmentReadRepository : IEstablishmentReadRepository
+    {
     }
 
     public interface ICachedEstablishmentReadRepository : IEstablishmentReadRepository

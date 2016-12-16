@@ -6,17 +6,26 @@ using System.Linq;
 using MoreLinq;
 using Edubase.Common;
 using System.Text;
+using Edubase.Data.DbContext;
+using System.Collections.Generic;
 
 namespace Edubase.Data.Repositories.Establishments
 {
-    public class CachedEstablishmentReadRepository : RepositoryBase, ICachedEstablishmentReadRepository
+    public class CachedEstablishmentReadRepository : CachedRepositoryBase, ICachedEstablishmentReadRepository
     {
-        private IEstablishmentReadRepository _repo;
+        private readonly IApplicationDbContextFactory _dbContextFactory;
+        private readonly IApplicationDbContextFactory _inMemoryDbContextFactory;
+        private readonly IEstablishmentReadRepository _repo;
 
-        public CachedEstablishmentReadRepository(IEstablishmentReadRepository repo, ICacheAccessor cache) 
+        public CachedEstablishmentReadRepository(IEstablishmentReadRepository repo, 
+            ICacheAccessor cache,
+            IInMemoryApplicationDbContextFactory inMemoryDbContextFactory,
+            IApplicationDbContextFactory dbContextFactory) 
             : base(cache)
         {
             _repo = repo;
+            _inMemoryDbContextFactory = inMemoryDbContextFactory;
+            _dbContextFactory = dbContextFactory;
         }
 
         public async Task<Establishment> GetAsync(int urn) 
@@ -32,39 +41,41 @@ namespace Edubase.Data.Repositories.Establishments
 
         public async Task<string> WarmAsync(int maxBatchSize = 1000, int maxConcurrency = 40, int? maxTotalRecords = null)
         {
-            long totalMillisecondsCaching = 0;
-            long totalMillisecondsGettingData = 0;
-            var skip = 0;
-            var repo = (EstablishmentReadRepository)_repo;
+            var inMemContext = _inMemoryDbContextFactory.WhilstRetaining().Obtain();
+            var realDbContext = _dbContextFactory.Obtain();
 
-            Func<Task<int[]>> getBatch = async () =>
-            {
-                using (Disposer.Timed(after: ms => totalMillisecondsGettingData += ms))
-                    return await repo.PreloadBatchAsync(skip, maxBatchSize);
-            };
+            if (_repo == null) throw new Exception("Repository is null");
+            var repo = _repo as RepositoryBase;
+            if (repo == null) throw new Exception("Repository is not castable to RepositoryBase");
+            repo.DbContextFactory = _inMemoryDbContextFactory;
 
-            var batch = await getBatch();
-            while (batch.Any())
+            var processedCount = 0;
+            var currentSkip = 0;
+            Func<IEnumerable<Establishment>> getBatch = ()
+                => realDbContext.Establishments
+                .Where(x => x.IsDeleted == false)
+                .OrderBy(x => x.Urn).Skip(currentSkip).Take(maxBatchSize).ToArray();
+            
+            var batch = getBatch();
+            do
             {
+                inMemContext.Establishments.AddRange(batch);
+
                 foreach (var set in batch.Batch(maxConcurrency))
                 {
-                    using (Disposer.Timed(after: ms => totalMillisecondsCaching += ms))
-                    {
-                        var tasks = set.Select(x => GetAsync(x));
-                        await Task.WhenAll(tasks.ToArray());
-                    }
+                    var tasks = set.Select(x => GetAsync(x.Urn));
+                    await Task.WhenAll(tasks);
+                    processedCount += maxConcurrency;
                 }
                 
-                skip += maxBatchSize;
-                batch = await getBatch();
+                ((InMemoryDbSet<Establishment>)inMemContext.Establishments).Clear();
 
-                if (maxTotalRecords.HasValue && skip > maxTotalRecords.Value) break;
+                currentSkip += maxBatchSize;
+                if (maxTotalRecords.HasValue && currentSkip >= maxTotalRecords.Value) break;
             }
-
-            var report = new StringBuilder();
-            report.AppendLine($"totalMillisecondsCaching: {totalMillisecondsCaching}");
-            report.AppendLine($"totalMillisecondsGettingData: {totalMillisecondsGettingData}");
-            return report.ToString();
+            while ((batch = getBatch()).Any());
+            
+            return $"Cached {processedCount} entities";
         }
     }
 }

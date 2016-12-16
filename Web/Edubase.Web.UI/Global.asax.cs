@@ -15,6 +15,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Edubase.Web.UI.Helpers;
 using Autofac;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Web.UI
 {

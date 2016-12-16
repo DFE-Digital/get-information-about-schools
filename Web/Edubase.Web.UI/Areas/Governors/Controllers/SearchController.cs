@@ -5,6 +5,7 @@ using Edubase.Data.Entity;
 using System.Data.Entity;
 using Edubase.Web.UI.Areas.Governors.Models;
 using System;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {

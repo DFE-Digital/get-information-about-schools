@@ -16,6 +16,7 @@ using Edubase.Common;
 namespace Edubase.Services.Groups
 {
     using Data;
+    using Data.DbContext;
     using eStatus = eLookupGroupStatus;
 
     public class GroupReadService : IGroupReadService

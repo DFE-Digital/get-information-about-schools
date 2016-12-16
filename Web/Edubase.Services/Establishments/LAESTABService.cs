@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MoreLinq;
 using Edubase.Services.Establishments.Enums;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Services.Establishments
 {

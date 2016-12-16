@@ -1,4 +1,5 @@
 ﻿using Edubase.Data.Entity.Lookups;
+using Edubase.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Edubase.Data.Entity
+namespace Edubase.Data.DbContext
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
     {

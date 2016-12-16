@@ -1,4 +1,5 @@
 ﻿#if (QA)
+using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using Edubase.Data.Entity.Lookups;
 using System.Data;

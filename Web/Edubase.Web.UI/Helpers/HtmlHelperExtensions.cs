@@ -1,5 +1,6 @@
 ﻿using Edubase.Common;
 using Edubase.Common.Reflection;
+using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using Edubase.Data.Entity.Lookups;
 using Edubase.Services;

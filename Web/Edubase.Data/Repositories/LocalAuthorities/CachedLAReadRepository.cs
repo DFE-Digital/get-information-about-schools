@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.Data.Repositories.LocalAuthorities
 {
-    public class CachedLAReadRepository : RepositoryBase, ICachedLAReadRepository
+    public class CachedLAReadRepository : CachedRepositoryBase, ICachedLAReadRepository
     {
         private ILAReadRepository _repo;
 

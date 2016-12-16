@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity;
+﻿using Edubase.Data.DbContext;
+using Edubase.Data.Entity;
 using System.Data.Entity;
 using System.Threading.Tasks;
 

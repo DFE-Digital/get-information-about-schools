@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 
-namespace Edubase.Data
+namespace Edubase.Data.DbContext
 {
     public class ApplicationDbConfiguration : DbConfiguration
     {

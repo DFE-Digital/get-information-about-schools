@@ -17,10 +17,18 @@ namespace Edubase.Services.Mapping
         {
             CreateMap<DbGeography, LatLon>().ConvertUsing(x => x.ToLatLon());
             CreateMap<LatLon, DbGeography>().ConvertUsing(x => x.ToDBGeography());
+
             CreateMap<ContactDetail, ContactDetailDto>();
             CreateMap<Address, EstablishmentAddressModel>();
             CreateMap<Person, PersonDto>();
-            CreateMap<Establishment, EstablishmentModel>();
+            CreateMap<Establishment, EstablishmentModel>()
+                .ForMember(x => x.Location, opt => opt.Ignore())
+                .AfterMap((s, d) =>
+                {
+                    d.Location = s.Location.ToLatLon();
+                });
+            
+
             CreateMap<GroupCollection, GroupModel>();
         }
     }

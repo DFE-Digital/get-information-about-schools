@@ -14,6 +14,7 @@ namespace Edubase.Import
 {
     using Common;
     using Data;
+    using Data.DbContext;
     using Data.Entity;
     using Data.Entity.Lookups;
     using Data.Migrations;

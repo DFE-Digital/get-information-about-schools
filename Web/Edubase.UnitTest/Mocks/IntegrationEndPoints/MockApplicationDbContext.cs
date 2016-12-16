@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity;
+﻿using Edubase.Data.DbContext;
+using Edubase.Data.Entity;
 using Edubase.Data.Entity.Lookups;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.UnitTest.Mocks.IntegrationEndPoints
 {
+    [Obsolete("use InMemoryApplicationDbContext")]
     public class MockApplicationDbContext : IApplicationDbContext
     {
         public DbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; } = new MockDbSet<EstablishmentApprovalQueue>();

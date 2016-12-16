@@ -9,6 +9,7 @@ using Edubase.Services.Enums;
 using System.Runtime.Caching;
 using Edubase.Common;
 using Edubase.Services.Domain;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Services
 {

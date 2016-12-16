@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Edubase.Web.UI.Helpers;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Filters;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Web.UI.Controllers
 {

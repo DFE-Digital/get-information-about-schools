@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using MoreLinq;
 using System.Text;
-using AutoMapper;
 
 namespace Edubase.Common
 {

@@ -1,12 +1,6 @@
 ﻿using Edubase.Common.Spatial;
-using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Services.Domain;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity.Spatial;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Edubase.Services.Establishments.Models
 {

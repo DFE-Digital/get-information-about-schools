@@ -18,21 +18,21 @@ namespace Edubase.Data.Entity
         
         public LocalAuthority LocalAuthority { get; set; }
 
-        [RestrictPermission]
+        
         public int? LocalAuthorityId { get; set; }
 
-        [RestrictPermission]
+        
         public int? EstablishmentNumber { get; set; }
 
-        [RequiresApproval]
+        
         public string Name { get; set; }
 
-        [Column("Type"), RestrictPermission]
+        [Column("Type")]
         public LookupEstablishmentType EstablishmentType { get; set; }
         
         public LookupEstablishmentStatus Status { get; set; }
 
-        [RestrictPermission]
+        
         public int? StatusId { get; set; }
 
         public LookupReasonEstablishmentOpened ReasonEstablishmentOpened { get; set; }
@@ -43,21 +43,19 @@ namespace Edubase.Data.Entity
 
         public int? ReasonEstablishmentClosedId { get; set; }
 
-        [RestrictPermission]
+        
         public DateTime? OpenDate { get; set; }
 
-        [RestrictPermission]
+        
         public DateTime? CloseDate { get; set; }
 
         public LookupEducationPhase EducationPhase { get; set; }
 
-        [RestrictPermission]
+        
         public int? EducationPhaseId { get; set; }
 
-        [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? StatutoryLowAge { get; set; }
 
-        [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? StatutoryHighAge { get; set; }
 
         public LookupProvisionBoarding ProvisionBoarding { get; set; }
@@ -74,7 +72,7 @@ namespace Edubase.Data.Entity
 
         public LookupGender Gender { get; set; }
 
-        [RestrictPermission]
+        
         public int? GenderId { get; set; }
 
         public LookupReligiousCharacter ReligiousCharacter { get; set; }
@@ -91,10 +89,9 @@ namespace Edubase.Data.Entity
 
         public LookupAdmissionsPolicy AdmissionsPolicy { get; set; }
 
-        [RestrictPermission]
+        
         public int? AdmissionsPolicyId { get; set; }
 
-        [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? Capacity { get; set; }
 
         public LookupProvisionSpecialClasses ProvisionSpecialClasses { get; set; }
@@ -107,10 +104,10 @@ namespace Edubase.Data.Entity
 
         public Address Address { get; set; }
 
-        [RequiresApproval]
+        
         public string HeadFirstName { get; set; }
 
-        [RequiresApproval]
+        
         public string HeadLastName { get; set; }
 
         public LookupHeadTitle HeadTitle { get; set; }
@@ -118,7 +115,7 @@ namespace Edubase.Data.Entity
         [NotMapped]
         public string HeadteacherFullName => StringUtil.ConcatNonEmpties(" ", HeadTitle?.ToString()?.RemoveSubstring("Unknown"), HeadFirstName, HeadLastName);
 
-        [RequiresApproval]
+        
         public int? HeadTitleId { get; set; }
 
         public string HeadEmailAddress { get; set; }
@@ -131,7 +128,7 @@ namespace Edubase.Data.Entity
         public int? TypeId { get; set; }
 
 
-        [NotMapped, RestrictPermission]
+        [NotMapped]
         public int? LAESTAB
         {
             get { return string.Concat(LocalAuthorityId, EstablishmentNumber).ToInteger(); }

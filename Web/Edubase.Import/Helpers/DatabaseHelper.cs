@@ -1,4 +1,5 @@
 ﻿using Edubase.Data;
+using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using Microsoft.SqlServer.Types;
 using System;

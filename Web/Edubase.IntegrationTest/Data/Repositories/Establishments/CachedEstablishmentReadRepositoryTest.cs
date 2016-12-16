@@ -1,5 +1,7 @@
-﻿using Edubase.Common.Cache;
+﻿using Edubase.Common;
+using Edubase.Common.Cache;
 using Edubase.Data;
+using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories.Establishments;
 using NUnit.Framework;
@@ -15,16 +17,21 @@ namespace Edubase.IntegrationTest.Data.Repositories.Establishments
     public class CachedEstablishmentReadRepositoryTest
     {
         [Test]
-        public async Task GetAsync_Test()
+        public async Task WarmAsync_Test()
         {
-            var dbf = new ApplicationDbContextFactory();
+            const int AMOUNT = 10;
+
+            var dbf = (IApplicationDbContextFactory) new ApplicationDbContextFactory<ApplicationDbContext>();
+
+            var imdbf = (IInMemoryApplicationDbContextFactory) new ApplicationDbContextFactory<InMemoryApplicationDbContext>();
+
             var repo = new EstablishmentReadRepository(dbf);
             var cache = new CacheAccessor(new CacheConfig { IsExceptionPropagationEnabled = true, IsPayloadCompressionEnabled = true });
             await cache.InitialiseIfNecessaryAsync();
-            var subject = new CachedEstablishmentReadRepository(repo, cache);
+            var subject = new CachedEstablishmentReadRepository(repo, cache, imdbf, dbf);
 
-            var report = await subject.WarmAsync(10, 1, 10);
-
+            var report = await subject.WarmAsync(AMOUNT, 1, AMOUNT);
+            Assert.AreEqual($"Cached {AMOUNT} entities", report);
         }
     }
 }

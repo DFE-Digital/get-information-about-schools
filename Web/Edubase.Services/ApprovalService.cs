@@ -13,6 +13,7 @@ using System.Configuration;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Edubase.Common.Reflection;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Services
 {

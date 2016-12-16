@@ -5,6 +5,7 @@ using System.Linq;
 using MoreLinq;
 using System.Data;
 using System.Text;
+using Edubase.Data.DbContext;
 
 namespace Edubase.CodeGen
 {

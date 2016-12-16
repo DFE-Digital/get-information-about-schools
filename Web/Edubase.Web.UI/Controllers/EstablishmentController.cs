@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Reflection;
+using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Data.Identity;
