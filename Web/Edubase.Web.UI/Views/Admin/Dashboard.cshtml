@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+}
+<br />
+<h1 class="bold-large">Dashboard</h1>
+<br />
+<ul class="font-xsmall">
+    <li>DB name: @ViewBag.DbName</li>
+    <li>Smtp EndPoint Name: @ViewBag.SmtpEndPointName</li>
+    <li>Redis Status: @ViewBag.RedisStatus</li>
+    <li>Memory Cache Size: @ViewBag.MemoryCacheSize</li>
+</ul>
+<br />
+<h2 class="bold-small">Redis Cache Report</h2>
+<pre style="font-family:'Courier New'; font-size:16px;">
+@Html.Raw(ViewBag.RedisReport)
+</pre>

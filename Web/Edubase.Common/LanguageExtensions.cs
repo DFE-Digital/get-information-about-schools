@@ -10,6 +10,9 @@ namespace Edubase.Common
 {
     public static class LanguageExtensions
     {
+        public static bool OneOfThese(this int? id, params Enum[] items) => items.Cast<int>().Any(x => x == id);
+        public static bool OneOfThese(this Enum flag, params Enum[] items) => items.Cast<int>().Any(x => x == Convert.ToInt32(flag));
+
         public static bool IsValidEmail(this string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return false;
@@ -129,6 +132,36 @@ namespace Edubase.Common
             return default(T2);
         }
 
+        /// <summary>
+        /// Gets data from a dictionary or sets it using the supplied factory; either way, returns the value.
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <param name="factory"></param>
+        /// <returns></returns>
+        public static T2 Get<T1, T2>(this IDictionary<T1, T2> data, T1 key, Func<T2> factory)
+        {
+            if (data.ContainsKey(key)) return data[key];
+            else return data.Set(key, factory());
+        }
+
+        /// <summary>
+        /// Sets a value to the dictionary and returns it
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="key"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static T2 Set<T1, T2>(this IDictionary<T1, T2> data, T1 key, T2 val)
+        {
+            return data[key] = val;
+            return val;
+        }
+
         public static T2 Get<T1, T2>(this IDictionary<T1, T2> data, T1 key, T2 defaultValue)
         {
             if (data.ContainsKey(key)) return data[key];
@@ -192,7 +225,7 @@ namespace Edubase.Common
             return false; // value-type
         }
 
-        public static Type GetUnderlyingType(this Type type) => (type.IsNullable()) ? Nullable.GetUnderlyingType(type) : type;
+        public static Type GetUnderlyingType(this Type type) => (type.IsNullable()) ? (Nullable.GetUnderlyingType(type) ?? type) : type;
 
 
         /// <summary>
@@ -216,6 +249,7 @@ namespace Edubase.Common
             if (item == null) throw exceptionFactory();
             return item;
         }
+
 
     }
 }

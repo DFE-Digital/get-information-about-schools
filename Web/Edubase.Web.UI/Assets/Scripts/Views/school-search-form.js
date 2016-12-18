@@ -6,8 +6,11 @@
         panelClass: '.expanding-search-field',
         openPanelClass: 'selected-search'
     }
+    var jScriptVersion;
+    /*@cc_on
+        jScriptVersion = @_jscript_version
 
-
+    @*/
     function ExpandingSearchForm(el, opts) {
         this.el = el;
         this.opts = $.extend({}, defaults, opts);
@@ -55,15 +58,22 @@
 
             });
 
-            var self = this;
-            $(function () {
-                setTimeout(function () {
-                    self.bindAutosuggest('#TextSearchModel_Text', '#TextSearchModel_AutoSuggestValue', self.getSchoolsSuggestionHandler);
-                    self.bindAutosuggest('#TrustSearchModel_Text', '#TrustSearchModel_AutoSuggestValue', self.getTrustSuggestionHandler);
-                    //self.bindAutosuggest('#LocalAuthoritySearchModel_Text', '#LocalAuthoritySearchModel_AutoSuggestValue', { data: window.localAuthorities, name: "name", value: "id" });
-                }, 500);
-                
-            });
+            if (typeof jScriptVersion ==='undefined' || jScriptVersion >= 9) {
+                var self = this;
+                $(function() {
+                    setTimeout(function() {
+                            self.bindAutosuggest('#TextSearchModel_Text',
+                                '#TextSearchModel_AutoSuggestValue',
+                                self.getSchoolsSuggestionHandler);
+                            self.bindAutosuggest('#GroupSearchModel_Text',
+                                '#GroupSearchModel_AutoSuggestValue',
+                                self.getTrustSuggestionHandler);
+                            //self.bindAutosuggest('#LocalAuthoritySearchModel_Text', '#LocalAuthoritySearchModel_AutoSuggestValue', { data: window.localAuthorities, name: "name", value: "id" });
+                        },
+                        500);
+
+                });
+            }
         },
         
         getSchoolsSuggestionHandler: function (keywords, callback) {
@@ -74,7 +84,7 @@
         },
 
         getTrustSuggestionHandler: function (keywords, callback) {
-            var dataSuggestionUrl = $("#TrustSearchModel_Text").attr("data-suggestion-url");
+            var dataSuggestionUrl = $("#GroupSearchModel_Text").attr("data-suggestion-url");
             return $.get(encodeURI(dataSuggestionUrl + keywords), function (response) {
                 return callback(response);
             });

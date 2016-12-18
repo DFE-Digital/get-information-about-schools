@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Edubase.Data.Entity;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Data.Identity
 {

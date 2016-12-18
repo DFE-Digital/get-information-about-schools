@@ -13,12 +13,27 @@ namespace Edubase.Services.Security
         public const string LA = "LA";
         public const string LAChildrensCentre = "LAChildrensCentre";
         public const string EFA = "EFA"; // education funding agency
-        public const string AOS = "AOS"; 
+        public const string AOS = "AOS"; // Academies Operations and Strategy
         public const string FSG = "FSG"; // free schools group
-        public const string IEBT = "IEBT";
-        public const string School = "School";
+        public const string IEBT = "IEBT"; // Independent Education and Boarding Schools Team
+        public const string School = "School"; // School organisation
         public const string PRU = "PRU"; // pupil referral unit
         public const string ChildrensCentre = "ChildrensCentre";
         public const string Admin = "Admin";
+
+        public static readonly string[] AllRoles = new []{
+            Establishment,
+            MAT,
+            LA,
+            LAChildrensCentre,
+            EFA,
+            AOS,
+            FSG,
+            IEBT,
+            School,
+            PRU,
+            ChildrensCentre,
+            Admin
+        };
     }
 }

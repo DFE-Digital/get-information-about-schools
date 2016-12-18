@@ -60,16 +60,16 @@
                             @if (result.EstablishmentUrn.HasValue)
                             {
                                 <dt>URN:</dt>
-                                <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Schools", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
+                                <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
                                 <dt>Establishment:</dt>
-                                <dd>@Html.ActionLink(result.Establishment.Name, "Details", "Schools", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
+                                <dd>@Html.ActionLink(result.Establishment.Name, "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
                             }
                             else
                             {
                                 <dt>UID:</dt>
-                                <dd>@Html.ActionLink(result.GroupUID.ToString(), "Details", "Trust", new { id = result.GroupUID, area = "" }, null)</dd>
+                                <dd>@Html.ActionLink(result.GroupUID.ToString(), "Details", "Group", new { id = result.GroupUID, area = "" }, null)</dd>
                                 <dt>Group:</dt>
-                                <dd>@Html.ActionLink(result.Group.Name, "Details", "Trust", new { id = result.GroupUID, area = "" }, null)</dd>
+                                <dd>@Html.ActionLink(result.Group.Name, "Details", "Group", new { id = result.GroupUID, area = "" }, null)</dd>
                             }
                             
                             <dt>GID:</dt>

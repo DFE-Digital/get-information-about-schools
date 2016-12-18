@@ -1,0 +1,207 @@
+.search-results {
+    li strong {
+        font-weight: bold;
+    }
+
+    li ul {
+        margin: 5px 0 10px 30px;
+    }
+}
+
+.result-info {
+    border-bottom: 1px solid #bfc1c3;
+    p {
+        font-size: 16px;
+        line-height: 1.25;
+        margin-bottom: 8px;
+    }
+}
+
+.school-results-listing {
+    margin: 15px 0;
+    li {
+        clear: both;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #bfc1c3;
+
+        &:last-child {
+            border-bottom:0; 
+        }
+    }
+    dl {
+        overflow: hidden;
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        @media (min-width: 640px) {
+            font-size: 14px;
+        }
+    }
+    dt, dd {
+        float: left;
+    }
+    dt {
+        clear: left;
+        padding-right: 0.5em;
+    }
+}
+
+.pagination {
+    overflow: hidden;
+    position: relative;
+    font-size: 16px;
+    padding-bottom: 8px;
+
+    .top-pagination & {
+        border-bottom: $black 1px solid;
+    }
+    .lower-pagination & {
+        border-top: $black 1px solid;
+        
+        p {
+            margin-top: em(20, 16);
+        }
+
+        .pagination-links {
+            top: em(20, 16);
+        }
+    }
+
+    p {
+        float: left;
+    }
+
+    .pagination-links {
+        clear: left;
+        margin: 0;
+        padding: 0;
+
+        @media (min-width: 640px) {
+            position: absolute;
+            right: 0;
+        }
+
+        @media(max-width: 640px) {
+            .numeric-pagination {
+                display: none;
+            }
+
+            .pagination-prev {
+                margin-right: 12px;
+            }
+        }
+    }
+    li {
+        float: left;
+        display:block;
+        text-align: center;
+    }
+
+    a, .go-nowhere {
+        display: block;
+        min-width: 30px;
+    }
+}
+
+div.approval-data
+{
+    dl{
+        font-size:15px;
+    }
+}
+
+table.approval-items {
+    display: table;
+    
+    th {
+        font-weight:bold;
+        text-align:left;
+    }
+
+    td, th {
+        font-size: 13px;
+        padding:5px 3px 5px 3px;
+        border:2px solid #eee;
+     }
+
+    
+    td.bb {
+        -ms-word-break: break-all;
+        word-break: break-all;
+        -ms-word-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    @include media(mobile) {
+        display: none;
+    }
+}
+
+ul.approval-items{
+    display:none;
+    @include media(mobile){
+        display:block;
+    }
+}
+
+.link-button {
+    padding:0;
+    background-color:transparent;
+    color:$link-colour;
+    border:none;
+    cursor:pointer;
+    text-decoration:underline;
+}
+
+
+
+.pending-updates-message {
+        background-color:$turquoise;
+        font-size:15px;
+        color:white;
+        padding:6px 36px 6px 36px;
+        position:relative;
+        margin-bottom:10px;
+
+        .tick {
+            position:absolute;
+            left:0;
+            top:0;
+            width:35px;
+            height:35px;
+            background-image: url('/public/assets/images/icons/tick.PNG');
+            background-repeat:no-repeat;
+            background-size:contain;
+        }
+        .cross {
+            position:absolute;
+            background-image: url('/public/assets/images/icons/cross.PNG');
+            top:0;
+            right:0;
+            width:31px;
+            height:31px;
+            background-repeat:no-repeat;
+            background-size:contain;
+            cursor:pointer;
+        }
+
+        a { color:white; }
+    }
+
+.clear-selections {
+    display: none;
+    position: absolute;
+    right: 30px;
+    top: 9px;
+    z-index: 98;
+    font-size: 14px;
+
+    &.active-clear {
+        display: block;
+    }
+}
+
+.filter-form .edubase-filter-submit {
+    font-size:19px;
+
+}

@@ -68,6 +68,7 @@
   OptionSelect.prototype.attachCheckedCounter = function attachCheckedCounter(){
       if (this.$options.filter(":checked").size() > 0) {
           this.updateCheckedCount();
+          //this.$optionSelect.trigger('countUpdated', { selectedCount: this.$options.filter(":checked").size() });
       }
   };
 
@@ -81,6 +82,7 @@
     if (count > 0){
       checkedString = count+" selected";
     }
+    this.$optionSelect.trigger('countUpdated', { selectedCount: count });
 
     return checkedString;
   };

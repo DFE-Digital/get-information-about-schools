@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Collections.Generic;
 using Edubase.Services;
+using Edubase.Services.Establishments;
 
 namespace Edubase.Web.UI.Models
 {
@@ -76,11 +77,7 @@ namespace Edubase.Web.UI.Models
 
         public CreateEditEstablishmentModel()
         {
-            SimplifiedLAESTABRules = new EstablishmentService().GetSimplifiedRules();
+            SimplifiedLAESTABRules = new LAESTABService().GetSimplifiedRules();
         }
-
-        
-
-
     }
 }

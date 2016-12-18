@@ -10,6 +10,7 @@ using System.Data.Entity.Spatial;
 
 namespace Edubase.Data.Entity
 {
+    [Serializable]
     public class Establishment : EdubaseEntity
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,21 +18,21 @@ namespace Edubase.Data.Entity
         
         public LocalAuthority LocalAuthority { get; set; }
 
-        [RestrictPermission]
+        
         public int? LocalAuthorityId { get; set; }
 
-        [RestrictPermission]
+        
         public int? EstablishmentNumber { get; set; }
 
-        [RequiresApproval]
+        
         public string Name { get; set; }
 
-        [Column("Type"), RestrictPermission]
+        [Column("Type")]
         public LookupEstablishmentType EstablishmentType { get; set; }
         
         public LookupEstablishmentStatus Status { get; set; }
 
-        [RestrictPermission]
+        
         public int? StatusId { get; set; }
 
         public LookupReasonEstablishmentOpened ReasonEstablishmentOpened { get; set; }
@@ -42,21 +43,19 @@ namespace Edubase.Data.Entity
 
         public int? ReasonEstablishmentClosedId { get; set; }
 
-        [RestrictPermission]
+        
         public DateTime? OpenDate { get; set; }
 
-        [RestrictPermission]
+        
         public DateTime? CloseDate { get; set; }
 
         public LookupEducationPhase EducationPhase { get; set; }
 
-        [RestrictPermission]
+        
         public int? EducationPhaseId { get; set; }
 
-        [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? StatutoryLowAge { get; set; }
 
-        [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? StatutoryHighAge { get; set; }
 
         public LookupProvisionBoarding ProvisionBoarding { get; set; }
@@ -73,7 +72,7 @@ namespace Edubase.Data.Entity
 
         public LookupGender Gender { get; set; }
 
-        [RestrictPermission]
+        
         public int? GenderId { get; set; }
 
         public LookupReligiousCharacter ReligiousCharacter { get; set; }
@@ -90,10 +89,9 @@ namespace Edubase.Data.Entity
 
         public LookupAdmissionsPolicy AdmissionsPolicy { get; set; }
 
-        [RestrictPermission]
+        
         public int? AdmissionsPolicyId { get; set; }
 
-        [RestrictAction(Roles.Academy, ActionType.Approve)]
         public int? Capacity { get; set; }
 
         public LookupProvisionSpecialClasses ProvisionSpecialClasses { get; set; }
@@ -106,10 +104,10 @@ namespace Edubase.Data.Entity
 
         public Address Address { get; set; }
 
-        [RequiresApproval]
+        
         public string HeadFirstName { get; set; }
 
-        [RequiresApproval]
+        
         public string HeadLastName { get; set; }
 
         public LookupHeadTitle HeadTitle { get; set; }
@@ -117,8 +115,10 @@ namespace Edubase.Data.Entity
         [NotMapped]
         public string HeadteacherFullName => StringUtil.ConcatNonEmpties(" ", HeadTitle?.ToString()?.RemoveSubstring("Unknown"), HeadFirstName, HeadLastName);
 
-        [RequiresApproval]
+        
         public int? HeadTitleId { get; set; }
+
+        public string HeadEmailAddress { get; set; }
 
         public ContactDetail Contact { get; set; }
 
@@ -128,7 +128,7 @@ namespace Edubase.Data.Entity
         public int? TypeId { get; set; }
 
 
-        [NotMapped, RestrictPermission]
+        [NotMapped]
         public int? LAESTAB
         {
             get { return string.Concat(LocalAuthorityId, EstablishmentNumber).ToInteger(); }
@@ -238,6 +238,31 @@ namespace Edubase.Data.Entity
 
         public LookupFurtherEducationType FurtherEducationType { get; set; }
         public int? FurtherEducationTypeId { get; set; }
+
+        public LookupCCGovernance CCGovernance { get; set; }
+        public int? CCGovernanceId { get; set; }
+
+        public string CCGovernanceDetail { get; set; }
+
+        public LookupCCOperationalHours CCOperationalHours { get; set; }
+        public int? CCOperationalHoursId { get; set; }
+
+        public LookupCCPhaseType CCPhaseType { get; set; }
+        public int? CCPhaseTypeId { get; set; }
+
+        public LookupCCGroupLead CCGroupLead { get; set; }
+        public int? CCGroupLeadId { get; set; }
+
+        public int? CCDisadvantagedAreaId { get; set; }
+        public LookupCCDisadvantagedArea CCDisadvantagedArea { get; set; }
+
+        public LookupDirectProvisionOfEarlyYears CCDirectProvisionOfEarlyYears { get; set; }
+        public int? CCDirectProvisionOfEarlyYearsId { get; set; }
+
+        public LookupDeliveryModel CCDeliveryModel { get; set; }
+        public int? CCDeliveryModelId { get; set; }
+
+        public int? CCUnder5YearsOfAgeCount { get; set; }
 
         public int? SenUnitOnRoll { get; set; }
         public int? SenUnitCapacity { get; set; }

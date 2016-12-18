@@ -15,9 +15,11 @@
     <EntitySet Name="Ccdisadvantagedarea" EntityType="EdubaseSourceDataModel.Store.Ccdisadvantagedarea" store:Type="Tables" />
     <EntitySet Name="Ccgovernance" EntityType="EdubaseSourceDataModel.Store.Ccgovernance" store:Type="Tables" />
     <EntitySet Name="Ccgrouplead" EntityType="EdubaseSourceDataModel.Store.Ccgrouplead" store:Type="Tables" />
+    <EntitySet Name="Cclacontacts" EntityType="EdubaseSourceDataModel.Store.Cclacontacts" store:Type="Tables" />
     <EntitySet Name="Ccoperationalhours" EntityType="EdubaseSourceDataModel.Store.Ccoperationalhours" store:Type="Tables" />
     <EntitySet Name="Ccphasetype" EntityType="EdubaseSourceDataModel.Store.Ccphasetype" store:Type="Tables" />
     <EntitySet Name="Childcarefacilities" EntityType="EdubaseSourceDataModel.Store.Childcarefacilities" store:Type="Tables" />
+    <EntitySet Name="Childrenscentresgroupflag" EntityType="EdubaseSourceDataModel.Store.Childrenscentresgroupflag" store:Type="Tables" />
     <EntitySet Name="Contactpreference" EntityType="EdubaseSourceDataModel.Store.Contactpreference" store:Type="Tables" />
     <EntitySet Name="County" EntityType="EdubaseSourceDataModel.Store.County" store:Type="Tables" />
     <EntitySet Name="Diocese" EntityType="EdubaseSourceDataModel.Store.Diocese" store:Type="Tables" />
@@ -153,6 +155,18 @@
     <Property Name="code" Type="nvarchar" />
     <Property Name="name" Type="nvarchar" />
   </EntityType>
+  <EntityType Name="Cclacontacts">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
+    <Property Name="LocalAuthority" Type="nvarchar" />
+    <Property Name="Firstname" Type="nvarchar" />
+    <Property Name="Lastname" Type="nvarchar" />
+    <Property Name="Email" Type="nvarchar" />
+    <Property Name="Telephonenumber" Type="nvarchar" />
+  </EntityType>
   <EntityType Name="Ccoperationalhours">
     <Key>
       <PropertyRef Name="autoid" />
@@ -176,6 +190,14 @@
     <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="Code" Type="nvarchar" />
     <Property Name="Name" Type="nvarchar" />
+  </EntityType>
+  <EntityType Name="Childrenscentresgroupflag">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="nvarchar" />
+    <Property Name="ChildrensCentresGroupFlag" Type="nvarchar" />
   </EntityType>
   <EntityType Name="Contactpreference">
     <Key>
@@ -913,9 +935,11 @@
     <EntitySet Name="Ccdisadvantagedarea" EntityType="EdubaseSourceDataModel.Ccdisadvantagedarea" />
     <EntitySet Name="Ccgovernance" EntityType="EdubaseSourceDataModel.Ccgovernance" />
     <EntitySet Name="Ccgrouplead" EntityType="EdubaseSourceDataModel.Ccgrouplead" />
+    <EntitySet Name="Cclacontacts" EntityType="EdubaseSourceDataModel.Cclacontacts" />
     <EntitySet Name="Ccoperationalhours" EntityType="EdubaseSourceDataModel.Ccoperationalhours" />
     <EntitySet Name="Ccphasetype" EntityType="EdubaseSourceDataModel.Ccphasetype" />
     <EntitySet Name="Childcarefacilities" EntityType="EdubaseSourceDataModel.Childcarefacilities" />
+    <EntitySet Name="Childrenscentresgroupflag" EntityType="EdubaseSourceDataModel.Childrenscentresgroupflag" />
     <EntitySet Name="Contactpreference" EntityType="EdubaseSourceDataModel.Contactpreference" />
     <EntitySet Name="County" EntityType="EdubaseSourceDataModel.County" />
     <EntitySet Name="Diocese" EntityType="EdubaseSourceDataModel.Diocese" />
@@ -1051,6 +1075,18 @@
     <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
+  <EntityType Name="Cclacontacts">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="LocalAuthority" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Firstname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Lastname" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="Telephonenumber" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
   <EntityType Name="Ccoperationalhours">
     <Key>
       <PropertyRef Name="autoid" />
@@ -1074,6 +1110,14 @@
     <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
     <Property Name="Code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
     <Property Name="Name" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Childrenscentresgroupflag">
+    <Key>
+      <PropertyRef Name="autoid" />
+    </Key>
+    <Property Name="autoid" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="code" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+    <Property Name="ChildrensCentresGroupFlag1" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="Contactpreference">
     <Key>
@@ -1892,6 +1936,19 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Cclacontacts">
+      <EntityTypeMapping TypeName="EdubaseSourceDataModel.Cclacontacts">
+        <MappingFragment StoreEntitySet="Cclacontacts">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="LocalAuthority" ColumnName="LocalAuthority" />
+          <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+          <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Telephonenumber" ColumnName="Telephonenumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Ccoperationalhours">
       <EntityTypeMapping TypeName="EdubaseSourceDataModel.Ccoperationalhours">
         <MappingFragment StoreEntitySet="Ccoperationalhours">
@@ -1916,6 +1973,15 @@
           <ScalarProperty Name="autoid" ColumnName="autoid" />
           <ScalarProperty Name="Code" ColumnName="Code" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Childrenscentresgroupflag">
+      <EntityTypeMapping TypeName="EdubaseSourceDataModel.Childrenscentresgroupflag">
+        <MappingFragment StoreEntitySet="Childrenscentresgroupflag">
+          <ScalarProperty Name="autoid" ColumnName="autoid" />
+          <ScalarProperty Name="code" ColumnName="code" />
+          <ScalarProperty Name="ChildrensCentresGroupFlag1" ColumnName="ChildrensCentresGroupFlag" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -21,14 +21,8 @@ namespace Edubase.Data.Entity
         public Person Head { get; set; } = new Person();
         public string Address { get; set; }
         public string ManagerEmailAddress { get; set; }
-        
         [Index(IsUnique=false), StringLength(400)]
         public string GroupId { get; set; }
-
-        /// <summary>
-        /// Temporary!
-        /// </summary>
-        [Obsolete, NotMapped]
         public int EstablishmentCount { get; set; }
     }
 }

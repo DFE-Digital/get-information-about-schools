@@ -1,5 +1,8 @@
-﻿namespace Edubase.Data.Identity
+﻿using System;
+
+namespace Edubase.Data.Identity
 {
+    [Obsolete]
     public static class Roles
     {
         public const string Admin = "Admin";

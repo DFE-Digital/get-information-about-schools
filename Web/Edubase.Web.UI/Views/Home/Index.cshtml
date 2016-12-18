@@ -6,7 +6,7 @@
 
 <div class="grid-row">
     <div class="column-full">
-        <h1 class="heading-xlarge" style="margin-bottom:0;">Home page</h1>
+        <h1 class="heading-intro">Home page</h1>
     </div>
 </div>
 
@@ -14,7 +14,7 @@
     <div class="column-half">
         <h2 class="heading-medium">Search</h2>
         <ul>
-            <li>@Html.ActionLink("Search", "Advanced", "Search")</li>
+            <li>@Html.ActionLink("Search", "Index", "Search")</li>
         </ul>
 
         <h2 class="heading-medium">Downloads</h2>
@@ -46,7 +46,7 @@
                     }
                     @if (Model.AllowTrustCreation)
                     {
-                        <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Trust")</li>
+                        <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group")</li>
                     }
                 </ul>
             }

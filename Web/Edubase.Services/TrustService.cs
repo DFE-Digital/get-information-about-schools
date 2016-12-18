@@ -1,6 +1,7 @@
 ﻿using CompaniesHouse;
 using CompaniesHouse.Request;
 using Edubase.Common;
+using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using Edubase.Services.Domain;
 using System;

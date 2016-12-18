@@ -23,6 +23,8 @@ using System.Linq;
 using MoreLinq;
 using Edubase.Common;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Web.UI
 {
@@ -70,10 +72,10 @@ namespace Edubase.Web.UI
 
             app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
 
+           
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
+            
         }
-        
-
 
         private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
         {
@@ -155,7 +157,7 @@ namespace Edubase.Web.UI
 
             spOptions.AttributeConsumingServices.Add(attributeConsumingService);
             //spOptions.ServiceCertificates.Add(GetCert());
-
+            
             return spOptions;
         }
 

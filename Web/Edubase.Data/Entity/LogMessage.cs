@@ -1,4 +1,5 @@
 ﻿using Edubase.Common;
+using Edubase.Common.Reflection;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Text;

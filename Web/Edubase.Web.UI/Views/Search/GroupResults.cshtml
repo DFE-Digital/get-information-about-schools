@@ -1,0 +1,88 @@
+﻿@using Edubase.Web.UI.Models
+@using Edubase.Common;
+@using Edubase.Services.Enums
+@model GroupSearchResultsModel
+@{
+    ViewBag.Title = string.Format("Search results for '{0}'", Model.SearchTerm);
+    ViewBag.PageClass = "search-results";
+    ViewBag.HideLogo = true;
+    var cacheSvc = new Edubase.Services.CachedLookupService();
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        @Html.ActionLink("Search for MAT", "Index", null, new { @class = "home-link" })
+
+        <h1 class="heading-xlarge">Search results</h1>
+        @if (Model.SearchTerm.IsInteger())
+        {
+            <p>We found <span class="heading-xlarge">@Model.Count</span> multi-academy trusts with Companies House Number '@Model.SearchTerm'.</p>
+        }
+        else
+        {
+            <p>We found <span class="heading-xlarge">@Model.Count</span> multi-academy trusts matching "@Model.SearchTerm".</p>
+        } 
+    </div>
+</div>
+
+<div class="grid-row">
+    @if (Model.Error != null)
+    {
+        <div class="column-two-thirds">
+            <h2 class="heading-medium">Error</h2>
+
+            <p>@Model.Error</p>
+        </div>
+    }
+    else if (Model.Results.Count > 0)
+    {
+        if (Model.PageCount > 1)
+        {
+            <div class="column-two-thirds top-pagination">
+                @Html.Partial("_ResultsPaginationAdvSearch")
+            </div>
+        }
+        <div class="column-two-thirds">
+            <ul class="school-results-listing">
+                @foreach (var result in Model.Results)
+                {
+                    <li>
+                        <h2>@Html.ActionLink(result.Name ?? "s", "Details", "Group", new { id = result.GroupUID }, new { @class = "bold-small" })</h2>
+                        <dl>
+                            @if (result.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+                            {
+                                <dt>Companies House Number:</dt>
+                                <dd>@result.CompaniesHouseNumber</dd>
+                            }
+                            <dt>Type:</dt>
+                            <dd>@(cacheSvc.GroupTypesGetAll().FirstOrDefault(x=>x.Id == result.GroupTypeId)?.Name)</dd>
+                            <dt>Number of schools belonging to the MAT:</dt>
+                            <dd>@result.EstablishmentCount</dd>
+                        </dl>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        if (Model.PageCount > 1)
+        {
+            <div class="column-two-thirds lower-pagination">
+                @Html.Partial("_ResultsPaginationAdvSearch")
+            </div>
+        }
+    }
+    else
+    {
+        <div class="column-two-thirds">
+            @if (Model.SearchTerm.IsInteger())
+            {
+                <p class="no-school-results">Please check the number entered or try @Html.ActionLink("searching again", "Index") using the multi-academy trust name.</p>
+            }
+            else
+            {
+                <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
+            }
+        </div>
+    }
+
+</div>

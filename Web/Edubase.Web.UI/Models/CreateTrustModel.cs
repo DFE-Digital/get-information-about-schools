@@ -10,9 +10,9 @@ using System.ComponentModel;
 
 namespace Edubase.Web.UI.Models
 {
-    public class CreateTrustModel
+    public class CreateGroupModel
     {
-        public CreateTrustModel(CompanyProfileDto companyProfile)
+        public CreateGroupModel(CompanyProfileDto companyProfile)
         {
             Name = companyProfile.Name;
             OpenDate = companyProfile.IncorporationDate;
@@ -20,7 +20,7 @@ namespace Edubase.Web.UI.Models
             Address = companyProfile.Address;
         }
 
-        public CreateTrustModel()
+        public CreateGroupModel()
         {
 
         }

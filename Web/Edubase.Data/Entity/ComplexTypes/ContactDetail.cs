@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Edubase.Data.Entity.ComplexTypes
 {
-    [ComplexType]
+    [ComplexType, Serializable]
     public class ContactDetail
     {
         public string TelephoneNumber { get; set; }

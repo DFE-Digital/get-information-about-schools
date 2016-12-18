@@ -2,14 +2,28 @@
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
-using Edubase.Web.UI.Helpers;
-using Edubase.Web.UI.Utils;
-using Edubase.Web.UI.Identity;
+using Edubase.Services.Establishments;
+using Edubase.Services.Groups;
+using Edubase.Services;
+using AutoMapper;
+using Edubase.Data.Entity;
+using Edubase.Services.IntegrationEndPoints.AzureSearch;
+using System.Configuration;
+using Edubase.Common.Cache;
+using Edubase.Common;
+using Edubase.Data.Repositories.Establishments;
+using Edubase.Data.Repositories.LocalAuthorities;
+using Edubase.Data;
+using Edubase.Services.IntegrationEndPoints.Smtp;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Web.UI
 {
     public static class IocConfig
     {
+        private static IContainer _container;
+        public static IContainer Container => _container;
+
         public static void Register()
         {
             var builder = new ContainerBuilder();
@@ -33,16 +47,48 @@ namespace Edubase.Web.UI
             RegisterTypes(builder);
 
             // Set the dependency resolver to be Autofac.
-            var container = builder.Build();
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            _container = builder.Build();
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(_container));
         }
 
         private static void RegisterTypes(ContainerBuilder builder)
         {
-            builder.RegisterType<SchoolPermissions>().As<ISchoolPermissions>();
-            builder.RegisterType<UserIdentity>().As<IUserIdentity>();
-            builder.RegisterType<RedirectAfterLoginHelper>().As<IRedirectAfterLoginHelper>();
-            builder.RegisterType<RequestContextWrapper>().As<IRequestContext>();
+#if QA
+            builder.RegisterType<MockSmtpEndPoint>().As<ISmtpEndPoint>();
+#else
+            builder.RegisterType<SmtpEndPoint>().As<ISmtpEndPoint>();
+#endif
+
+            builder.RegisterType<MessageLoggingService>()
+                .As<IMessageLoggingService>()
+                .As<IExceptionLogger>()
+                .SingleInstance();
+
+            builder.RegisterType<CacheAccessor>().As<ICacheAccessor>().SingleInstance().AsSelf();
+
+            builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
+                ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString).As<IAzureSearchEndPoint>();
+
+            builder.RegisterType<ApplicationDbContextFactory<ApplicationDbContext>>()
+                .As<IApplicationDbContextFactory>();
+
+            builder.RegisterType<ApplicationDbContextFactory<InMemoryApplicationDbContext>>()
+                .As<IInMemoryApplicationDbContextFactory>();
+
+            builder.RegisterType<ApplicationDbContext>().As<IApplicationDbContext>();
+            builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
+
+            builder.RegisterType<LAReadRepository>().As<ILAReadRepository>();
+            builder.RegisterType<CachedLAReadRepository>().As<ICachedLAReadRepository>();
+            
+            builder.RegisterType<EstablishmentReadRepository>().As<IEstablishmentReadRepository>();
+            builder.RegisterType<CachedEstablishmentReadRepository>().As<ICachedEstablishmentReadRepository>();
+
+            builder.RegisterType<GroupsWriteService>().As<IGroupsWriteService>();
+            builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
+            builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
+            builder.RegisterType<GroupReadService>().As<IGroupReadService>();
+            builder.RegisterType<LAESTABService>().As<ILAESTABService>();
         }
     }
 }

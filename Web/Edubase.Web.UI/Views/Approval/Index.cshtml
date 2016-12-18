@@ -50,8 +50,8 @@
                 @foreach (var item in Model.Items)
                 {
                     <tr>
-                        <td>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Schools", new { id = item.EstablishmentUrn }, null)</td>
-                        <td>@Html.ActionLink(item.EstablishmentName, "Details", "Schools", new { id = item.EstablishmentUrn }, null)</td>
+                        <td>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = item.EstablishmentUrn }, null)</td>
+                        <td>@Html.ActionLink(item.EstablishmentName, "Details", "Establishment", new { id = item.EstablishmentUrn }, null)</td>
                         <td class="bb">@item.UpdatedFieldName</td>
                         <td>@item.OldValue</td>
                         <td>@item.NewValue</td>
@@ -92,7 +92,7 @@
                 <li>
                     <dl>
                         <dt>URN:</dt>
-                        <dd>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Schools", new { id = item.EstablishmentUrn }, null)</dd>
+                        <dd>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = item.EstablishmentUrn }, null)</dd>
                         <dt>Establishment name:</dt>
                         <dd>@item.EstablishmentName</dd>
                         <dt>Updated field:</dt>
@@ -116,22 +116,23 @@
                                 <input type="submit" value="Approve" class="link-button" />
                             }
                         </dd>
-                        <div style="clear:left;">
-                            @using (Html.BeginForm("Reject", "Approval", FormMethod.Post))
-                            {
-                                @Html.Hidden("skip", Model.Skip)
-                                @Html.Hidden("take", Model.Take)
-                                @Html.Hidden("id", item.Id)
-                                @Html.Hidden("urn", Model.EstablishmentUrn)
-                                <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().children(':first').focus(); $(this).hide()" />
-                                <div style="display:none;" class="form-group">
-                                    <input type="text" name="reason" placeholder="Reason" autocomplete="off" class="form-control" style="margin:4px; width:90%" /><br />
-                                    <input type="submit" value="Save" class="button" style="font-size:16px; margin-top:10px; width:100%;" />
-                                </div>
-                            }
-                        </div>
-
                     </dl>
+                    <div>
+                        @using (Html.BeginForm("Reject", "Approval", FormMethod.Post))
+                        {
+                            @Html.Hidden("skip", Model.Skip)
+                            @Html.Hidden("take", Model.Take)
+                            @Html.Hidden("id", item.Id)
+                            @Html.Hidden("urn", Model.EstablishmentUrn)
+                            <input type="button" value="Reject" class="link-button" onclick="$(this).next().show(); $(this).next().children(':first').focus(); $(this).hide()" />
+                            <div class="form-group hidden">
+                                <input type="text" name="reason" placeholder="Reason" autocomplete="off" class="form-control" style="margin:4px; width:90%" /><br />
+                                <input type="submit" value="Save" class="button"  />
+                            </div>
+                        }
+                    </div>
+
+                    
                 </li>
             }
         </ul>

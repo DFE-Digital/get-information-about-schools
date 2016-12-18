@@ -1,40 +1,48 @@
 ﻿@using Edubase.Web.UI.Models
 @using Edubase.Web.UI.Helpers
-@using Edubase.Data.Entity.Lookups
 @model AdvancedSearchViewModel
 @{
     ViewBag.Title = string.Format("Search results for '{0}'", Model.TextSearchModel.Text);
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
+
+    var cache = new Edubase.Services.CachedLookupService();
 }
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        @Html.ActionLink("Go back", "Advanced", null, new { @class = "home-link" })
+        @Html.ActionLink("Go back", "Index", null, new { @class = "home-link" })
 
         <h1 class="heading-xlarge">Search results</h1>
         @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
         {
-            if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.EstablishmentName || Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.Unknown)
+            if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.EstablishmentName
+                || Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.Unknown)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges for the search term "@Model.TextSearchModel.Text".</p>
+                <p>
+                    We found <span class="heading-xlarge">@Model.Count</span> establishments
+                    @if (!Model.TextSearchModel.Text.IsEmpty())
+                    {
+                        <text>for the search term "@Model.TextSearchModel.Text".</text>
+                    }
+                </p>
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.LAESTAB)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the LAESTAB "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</p>
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.UKPRN)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the UKPRN "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the UKPRN "@Model.TextSearchModel.Text".</p>
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.URN)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the URN "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the URN "@Model.TextSearchModel.Text".</p>
             }
         }
         else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.LocalAuthority)
         {
-            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges in the selected local authorities</p>
+            <p>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</p>
         }
 
 
@@ -51,7 +59,7 @@
                  data-track="search-results||edit-search"
                  aria-controls="EditSearchCollapse"
                  role="button">
-                <a class="help-toggle" href="/Search/Advanced">Edit search</a>
+                <a class="help-toggle" href="/Search">Edit search</a>
             </div>
 
             <div id="EditSearchCollapse" aria-expanded="true">
@@ -77,7 +85,7 @@
                     @Selector("Religious character", "r", Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
                     <div class="filter-divider"></div>
 
-                    <input type="submit" value="Update" class="button" style="font-size:19px;" />
+                    <input type="submit" value="Update" class="button edubase-filter-submit" />
 
                     @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
                     {
@@ -122,16 +130,16 @@
                 @foreach (var result in Model.Results)
                 {
                     <li>
-                        <h2>@Html.ActionLink(result.Name, "Details", "Schools", new { id = result.Urn }, new { @class = "bold-small" })</h2>
+                        <h2>@Html.ActionLink(result.Name, "Details", "Establishment", new { id = result.Urn }, new { @class = "bold-small" })</h2>
                         <dl>
                             <dt>Address:</dt>
-                            <dd>@result.Address</dd>
+                            <dd>@result.GetAddress()</dd>
                             <dt>URN:</dt>
                             <dd> @result.Urn</dd>
                             <dt>LAESTAB:</dt>
-                            <dd>@result.LAESTAB</dd>
+                            <dd>@result.GetLAESTAB()</dd>
                             <dt>Status:</dt>
-                            <dd>@result.Status</dd>
+                            <dd>@(cache.EstablishmentStatusesGetAll().FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "--")</dd>
                         </dl>
                     </li>
                 }
@@ -159,7 +167,9 @@
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter"></div>
+            
         </div>
+        <a href="#" class="clear-selections">Clear</a>
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 <fieldset>
@@ -177,16 +187,4 @@
         </div>
     </div>
 
-}
-
-
-@section ViewScripts{
-    
-    <script>
-        $(function () {
-            $('.govuk-option-select').map(function () {
-                return new GOVUK.OptionSelect({ $el: $(this) });
-            });
-        })
-    </script>
 }

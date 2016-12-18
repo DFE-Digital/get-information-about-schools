@@ -30,7 +30,20 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28QA%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug %28QA%29\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -144,8 +157,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationDbContext.cs" />
-    <Compile Include="ApplicationDbConfiguration.cs" />
+    <Compile Include="DbContext\ApplicationDbContext.cs" />
+    <Compile Include="DbContext\ApplicationDbConfiguration.cs" />
+    <Compile Include="DbContext\ApplicationDbContextFactory.cs" />
+    <Compile Include="DbContext\IInMemoryApplicationDbContext.cs" />
+    <Compile Include="DbContext\InMemoryDbSet.cs" />
     <Compile Include="DbUtil.cs" />
     <Compile Include="Entity\ComplexTypes\Person.cs" />
     <Compile Include="Entity\EstablishmentChangeHistory.cs" />
@@ -166,17 +182,36 @@
     <Compile Include="Entity\EstablishmentLink.cs" />
     <Compile Include="Entity\Permissions\Permission.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="DbContext\IApplicationDbContext.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
-    <Compile Include="Migrations\201611281050558_InitialCreate.cs" />
-    <Compile Include="Migrations\201611281050558_InitialCreate.Designer.cs">
-      <DependentUpon>201611281050558_InitialCreate.cs</DependentUpon>
+    <Compile Include="DbContext\InMemoryApplicationDbContext.cs" />
+    <Compile Include="Migrations\201612081432298_Initial.cs" />
+    <Compile Include="Migrations\201612081432298_Initial.Designer.cs">
+      <DependentUpon>201612081432298_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612120829468_AddedEstabCountCol.cs" />
+    <Compile Include="Migrations\201612120829468_AddedEstabCountCol.Designer.cs">
+      <DependentUpon>201612120829468_AddedEstabCountCol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612120857427_RenamedCols.cs" />
+    <Compile Include="Migrations\201612120857427_RenamedCols.Designer.cs">
+      <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
-    <Compile Include="Migrations\UserAccountSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ODataFilterList.cs" />
+    <Compile Include="ODataUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Establishments\CachedEstablishmentReadRepository.cs" />
+    <Compile Include="Repositories\Establishments\EstablishmentReadRepository.cs" />
+    <Compile Include="Repositories\Establishments\IEstablishmentReadRepository.cs" />
+    <Compile Include="Repositories\LocalAuthorities\CachedLAReadRepository.cs" />
+    <Compile Include="Repositories\LocalAuthorities\LAReadRepository.cs" />
+    <Compile Include="Repositories\LocalAuthorities\ILAReadRepository.cs" />
     <Compile Include="Repositories\LogMessageRepository.cs" />
+    <Compile Include="Repositories\CachedRepositoryBase.cs" />
+    <Compile Include="Repositories\RepositoryBase.cs" />
     <Compile Include="Repositories\TableStorage\TableStorageBase.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -190,8 +225,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611281050558_InitialCreate.resx">
-      <DependentUpon>201611281050558_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612081432298_Initial.resx">
+      <DependentUpon>201612081432298_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612120829468_AddedEstabCountCol.resx">
+      <DependentUpon>201612120829468_AddedEstabCountCol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612120857427_RenamedCols.resx">
+      <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

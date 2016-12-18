@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity;
+﻿using Edubase.Data.DbContext;
+using Edubase.Data.Entity;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

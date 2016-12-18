@@ -1,0 +1,33 @@
+﻿using Edubase.Web.UI.MvcResult;
+using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+
+namespace Edubase.Web.UI.Filters
+{
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+    public class EdubaseAuthorizeAttribute : AuthorizeAttribute
+    {
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            if (filterContext.HttpContext.Request.IsAuthenticated)
+            {
+                filterContext.Result = new HttpStatusCodeResult((int)HttpStatusCode.Forbidden);
+            }
+            else
+            {
+                var urlHelper = new UrlHelper(filterContext.RequestContext);
+                var redirectUrl = urlHelper.Action("ExternalLoginCallback", "Account", new
+                {
+                    ReturnUrl = filterContext.RequestContext.HttpContext.Request.Url.PathAndQuery
+                });
+
+                filterContext.Result = new ChallengeResult("KentorAuthServices", redirectUrl);
+            }
+        }
+    }
+}

@@ -56,7 +56,8 @@ namespace Edubase.Web.UI.Filters
                 UserName = userName
             };
 
-            MessageLoggingService.Instance.Push(msg);
+            DependencyResolver.Current.GetService<IMessageLoggingService>().Push(msg);
+
             return msg;
         }
     }

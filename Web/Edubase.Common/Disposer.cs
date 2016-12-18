@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MoreLinq;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace Edubase.Common
 {
@@ -51,11 +52,12 @@ namespace Edubase.Common
             }
         }
 
-        public static IDisposable Timed(Action before, Action<long> after)
+        public static IDisposable Timed(Action before = null, Action<long> after = null)
         {
-            before();
+            before?.Invoke();
             return new Disposer(after);
         }
+        
 
         public static void Using<T>(Func<T> factory, Action<T> before, Action<T> after, Action<T> meat) where T : IDisposable
         {
@@ -67,7 +69,6 @@ namespace Edubase.Common
                 after(obj);
             }
         }
-        
 
         public void Dispose() => Dispose(true);
     }

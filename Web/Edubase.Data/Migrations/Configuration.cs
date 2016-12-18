@@ -1,8 +1,9 @@
 namespace Edubase.Data.Migrations
 {
+    using DbContext;
     using Entity;
     using System.Data.Entity.Migrations;
-    
+
     public sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()

@@ -1,10 +1,18 @@
 ﻿using AutoMapper;
 using Edubase.Common;
+using Edubase.Common.Reflection;
+using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Data.Identity;
 using Edubase.Services;
+using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Enums;
+using Edubase.Services.Groups;
+using Edubase.Services.Security;
+using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models.Establishments;
 using FluentValidation.Mvc;
 using Microsoft.ServiceBus.Messaging;
 using MoreLinq;
@@ -21,16 +29,29 @@ using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [Authorize]
     public class EstablishmentController : Controller
     {
-        [HttpGet]
+        private IEstablishmentReadService _establishmentReadService;
+        private IGroupReadService _groupReadService;
+        private IMapper _mapper;
+        private ILAESTABService _laEstabService;
+
+        public EstablishmentController(IEstablishmentReadService establishmentReadService, 
+            IGroupReadService groupReadService, IMapper mapper, ILAESTABService laEstabService)
+        {
+            _establishmentReadService = establishmentReadService;
+            _groupReadService = groupReadService;
+            _mapper = mapper;
+            _laEstabService = laEstabService;
+        }
+
+        [HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> Edit(int id)
         {
             using (var dc = ApplicationDbContext.Create())
             {
                 var dataModel = dc.Establishments.FirstOrDefault(x => x.Urn == id);
-                var viewModel = Mapper.Map<Establishment, ViewModel>(dataModel);
+                var viewModel = _mapper.Map<Establishment, ViewModel>(dataModel);
 
                 viewModel.Links = (await dc.EstablishmentLinks
                     .Include(x => x.LinkedEstablishment)
@@ -43,7 +64,7 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
         public async Task<ActionResult> Edit(ViewModel model)
         {
             if (model.Action == ViewModel.eAction.Save)
@@ -51,8 +72,8 @@ namespace Edubase.Web.UI.Controllers
                 if (ModelState.IsValid)
                 {
                     var thereArePendingUpdates = await SaveEstablishment(model);
-                    if(thereArePendingUpdates) return RedirectToAction("Details", "Schools", new { id = model.Urn.Value, pendingUpdates = true });
-                    else return RedirectToAction("Details", "Schools", new { id = model.Urn.Value });
+                    if(thereArePendingUpdates) return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value, pendingUpdates = true });
+                    else return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                 }
             }
             else
@@ -129,7 +150,7 @@ namespace Edubase.Web.UI.Controllers
                 var changes = ReflectionHelper.DetectChanges(estabTemp, dataModel, typeof(Address), typeof(ContactDetail));
                 mapper.Map(model, dataModel);
 
-                var establishment = Mapper.Map<ViewModel, Establishment>(model);
+                var establishment = _mapper.Map<ViewModel, Establishment>(model);
                 var permPropertiesThatChanged = new List<ChangeDescriptor>();
                 permissions.ForEach(p =>
                 {
@@ -238,36 +259,66 @@ namespace Edubase.Web.UI.Controllers
 
         }
 
-        [HttpGet, Authorize]
+        [HttpGet, EdubaseAuthorize]
         public ActionResult Create() => View(new ViewModel());
-
-
-        [HttpPost, ValidateAntiForgeryToken, Authorize]
+        
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
         public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] ViewModel model)
         {
             if (ModelState.IsValid)
             {
                 using (var dc = ApplicationDbContext.Create())
                 {
-                    var dataModel = Mapper.Map<Establishment>(model);
-
-                    var svc = new EstablishmentService();
-                    var pol = svc.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);
-                    if(pol == EstablishmentService.EstabNumberEntryPolicy.SystemGenerated)
+                    var dataModel = _mapper.Map<Establishment>(model);
+                    var pol = _laEstabService.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);
+                    if(pol == EstabNumberEntryPolicy.SystemGenerated)
                     {
-                        dataModel.EstablishmentNumber = svc.GenerateEstablishmentNumber(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value, dataModel.LocalAuthorityId.Value);
+                        dataModel.EstablishmentNumber = _laEstabService.GenerateEstablishmentNumber(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value, dataModel.LocalAuthorityId.Value);
                     }
 
                     dc.Establishments.Add(dataModel);
                     dc.SaveChanges();
-                    return RedirectToAction("Details", "Schools", new { id = dataModel.Urn });
+                    return RedirectToAction("Details", "Establishment", new { id = dataModel.Urn });
                 }
             }
             else return View(model);
         }
 
-        
+        [HttpGet]
+        public async Task<ActionResult> Details(int id, bool? pendingUpdates)
+        {
+            var viewModel = new EstablishmentDetailViewModel()
+            {
+                ShowPendingMessage = pendingUpdates.GetValueOrDefault(),
+                IsUserLoggedOn = User.Identity.IsAuthenticated
+            };
 
+            var result = await _establishmentReadService.GetAsync(id, User);
+
+            if (!result.Success) return HttpNotFound();
+
+            viewModel.Establishment = result.ReturnValue;
+            if (viewModel.Establishment == null) return HttpNotFound();
+
+            viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishments(id)).Select(x => new LinkedEstabViewModel(x));
+
+            if (User.Identity.IsAuthenticated)
+            {
+                viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
+                viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
+            }
+
+            viewModel.Group = await _groupReadService.GetByEstablishmentUrnAsync(id);
+
+            var gsvc = new GovernorService();
+            viewModel.HistoricalGovernors = await gsvc.GetHistoricalByUrn(id);
+            viewModel.Governors = await gsvc.GetCurrentByUrn(id);
+
+            viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment, viewModel.Group);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
+
+            return View(viewModel);
+        }
 
 
 

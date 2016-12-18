@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using Edubase.Common;
 using System;
+using Edubase.Services.Groups.Models;
 
 namespace Edubase.Web.UI.Models
 {
-    public class MATASSearchResultsModel
+    public class GroupSearchResultsModel
     {
         public string SearchTerm { get; set; }
-        public List<GroupCollection> Results { get; set; } = new List<GroupCollection>();
+        public IList<SearchGroupDocument> Results { get; set; } = new List<SearchGroupDocument>();
         public string Error { get; set; }
         public string SearchType { get; set; }
-        public int Count { get; set; }
+        public long Count { get; set; }
         public int PageCount { get; private set; }
         public int PageSize { get; set; }
         public int StartIndex { get; set; }
 
-        public MATASSearchResultsModel(string searchTerm)
+        public GroupSearchResultsModel(string searchTerm)
         {
             SearchTerm = searchTerm.Clean();
         }

@@ -13,6 +13,8 @@ using System.Linq;
 namespace Edubase.Import
 {
     using Common;
+    using Data;
+    using Data.DbContext;
     using Data.Entity;
     using Data.Entity.Lookups;
     using Data.Migrations;
@@ -42,7 +44,8 @@ namespace Edubase.Import
                 using (Timing("Loading Ofsted ratings and mapping configuration"))
                 {
                     var ofstedRatings = source.Ofstedratings.ToDictionary(x => x.URN.ToInteger().Value);
-                    _mapper = MappingConfiguration.Create(ofstedRatings);
+                    var laContacts = source.Cclacontacts.ToDictionary(x => x.code.ToInteger().Value);
+                    _mapper = MappingConfiguration.Create(ofstedRatings, laContacts);
                 }
 
                 Disposer.Using(CreateSqlConnection, x => x.Open(), x => x.Close(), connection =>
@@ -196,6 +199,7 @@ namespace Edubase.Services.Enums
                 MigrateLookup<LookupTeenageMothersProvision>(source.Teenagemothers, connection);
                 MigrateLookup<LookupTypeOfResourcedProvision>(source.Typeofresourcedprovision, connection);
                 MigrateLookup<LookupEstablishmentType>(source.Typeofestablishment, connection);
+                MigrateLookup<LookupCCDisadvantagedArea>(source.Ccdisadvantagedarea, connection);
                 MigrateLookup<LookupEstablishmentTypeGroup>(source.Establishmenttypegroup, connection);
                 MigrateLookup<LookupGovernmentOfficeRegion>(source.GOR, connection);
                 MigrateLookup<LookupDistrictAdministrative>(source.Districtadministrative, connection);
@@ -206,6 +210,11 @@ namespace Edubase.Services.Enums
                 MigrateLookup<LookupMSOA>(source.MSOA, connection);
                 MigrateLookup<LookupLSOA>(source.LSOA, connection);
                 MigrateLookup<LookupAdministrativeWard>(source.Administrativeward, connection);
+                MigrateLookup<LookupCCGroupLead>(source.Ccgrouplead, connection);
+                
+                var childrensCentresGroupflags = source.Childrenscentresgroupflag.ToList()
+                    .Select(x => new { Name = x.ChildrensCentresGroupFlag1.Clean(), Code = x.code }).ToList();
+                MigrateLookup<LookupDeliveryModel>(childrensCentresGroupflags, connection);
 
                 var governorRoles = source.Governors.Where(x => !string.IsNullOrEmpty(x.Role))
                     .Select(x => x.Role).Distinct().ToList()

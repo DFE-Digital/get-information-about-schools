@@ -1,4 +1,5 @@
 ﻿using Edubase.Common;
+using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using Edubase.Data.Migrations;
 using System.Data.Entity;

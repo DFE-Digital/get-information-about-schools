@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Edubase.Data.DbContext;
 
 namespace Edubase.Services
 {
@@ -61,8 +62,14 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> CCGovernanceGetAll() => DataContext.LookupCCGovernance.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> CCOperationalHoursGetAllAsync() => (await DataContext.LookupCCOperationalHours.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> CCOperationalHoursGetAll() => DataContext.LookupCCOperationalHours.ToArray().Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> CCDisadvantagedAreasGetAllAsync() => (await DataContext.LookupCCDisadvantagedAreas.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> CCDisadvantagedAreasGetAll() => DataContext.LookupCCDisadvantagedAreas.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> CCPhaseTypesGetAllAsync() => (await DataContext.LookupCCPhaseTypes.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> CCPhaseTypesGetAll() => DataContext.LookupCCPhaseTypes.ToArray().Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> CCDeliveryModelsGetAllAsync() => (await DataContext.LookupCCDeliveryModels.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> CCDeliveryModelsGetAll() => DataContext.LookupCCDeliveryModels.ToArray().Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> CCGroupLeadsGetAllAsync() => (await DataContext.LookupCCGroupLeads.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> CCGroupLeadsGetAll() => DataContext.LookupCCGroupLeads.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> DiocesesGetAllAsync() => (await DataContext.LookupDioceses.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> DiocesesGetAll() => DataContext.LookupDioceses.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> ChildcareFacilitiesGetAllAsync() => (await DataContext.LookupChildcareFacilities.ToArrayAsync()).Select(x => new LookupDto(x));
@@ -101,8 +108,8 @@ namespace Edubase.Services
         public IEnumerable<LookupDto> TypeOfResourcedProvisionsGetAll() => DataContext.LookupTypeOfResourcedProvisions.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> EstablishmentLinkTypesGetAllAsync() => (await DataContext.LookupEstablishmentLinkTypes.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll() => DataContext.LookupEstablishmentLinkTypes.ToArray().Select(x => new LookupDto(x));
-        public async Task<IEnumerable<LookupDto>> EstablishmentGroupTypesGetAllAsync() => (await DataContext.LookupEstablishmentTypeGroups.ToArrayAsync()).Select(x => new LookupDto(x));
-        public IEnumerable<LookupDto> EstablishmentGroupTypesGetAll() => DataContext.LookupEstablishmentTypeGroups.ToArray().Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> EstablishmentTypeGroupsGetAllAsync() => (await DataContext.LookupEstablishmentTypeGroups.ToArrayAsync()).Select(x => new LookupDto(x));
+        public IEnumerable<LookupDto> EstablishmentTypeGroupsGetAll() => DataContext.LookupEstablishmentTypeGroups.ToArray().Select(x => new LookupDto(x));
 
         public async Task<IEnumerable<LookupDto>> GovernmentOfficeRegionsGetAllAsync() => (await DataContext.LookupGovernmentOfficeRegions.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> GovernmentOfficeRegionsGetAll() => DataContext.LookupGovernmentOfficeRegions.ToArray().Select(x => new LookupDto(x));

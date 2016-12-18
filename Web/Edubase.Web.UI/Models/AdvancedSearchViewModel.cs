@@ -7,6 +7,7 @@ using System.Web;
 using Edubase.Common;
 using Edubase.Data.Entity.Lookups;
 using Edubase.Web.UI.Helpers.ModelBinding;
+using Edubase.Services.Establishments.Search;
 
 namespace Edubase.Web.UI.Models
 {
@@ -14,6 +15,7 @@ namespace Edubase.Web.UI.Models
     {
         private Dictionary<int, eTextSearchType> _textSearchTypeMap = new Dictionary<int, eTextSearchType>
         {
+            { 5, eTextSearchType.URN },
             { 6, eTextSearchType.URN },
             { 7, eTextSearchType.LAESTAB },
             { 8, eTextSearchType.UKPRN }
@@ -32,7 +34,7 @@ namespace Edubase.Web.UI.Models
             Text,
             Location,
             LocalAuthority,
-            Trust,
+            Group,
             Governor
         }
 
@@ -45,14 +47,14 @@ namespace Edubase.Web.UI.Models
             UKPRN
         }
 
-        public List<Establishment> Results { get; set; }
+        public IList<SearchEstablishmentDocument> Results { get; set; }
         public string Error { get; set; }
 
         public eTextSearchType TextSearchType => TextSearchModel.Text.IsInteger()
             ? _textSearchTypeMap.Get(TextSearchModel.Text.Length, eTextSearchType.Unknown)
             : eTextSearchType.EstablishmentName;
 
-        public int Count { get; set; }
+        public long Count { get; set; }
         public int PageCount => (int)Math.Ceiling(Count / (double)PageSize);
         public int PageSize { get; set; } = 50;
         public int StartIndex { get; set; }
@@ -69,13 +71,10 @@ namespace Edubase.Web.UI.Models
         public Payload TextSearchModel { get; set; } = new Payload();
         public Payload LocationSearchModel { get; set; } = new Payload();
         
-        public Payload TrustSearchModel { get; set; } = new Payload();
+        public Payload GroupSearchModel { get; set; } = new Payload();
 
         public eSearchType SearchType { get; set; }
-
-        public int Skip { get; set; }
-        public int Take { get; set; }
-
+        
 
         public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
         [BindAlias("t")]

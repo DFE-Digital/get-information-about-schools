@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Edubase.Data.Entity
 {
+    [Serializable]
     public class LocalAuthority : EdubaseEntity
     {
         [Key]
@@ -9,6 +11,11 @@ namespace Edubase.Data.Entity
         public string Name { get; set; }
         public string Group { get; set; }
         public int Order { get; set; }
+        
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string EmailAddress { get; set; }
+        public string TelephoneNumber { get; set; }
 
         public override string ToString() => Name;
     }

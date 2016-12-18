@@ -11,13 +11,13 @@ namespace Edubase.Data.Entity
 
         public Establishment Establishment { get; set; }
 
-        [ForeignKey("Trust")]
-        public int TrustGroupUID { get; set; }
+        [ForeignKey("Group")]
+        public int GroupUID { get; set; }
 
         [ForeignKey("Establishment")]
         public int EstablishmentUrn { get; set; }
 
-        public GroupCollection Trust { get; set; }
+        public GroupCollection Group { get; set; }
 
         public DateTime? JoinedDate { get; set; }
     }
