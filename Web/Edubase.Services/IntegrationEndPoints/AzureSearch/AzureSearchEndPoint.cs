@@ -110,7 +110,19 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch
             return result.Results.Select(x => x.Document);
         }
 
+        public async Task<Tuple<string, long>> GetStatusAsync(string indexName)
+        {
+            var c = GetClient();
+            
+            var documentCount = (await c.Indexes.ExistsAsync(indexName)) 
+                ? (await c.Indexes.GetStatisticsAsync(indexName))?.DocumentCount : 0;
 
+            var status = (await c.Indexers.ExistsAsync(indexName + "-indexer"))
+                ? (await c.Indexers.GetStatusAsync(indexName + "-indexer"))?.LastResult?.Status.ToString() ?? "indexernotfound"
+                : "indexernotfound";
+
+            return new Tuple<string, long>(status, documentCount.GetValueOrDefault());
+        }
 
         
         private SearchServiceClient GetClient() => new SearchServiceClient(_connection.Name, new SearchCredentials(_connection.ApiKey));

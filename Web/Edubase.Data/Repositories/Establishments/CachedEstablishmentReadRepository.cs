@@ -39,45 +39,66 @@ namespace Edubase.Data.Repositories.Establishments
             return await _repo.GetUrns(skip, take);
         }
 
-        public async Task<string> WarmAsync(int maxBatchSize = 1000, int maxConcurrency = 40, int? maxTotalRecords = null)
+        public async Task<string> WarmAsync(int maxBatchSize = 500, int maxConcurrency = 40, int? maxTotalRecords = null)
         {
-            var inMemContext = _inMemoryDbContextFactory.WhilstRetaining().Obtain();
-            var realDbContext = _dbContextFactory.Obtain();
-
-            if (_repo == null) throw new Exception("Repository is null");
-            var repo = _repo as RepositoryBase;
-            if (repo == null) throw new Exception("Repository is not castable to RepositoryBase");
-            repo.DbContextFactory = _inMemoryDbContextFactory;
-
-            var processedCount = 0;
-            var currentSkip = 0;
-            Func<IEnumerable<Establishment>> getBatch = ()
-                => realDbContext.Establishments.AsNoTracking()
-                .Where(x => x.IsDeleted == false)
-                .OrderBy(x => x.Urn).Skip(currentSkip).Take(maxBatchSize).ToArray();
-            
-            var batch = getBatch();
-            do
+            try
             {
-                inMemContext.Establishments.AddRange(batch);
+                await CacheAccessor.SetAsync(GetWarmUpProgressCacheKey(), $"Starting...");
 
-                foreach (var set in batch.Batch(maxConcurrency))
-                {
-                    var tasks = set.Select(x => GetAsync(x.Urn));
-                    await Task.WhenAll(tasks);
-                    processedCount += maxConcurrency;
-                }
+                var inMemContext = _inMemoryDbContextFactory.WhilstRetaining().Obtain();
+                var realDbContext = _dbContextFactory.Obtain();
+
+                Guard.IsNotNull(_repo, () => new Exception("Repository is null"));
+                var repo = _repo as RepositoryBase;
+                Guard.IsNotNull(_repo, () => new Exception("Repository is not castable to RepositoryBase"));
+                repo.DbContextFactory = _inMemoryDbContextFactory;
+
+                var totalRecordsCount = realDbContext.Establishments.Where(x => x.IsDeleted == false).Count();
+                var processedCount = 0;
+                var currentSkip = 0;
+
+                Func<string> progress = () => (int)Math.Round((double)(100 * processedCount) / totalRecordsCount)
+                    + $"% done.  {processedCount} of {totalRecordsCount} items.";
                 
-                ((InMemoryDbSet<Establishment>)inMemContext.Establishments).Clear();
-                inMemContext = _inMemoryDbContextFactory.ObtainNew();
-                realDbContext = _dbContextFactory.Obtain();
+                Func<IEnumerable<Establishment>> getBatch = ()
+                    => realDbContext.Establishments.AsNoTracking()
+                    .Where(x => x.IsDeleted == false)
+                    .OrderBy(x => x.Urn).Skip(currentSkip).Take(maxBatchSize).ToArray();
 
-                currentSkip += maxBatchSize;
-                if (maxTotalRecords.HasValue && currentSkip >= maxTotalRecords.Value) break;
+                var batch = getBatch();
+                do
+                {
+                    inMemContext.Establishments.AddRange(batch);
+
+                    foreach (var set in batch.Batch(maxConcurrency))
+                    {
+                        var tasks = set.Select(x => GetAsync(x.Urn));
+                        await Task.WhenAll(tasks);
+                        processedCount += maxConcurrency;
+                    }
+
+                    ((InMemoryDbSet<Establishment>)inMemContext.Establishments).Clear();
+                    inMemContext = _inMemoryDbContextFactory.ObtainNew();
+                    realDbContext = _dbContextFactory.ObtainNew();
+
+                    currentSkip += maxBatchSize;
+                    if (maxTotalRecords.HasValue && currentSkip >= maxTotalRecords.Value) break;
+
+                    await CacheAccessor.SetAsync(GetWarmUpProgressCacheKey(), progress());
+                }
+                while ((batch = getBatch()).Any());
+
+                await CacheAccessor.SetAsync(GetWarmUpProgressCacheKey(), progress());
+
+                return $"Cached {processedCount} entities";
             }
-            while ((batch = getBatch()).Any());
-            
-            return $"Cached {processedCount} entities";
+            catch (Exception ex)
+            {
+                await CacheAccessor.SetAsync(GetWarmUpProgressCacheKey(), $"Error: {ex}");
+                throw;
+            }
         }
+
+        public string GetWarmUpProgressCacheKey() => string.Concat(nameof(CachedEstablishmentReadRepository), ".", nameof(WarmAsync), "-progress");
     }
 }

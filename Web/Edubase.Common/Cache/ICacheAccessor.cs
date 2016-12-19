@@ -19,7 +19,7 @@
         /// <param name="key">The cache key</param>
         /// <param name="value">The object to put in</param>
         /// <param name="cacheExpiry">The absolute expiration. Pass in null for no cache expiry.</param>
-        void Set(string key, object value, TimeSpan? cacheExpiry);
+        void Set<T>(string key, T value, TimeSpan? cacheExpiry);
 
         /// <summary>
         /// Validates the data going into the Cache and then sets the item into the cache.
@@ -30,7 +30,7 @@
         /// <param name="key">The cache key</param>
         /// <param name="value">The object to put in</param>
         /// <param name="cacheExpiry">The absolute expiration. Pass in null for no cache expiry.</param>
-        void Set(string domain, string key, object value, TimeSpan? cacheExpiry);
+        void Set<T>(string domain, string key, T value, TimeSpan? cacheExpiry);
 
         /// <summary>
         /// Retrieves an item from the cache
@@ -47,8 +47,7 @@
         /// <param name="key">The cache key</param>
         /// <returns>Returns the type or default(type)</returns>
         T Get<T>(string key);
-
-
+        
         /// <summary>
         /// Retrieves an item from the cache
         /// </summary>
@@ -102,7 +101,7 @@
 
         string CreateKey(string key);
 
-        Task SetAsync(string key, object value, TimeSpan? cacheExpiry = null);
+        Task SetAsync<T>(string key, T value, TimeSpan? cacheExpiry = null);
 
         string Keyify(params object[] items);
 

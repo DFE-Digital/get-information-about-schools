@@ -162,6 +162,7 @@
     <Compile Include="DbContext\ApplicationDbContextFactory.cs" />
     <Compile Include="DbContext\IInMemoryApplicationDbContext.cs" />
     <Compile Include="DbContext\InMemoryDbSet.cs" />
+    <Compile Include="DbGeographyConverter.cs" />
     <Compile Include="DbUtil.cs" />
     <Compile Include="Entity\ComplexTypes\Person.cs" />
     <Compile Include="Entity\EstablishmentChangeHistory.cs" />

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
+using System;
 
 namespace Edubase.Services.IntegrationEndPoints.AzureSearch
 {
@@ -29,5 +30,6 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch
         Task<AzureSearchResult<T>> SearchAsync<T>(string indexName, string text = null, string filter = null, int skip = 0,
             int take = 10, IList<string> fullTextSearchFields = null, IList<string> orderBy = null) where T : class;
 
+        Task<Tuple<string, long>> GetStatusAsync(string indexName);
     }
 }

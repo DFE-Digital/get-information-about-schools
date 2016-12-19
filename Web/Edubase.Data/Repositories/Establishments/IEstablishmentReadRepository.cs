@@ -19,5 +19,6 @@ namespace Edubase.Data.Repositories.Establishments
     public interface ICachedEstablishmentReadRepository : IEstablishmentReadRepository
     {
         Task<string> WarmAsync(int maxBatchSize = 1000, int maxConcurrency = 40, int? maxTotalRecords = null);
+        string GetWarmUpProgressCacheKey();
     }
 }
