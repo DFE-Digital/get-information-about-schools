@@ -82,10 +82,11 @@
         }
 
         private IExceptionLogger _exceptionLogger;
+        private JsonConverterCollection _jsonConverterCollection;
 
-        public CacheAccessor() : this(new CacheConfig(), null)
+        public CacheAccessor(JsonConverterCollection jsonConverterCollection) : this(new CacheConfig(), null)
         {
-
+            _jsonConverterCollection = jsonConverterCollection;
         }
 
         public CacheAccessor(CacheConfig config) : this(config, null)
@@ -105,7 +106,7 @@
             _memoryCache = new MemoryCache(config.Name);
         }
         
-        public static ICacheAccessor Create() => new CacheAccessor() as ICacheAccessor;
+        public static ICacheAccessor Create() => new CacheAccessor(new JsonConverterCollection()) as ICacheAccessor;
 
         #region Async methods
 
@@ -162,12 +163,12 @@
 
                 _cacheDatabase = _connection.GetDatabase();
 
-                if (_config.IsDistributedCachingEnabled)
-                {
-                    _subscriber = _connection.GetSubscriber();
-                    await _subscriber.SubscribeAsync(CHANNEL_KEY_UPDATES, OnKeyValueUpdated);
-                    await _subscriber.SubscribeAsync(CHANNEL_KEY_DELETES, OnKeyDeleted);
-                }
+                //if (_config.IsDistributedCachingEnabled)
+                //{
+                //    _subscriber = _connection.GetSubscriber();
+                //    await _subscriber.SubscribeAsync(CHANNEL_KEY_UPDATES, OnKeyValueUpdated);
+                //    await _subscriber.SubscribeAsync(CHANNEL_KEY_DELETES, OnKeyDeleted);
+                //}
 
                 Status = State.Connected;
                 Log(eCacheEvent.ConnectedToServer, null);
@@ -179,31 +180,32 @@
             }
         }
 
-        /// <summary>
-        /// Invoked whenever a cache key-value-pair is updated on another node.
-        /// </summary>
-        /// <param name="channel"></param>
-        /// <param name="value"></param>
-        private void OnKeyValueUpdated(RedisChannel channel, RedisValue value)
-        {
-            try
-            {
-                var message = Deserialize<DistributedCacheMessage>(value);
-                if (message.SenderCacheName != Name) // don't process messages sent by the sender instance, as the job should have been synchronously
-                {
-                    if (!_memoryCache.Contains(message.TransactionCacheKey)) // checks whether the message has already been processed (i.e., this node did the op directly)
-                    {
-                        Cacheable cacheable = Deserialize<Cacheable>(message.Value);
-                        SetInMemoryCache(message.Key, cacheable.Payload, cacheable.ExpirationUtc);
-                        Log(eCacheEvent.KeySetInMemory, message.Key);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
-        }
+
+        ///// <summary>
+        ///// Invoked whenever a cache key-value-pair is updated on another node.
+        ///// </summary>
+        ///// <param name="channel"></param>
+        ///// <param name="value"></param>
+        //private void OnKeyValueUpdated(RedisChannel channel, RedisValue value)
+        //{
+        //    try
+        //    {
+        //        var message = Deserialize<DistributedCacheMessage>(value);
+        //        if (message.SenderCacheName != Name) // don't process messages sent by the sender instance, as the job should have been synchronously
+        //        {
+        //            if (!_memoryCache.Contains(message.TransactionCacheKey)) // checks whether the message has already been processed (i.e., this node did the op directly)
+        //            {
+        //                Cacheable cacheable = Deserialize<Cacheable>(message.Value);
+        //                SetInMemoryCache(message.Key, cacheable.Payload, cacheable.ExpirationUtc);
+        //                Log(eCacheEvent.KeySetInMemory, message.Key);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log(ex);
+        //    }
+        //}
 
         /// <summary>
         /// Helper function that waits for a caching event on this instance
@@ -286,12 +288,12 @@
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="value"></param>
-        private void OnKeyDeleted(RedisChannel channel, RedisValue value)
-        {
-            string key = Deserialize<string>(value);
-            _memoryCache.Remove(key);
-            Log(eCacheEvent.KeyDeletedInMemory, key);
-        }
+        //private void OnKeyDeleted(RedisChannel channel, RedisValue value)
+        //{
+        //    string key = Deserialize<string>(value);
+        //    _memoryCache.Remove(key);
+        //    Log(eCacheEvent.KeyDeletedInMemory, key);
+        //}
 
 
         private void Log(eCacheEvent cachingEvent, string key, [CallerMemberName] string callerName = null)
@@ -385,7 +387,7 @@
         /// <param name="value"></param>
         /// <param name="cacheExpiry"></param>
         /// <returns></returns>
-        public void Set(string key, object value, TimeSpan? cacheExpiry)
+        public void Set<T>(string key, T value, TimeSpan? cacheExpiry)
         {
             var t = SetAsync(key, value, cacheExpiry);
         }
@@ -399,7 +401,7 @@
         /// <param name="value"></param>
         /// <param name="cacheExpiry">Pass in null for no cache expiry</param>
         /// <returns></returns>
-        public void Set(string domain, string key, object value, TimeSpan? cacheExpiry)
+        public void Set<T>(string domain, string key, T value, TimeSpan? cacheExpiry)
         {
             Set(CreateKey(domain, key), value, cacheExpiry);
         }
@@ -414,7 +416,7 @@
         /// <param name="value"></param>
         /// <param name="cacheExpiry"></param>
         /// <returns></returns>
-        public async Task SetAsync(string key, object value, TimeSpan? cacheExpiry = null)
+        public async Task SetAsync<T>(string key, T value, TimeSpan? cacheExpiry = null)
         {
             _isPendingSetOperation = true;
             key = CleanKey(key);
@@ -423,12 +425,12 @@
                 await InitialiseIfNecessaryAsync(); // attempts to connect, or awaits on a pre-invoked connection. If connection is complete, this [SetAsync] task will continue immediately.
 
                 // Create and serialize the Cacheable<T>
-                var item = new Cacheable(value);
+                var item = new Cacheable<T>(value);
                 if (cacheExpiry.HasValue) item.ExpirationUtc = DateTime.UtcNow.Add(cacheExpiry.Value);
                 byte[] buffer = Serialize(item);
 
                 // Create a clone and put it in memory for this instance
-                var clone = Deserialize<Cacheable>(buffer);
+                var clone = Deserialize<Cacheable<T>>(buffer);
                 SetInMemoryCache(key, clone.Payload, cacheExpiry);
                 Log(eCacheEvent.KeySetInMemory, key);
 
@@ -436,7 +438,7 @@
                 {
                     if (_cacheDatabase == null) throw new Exception("The cache database is null, in-spite of it being connected");
                     await PutItemIntoCentralCache(key, buffer, cacheExpiry);
-                    await DistributeCacheItem(key, buffer);
+                    //await DistributeCacheItem(key, buffer);
                 }
 
             }
@@ -479,21 +481,21 @@
         /// <param name="key"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        private async Task DistributeCacheItem(string key, byte[] data)
-        {
-            if (_config.IsDistributedCachingEnabled && _subscriber != null)
-            {
-                var msg = new DistributedCacheMessage
-                {
-                    Key = key,
-                    Value = data,
-                    SenderCacheName = Name
-                };
+        //private async Task DistributeCacheItem(string key, byte[] data)
+        //{
+        //    if (_config.IsDistributedCachingEnabled && _subscriber != null)
+        //    {
+        //        var msg = new DistributedCacheMessage
+        //        {
+        //            Key = key,
+        //            Value = data,
+        //            SenderCacheName = Name
+        //        };
 
-                var buffer = Serialize(msg);
-                await _subscriber.PublishAsync(CHANNEL_KEY_UPDATES, buffer);
-            }
-        }
+        //        var buffer = Serialize(msg);
+        //        await _subscriber.PublishAsync(CHANNEL_KEY_UPDATES, buffer);
+        //    }
+        //}
 
         /// <summary>
         /// Retrieves an item from the cache, if possible.
@@ -616,8 +618,8 @@
                 byteBuffer = new IO.Compression().Decompress(byteBuffer);
             }
 
-            var item = Deserialize<Cacheable>(byteBuffer);
-            if (item != null) dto.Data = (T)item.Payload;
+            var item = Deserialize<Cacheable<T>>(byteBuffer);
+            if (item != null) dto.Data = item.Payload;
             dto.IsFromCentralCacheServer = true;
             if (item != null) Log(eCacheEvent.KeyValueGotFromCentral, key);
             // Put it into the in-memory cache
@@ -711,16 +713,30 @@
 
         #endregion
 
+        public class BsonEnvelope<T>
+        {
+            public T Value { get; set; }
 
-        private byte[] Serialize(object o)
+            public BsonEnvelope()
+            {
+
+            }
+
+            public BsonEnvelope(T payload)
+            {
+                Value = payload;
+            }
+        }
+        
+        private byte[] Serialize<T>(T o)
         {
             if (o == null) return null;
-    
+
             using (var memoryStream = new MemoryStream())
             {
                 using (var writer = new BsonWriter(memoryStream))
                 {
-                    new JsonSerializer().Serialize(writer, o);
+                    CreateJsonSerializer().Serialize(writer, new BsonEnvelope<T>(o));
                 }
                 return memoryStream.ToArray();
             }
@@ -734,10 +750,16 @@
             {
                 using (var reader = new BsonReader(memoryStream))
                 {
-                    return new JsonSerializer().Deserialize<T>(reader);
+                    return CreateJsonSerializer().Deserialize<BsonEnvelope<T>>(reader).Value;
                 }
             }
+        }
 
+        private JsonSerializer CreateJsonSerializer()
+        {
+            var retVal = new JsonSerializer();
+            _jsonConverterCollection.ForEach(x => retVal.Converters.Add(x));
+            return retVal;
         }
 
         /// <summary>
@@ -788,7 +810,7 @@
                 retVal = await factory();
                 if (retVal != null)
                 {
-                    var t = SetAsync(key, retVal);
+                    await SetAsync(key, retVal);
                 }
             }
             return retVal;

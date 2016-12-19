@@ -16,6 +16,7 @@ using Edubase.Data.Repositories.LocalAuthorities;
 using Edubase.Data;
 using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Data.DbContext;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI
 {
@@ -64,10 +65,16 @@ namespace Edubase.Web.UI
                 .As<IExceptionLogger>()
                 .SingleInstance();
 
-            builder.RegisterType<CacheAccessor>().As<ICacheAccessor>().SingleInstance().AsSelf();
+            var jsonConverterCollection = new JsonConverterCollection();
+            jsonConverterCollection.Add(new DbGeographyConverter());
+            builder.RegisterInstance(jsonConverterCollection);
+
+            builder.RegisterType<CacheAccessor>().As<ICacheAccessor>()
+                .UsingConstructor(typeof(JsonConverterCollection)).SingleInstance().AsSelf();
 
             builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
-                ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString).As<IAzureSearchEndPoint>();
+                ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString)
+                .As<IAzureSearchEndPoint>();
 
             builder.RegisterType<ApplicationDbContextFactory<ApplicationDbContext>>()
                 .As<IApplicationDbContextFactory>();
@@ -90,5 +97,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();
         }
+        
     }
 }

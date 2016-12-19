@@ -7,6 +7,7 @@ using Edubase.Common;
 using Edubase.Data.Entity.Permissions;
 using Edubase.Data.Identity;
 using System.Data.Entity.Spatial;
+using Newtonsoft.Json;
 
 namespace Edubase.Data.Entity
 {

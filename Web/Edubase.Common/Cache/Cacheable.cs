@@ -6,13 +6,12 @@ namespace Edubase.Common.Cache
     /// Wrapper for all cacheable items
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    [Serializable]
-    internal class Cacheable
+    internal class Cacheable<T>
     {
-        public object Payload { get; set; }
+        public T Payload { get; set; }
         public DateTime? ExpirationUtc { get; set; }
 
-        public Cacheable(object obj)
+        public Cacheable(T obj)
         {
             Payload = obj;
         }

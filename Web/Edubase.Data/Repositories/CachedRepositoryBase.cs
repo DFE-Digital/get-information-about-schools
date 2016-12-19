@@ -13,6 +13,8 @@ namespace Edubase.Data.Repositories
     {
         private ICacheAccessor _cache;
 
+        protected ICacheAccessor CacheAccessor => _cache;
+
         public CachedRepositoryBase(ICacheAccessor cache)
         {
             _cache = cache;
