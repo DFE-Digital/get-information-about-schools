@@ -13,6 +13,7 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Filters;
 using Edubase.Data.DbContext;
+using Edubase.Services.Governors;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -182,7 +183,7 @@ namespace Edubase.Web.UI.Controllers
                     la = (await new CachedLookupService().LocalAuthorityGetAllAsync()).First(x => x.Id == estabs.First().Establishment.LocalAuthorityId);
                 }
 
-                var gsvc = new GovernorService();
+                var gsvc = new GovernorsReadService();
                 var historicGovernors = await gsvc.GetHistoricalByGroupUID(id);
                 var currentGovernors = await gsvc.GetCurrentByGroupUID(id);
 

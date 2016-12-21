@@ -43,10 +43,9 @@ else if (Model.UserHasPendingApprovals)
 }
 
 <h1 class="heading-large">@Html.PendingUpdateFor(x => x.Name) @Model.Establishment.Name</h1>
-@if (Model.UserCanEdit)
-{
-    @Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
-}
+
+@Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
+
 
 <div class="column-full">
     <div class="grid-row summary">

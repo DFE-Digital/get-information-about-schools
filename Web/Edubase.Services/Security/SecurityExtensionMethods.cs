@@ -1,13 +1,9 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Security.Permissions;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Edubase.Services.Security
 {
@@ -40,5 +36,13 @@ namespace Edubase.Services.Security
             return (ClaimsPrincipal)principal;
         }
 
+        /// <summary>
+        /// Returns whether a principal is in at least one of the roles supplied.
+        /// </summary>
+        /// <param name="principal"></param>
+        /// <param name="roles"></param>
+        /// <returns></returns>
+        internal static bool InRole(this IPrincipal principal, params string[] roles)
+            => roles.Any(x => principal.IsInRole(x));
     }
 }

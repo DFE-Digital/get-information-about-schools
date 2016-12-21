@@ -40,6 +40,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.0.0\lib\net451\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
@@ -80,6 +84,7 @@
       <HintPath>..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Moq, Version=4.5.28.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.28\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
@@ -115,6 +120,7 @@
     <Compile Include="Data\Repositories\Establishments\CachedEstablishmentReadRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Establishments\EstablishmentReadServiceTest.cs" />
+    <Compile Include="Services\Establishments\EstablishmentWriteServiceTest.cs" />
     <Compile Include="Services\IntegrationEndPoints\AzureSearch\AzureSearchEndPointTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +141,10 @@
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
       <Project>{d605ace4-2659-48dc-bf21-94e7b8d230da}</Project>
       <Name>Edubase.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edubase.Web.UI\Edubase.Web.UI.csproj">
+      <Project>{f32e2a2e-6782-4293-b533-284ff1b17ff6}</Project>
+      <Name>Edubase.Web.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

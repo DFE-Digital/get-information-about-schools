@@ -163,12 +163,12 @@
 
                 _cacheDatabase = _connection.GetDatabase();
 
-                //if (_config.IsDistributedCachingEnabled)
-                //{
-                //    _subscriber = _connection.GetSubscriber();
-                //    await _subscriber.SubscribeAsync(CHANNEL_KEY_UPDATES, OnKeyValueUpdated);
-                //    await _subscriber.SubscribeAsync(CHANNEL_KEY_DELETES, OnKeyDeleted);
-                //}
+                if (_config.IsDistributedCachingEnabled)
+                {
+                    _subscriber = _connection.GetSubscriber();
+                    //await _subscriber.SubscribeAsync(CHANNEL_KEY_UPDATES, OnKeyValueUpdated);
+                    await _subscriber.SubscribeAsync(CHANNEL_KEY_DELETES, OnKeyDeleted);
+                }
 
                 Status = State.Connected;
                 Log(eCacheEvent.ConnectedToServer, null);
@@ -288,12 +288,11 @@
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="value"></param>
-        //private void OnKeyDeleted(RedisChannel channel, RedisValue value)
-        //{
-        //    string key = Deserialize<string>(value);
-        //    _memoryCache.Remove(key);
-        //    Log(eCacheEvent.KeyDeletedInMemory, key);
-        //}
+        private void OnKeyDeleted(RedisChannel channel, RedisValue value)
+        {
+            _memoryCache.Remove(value);
+            Log(eCacheEvent.KeyDeletedInMemory, value);
+        }
 
 
         private void Log(eCacheEvent cachingEvent, string key, [CallerMemberName] string callerName = null)
@@ -669,7 +668,7 @@
                     Log(eCacheEvent.KeyDeletedCentrally, key);
 
                     if (_config.IsDistributedCachingEnabled)
-                        await _subscriber.PublishAsync(CHANNEL_KEY_DELETES, Serialize(key));
+                        await _subscriber.PublishAsync(CHANNEL_KEY_DELETES, key);
                 }
             }
             catch (Exception ex)
@@ -799,10 +798,11 @@
         /// <param name="cacheKey"></param>
         /// <param name="callerTypeName"></param>
         /// <param name="callerFuncName"></param>
+        /// <param name="relationshipKey">Appends this cache item with this key value</param>
         /// <returns></returns>
-        public async Task<T> AutoAsync<T>(Func<Task<T>> factory, string cacheKey, string callerTypeName, [CallerMemberName] string callerFuncName = null)
+        public async Task<T> AutoAsync<T>(Func<Task<T>> factory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
         {
-            var key = $"{callerTypeName}.{callerFuncName}({cacheKey})";
+            var key = $"{callerTypeName}.{callerFuncName}({cacheKey})".ToLower();
             var retVal = await GetAsync<T>(key);
 
             if (retVal == null)
@@ -811,11 +811,27 @@
                 if (retVal != null)
                 {
                     await SetAsync(key, retVal);
+
+                    if (relationshipKey != null) await _cacheDatabase.StringAppendAsync(relationshipKey.ToLower(), string.Concat(key, ";"));
                 }
             }
             return retVal;
         }
 
+        public async Task ClearRelatedCacheKeysAsync(string relationshipKey)
+        {
+            var data = (string) await _cacheDatabase.StringGetAsync(relationshipKey);
+            if (data != null)
+            {
+                var cacheKeys = data.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Where(x => x.Clean() != null).ToArray();
+                foreach (var cacheKey in cacheKeys)
+                {
+                    await DeleteAsync(cacheKey);
+                }
+                await DeleteAsync(relationshipKey);
+            }
+        }
+        
 
         public long GetMemoryCacheApproximateSize()
         {

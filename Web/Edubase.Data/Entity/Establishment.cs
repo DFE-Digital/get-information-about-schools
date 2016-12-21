@@ -289,6 +289,12 @@ namespace Edubase.Data.Entity
             set { _fullAddress = value; }
         }
 
+        /// <summary>
+        /// Addtional addresses data (JSON encoded object)
+        /// - No need for querying or indexing of this data, hence JSON is fine.
+        /// </summary>
+        public string AdditionalAddresses { get; set; }
+
         public Establishment()
         {
             Contact = new ContactDetail();

@@ -1,5 +1,4 @@
-﻿using Edubase.Common;
-using Edubase.Data.DbContext;
+﻿using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using System.Data;
 using System.Data.Entity;

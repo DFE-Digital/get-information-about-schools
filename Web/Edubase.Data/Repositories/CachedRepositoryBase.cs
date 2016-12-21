@@ -20,9 +20,9 @@ namespace Edubase.Data.Repositories
             _cache = cache;
         }
 
-        protected async Task<T> AutoAsync<T>(Func<Task<T>> factory, string cacheKey, [CallerMemberName] string callerFuncName = null)
+        protected async Task<T> AutoAsync<T>(Func<Task<T>> factory, string cacheKey, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
         {
-            return await _cache.AutoAsync(factory, cacheKey, GetType().Name, callerFuncName);
+            return await _cache.AutoAsync(factory, cacheKey, GetType().Name, relationshipKey, callerFuncName);
         }
 
         protected string Keyify(params object[] items) => _cache.Keyify(items);

@@ -1,26 +1,23 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using Edubase.Common;
-using System.Web.Routing;
-using Edubase.Data.Entity;
+﻿using Edubase.Common;
 using Edubase.Web.UI.Models;
-using System.Data.Entity;
-using Edubase.Data;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using Common.Spatial;
+    using Services;
+    using Services.Domain;
     using Services.Establishments;
+    using Services.Establishments.Search;
     using Services.Groups;
+    using Services.Groups.Models;
+    using Services.Groups.Search;
+    using StackExchange.Profiling;
+    using System;
     using System.Threading.Tasks;
     using ViewModel = AdvancedSearchViewModel;
-    using System;
-    using Services.Establishments.Search;
-    using Services.Domain;
-    using System.Collections.Generic;
-    using Services;
-    using Common.Spatial;
-    using Services.Groups.Search;
-    using Services.Groups.Models;
 
     public class SearchController : EduBaseController
     {
@@ -68,19 +65,25 @@ namespace Edubase.Web.UI.Controllers
             {
                 var text = model.GroupSearchModel.Text.Clean();
                 var viewModel = new GroupSearchResultsModel(text) { StartIndex = model.StartIndex, Count = model.Count };
-                var results  = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
+                using (MiniProfiler.Current.Step("Searching groups..."))
+                {
+                    var results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
 
-                if (results.Count > 0)
-                {
-                    viewModel.Results.Add(results.Items[0]);
-                    viewModel.Count = 1;
-                }
-                else
-                {
-                    var payload = new GroupSearchPayload(nameof(GroupModel.Name), model.StartIndex, model.PageSize) { Text = text };
-                    results = await _groupReadService.SearchAsync(payload, User);
-                    viewModel.Results = results.Items;
-                    if (model.StartIndex == 0) viewModel.Count = results.Count.Value;
+                    if (results.Count > 0)
+                    {
+                        viewModel.Results.Add(results.Items[0]);
+                        viewModel.Count = 1;
+                    }
+                    else
+                    {
+                        var payload = new GroupSearchPayload(nameof(GroupModel.Name), model.StartIndex, model.PageSize) { Text = text };
+                        using (MiniProfiler.Current.Step("Searching groups (in text mode)..."))
+                        {
+                            results = await _groupReadService.SearchAsync(payload, User);
+                            viewModel.Results = results.Items;
+                            if (model.StartIndex == 0) viewModel.Count = results.Count.Value;
+                        }
+                    }
                 }
                 
                 viewModel.SearchType = "Groups";
@@ -159,9 +162,12 @@ namespace Edubase.Web.UI.Controllers
         {
             if (!model.HasError)
             {
-                var results = await _establishmentReadService.SearchAsync(payload, User);
-                if (payload.Skip == 0) model.Count = results.Count.GetValueOrDefault();
-                model.Results = results.Items;
+                using (MiniProfiler.Current.Step("Invoking AZS search"))
+                {
+                    var results = await _establishmentReadService.SearchAsync(payload, User);
+                    if (payload.Skip == 0) model.Count = results.Count.GetValueOrDefault();
+                    model.Results = results.Items;
+                }
             }
 
             if (model.Count == 1) return RedirectToEstabDetail(model.Results.First().Urn.GetValueOrDefault());
@@ -169,12 +175,16 @@ namespace Edubase.Web.UI.Controllers
             {
                 var permittedStatusIds = _establishmentReadService.GetPermittedStatusIds(User);
 
-                var svc = new CachedLookupService();
-                model.EstablishmentTypes = (await svc.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                model.EstablishmentStatuses = (await svc.EstablishmentStatusesGetAllAsync()).Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id)).Select(x => new LookupItemViewModel(x));
-                model.EducationPhases = (await svc.EducationPhasesGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                model.ReligiousCharacters = (await svc.ReligiousCharactersGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                model.LocalAuthorties = (await svc.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                using (MiniProfiler.Current.Step("Populate lookups from CachedLookupService"))
+                {
+                    var svc = new CachedLookupService();
+                    model.EstablishmentTypes = (await svc.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    model.EstablishmentStatuses = (await svc.EstablishmentStatusesGetAllAsync()).Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id)).Select(x => new LookupItemViewModel(x));
+                    model.EducationPhases = (await svc.EducationPhasesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    model.ReligiousCharacters = (await svc.ReligiousCharactersGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    model.LocalAuthorties = (await svc.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                }
+                
                 return View("AdvancedSearchResults", model);
             }
         }

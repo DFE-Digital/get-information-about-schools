@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Edubase.Data.Entity;
 using Edubase.Data.Entity.ComplexTypes;
+using Edubase.Services.Domain;
+using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Models;
 using System;
-using Edubase.Common;
 
 namespace Edubase.Web.UI
 {
@@ -12,26 +12,10 @@ namespace Edubase.Web.UI
         public AutoMapperWebProfile()
         {
             CreateMap<AddressViewModel, Address>().ReverseMap();
-
-            var estabVm2DmMap = CreateMap<CreateEditEstablishmentModel, Establishment>()
-                //.ForMember(x => x.Name, opt => opt.Ignore())
-                .AfterMap((s, d) =>
-                {
-                    if (s.LAESTAB.HasValue)
-                    {
-                        var laestab = s.LAESTAB.Value.ToString();
-                        if (laestab.Length == 7) d.EstablishmentNumber = laestab.Substring(3, 4).ToInteger();
-                    }
-                });
-
-
-            estabVm2DmMap.ReverseMap().AfterMap((s, d) =>
-            {
-                if (s.EstablishmentNumber.HasValue && s.LocalAuthorityId.HasValue)
-                    d.LAESTAB = int.Parse(string.Concat(s.LocalAuthorityId, s.EstablishmentNumber));
-            });
-
+            CreateMap<AddressViewModel, EstablishmentAddressModel>().ReverseMap();
+            CreateMap<CreateEditEstablishmentModel, EstablishmentModel>().ReverseMap();
             CreateMap<ContactDetailsViewModel, ContactDetail>().ReverseMap();
+            CreateMap<ContactDetailsViewModel, ContactDetailDto>().ReverseMap();
             CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();
             CreateMap<DateTime?, DateTimeViewModel>().ConvertUsing<DateTimeViewModelTypeConverter>();
         }

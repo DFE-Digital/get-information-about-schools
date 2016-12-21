@@ -1,13 +1,13 @@
 ﻿using Edubase.Common.Spatial;
 using Edubase.Services.Domain;
 using System;
+using System.Collections.Generic;
 
 namespace Edubase.Services.Establishments.Models
 {
-    [Serializable]
     public class EstablishmentModel
     {
-        public int Urn { get; set; }
+        public int? Urn { get; set; }
         public int? LocalAuthorityId { get; set; }
         public int? EstablishmentNumber { get; set; }
         public string Name { get; set; }
@@ -97,6 +97,8 @@ namespace Edubase.Services.Establishments.Models
         public DateTime? BSODateOfLastInspectionVisit { get; set; }
         public DateTime? BSODateOfNextInspectionVisit { get; set; }
 
+        public List<AdditionalAddressModel> AdditionalAddresses { get; set; }
+        
         public ChildrensCentreLocalAuthorityDto CCLAContactDetail { get; set; }
     }
 }

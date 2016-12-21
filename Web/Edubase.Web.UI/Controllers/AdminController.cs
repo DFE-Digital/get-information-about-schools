@@ -40,24 +40,27 @@ namespace Edubase.Web.UI.Controllers
         {
             ViewBag.Message = message;
 
-            var cache = DependencyResolver.Current.GetService<CacheAccessor>();
-            ViewBag.SmtpEndPointName = DependencyResolver.Current.GetService<ISmtpEndPoint>().GetType().FullName;
-            ViewBag.RedisStatus = cache.Status.ToString();
-            ViewBag.MemoryCacheSize = cache.GetMemoryCacheApproximateSize().ToString();
+            using (var scope = IocConfig.Container.BeginLifetimeScope())
+            {
+                var cache = scope.Resolve<ICacheAccessor>();
+                ViewBag.SmtpEndPointName = scope.Resolve<ISmtpEndPoint>().GetType().FullName;
+                ViewBag.RedisStatus = cache.Status.ToString();
+                ViewBag.MemoryCacheSize = cache.GetMemoryCacheApproximateSize().ToString();
 
-            var lines = cache.GetRedisMemoryUsage().SelectMany(x => x.Select(v => string.Concat(v.Key, " = ", v.Value)));
-            ViewBag.RedisReport = string.Join("<br/>", lines);
+                var lines = cache.GetRedisMemoryUsage().SelectMany(x => x.Select(v => string.Concat(v.Key, " = ", v.Value)));
+                ViewBag.RedisReport = string.Join("<br/>", lines);
 
-            ViewBag.DbName = new System.Data.SqlClient.SqlConnectionStringBuilder(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString).InitialCatalog;
+                ViewBag.DbName = new System.Data.SqlClient.SqlConnectionStringBuilder(ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString).InitialCatalog;
 
-            ViewBag.AZSEstablishmentsStatus = await _azureSearchEndPoint.GetStatusAsync(EstablishmentsSearchIndex.INDEX_NAME);
-            ViewBag.AZSGovernorsStatus = await _azureSearchEndPoint.GetStatusAsync(GovernorsSearchIndex.INDEX_NAME);
-            ViewBag.AZSGroupsStatus = await _azureSearchEndPoint.GetStatusAsync(GroupsSearchIndex.INDEX_NAME);
-            
-            ViewBag.EstabWarmUpStatus = await cache.GetAsync<string>(DependencyResolver.Current
-                .GetService<ICachedEstablishmentReadRepository>().GetWarmUpProgressCacheKey());
-            
-            return View(nameof(Dashboard));   
+                ViewBag.AZSEstablishmentsStatus = await _azureSearchEndPoint.GetStatusAsync(EstablishmentsSearchIndex.INDEX_NAME);
+                ViewBag.AZSGovernorsStatus = await _azureSearchEndPoint.GetStatusAsync(GovernorsSearchIndex.INDEX_NAME);
+                ViewBag.AZSGroupsStatus = await _azureSearchEndPoint.GetStatusAsync(GroupsSearchIndex.INDEX_NAME);
+
+                ViewBag.EstabWarmUpStatus = await cache.GetAsync<string>(
+                    scope.Resolve<ICachedEstablishmentReadRepository>().GetWarmUpProgressCacheKey());
+
+                return View(nameof(Dashboard));
+            }   
         }
 
         public async Task<ActionResult> Logs(string date, string skipToken)
@@ -96,7 +99,10 @@ namespace Edubase.Web.UI.Controllers
 
         public async Task<ActionResult> ClearCache()
         {
-            await DependencyResolver.Current.GetService<CacheAccessor>().ClearAsync();
+            using (var scope = IocConfig.Container.BeginLifetimeScope())
+            {
+                await scope.Resolve<ICacheAccessor>().ClearAsync();
+            }
             return RedirectToAction(nameof(Dashboard), new { message = "Redis cache and MemoryCache cleared successfully." });
         }
 

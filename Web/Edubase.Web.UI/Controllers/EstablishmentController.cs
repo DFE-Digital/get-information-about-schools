@@ -8,6 +8,8 @@ using Edubase.Data.Identity;
 using Edubase.Services;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Enums;
+using Edubase.Services.Establishments.Models;
+using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Filters;
@@ -16,6 +18,7 @@ using Edubase.Web.UI.Models.Establishments;
 using FluentValidation.Mvc;
 using Microsoft.ServiceBus.Messaging;
 using MoreLinq;
+using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -35,33 +38,25 @@ namespace Edubase.Web.UI.Controllers
         private IGroupReadService _groupReadService;
         private IMapper _mapper;
         private ILAESTABService _laEstabService;
+        private IEstablishmentWriteService _establishmentWriteService;
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
-            IGroupReadService groupReadService, IMapper mapper, ILAESTABService laEstabService)
+            IGroupReadService groupReadService, IMapper mapper, 
+            ILAESTABService laEstabService,
+            IEstablishmentWriteService establishmentWriteService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _mapper = mapper;
             _laEstabService = laEstabService;
+            _establishmentWriteService = establishmentWriteService;
         }
 
         [HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> Edit(int id)
         {
-            using (var dc = ApplicationDbContext.Create())
-            {
-                var dataModel = dc.Establishments.FirstOrDefault(x => x.Urn == id);
-                var viewModel = _mapper.Map<Establishment, ViewModel>(dataModel);
-
-                viewModel.Links = (await dc.EstablishmentLinks
-                    .Include(x => x.LinkedEstablishment)
-                    .Where(x => x.EstablishmentUrn == id)
-                    .Select(x => x)
-                    .ToArrayAsync())
-                    .Select(x => new LinkedEstabViewModel(x)).ToList();
-
-                return View(viewModel);
-            }
+            var domainModel = (await _establishmentReadService.GetAsync(id, User)).GetResult();
+            return View(_mapper.Map<ViewModel>(domainModel));
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
@@ -71,34 +66,34 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var thereArePendingUpdates = await SaveEstablishment(model);
-                    if(thereArePendingUpdates) return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value, pendingUpdates = true });
-                    else return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
+                    await _establishmentWriteService.SaveAsync(_mapper.Map<EstablishmentModel>(model), User);
+                    return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                 }
             }
             else
             {
-                if (model.Action == ViewModel.eAction.FindEstablishment && model.LinkedSearchUrn.HasValue)
-                {
-                    ModelState.Clear();
-                    model.LinkedEstabNameToAdd = new EstablishmentService().GetName(model.LinkedSearchUrn.Value);
-                    model.LinkedUrnToAdd = model.LinkedSearchUrn;
-                }
-                else if (model.Action == ViewModel.eAction.AddLinkedSchool)
-                {
-                    if (ModelState.IsValid)
-                    {
-                        AddLinkedEstablishment(model);
-                        ModelState.Clear();
-                    }
-                }
-                else if (model.Action == ViewModel.eAction.RemoveLinkedSchool)
-                {
-                    ModelState.Clear();
-                    if (model.LinkedItemPositionToRemove.HasValue)
-                        model.Links.RemoveAt(model.LinkedItemPositionToRemove.Value);
-                }
-                model.ScrollToLinksSection = true;
+
+                //if (model.Action == ViewModel.eAction.FindEstablishment && model.LinkedSearchUrn.HasValue)
+                //{
+                //    ModelState.Clear();
+                //    model.LinkedEstabNameToAdd = new EstablishmentService().GetName(model.LinkedSearchUrn.Value);
+                //    model.LinkedUrnToAdd = model.LinkedSearchUrn;
+                //}
+                //else if (model.Action == ViewModel.eAction.AddLinkedSchool)
+                //{
+                //    if (ModelState.IsValid)
+                //    {
+                //        AddLinkedEstablishment(model);
+                //        ModelState.Clear();
+                //    }
+                //}
+                //else if (model.Action == ViewModel.eAction.RemoveLinkedSchool)
+                //{
+                //    ModelState.Clear();
+                //    if (model.LinkedItemPositionToRemove.HasValue)
+                //        model.Links.RemoveAt(model.LinkedItemPositionToRemove.Value);
+                //}
+                //model.ScrollToLinksSection = true;
             }
             return View(model);
         }
@@ -121,80 +116,6 @@ namespace Edubase.Web.UI.Controllers
                     model.LinkedEstabNameToAdd = null;
                 }
             }
-        }
-
-        private async Task<bool> SaveEstablishment(ViewModel model)
-        {
-            using (var dc = ApplicationDbContext.Create())
-            {
-                Establishment dataModel2 = null;
-                using (var dc2 = ApplicationDbContext.Create()) dataModel2 = dc2.Establishments.FirstOrDefault(x => x.Urn == model.Urn);
-                var dataModel = await dc.Establishments.FirstOrDefaultAsync(x => x.Urn == model.Urn);
-
-                var role = Roles.RestrictiveRoles.FirstOrDefault(x => User.IsInRole(x)) ?? Roles.Academy;
-                var permissions = await dc.Permissions.Where(x => x.RoleName == role).ToArrayAsync();
-
-                var config = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<ContactDetailsViewModel, ContactDetail>();
-                    cfg.CreateMap<AddressViewModel, Address>();
-                    cfg.CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();
-
-                    var map = cfg.CreateMap<ViewModel, Establishment>();
-                    permissions.Where(x => !x.PropertyName.Contains("_"))
-                        .ForEach(p => map.ForMember(p.PropertyName, opt => opt.Ignore()));
-                });
-
-                var mapper = config.CreateMapper();
-                var estabTemp = mapper.Map(model, dataModel2);
-                var changes = ReflectionHelper.DetectChanges(estabTemp, dataModel, typeof(Address), typeof(ContactDetail));
-                mapper.Map(model, dataModel);
-
-                var establishment = _mapper.Map<ViewModel, Establishment>(model);
-                var permPropertiesThatChanged = new List<ChangeDescriptor>();
-                permissions.ForEach(p =>
-                {
-                    var newValue = ReflectionHelper.GetProperty(establishment, p.PropertyName).Clean();
-                    var oldValue = ReflectionHelper.GetProperty(dataModel, p.PropertyName).Clean();
-
-                    if (newValue != oldValue)
-                    {
-                        permPropertiesThatChanged.Add(new ChangeDescriptor(p.PropertyName, newValue, oldValue));
-                        dc.EstablishmentApprovalQueue.Add(new EstablishmentApprovalQueue
-                        {
-                            Urn = dataModel.Urn,
-                            Name = p.PropertyName,
-                            NewValue = newValue,
-                            OldValue = oldValue,
-                            OriginatorUserId = ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value
-                        });
-                    }
-                });
-
-                new EstablishmentService().AddChangeHistory(dataModel.Urn, dc, null,
-                    ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value,
-                    DateTime.UtcNow, changes.ToArray());
-
-                await AddOrRemoveEstablishmentLinks(model, dc);
-
-                await dc.SaveChangesAsync();
-
-                if (changes.Count > 0)
-                {
-                    new SmtpClient().Send("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment data changed",
-                        $"For Establishment URN: {dataModel.Urn}, the following has changed: \r\n" + string.Join("\r\n", changes));
-
-                    await new BusMessagingService().SendEstablishmentUpdateMessageAsync(dataModel);
-                }
-
-                if (permPropertiesThatChanged.Count > 0)
-                {
-                    new SmtpClient().Send("kris.dyson@contentsupport.co.uk", ConfigurationManager.AppSettings["DataOwnerEmailAddress"], "Establishment data changes require approval",
-                        $"For Establishment URN: {dataModel.Urn}, the following has changed and requires approval: \r\n" + string.Join("\r\n", permPropertiesThatChanged));
-                    return true;
-                }
-            }
-            return false;
         }
 
         private async Task AddOrRemoveEstablishmentLinks(ViewModel model, ApplicationDbContext dc)
@@ -293,29 +214,45 @@ namespace Edubase.Web.UI.Controllers
                 IsUserLoggedOn = User.Identity.IsAuthenticated
             };
 
-            var result = await _establishmentReadService.GetAsync(id, User);
+            using (MiniProfiler.Current.Step("Retrieving establishment"))
+            {
+                var result = await _establishmentReadService.GetAsync(id, User);
+                if (!result.Success) return HttpNotFound();
+                viewModel.Establishment = result.ReturnValue;
+            }
+            
 
-            if (!result.Success) return HttpNotFound();
-
-            viewModel.Establishment = result.ReturnValue;
-            if (viewModel.Establishment == null) return HttpNotFound();
-
-            viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishments(id)).Select(x => new LinkedEstabViewModel(x));
+            using (MiniProfiler.Current.Step("Retrieving LinkedEstablishments"))
+            {
+                viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishments(id)).Select(x => new LinkedEstabViewModel(x));
+            }
+            
 
             if (User.Identity.IsAuthenticated)
             {
-                viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
-                viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
+                using (MiniProfiler.Current.Step("Retrieving ChangeHistory"))
+                    viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
+
+                using (MiniProfiler.Current.Step("Retrieving UserHasPendingApprovals flag"))
+                    viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
             }
 
-            viewModel.Group = await _groupReadService.GetByEstablishmentUrnAsync(id);
+            using (MiniProfiler.Current.Step("Retrieving Group record"))
+                viewModel.Group = await _groupReadService.GetByEstablishmentUrnAsync(id);
 
-            var gsvc = new GovernorService();
-            viewModel.HistoricalGovernors = await gsvc.GetHistoricalByUrn(id);
-            viewModel.Governors = await gsvc.GetCurrentByUrn(id);
+            var gsvc = new GovernorsReadService();
 
-            viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment, viewModel.Group);
-            viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
+            using (MiniProfiler.Current.Step("Retrieving HistoricalGovernors"))
+                viewModel.HistoricalGovernors = await gsvc.GetHistoricalByUrn(id);
+
+            using (MiniProfiler.Current.Step("Retrieving Governors"))
+                viewModel.Governors = await gsvc.GetCurrentByUrn(id);
+
+            using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
+                viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment, viewModel.Group);
+
+            using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
+                viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
 
             return View(viewModel);
         }

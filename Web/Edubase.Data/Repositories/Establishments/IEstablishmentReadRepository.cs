@@ -20,5 +20,6 @@ namespace Edubase.Data.Repositories.Establishments
     {
         Task<string> WarmAsync(int maxBatchSize = 1000, int maxConcurrency = 40, int? maxTotalRecords = null);
         string GetWarmUpProgressCacheKey();
+        Task ClearRelationshipCacheAsync(int? urn);
     }
 }

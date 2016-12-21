@@ -1,49 +1,63 @@
-﻿//using Edubase.Data.Entity;
-//using Edubase.Services.Exceptions;
-//using Edubase.Services.Security;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Security.Claims;
-//using System.Text;
-//using System.Threading.Tasks;
-//using MoreLinq;
-//using Edubase.Common;
-//using Edubase.Services.Security.Permissions;
-//using Edubase.Services.Domain;
+﻿using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
-//namespace Edubase.Services.Establishments
-//{
-//    public class EstablishmentWriteService
-//    {
-//        private ApplicationDbContext _dbContext;
+namespace Edubase.Services.Establishments
+{
+    using AutoMapper;
+    using Data.DbContext;
+    using Data.Entity;
+    using Data.Repositories.Establishments;
+    using Exceptions;
+    using Groups;
+    using Models;
+    using Security;
 
-//        public EstablishmentWriteService(ApplicationDbContext dbContext)
-//        {
-//            _dbContext = dbContext;
-//        }
+    public class EstablishmentWriteService : IEstablishmentWriteService
+    {
+        private IEstablishmentReadService _readService;
+        private IGroupReadService _groupReadService;
+        private IApplicationDbContextFactory _dbContextFactory;
+        private IMapper _mapper;
+        private ICachedEstablishmentReadRepository _cachedEstablishmentReadRepository;
 
+        public EstablishmentWriteService(IEstablishmentReadService readService, 
+            IGroupReadService groupReadService, 
+            IApplicationDbContextFactory dbContextFactory,
+            IMapper mapper, 
+            ICachedEstablishmentReadRepository cachedEstablishmentReadRepository)
+        {
+            _readService = readService;
+            _groupReadService = groupReadService;
+            _dbContextFactory = dbContextFactory;
+            _mapper = mapper;
+            _cachedEstablishmentReadRepository = cachedEstablishmentReadRepository;
+        }
 
-//        public async Task UpdateAsync(EstablishmentDto dto, ClaimsPrincipal principal)
-//        {
-//            var predicate = principal.GetEditEstablishmentPermissions();
-//            Guard.IsFalse(predicate.HasNoEditingPermission, () => new PermissionDeniedException("User does not have editing permissions"));
-//            Guard.IsTrue(predicate.IsUrnAllowed(dto.Urn), () => new PermissionDeniedException("User does not have editing permission for this urn"));
-//            var establishment = _dbContext.Establishments.SingleOrThrow(x => x.Urn == dto.Urn);
+        public async Task SaveAsync(EstablishmentModel model, IPrincipal principal)
+        {
+            var cp = principal.AsClaimsPrincipal();
+            if (model.Urn.HasValue)
+            {
+                var original = (await _readService.GetAsync(model.Urn.Value, principal)).GetResult();
+                var editPermissions = cp.GetEditEstablishmentPermissions();
+                var groupIds = editPermissions.GroupIds.Any() ? await _groupReadService.GetParentGroupIdsAsync(model.Urn.Value) : null as int[];
+                if(!editPermissions.CanEdit(original.Urn.Value, original.TypeId, groupIds, original.LocalAuthorityId, original.EstablishmentTypeGroupId))
+                {
+                    throw new PermissionDeniedException("Principal cannot edit Establishment. Permission denied.");
+                }
+            }
+            else if (cp.GetCreateEstablishmentPermissions() == null) throw new PermissionDeniedException("Principal cannot create an Establishment");
 
-//            Guard.IsTrue<PermissionDeniedException>(predicate.CanEdit(establishment.Urn, establishment.TypeId, 
-//                null, establishment.LocalAuthorityId, establishment.EstablishmentTypeGroupId));
-            
-            
-//            await UpdateInternalAsync(dto, establishment, principal);
-//        }
+            using (var db = _dbContextFactory.Obtain())
+            {
+                var entity = await db.Establishments.FirstOrDefaultAsync(x => x.Urn == model.Urn);
+                _mapper.Map(model, entity);
+                await db.SaveChangesAsync();
 
-//        private async Task UpdateInternalAsync(EstablishmentDto dto, Establishment entity, ClaimsPrincipal principal)
-//        {
-
-
-            
-//        }
-        
-//    }
-//}
+                await _cachedEstablishmentReadRepository.ClearRelationshipCacheAsync(model.Urn);
+            }
+        }
+    }
+}

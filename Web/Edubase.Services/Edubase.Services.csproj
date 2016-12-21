@@ -124,6 +124,10 @@
       <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MiniProfiler, Version=3.2.0.157, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiniProfiler.3.2.0.157\lib\net40\MiniProfiler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
@@ -254,8 +258,10 @@
     <Compile Include="Establishments\DisplayPolicies\WelshDisplayPolicy.cs" />
     <Compile Include="Establishments\Enums\EstabNumberEntryPolicy.cs" />
     <Compile Include="Establishments\EstablishmentReadService.cs" />
+    <Compile Include="Establishments\IEstablishmentWriteService.cs" />
     <Compile Include="Establishments\ILAESTABService.cs" />
     <Compile Include="Establishments\LAESTABService.cs" />
+    <Compile Include="Establishments\Models\AdditionalAddressModel.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchFiltersLookups.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchFilters.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchPayload.cs" />
@@ -288,7 +294,6 @@
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Exceptions\PermissionDeniedException.cs" />
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="GovernorService.cs" />
     <Compile Include="Groups\GroupReadService.cs" />
     <Compile Include="Groups\IGroupReadService.cs" />
     <Compile Include="Groups\Models\GroupModel.cs" />

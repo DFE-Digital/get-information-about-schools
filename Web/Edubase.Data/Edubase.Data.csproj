@@ -120,6 +120,10 @@
       <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MiniProfiler, Version=3.2.0.157, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiniProfiler.3.2.0.157\lib\net40\MiniProfiler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
@@ -199,6 +203,10 @@
     <Compile Include="Migrations\201612120857427_RenamedCols.Designer.cs">
       <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612202018460_EstabAdditionalAddresses.cs" />
+    <Compile Include="Migrations\201612202018460_EstabAdditionalAddresses.Designer.cs">
+      <DependentUpon>201612202018460_EstabAdditionalAddresses.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ODataFilterList.cs" />
@@ -234,6 +242,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612120857427_RenamedCols.resx">
       <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612202018460_EstabAdditionalAddresses.resx">
+      <DependentUpon>201612202018460_EstabAdditionalAddresses.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

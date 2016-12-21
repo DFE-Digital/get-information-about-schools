@@ -75,6 +75,13 @@ namespace Edubase.Services.Establishments
                 if (HasAccess(principal, dataModel.StatusId))
                 {
                     var domainModel = _mapper.Map<Establishment, EstablishmentModel>(dataModel);
+
+                    if (!principal.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT))
+                    {
+                        var toRemove = domainModel.AdditionalAddresses.Where(x => x.IsRestricted == true);
+                        toRemove.ForEach(x => domainModel.AdditionalAddresses.Remove(x));
+                    }
+
                     if (domainModel.TypeId == (int)eLookupEstablishmentType.ChildrensCentre
                         && domainModel.LocalAuthorityId.HasValue) // supply LA contact details
                     {

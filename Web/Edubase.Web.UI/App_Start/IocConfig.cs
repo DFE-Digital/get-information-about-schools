@@ -69,8 +69,9 @@ namespace Edubase.Web.UI
             jsonConverterCollection.Add(new DbGeographyConverter());
             builder.RegisterInstance(jsonConverterCollection);
 
-            builder.RegisterType<CacheAccessor>().As<ICacheAccessor>()
-                .UsingConstructor(typeof(JsonConverterCollection)).SingleInstance().AsSelf();
+            builder.RegisterType<CacheAccessor>()
+                .SingleInstance().As<ICacheAccessor>()
+                .UsingConstructor(typeof(JsonConverterCollection));
 
             builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
                 ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString)
@@ -94,6 +95,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<GroupsWriteService>().As<IGroupsWriteService>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
             builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
+            builder.RegisterType<EstablishmentWriteService>().As<IEstablishmentWriteService>();
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();
         }

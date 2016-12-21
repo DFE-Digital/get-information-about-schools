@@ -84,5 +84,10 @@ namespace Edubase.Services.Groups
 
         private bool IsRoleRestrictedOnStatus(IPrincipal principal)
             => !_nonStatusRestrictiveRoles.Any(x => principal.IsInRole(x));
+
+        public async Task<int[]> GetParentGroupIdsAsync(int establishmentUrn)
+        {
+            return await _dbContext.EstablishmentGroups.Where(x => x.EstablishmentUrn == establishmentUrn && x.IsDeleted == false).Select(x => x.GroupUID).ToArrayAsync();
+        }
     }
 }
