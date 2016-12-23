@@ -1,23 +1,10 @@
-﻿@model Edubase.Web.UI.Models.CreateEditTrustModel
+﻿@model CreateEditGroupModel
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
     ViewBag.Title = "Create/edit academy trust";
 
-    var dc = new Edubase.Data.Entity.ApplicationDbContext();
-}
-
-@helper FormHint(string controlId, string hintText = "help with this field. <br>and more help - even more help could go here...")
-{
-    @*<a class="help-icon" tab-index="0">?</a>
-    <div class="help-text" id="help-@controlId">
-        <p>Here is some thext that would assist a user with filling in the associated field:</p>
-        <p>
-            Lorem ipsum dolor sit amet, reque mollis ponderum vis et, no reprimique efficiantur accommodare
-            nec. Nec ad deleniti percipitur. Salutandi erroribus sea ex. At vidisse honestatis
-        </p>
-    </div>*@
-
+    var dc = new Edubase.Data.DbContext.ApplicationDbContext();
 }
 
 @using (Html.BeginForm((Model.GroupUID == null ? "Create" : "Edit"), "Group", FormMethod.Post))
@@ -60,7 +47,6 @@
                 <tr>
                     <th scope="row">
                         <label for="school-name">Trust name</label>
-                        @FormHint("name")
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x=>x.Name)">
@@ -73,7 +59,6 @@
                 <tr>
                     <th scope="row">
                         <label for="school-type">Trust type</label>
-                        @FormHint("trust-type")
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x=>x.TypeId)">
@@ -87,7 +72,6 @@
                 <tr>
                     <th scope="row">
                         <label for="school-type">Open date</label>
-                        @FormHint("open-date")
                     </th>
                     <td>
                         <div class="form-group drop-down-date @Html.ValidationCssClassFor(x=>x.OpenDate)">
@@ -111,7 +95,6 @@
                 <tr>
                     <th scope="row">
                         <label for="school-name">Companies house number</label>
-                        @FormHint("companieshousenumber")
                     </th>
                     <td>
                         <div class="form-group @Html.ValidationCssClassFor(x=>x.CompaniesHouseNumber)">
