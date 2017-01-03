@@ -18,18 +18,7 @@
     }
 }
 
-@helper FormHint(string controlId, string hintText = "help with this field. <br>and more help - even more help could go here...")
-{
-    @*<a class="help-icon" tab-index="0">?</a>
-    <div class="help-text" id="help-@controlId">
-        <p>Here is some thext that would assist a user with filling in the associated field:</p>
-        <p>
-            Lorem ipsum dolor sit amet, reque mollis ponderum vis et, no reprimique efficiantur accommodare
-            nec. Nec ad deleniti percipitur. Salutandi erroribus sea ex. At vidisse honestatis
-        </p>
-    </div>*@
 
-}
 
 @using (Html.BeginForm((Model.Urn == null ? "Create" : "Edit"), "Establishment", FormMethod.Post))
 {
@@ -47,291 +36,489 @@
             {
                 <h1 class="heading-xlarge">Edit school or college</h1>
             }
-            
+
 
             @Html.ValidationSummary(null, new { @class = "error-summary" })
+            <div class="column-half">
+                <!-- address -->
+                <div class="form-group">
+                    <label class="form-label" for="school-name">
+                        Establishment name
+                    </label>
+                    @Html.EduTextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
+                </div>
 
-            <table class="borderless editor">
-                <colgroup>
-                    <col style="width:40%" />
-                    <col style="width:60%" />
-                </colgroup>
-                <caption class="visually-hidden">School information</caption>
-                <tr>
-                    <th scope="row">
-                        <label for="school-name">School / College name</label>
-                        @FormHint("school-name")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.Name)">
-                            @Html.EduTextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">
-                        <label for="school-street">Street</label>
-                        @FormHint("school-street")
-                    </th>
-                    <td>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.Address.Line1, new { maxlength = 120, id = "school-street", @class = "form-control", aria_describedby = "help-school-street" })
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">
-                        <label for="school-locality">Locality</label>
-                        @FormHint("school-locality")
-                    </th>
-                    <td>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.Address.Locality, new { maxlength = 120, id = "school-locality", @class = "form-control", aria_describedby = "help-school-locality" })
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">
-                        <label for="school-addressline3">Address line 3</label>
-                        @FormHint("school-addressline3")
-                    </th>
-                    <td>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.Address.Line3, new { maxlength = 120, id = "school-addressline3", @class = "form-control", aria_describedby = "help-school-addressline3" })
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">
-                        <label for="school-town">City / town</label>
-                        @FormHint("school-town")
-                    </th>
-                    <td>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.Address.CityOrTown, new { maxlength = 120, id = "school-town", @class = "form-control", aria_describedby = "help-school-town" })
-                        </div>
-                    </td>
-                </tr>
+                <div class="form-group">
+                    <label for="school-street" class="form-label">Street</label>
+                    @Html.TextBoxFor(x => x.Address.Line1, new { maxlength = 120, id = "school-street", @class = "form-control", aria_describedby = "help-school-street" })
+                </div>
 
-                <tr>
-                    <th scope="row">
-                        <label for="school-town">Post code</label>
-                        @FormHint("school-postcode")
-                    </th>
-                    <td>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.Address.PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control", aria_describedby = "help-school-postcode" })
-                        </div>
-                    </td>
-                </tr>
+                <div class="form-group">
+                    <label for="school-locality" class="form-label">Locality</label>
+                    @Html.TextBoxFor(x => x.Address.Locality, new { maxlength = 120, id = "school-locality", @class = "form-control", aria_describedby = "help-school-locality" })
+                </div>
 
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Local authority</label>
-                        @FormHint("local-authority")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-                            @Html.EduLookupDropDownFor(x => x.LocalAuthorityId, x => x.LocalAuthorityGetAll())
-                        </div>
-                    </td>
-                </tr>
+                <div class="form-group">
+                    <label for="school-addressline3" class="form-label">Address line 3</label>
+                    @Html.TextBoxFor(x => x.Address.Line3, new { maxlength = 120, id = "school-addressline3", @class = "form-control", aria_describedby = "help-school-addressline3" })
+                </div>
+
+                <div class="form-group">
+                    <label for="school-town" class="form-label">City / town</label>
+                    @Html.TextBoxFor(x => x.Address.CityOrTown, new { maxlength = 120, id = "school-town", @class = "form-control", aria_describedby = "help-school-town" })
+                </div>
+
+                <div class="form-group">
+                    <label for="school-postcode" class="form-label">Post code</label>
+                    @Html.TextBoxFor(x => x.Address.PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control", aria_describedby = "help-school-postcode" })
+                </div>
+
+                <!-- headteacher ID -->
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Headteacher title
+                    </label>
+                    @Html.EduHeadTitlesDropDownFor(x => x.HeadTitleId)
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="headfirstname">
+                        Headteacher first name
+                    </label>
+                    @Html.EduTextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", placeholder = "First name" })
+
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Headteacher last name
+                    </label>
+                    @Html.EduTextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
+                </div>
+
+                <!-- school admissions information -->
+
+                <div class="form-group range-group">
+                    <fieldset>
+                        <legend>Age range</legend>
+                        <span class="inline-form-control">
+                            <label for="agerange-from" class="form-label">
+                                Low
+                            </label>
+                            @Html.EduTextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control age-field", placeholder = "From", type = "number", min = 1, max = 99 })
+
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="agerange-to" class="form-label">High</label>
+                            @Html.EduTextBoxFor(x => x.StatutoryHighAge, new { maxlength = 120, id = "agerange-to", @class = "form-control age-field", placeholder = "To", type = "number", min = 1, max = 99 })
+                        </span>
+                    </fieldset>
+                </div>
 
 
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Headteacher/Principle</label>
-                        @FormHint("headteacher")
-                    </th>
-                    <td>
-                        <div class="form-group full-name-inline">
-                            @Html.EduHeadTitlesDropDownFor(x => x.HeadTitleId)
-                            @Html.EduTextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control inline-name", aria_describedby = "help-headfirstname", placeholder = "First name" })
-                            @Html.EduTextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control inline-name", aria_describedby = "help-headlastname", placeholder = "Last name" })
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Age range</label>
-                        @FormHint("agerange")
-                    </th>
-                    <td>
-                        <div class="form-group">
-                            @Html.EduTextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control age-field", aria_describedby = "help-agerange-from", placeholder = "From", type = "number", min = 1, max = 99 })
-                            to
-                            @Html.EduTextBoxFor(x => x.StatutoryHighAge, new { maxlength = 120, id = "agerange-to", @class = "form-control age-field", aria_describedby = "help-agerange-to", placeholder = "To", type = "number", min = 1, max = 99 })
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Phase of education</label>
-                        @FormHint("education-phase")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
-                            @Html.EduEducationPhasesDropDownFor(x => x.EducationPhaseId)
-                        </div>
-                    </td>
-                </tr>
-                
-
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">School type</label>
-                        @FormHint("school-type")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
-                            @Html.EduEstablishmentTypesDropDownFor(x => x.TypeId)
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Gender of entry</label>
-                        @FormHint("gender-of-entry")
-                    </th>
-                    <td>
-                        <div class="form-group">
-                            @Html.EduGendersDropDownFor(x => x.GenderId)
-                        </div>
-                    </td>
-                </tr>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                    <label for="educationphaseid" class="form-label">Phase of education</label>
+                    @Html.EduEducationPhasesDropDownFor(x => x.EducationPhaseId)
+                </div>
 
 
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">URN</label>
-                        @FormHint("urn")
-                    </th>
-                    <td>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", aria_describedby = "help-urn", placeholder = "auto-generated", @readonly = true, disabled = true })
-                        </div>
-                    </td>
-                </tr>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
+                    <label class="form-label" for="typeid">Establishment type</label>
+                    @Html.EduEstablishmentTypesDropDownFor(x => x.TypeId)
+                </div>
 
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">LAESTAB</label>
-                        @FormHint("laestab")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.LAESTAB)">
-                            @Html.EduTextBoxFor(x => x.LAESTAB, 
-                                new { id = "laestab", @class = "form-control", aria_describedby = "help-laestab", type = "number", maxlength = 7 }, 
-                                "EstablishmentNumber")
-                        </div>
-                    </td>
-                </tr>
 
-                <tr>
-                    <th scope="row">
-                        <label for="status">Establishment status</label>
-                        @FormHint("establishment-status")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
-                            @Html.EduStatusesPoliciesDropDownFor(x => x.StatusId)
-                        </div>
-                    </td>
-                </tr>
+                <div class="form-group">
+                    @* TODO *@
+                    <label class="form-label" for="furthereducationtypeid">Further education type</label>
+                    <select id="furthereducationtypeid" class="form-control">
+                        <option>something</option>
+                        <option>something</option>
+                        <option>darkside</option>
+                    </select>
+                </div>
 
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Admissions policy</label>
-                        @FormHint("admissions-policy")
-                    </th>
-                    <td>
-                        <div class="form-group">
-                            @Html.EduAdmissionsPoliciesDropDownFor(x => x.AdmissionsPolicyId)
-                        </div>
-                    </td>
-                </tr>
 
-                <tr>
-                    <td colspan="2">
-                        <h2 class="heading-medium  create-edit-section-break">Details</h2>                        
-                    </td>
-                </tr>
+                <div class="form-group">
+                    <label class="form-label" for="genderid">Gender of entry</label>
+                    @Html.EduGendersDropDownFor(x => x.GenderId)
+                </div>
 
-                <tr>
-                    <th scope="row">
-                        <label for="reason-establishment-opened">Reason establishment opened</label>
-                        @FormHint("reason-establishment-opened")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
-                            @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
-                            @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.LookupReasonEstablishmentOpened.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-opened", @class = "form-control" })
-                        </div>
-                    </td>
-                </tr>
 
-                <tr>
-                    <th scope="row">
-                        <label for="open-date-day">Open date</label>
-                        @FormHint("open-date")
-                    </th>
-                    <td>
-                        <div class="form-group create-edit-form-group drop-down-date @Html.ValidationCssClassFor(x => x.OpenDate)">
-                            @Html.ValidationMessageFor(x => x.OpenDate)
+                <div class="form-group">
+                    <label class="form-label">URN</label>
+                    @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", aria_describedby = "help-urn", placeholder = "auto-generated", @readonly = true, disabled = "disabled" })
+                </div>
+
+                <!-- LA -->
+                <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                    <label for="localauthorityid" class="form-label">Local authority</label>
+                    @Html.EduLookupDropDownFor(x => x.LocalAuthorityId, x => x.LocalAuthorityGetAll())
+                </div>
+
+
+                <div class="form-group"> @* TODO *@
+                    <fieldset class="inline-fields">
+                        <legend>DfE number</legend>
+                        <p class="form-hint">LA code + Establishment number</p>
+                        <label class="form-label visually-hidden" for="lacode"> LA code</label>
+                        <input type="text" id="lacode" class="form-control" size="5" disabled="disabled" />
+                        <label class="form-label visually-hidden" for="establishmentnumber">Establishment number</label>
+                        <input type="text" size="8" id="establishmentnumber" class="form-control" />
+                    </fieldset>
+                </div>
+
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
+                    <label class="form-label" for="ukprn">UK provider reference number (UKPRN)</label>
+                    @Html.ValidationMessageFor(x => x.UKPRN)
+                    @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", type = "text" })
+                </div>
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
+                    <label for="status">Establishment status</label>
+                    @Html.EduStatusesPoliciesDropDownFor(x => x.StatusId)
+                </div>
+
+                <div class="form-group">
+                    <label for="admissionspolicyid" class="form-label">Admissions policy</label>
+                    @Html.EduAdmissionsPoliciesDropDownFor(x => x.AdmissionsPolicyId)
+                </div>
+
+
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="school-website" class="form-label">Website</label>
+                    <input type="text" class="form-control" id="school-website" />
+                </div>
+
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="school-phone" class="form-label">Telephone</label>
+                    <input type="text" class="form-control" id="school-phone" />
+                </div>
+
+                <div class="form-group ofstead-rating">
+                    @* TODO *@
+                    <label for="ofsted-rating" class="form-label">Ofsted rating</label>
+                    <span>2</span>
+                    <input type="text" class="form-control" id="ofsted-rating" disabled="disabled" value="Good" />
+                </div>
+
+
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="ofsted-inspection-date" class="form-label">Ofsted last inspection</label>
+                    <input type="text" class="form-control" id="ofsted-inspection-date" disabled="disabled" value="14/10/2012" />
+                </div>
+
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="ofsted-report" class="form-label">Ofsted report link</label>
+                    <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="[REPORT LINK]" />
+                </div>
+
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="inspectorate">Inspectorate</label>
+                    <select id="inspectorate" class="form-control">
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="proprietor" class="form-label">Proprietor's name</label>
+                    <input type="text" class="form-control" id="proprietor" />
+                </div>
+
+            </div>
+
+            <h2 class="heading-medium  create-edit-section-break">Details</h2>
+            <div class="column-half">
+                <div class="form-group">
+                    <label for="religious-character">Religious character</label>
+                    <select id="religious-character" class="form-control">
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                    </select>
+                </div>
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
+                    <label for="school-type">Diocese</label>
+                    @Html.DropDownListFor(x => x.DioceseId, dc.LookupDioceses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "diocese", @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="religious-ethos">Religious ethos</label>
+                    <select id="religious-ethos" class="form-control">
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                    </select>
+                </div>
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
+                    <label for="boarders">Boarders</label>
+                    @Html.DropDownListFor(x => x.ProvisionBoardingId, dc.LookupProvisionBoarding.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "boarders", @class = "form-control" })
+                </div>
+
+
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
+                    <label for="nursery">Nursery provision</label>
+                    @Html.DropDownListFor(x => x.ProvisionNurseryId, dc.LookupProvisionNurseries.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "nursery", @class = "form-control" })
+                </div>
+
+
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
+                    <label for="sixthform">Official sixth form</label>
+                    @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, dc.LookupProvisionOfficialSixthForms.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "sixthform", @class = "form-control" })
+                </div>
+
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.Capacity)">
+                    <label for="school-capacity">School capacity</label>
+                    @Html.EduTextBoxFor(x => x.Capacity, new { id = "school-capacity", @class = "form-control", type = "number" })
+                </div>
+
+                <div class="form-group">
+                    <label for="section-41">Section 41 approved</label>
+                    <select id="section-41s" class="form-control">
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                </div>
+
+                <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
+                    <fieldset>
+                        <legend>Open date</legend>
+
+                        <div class="form-hint">For exampe, 20 03 2003</div>
+                        @Html.ValidationMessageFor(x => x.OpenDate)
+                        <span class="inline-form-control">
+                            <label for="opendate-day">Day</label>
                             @Html.EduDropDownFor(x => x.OpenDate.Day,
-                                Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                                new
-                                {
-                                    id = "opendate-day",
-                                    @class = "form-control",
-                                    aria_describedby = "help-opendate-day",
-                                }, label: "DD", fieldName: "OpenDate")
-
+                            Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                            new
+                            {
+                                id = "opendate-day",
+                                @class = "form-control",
+                                aria_describedby = "help-opendate-day",
+                            }, label: "DD", fieldName: "OpenDate")
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="opendate-month">Month</label>
                             @Html.EduDropDownFor(x => x.OpenDate.Month,
-                                Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), 
-                                new
-                                {
-                                    id = "opendate-month",
-                                    @class = "form-control",
-                                    aria_describedby = "help-opendate-month",
-                                }, label: "MM", fieldName: "OpenDate")
+                    Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                    new
+                    {
+                        id = "opendate-month",
+                        @class = "form-control",
+                        aria_describedby = "help-opendate-month",
+                    }, label: "MM", fieldName: "OpenDate")
 
+                        </span>
+                        <span class="inline-form-contol">
+                            <label for="opendate-year">Year</label>
                             @Html.EduDropDownFor(x => x.OpenDate.Year,
-                                Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), 
-                                new
-                                {
-                                    id = "opendate-year",
-                                    @class = "form-control",
-                                    aria_describedby = "help-opendate-year",
-                                }, label: "YYYY", fieldName: "OpenDate")
-                        </div>
-                    </td>
-                </tr>
+                    Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                    new
+                    {
+                        id = "opendate-year",
+                        @class = "form-control",
+                        aria_describedby = "help-opendate-year",
+                    }, label: "YYYY", fieldName: "OpenDate")
+                        </span>
+                    </fieldset>
+                </div>
 
 
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Reason establishment closed</label>
-                        @FormHint("reason-establishment-closed")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
-                            @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, dc.LookupReasonEstablishmentClosed.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-closed", @class = "form-control" })
-                        </div>
-                    </td>
-                </tr>
 
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Close date</label>
-                        @FormHint("close-date")
-                    </th>
-                    <td>
-                        <div class="form-group create-edit-form-group drop-down-date @Html.ValidationCssClassFor(x => x.CloseDate)">
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
+                    <label for="reason-establishment-opened">Reason establishment opened</label>
+                    @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
+                    @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.LookupReasonEstablishmentOpened.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-opened", @class = "form-control" })
+                </div>
+
+
+                <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.CloseDate)">
+                    <fieldset>
+                        <legend>Close date</legend>
+                        <div class="form-hint">For example, 20 03 2003</div>
+
+                        @Html.ValidationMessageFor(x => x.CloseDate)
+                        <span class="inline-form-control">
+                            <label for="Closedate-day">Day</label>
+                            @Html.EduDropDownFor(x => x.CloseDate.Day,
+                            Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                            new
+                            {
+                                id = "Closedate-day",
+                                @class = "form-control",
+                                aria_describedby = "help-Closedate-day",
+                            }, label: "DD", fieldName: "CloseDate")
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="Closedate-month">Month</label>
+                            @Html.EduDropDownFor(x => x.CloseDate.Month,
+                            Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                            new
+                            {
+                                id = "Closedate-month",
+                                @class = "form-control",
+                                aria_describedby = "help-Closedate-month",
+                            }, label: "MM", fieldName: "CloseDate")
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="Closedate-year">Year</label>
+                            @Html.EduDropDownFor(x => x.CloseDate.Year,
+                            Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                            new
+                            {
+                                id = "Closedate-year",
+                                @class = "form-control",
+                                aria_describedby = "help-Closedate-year",
+                            }, label: "YYYY", fieldName: "CloseDate")
+                        </span>
+                    </fieldset>
+                </div>
+
+
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
+                    <label for="school-type">Reason establishment closed</label>
+                    @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, dc.LookupReasonEstablishmentClosed.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-closed", @class = "form-control" })
+                </div>
+
+
+                <div class="form-group"> @* TODO *@
+                    <label class="form-label" for="special-classes">
+                        Special classes
+                    </label>
+                    <select id="special-classes" class="form-control">
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                </div>
+
+                <div class="form-group grouped-controls">@* TODO *@
+                    <label>Type of SEN provision</label>
+                    <select id="sen-provision0" class="form-control">
+                        <option></option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+
+                    <select id="sen-provision1" class="form-control">
+                        <option></option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                    <select id="sen-provision2" class="form-control">
+                        <option></option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+
+                    <select id="sen-provision3" class="form-control">
+                        <option></option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">@* TODO *@
+                    <label for="resourced-provision-type">
+                        Type of resourced provision
+                    </label>
+                    <select id="resourced-provision-type" class="form-control">
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">@* TODO *@
+                    <label for="resourced-provision-headcount">Resourced provision number on roll</label>
+                    <input type="number" id="resourced-provision-headcount" class="form-control" />
+                </div>
+
+
+                <div class="form-group">@* TODO *@
+                    <label for="sen-unit-number">SEN unit number on roll</label>
+                    <input type="number" id="sen-unit-number" class="form-control" />
+                </div>
+
+                <div class="form-group">@* TODO *@
+                    <label for="sen-unit-number">SEN unit capacity</label>
+                    <input type="number" id="sen-unit-capacity" class="form-control" />
+                </div>
+                @* TODO  *@
+                <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.CloseDate)">
+                    <fieldset>
+                        <legend>BSO: Date of last inspection</legend>
+                        <div class="form-hint">For example, 20 03 2003</div>
+
+                        @Html.ValidationMessageFor(x => x.CloseDate)
+                        <span class="inline-form-control">
+                            <label for="Closedate-day">Day</label>
+                            @Html.EduDropDownFor(x => x.CloseDate.Day,
+                            Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                            new
+                            {
+                                id = "Closedate-day",
+                                @class = "form-control",
+                                aria_describedby = "help-Closedate-day",
+                            }, label: "DD", fieldName: "CloseDate")
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="Closedate-month">Month</label>
+                            @Html.EduDropDownFor(x => x.CloseDate.Month,
+                            Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                            new
+                            {
+                                id = "Closedate-month",
+                                @class = "form-control",
+                                aria_describedby = "help-Closedate-month",
+                            }, label: "MM", fieldName: "CloseDate")
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="Closedate-year">Year</label>
+                            @Html.EduDropDownFor(x => x.CloseDate.Year,
+                            Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                            new
+                            {
+                                id = "Closedate-year",
+                                @class = "form-control",
+                                aria_describedby = "help-Closedate-year",
+                            }, label: "YYYY", fieldName: "CloseDate")
+                        </span>
+                    </fieldset>
+                </div>
+
+                @* TODO update to correct field mappings *@
+            <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.CloseDate)">
+                <fieldset>
+                    <legend>BSO: Next inspection visit</legend>
+                    <div class="form-hint">For example, 20 03 2003</div>
+                    <span class="inline-form-control">
                             @Html.ValidationMessageFor(x => x.CloseDate)
+                            <label for="Closedate-day">Day</label>
                             @Html.EduDropDownFor(x => x.CloseDate.Day,
                                 Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
                                 new
@@ -340,7 +527,9 @@
                                     @class = "form-control",
                                     aria_describedby = "help-Closedate-day",
                                 }, label: "DD", fieldName: "CloseDate")
-
+                        </span>
+                    <span class="inline-form-control">
+                            <label for="Closedate-month">Month</label>
                             @Html.EduDropDownFor(x => x.CloseDate.Month,
                                 Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
                                 new
@@ -349,7 +538,9 @@
                                     @class = "form-control",
                                     aria_describedby = "help-Closedate-month",
                                 }, label: "MM", fieldName: "CloseDate")
-
+                        </span>
+                    <span class="inline-form-control">
+                            <label for="Closedate-year">Year</label>
                             @Html.EduDropDownFor(x => x.CloseDate.Year,
                                 Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
                                 new
@@ -358,111 +549,17 @@
                                     @class = "form-control",
                                     aria_describedby = "help-Closedate-year",
                                 }, label: "YYYY", fieldName: "CloseDate")
-                        </div>
-                    </td>
-
-                </tr>
-
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Boarders</label>
-                        @FormHint("boarders")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
-                            @Html.DropDownListFor(x => x.ProvisionBoardingId, dc.LookupProvisionBoarding.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "boarders", @class = "form-control" })
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Nursery provision</label>
-                        @FormHint("nursery")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
-                            @Html.DropDownListFor(x => x.ProvisionNurseryId, dc.LookupProvisionNurseries.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "nursery", @class = "form-control"})
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Sixth form</label>
-                        @FormHint("sixthform")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
-                            @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, dc.LookupProvisionOfficialSixthForms.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "sixthform", @class = "form-control" })
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <th scope="row">
-                        <label for="school-type">Diocese</label>
-                        @FormHint("diocese")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
-                            @Html.DropDownListFor(x => x.DioceseId, dc.LookupDioceses.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "diocese", @class = "form-control" })
-                        </div>
-                    </td>
-                </tr>
-
-
-
-                <tr>
-                    <th scope="row">
-                        <label for="school-capacity">School capacity</label>
-                        @FormHint("school-capacity")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.Capacity)">
-                            @Html.EduTextBoxFor(x => x.Capacity, new { id = "school-capacity", @class = "form-control", aria_describedby = "help-school-capacity", type = "number" })
-                        </div>
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <th scope="row">
-                        <label for="ukprn">UK Provider Reference Number</label>
-                        @FormHint("ukprn")
-                    </th>
-                    <td>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
-                            @Html.ValidationMessageFor(x => x.UKPRN)
-                            @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", aria_describedby = "help-ukprn", type = "text" })
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td colspan="2">
-                        <h2 class="heading-medium create-edit-section-break">Contact</h2>
-                        
-                        <h3>Placeholder</h3>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td colspan="2">
-                        <h2 class="heading-medium  create-edit-section-break">Governance</h2>                       
-                        <h3>Placeholder</h3>
-                    </td>
-                </tr>
-
-
-                <tr>
+                        </span>
+                </fieldset>
+            </div>
+                    
+                    <h2 class="heading-medium  create-edit-section-break">Governance</h2>
+                    <p>Placeholder</p>
+                    
                     @if (Model.Urn.HasValue)
                     {
-                        <td colspan="2">
-                            <a name="addlinkedschool"></a>
+                        
+                            <a id="addlinkedschool"></a>
                             <h2 class="heading-medium create-edit-section-break">Links</h2>
                             <div class="link-establishment-form">
                                 <h2 class="bold-xsmall">Link new school</h2>
@@ -471,7 +568,7 @@
                                 &nbsp;&nbsp;
                                 <button type="submit" class="button button-next font-xsmall" name="action" value="@ViewModel.eAction.FindEstablishment">Search</button>
                             </div>
-                            @if (Model.LinkedUrnToAdd.HasValue)
+                           if (Model.LinkedUrnToAdd.HasValue)
                             {
                                 <div class="establishment-link-results">
 
@@ -495,31 +592,31 @@
                                                 <div class="form-group drop-down-date @Html.ValidationCssClassFor(x => x.LinkedDateToAdd)">
                                                     @Html.ValidationMessageFor(x => x.LinkedDateToAdd)
                                                     @Html.EduDropDownFor(x => x.LinkedDateToAdd.Day,
-                                             Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                                                 new
-                                                 {
-                                                     id = "LinkedDateToAdd-day",
-                                                     @class = "form-control",
-                                                     aria_describedby = "help-LinkedDateToAdd-day"
-                                                 }, label: "DD", fieldName: "LinkedDateToAdd")
+                                                 Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                                     new
+                                                     {
+                                                         id = "LinkedDateToAdd-day",
+                                                         @class = "form-control",
+                                                         aria_describedby = "help-LinkedDateToAdd-day"
+                                                     }, label: "DD", fieldName: "LinkedDateToAdd")
 
                                                     @Html.EduDropDownFor(x => x.LinkedDateToAdd.Month,
-                                             Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                                                 new
-                                                 {
-                                                     id = "LinkedDateToAdd-month",
-                                                     @class = "form-control",
-                                                     aria_describedby = "help-Closedate-month"
-                                                 }, label: "MM", fieldName: "LinkedDateToAdd")
+                                                 Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                                     new
+                                                     {
+                                                         id = "LinkedDateToAdd-month",
+                                                         @class = "form-control",
+                                                         aria_describedby = "help-Closedate-month"
+                                                     }, label: "MM", fieldName: "LinkedDateToAdd")
 
                                                     @Html.EduDropDownFor(x => x.LinkedDateToAdd.Year,
-                                             Enumerable.Range(1900, 200).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                                                 new
-                                                 {
-                                                     id = "LinkedDateToAdd-year",
-                                                     @class = "form-control",
-                                                     aria_describedby = "help-LinkedDateToAdd-year"
-                                                 }, label: "YYYY", fieldName: "LinkedDateToAdd")
+                                                 Enumerable.Range(1900, 200).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                                     new
+                                                     {
+                                                         id = "LinkedDateToAdd-year",
+                                                         @class = "form-control",
+                                                         aria_describedby = "help-LinkedDateToAdd-year"
+                                                     }, label: "YYYY", fieldName: "LinkedDateToAdd")
                                                 </div>
 
                                             </td>
@@ -534,96 +631,234 @@
                             }
 
 
-                        @if (Model.Links.Count > 0)
-                        {
-                            @Html.HiddenFor(x => x.LinkedItemPositionToRemove)
-                            <table class="estab-links edit-estab-links mi">
-                                <thead>
-                                    <tr>
-                                        <th>URN</th>
-                                        <th>Establishment name</th>
-                                        <th>Link type</th>
-                                        <th>Date linked</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (int i = 0; i < Model.Links.Count; i++)
-                                    {
-                                        var l = Model.Links[i];
+                            if (Model.Links.Count > 0)
+                            {
+                                @Html.HiddenFor(x => x.LinkedItemPositionToRemove)
+                                <table class="estab-links edit-estab-links mi">
+                                    <thead>
                                         <tr>
-                                            <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
-                                            <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
-                                            <td>@l.Type</td>
-                                            <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
-                                            <td>
-                                                <button type="submit" name="action"  class="link-button font-xsmall"
-                                                       value="RemoveLinkedSchool" onclick="$('#LinkedItemPositionToRemove').val(@i);" >
-                                                    Remove
-                                                </button>
-                                                @Html.HiddenFor(x => x.Links[i].Id)
-                                                @Html.HiddenFor(x => x.Links[i].Urn)
-                                                @Html.HiddenFor(x => x.Links[i].Name)
-                                                @Html.HiddenFor(x => x.Links[i].Type)
-                                                @Html.HiddenFor(x => x.Links[i].LinkDate)
-                                            </td>
+                                            <th>URN</th>
+                                            <th>Establishment name</th>
+                                            <th>Link type</th>
+                                            <th>Date linked</th>
+                                            <th></th>
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
-                            
-                            <div class="mvo">
-                                @for (int i = 0; i < Model.Links.Count; i++)
-                                {
-                                    var l = Model.Links[i];
-                                    <table class="estab-links">
-                                        <tbody>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.Links.Count; i++)
+                                        {
+                                            var l = Model.Links[i];
                                             <tr>
-                                                <th>URN</th>
-                                                <td>@Html.ActionLink(l.Urn.ToString(), "Details", "Establishment", new { id = l.Urn }, null)</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Establishment name</th>
-                                                <td>@Html.ActionLink(l.Name, "Details", "Establishment", new { id = l.Urn }, null)</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Type of link</th>
+                                                <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
+                                                <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
                                                 <td>@l.Type</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Date linked</th>
                                                 <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
-                                            </tr>
-                                            <tr>
                                                 <td>
                                                     <button type="submit" name="action" class="link-button font-xsmall"
                                                             value="RemoveLinkedSchool" onclick="$('#LinkedItemPositionToRemove').val(@i);">
                                                         Remove
                                                     </button>
+                                                    @Html.HiddenFor(x => x.Links[i].Id)
+                                                    @Html.HiddenFor(x => x.Links[i].Urn)
+                                                    @Html.HiddenFor(x => x.Links[i].Name)
+                                                    @Html.HiddenFor(x => x.Links[i].Type)
+                                                    @Html.HiddenFor(x => x.Links[i].LinkDate)
                                                 </td>
-                                                <td>&nbsp;</td>
                                             </tr>
-                                        </tbody>
-                                    </table>
-                                    <br />
-                                }
-                            </div>
-                        }
-                    </td>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                <div class="mvo">
+                                    @for (int i = 0; i < Model.Links.Count; i++)
+                                    {
+                                        var l = Model.Links[i];
+                                        <table class="estab-links">
+                                            <tbody>
+                                                <tr>
+                                                    <th>URN</th>
+                                                    <td>@Html.ActionLink(l.Urn.ToString(), "Details", "Establishment", new { id = l.Urn }, null)</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Establishment name</th>
+                                                    <td>@Html.ActionLink(l.Name, "Details", "Establishment", new { id = l.Urn }, null)</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Type of link</th>
+                                                    <td>@l.Type</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Date linked</th>
+                                                    <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <button type="submit" name="action" class="link-button font-xsmall"
+                                                                value="RemoveLinkedSchool" onclick="$('#LinkedItemPositionToRemove').val(@i);">
+                                                            Remove
+                                                        </button>
+                                                    </td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                </div>
+                            }
                     }
                     else
                     {
-                        <td colspan="2">
-                            <h2 class="heading-medium create-edit-section-break">Links</h2>
-                            
-                            <h3>Placeholder</h3>
-                        </td>
+                        <h2 class="heading-medium create-edit-section-break">Links</h2>
+
+                        <h3>Placeholder</h3>
                     }
-                </tr>
-            </table>
+                    
+
+                <h2 class="heading-medium  create-edit-section-break">Location</h2>
+                    
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="rsc-region">
+                        RSC region
+                    </label>
+                    <select id="rsc-region" class="form-control">
+                        <option>Select...</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="rsc-region">
+                        Government office region
+                    </label>
+                    <select id="government-office-region" class="form-control">
+                        <option>Select...</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                </div>
+                    <div class="form-group">
+                        @* TODO *@
+                        <label for="district">
+                            District
+                        </label>
+                        <select id="district" class="form-control">
+                            <option>Select...</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                            <option>Maybe</option>
+                        </select>
+                    </div>
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="ward">
+                        Ward
+                    </label>
+                    <select id="ward" class="form-control">
+                        <option>Select...</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                </div>
+                    <div class="form-group">
+                        @* TODO *@
+                        <label for="parlimentary-constituency">
+                            Parliamentary Constituency
+                        </label>
+                        <select id="parlimentary-constituency" class="form-control">
+                            <option>Select...</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                            <option>Maybe</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        @* TODO *@
+                        <label for="urban-rural">
+                            Urban/ Rural description
+                        </label>
+                        <select id="urban-rural" class="form-control">
+                            <option>Select...</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                            <option>Maybe</option>
+                        </select>
+                    </div>
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="gss-la-code">
+                        GSS LA code
+                    </label>
+                    <select id="gss-la-code" class="form-control">
+                        <option>Select...</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                </div>
+                    
+                <div class="form-group">
+                    <label for="easting">Easting</label>
+                    <input type="text" class="form-control" id="easting"/>
+                </div>
+                
+                <div class="form-group">
+                    <label for="northing">Northing</label>
+                    <input type="text" class="form-control" id="northing"/>
+                </div>
+
+                
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="census-ward">
+                        Census ward
+                    </label>
+                    <select id="census-ward" class="form-control">
+                        <option>Select...</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    @* TODO *@
+                    <label for="msoa">
+                        Middle Super Output Area (MSOA)
+                    </label>
+                    <select id="msoa" class="form-control">
+                        <option>Select...</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                        <option>Maybe</option>
+                    </select>
+                </div>
+                
+                    <div class="form-group">
+                        @* TODO *@
+                        <label for="lsoa">
+                            Lower Super Output Area (MSOA)
+                        </label>
+                        <select id="lsoa" class="form-control">
+                            <option>Select...</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                            <option>Maybe</option>
+                        </select>
+                    </div>
+                    
+                </div>
+
+            </div>
+
             <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.Save">Submit</button>
         </div>
 
 
-    </div>
+    
+
 }

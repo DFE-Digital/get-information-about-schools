@@ -9,13 +9,14 @@
 }
 
 select#headtitleid {
-    width: 70px;
+    width: 120px;
 }
 
 .create-edit-section-break {
     margin-bottom: 1em;
     padding-bottom: 0.4em;
     border-bottom: $grey-3 3px solid;
+    clear: both;
 }
 
 .drop-down-date {
@@ -58,5 +59,73 @@ select#headtitleid {
 
     .button {
         font-size: 16px;
+    }
+}
+
+.range-group {
+    overflow: hidden;
+
+    legend {
+        margin-bottom: 0;
+    }
+    
+    label {
+        display: block;
+    }
+    .inline-form-control {
+        display: block;
+        float: left;
+        margin-right: 1em;
+    }
+}
+
+.create-edit-school {
+    .column-half {
+        padding-left: 0;
+    }
+    label {
+        font-size: 16px;
+    }
+
+    legend {
+        font-weight: normal;
+        font-size: 16px;
+    }
+    .hint-text, .form-hint {
+        font-size: 16px;
+    }
+
+    .grouped-controls .form-control {
+        margin-bottom: 0.25em;
+    }
+
+    .inline-fields .form-control {
+        width: auto;
+        margin-right: 1em;
+    }
+
+    .ofstead-rating {
+        overflow: hidden;
+        span {
+            display: block;
+            color: #fff;
+            background-color: $govuk-blue;
+            float: left;
+            padding:2px 6px;
+            margin-top: 0.15em;
+            margin-right: 1.5%;
+            font-size: 16px;
+            @include media(mobile)  {
+                font-size: 14px;
+            }
+        }
+        .form-control {
+            max-width: 92%;
+            float: right;
+
+            @include media(mobile)  {
+                max-width: 89%;
+            }
+        }
     }
 }
