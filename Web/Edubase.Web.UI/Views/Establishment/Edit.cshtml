@@ -50,27 +50,27 @@
 
                 <div class="form-group">
                     <label for="school-street" class="form-label">Street</label>
-                    @Html.TextBoxFor(x => x.Address.Line1, new { maxlength = 120, id = "school-street", @class = "form-control", aria_describedby = "help-school-street" })
+                    @Html.TextBoxFor(x => x.Address.Line1, new { maxlength = 120, id = "school-street", @class = "form-control" })
                 </div>
 
                 <div class="form-group">
                     <label for="school-locality" class="form-label">Locality</label>
-                    @Html.TextBoxFor(x => x.Address.Locality, new { maxlength = 120, id = "school-locality", @class = "form-control", aria_describedby = "help-school-locality" })
+                    @Html.TextBoxFor(x => x.Address.Locality, new { maxlength = 120, id = "school-locality", @class = "form-control"})
                 </div>
 
                 <div class="form-group">
                     <label for="school-addressline3" class="form-label">Address line 3</label>
-                    @Html.TextBoxFor(x => x.Address.Line3, new { maxlength = 120, id = "school-addressline3", @class = "form-control", aria_describedby = "help-school-addressline3" })
+                    @Html.TextBoxFor(x => x.Address.Line3, new { maxlength = 120, id = "school-addressline3", @class = "form-control"})
                 </div>
 
                 <div class="form-group">
                     <label for="school-town" class="form-label">City / town</label>
-                    @Html.TextBoxFor(x => x.Address.CityOrTown, new { maxlength = 120, id = "school-town", @class = "form-control", aria_describedby = "help-school-town" })
+                    @Html.TextBoxFor(x => x.Address.CityOrTown, new { maxlength = 120, id = "school-town", @class = "form-control" })
                 </div>
 
                 <div class="form-group">
                     <label for="school-postcode" class="form-label">Post code</label>
-                    @Html.TextBoxFor(x => x.Address.PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control", aria_describedby = "help-school-postcode" })
+                    @Html.TextBoxFor(x => x.Address.PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control" })
                 </div>
 
                 <!-- headteacher ID -->
@@ -147,7 +147,7 @@
 
                 <div class="form-group">
                     <label class="form-label">URN</label>
-                    @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", aria_describedby = "help-urn", placeholder = "auto-generated", @readonly = true, disabled = "disabled" })
+                    @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", placeholder = "auto-generated", @readonly = true, disabled = "disabled" })
                 </div>
 
                 <!-- LA -->
