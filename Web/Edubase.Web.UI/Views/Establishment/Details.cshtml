@@ -46,6 +46,10 @@ else if (Model.UserHasPendingApprovals)
 
 @Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
 
+    @* TODO correct link address when download is available*@
+@Html.ActionLink("Download", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" }) 
+
+
 
 <div class="column-full">
     <div class="grid-row summary">

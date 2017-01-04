@@ -199,6 +199,14 @@ nav.tabs {
         margin: 0;
         padding: 48px 0 24px;
 
+        h3 {
+            clear: both;
+            margin: 0 8px 0.2em;
+        }
+        .borderless {
+            margin-bottom: 1em;
+        }
+
         &.hidden-tab-content {
             display: none;
         }

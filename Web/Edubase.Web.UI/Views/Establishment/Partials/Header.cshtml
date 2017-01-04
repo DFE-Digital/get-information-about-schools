@@ -1,12 +1,24 @@
 ﻿@using Edubase.Web.UI.ValueConverters;
 @model EstablishmentDetailViewModel
 
+<h1>@Model.Establishment.AdditionalAddresses.Count</h1>
+
 <table class="borderless">
     <caption class="visually-hidden">@Model.Establishment.Name information</caption>
     <tr>
         <th scope="row">Address:</th>
         <td>@Model.Establishment.Address</td>
     </tr>
+    @{
+        if (Model.Establishment.AdditionalAddresses.Count >= 0)
+        {
+            <tr>
+                <td>&nbsp;</td>
+                <td><a href="#school-location" class="tab-manipulator">View other sites</a></td>
+            </tr>
+        }
+    }
+   
     <tr>
         <th scope="row">Local authority:</th>
         <td>

@@ -1,6 +1,6 @@
 ﻿@model EstablishmentDetailViewModel
 
-<div id="school-location" class="tab-content">
+<div id="school-location" class="tab-content">    
     <table class="borderless">
         <caption class="visually-hidden">Location information for @Model.Establishment.Name</caption>
         <tr>
@@ -51,5 +51,37 @@
             <th scope="row">Lower Super Output Area (LSOA):</th>
             <td>@Html.NameFor(x => x.Establishment.LSOAId)</td>
         </tr>
+       
     </table>
+    @{
+        if (Model.Establishment.AdditionalAddresses.Count > 0)
+        {
+            <h3 class="font-small">Other sites</h3>
+            <table class="borderless">
+                <caption class="visually-hidden">Additional site information for @Model.Establishment.Name</caption>
+
+
+                @foreach (var address in Model.Establishment.AdditionalAddresses)
+                {
+                    <tr>
+                        <th colspan="2">[Additional site name]</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            Address:
+                        </th>
+                        <td>
+                            Aughton Road, Swallownest, Sheffield, South
+                            Yorkshire, S26 6TT
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Telephone</th>
+                        <td> Not recorded</td>
+                    </tr>
+                }
+
+            </table>
+        }
+    }
 </div>

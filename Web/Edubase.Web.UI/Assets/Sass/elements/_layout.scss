@@ -149,4 +149,5 @@ category: Base
 .column-full {
   @include grid-column( 1/1 );
   float: none !important;
+  clear: both;
 }
