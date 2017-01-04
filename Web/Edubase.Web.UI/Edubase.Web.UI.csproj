@@ -766,6 +766,7 @@
     <Content Include="Views\Establishment\Partials\TabLocation.cshtml" />
     <Content Include="Views\Establishment\Partials\TabChangeHistory.cshtml" />
     <Content Include="Views\Establishment\Partials\Header.cshtml" />
+    <Content Include="Views\Establishment\Partials\AdditionalAddresses.cshtml" />
     <None Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />

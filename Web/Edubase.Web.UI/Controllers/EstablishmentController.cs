@@ -72,6 +72,11 @@ namespace Edubase.Web.UI.Controllers
             }
             else
             {
+                // fakery to show the additional fields when adding site addresses to establishments
+                if (model.Action == ViewModel.eAction.AddAdditionalAddress)
+                {
+                    ViewBag.ShowAddtionalAddressFields = true;
+                }
 
                 //if (model.Action == ViewModel.eAction.FindEstablishment && model.LinkedSearchUrn.HasValue)
                 //{

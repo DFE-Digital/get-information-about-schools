@@ -23,7 +23,8 @@ namespace Edubase.Web.UI.Models
             FindEstablishment,
             Save,
             AddLinkedSchool,
-            RemoveLinkedSchool
+            RemoveLinkedSchool,
+            AddAdditionalAddress // fakery to show the additional fields when adding site addresses to establishments
         }
 
         public enum eLinkType
