@@ -125,6 +125,12 @@ select#headtitleid {
             }
         }
     }
+    .column-full {
+        .column-half,
+        .column-two-thirds {
+                padding-left: 0;
+            }
+    }
 }
 
 .additional-address-wrapper {
