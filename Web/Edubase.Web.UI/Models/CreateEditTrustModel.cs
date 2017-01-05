@@ -10,11 +10,12 @@ namespace Edubase.Web.UI.Models
     public class CreateEditGroupModel
     {
         public int? GroupUID { get; set; }
+        public string GroupId { get; set; }
         public string Name { get; set; }
         public int? TypeId { get; set; }
         public DateTimeViewModel OpenDate { get; set; }
         public string CompaniesHouseNumber { get; set; }
-
+        public string Address { get; set; }
         public string SearchURN { get; set; }
         public string EstablishmentName { get; set; }
         public int? EstablishmentUrn { get; set; }

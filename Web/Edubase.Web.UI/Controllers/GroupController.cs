@@ -60,11 +60,13 @@ namespace Edubase.Web.UI.Controllers
             {
                 var company = await dc.Groups.FirstOrDefaultAsync(x => x.GroupUID == id);
                 viewModel.GroupUID = company.GroupUID;
+                viewModel.GroupId = company.GroupId;
                 viewModel.Name = company.Name;
                 viewModel.TypeId = company.GroupTypeId;
                 viewModel.OpenDate = new DateTimeViewModel(company.OpenDate);
                 viewModel.CompaniesHouseNumber = company.CompaniesHouseNumber;
-
+                viewModel.Address = company.Address;
+            
                 viewModel.Establishments = (await dc.EstablishmentGroups
                     .Include(x => x.Establishment)
                     .Include(x => x.Establishment.EstablishmentType)

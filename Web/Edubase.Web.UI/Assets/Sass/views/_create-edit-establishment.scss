@@ -80,9 +80,6 @@ select#headtitleid {
 }
 
 .create-edit-school {
-    .column-half {
-        padding-left: 0;
-    }
     label {
         font-size: 16px;
     }
@@ -140,4 +137,8 @@ select#headtitleid {
 
 .create-edit-school .link-button {
     font-size: 16px;
+}
+
+.button-find-inline {
+    font-size: 18px;
 }
