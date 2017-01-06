@@ -40,4 +40,26 @@
 
 }
 
+.inline-with-button {
+    .form-control {
+        width: 75%;
+        margin-right: 12px;
+    }
+    .button-next {
+        font-size: 16px;
+    }
+    
+}
 
+.trust-details {
+    margin: 10px 0;
+
+    th {
+        white-space: nowrap;
+        padding-left: 0;
+    }
+}
+
+.single-group {
+    margin: 40px 0;
+}

@@ -188,6 +188,25 @@ ul.approval-items{
         a { color:white; }
     }
 
+.dismissable-warning {
+    background-color: $red;
+
+    .exclaim {
+        background-image: url('/public/assets/images/icons/exclaim-transparent.PNG');
+        width: 35px;
+        height: 35px;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+         @include device-pixel-ratio() {
+            background-image: url('/public/assets/images/icons/exclaim-transparentx2.PNG');
+            background-size: 100%;
+          }
+    }
+}
+
 .clear-selections {
     display: none;
     position: absolute;

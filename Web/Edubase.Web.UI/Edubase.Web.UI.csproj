@@ -360,6 +360,8 @@
     <Content Include="public\assets\images\icon-location.png" />
     <Content Include="public\assets\images\icon-pupils.png" />
     <Content Include="public\assets\images\icons\cross.PNG" />
+    <Content Include="public\assets\images\icons\exclaim-transparent.PNG" />
+    <Content Include="public\assets\images\icons\exclaim-transparentx2.PNG" />
     <Content Include="public\assets\images\icons\exclaim.PNG" />
     <Content Include="public\assets\images\icons\icon-calendar-2x.png" />
     <Content Include="public\assets\images\icons\icon-calendar.png" />

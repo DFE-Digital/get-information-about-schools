@@ -5,10 +5,12 @@
     ViewBag.Title = "Create academy trust";
 }
 
+
+
 @using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Get))
 { 
     <div class="grid-row">
-        <div class="column-two-thirds">
+        <div class="column-full">
             @Html.ActionLink("Search for an Academy Trust", "Index", "Search", null, new { @class = "home-link" })
             
             
@@ -24,10 +26,10 @@
     <div class="grid-row">
         <div class="column-two-thirds">
 
-            <div class="form-group">
+            <div class="form-group inline-with-button">
                 <label class="form-label">Enter Companies House number OR Company name</label>
 
-                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control"})
+                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control "})
                 <button type="submit" class="button button-next">Search</button>
             </div>
 
@@ -104,3 +106,4 @@
 
 
 }
+@Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "button button-grey cancel" })

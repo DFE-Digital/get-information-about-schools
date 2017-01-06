@@ -18,6 +18,7 @@ namespace Edubase.Web.UI.Models
             OpenDate = companyProfile.IncorporationDate;
             CompaniesHouseNumber = companyProfile.Number;
             Address = companyProfile.Address;
+            TrustExists = false;
         }
 
         public CreateGroupModel()
@@ -32,5 +33,6 @@ namespace Edubase.Web.UI.Models
         public DateTime? OpenDate { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
+        public bool TrustExists { get; internal set; }
     }
 }
