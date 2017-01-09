@@ -168,7 +168,7 @@
         <tr>
             <th scope="row">Ofsted rating:</th>
             <td>
-                @Model.Establishment.OfstedRating
+                <span class="highlighted-ofsted-rating">@Model.Establishment.OfstedRating</span>
                 @if (Model.Establishment.OfstedInspectionDate.HasValue)
                 {
                     <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
