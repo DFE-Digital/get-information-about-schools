@@ -17,6 +17,7 @@ using Edubase.Data;
 using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Data.DbContext;
 using Newtonsoft.Json;
+using Edubase.Services.Establishments.Downloads;
 
 namespace Edubase.Web.UI
 {
@@ -77,6 +78,11 @@ namespace Edubase.Web.UI
                 ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString)
                 .As<IAzureSearchEndPoint>();
 
+            builder.RegisterInstance(Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(
+                ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString));
+
+            builder.RegisterType<BlobService>().As<IBlobService>();
+
             builder.RegisterType<ApplicationDbContextFactory<ApplicationDbContext>>()
                 .As<IApplicationDbContextFactory>();
 
@@ -94,6 +100,7 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<GroupsWriteService>().As<IGroupsWriteService>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
+            builder.RegisterType<EstablishmentDownloadService>().As<IEstablishmentDownloadService>();
             builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
             builder.RegisterType<EstablishmentWriteService>().As<IEstablishmentWriteService>();
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();

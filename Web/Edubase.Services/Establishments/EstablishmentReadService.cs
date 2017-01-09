@@ -25,15 +25,21 @@ namespace Edubase.Services.Establishments
     using IntegrationEndPoints.AzureSearch.Models;
     using Security;
     using Data.DbContext;
+    using Common.Cache;
+    using System.IO;
+    using Common.IO;
+    using Ionic.Zip;
 
     public class EstablishmentReadService : IEstablishmentReadService
     {
-        private IApplicationDbContext _dbContext;
-        private IMapper _mapper;
-        private ICachedLookupService _cachedLookupService;
-        private IAzureSearchEndPoint _azureSearchService;
-        private IEstablishmentReadRepository _establishmentRepository;
-        private ILAReadRepository _laRepository;
+        private readonly IApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
+        private readonly ICachedLookupService _cachedLookupService;
+        private readonly IAzureSearchEndPoint _azureSearchService;
+        private readonly IEstablishmentReadRepository _establishmentRepository;
+        private readonly ILAReadRepository _laRepository;
+        private ICacheAccessor _cacheAccessor;
+        private IBlobService _blobService;
 
         /// <summary>
         /// Allow these roles to see establishments of all statuses
@@ -49,6 +55,7 @@ namespace Edubase.Services.Establishments
             eLookupEstablishmentStatus.OpenButProposedToClose,
             eLookupEstablishmentStatus.ProposedToOpen
         }.Select(x => (int)x).ToArray();
+        
 
         public EstablishmentReadService(
             IApplicationDbContext dbContext, 
@@ -56,7 +63,9 @@ namespace Edubase.Services.Establishments
             ICachedLookupService cachedLookupService, 
             IAzureSearchEndPoint azureSearchService,
             ICachedEstablishmentReadRepository establishmentRepository,
-            ICachedLAReadRepository laRepository)
+            ICachedLAReadRepository laRepository,
+            ICacheAccessor cacheAccessor,
+            IBlobService blobService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
@@ -64,6 +73,8 @@ namespace Edubase.Services.Establishments
             _establishmentRepository = establishmentRepository;
             _azureSearchService = azureSearchService;
             _laRepository = laRepository;
+            _cacheAccessor = cacheAccessor;
+            _blobService = blobService;
         }
         
         public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
@@ -171,8 +182,6 @@ namespace Edubase.Services.Establishments
                 }
             });
         }
-
-        private IQueryable<Establishment> GetEstablishmentsQuery() => _dbContext.Establishments.Where(x => x.IsDeleted == false);
         
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
@@ -209,7 +218,8 @@ namespace Edubase.Services.Establishments
             {
                 var geoPredicate = new ODataGeographyExpression(payload.GeoSearchLocation);
                 predicates.Add(geoPredicate.ToFilterODataExpression(nameof(SearchEstablishmentDocument.Location), payload.GeoSearchMaxRadiusInKilometres.Value));
-                if (payload.GeoSearchOrderByDistance) payload.OrderBy.Insert(0, geoPredicate.ToODataExpression(nameof(SearchEstablishmentDocument.Location)));
+                var expression = geoPredicate.ToODataExpression(nameof(SearchEstablishmentDocument.Location));
+                if (payload.GeoSearchOrderByDistance && !payload.OrderBy.Contains(expression)) payload.OrderBy.Insert(0, expression);
             }
 
             var oDataFilterExpression = string.Join(" and ", predicates);
@@ -236,6 +246,9 @@ namespace Edubase.Services.Establishments
             }
             else return new ServiceResultDto<bool>(eServiceResultStatus.NotFound);
         }
+
+
+        
 
 
     }

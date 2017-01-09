@@ -280,6 +280,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SearchController.Establishments.cs" />
+    <Compile Include="Controllers\SearchController.Download.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
@@ -305,7 +307,8 @@
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Admin\LogMessagesViewModel.cs" />
     <Compile Include="Models\ApprovalsViewModel.cs" />
-    <Compile Include="Models\AdvancedSearchViewModel.cs" />
+    <Compile Include="Models\Search\AdvancedSearchDownloadViewModel.cs" />
+    <Compile Include="Models\Search\AdvancedSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateTrustModel.cs" />
@@ -766,6 +769,10 @@
     <Content Include="Views\Establishment\Partials\TabLocation.cshtml" />
     <Content Include="Views\Establishment\Partials\TabChangeHistory.cshtml" />
     <Content Include="Views\Establishment\Partials\Header.cshtml" />
+    <Content Include="Views\Search\Download\SelectFormat.cshtml" />
+    <Content Include="Views\Search\Download\SelectDataset.cshtml" />
+    <Content Include="Views\Search\Download\PreparingFilePleaseWait.cshtml" />
+    <Content Include="Views\Search\Download\ReadyToDownload.cshtml" />
     <None Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />

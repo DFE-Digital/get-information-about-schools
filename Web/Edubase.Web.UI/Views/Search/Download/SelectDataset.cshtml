@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.bodyClasses = "schools-search-page search-page";
+    ViewBag.hideLogo = true;
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">Download data</h1>
+    </div>
+    <div class="horizontal-tabs-wrapper">        
+        <div class="column-full">
+            
+            <h2 class="bold-medium">Download establishment search results</h2>
+            <p>1 of 4</p>
+            <h2 class="bold-medium">Select the data you are interested in</h2>
+            <p>Core data includes commonly used ﬁelds including URN, establishment name, address, type and phase. Full data includes all data ﬁelds.</p>
+
+            @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
+            {
+                <div class="form-group">
+                    <fieldset>
+                        <legend class="visually-hidden"></legend>
+                        <label class="block-label selection-button-radio" for="radio-1">
+                            <input id="radio-1" type="radio" name="dataset" value="core">
+                            Core set of data
+                        </label>
+                        <label class="block-label selection-button-radio" for="radio-2">
+                            <input id="radio-2" type="radio" name="dataset" value="full">
+                            Full set of data
+                        </label>
+
+                    </fieldset>
+                </div>
+
+                <br />
+                <br />
+
+                @Html.HiddenFieldsFromQueryString()
+
+                <input class="button button-next" type="submit" value="Save and continue">
+            }
+
+        </div>
+    </div>
+</div>
+

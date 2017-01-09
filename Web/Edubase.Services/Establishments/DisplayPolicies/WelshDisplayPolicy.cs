@@ -10,11 +10,11 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         protected override void ConfigureInternal()
         {
             CloseDate = IsSchoolClosed;
-            ReasonEstablishmentClosed = IsSchoolClosed;
-            ReligiousCharacter = true;
+            ReasonEstablishmentClosedId = IsSchoolClosed;
+            ReligiousCharacterId = true;
             LastChangedDate = IsUserLoggedIn;
-            LAESTAB = true;
-            Section41Approved = true;
+            EstablishmentNumber = true;
+            Section41ApprovedId = true;
         }
     }
 }

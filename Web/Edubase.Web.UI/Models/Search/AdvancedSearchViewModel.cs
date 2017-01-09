@@ -28,6 +28,12 @@ namespace Edubase.Web.UI.Models
             public int? AutoSuggestValueAsInt => AutoSuggestValue.ToInteger();
         }
 
+        public enum eSearchCollection
+        {
+            Establishments,
+            Groups,
+            Governors
+        }
 
         public enum eSearchType
         {
@@ -74,8 +80,9 @@ namespace Edubase.Web.UI.Models
         public Payload GroupSearchModel { get; set; } = new Payload();
 
         public eSearchType SearchType { get; set; }
-        
 
+        public eSearchCollection SearchCollection => SearchType == eSearchType.Governor ? eSearchCollection.Governors : (SearchType == eSearchType.Group ? eSearchCollection.Groups : eSearchCollection.Establishments);
+        
         public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
         [BindAlias("t")]
         public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();

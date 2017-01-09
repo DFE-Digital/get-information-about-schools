@@ -14,6 +14,7 @@ namespace Edubase.Web.UI
             CreateMap<AddressViewModel, Address>().ReverseMap();
             CreateMap<AddressViewModel, EstablishmentAddressModel>().ReverseMap();
             CreateMap<CreateEditEstablishmentModel, EstablishmentModel>().ReverseMap();
+            CreateMap<CreateEditEstablishmentModel, Data.Entity.Establishment>().ReverseMap(); // TODO: delete one day
             CreateMap<ContactDetailsViewModel, ContactDetail>().ReverseMap();
             CreateMap<ContactDetailsViewModel, ContactDetailDto>().ReverseMap();
             CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();

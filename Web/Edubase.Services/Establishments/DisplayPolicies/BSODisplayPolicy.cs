@@ -11,16 +11,15 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         {
             HeadteacherDetails = true;
             AgeRange = true;
-            GenderOfEntry = true;
-            LAESTAB = true;
-            WebsiteAddress = true;
+            GenderId = true;
+            EstablishmentNumber = true;
+            Contact_WebsiteAddress = true;
             CloseDate = true;
-            ReasonEstablishmentClosed = true;
-            MainEmailAddress = IsUserLoggedIn;
-            AlternativeEmailAddress = MainEmailAddress;
+            ReasonEstablishmentClosedId = true;
+            Contact_EmailAddress = ContactAlt_EmailAddress = IsUserLoggedIn;
             LastChangedDate = IsUserLoggedIn;
-            BSODateOfLastInspectionVisit = BSODateOfNextInspectionVisit = BSOInspectorate = BSOInspectorateReport = true;
-            LocationDetails = false;
+            BSODateOfLastInspectionVisit = BSODateOfNextInspectionVisit = BSOInspectorateId = BSOInspectorateReportUrl = true;
+            SetLocationFields(false);
         }
     }
 }

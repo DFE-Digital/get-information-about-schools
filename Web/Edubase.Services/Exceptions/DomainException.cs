@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Edubase.Services.Domain
+namespace Edubase.Services.Exceptions
 {
 
     [Serializable]

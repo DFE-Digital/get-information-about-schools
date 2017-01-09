@@ -16,14 +16,14 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         {
             HeadteacherDetails = true;
             AgeRange = true;
-            GenderOfEntry = true;
-            WebsiteAddress = true;
+            GenderId = true;
+            Contact_WebsiteAddress = true;
             CloseDate = IsSchoolClosed;
-            ReasonEstablishmentClosed = IsSchoolClosed;
-            MainEmailAddress = IsUserLoggedIn;
-            AlternativeEmailAddress = MainEmailAddress;
+            ReasonEstablishmentClosedId = IsSchoolClosed;
+            Contact_EmailAddress = IsUserLoggedIn;
+            ContactAlt_EmailAddress = IsUserLoggedIn;
             LastChangedDate = IsUserLoggedIn;
-            FurtherEducationType = true;
+            FurtherEducationTypeId = true;
         }
     }
 }

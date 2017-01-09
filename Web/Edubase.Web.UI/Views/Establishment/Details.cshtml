@@ -56,7 +56,7 @@ else if (Model.UserHasPendingApprovals)
             <div id="map" class="school-detail-map"
                  data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
                  data-school-name="@Model.Establishment.Name"
-                 data-school-address="@Model.Establishment.Address"></div>
+                 data-school-address="@Model.Establishment.GetAddress()"></div>
         </div>
     </div>
 

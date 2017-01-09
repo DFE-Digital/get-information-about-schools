@@ -20,12 +20,12 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         protected override void ConfigureInternal()
         {
             CloseDate = true;
-            ReasonEstablishmentClosed = true;
-            LAESTAB = true;
+            ReasonEstablishmentClosedId = true;
+            EstablishmentNumber = true;
             HeadteacherDetails = true;
-            GenderOfEntry = true;
-            MainEmailAddress = IsUserLoggedIn;
-            AlternativeEmailAddress = MainEmailAddress;
+            GenderId = true;
+            Contact_EmailAddress = IsUserLoggedIn;
+            ContactAlt_EmailAddress = IsUserLoggedIn;
             LastChangedDate = IsUserLoggedIn;
         }
     }

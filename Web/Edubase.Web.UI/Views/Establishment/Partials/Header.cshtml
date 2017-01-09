@@ -5,7 +5,7 @@
     <caption class="visually-hidden">@Model.Establishment.Name information</caption>
     <tr>
         <th scope="row">Address:</th>
-        <td>@Model.Establishment.Address</td>
+        <td>@Model.Establishment.GetAddress()</td>
     </tr>
     <tr>
         <th scope="row">Local authority:</th>
@@ -64,8 +64,8 @@
         </td>
     </tr>
 
-    @if (Model.DisplayPolicy.EstablishmentType)
-            {
+    @if (Model.DisplayPolicy.TypeId)
+    {
         <tr>
             <th scope="row">@(Model.DisplayPolicy.EstablishmentTypeLabel):</th>
             <td>
@@ -75,7 +75,7 @@
         </tr>
     }
 
-    @if (Model.DisplayPolicy.FurtherEducationType)
+    @if (Model.DisplayPolicy.FurtherEducationTypeId)
             {
         <tr>
             <th scope="row">Further Education type:</th>
@@ -95,7 +95,7 @@
         </tr>
     }
 
-    @if (Model.DisplayPolicy.GenderOfEntry)
+    @if (Model.DisplayPolicy.GenderId)
             {
         <tr>
             <th scope="row">Gender of entry:</th>
@@ -110,9 +110,9 @@
         <th scope="row">ID:</th>
         <td>
             URN: @Model.Establishment.Urn,
-            @if (Model.DisplayPolicy.LAESTAB)
+            @if (Model.DisplayPolicy.EstablishmentNumber)
             {
-                <text>DfE number: @Model.Establishment.LAESTAB<br /></text>
+                <text>DfE number: @Model.Establishment.GetLAESTAB()<br /></text>
             }
             UKPRN: @Model.Establishment.UKPRN
         </td>
@@ -135,7 +135,7 @@
         </td>
     </tr>
 
-    @if (Model.DisplayPolicy.AdmissionsPolicy)
+    @if (Model.DisplayPolicy.AdmissionsPolicyId)
             {
         <tr>
             <th scope="row">Admissions policy:</th>
@@ -146,21 +146,21 @@
         </tr>
     }
 
-    @if (Model.DisplayPolicy.WebsiteAddress)
+    @if (Model.DisplayPolicy.Contact_WebsiteAddress)
             {
         <tr>
             <th scope="row">Website:</th>
             <td>
-                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact.WebsiteAddress)" target="_blank">
-                    @WeblinkConverter.Convert(Model.Establishment.Contact.WebsiteAddress)
+                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank">
+                    @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
                 </a>
             </td>
         </tr>
     }
 
-    @if (Model.DisplayPolicy.TelephoneNumber)
+    @if (Model.DisplayPolicy.Contact_TelephoneNumber)
             {
-        <tr><th scope="row">Telephone:</th><td>@Model.Establishment.Contact.TelephoneNumber</td></tr>
+        <tr><th scope="row">Telephone:</th><td>@Model.Establishment.Contact_TelephoneNumber</td></tr>
     }
 
     @if (Model.DisplayPolicy.OfstedRatingDetails)
@@ -168,7 +168,7 @@
         <tr>
             <th scope="row">Ofsted rating:</th>
             <td>
-                @Model.Establishment.OfstedRating
+                <span class="highlighted-ofsted-rating">@Model.Establishment.OfstedRating</span>
                 @if (Model.Establishment.OfstedInspectionDate.HasValue)
                 {
                     <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
@@ -179,7 +179,7 @@
         </tr>
     }
 
-    @if (Model.DisplayPolicy.Inspectorate)
+    @if (Model.DisplayPolicy.InspectorateId)
             {
         <tr>
             <th scope="row">Inspectorate:</th>
@@ -189,7 +189,7 @@
         </tr>
     }
 
-    @if (Model.DisplayPolicy.Proprietor)
+    @if (Model.DisplayPolicy.ProprietorName)
             {
         <tr><th scope="row">Proprietor's name:</th><td>@Model.Establishment.ProprietorName</td></tr>
     }

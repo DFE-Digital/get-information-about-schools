@@ -7,6 +7,7 @@ using System.Linq;
 using MoreLinq;
 using Edubase.Services.Establishments.Enums;
 using Edubase.Data.DbContext;
+using Edubase.Services.Exceptions;
 
 namespace Edubase.Services.Establishments
 {
