@@ -191,6 +191,9 @@ namespace Edubase.Services.Establishments.Models
 
         public int? SenUnitCapacity { get; set; }
 
+        /// <summary>
+        /// Local Authority Id
+        /// </summary>
         public int? RSCRegionId { get; set; }
 
         public int? BSOInspectorateId { get; set; }

@@ -159,7 +159,6 @@ namespace Edubase.Common
         public static T2 Set<T1, T2>(this IDictionary<T1, T2> data, T1 key, T2 val)
         {
             return data[key] = val;
-            return val;
         }
 
         public static T2 Get<T1, T2>(this IDictionary<T1, T2> data, T1 key, T2 defaultValue)

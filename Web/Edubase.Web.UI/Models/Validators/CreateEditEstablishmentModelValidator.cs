@@ -41,25 +41,25 @@ namespace Edubase.Web.UI.Models.Validators
 
         private void ConfigureLAEstabRule()
         {
-            When(x => x.TypeId.HasValue && x.EducationPhaseId.HasValue, () =>
-            {
-                When(x => new LAESTABService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstabNumberEntryPolicy.UserDefined, () =>
-                {
-                    RuleFor(x => x.LAESTAB)
-                    .Cascade(CascadeMode.StopOnFirstFailure)
-                    .NotEmpty()
-                    .WithMessage("LAESTAB is invalid")
-                    .Must((m, v) => v.ToString().StartsWith(m.LocalAuthorityId.ToString()))
-                    .WithMessage("LAESTAB should be a numeric value of LA Code + Establishment Number")
-                    .Must(x => x.ToString().Length == 7)
-                    .WithMessage("The LAESTAB should be 7 characters long");
-                });
+            //When(x => x.TypeId.HasValue && x.EducationPhaseId.HasValue, () =>
+            //{
+            //    When(x => new LAESTABService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstabNumberEntryPolicy.UserDefined, () =>
+            //    {
+            //        RuleFor(x => x.LAESTAB)
+            //        .Cascade(CascadeMode.StopOnFirstFailure)
+            //        .NotEmpty()
+            //        .WithMessage("LAESTAB is invalid")
+            //        .Must((m, v) => v.ToString().StartsWith(m.LocalAuthorityId.ToString()))
+            //        .WithMessage("LAESTAB should be a numeric value of LA Code + Establishment Number")
+            //        .Must(x => x.ToString().Length == 7)
+            //        .WithMessage("The LAESTAB should be 7 characters long");
+            //    });
 
-                When(x => new LAESTABService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstabNumberEntryPolicy.NonePermitted, () =>
-                {
-                    RuleFor(x => x.LAESTAB).Empty().WithMessage("The LAESTAB should be empty for this combination of phase and establishment type.");
-                });
-            });
+            //    When(x => new LAESTABService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstabNumberEntryPolicy.NonePermitted, () =>
+            //    {
+            //        RuleFor(x => x.LAESTAB).Empty().WithMessage("The LAESTAB should be empty for this combination of phase and establishment type.");
+            //    });
+            //});
         }
     }
 }
