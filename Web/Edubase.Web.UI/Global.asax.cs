@@ -33,7 +33,10 @@ namespace Edubase.Web.UI
             IocConfig.Register();
 
             using (var scope = IocConfig.Container.BeginLifetimeScope())
+            {
                 scope.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
+                scope.Resolve<IBlobService>().Initialise("downloads");
+            }
             
             // REMOVE WHEN IN WEBFARM!!!!!
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();

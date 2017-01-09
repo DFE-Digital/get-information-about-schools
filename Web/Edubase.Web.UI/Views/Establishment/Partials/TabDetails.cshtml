@@ -4,7 +4,7 @@
     <table class="borderless">
         <caption class="visually-hidden">@Model.Establishment.Name details</caption>
 
-        @if (Model.DisplayPolicy.ReligiousCharacter)
+        @if (Model.DisplayPolicy.ReligiousCharacterId)
         {
             <tr>
                 <th scope="row">Religious character:</th>
@@ -14,7 +14,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.Diocese)
+        @if (Model.DisplayPolicy.DioceseId)
         {
             <tr>
                 <th scope="row">Diocese:</th>
@@ -24,7 +24,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.ReligiousEhtos)
+        @if (Model.DisplayPolicy.ReligiousEthosId)
         {
             <tr>
                 <th scope="row">Religious ehtos:</th>
@@ -34,7 +34,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.BoardingProvision)
+        @if (Model.DisplayPolicy.ProvisionBoardingId)
         {
             <tr>
                 <th scope="row">Boarders:</th>
@@ -42,7 +42,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.BoardingProvision)
+        @if (Model.DisplayPolicy.ProvisionNurseryId)
         {
             <tr>
                 <th scope="row">Nursery provision:</th>
@@ -50,7 +50,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.OfficialSixthFormProvision)
+        @if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
         {
             <tr>
                 <th scope="row">Official sixth form:</th>
@@ -66,7 +66,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.Section41Approved)
+        @if (Model.DisplayPolicy.Section41ApprovedId)
         {
             <tr>
                 <th scope="row">Section 41 approved:</th>
@@ -93,7 +93,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.CCOperationalHours)
+        @if (Model.DisplayPolicy.CCOperationalHoursId)
         {
             <tr>
                 <th scope="row">Operational hours:</th>
@@ -113,7 +113,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.CCGovernance)
+        @if (Model.DisplayPolicy.CCGovernanceId)
         {
             <tr>
                 <th scope="row">Governance:</th>
@@ -155,7 +155,7 @@
                         </tr>
         }
 
-        @if (Model.DisplayPolicy.CCDeliveryModel)
+        @if (Model.DisplayPolicy.CCDeliveryModelId)
         {
             <tr>
                 <th scope="row">Delivery model:</th>
@@ -175,7 +175,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.CCGroupLeadCentre)
+        @if (Model.DisplayPolicy.CCGroupLeadId)
         {
             <tr>
                 <th scope="row">Group lead centre:</th>
@@ -185,7 +185,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.CCPhaseType)
+        @if (Model.DisplayPolicy.CCPhaseTypeId)
         {
             <tr>
                 <th scope="row">Phase:</th>
@@ -195,7 +195,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.CCDisadvantagedArea)
+        @if (Model.DisplayPolicy.CCDisadvantagedAreaId)
         {
             <tr>
                 <th scope="row">Disadvantaged area:</th>
@@ -205,7 +205,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.CCDirectProvisionOfEarlyYears)
+        @if (Model.DisplayPolicy.CCDirectProvisionOfEarlyYearsId)
         {
             <tr>
                 <th scope="row">Direct provision of early years:</th>
@@ -215,7 +215,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.SpecialClasses)
+        @if (Model.DisplayPolicy.ProvisionSpecialClassesId)
         {
             <tr>
                 <th scope="row">Special classes:</th>
@@ -241,19 +241,19 @@
         }
 
 
-        @if (Model.DisplayPolicy.MainEmailAddress)
+        @if (Model.DisplayPolicy.Contact_EmailAddress)
         {
             <tr>
                 <th scope="row">@Model.DisplayPolicy.MainEmailAddressLabel:</th>
-                <td>@(Model.Establishment.Contact.EmailAddress ?? "Not recorded")</td>
+                <td>@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</td>
             </tr>
         }
 
-        @if (Model.DisplayPolicy.AlternativeEmailAddress)
+        @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
         {
             <tr>
                 <th scope="row">Email:</th>
-                <td>@Model.Establishment.ContactAlt.EmailAddress</td>
+                <td>@Model.Establishment.ContactAlt_EmailAddress</td>
             </tr>
         }
 
@@ -265,7 +265,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.SENProvisions)
+        @if (Model.DisplayPolicy.TypeOfSENProvisionList)
         {
             <tr>
                 <th scope="row">Type of SEN provision:</th>
@@ -290,7 +290,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.TeenageMothers)
+        @if (Model.DisplayPolicy.TeenageMothersProvisionId)
         {
             <tr>
                 <th scope="row">Teenage mothers:</th>
@@ -306,7 +306,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.ChildcareFacilities)
+        @if (Model.DisplayPolicy.ChildcareFacilitiesId)
         {
             <tr>
                 <th scope="row">Childcare facilities:</th>
@@ -314,7 +314,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.SENFacilities)
+        @if (Model.DisplayPolicy.PRUSENId)
         {
             <tr>
                 <th scope="row">SEN facilities:</th>
@@ -322,7 +322,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.PupilsWithEBD)
+        @if (Model.DisplayPolicy.PRUEBDId)
         {
             <tr>
                 <th scope="row">Pupils with EBD:</th>
@@ -330,7 +330,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.PRUNumberOfPlaces)
+        @if (Model.DisplayPolicy.PlacesPRU)
         {
             <tr>
                 <th scope="row">Number of places:</th>
@@ -338,7 +338,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.PRUFullTimeProvision)
+        @if (Model.DisplayPolicy.PruFulltimeProvisionId)
         {
             <tr>
                 <th scope="row">Full time provision :</th>
@@ -347,7 +347,7 @@
         }
 
 
-        @if (Model.DisplayPolicy.PRUPupilsEducatedByOthers)
+        @if (Model.DisplayPolicy.PruEducatedByOthersId)
         {
             <tr>
                 <th scope="row">Pupils educated by other providers:</th>
@@ -356,7 +356,7 @@
         }
 
 
-        @if (Model.DisplayPolicy.TypeOfResourcedProvision)
+        @if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
         {
             <tr>
                 <th scope="row">Type of resourced provision:</th>
@@ -397,7 +397,7 @@
         }
 
 
-        @if (Model.DisplayPolicy.BSOInspectorate)
+        @if (Model.DisplayPolicy.BSOInspectorateId)
         {
             <tr>
                 <th scope="row">Inspectorate name:</th>
@@ -405,7 +405,7 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.BSOInspectorateReport)
+        @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
         {
             <tr>
                 <th scope="row">Inspectorate report:</th>

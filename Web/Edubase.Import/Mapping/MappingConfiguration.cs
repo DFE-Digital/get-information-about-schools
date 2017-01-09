@@ -155,6 +155,7 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.BSODateOfLastInspectionVisit, opt => opt.MapFrom(m => m.DateOfLastInspectionVisit.ToDateTime(_dtFormats)))
                     .ForMember(x => x.BSODateOfNextInspectionVisit, opt => opt.MapFrom(m => m.NextInspectionVisit.ToDateTime(_dtFormats)))
                     .ForMember(x => x.BSOInspectorateReportUrl, opt => opt.MapFrom(m => m.InspectorateReport))
+                    .ForMember(x => x.HeadPreferredJobTitle, opt => opt.MapFrom(m => m.HeadPreferredJobTitle))
                     .AfterMap((source, dest) =>
                     {
                         var rating = ofstedRatings.Get(dest.Urn);

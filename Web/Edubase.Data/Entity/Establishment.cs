@@ -279,6 +279,7 @@ namespace Edubase.Data.Entity
         public string BSOInspectorateReportUrl { get; set; }
         public DateTime? BSODateOfLastInspectionVisit { get; set; }
         public DateTime? BSODateOfNextInspectionVisit { get; set; }
+        public string HeadPreferredJobTitle { get; set; }
 
         private string _fullAddress = null;
 

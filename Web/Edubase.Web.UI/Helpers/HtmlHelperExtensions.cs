@@ -14,10 +14,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Caching;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -261,8 +263,31 @@ namespace Edubase.Web.UI.Helpers
         public static IHtmlString HiddenFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
          => condition ? htmlHelper.HiddenFor(expression) : MvcHtmlString.Empty;
 
+        public static IDisposable BeginFormRetainQuery(this HtmlHelper html, string action, string controller, FormMethod method)
+        {
+            var routeValues = new RouteValueDictionary();
+            var query = html.ViewContext.HttpContext.Request.QueryString;
+            foreach (string key in query)
+            {
+                routeValues[key] = query[key];
+            }
+            return html.BeginForm(action, controller, routeValues, FormMethod.Get);
+        }
 
+        public static IHtmlString HiddenFieldsFromQueryString(this HtmlHelper html)
+        {
+            var sb = new StringBuilder();
+            var query = html.ViewContext.HttpContext.Request.QueryString;
+            foreach (var item in query.AllKeys)
+            {
+                foreach (var item2 in query.GetValues(item))
+                {
+                    sb.AppendLine(html.Hidden(item, item2).ToString());
+                }
+            }
+            return new MvcHtmlString(sb.ToString());
 
+        }
 
     }
 }

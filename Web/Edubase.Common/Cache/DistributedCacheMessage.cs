@@ -11,7 +11,9 @@ namespace Edubase.Common.Cache
     {
         public const string MESSAGE_ALREADY_PROCESSED_SPECIFIER = "1";
         public string Key { get; set; }
-        public byte[] Value { get; set; }
+        public byte[] Buffer { get; set; }
+        public DateTime? ExpirationUtc { get; set; }
+
         public Guid Id { get; private set; }
         public string TransactionCacheKey { get { return string.Concat("DistributedCacheMessage_", Id); } }
         public string SenderCacheName { get; set; }

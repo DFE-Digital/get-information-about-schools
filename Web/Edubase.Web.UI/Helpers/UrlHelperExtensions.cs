@@ -26,5 +26,23 @@ namespace Edubase.Web.UI.Helpers
             
             return new MvcHtmlString(uriBuilder.Uri.MakeRelativeUri(uriBuilder.Uri).ToString());
         }
+
+        public static MvcHtmlString CurrentQueryString(this UrlHelper helper, object substitutes = null)
+        {
+            var url = helper.RequestContext.HttpContext.Request.Url;
+            var uriBuilder = new UriBuilder(url);
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+
+            if (substitutes != null)
+            {
+                foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(substitutes.GetType()))
+                {
+                    var value = property.GetValue(substitutes)?.ToString()?.Clean();
+                    if (value == null) query.Remove(property.Name);
+                    else query[property.Name] = value;
+                }
+            }
+            return new MvcHtmlString(query.ToString());
+        }
     }
 }

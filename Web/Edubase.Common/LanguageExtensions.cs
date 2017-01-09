@@ -250,6 +250,10 @@ namespace Edubase.Common
             return item;
         }
 
+        public static byte[] Compress(this byte[] buffer) => new IO.Compression().Compress(buffer);
+
+        public static byte[] Decompress(this byte[] buffer) => new IO.Compression().Decompress(buffer);
+
 
     }
 }
