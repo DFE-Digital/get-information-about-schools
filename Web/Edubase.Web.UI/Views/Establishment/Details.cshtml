@@ -8,7 +8,7 @@
     ViewBag.HideLogo = true;
 }
 
-@if (Model.ShowPendingMessage)
+@*@if (Model.ShowPendingMessage)
 {
     <div class="pending-updates-message dismissable-message">
         <div class="tick"></div>
@@ -40,12 +40,14 @@ else if (Model.UserHasPendingApprovals)
             </div>
         }
     </div>
-}
+}*@
 
 <h1 class="heading-large">@Html.PendingUpdateFor(x => x.Name) @Model.Establishment.Name</h1>
 
-@Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
-
+@if (Model.UserCanEdit)
+{
+    @Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
+}
 
 <div class="column-full">
     <div class="grid-row summary">

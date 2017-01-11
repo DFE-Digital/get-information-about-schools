@@ -18,6 +18,7 @@ using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Data.DbContext;
 using Newtonsoft.Json;
 using Edubase.Services.Establishments.Downloads;
+using Edubase.Services.Lookup;
 
 namespace Edubase.Web.UI
 {
@@ -66,9 +67,7 @@ namespace Edubase.Web.UI
                 .As<IExceptionLogger>()
                 .SingleInstance();
 
-            var jsonConverterCollection = new JsonConverterCollection();
-            jsonConverterCollection.Add(new DbGeographyConverter());
-            builder.RegisterInstance(jsonConverterCollection);
+            builder.RegisterInstance(new JsonConverterCollection() { new DbGeographyConverter() });
 
             builder.RegisterType<CacheAccessor>()
                 .SingleInstance().As<ICacheAccessor>()
@@ -105,6 +104,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<EstablishmentWriteService>().As<IEstablishmentWriteService>();
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();
+            builder.RegisterType<LookupService>().As<ILookupService>();
         }
         
     }

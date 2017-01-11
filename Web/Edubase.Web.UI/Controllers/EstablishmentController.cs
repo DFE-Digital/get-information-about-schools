@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Web.UI.Helpers;
 using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel;
+using Edubase.Services.Lookup;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -126,63 +127,63 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task AddOrRemoveEstablishmentLinks(ViewModel model, ApplicationDbContext dc)
         {
-            var svc = new CachedLookupService();
+            //var svc = new CachedLookupService();
 
-            var linksInDb = dc.EstablishmentLinks.Where(x => x.EstablishmentUrn == model.Urn).ToList();
-            var urnsInDb = linksInDb.Select(x => x.LinkedEstablishmentUrn).Cast<int?>().ToArray();
-            var urnsInModel = model.Links.Select(x => x.Urn).Cast<int?>().ToArray();
+            //var linksInDb = dc.EstablishmentLinks.Where(x => x.EstablishmentUrn == model.Urn).ToList();
+            //var urnsInDb = linksInDb.Select(x => x.LinkedEstablishmentUrn).Cast<int?>().ToArray();
+            //var urnsInModel = model.Links.Select(x => x.Urn).Cast<int?>().ToArray();
 
-            var urnsToAdd = from e in urnsInModel
-                            join l in urnsInDb on e equals l into l2
-                            from l3 in l2.DefaultIfEmpty()
-                            where l3 == null
-                            select e;
+            //var urnsToAdd = from e in urnsInModel
+            //                join l in urnsInDb on e equals l into l2
+            //                from l3 in l2.DefaultIfEmpty()
+            //                where l3 == null
+            //                select e;
 
-            var urnsToRemove = from l in urnsInDb
-                               join e in urnsInModel on l equals e into e2
-                               from e3 in e2.DefaultIfEmpty()
-                               where e3 == null
-                               select l;
+            //var urnsToRemove = from l in urnsInDb
+            //                   join e in urnsInModel on l equals e into e2
+            //                   from e3 in e2.DefaultIfEmpty()
+            //                   where e3 == null
+            //                   select l;
 
-            foreach (var urn in urnsToAdd.Cast<int>())
-            {
-                var item = model.Links.Where(x => x.Urn == urn).First();
-                var link = new EstablishmentLink
-                {
-                    EstablishmentUrn = model.Urn,
-                    LinkedEstablishmentUrn = urn,
-                    LinkEstablishedDate = item.LinkDate,
-                    LinkName = item.Name,
-                    LinkTypeId = (await svc.EstablishmentLinkTypesGetAllAsync()).Single(x => x.Name == item.Type).Id
-                };
-                dc.EstablishmentLinks.Add(link);
+            //foreach (var urn in urnsToAdd.Cast<int>())
+            //{
+            //    var item = model.Links.Where(x => x.Urn == urn).First();
+            //    var link = new EstablishmentLink
+            //    {
+            //        EstablishmentUrn = model.Urn,
+            //        LinkedEstablishmentUrn = urn,
+            //        LinkEstablishedDate = item.LinkDate,
+            //        LinkName = item.Name,
+            //        LinkTypeId = (await svc.EstablishmentLinkTypesGetAllAsync()).Single(x => x.Name == item.Type).Id
+            //    };
+            //    dc.EstablishmentLinks.Add(link);
 
-                var oppositeLinkType = (item.Type.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor);
-                var oppositeLinkTypeName = oppositeLinkType.ToString();
-                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkTypeName);
-                if (oppositeLink == null)
-                {
-                    oppositeLink = new EstablishmentLink
-                    {
-                        EstablishmentUrn = urn,
-                        LinkedEstablishmentUrn = model.Urn,
-                        LinkEstablishedDate = item.LinkDate,
-                        LinkName = model.Name,
-                        LinkTypeId = (await svc.EstablishmentLinkTypesGetAllAsync()).Single(x => x.Name == oppositeLinkType.ToString()).Id
-                    };
-                    dc.EstablishmentLinks.Add(oppositeLink);
-                }
-            }
+            //    var oppositeLinkType = (item.Type.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor);
+            //    var oppositeLinkTypeName = oppositeLinkType.ToString();
+            //    var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkTypeName);
+            //    if (oppositeLink == null)
+            //    {
+            //        oppositeLink = new EstablishmentLink
+            //        {
+            //            EstablishmentUrn = urn,
+            //            LinkedEstablishmentUrn = model.Urn,
+            //            LinkEstablishedDate = item.LinkDate,
+            //            LinkName = model.Name,
+            //            LinkTypeId = (await svc.EstablishmentLinkTypesGetAllAsync()).Single(x => x.Name == oppositeLinkType.ToString()).Id
+            //        };
+            //        dc.EstablishmentLinks.Add(oppositeLink);
+            //    }
+            //}
 
-            foreach (var urn in urnsToRemove.Cast<int>())
-            {
-                var linkDataModel = linksInDb.FirstOrDefault(x => x.LinkedEstablishmentUrn == urn);
-                if (linkDataModel != null) dc.EstablishmentLinks.Remove(linkDataModel);
+            //foreach (var urn in urnsToRemove.Cast<int>())
+            //{
+            //    var linkDataModel = linksInDb.FirstOrDefault(x => x.LinkedEstablishmentUrn == urn);
+            //    if (linkDataModel != null) dc.EstablishmentLinks.Remove(linkDataModel);
 
-                var oppositeLinkType = (linkDataModel.LinkType.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
-                var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkType);
-                if (oppositeLink != null) dc.EstablishmentLinks.Remove(oppositeLink);
-            }
+            //    var oppositeLinkType = (linkDataModel.LinkType.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
+            //    var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkType);
+            //    if (oppositeLink != null) dc.EstablishmentLinks.Remove(oppositeLink);
+            //}
 
         }
 
@@ -260,6 +261,14 @@ namespace Edubase.Web.UI.Controllers
             using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
                 viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
 
+
+            viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
+                .CanEdit(viewModel.Establishment.Urn.Value, 
+                    viewModel.Establishment.TypeId,
+                    viewModel.Group != null ? new[] { viewModel.Group.GroupUID } : null as int[], 
+                    viewModel.Establishment.LocalAuthorityId, 
+                    viewModel.Establishment.EstablishmentTypeGroupId);
+
             return View(viewModel);
         }
 
@@ -298,9 +307,6 @@ namespace Edubase.Web.UI.Controllers
             viewModel.UrbanRuralLookup = (await _cachedLookupService.UrbanRuralGetAllAsync()).ToSelectList(viewModel.UrbanRuralId);
             viewModel.GSSLALookup = (await _cachedLookupService.GSSLAGetAllAsync()).ToSelectList(viewModel.GSSLAId);
             viewModel.CASWards = (await _cachedLookupService.CASWardsGetAllAsync()).ToSelectList(viewModel.CASWardId);
-            
-
-
         }
 
     }

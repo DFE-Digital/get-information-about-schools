@@ -1,10 +1,12 @@
-﻿using Edubase.Common;
+﻿using Autofac;
+using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
 using Edubase.Data.Entity.Lookups;
 using Edubase.Services;
 using Edubase.Services.Domain;
+using Edubase.Services.Lookup;
 using Edubase.Web.UI.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -166,42 +168,42 @@ namespace Edubase.Web.UI.Helpers
             return d;
         }
 
-        [Obsolete]
-        public static MvcHtmlString EduLocalAuthorityDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
-        {
-            return htmlHelper.EduDropDownFor(expression,  new CachedLookupService().LocalAuthorityGetAll().Select(x => new SelectListItem
-            {
-                Text = string.Concat(x.Name, "(", x.Id, ")"),
-                Value = x.Id.ToString()
-            }));
-        }
+        //[Obsolete]
+        //public static MvcHtmlString EduLocalAuthorityDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        //{
+        //    return htmlHelper.EduDropDownFor(expression,  new CachedLookupService().LocalAuthorityGetAll().Select(x => new SelectListItem
+        //    {
+        //        Text = string.Concat(x.Name, "(", x.Id, ")"),
+        //        Value = x.Id.ToString()
+        //    }));
+        //}
 
-        [Obsolete]
-        public static MvcHtmlString EduHeadTitlesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().HeadTitlesGetAll());
+        //[Obsolete]
+        //public static MvcHtmlString EduHeadTitlesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+        //    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().HeadTitlesGetAll());
 
-        [Obsolete]
-        public static MvcHtmlString EduGendersDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().GendersGetAll());
+        //[Obsolete]
+        //public static MvcHtmlString EduGendersDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+        //            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().GendersGetAll());
 
-        [Obsolete]
-        public static MvcHtmlString EduEducationPhasesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().EducationPhasesGetAll());
+        //[Obsolete]
+        //public static MvcHtmlString EduEducationPhasesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+        //            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().EducationPhasesGetAll());
 
-        public static MvcHtmlString EduAdmissionsPoliciesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-                            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().AdmissionsPoliciesGetAll());
+        //public static MvcHtmlString EduAdmissionsPoliciesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+        //                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().AdmissionsPoliciesGetAll());
 
-        [Obsolete]
-        public static MvcHtmlString EduStatusesPoliciesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-                                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().EstablishmentStatusesGetAll());
+        //[Obsolete]
+        //public static MvcHtmlString EduStatusesPoliciesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+        //                            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().EstablishmentStatusesGetAll());
 
-        [Obsolete]
-        public static MvcHtmlString EduEstablishmentTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, 
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().EstablishmentTypesGetAll());
+        //[Obsolete]
+        //public static MvcHtmlString EduEstablishmentTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, 
+        //    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().EstablishmentTypesGetAll());
 
-        [Obsolete]
-        public static MvcHtmlString EduGroupTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().GroupTypesGetAll());
+        //[Obsolete]
+        //public static MvcHtmlString EduGroupTypesDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+        //    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(expression,  new CachedLookupService().GroupTypesGetAll());
 
         /// <summary>
         /// Group Types drop down but limited to just single and multi-academy trusts
@@ -211,11 +213,11 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="htmlHelper"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        [Obsolete]
-        public static MvcHtmlString EduGroupTypesForCreateDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-                    Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(
-                        expression,  new CachedLookupService().GroupTypesGetAll().Where(x=>x.Name.Contains("Multi") 
-                        || x.Name.Contains("Single")));
+        //[Obsolete]
+        //public static MvcHtmlString EduGroupTypesForCreateDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+        //            Expression<Func<TModel, TProperty>> expression) => htmlHelper.EduLookupDropDownFor(
+        //                expression,  new CachedLookupService().GroupTypesGetAll().Where(x=>x.Name.Contains("Multi") 
+        //                || x.Name.Contains("Single")));
 
         [Obsolete]
         public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, 
@@ -235,18 +237,18 @@ namespace Edubase.Web.UI.Helpers
                 Value = x.Id.ToString()
             }));
 
-        [Obsolete]
-        public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> modelExpression,
-            Expression<Func<CachedLookupService, IEnumerable<LookupDto>>> lookupSourceExpression)
-        {
-            var items = lookupSourceExpression.Compile()( new CachedLookupService());
-            return htmlHelper.EduDropDownFor(modelExpression, items.Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            }));
-        }
+        //[Obsolete]
+        //public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
+        //    Expression<Func<TModel, TProperty>> modelExpression,
+        //    Expression<Func<CachedLookupService, IEnumerable<LookupDto>>> lookupSourceExpression)
+        //{
+        //    var items = lookupSourceExpression.Compile()( new CachedLookupService());
+        //    return htmlHelper.EduDropDownFor(modelExpression, items.Select(x => new SelectListItem
+        //    {
+        //        Text = x.Name,
+        //        Value = x.Id.ToString()
+        //    }));
+        //}
 
         /// <summary>
         /// Gets the name of the item associated with a Lookup item id
@@ -255,18 +257,21 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="htmlHelper"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        [Obsolete]
         public static IHtmlString NameFor<EstablishmentDetailViewModel>(this HtmlHelper<EstablishmentDetailViewModel> htmlHelper,
             Expression<Func<EstablishmentDetailViewModel, int?>> expression)
         {
-            var expressionText = ExpressionHelper.GetExpressionText(expression).Split('.').Last();
-            var id = expression.Compile()(htmlHelper.ViewData.Model);
-            if ( new CachedLookupService().IsLookupField(expressionText))
+            using (var scope = IocConfig.Container.BeginLifetimeScope())
             {
-                if (id.HasValue) return new MvcHtmlString( new CachedLookupService().GetName(expressionText, id.Value));
-                else return MvcHtmlString.Empty;
+                var cachedLookupService = scope.Resolve<ICachedLookupService>();
+                var expressionText = ExpressionHelper.GetExpressionText(expression).Split('.').Last();
+                var id = expression.Compile()(htmlHelper.ViewData.Model);
+                if (cachedLookupService.IsLookupField(expressionText))
+                {
+                    if (id.HasValue) return new MvcHtmlString(cachedLookupService.GetName(expressionText, id.Value));
+                    else return MvcHtmlString.Empty;
+                }
+                else throw new Exception($"The lookup name '{expressionText}' was not recognised");
             }
-            else return new MvcHtmlString("_ new CachedLookupService()_NOT_RECOGNISED__");
         }
 
 

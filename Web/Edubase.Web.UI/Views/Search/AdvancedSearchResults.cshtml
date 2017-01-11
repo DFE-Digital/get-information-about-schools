@@ -5,8 +5,6 @@
     ViewBag.Title = string.Format("Search results for '{0}'", Model.TextSearchModel.Text);
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
-
-    var cache = new Edubase.Services.CachedLookupService();
 }
 
 <div class="grid-row">
@@ -143,7 +141,7 @@
                             <dt>LAESTAB:</dt>
                             <dd>@result.GetLAESTAB()</dd>
                             <dt>Status:</dt>
-                            <dd>@(cache.EstablishmentStatusesGetAll().FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "--")</dd>
+                            <dd>@(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "--")</dd>
                         </dl>
                     </li>
                 }

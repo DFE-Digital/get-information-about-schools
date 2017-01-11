@@ -8,6 +8,7 @@ using AutoMapper;
 using Edubase.Data;
 using System.Collections.Generic;
 using System;
+using Edubase.Services.Lookup;
 
 namespace Edubase.Import.Mapping
 {
@@ -15,11 +16,14 @@ namespace Edubase.Import.Mapping
     {
         private static readonly string[] _dtFormats = new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" };
 
-        private static CachedLookupService L { get; set; } = new CachedLookupService();
+        private static ICachedLookupService L { get; set; }
         private static IMapper _mapper = null;
 
-        public static IMapper Create(Dictionary<int, Ofstedratings> ofstedRatings, Dictionary<int, Cclacontacts> laContacts)
+        public static IMapper Create(Dictionary<int, Ofstedratings> ofstedRatings, 
+            Dictionary<int, Cclacontacts> laContacts, ICachedLookupService lookupService)
         {
+            L = lookupService;
+
             return _mapper = new MapperConfiguration(cfg =>
             {
                 var contactAltMapper = new MapperConfiguration(cfg2 =>

@@ -8,11 +8,14 @@ using MoreLinq;
 using Edubase.Services.Establishments.Enums;
 using Edubase.Data.DbContext;
 using Edubase.Services.Exceptions;
+using Edubase.Services.Lookup;
 
 namespace Edubase.Services.Establishments
 {
     public class LAESTABService : ILAESTABService
     {
+        private ICachedLookupService _cachedLookupService;
+
         #region EstabNoRules
 
         private static readonly string[][] _estabNoRules = new string[][]
@@ -64,8 +67,12 @@ namespace Edubase.Services.Establishments
             new[]{"98 - Legacy types","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE"}
         };
 
-
         #endregion
+
+        public LAESTABService(ICachedLookupService cachedLookupService)
+        {
+            _cachedLookupService = cachedLookupService;
+        }
 
         public EstabNumberEntryPolicy GetEstabNumberEntryPolicy(int establishmentTypeId, int educationPhaseId)
         {
@@ -132,9 +139,8 @@ namespace Edubase.Services.Establishments
         public Dictionary<string, string> GetSimplifiedRules()
         {
             var retVal = new Dictionary<string, string>();
-            var svc = new CachedLookupService();
-            var phases = svc.EducationPhasesGetAll().Select(x => int.Parse(x.Code));
-            var types = svc.EstablishmentTypesGetAll().Select(x => int.Parse(x.Code));
+            var phases = _cachedLookupService.EducationPhasesGetAll().Select(x => int.Parse(x.Code));
+            var types = _cachedLookupService.EstablishmentTypesGetAll().Select(x => int.Parse(x.Code));
             phases.ForEach(p => types.ForEach(t => retVal.Add(string.Concat(p, "-", t), GetEstabNumberEntryPolicy(t, p).ToString())));
             return retVal;
         }

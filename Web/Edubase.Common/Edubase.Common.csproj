@@ -70,7 +70,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cacher.cs" />
     <Compile Include="Cache\CacheAccessor.cs" />
     <Compile Include="Cache\CacheAuditLogItem.cs" />
     <Compile Include="Cache\CacheConfig.cs" />

@@ -102,8 +102,13 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<LookupItemViewModel> ReligiousCharacters { get; set; }
         [BindAlias("r")]
         public List<int> SelectedReligiousCharacterIds { get; set; } = new List<int>();
+        
+        public IEnumerable<LookupItemViewModel> GovernorRoles { get; set; }
 
-
-
+        /// <summary>
+        /// When one result is found, whether to redirect the user to the detail page
+        /// </summary>
+        [BindAlias("g")]
+        public bool GoToDetailPageOnOneResult { get; set; }
     }
 }

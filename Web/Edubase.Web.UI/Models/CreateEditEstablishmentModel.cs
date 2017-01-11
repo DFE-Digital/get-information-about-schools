@@ -178,7 +178,7 @@ namespace Edubase.Web.UI.Models
 
         public CreateEditEstablishmentModel()
         {
-            SimplifiedLAESTABRules = new LAESTABService().GetSimplifiedRules();
+            //SimplifiedLAESTABRules = new LAESTABService().GetSimplifiedRules();
         }
     }
 }

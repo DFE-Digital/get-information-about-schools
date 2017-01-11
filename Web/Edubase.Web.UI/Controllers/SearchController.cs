@@ -17,6 +17,7 @@ namespace Edubase.Web.UI.Controllers
     using Services.Groups;
     using Services.Groups.Models;
     using Services.Groups.Search;
+    using Services.Lookup;
     using StackExchange.Profiling;
     using System;
     using System.Threading.Tasks;
@@ -24,20 +25,23 @@ namespace Edubase.Web.UI.Controllers
 
     public partial class SearchController : EduBaseController
     {
-        private IEstablishmentReadService _establishmentReadService;
-        private IGroupReadService _groupReadService;
-        private IEstablishmentDownloadService _establishmentDownloadService;
+        IEstablishmentReadService _establishmentReadService;
+        IGroupReadService _groupReadService;
+        IEstablishmentDownloadService _establishmentDownloadService;
+        ICachedLookupService _lookupService;
 
         public SearchController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService,
-            IEstablishmentDownloadService establishmentDownloadService)
+            IEstablishmentDownloadService establishmentDownloadService,
+            ICachedLookupService lookupService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _establishmentDownloadService = establishmentDownloadService;
+            _lookupService = lookupService;
         }
 
-        public ActionResult Index() => View();
+        public async Task<ActionResult> Index() => View(await PopulateLookups(new ViewModel()));
         
         [HttpGet]
         public async Task<ActionResult> Results(ViewModel model)

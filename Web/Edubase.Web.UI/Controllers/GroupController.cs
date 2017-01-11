@@ -14,13 +14,21 @@ using Edubase.Services.Enums;
 using Edubase.Web.UI.Filters;
 using Edubase.Data.DbContext;
 using Edubase.Services.Governors;
+using Edubase.Common.Cache;
+using Edubase.Services.Lookup;
 
 namespace Edubase.Web.UI.Controllers
 {
     public class GroupController : Controller
     {
         private const string VIEWNAME = "CreateEdit";
-        
+        ICachedLookupService _cachedLookupService;
+
+        public GroupController(ICachedLookupService cachedLookupService)
+        {
+            _cachedLookupService = cachedLookupService;
+        }
+
         [EdubaseAuthorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
@@ -180,7 +188,7 @@ namespace Edubase.Web.UI.Controllers
                 LookupDto la = null;
                 if(mat.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresCollaboration, eLookupGroupType.ChildrensCentresGroup))
                 {
-                    la = (await new CachedLookupService().LocalAuthorityGetAllAsync()).First(x => x.Id == estabs.First().Establishment.LocalAuthorityId);
+                    la = (await _cachedLookupService.LocalAuthorityGetAllAsync()).First(x => x.Id == estabs.First().Establishment.LocalAuthorityId);
                 }
 
                 var gsvc = new GovernorsReadService();

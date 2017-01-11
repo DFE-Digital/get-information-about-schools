@@ -379,7 +379,7 @@
         /// <param name="value"></param>
         /// <param name="cacheExpiry"></param>
         /// <returns></returns>
-        public void Set<T>(string key, T value, TimeSpan? cacheExpiry)
+        public void Set<T>(string key, T value, TimeSpan? cacheExpiry = null)
         {
             var t = SetAsync(key, value, cacheExpiry);
         }
@@ -657,30 +657,11 @@
             return key.ToLower();
         }
 
-        public string CreateKey(string domain, string key)
-        {
-            return CreateKey(string.Concat(domain, "_", key));
-        }
-
-        public string CreateKey(string key)
-        {
-            return key.ToLower();
-        }
-
-        public T Get<T>(string domain, string key)
-        {
-            return Get<T>(CreateKey(domain, key));
-        }
-
-        public async Task<T> GetAsync<T>(string domain, string key)
-        {
-            return await GetAsync<T>(CreateKey(domain, key));
-        }
-
-        public async Task<bool> DeleteAsync(string domain, string key)
-        {
-            return await DeleteAsync(CreateKey(domain, key));
-        }
+        public string CreateKey(string domain, string key) => CreateKey(string.Concat(domain, "_", key));
+        public string CreateKey(string key) => key.ToLower();
+        public T Get<T>(string domain, string key) => Get<T>(CreateKey(domain, key));
+        public async Task<T> GetAsync<T>(string domain, string key) => await GetAsync<T>(CreateKey(domain, key));
+        public async Task<bool> DeleteAsync(string domain, string key) => await DeleteAsync(CreateKey(domain, key));
 
         #endregion
         
@@ -726,19 +707,6 @@
             return retVal;
         }
 
-        /// <summary>
-        /// Clones an object by serializing it and then deserializing it.
-        /// It's done this way rather than cloning because cloning is not supported by .NET list/dictionary objects.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        //private T Clone<T>(object obj)
-        //{
-        //    if (obj == null) return default(T);
-        //    return Deserialize<T>(Serialize(obj));
-        //}
-
         public void Dispose()
         {
             if (_connection != null)
@@ -759,25 +727,82 @@
         /// Automatically caches an items and calls the factory if it doesn't exist.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="factory"></param>
-        /// <param name="cacheKey"></param>
+        /// <param name="asyncFactory">An async factory method</param>
+        /// <param name="paramsCacheKey">The main cache key comes from the caller type name and caller func. name. This is purely the parameters, as a concatenated string</param>
         /// <param name="callerTypeName"></param>
         /// <param name="callerFuncName"></param>
         /// <param name="relationshipKey">Appends this cache item with this key value</param>
         /// <returns></returns>
-        public async Task<T> AutoAsync<T>(Func<Task<T>> factory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
+        public async Task<T> AutoAsync<T>(Func<Task<T>> asyncFactory, string paramsCacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
         {
-            var key = $"{callerTypeName}.{callerFuncName}({cacheKey})".ToLower();
+            var key = $"{callerTypeName}.{callerFuncName}({paramsCacheKey})".ToLower();
             var retVal = await GetAsync<T>(key);
 
             if (retVal == null)
             {
-                retVal = await factory();
+                retVal = await asyncFactory();
                 if (retVal != null)
                 {
                     await SetAsync(key, retVal);
 
-                    if (relationshipKey != null) await _cacheDatabase.StringAppendAsync(relationshipKey.ToLower(), string.Concat(key, ";"));
+                    if (relationshipKey != null && _config.IsCentralCacheEnabled)
+                        await _cacheDatabase.StringAppendAsync(relationshipKey.ToLower(), string.Concat(key, ";"));
+                }
+            }
+            return retVal;
+        }
+
+        /// <summary>
+        /// Automatically sets the cache key based on the caller function name
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="factory"></param>
+        /// <param name="paramsCacheKey"></param>
+        /// <param name="callerTypeName"></param>
+        /// <param name="relationshipKey"></param>
+        /// <param name="callerFuncName"></param>
+        /// <returns></returns>
+        public async Task<T> AutoAsync<T>(Func<T> factory, string paramsCacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
+        {
+            var key = $"{callerTypeName}.{callerFuncName}({paramsCacheKey})".ToLower();
+            var retVal = await GetAsync<T>(key);
+
+            if (retVal == null)
+            {
+                retVal = factory();
+                if (retVal != null)
+                {
+                    await SetAsync(key, retVal);
+                    if (relationshipKey != null && _config.IsCentralCacheEnabled)
+                        await _cacheDatabase.StringAppendAsync(relationshipKey.ToLower(), string.Concat(key, ";"));
+                }
+            }
+            return retVal;
+        }
+        
+        /// <summary>
+        /// Automatically sets the cache key based on the caller function name
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="factory"></param>
+        /// <param name="paramsCacheKey"></param>
+        /// <param name="callerTypeName"></param>
+        /// <param name="relationshipKey"></param>
+        /// <param name="callerFuncName"></param>
+        /// <returns></returns>
+        public T Auto<T>(Func<T> factory, string paramsCacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
+        {
+            var key = $"{callerTypeName}.{callerFuncName}({paramsCacheKey})".ToLower();
+            var retVal = Get<T>(key);
+
+            if (retVal == null)
+            {
+                retVal = factory();
+                if (retVal != null)
+                {
+                    Set(key, retVal);
+                    if (relationshipKey != null && _config.IsCentralCacheEnabled)
+                        _cacheDatabase.StringAppend(relationshipKey.ToLower(), string.Concat(key, ";"));
                 }
             }
             return retVal;
@@ -785,6 +810,8 @@
 
         public async Task ClearRelatedCacheKeysAsync(string relationshipKey)
         {
+            if (!_config.IsCentralCacheEnabled) return;
+
             var data = (string) await _cacheDatabase.StringGetAsync(relationshipKey);
             if (data != null)
             {
@@ -797,7 +824,6 @@
             }
         }
         
-
         public long GetMemoryCacheApproximateSize()
         {
             var statsField = typeof(MemoryCache).GetField("_stats", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -810,13 +836,9 @@
             return (long)approxProp.GetValue(sizeValue, null);
         }
 
-
-        public IGrouping<string, KeyValuePair<string, string>>[] GetRedisMemoryUsage()
-        {
-            return _connection.GetServer(_connection.GetEndPoints()[0]).Info("Memory");
-        }
+        public IGrouping<string, KeyValuePair<string, string>>[] GetRedisMemoryUsage() => 
+            _connection.GetServer(_connection.GetEndPoints()[0]).Info("Memory");
         
-
     }
 
 

@@ -173,7 +173,7 @@
     <Compile Include="ApprovalService.cs" />
     <Compile Include="BlobService.cs" />
     <Compile Include="BusMessagingService.cs" />
-    <Compile Include="CachedLookupService.cs" />
+    <Compile Include="Lookup\CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
     <Compile Include="Domain\ChildrensCentreLocalAuthorityDto.cs" />
@@ -305,7 +305,6 @@
     <Compile Include="Groups\GroupReadService.cs" />
     <Compile Include="Groups\IGroupReadService.cs" />
     <Compile Include="Groups\Models\GroupModel.cs" />
-    <Compile Include="ICachedLookupService.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\AzureSearchEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\Base64String.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\BlobStorageEndPoint.cs" />
@@ -316,9 +315,11 @@
     <Compile Include="IntegrationEndPoints\Smtp\MockSmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\Smtp\SmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\TableStorageEndPoint.cs" />
+    <Compile Include="Lookup\ICachedLookupService.cs" />
+    <Compile Include="Lookup\ILookupService.cs" />
     <Compile Include="Mapping\AutoMapperServicesProfile.cs" />
     <Compile Include="MessageLoggingService.cs" />
-    <Compile Include="LookupService.cs" />
+    <Compile Include="Lookup\LookupService.cs" />
     <Compile Include="LogMessageReadService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\StubClaimsIdConverter.cs" />

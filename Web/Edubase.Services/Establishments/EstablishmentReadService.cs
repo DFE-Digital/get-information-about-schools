@@ -29,6 +29,7 @@ namespace Edubase.Services.Establishments
     using System.IO;
     using Common.IO;
     using Ionic.Zip;
+    using Lookup;
 
     public class EstablishmentReadService : IEstablishmentReadService
     {

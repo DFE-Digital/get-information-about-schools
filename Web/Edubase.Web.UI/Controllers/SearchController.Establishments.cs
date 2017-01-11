@@ -16,6 +16,7 @@ namespace Edubase.Web.UI.Controllers
     using Services.Groups;
     using Services.Groups.Models;
     using Services.Groups.Search;
+    using Services.Lookup;
     using StackExchange.Profiling;
     using System;
     using System.Threading.Tasks;
@@ -23,8 +24,6 @@ namespace Edubase.Web.UI.Controllers
 
     public partial class SearchController : EduBaseController
     {
-        
-
         private Returns<EstablishmentSearchPayload> GetEstablishmentSearchPayload(ViewModel model)
         {
             var retVal = new Returns<EstablishmentSearchPayload>();
@@ -82,19 +81,18 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            if (model.Count == 1) return RedirectToEstabDetail(model.Results.First().Urn.GetValueOrDefault());
+            if (model.Count == 1 && model.GoToDetailPageOnOneResult) return RedirectToEstabDetail(model.Results.First().Urn.GetValueOrDefault());
             else
             {
                 var permittedStatusIds = _establishmentReadService.GetPermittedStatusIds(User);
 
-                using (MiniProfiler.Current.Step("Populate lookups from CachedLookupService"))
+                using (MiniProfiler.Current.Step("Populate filter lookups from CachedLookupService"))
                 {
-                    var svc = new CachedLookupService();
-                    model.EstablishmentTypes = (await svc.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                    model.EstablishmentStatuses = (await svc.EstablishmentStatusesGetAllAsync()).Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id)).Select(x => new LookupItemViewModel(x));
-                    model.EducationPhases = (await svc.EducationPhasesGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                    model.ReligiousCharacters = (await svc.ReligiousCharactersGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                    model.LocalAuthorties = (await svc.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                    model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    model.EstablishmentStatuses = (await _lookupService.EstablishmentStatusesGetAllAsync()).Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id)).Select(x => new LookupItemViewModel(x));
+                    model.EducationPhases = (await _lookupService.EducationPhasesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    model.ReligiousCharacters = (await _lookupService.ReligiousCharactersGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    await PopulateLookups(model);
                 }
                 
                 return View("AdvancedSearchResults", model);
@@ -124,7 +122,15 @@ namespace Edubase.Web.UI.Controllers
                 { "id", urn }
             });
 
-        
+        private async Task<ViewModel> PopulateLookups(ViewModel vm)
+        {
+            using (MiniProfiler.Current.Step($"{GetType().Name}.{nameof(PopulateLookups)}"))
+            {
+                vm.LocalAuthorties = (await _lookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.GovernorRoles = (await _lookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+            }
+            return vm;
+        }
         
 
     }
