@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Identity;
+﻿using Edubase.Common;
+using Edubase.Data.Identity;
 using Edubase.Services.Security;
 using Edubase.Services.Security.ClaimsIdentityConverters;
 using Edubase.Web.UI.Helpers;
@@ -45,7 +46,7 @@ namespace Edubase.Web.UI.Controllers
         {
             return new ChallengeResult(AuthenticationManager.GetExternalAuthenticationTypes()
                 .First().AuthenticationType, 
-                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = "/Search" }));
+                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl.Clean() ?? "/Search" }));
         }
 
         //
