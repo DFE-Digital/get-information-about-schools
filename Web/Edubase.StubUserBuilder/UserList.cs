@@ -42,7 +42,7 @@ namespace Edubase.StubUserBuilder
                 if (perm != null) claims.Add(new Claim(ct, perm));
             });
 
-            return new ClaimsIdentity(claims, "ApplicationCookie", ClaimTypes.NameIdentifier, ClaimTypes.Role);
+            return new ClaimsIdentity(claims, "ApplicationCookie", ClaimTypes.Name, ClaimTypes.Role);
         }
     }
 
