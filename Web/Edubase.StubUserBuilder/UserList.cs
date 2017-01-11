@@ -1,10 +1,13 @@
 ﻿using Edubase.Common;
+using Edubase.Services.Security;
 using Edubase.Services.Security.Permissions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
+using MoreLinq;
 
 namespace Edubase.StubUserBuilder
 {
@@ -20,6 +23,27 @@ namespace Edubase.StubUserBuilder
         public string DisplayName { get; set; }
         public string Description { get; set; }
         public Assertion Assertion { get; set; } = new Assertion();
+
+        public ClaimsIdentity ToClaimsIdentity()
+        {
+            var claims = new List<Claim>();
+
+            var nameClaim = new Claim(ClaimTypes.NameIdentifier, Assertion.NameId);
+            claims.Add(nameClaim);
+
+            var roleClaim = new Claim(ClaimTypes.Role, Assertion.AttributeStatements.First(x => x.Type == ClaimTypes.Role).Value);
+            claims.Add(roleClaim);
+
+            var t = new[] { EduClaimTypes.EditEstablishment, EduClaimTypes.CreateEstablishment, EduClaimTypes.EditGroup, EduClaimTypes.CreateGroup };
+
+            t.ForEach(ct =>
+            {
+                var perm = Assertion.AttributeStatements.FirstOrDefault(x => x.Type == ct)?.Value;
+                if (perm != null) claims.Add(new Claim(ct, perm));
+            });
+
+            return new ClaimsIdentity(claims, "ApplicationCookie", ClaimTypes.NameIdentifier, ClaimTypes.Role);
+        }
     }
 
     public class Assertion
