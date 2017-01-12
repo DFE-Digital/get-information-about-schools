@@ -8,6 +8,7 @@ using System;
 namespace Edubase.Web.UI.Controllers
 {
     using Common.Spatial;
+    using Helpers;
     using Models.Search;
     using Services;
     using Services.Domain;
@@ -20,6 +21,7 @@ namespace Edubase.Web.UI.Controllers
     using Services.Lookup;
     using StackExchange.Profiling;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using ViewModel = AdvancedSearchViewModel;
 
@@ -41,12 +43,20 @@ namespace Edubase.Web.UI.Controllers
             _lookupService = lookupService;
         }
 
-        public async Task<ActionResult> Index() => View(await PopulateLookups(new ViewModel()));
+        public async Task<ActionResult> Index(ViewModel vm) => View(await PopulateLookups(vm));
         
         [HttpGet]
         public async Task<ActionResult> Results(ViewModel model)
         {
-            if(model.SearchCollection == ViewModel.eSearchCollection.Establishments)
+            if (model.LocalAuthorityToRemove.HasValue)
+            {
+                return Redirect("/?" + QueryStringHelper.ToQueryString("l", model.RemoveLocalAuthorityId(model.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
+            }
+            else if (model.SearchType == ViewModel.eSearchType.LocalAuthorityDisambiguation)
+            {
+                return await ProcessLocalAuthorityDisambiguation(model);
+            }
+            else if (model.SearchCollection == ViewModel.eSearchCollection.Establishments)
             {
                 var retVal = await SearchByUrnAsync(model);
                 if (retVal != null) return retVal;
@@ -60,6 +70,19 @@ namespace Edubase.Web.UI.Controllers
                 if (model.SearchType == ViewModel.eSearchType.Group) return await SearchGroups(model);
                 else if (model.SearchType == ViewModel.eSearchType.Governor) return SearchGovernors(model.GovernorSearchModel);
                 throw new NotImplementedException();
+            }
+        }
+
+        private async Task<ActionResult> ProcessLocalAuthorityDisambiguation(ViewModel model)
+        {
+            var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
+            var localAuthority = localAuthorities.FirstOrDefault(x => x.Name.Equals(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase));
+            if (localAuthority != null) return Redirect("/?" + QueryStringHelper.ToQueryString("l", model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
+            else
+            {
+                var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(model.SelectedLocalAuthorityIds, model.LocalAuthorityToAdd,
+                    localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList());
+                return View("LocalAuthorityDisambiguation", localAuthorityDisambiguationViewModel);
             }
         }
 

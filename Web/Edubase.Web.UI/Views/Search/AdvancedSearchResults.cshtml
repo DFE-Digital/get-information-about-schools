@@ -38,7 +38,7 @@
                 <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the URN "@Model.TextSearchModel.Text".</p>
             }
         }
-        else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.LocalAuthority)
+        else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
         {
             <p>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</p>
         }
@@ -99,7 +99,7 @@
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                     }
-                    else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.LocalAuthority)
+                    else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
                     {
                         @*@Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.Text)
                         @Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.AutoSuggestValue)*@

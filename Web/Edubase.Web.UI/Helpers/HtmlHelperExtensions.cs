@@ -303,9 +303,10 @@ namespace Edubase.Web.UI.Helpers
             var query = html.ViewContext.HttpContext.Request.QueryString;
             foreach (var item in query.AllKeys)
             {
-                foreach (var item2 in query.GetValues(item))
+                var vals = query.GetValues(item);
+                foreach (var item2 in vals)
                 {
-                    sb.AppendLine(html.Hidden(item, item2).ToString());
+                    sb.AppendLine("\r\n\t\t\t\t\t\t\t\t\t" + $@"<input type=""hidden"" name=""{item}"" value=""{item2}"" />");
                 }
             }
             return new MvcHtmlString(sb.ToString());

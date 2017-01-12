@@ -326,6 +326,7 @@
     <Compile Include="Models\PendingChangeViewModel.cs" />
     <Compile Include="Models\SearchResultsModel.cs" />
     <Compile Include="Models\GroupEstabViewModel.cs" />
+    <Compile Include="Models\Search\LocalAuthorityDisambiguationViewModel.cs" />
     <Compile Include="Models\Validators\CreateEditGroupModelValidator.cs" />
     <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
     <Compile Include="MvcResult\ChallengeResult.cs" />
@@ -773,6 +774,7 @@
     <Content Include="Views\Search\Download\SelectDataset.cshtml" />
     <Content Include="Views\Search\Download\PreparingFilePleaseWait.cshtml" />
     <Content Include="Views\Search\Download\ReadyToDownload.cshtml" />
+    <Content Include="Views\Search\LocalAuthorityDisambiguation.cshtml" />
     <None Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />

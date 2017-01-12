@@ -39,9 +39,10 @@ namespace Edubase.Web.UI.Models
         {
             Text,
             Location,
-            LocalAuthority,
+            ByLocalAuthority,
             Group,
-            Governor
+            Governor,
+            LocalAuthorityDisambiguation
         }
 
         public enum eTextSearchType
@@ -110,5 +111,24 @@ namespace Edubase.Web.UI.Models
         /// </summary>
         [BindAlias("g")]
         public bool GoToDetailPageOnOneResult { get; set; }
+
+
+        public string LocalAuthorityToAdd { get; set; }
+
+        public int? LocalAuthorityToRemove { get; set; }
+
+        public AdvancedSearchViewModel AddLocalAuthorityId(int id)
+        {
+            SelectedLocalAuthorityIds.Add(id);
+            return this;
+        }
+
+        public AdvancedSearchViewModel RemoveLocalAuthorityId(int id)
+        {
+            SelectedLocalAuthorityIds.Remove(id);
+            return this;
+        }
+        
+
     }
 }
