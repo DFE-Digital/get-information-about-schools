@@ -15,6 +15,6 @@ namespace Edubase.Data.Entity.ComplexTypes
         [NotMapped]
         public string FullName => ToString();
 
-        public override string ToString() => StringUtil.ConcatNonEmpties(" ", Title, FirstName, LastName);
+        public override string ToString() => StringUtil.ConcatNonEmpties(" ", Title, FirstName, MiddleName, LastName);
     }
 }

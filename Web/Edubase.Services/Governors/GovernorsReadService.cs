@@ -49,7 +49,7 @@ namespace Edubase.Services.Governors
             var date = DateTime.UtcNow.Date;
             return dc.Governors
                 .Include(x => x.AppointingBody).Include(x => x.Role)
-                .Where(x => !x.AppointmentEndDate.HasValue || x.AppointmentEndDate > date);
+                .Where(x => (!x.AppointmentEndDate.HasValue || x.AppointmentEndDate > date) && x.IsDeleted == false);
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace Edubase.Services.Governors
             var date1 = DateTime.UtcNow.Date.AddYears(-1);
             var date2 = DateTime.UtcNow.Date;
             return dc.Governors.Include(x => x.AppointingBody).Include(x => x.Role)
-                .Where(x => x.AppointmentEndDate != null
+                .Where(x => (x.AppointmentEndDate != null
                 && x.AppointmentEndDate.Value > date1
-                && x.AppointmentEndDate < date2);
+                && x.AppointmentEndDate < date2) && x.IsDeleted == false);
         }
     }
 }
