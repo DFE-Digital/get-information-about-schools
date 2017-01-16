@@ -28,14 +28,21 @@ namespace Edubase.Web.UI.Models
             public int? AutoSuggestValueAsInt => AutoSuggestValue.ToInteger();
         }
 
+        public enum eSearchCollection
+        {
+            Establishments,
+            Groups,
+            Governors
+        }
 
         public enum eSearchType
         {
             Text,
             Location,
-            LocalAuthority,
+            ByLocalAuthority,
             Group,
-            Governor
+            Governor,
+            LocalAuthorityDisambiguation
         }
 
         public enum eTextSearchType
@@ -74,8 +81,9 @@ namespace Edubase.Web.UI.Models
         public Payload GroupSearchModel { get; set; } = new Payload();
 
         public eSearchType SearchType { get; set; }
-        
 
+        public eSearchCollection SearchCollection => SearchType == eSearchType.Governor ? eSearchCollection.Governors : (SearchType == eSearchType.Group ? eSearchCollection.Groups : eSearchCollection.Establishments);
+        
         public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
         [BindAlias("t")]
         public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();
@@ -95,8 +103,32 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<LookupItemViewModel> ReligiousCharacters { get; set; }
         [BindAlias("r")]
         public List<int> SelectedReligiousCharacterIds { get; set; } = new List<int>();
+        
+        public IEnumerable<LookupItemViewModel> GovernorRoles { get; set; }
+
+        /// <summary>
+        /// When one result is found, whether to redirect the user to the detail page
+        /// </summary>
+        [BindAlias("g")]
+        public bool GoToDetailPageOnOneResult { get; set; }
 
 
+        public string LocalAuthorityToAdd { get; set; }
+
+        public int? LocalAuthorityToRemove { get; set; }
+
+        public AdvancedSearchViewModel AddLocalAuthorityId(int id)
+        {
+            SelectedLocalAuthorityIds.Add(id);
+            return this;
+        }
+
+        public AdvancedSearchViewModel RemoveLocalAuthorityId(int id)
+        {
+            SelectedLocalAuthorityIds.Remove(id);
+            return this;
+        }
+        
 
     }
 }

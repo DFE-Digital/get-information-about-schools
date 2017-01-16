@@ -6,6 +6,7 @@ namespace Edubase.Web.UI.Models
 {
     public class MATDetailViewModel
     {
+        public bool CanUserEdit { get; internal set; }
 
         public List<EstablishmentGroup> Establishments { get; set; }
         public GroupCollection Group { get; set; }

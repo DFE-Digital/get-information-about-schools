@@ -18,23 +18,23 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             HeadEmailAddressLabel = "Manager email";
             HeadEmailAddress = IsUserLoggedIn;
 
-            MainEmailAddress = IsUserLoggedIn;
+            Contact_EmailAddress = IsUserLoggedIn;
             MainEmailAddressLabel = "Centre email";
 
             EstablishmentTypeLabel = "Provider type";
-            WebsiteAddress = true;
+            Contact_WebsiteAddress = true;
             CloseDate = IsSchoolClosed;
-            ReasonEstablishmentClosed = IsSchoolClosed;
-            CCOperationalHours = IsUserLoggedIn;
-            CCGovernance = IsUserLoggedIn;
+            ReasonEstablishmentClosedId = IsSchoolClosed;
+            CCOperationalHoursId = IsUserLoggedIn;
+            CCGovernanceId = IsUserLoggedIn;
             CCGovernanceDetail = IsUserLoggedIn;
             CCLAContactDetail = IsUserLoggedIn;
-            CCPhaseType = IsUserLoggedIn;
-            CCDeliveryModel = IsUserLoggedIn;
+            CCPhaseTypeId = IsUserLoggedIn;
+            CCDeliveryModelId = IsUserLoggedIn;
             GroupCollaborationName = IsUserLoggedIn;
-            CCGroupLeadCentre = IsUserLoggedIn;
-            CCDisadvantagedArea = IsUserLoggedIn;
-            CCDirectProvisionOfEarlyYears = IsUserLoggedIn;
+            CCGroupLeadId = IsUserLoggedIn;
+            CCDisadvantagedAreaId = IsUserLoggedIn;
+            CCDirectProvisionOfEarlyYearsId = IsUserLoggedIn;
             CCUnder5YearsOfAgeCount = IsUserLoggedIn;
         }
     }

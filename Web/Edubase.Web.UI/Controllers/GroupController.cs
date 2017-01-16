@@ -14,13 +14,24 @@ using Edubase.Services.Enums;
 using Edubase.Web.UI.Filters;
 using Edubase.Data.DbContext;
 using Edubase.Services.Governors;
+using Edubase.Common.Cache;
+using Edubase.Services.Lookup;
+using Edubase.Services.Security;
 
 namespace Edubase.Web.UI.Controllers
 {
     public class GroupController : Controller
     {
-        private const string VIEWNAME = "CreateEdit";
-        
+        const string VIEWNAME = "CreateEdit";
+        ICachedLookupService _cachedLookupService;
+        ISecurityService _securityService;
+
+        public GroupController(ICachedLookupService cachedLookupService, ISecurityService securityService)
+        {
+            _cachedLookupService = cachedLookupService;
+            _securityService = securityService;
+        }
+
         [EdubaseAuthorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
@@ -173,26 +184,31 @@ namespace Edubase.Web.UI.Controllers
         {
             using (var dc = new ApplicationDbContext())
             {
-                var mat = dc.Groups.Include(x => x.GroupType).FirstOrDefault(x => x.GroupUID == id);
+                var group = dc.Groups.Include(x => x.GroupType).FirstOrDefault(x => x.GroupUID == id);
                 var estabs = dc.EstablishmentGroups.Include(x => x.Establishment)
                     .Include(x => x.Establishment.EstablishmentType)
                     .Include(x => x.Establishment.HeadTitle)
                     .Where(x => x.Group.GroupUID == id).ToList();
 
                 LookupDto la = null;
-                if(mat.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresCollaboration, eLookupGroupType.ChildrensCentresGroup))
+                if(group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresCollaboration, 
+                    eLookupGroupType.ChildrensCentresGroup))
                 {
-                    la = (await new CachedLookupService().LocalAuthorityGetAllAsync()).First(x => x.Id == estabs.First().Establishment.LocalAuthorityId);
+                    la = (await _cachedLookupService.LocalAuthorityGetAllAsync())
+                        .First(x => x.Id == estabs.First().Establishment.LocalAuthorityId);
                 }
 
                 var gsvc = new GovernorsReadService();
                 var historicGovernors = await gsvc.GetHistoricalByGroupUID(id);
                 var currentGovernors = await gsvc.GetCurrentByGroupUID(id);
 
-                return View(new MATDetailViewModel(estabs, mat, User.Identity.IsAuthenticated, la)
+                var canUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(id, group.GroupTypeId);
+
+                return View(new MATDetailViewModel(estabs, group, User.Identity.IsAuthenticated, la)
                 {
                     HistoricalGovernors = historicGovernors,
-                    Governors = currentGovernors
+                    Governors = currentGovernors,
+                    CanUserEdit = canUserEdit
                 });
             }
         }

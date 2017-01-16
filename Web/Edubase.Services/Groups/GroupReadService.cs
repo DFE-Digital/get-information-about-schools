@@ -42,7 +42,7 @@ namespace Edubase.Services.Groups
         public async Task<GroupModel> GetByEstablishmentUrnAsync(int urn)
         {
             var g = (await _dbContext.EstablishmentGroups.Include(x => x.Group)
-                .FirstOrDefaultAsync(x => x.EstablishmentUrn == urn))?.Group;
+                .FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.IsDeleted == false))?.Group;
             if (g != null) return _mapper.Map<GroupCollection, GroupModel>(g);
             else return null;
         }

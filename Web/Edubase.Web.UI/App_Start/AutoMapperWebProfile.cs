@@ -11,11 +11,7 @@ namespace Edubase.Web.UI
     {
         public AutoMapperWebProfile()
         {
-            CreateMap<AddressViewModel, Address>().ReverseMap();
-            CreateMap<AddressViewModel, EstablishmentAddressModel>().ReverseMap();
             CreateMap<CreateEditEstablishmentModel, EstablishmentModel>().ReverseMap();
-            CreateMap<ContactDetailsViewModel, ContactDetail>().ReverseMap();
-            CreateMap<ContactDetailsViewModel, ContactDetailDto>().ReverseMap();
             CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();
             CreateMap<DateTime?, DateTimeViewModel>().ConvertUsing<DateTimeViewModelTypeConverter>();
         }

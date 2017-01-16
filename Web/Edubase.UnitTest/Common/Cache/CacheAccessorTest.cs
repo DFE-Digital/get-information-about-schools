@@ -10,7 +10,6 @@
     using NUnit.Framework;
     using Edubase.Common.Cache;
     using Rhino.Mocks;
-    using Edubase.Common.Cache;
 
     [TestFixture]
     public class CacheAccessorTest

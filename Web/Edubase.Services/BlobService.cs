@@ -1,19 +1,16 @@
 ﻿namespace Edubase.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Threading.Tasks;
+    using Common;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
-    using System.Configuration;
-    using Common;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
 
-    public class BlobService
+    public class BlobService : IBlobService
     {
         private CloudBlobClient _client;
-        private static readonly Dictionary<string, CloudBlobClient> _clients = new Dictionary<string, CloudBlobClient>();
         
         public class Base64String
         {
@@ -38,16 +35,10 @@
 
         #region Constructors
 
-        public BlobService(string storageConnectionString)
+        public BlobService(CloudStorageAccount account)
         {
-            if (storageConnectionString.IsNullOrEmpty()) throw new ArgumentNullException(nameof(storageConnectionString));
-            _client = _clients.Get(storageConnectionString);
-            if (_client == null)
-            {
-                _client = CloudStorageAccount.Parse(storageConnectionString).CreateCloudBlobClient();
-                _clients.Add(storageConnectionString, _client);
-                _client.DefaultRequestOptions.RetryPolicy = new ExponentialRetry();
-            }
+            _client = account.CreateCloudBlobClient();
+            _client.DefaultRequestOptions.RetryPolicy = new ExponentialRetry();
         }
 
         #endregion
@@ -87,9 +78,10 @@
         /// <param name="destinationContainerName"></param>
         /// <param name="destinationBlobName"></param>
         /// <returns></returns>
-        public async Task<string> UploadAsync(string sourceFileName, string mimeType, string destinationContainerName, string destinationBlobName)
+        public async Task<string> UploadAsync(string sourceFileName, string mimeType, string destinationContainerName, string destinationBlobName, string friendlyName)
         {
             var blob = GetBlobReference(destinationContainerName, destinationBlobName);
+            if (friendlyName != null) blob.Properties.ContentDisposition = "attachment; filename=" + friendlyName;
             using (var fs = new FileStream(sourceFileName, FileMode.Open))
                 await blob.UploadFromStreamAsync(fs);
             SetContentMimeType(mimeType, blob);
@@ -165,10 +157,11 @@
         /// <param name="destinationContainerName"></param>
         /// <param name="destinationBlobName"></param>
         /// <returns></returns>
-        public async Task<string> UploadAsync(string sourceFileName, string mimeType, string absolutePathWithContainerNameAndPrependingSlash)
+        public async Task<string> UploadAsync(string sourceFileName, string mimeType, string absolutePathWithContainerNameAndPrependingSlash, string friendlyName)
         {
             var components = ExtractPathComponents(absolutePathWithContainerNameAndPrependingSlash);
             var blob = GetBlobReference(components.ContainerName, components.Path);
+            if (friendlyName != null) blob.Properties.ContentDisposition = "attachment; filename=" + friendlyName;
             using (var fs = new FileStream(sourceFileName, FileMode.Open))
                 await blob.UploadFromStreamAsync(fs);
             SetContentMimeType(mimeType, blob);
@@ -237,6 +230,7 @@
         /// <returns></returns>
         public string CreateRandomBlobName(string extensionToAppend = null)
         {
+            if (extensionToAppend.Clean() != null && !extensionToAppend.StartsWith(".")) extensionToAppend = "." + extensionToAppend;
             return Guid.NewGuid().ToString("N").ToLower() + (extensionToAppend ?? string.Empty);
         }
 
@@ -279,6 +273,18 @@
             string blobName = path.Substring(path.IndexOf(FORWARD_SLASH) + 1);
 
             return new PathComponents { Path = blobName, ContainerName = containerName };
+        }
+
+        public string GetReadOnlySharedAccessUrl(string containerName, string blobName, DateTimeOffset expirationUtc)
+        {
+            var blob = GetBlobReference(containerName, blobName);
+            var signature = blob.GetSharedAccessSignature(new SharedAccessBlobPolicy()
+            {
+                Permissions = SharedAccessBlobPermissions.Read,
+                SharedAccessExpiryTime = expirationUtc
+            });
+
+            return blob.Uri + signature;
         }
 
         #endregion

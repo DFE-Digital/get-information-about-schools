@@ -42,7 +42,7 @@ namespace Edubase.Services.Security
         /// <param name="principal"></param>
         /// <param name="roles"></param>
         /// <returns></returns>
-        internal static bool InRole(this IPrincipal principal, params string[] roles)
+        public static bool InRole(this IPrincipal principal, params string[] roles)
             => roles.Any(x => principal.IsInRole(x));
     }
 }

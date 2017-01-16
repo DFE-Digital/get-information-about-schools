@@ -1,8 +1,10 @@
+﻿using Edubase.Common;
+using Edubase.Common.Spatial;
 using System;
 
-namespace Edubase.Services.Establishments.Search
+namespace Edubase.Services.Establishments.Models
 {
-    public abstract class SearchEstablishmentDocumentBase
+    public abstract class EstablishmentModelBase
     {
         public int? Urn { get; set; }
 
@@ -97,9 +99,9 @@ namespace Edubase.Services.Establishments.Search
         public int? Easting { get; set; }
 
         public int? Northing { get; set; }
-
-        public Microsoft.Spatial.GeographyPoint Location { get; set; }
-
+        
+        public abstract LatLon Coordinate { get; }
+        
         public int? EstablishmentTypeGroupId { get; set; }
 
         public byte? OfstedRating { get; set; }
@@ -188,6 +190,9 @@ namespace Edubase.Services.Establishments.Search
 
         public int? SenUnitCapacity { get; set; }
 
+        /// <summary>
+        /// Local Authority Id
+        /// </summary>
         public int? RSCRegionId { get; set; }
 
         public int? BSOInspectorateId { get; set; }
@@ -203,5 +208,8 @@ namespace Edubase.Services.Establishments.Search
         public DateTime? LastUpdatedUtc { get; set; }
 
         public bool? IsDeleted { get; set; }
+        
+        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Address_County, Address_PostCode);
+        public string GetLAESTAB() => string.Concat(LocalAuthorityId, EstablishmentNumber.GetValueOrDefault().ToString("D4"));
     }
 }

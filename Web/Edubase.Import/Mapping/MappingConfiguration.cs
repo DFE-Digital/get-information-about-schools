@@ -8,6 +8,7 @@ using AutoMapper;
 using Edubase.Data;
 using System.Collections.Generic;
 using System;
+using Edubase.Services.Lookup;
 
 namespace Edubase.Import.Mapping
 {
@@ -15,11 +16,14 @@ namespace Edubase.Import.Mapping
     {
         private static readonly string[] _dtFormats = new[] { "dd-MM-yyyy", "dd/MM/yyyy", "dd/MM/yy" };
 
-        private static CachedLookupService L { get; set; } = new CachedLookupService();
+        private static ICachedLookupService L { get; set; }
         private static IMapper _mapper = null;
 
-        public static IMapper Create(Dictionary<int, Ofstedratings> ofstedRatings, Dictionary<int, Cclacontacts> laContacts)
+        public static IMapper Create(Dictionary<int, Ofstedratings> ofstedRatings, 
+            Dictionary<int, Cclacontacts> laContacts, ICachedLookupService lookupService)
         {
+            L = lookupService;
+
             return _mapper = new MapperConfiguration(cfg =>
             {
                 var contactAltMapper = new MapperConfiguration(cfg2 =>
@@ -155,6 +159,7 @@ namespace Edubase.Import.Mapping
                     .ForMember(x => x.BSODateOfLastInspectionVisit, opt => opt.MapFrom(m => m.DateOfLastInspectionVisit.ToDateTime(_dtFormats)))
                     .ForMember(x => x.BSODateOfNextInspectionVisit, opt => opt.MapFrom(m => m.NextInspectionVisit.ToDateTime(_dtFormats)))
                     .ForMember(x => x.BSOInspectorateReportUrl, opt => opt.MapFrom(m => m.InspectorateReport))
+                    .ForMember(x => x.HeadPreferredJobTitle, opt => opt.MapFrom(m => m.HeadPreferredJobTitle))
                     .AfterMap((source, dest) =>
                     {
                         var rating = ofstedRatings.Get(dest.Urn);

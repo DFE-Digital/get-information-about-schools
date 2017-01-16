@@ -41,7 +41,7 @@
             $tabbedContent.attr('tab-index', 0);
             $tabbedContent.addClass('hidden-tab-content').attr('aria-hidden', true);
 
-            $('.tab-manipulator').on('click', function(e) {
+            $('.tab-manipulator').on('click', function (e) {
                 e.preventDefault();
                 var hash = $(this).attr('href'),
                     hasTab = $.inArray(hash, validHashes);

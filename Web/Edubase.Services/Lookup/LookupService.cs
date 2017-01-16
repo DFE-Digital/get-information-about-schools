@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Edubase.Data.DbContext;
 
-namespace Edubase.Services
+namespace Edubase.Services.Lookup
 {
-    public class LookupService : IDisposable
+    public class LookupService : IDisposable, ILookupService
     {
         private Lazy<ApplicationDbContext> _dc = new Lazy<ApplicationDbContext>(ApplicationDbContext.Create);
         private ApplicationDbContext DataContext => _dc.Value;

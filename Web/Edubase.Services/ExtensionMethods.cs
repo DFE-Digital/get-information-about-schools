@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace Edubase.Services
 {
@@ -24,5 +25,14 @@ namespace Edubase.Services
             if (retVal == null) throw new EntityNotFoundException();
             return retVal;
         }
+
+        public static TSource SingleOrThrow<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate, Func<Exception> exceptionFactory)
+        {
+            var retVal = source.SingleOrDefault(predicate);
+            if (retVal == null) throw exceptionFactory();
+            return retVal;
+        }
+        
+
     }
 }

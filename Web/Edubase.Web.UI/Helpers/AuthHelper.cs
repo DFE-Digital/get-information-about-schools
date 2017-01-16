@@ -6,6 +6,7 @@ using System.Web;
 
 namespace Edubase.Web.UI.Helpers
 {
+    [Obsolete]
     public class AuthHelper
     {
         public static string GetRole()

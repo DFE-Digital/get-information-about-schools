@@ -419,3 +419,11 @@ table.mvo { // mobile-visible-only
 #school-change-history h2 {
     margin-bottom: 8px;
 }
+
+
+.highlighted-ofsted-rating {
+    display: inline-block;
+    background: $govuk-blue;
+    color: #fff;
+    padding: 0.1em 0.5em 0;
+}

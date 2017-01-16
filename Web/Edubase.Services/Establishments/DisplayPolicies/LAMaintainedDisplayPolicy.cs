@@ -18,26 +18,26 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         {
             HeadteacherDetails = true;
             AgeRange = true;
-            GenderOfEntry = true;
+            GenderId = true;
             GroupDetails = true;
-            LAESTAB = true;
-            AdmissionsPolicy = true;
-            WebsiteAddress = true;
+            EstablishmentNumber = true;
+            AdmissionsPolicyId = true;
+            Contact_WebsiteAddress = true;
             OfstedRatingDetails = true;
-            ReligiousCharacter = true;
-            Diocese = Establishment.DioceseId.HasValue;
-            BoardingProvision = true;
-            NurseryProvision = true;
-            OfficialSixthFormProvision = true;
+            ReligiousCharacterId = true;
+            DioceseId = Establishment.DioceseId.HasValue;
+            ProvisionBoardingId = true;
+            ProvisionNurseryId = true;
+            ProvisionOfficialSixthFormId = true;
             Capacity = true;
             CloseDate = IsSchoolClosed;
-            ReasonEstablishmentClosed = IsSchoolClosed;
-            SpecialClasses = true;
-            MainEmailAddress = IsUserLoggedIn;
-            AlternativeEmailAddress = MainEmailAddress;
+            ReasonEstablishmentClosedId = IsSchoolClosed;
+            ProvisionSpecialClassesId = true;
+            Contact_EmailAddress = IsUserLoggedIn;
+            ContactAlt_EmailAddress = IsUserLoggedIn;
             LastChangedDate = IsUserLoggedIn;
-            SENProvisions = true;
-            TypeOfResourcedProvision = true;
+            TypeOfSENProvisionList = true;
+            TypeOfResourcedProvisionId = true;
 
             if (Establishment.TypeOfResourcedProvisionId
                 .OneOfThese(eLookupTypeOfResourcedProvision.ResourceProvisionAndSENUnit,

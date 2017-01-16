@@ -15,9 +15,5 @@ namespace Edubase.Web.UI.Models
         public string Country { get; set; }
         public string Locality { get; set; }
         public string PostCode { get; set; }
-        public string Easting { get; set; }
-        public string Northing { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
     }
 }

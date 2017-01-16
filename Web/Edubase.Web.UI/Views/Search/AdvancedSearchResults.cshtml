@@ -5,8 +5,6 @@
     ViewBag.Title = string.Format("Search results for '{0}'", Model.TextSearchModel.Text);
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
-
-    var cache = new Edubase.Services.CachedLookupService();
 }
 
 <div class="grid-row">
@@ -40,11 +38,15 @@
                 <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the URN "@Model.TextSearchModel.Text".</p>
             }
         }
-        else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.LocalAuthority)
+        else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
         {
             <p>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</p>
         }
 
+
+        <div style="text-align:right;display:none;">
+            <a href="@Url.Action("PrepareDownload", "Search")?@Url.CurrentQueryString()">Download these search results</a>
+        </div>
 
     </div>
 </div>
@@ -97,7 +99,7 @@
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                     }
-                    else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.LocalAuthority)
+                    else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
                     {
                         @*@Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.Text)
                         @Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.AutoSuggestValue)*@
@@ -139,7 +141,7 @@
                             <dt>LAESTAB:</dt>
                             <dd>@result.GetLAESTAB()</dd>
                             <dt>Status:</dt>
-                            <dd>@(cache.EstablishmentStatusesGetAll().FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "--")</dd>
+                            <dd>@(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "--")</dd>
                         </dl>
                     </li>
                 }
