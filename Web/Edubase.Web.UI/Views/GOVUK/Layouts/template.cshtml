@@ -135,7 +135,7 @@
                             {
                                 <li><a href="/Tools">Tools</a></li>
                                 <li>
-                                    @Html.ActionLink("Log off", "LogOff", "Account")
+                                    @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)
                                 </li>
                             }
                             else

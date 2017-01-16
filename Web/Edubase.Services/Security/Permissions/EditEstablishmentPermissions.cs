@@ -33,7 +33,7 @@ namespace Edubase.Services.Security.Permissions
             && IsGroupAllowed(groupIds)
             && IsLAAllowed(localAuthorityId)
             && IsTypeAllowed(typeId)
-            && IsTypeGroupAllowed(typeGroupId); //todo: need to support anding and oring!!!!
+            && IsTypeGroupAllowed(typeGroupId);
     }
 
     public class CreateEstablishmentPermissions : EstablishmentPermissions

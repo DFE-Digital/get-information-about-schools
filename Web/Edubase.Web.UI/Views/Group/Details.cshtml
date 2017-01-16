@@ -12,7 +12,7 @@
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 
-@if (Model.IsUserLoggedOn)
+@if (Model.CanUserEdit)
 {
     @Html.ActionLink("Edit", "Edit", "Group", new { id = Model.Group.GroupUID }, new { @class = "button mobile-full-width" })
 }

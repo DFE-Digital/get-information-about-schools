@@ -302,7 +302,6 @@
     <Compile Include="Helpers\ModelBinding\DefaultModelBinderEx.cs" />
     <Compile Include="Helpers\QueryStringHelper.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Admin\LogMessagesViewModel.cs" />

@@ -64,10 +64,7 @@ namespace Edubase.Web.UI.Controllers
             AuthenticationManager.SignIn(id);
 
             var urlHelper = new UrlHelper(Request.RequestContext);
-            if (urlHelper.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
+            if (urlHelper.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
             else return RedirectToAction("Index", "Search");
         }
 
@@ -96,10 +93,10 @@ namespace Edubase.Web.UI.Controllers
 
 
         [HttpGet]
-        public ActionResult LogOff()
+        public ActionResult LogOff(string returnUrl)
         {
-            AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = "/Search" });
-            return RedirectToAction("Index", "Search");
+            AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = returnUrl.Clean() ?? "/Search" });
+            return Url.IsLocalUrl(returnUrl) ? (ActionResult) Redirect(returnUrl) : RedirectToAction("Index", "Search");
         }
 
         protected override void Dispose(bool disposing)

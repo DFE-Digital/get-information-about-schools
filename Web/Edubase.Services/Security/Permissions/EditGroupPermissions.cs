@@ -19,6 +19,10 @@ namespace Edubase.Services.Security.Permissions
 
         [JsonProperty("g")]
         public int[] GroupIds { get; set; } = new int[0];
+
+        public bool CanEdit(int id, int? typeId) => IsIdAllowed(id) && IsTypeAllowed(typeId);
+
+        public bool IsIdAllowed(int id) => AllGroups || GroupIds.Contains(id);
     }
 
     public class CreateGroupPermissions : GroupPermissions
@@ -37,5 +41,7 @@ namespace Edubase.Services.Security.Permissions
             get { return TypeIds.Cast<eLookupGroupType>().ToArray(); }
             set { TypeIds = value.Cast<int>().ToArray(); }
         }
+
+        public bool IsTypeAllowed(int? typeId) => !TypeIds.Any() || (typeId.HasValue && TypeIds.Contains(typeId.Value));
     }
 }
