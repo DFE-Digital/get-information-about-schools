@@ -327,6 +327,7 @@
     <Compile Include="Security\ClaimsIdentityConverters\SecureAccessClaimsIdConverter.cs" />
     <Compile Include="Security\EdubaseRoles.cs" />
     <Compile Include="Security\EduClaimTypes.cs" />
+    <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\Permissions\EditGroupPermissions.cs" />
     <Compile Include="Security\Permissions\EditEstablishmentPermissions.cs" />
     <Compile Include="Security\Permissions\Permission.cs" />

@@ -128,4 +128,14 @@ select#headtitleid {
             }
         }
     }
+
+    .grey-bar {
+        border-top: $grey-3 3px solid;
+        border-left: 0;
+        border-right: 0;
+        //padding: 12px 0;
+        margin: 12px 0;
+    }
+
 }
+

@@ -8,46 +8,16 @@
     ViewBag.HideLogo = true;
 }
 
-@*@if (Model.ShowPendingMessage)
-{
-    <div class="pending-updates-message dismissable-message">
-        <div class="tick"></div>
-        Updates require approval. The Data Owner has been notified.
-        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
-    </div>
-}
-else if (Model.UserHasPendingApprovals)
-{
-    <div class="pending-updates-message dismissable-message">
-        <div class="exclaim"></div>
-        You have pending approvals awaiting for this school. @Html.ActionLink("Approve now.", "Index", "Approval", new { urn = Model.Establishment.Urn }, null)
-        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
-    </div>
-}
 
-
-@if (Model.PendingChanges.Any())
-{
-    <div class="pending-updates">
-        <div class="icon" style="height:24px;">!</div>
-        <h3>Data update@(Model.PendingChanges.Count > 1 ? "s" : "") pending Data Owner approval</h3>
-        @foreach (var item in Model.PendingChanges)
-        {
-            <div class="group">
-                <div>Data field: @item.DataField</div>
-                <div>Old: @(item.OldValue.Clean() ?? "(nothing)")</div>
-                <div>New: @(item.NewValue.Clean() ?? "(nothing)")</div>
-            </div>
-        }
-    </div>
-}*@
-
-<h1 class="heading-large">@Html.PendingUpdateFor(x => x.Name) @Model.Establishment.Name</h1>
+<h1 class="heading-large">@Model.Establishment.Name</h1>
 
 @if (Model.UserCanEdit)
 {
     @Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
 }
+
+@Html.ActionLink("Download", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
+
 
 <div class="column-full">
     <div class="grid-row summary">

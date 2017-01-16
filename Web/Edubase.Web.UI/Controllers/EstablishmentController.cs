@@ -31,6 +31,8 @@ using System.Web.Mvc;
 using Edubase.Web.UI.Helpers;
 using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel;
 using Edubase.Services.Lookup;
+using System.Collections.Specialized;
+using Edubase.Services.Security;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -58,10 +60,18 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, EdubaseAuthorize]
-        public async Task<ActionResult> Edit(int id)
+        public async Task<ActionResult> Edit(int? id)
         {
-            var domainModel = (await _establishmentReadService.GetAsync(id, User)).GetResult();
+            if (!id.HasValue) return HttpNotFound();
+
+            var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
             var viewModel = _mapper.Map<ViewModel>(domainModel);
+            
+            viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, domainModel);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
+
+            viewModel.AllowHidingOfAddress = User.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT);
+
             await PopulateSelectLists(viewModel);
             return View(viewModel);
         }
@@ -69,155 +79,100 @@ namespace Edubase.Web.UI.Controllers
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
         public async Task<ActionResult> Edit(ViewModel model)
         {
+            var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
+            model.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, domainModel);
+            model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
+            await PopulateSelectLists(model);
+
             if (model.Action == ViewModel.eAction.Save)
             {
                 if (ModelState.IsValid)
                 {
-                    await _establishmentWriteService.SaveAsync(_mapper.Map<EstablishmentModel>(model), User);
+                    model.LSOAId = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.LSOACode)?.Id;
+                    model.MSOAId = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.MSOACode)?.Id;
+
+                    MapToDomainModel(model, domainModel, Request.Form);
+
+                    domainModel.AdditionalAddresses = model.AdditionalAddresses;
+
+                    await _establishmentWriteService.SaveAsync(domainModel, User);
                     return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                 }
             }
-            else
+            else if (model.AddressToRemoveId.HasValue)
             {
+                var item = model.AdditionalAddresses.FirstOrDefault(x => x.Id == model.AddressToRemoveId.Value);
+                if (item != null)
+                {
+                    model.AdditionalAddresses.Remove(item);
+                    model.AdditionalAddressesCount = model.AdditionalAddressesCount - 1;
+                }
 
-                //if (model.Action == ViewModel.eAction.FindEstablishment && model.LinkedSearchUrn.HasValue)
-                //{
-                //    ModelState.Clear();
-                //    model.LinkedEstabNameToAdd = new EstablishmentService().GetName(model.LinkedSearchUrn.Value);
-                //    model.LinkedUrnToAdd = model.LinkedSearchUrn;
-                //}
-                //else if (model.Action == ViewModel.eAction.AddLinkedSchool)
-                //{
-                //    if (ModelState.IsValid)
-                //    {
-                //        AddLinkedEstablishment(model);
-                //        ModelState.Clear();
-                //    }
-                //}
-                //else if (model.Action == ViewModel.eAction.RemoveLinkedSchool)
-                //{
-                //    ModelState.Clear();
-                //    if (model.LinkedItemPositionToRemove.HasValue)
-                //        model.Links.RemoveAt(model.LinkedItemPositionToRemove.Value);
-                //}
-                //model.ScrollToLinksSection = true;
+                ModelState.Clear();
+            }
+            else if (model.Action == ViewModel.eAction.AddAddress)
+            {
+                model.AdditionalAddressesCount = model.AdditionalAddressesCount + 1;
+                model.AdditionalAddresses.Add(new AdditionalAddressModel());
+
+                ModelState.Clear();
             }
             return View(model);
         }
-
-        private void AddLinkedEstablishment(ViewModel model)
-        {
-            if (!model.Links.Any(x => x.Urn == model.LinkedUrnToAdd))
-            {
-                using (var dc = new ApplicationDbContext())
-                {
-                    var link = new LinkedEstabViewModel
-                    {
-                        LinkDate = model.LinkedDateToAdd.ToDateTime(),
-                        Name = model.LinkedEstabNameToAdd,
-                        Type = model.LinkTypeToAdd.ToString(),
-                        Urn = model.LinkedUrnToAdd
-                    };
-                    model.Links.Insert(0, link);
-                    model.LinkedSearchUrn = model.LinkedUrnToAdd = null;
-                    model.LinkedEstabNameToAdd = null;
-                }
-            }
-        }
-
-        private async Task AddOrRemoveEstablishmentLinks(ViewModel model, ApplicationDbContext dc)
-        {
-            //var svc = new CachedLookupService();
-
-            //var linksInDb = dc.EstablishmentLinks.Where(x => x.EstablishmentUrn == model.Urn).ToList();
-            //var urnsInDb = linksInDb.Select(x => x.LinkedEstablishmentUrn).Cast<int?>().ToArray();
-            //var urnsInModel = model.Links.Select(x => x.Urn).Cast<int?>().ToArray();
-
-            //var urnsToAdd = from e in urnsInModel
-            //                join l in urnsInDb on e equals l into l2
-            //                from l3 in l2.DefaultIfEmpty()
-            //                where l3 == null
-            //                select e;
-
-            //var urnsToRemove = from l in urnsInDb
-            //                   join e in urnsInModel on l equals e into e2
-            //                   from e3 in e2.DefaultIfEmpty()
-            //                   where e3 == null
-            //                   select l;
-
-            //foreach (var urn in urnsToAdd.Cast<int>())
-            //{
-            //    var item = model.Links.Where(x => x.Urn == urn).First();
-            //    var link = new EstablishmentLink
-            //    {
-            //        EstablishmentUrn = model.Urn,
-            //        LinkedEstablishmentUrn = urn,
-            //        LinkEstablishedDate = item.LinkDate,
-            //        LinkName = item.Name,
-            //        LinkTypeId = (await svc.EstablishmentLinkTypesGetAllAsync()).Single(x => x.Name == item.Type).Id
-            //    };
-            //    dc.EstablishmentLinks.Add(link);
-
-            //    var oppositeLinkType = (item.Type.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor);
-            //    var oppositeLinkTypeName = oppositeLinkType.ToString();
-            //    var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkTypeName);
-            //    if (oppositeLink == null)
-            //    {
-            //        oppositeLink = new EstablishmentLink
-            //        {
-            //            EstablishmentUrn = urn,
-            //            LinkedEstablishmentUrn = model.Urn,
-            //            LinkEstablishedDate = item.LinkDate,
-            //            LinkName = model.Name,
-            //            LinkTypeId = (await svc.EstablishmentLinkTypesGetAllAsync()).Single(x => x.Name == oppositeLinkType.ToString()).Id
-            //        };
-            //        dc.EstablishmentLinks.Add(oppositeLink);
-            //    }
-            //}
-
-            //foreach (var urn in urnsToRemove.Cast<int>())
-            //{
-            //    var linkDataModel = linksInDb.FirstOrDefault(x => x.LinkedEstablishmentUrn == urn);
-            //    if (linkDataModel != null) dc.EstablishmentLinks.Remove(linkDataModel);
-
-            //    var oppositeLinkType = (linkDataModel.LinkType.Equals(ViewModel.eLinkType.Successor.ToString()) ? ViewModel.eLinkType.Predecessor : ViewModel.eLinkType.Successor).ToString();
-            //    var oppositeLink = await dc.EstablishmentLinks.FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.LinkedEstablishmentUrn == model.Urn && x.LinkType.Name == oppositeLinkType);
-            //    if (oppositeLink != null) dc.EstablishmentLinks.Remove(oppositeLink);
-            //}
-
-        }
-
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult Create() => View(new ViewModel());
         
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
-        public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] ViewModel model)
+        /// <summary>
+        /// Transfers property values from the view model to the domain model
+        /// where the value is passed into the form; i.e., the key is present.
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <param name="domainModel"></param>
+        /// <param name="form"></param>
+        private void MapToDomainModel(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)
         {
-            if (ModelState.IsValid)
-            {
-                using (var dc = ApplicationDbContext.Create())
-                {
-                    var dataModel = _mapper.Map<Establishment>(model);
-                    var pol = _laEstabService.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);
-                    if(pol == EstabNumberEntryPolicy.SystemGenerated)
-                    {
-                        dataModel.EstablishmentNumber = _laEstabService.GenerateEstablishmentNumber(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value, dataModel.LocalAuthorityId.Value);
-                    }
+            var properties = ReflectionHelper.GetProperties(domainModel, writeableOnly: true);
+            properties = properties.Where(x => form.AllKeys.Contains(x)).ToList();
 
-                    dc.Establishments.Add(dataModel);
-                    dc.SaveChanges();
-                    return RedirectToAction("Details", "Establishment", new { id = dataModel.Urn });
-                }
+            var viewModelProperties = ReflectionHelper.GetProperties(viewModel);
+
+            foreach (var item in properties.Intersect(viewModelProperties))
+            {
+                var value = ReflectionHelper.GetPropertyValue(viewModel, item);
+                ReflectionHelper.SetProperty(domainModel, item, value);
             }
-            else return View(model);
+
+
         }
+        
+        //[HttpGet, EdubaseAuthorize]
+        //public ActionResult Create() => View(new ViewModel());
+        
+        //[HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
+        //public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] ViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        using (var dc = ApplicationDbContext.Create())
+        //        {
+        //            var dataModel = _mapper.Map<Establishment>(model);
+        //            var pol = _laEstabService.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);
+        //            if(pol == EstabNumberEntryPolicy.SystemGenerated)
+        //            {
+        //                dataModel.EstablishmentNumber = _laEstabService.GenerateEstablishmentNumber(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value, dataModel.LocalAuthorityId.Value);
+        //            }
+
+        //            dc.Establishments.Add(dataModel);
+        //            dc.SaveChanges();
+        //            return RedirectToAction("Details", "Establishment", new { id = dataModel.Urn });
+        //        }
+        //    }
+        //    else return View(model);
+        //}
 
         [HttpGet]
-        public async Task<ActionResult> Details(int id, bool? pendingUpdates)
+        public async Task<ActionResult> Details(int id)
         {
             var viewModel = new EstablishmentDetailViewModel()
             {
-                ShowPendingMessage = pendingUpdates.GetValueOrDefault(),
                 IsUserLoggedOn = User.Identity.IsAuthenticated
             };
 
@@ -256,7 +211,7 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.Governors = await gsvc.GetCurrentByUrn(id);
 
             using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
-                viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment, viewModel.Group);
+                viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment);
 
             using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
                 viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
@@ -307,6 +262,9 @@ namespace Edubase.Web.UI.Controllers
             viewModel.UrbanRuralLookup = (await _cachedLookupService.UrbanRuralGetAllAsync()).ToSelectList(viewModel.UrbanRuralId);
             viewModel.GSSLALookup = (await _cachedLookupService.GSSLAGetAllAsync()).ToSelectList(viewModel.GSSLAId);
             viewModel.CASWards = (await _cachedLookupService.CASWardsGetAllAsync()).ToSelectList(viewModel.CASWardId);
+
+            if (viewModel.MSOAId.HasValue) viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.MSOAId.Value)?.Code;
+            if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
         }
 
     }

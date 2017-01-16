@@ -237,19 +237,33 @@ namespace Edubase.Web.UI.Helpers
                 Value = x.Id.ToString()
             }));
 
-        //[Obsolete]
-        //public static MvcHtmlString EduLookupDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper,
-        //    Expression<Func<TModel, TProperty>> modelExpression,
-        //    Expression<Func<CachedLookupService, IEnumerable<LookupDto>>> lookupSourceExpression)
-        //{
-        //    var items = lookupSourceExpression.Compile()( new CachedLookupService());
-        //    return htmlHelper.EduDropDownFor(modelExpression, items.Select(x => new SelectListItem
-        //    {
-        //        Text = x.Name,
-        //        Value = x.Id.ToString()
-        //    }));
-        //}
+        
+        public static MvcHtmlString EduDayDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
+            TProperty>> expression, object attributes)
+        {
+            var items = Enumerable.Range(1, 31)
+                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() });
+            return htmlHelper.DropDownListFor(expression, items, "", attributes);
+        }
 
+        public static MvcHtmlString EduMonthDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
+            TProperty>> expression, object attributes)
+        {
+            var items = Enumerable.Range(1, 12)
+                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() });
+            return htmlHelper.DropDownListFor(expression, items, "", attributes);
+        }
+
+        public static MvcHtmlString EduYearDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
+            TProperty>> expression, object attributes)
+        {
+            var start = 1900;
+            var count = (DateTime.UtcNow.Year + 5) - start;
+            var items = Enumerable.Range(start, count).Reverse()
+                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() });
+            return htmlHelper.DropDownListFor(expression, items, "", attributes);
+        }
+        
         /// <summary>
         /// Gets the name of the item associated with a Lookup item id
         /// </summary>
@@ -312,6 +326,8 @@ namespace Edubase.Web.UI.Helpers
             return new MvcHtmlString(sb.ToString());
 
         }
+
+
 
     }
 }

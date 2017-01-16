@@ -114,7 +114,7 @@ namespace Edubase.Common
 
         public static string Get(this IDictionary<string, string> data, string key)
         {
-            if (data.ContainsKey(key)) return data[key];
+            if (key != null && data.ContainsKey(key)) return data[key];
             return null;
         }
 
@@ -128,7 +128,7 @@ namespace Edubase.Common
         /// <returns></returns>
         public static T2 Get<T1,T2>(this IDictionary<T1, T2> data, T1 key)
         {
-            if (data.ContainsKey(key)) return data[key];
+            if (key != null && data.ContainsKey(key)) return data[key];
             return default(T2);
         }
 

@@ -99,7 +99,6 @@ namespace Edubase.Services.Establishments.Models
         public int? Easting { get; set; }
 
         public int? Northing { get; set; }
-
         
         public abstract LatLon Coordinate { get; }
         

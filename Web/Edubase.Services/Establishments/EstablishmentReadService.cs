@@ -87,11 +87,15 @@ namespace Edubase.Services.Establishments
                 if (HasAccess(principal, dataModel.StatusId))
                 {
                     var domainModel = _mapper.Map<Establishment, EstablishmentModel>(dataModel);
+                    domainModel.AdditionalAddressesCount = domainModel.AdditionalAddresses.Count;
 
                     if (!principal.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT))
                     {
-                        var toRemove = domainModel.AdditionalAddresses.Where(x => x.IsRestricted == true);
-                        toRemove.ForEach(x => domainModel.AdditionalAddresses.Remove(x));
+                        var toRemove = domainModel.AdditionalAddresses.Where(x => x.IsRestricted == true).ToArray();
+                        for (int i = 0; i < toRemove.Length; i++)
+                        {
+                            domainModel.AdditionalAddresses.Remove(toRemove[i]);
+                        }
                     }
 
                     if (domainModel.TypeId == (int)eLookupEstablishmentType.ChildrensCentre
@@ -115,8 +119,8 @@ namespace Edubase.Services.Establishments
               || GetPermittedStatusIds(principal).Any(x => x == statusId.Value);
         }
 
-        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment, GroupModel group) 
-            => new DisplayPolicyFactory().Create(user, establishment, group);
+        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment) 
+            => new DisplayPolicyFactory().Create(user, establishment);
 
         public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn)
         {

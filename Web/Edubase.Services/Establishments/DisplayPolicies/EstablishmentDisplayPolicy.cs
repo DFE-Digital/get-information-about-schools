@@ -13,7 +13,6 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         public string EstablishmentTypeLabel { get; set; } = "School type";
         public string MainEmailAddressLabel { get; set; } = "Email";
         protected EstablishmentModelBase Establishment { get; private set; }
-        //protected GroupModel Group { get; private set; }
         protected IPrincipal Principal { get; private set; }
         public bool IsUserLoggedIn { get; set; }
         public bool IsSchoolClosed { get; set; }
@@ -38,10 +37,9 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             && establishment.EstablishmentTypeGroupId.HasValue 
             && IsMatchInternal((eLookupEstablishmentType)establishment.TypeId, (eLookupEstablishmentTypeGroup)establishment.EstablishmentTypeGroupId);
 
-        internal EstablishmentDisplayPolicy Configure(IPrincipal principal, EstablishmentModelBase establishment, GroupModel group)
+        internal EstablishmentDisplayPolicy Configure(IPrincipal principal, EstablishmentModelBase establishment)
         {
             Establishment = establishment;
-            //Group = group;
             Principal = principal;
 
             IsUserLoggedIn = Principal.Identity.IsAuthenticated;

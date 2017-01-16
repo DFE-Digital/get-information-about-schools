@@ -19,6 +19,7 @@ using Edubase.Data.DbContext;
 using Newtonsoft.Json;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Lookup;
+using Edubase.Services.Security;
 
 namespace Edubase.Web.UI
 {
@@ -105,6 +106,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();
             builder.RegisterType<LookupService>().As<ILookupService>();
+            builder.RegisterType<SecurityService>().As<ISecurityService>();
         }
         
     }

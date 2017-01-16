@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using Edubase.Services;
 using Edubase.Services.Establishments;
 using Edubase.Common;
+using Edubase.Services.Establishments.DisplayPolicies;
+using Edubase.Web.UI.Models.Establishments;
+using Edubase.Services.Establishments.Models;
 
 namespace Edubase.Web.UI.Models
 {
@@ -31,10 +34,13 @@ namespace Edubase.Web.UI.Models
 
         public enum eAction
         {
+            Edit,
             FindEstablishment,
             Save,
             AddLinkedSchool,
-            RemoveLinkedSchool
+            RemoveLinkedSchool,
+            AddAddress,
+            RemoveAddress
         }
 
         public enum eLinkType
@@ -42,6 +48,8 @@ namespace Edubase.Web.UI.Models
             Successor,
             Predecessor
         }
+        
+        public EstablishmentDisplayPolicy DisplayPolicy { get; set; }
 
         public int? Urn { get; set; }
         public int? LocalAuthorityId { get; set; }
@@ -63,6 +71,8 @@ namespace Edubase.Web.UI.Models
         public int? Capacity { get; set; }
         public int? ProvisionSpecialClassesId { get; set; }
         public int? UKPRN { get; set; }
+        public int? EstablishmentTypeGroupId { get; set; }
+
 
         public string Address_Line1 { get; set; }
 
@@ -139,6 +149,10 @@ namespace Edubase.Web.UI.Models
         public int? MSOAId { get; set; }
         public int? LSOAId { get; set; }
 
+        public string MSOACode { get; set; }
+        public string LSOACode { get; set; }
+        public List<AdditionalAddressModel> AdditionalAddresses { get; set; } = new List<AdditionalAddressModel>();
+        public int AdditionalAddressesCount { get; set; }
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel BSODateOfNextInspectionVisit { get; set; } = new DateTimeViewModel();
 
@@ -175,6 +189,11 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> UrbanRuralLookup { get; internal set; }
         public IEnumerable<SelectListItem> GSSLALookup { get; internal set; }
         public IEnumerable<SelectListItem> CASWards { get; internal set; }
+        public TabDisplayPolicy TabDisplayPolicy { get; internal set; }
+
+        public Guid? AddressToRemoveId { get; set; }
+
+        public bool AllowHidingOfAddress { get; set; }
 
         public CreateEditEstablishmentModel()
         {
