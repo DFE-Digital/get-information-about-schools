@@ -3,6 +3,7 @@ using Edubase.Services.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -30,6 +31,15 @@ namespace Edubase.Web.UI.Helpers
             var retVal = new List<int>(list);
             if (!retVal.Contains(item)) retVal.Add(item);
             return retVal;
+        }
+
+        public static void AddModelError<TModel, TProperty>(this TModel source,
+                                                    Expression<Func<TModel, TProperty>> ex,
+                                                    string message,
+                                                    ModelStateDictionary modelState)
+        {
+            var key = ExpressionHelper.GetExpressionText(ex);
+            modelState.AddModelError(key, message);
         }
 
 

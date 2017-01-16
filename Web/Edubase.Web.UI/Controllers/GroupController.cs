@@ -18,6 +18,9 @@ using Edubase.Common.Cache;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using MoreLinq;
+using Edubase.Web.UI.Models.Validators;
+using FluentValidation;
+using FluentValidation.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -106,18 +109,24 @@ namespace Edubase.Web.UI.Controllers
             }
             else if (viewModel.Action == "Add")
             {
-                ModelState.Clear();
-                if (!viewModel.Establishments.Any(x => x.Urn == viewModel.EstablishmentUrn))
+                var validator = new DateTimeViewModelValidator();
+                var results = validator.Validate(viewModel.JoinedDate);
+                if (!results.IsValid) viewModel.AddModelError(x => x.JoinedDate, "The date specified is not valid", ModelState);
+                else
                 {
-                    using (var dc = new ApplicationDbContext())
+                    ModelState.Clear();
+                    if (!viewModel.Establishments.Any(x => x.Urn == viewModel.EstablishmentUrn))
                     {
-                        var estab = new GroupEstabViewModel(await dc.Establishments
-                            .Include(x => x.HeadTitle)
-                            .Include(x => x.EstablishmentType)
-                            .FirstOrDefaultAsync(x => x.Urn == viewModel.EstablishmentUrn), viewModel.JoinedDate.ToDateTime());
-                        viewModel.Establishments.Insert(0, estab);
-                        viewModel.SearchURN = string.Empty;
-                        viewModel.EstablishmentUrn = null;
+                        using (var dc = new ApplicationDbContext())
+                        {
+                            var estab = new GroupEstabViewModel(await dc.Establishments
+                                .Include(x => x.HeadTitle)
+                                .Include(x => x.EstablishmentType)
+                                .FirstOrDefaultAsync(x => x.Urn == viewModel.EstablishmentUrn), viewModel.JoinedDate.ToDateTime());
+                            viewModel.Establishments.Insert(0, estab);
+                            viewModel.SearchURN = string.Empty;
+                            viewModel.EstablishmentUrn = null;
+                        }
                     }
                 }
             }
@@ -136,10 +145,22 @@ namespace Edubase.Web.UI.Controllers
             }
             else if (viewModel.Action.Equals("SaveJoinedDate", StringComparison.OrdinalIgnoreCase))
             {
-                ModelState.Clear();
                 var model = viewModel.Establishments.First(x => x.EditMode == true);
-                model.JoinedDate = model.JoinedDateEditable.ToDateTime();
-                viewModel.Establishments.ForEach(x => x.EditMode = false);
+                var i = viewModel.Establishments.IndexOf(model);
+
+                var validator = new DateTimeViewModelValidator();
+                var results = validator.Validate(model.JoinedDateEditable);
+
+                if (!results.IsValid)
+                {
+                    viewModel.AddModelError(x => x.Establishments[i].JoinedDateEditable, "The date specified is not valid", ModelState);
+                }
+                else
+                {
+                    ModelState.Clear();
+                    model.JoinedDate = model.JoinedDateEditable.ToDateTime();
+                    viewModel.Establishments.ForEach(x => x.EditMode = false);
+                }
             }
             else if (viewModel.Action.Equals("Remove", StringComparison.OrdinalIgnoreCase) && viewModel.EstabUrnToRemove.HasValue)
             {

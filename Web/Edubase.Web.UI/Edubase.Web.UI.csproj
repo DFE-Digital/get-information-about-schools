@@ -328,6 +328,7 @@
     <Compile Include="Models\Search\LocalAuthorityDisambiguationViewModel.cs" />
     <Compile Include="Models\Validators\CreateEditGroupModelValidator.cs" />
     <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
+    <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
     <Compile Include="MvcResult\ChallengeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
