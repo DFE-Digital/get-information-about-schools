@@ -140,20 +140,21 @@ select#headtitleid {
         //padding: 12px 0;
         margin: 12px 0;
 	}
-.additional-address-wrapper {
-    border: $grey-3 3px solid;
-    border-left: 0;
-    border-right: 0;
-    padding: 12px 0;
-    margin: 12px 0;
-}
 
-.create-edit-school .link-button {
-    font-size: 16px;
-}
+    .additional-address-wrapper {
+        border: $grey-3 3px solid;
+        border-left: 0;
+        border-right: 0;
+        padding: 12px 0;
+        margin: 12px 0;
+    }
 
-.button-find-inline {
-    font-size: 18px;
+    .create-edit-school .link-button {
+        font-size: 16px;
+    }
+
+    .button-find-inline {
+        font-size: 18px;
     }
 
 }

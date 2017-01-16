@@ -17,6 +17,7 @@ using Edubase.Services.Governors;
 using Edubase.Common.Cache;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
+using MoreLinq;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -74,22 +75,24 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.GroupId = company.GroupId;
                 viewModel.Name = company.Name;
                 viewModel.TypeId = company.GroupTypeId;
-                viewModel.OpenDate = new DateTimeViewModel(company.OpenDate);
+                viewModel.OpenDate = company.OpenDate;
                 viewModel.CompaniesHouseNumber = company.CompaniesHouseNumber;
                 viewModel.Address = company.Address;
+
+                if (company.GroupTypeId.HasValue)
+                    viewModel.TypeName = (await _cachedLookupService.GroupTypesGetAllAsync()).FirstOrDefault(x => x.Id == company.GroupTypeId)?.Name;
             
                 viewModel.Establishments = (await dc.EstablishmentGroups
                     .Include(x => x.Establishment)
                     .Include(x => x.Establishment.EstablishmentType)
                     .Include(x => x.Establishment.HeadTitle)
                     .Where(x => x.Group.GroupUID == company.GroupUID)
-                    .Select(x => x.Establishment)
                     .ToArrayAsync())
-                    .Select(x => new GroupEstabViewModel(x)).ToList();
+                    .Select(x => new GroupEstabViewModel(x.Establishment, x.JoinedDate)).ToList();
             }
             return View(VIEWNAME, viewModel);
         }
-
+        
         [HttpPost, EdubaseAuthorize]
         public async Task<ActionResult> Edit(CreateEditGroupModel viewModel)
         {
@@ -111,12 +114,32 @@ namespace Edubase.Web.UI.Controllers
                         var estab = new GroupEstabViewModel(await dc.Establishments
                             .Include(x => x.HeadTitle)
                             .Include(x => x.EstablishmentType)
-                            .FirstOrDefaultAsync(x => x.Urn == viewModel.EstablishmentUrn));
+                            .FirstOrDefaultAsync(x => x.Urn == viewModel.EstablishmentUrn), viewModel.JoinedDate.ToDateTime());
                         viewModel.Establishments.Insert(0, estab);
                         viewModel.SearchURN = string.Empty;
                         viewModel.EstablishmentUrn = null;
                     }
                 }
+            }
+            else if (viewModel.Action.StartsWith("edit-", StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.Clear();
+                var urn = int.Parse(viewModel.Action.Split('-')[1]);
+                var m = viewModel.Establishments.Single(x => x.Urn == urn);
+                m.EditMode = true;
+                m.JoinedDateEditable = new DateTimeViewModel(m.JoinedDate);
+            }
+            else if (viewModel.Action.Equals("Cancel", StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.Clear();
+                viewModel.Establishments.ForEach(x => x.EditMode = false);
+            }
+            else if (viewModel.Action.Equals("SaveJoinedDate", StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.Clear();
+                var model = viewModel.Establishments.First(x => x.EditMode == true);
+                model.JoinedDate = model.JoinedDateEditable.ToDateTime();
+                viewModel.Establishments.ForEach(x => x.EditMode = false);
             }
             else if (viewModel.Action.Equals("Remove", StringComparison.OrdinalIgnoreCase) && viewModel.EstabUrnToRemove.HasValue)
             {
@@ -131,10 +154,7 @@ namespace Edubase.Web.UI.Controllers
                     using (var dc = new ApplicationDbContext())
                     {
                         var company = await dc.Groups.SingleAsync(x => x.GroupUID == viewModel.GroupUID.Value);
-                        company.Name = viewModel.Name;
-                        company.OpenDate = viewModel.OpenDate.ToDateTime();
-                        company.GroupTypeId = viewModel.TypeId;
-                        company.CompaniesHouseNumber = viewModel.CompaniesHouseNumber.Clean();
+                        company.GroupId = viewModel.GroupId.Clean();
                         
                         var links = dc.EstablishmentGroups.Where(x => x.GroupUID == viewModel.GroupUID).ToList();
                         var urnsInDb = links.Select(x => x.EstablishmentUrn).Cast<int?>().ToArray();
@@ -154,11 +174,13 @@ namespace Edubase.Web.UI.Controllers
 
                         foreach (var urn in urnsToAdd.Cast<int>())
                         {
+                            var joinedDate = viewModel.Establishments.FirstOrDefault(x => x.Urn == urn)?.JoinedDate;
+
                             var link = new EstablishmentGroup
                             {
                                 GroupUID = company.GroupUID,
                                 EstablishmentUrn = urn,
-                                JoinedDate = DateTime.UtcNow
+                                JoinedDate = joinedDate
                             };
                             dc.EstablishmentGroups.Add(link);
                         }
@@ -168,7 +190,14 @@ namespace Edubase.Web.UI.Controllers
                             var o = links.FirstOrDefault(x => x.EstablishmentUrn == urn);
                             if (o != null) dc.EstablishmentGroups.Remove(o);
                         }
-                        
+
+                        var urnsToUpdate = urnsInDb.Intersect(urnsInModel);
+                        foreach (var urn in urnsToUpdate)
+                        {
+                            var o = links.FirstOrDefault(x => x.EstablishmentUrn == urn);
+                            o.JoinedDate = viewModel.Establishments.FirstOrDefault(x => x.Urn == urn)?.JoinedDate;
+                        }
+
                         await dc.SaveChangesAsync();
                         return RedirectToAction("Details", new { id = company.GroupUID });
                     }

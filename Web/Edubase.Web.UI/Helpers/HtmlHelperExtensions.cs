@@ -241,26 +241,31 @@ namespace Edubase.Web.UI.Helpers
         public static MvcHtmlString EduDayDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
             TProperty>> expression, object attributes)
         {
+            var v = expression.Compile()(htmlHelper.ViewData.Model);
             var items = Enumerable.Range(1, 31)
-                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() });
+                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(), Selected = (x.ToString() == v?.ToString()) });
             return htmlHelper.DropDownListFor(expression, items, "", attributes);
         }
 
         public static MvcHtmlString EduMonthDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
             TProperty>> expression, object attributes)
         {
+            var v = expression.Compile()(htmlHelper.ViewData.Model);
             var items = Enumerable.Range(1, 12)
-                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() });
+                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(),
+                    Selected = (x.ToString() == v?.ToString())});
             return htmlHelper.DropDownListFor(expression, items, "", attributes);
         }
 
         public static MvcHtmlString EduYearDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
             TProperty>> expression, object attributes)
         {
+            var v = expression.Compile()(htmlHelper.ViewData.Model);
             var start = 1900;
             var count = (DateTime.UtcNow.Year + 5) - start;
             var items = Enumerable.Range(start, count).Reverse()
-                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() });
+                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(),
+                    Selected = (x.ToString() == v?.ToString()) });
             return htmlHelper.DropDownListFor(expression, items, "", attributes);
         }
         

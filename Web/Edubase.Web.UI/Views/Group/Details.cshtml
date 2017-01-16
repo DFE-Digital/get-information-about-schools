@@ -143,6 +143,8 @@
                                     <dd>@result.Establishment.EstablishmentType</dd>
                                     <dt>Headteacher name:</dt>
                                     <dd>@result.Establishment.HeadTitle @result.Establishment.HeadFirstName @result.Establishment.HeadLastName</dd>
+                                    <dt>Joined date:</dt>
+                                    <dd>@(result.JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
                                 </dl>
                             </li>
                         }
