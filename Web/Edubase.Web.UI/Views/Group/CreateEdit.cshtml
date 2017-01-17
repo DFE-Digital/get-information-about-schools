@@ -59,39 +59,38 @@
         </div>
     </div>
 
-    if (Model.GroupUID.HasValue)
-    {
-        <div class="grid-row">
-            <div class="column-half">
-                <span class="bold-xsmall">Add establishment to this Academy Trust</span>
-                <p  class="font-xsmall">Enter the establishment URN</p>
-                <div class="form-group">
-                    @Html.TextBoxFor(x => x.SearchURN, new { @class = "form-control form-control-1-2 search-box" })
-                    <button type="submit" name="action" value="Search" class="button button-find-inline">Find</button>
-                </div>
-                @if (Model.EstablishmentName != null)
-                {
-                    <p class="bold-xsmall">Establishment found</p>
-                    <p>@Model.EstablishmentName</p>
+
+    <div class="grid-row">
+        <div class="column-half">
+            <span class="bold-xsmall">Add establishment to this Academy Trust</span>
+            <p  class="font-xsmall">Enter the establishment URN</p>
+            <div class="form-group">
+                @Html.TextBoxFor(x => x.SearchURN, new { @class = "form-control form-control-1-2 search-box" })
+                <button type="submit" name="action" value="Search" class="button button-find-inline">Find</button>
+            </div>
+            @if (Model.EstablishmentName != null)
+            {
+                <p class="bold-xsmall">Establishment found</p>
+                <p>@Model.EstablishmentName</p>
                     
-                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.JoinedDate)">
-                        <fieldset>
-                            <legend>Joined date</legend>
-                            <div class="form-hint">For exampe, 20 03 2003</div>
-                            @Html.ValidationMessageFor(x => x.JoinedDate)
-                            <span class="inline-form-control">
-                                <label for="opendate-day">Day</label>
-                                @Html.EduDayDropDownFor(x => x.JoinedDate.Day,
+                <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.JoinedDate)">
+                    <fieldset>
+                        <legend>Joined date</legend>
+                        <div class="form-hint">For exampe, 20 03 2003</div>
+                        @Html.ValidationMessageFor(x => x.JoinedDate)
+                        <span class="inline-form-control">
+                            <label for="opendate-day">Day</label>
+                            @Html.EduDayDropDownFor(x => x.JoinedDate.Day,
                                 new
                                 {
                                     id = "joineddate-day",
                                     @class = "form-control",
                                     aria_describedby = "help-joineddate-day",
                                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="joineddate-month">Month</label>
-                                @Html.EduMonthDropDownFor(x => x.JoinedDate.Month,
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="joineddate-month">Month</label>
+                            @Html.EduMonthDropDownFor(x => x.JoinedDate.Month,
                                 new
                                 {
                                     id = "joineddate-month",
@@ -99,30 +98,35 @@
                                     aria_describedby = "help-joineddate-month",
                                 })
 
-                            </span>
-                            <span class="inline-form-contol">
-                                <label for="joineddate-year">Year</label>
-                                @Html.EduYearDropDownFor(x => x.JoinedDate.Year,
+                        </span>
+                        <span class="inline-form-contol">
+                            <label for="joineddate-year">Year</label>
+                            @Html.EduYearDropDownFor(x => x.JoinedDate.Year,
                                 new
                                 {
                                     id = "joineddate-year",
                                     @class = "form-control",
                                     aria_describedby = "help-joineddate-year",
                                 })
-                            </span>
-                        </fieldset>
-                    </div>
+                        </span>
+                    </fieldset>
+                </div>
                     
-                    <input type="submit" name="action" value="Add" class="button" />
-                    @Html.HiddenFor(x => x.EstablishmentUrn)
-                }
-                @if (Model.EstablishmentNotFound)
-                {
-                    <p class="bold-xsmall">Establishment not found</p>
-                }
-            </div>
+                <input type="submit" name="action" value="Add" class="button" />
+                @Html.HiddenFor(x => x.EstablishmentUrn)
+                    
+            }
+            @if (Model.EstablishmentNotFound)
+            {
+                <p class="bold-xsmall">Establishment not found</p>
+            }
+
+            @Html.HiddenFor(x => x.EstablishmentNotFound)
+            @Html.HiddenFor(x => x.EstablishmentName)
+
         </div>
-    }
+    </div>
+
     <div class="grid-row">
         <div class="column-two-thirds">
 
@@ -231,7 +235,11 @@
                 {
                     @Html.ActionLink("Cancel", "Details", "Group", new { id = Model.GroupUID }, new { @class = "button button-grey cancel" })
                 }
-                <button type="submit" class="button submit" name="action" value="save">Submit</button>
+
+                @if (!Model.Establishments.Any(x => x.EditMode))
+                {
+                    <button type="submit" class="button submit" name="action" value="save">Submit</button>
+                }
             </div>
         </div>
     </div>

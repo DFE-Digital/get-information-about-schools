@@ -66,7 +66,6 @@
     <tr>
         <th scope="row">Phase of education:</th>
         <td>
-            @(Html.PendingUpdatesFor(x => x.EducationPhaseId))
             @Html.NameFor(x => x.Establishment.EducationPhaseId)
         </td>
     </tr>
@@ -76,7 +75,6 @@
         <tr>
             <th scope="row">@(Model.DisplayPolicy.EstablishmentTypeLabel):</th>
             <td>
-                @(Html.PendingUpdatesFor(x => x.TypeId))
                 @Html.NameFor(x => x.Establishment.TypeId)
             </td>
         </tr>
@@ -175,13 +173,24 @@
         <tr>
             <th scope="row">Ofsted rating:</th>
             <td>
-                <span class="highlighted-ofsted-rating">@Model.Establishment.OfstedRating</span>
+                @if (Model.Establishment.OfstedRating.HasValue)
+                {
+                    <span class="highlighted-ofsted-rating">@Model.Establishment.OfstedRating</span>
+                }
+                else
+                {
+                    <span>Not recorded</span>
+                }
+
                 @if (Model.Establishment.OfstedInspectionDate.HasValue)
                 {
                     <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
                 }
-                <br />
-                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report</a>
+                @if (Model.OfstedRatingReportUrl != null)
+                {
+                    <br />
+                    <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report</a>
+                }
             </td>
         </tr>
     }

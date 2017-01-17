@@ -62,7 +62,7 @@
 
             <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
                 <label for="TypeId" class="form-label bold-small" style="font-weight:bold;">Trust type</label>
-                @Html.EduGroupTypesForCreateDropDownFor(x => x.TypeId)
+                @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", new { @class = "form-control" })
             </div>
             <br /><br />
         </div>

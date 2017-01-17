@@ -21,6 +21,7 @@ using MoreLinq;
 using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
 using FluentValidation.Mvc;
+using System.Collections.Generic;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -52,8 +53,11 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> Create(string id)
         {
+            if (string.IsNullOrWhiteSpace(id)) return HttpNotFound();
+
             var companyProfile = await new TrustService().SearchByCompaniesHouseNumber(id);
-            return View("Create", new CreateGroupModel(companyProfile.Items.First()));
+            var groupTypes = await GetGroupTypes();
+            return View("Create", new CreateGroupModel(companyProfile.Items.First(), groupTypes));
         }
         
         [HttpPost, EdubaseAuthorize]
@@ -64,7 +68,18 @@ namespace Edubase.Web.UI.Controllers
                 var id = await new TrustService().CreateAsync(User as ClaimsPrincipal, viewModel.CompaniesHouseNumber, viewModel.TypeId.Value);
                 return RedirectToAction("Details", new { id });
             }
-            else return View(viewModel);
+            else
+            {
+                viewModel.GroupTypes = await GetGroupTypes(viewModel.TypeId);
+                return View(viewModel);
+            }
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetGroupTypes(int? typeId = null)
+        {
+            return (await _cachedLookupService.GroupTypesGetAllAsync())
+                .Where(x => x.Name.IndexOf("trust", StringComparison.OrdinalIgnoreCase) > -1)
+                .ToSelectList(typeId);
         }
 
         [HttpGet, EdubaseAuthorize]
@@ -103,7 +118,11 @@ namespace Edubase.Web.UI.Controllers
             {
                 ModelState.Clear();
                 var urn = viewModel.SearchURN.ToInteger();
-                using (var dc = new ApplicationDbContext()) viewModel.EstablishmentName = dc.Establishments.Where(x => x.Urn == urn).Select(x => x.Name).FirstOrDefault();
+
+                using (var dc = new ApplicationDbContext())
+                    viewModel.EstablishmentName = dc.Establishments.Where(x => x.Urn == urn)
+                        .Select(x => x.Name).FirstOrDefault();
+
                 if (viewModel.EstablishmentName != null) viewModel.EstablishmentUrn = urn;
                 else viewModel.EstablishmentNotFound = true;
             }
@@ -126,6 +145,7 @@ namespace Edubase.Web.UI.Controllers
                             viewModel.Establishments.Insert(0, estab);
                             viewModel.SearchURN = string.Empty;
                             viewModel.EstablishmentUrn = null;
+                            viewModel.EstablishmentName = null;
                         }
                     }
                 }
@@ -174,9 +194,14 @@ namespace Edubase.Web.UI.Controllers
                 {
                     using (var dc = new ApplicationDbContext())
                     {
-                        var company = await dc.Groups.SingleAsync(x => x.GroupUID == viewModel.GroupUID.Value);
-                        company.GroupId = viewModel.GroupId.Clean();
-                        
+                        var group = await dc.Groups.SingleAsync(x => x.GroupUID == viewModel.GroupUID.Value);
+                        group.GroupId = viewModel.GroupId.Clean();
+
+                        if (!_securityService.GetEditGroupPermission(User).CanEdit(group.GroupUID, group.GroupTypeId))
+                        {
+                            return new HttpUnauthorizedResult("Edit permission denied");
+                        }
+
                         var links = dc.EstablishmentGroups.Where(x => x.GroupUID == viewModel.GroupUID).ToList();
                         var urnsInDb = links.Select(x => x.EstablishmentUrn).Cast<int?>().ToArray();
                         var urnsInModel = viewModel.Establishments.Select(x => x.Urn).Cast<int?>().ToArray();
@@ -199,7 +224,7 @@ namespace Edubase.Web.UI.Controllers
 
                             var link = new EstablishmentGroup
                             {
-                                GroupUID = company.GroupUID,
+                                GroupUID = group.GroupUID,
                                 EstablishmentUrn = urn,
                                 JoinedDate = joinedDate
                             };
@@ -220,7 +245,7 @@ namespace Edubase.Web.UI.Controllers
                         }
 
                         await dc.SaveChangesAsync();
-                        return RedirectToAction("Details", new { id = company.GroupUID });
+                        return RedirectToAction("Details", new { id = group.GroupUID });
                     }
                 }
             }
