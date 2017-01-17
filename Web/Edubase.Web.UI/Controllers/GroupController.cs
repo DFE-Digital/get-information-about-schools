@@ -57,7 +57,14 @@ namespace Edubase.Web.UI.Controllers
 
             var companyProfile = await new TrustService().SearchByCompaniesHouseNumber(id);
             var groupTypes = await GetGroupTypes();
-            return View("Create", new CreateGroupModel(companyProfile.Items.First(), groupTypes));
+
+            var vm = new CreateGroupModel(companyProfile.Items.First(), groupTypes);
+            using (var dc = new ApplicationDbContext())
+            {
+                vm.TrustExists = await dc.Groups.AnyAsync(x => x.CompaniesHouseNumber == id);
+            }
+
+            return View("Create", vm);
         }
         
         [HttpPost, EdubaseAuthorize]

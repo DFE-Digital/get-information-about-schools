@@ -75,7 +75,7 @@
                                     <dt>Incorporated:</dt>
                                     <dd> @(result.IncorporationDate?.ToString("dd MMMM yyyy"))</dd>
                                     <dt>Address:</dt>
-                                    <dd>@result.Address</dd>
+                                    <dd>@(result.Address ?? "Not recorded")</dd>
                                 </dl>
                             </li>
                         }

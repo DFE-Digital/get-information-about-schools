@@ -50,8 +50,8 @@ namespace Edubase.Services
                 return new PagedDto<CompanyProfileDto>(skip, take, result.Data.Companies.Select(x => new CompanyProfileDto
                 {
                     Name = x.Title,
-                    Address = StringUtil.ConcatNonEmpties(", ", x.Address.CareOf, x.Address.PoBox, x.Address.AddressLine1,
-                            x.Address.AddressLine2, x.Address.Locality, x.Address.Region, x.Address.PostalCode),
+                    Address = StringUtil.ConcatNonEmpties(", ", x.Address?.CareOf, x.Address?.PoBox, x.Address?.AddressLine1,
+                            x.Address?.AddressLine2, x.Address?.Locality, x.Address?.Region, x.Address?.PostalCode),
                     IncorporationDate = x.DateOfCreation,
                     Number = x.CompanyNumber
                 }).ToList(), result.Data.TotalResults.GetValueOrDefault());
