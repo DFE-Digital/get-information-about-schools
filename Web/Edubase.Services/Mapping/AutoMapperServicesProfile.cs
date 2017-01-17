@@ -32,6 +32,7 @@ namespace Edubase.Services.Mapping
 
             CreateMap<Establishment, EstablishmentModel>() // out
                 .ForMember(x => x.Location, opt => opt.Ignore())
+                .ForMember(x => x.AdditionalAddressesCount, opt => opt.Ignore())
                 .AfterMap((s, d) =>
                 {
                     d.Location = s.Location.ToLatLon();

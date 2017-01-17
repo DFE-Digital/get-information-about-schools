@@ -54,7 +54,6 @@
         <tr>
             <th scope="col">Age range:</th>
             <td>
-                @(Html.PendingUpdatesFor("StatutoryLowAge", "StatutoryHighAge"))
                 @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
                 {
                     <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
@@ -105,7 +104,6 @@
         <tr>
             <th scope="row">Gender of entry:</th>
             <td>
-                @(Html.PendingUpdatesFor(x => x.GenderId))
                 @Html.NameFor(x => x.Establishment.GenderId)
             </td>
         </tr>
@@ -126,7 +124,6 @@
     <tr>
         <th scope="row">Establishment status:</th>
         <td>
-            @(Html.PendingUpdatesFor(x => x.StatusId))
             @if (Model.IsClosed)
             {
                 <span class="pending-closure">
@@ -145,7 +142,6 @@
         <tr>
             <th scope="row">Admissions policy:</th>
             <td>
-                @(Html.PendingUpdatesFor(x => x.AdmissionsPolicyId))
                 @Html.NameFor(x => x.Establishment.AdmissionsPolicyId)
             </td>
         </tr>
@@ -156,16 +152,23 @@
         <tr>
             <th scope="row">Website:</th>
             <td>
-                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank">
-                    @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
-                </a>
+                @if (Model.Establishment.Contact_WebsiteAddress == null)
+                {
+                    <text>Not recorded</text>
+                }
+                else
+                {
+                    <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank">
+                        @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
+                    </a>
+                }
             </td>
         </tr>
     }
 
     @if (Model.DisplayPolicy.Contact_TelephoneNumber)
     {
-        <tr><th scope="row">Telephone:</th><td>@Model.Establishment.Contact_TelephoneNumber</td></tr>
+        <tr><th scope="row">Telephone:</th><td>@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</td></tr>
     }
 
     @if (Model.DisplayPolicy.OfstedRatingDetails)
