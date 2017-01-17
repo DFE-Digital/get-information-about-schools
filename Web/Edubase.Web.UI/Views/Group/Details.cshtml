@@ -12,7 +12,7 @@
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 
-@if (Model.IsUserLoggedOn)
+@if (Model.CanUserEdit)
 {
     @Html.ActionLink("Edit", "Edit", "Group", new { id = Model.Group.GroupUID }, new { @class = "button mobile-full-width" })
 }
@@ -143,6 +143,8 @@
                                     <dd>@result.Establishment.EstablishmentType</dd>
                                     <dt>Headteacher name:</dt>
                                     <dd>@result.Establishment.HeadTitle @result.Establishment.HeadFirstName @result.Establishment.HeadLastName</dd>
+                                    <dt>Joined date:</dt>
+                                    <dd>@(result.JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
                                 </dl>
                             </li>
                         }

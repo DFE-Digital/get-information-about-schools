@@ -80,6 +80,10 @@
             display: block;
             margin-top: 12px;
         }
+
+        &.la {
+            .link-button { margin-top:5px; }
+        }
     }
 }
 

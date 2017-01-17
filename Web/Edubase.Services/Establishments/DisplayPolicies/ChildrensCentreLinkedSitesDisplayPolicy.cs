@@ -13,10 +13,10 @@ namespace Edubase.Services.Establishments.DisplayPolicies
 
         protected override void ConfigureInternal()
         {
-            EstablishmentType = false;
-            TelephoneNumber = false;
+            TypeId = false;
+            Contact_TelephoneNumber = false;
             CloseDate = IsSchoolClosed;
-            ReasonEstablishmentClosed = IsSchoolClosed;
+            ReasonEstablishmentClosedId = IsSchoolClosed;
         }
     }
 }

@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Edubase.Services.Domain;
 
-namespace Edubase.Services
+namespace Edubase.Services.Lookup
 {
-    public interface ICachedLookupService
+    public interface ILookupService
     {
         IEnumerable<LookupDto> AccommodationChangedGetAll();
         Task<IEnumerable<LookupDto>> AccommodationChangedGetAllAsync();
@@ -18,8 +18,14 @@ namespace Edubase.Services
         Task<IEnumerable<LookupDto>> BoardingEstablishmentGetAllAsync();
         IEnumerable<LookupDto> CASWardsGetAll();
         Task<IEnumerable<LookupDto>> CASWardsGetAllAsync();
+        IEnumerable<LookupDto> CCDeliveryModelsGetAll();
+        Task<IEnumerable<LookupDto>> CCDeliveryModelsGetAllAsync();
+        IEnumerable<LookupDto> CCDisadvantagedAreasGetAll();
+        Task<IEnumerable<LookupDto>> CCDisadvantagedAreasGetAllAsync();
         IEnumerable<LookupDto> CCGovernanceGetAll();
         Task<IEnumerable<LookupDto>> CCGovernanceGetAllAsync();
+        IEnumerable<LookupDto> CCGroupLeadsGetAll();
+        Task<IEnumerable<LookupDto>> CCGroupLeadsGetAllAsync();
         IEnumerable<LookupDto> CCOperationalHoursGetAll();
         Task<IEnumerable<LookupDto>> CCOperationalHoursGetAllAsync();
         IEnumerable<LookupDto> CCPhaseTypesGetAll();
@@ -45,7 +51,6 @@ namespace Edubase.Services
         Task<IEnumerable<LookupDto>> FurtherEducationTypesGetAllAsync();
         IEnumerable<LookupDto> GendersGetAll();
         Task<IEnumerable<LookupDto>> GendersGetAllAsync();
-        Task<string> GetNameAsync(string lookupName, int id);
         IEnumerable<LookupDto> GovernmentOfficeRegionsGetAll();
         Task<IEnumerable<LookupDto>> GovernmentOfficeRegionsGetAllAsync();
         IEnumerable<LookupDto> GovernorAppointingBodiesGetAll();
@@ -66,7 +71,6 @@ namespace Edubase.Services
         Task<IEnumerable<LookupDto>> InspectorateNamesGetAllAsync();
         IEnumerable<LookupDto> InspectoratesGetAll();
         Task<IEnumerable<LookupDto>> InspectoratesGetAllAsync();
-        bool IsLookupField(string name);
         IEnumerable<LookupDto> LocalAuthorityGetAll();
         Task<IEnumerable<LookupDto>> LocalAuthorityGetAllAsync();
         IEnumerable<LookupDto> LocalGovernorsGetAll();

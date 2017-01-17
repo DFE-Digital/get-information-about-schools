@@ -32,6 +32,7 @@ namespace Edubase.Services.Mapping
 
             CreateMap<Establishment, EstablishmentModel>() // out
                 .ForMember(x => x.Location, opt => opt.Ignore())
+                .ForMember(x => x.AdditionalAddressesCount, opt => opt.Ignore())
                 .AfterMap((s, d) =>
                 {
                     d.Location = s.Location.ToLatLon();
@@ -39,9 +40,18 @@ namespace Edubase.Services.Mapping
                 })
                 .ReverseMap() // in
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Name))
-                .ForMember(x => x.AdditionalAddresses, opt => opt.MapFrom(x => x.AdditionalAddresses))
-                .ForAllOtherMembers(opt => opt.Ignore());
-            
+                .ForMember(x => x.Address, opt => opt.MapFrom(x => new Address
+                {
+                    Country = x.Address_Country,
+                    County = x.Address_County,
+                    Line1 = x.Address_Line1,
+                    Line2 = x.Address_Line2,
+                    Line3 = x.Address_Line3,
+                    Locality = x.Address_Locality,
+                    PostCode = x.Address_PostCode,
+                    CityOrTown = x.Address_CityOrTown
+                }))
+                .ForMember(x => x.AdditionalAddresses, opt => opt.MapFrom(x => x.AdditionalAddresses));
 
             CreateMap<GroupCollection, GroupModel>();
         }

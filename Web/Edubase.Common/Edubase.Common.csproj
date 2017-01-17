@@ -70,11 +70,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cacher.cs" />
-    <Compile Include="Cache\Cacheable.cs" />
     <Compile Include="Cache\CacheAccessor.cs" />
     <Compile Include="Cache\CacheAuditLogItem.cs" />
     <Compile Include="Cache\CacheConfig.cs" />
+    <Compile Include="Cache\ObjectEnvelope.cs" />
     <Compile Include="Cache\CacheResponseDto.cs" />
     <Compile Include="Cache\DistributedCacheMessage.cs" />
     <Compile Include="Cache\eCacheEvent.cs" />
@@ -98,6 +97,7 @@
     <Compile Include="Reflection\ReflectionHelper.cs" />
     <Compile Include="Reflection\PropInfo.cs" />
     <Compile Include="Retry.cs" />
+    <Compile Include="Returns.cs" />
     <Compile Include="Spatial\DistanceCalculator.cs" />
     <Compile Include="Spatial\LatLon.cs" />
     <Compile Include="Spatial\OSGB36Converter.cs" />

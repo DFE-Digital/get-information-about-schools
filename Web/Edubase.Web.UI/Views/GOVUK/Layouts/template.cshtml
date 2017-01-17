@@ -97,7 +97,7 @@
     <div id="global-cookie-message">
         <div class="outer-block">
             <div class="inner-block">
-                @if (String.IsNullOrEmpty(ViewBag.cookieMessage) == false)
+                @if (string.IsNullOrEmpty(ViewBag.cookieMessage) == false)
                 {
                     @(ViewBag.cookieMessage)
                 }
@@ -128,7 +128,6 @@
                     <nav id="proposition-menu">
                         <a href="/Home" id="proposition-name">Edubase</a>
                         
-                        @Html.AntiForgeryToken()
                         <ul id="proposition-links">
                             <li><a href="/Search">Search</a></li>
                             <li><a href="/Downloads">Downloads</a></li>
@@ -136,12 +135,12 @@
                             {
                                 <li><a href="/Tools">Tools</a></li>
                                 <li>
-                                    @Html.ActionLink("Log off", "LogOff", "Account")
+                                    @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)
                                 </li>
                             }
                             else
                             {
-                                <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "" }, null)</li>
+                                <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)</li>
                             }
                         </ul>
                         

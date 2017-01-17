@@ -114,7 +114,7 @@ namespace Edubase.Common
 
         public static string Get(this IDictionary<string, string> data, string key)
         {
-            if (data.ContainsKey(key)) return data[key];
+            if (key != null && data.ContainsKey(key)) return data[key];
             return null;
         }
 
@@ -128,7 +128,7 @@ namespace Edubase.Common
         /// <returns></returns>
         public static T2 Get<T1,T2>(this IDictionary<T1, T2> data, T1 key)
         {
-            if (data.ContainsKey(key)) return data[key];
+            if (key != null && data.ContainsKey(key)) return data[key];
             return default(T2);
         }
 
@@ -159,7 +159,6 @@ namespace Edubase.Common
         public static T2 Set<T1, T2>(this IDictionary<T1, T2> data, T1 key, T2 val)
         {
             return data[key] = val;
-            return val;
         }
 
         public static T2 Get<T1, T2>(this IDictionary<T1, T2> data, T1 key, T2 defaultValue)
@@ -249,6 +248,10 @@ namespace Edubase.Common
             if (item == null) throw exceptionFactory();
             return item;
         }
+
+        public static byte[] Compress(this byte[] buffer) => new IO.Compression().Compress(buffer);
+
+        public static byte[] Decompress(this byte[] buffer) => new IO.Compression().Decompress(buffer);
 
 
     }

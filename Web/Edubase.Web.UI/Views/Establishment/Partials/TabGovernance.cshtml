@@ -14,15 +14,15 @@
             if (Model.HistoricalGovernors.Any())
             {
                 <br />
-                            <hr />
-                            <br />
+                <hr />
+                <br />
             }
         }
 
         if (Model.HistoricalGovernors.Any())
         {
             <h3 class="bold-xsmall">Historic (left with past 12 months)</h3>
-                        @Html.Partial("_Governors", Model.HistoricalGovernors)
+            @Html.Partial("_Governors", Model.HistoricalGovernors)
         }
     }
 

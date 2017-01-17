@@ -7,6 +7,7 @@ using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
+using System;
 
 namespace Edubase.Services.Establishments
 {
@@ -15,7 +16,7 @@ namespace Edubase.Services.Establishments
         Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal);
         Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal);
         Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user);
-        EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment, GroupModel group);
+        EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment);
         Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn);
         Task<IEnumerable<ChangeDescriptorDto>> GetPendingChangesAsync(int urn, IPrincipal principal);
         Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10);

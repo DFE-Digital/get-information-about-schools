@@ -107,7 +107,9 @@
 
         string Keyify(params object[] items);
 
-        Task<T> AutoAsync<T>(Func<Task<T>> factory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null);
+        Task<T> AutoAsync<T>(Func<Task<T>> asyncFactory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null);
+        Task<T> AutoAsync<T>(Func<T> factory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null);
+        T Auto<T>(Func<T> factory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null);
 
         Task ClearRelatedCacheKeysAsync(string relationshipKey);
 

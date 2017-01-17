@@ -1,9 +1,9 @@
 ﻿@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
-@model AdvancedSearchViewModel
+@using VM = Edubase.Web.UI.Models.AdvancedSearchViewModel;
+@model VM
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
-    var cache = new Edubase.Services.CachedLookupService();
 }
 
 <div class="grid-row">
@@ -53,7 +53,8 @@
                                         <span class="search-hint">Enter name, URN, LAESTAB or UKPRN</span>
                                         @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text="})
                                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                                        <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Text">Search</button>
+                                        <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Text">Search</button>
+                                        <input type="hidden" name="g" value="true" />
                                     </div>
                                 }
                             </li>
@@ -69,33 +70,38 @@
                                         <span class="search-hint">Enter postcode, town or city</span>
                                         @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "form-control", autocomplete = "off"})
                                         @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
-                                        <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Location">Search</button>
+                                        <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Location">Search</button>
+                                        <input type="hidden" name="g" value="true" />
                                     </div>
 
                                 }
                             </li>
                             <li class="search-type-wrapper">
+                                <a name="la"></a>
                                 @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                                 {
-                                    var las = cache.LocalAuthorityGetAll().Where(x => x.Id > 0).OrderBy(x => x.Name);
                                     <label>
                                         <input type="radio" id="" class="panel-toggle"/>
                                         <span class="label-text">Local authority</span>
                                     </label>
-                                    <div class="expanding-search-field">
-                                        <span class="search-hint">Select one or more local authorities</span>
-                                        <div class="local-authority-selector">
-                                            @foreach (var item in las)
-                                            {
-                                                <label for="la_@item.Id">
-                                                    <input name="l" value="@item.Id" id="la_@item.Id" type="checkbox" class=""/>
-                                                    @item
-                                                </label>
-                                            }
+                                    <div class="expanding-search-field la">
+                                        <span class="search-hint">Enter a Local authority</span>
+                                        @foreach (var id in Model.SelectedLocalAuthorityIds)
+                                        {
+                                            var la = Model.LocalAuthorties.First(x => x.Id == id);
+                                            <input value="@la.Name" disabled="disabled" class="form-control" />
+                                            <button type="submit" class="link-button font-small" name="LocalAuthorityToRemove" value="@id">Remove</button>
+                                            <br /><br />
+                                        }
 
-                                        </div>
-                                        
-                                        <button type="submit" class="button button-next button-below" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.LocalAuthority">Search</button>
+                                        @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new { @class = "form-control", autocomplete = "off" })
+                                        <button type="submit" class="link-button font-small" name="searchtype" value="@VM.eSearchType.LocalAuthorityDisambiguation">Find</button>
+                                        @Html.HiddenFieldsFromQueryString()
+                                        <br />
+                                        <br />
+
+                                        <input type="hidden" name="g" value="true" />
+                                        <button type="submit" class="button button-next button-below" name="searchtype" value="@VM.eSearchType.ByLocalAuthority">Search</button>
                                     </div>
                                 }
                             </li>
@@ -117,6 +123,7 @@
                             </label>
                             @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text="})
                             @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
+                            <input type="hidden" name="g" value="true" />
                         </div>
                         <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Group">Search</button>
                     }
@@ -130,17 +137,17 @@
                         <div class="edubase-search-element">
                             <label for="forename" class="bold-small">Forename</label>
                             <span class="form-hint">e.g. John</span>
-                            @Html.EduTextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control"})
+                            @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control"})
                         </div>
                         <div class="edubase-search-element">
                             <label for="surname" class="bold-small">Surname</label>
                             <span class="form-hint">e.g. Evans</span>
-                            @Html.EduTextBoxFor(x => x.GovernorSearchModel.Surname, new {maxlength = 120, id = "surname", @class = "form-control"})
+                            @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new {maxlength = 120, id = "surname", @class = "form-control"})
                         </div>
                         <div class="edubase-search-element">
                             <label for="roleid" class="bold-small">Role</label>
                             <span class="form-hint">e.g. Trustee</span>
-                            @Html.EduDropDownFor(x => x.GovernorSearchModel.RoleId, cache.GovernorRolesGetAll().Select(x => new SelectListItem {Text = x.Name, Value = x.Id.ToString()}),
+                            @Html.DropDownListFor(x => x.GovernorSearchModel.RoleId, Model.GovernorRoles.Select(x => new SelectListItem {Text = x.Name, Value = x.Id.ToString()}),
                                 new {id = "roleid", @class = "form-control"})
                         </div>
                         <div class="edubase-search-element">
@@ -150,6 +157,7 @@
                             </label>
                         </div>
                         <div class="edubase-search-element">
+                            <input type="hidden" name="g" value="true" />
                             <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Governor">Search</button>
                         </div>
                     }
@@ -183,8 +191,7 @@
     </script>
     @*<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw"></script>*@
     <script type="text/javascript">
-
-        window.localAuthorities = @Html.Json(cache.LocalAuthorityGetAll())
+        window.localAuthorities = @Html.Json(Model.LocalAuthorties);
     </script>
 }
 

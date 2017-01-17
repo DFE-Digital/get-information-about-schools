@@ -10,15 +10,15 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         protected override void ConfigureInternal()
         {
             CloseDate = true;
-            ReasonEstablishmentClosed = true;
-            LAESTAB = true;
+            ReasonEstablishmentClosedId = true;
+            EstablishmentNumber = true;
             HeadteacherDetails = true;
-            BoardingProvision = true;
+            ProvisionBoardingId = true;
             Capacity = true;
             AgeRange = true;
-            GenderOfEntry = true;
-            WebsiteAddress = true;
-            Section41Approved = true;
+            GenderId = true;
+            Contact_WebsiteAddress = true;
+            Section41ApprovedId = true;
 
         }
     }

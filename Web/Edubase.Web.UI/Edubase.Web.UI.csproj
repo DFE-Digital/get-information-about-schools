@@ -280,6 +280,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SearchController.Establishments.cs" />
+    <Compile Include="Controllers\SearchController.Download.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
@@ -300,12 +302,12 @@
     <Compile Include="Helpers\ModelBinding\DefaultModelBinderEx.cs" />
     <Compile Include="Helpers\QueryStringHelper.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Admin\LogMessagesViewModel.cs" />
     <Compile Include="Models\ApprovalsViewModel.cs" />
-    <Compile Include="Models\AdvancedSearchViewModel.cs" />
+    <Compile Include="Models\Search\AdvancedSearchDownloadViewModel.cs" />
+    <Compile Include="Models\Search\AdvancedSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateTrustModel.cs" />
@@ -323,8 +325,10 @@
     <Compile Include="Models\PendingChangeViewModel.cs" />
     <Compile Include="Models\SearchResultsModel.cs" />
     <Compile Include="Models\GroupEstabViewModel.cs" />
+    <Compile Include="Models\Search\LocalAuthorityDisambiguationViewModel.cs" />
     <Compile Include="Models\Validators\CreateEditGroupModelValidator.cs" />
     <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
+    <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
     <Compile Include="MvcResult\ChallengeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -768,6 +772,11 @@
     <Content Include="Views\Establishment\Partials\TabLocation.cshtml" />
     <Content Include="Views\Establishment\Partials\TabChangeHistory.cshtml" />
     <Content Include="Views\Establishment\Partials\Header.cshtml" />
+    <Content Include="Views\Search\Download\SelectFormat.cshtml" />
+    <Content Include="Views\Search\Download\SelectDataset.cshtml" />
+    <Content Include="Views\Search\Download\PreparingFilePleaseWait.cshtml" />
+    <Content Include="Views\Search\Download\ReadyToDownload.cshtml" />
+    <Content Include="Views\Search\LocalAuthorityDisambiguation.cshtml" />
     <None Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />
@@ -805,6 +814,10 @@
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
       <Project>{D605ACE4-2659-48DC-BF21-94E7B8D230DA}</Project>
       <Name>Edubase.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edubase.StubUserBuilder\Edubase.StubUserBuilder.csproj">
+      <Project>{0c900c37-a5fa-4a79-a2b9-66d372890fda}</Project>
+      <Name>Edubase.StubUserBuilder</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
