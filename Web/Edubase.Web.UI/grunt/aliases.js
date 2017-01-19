@@ -23,6 +23,6 @@ module.exports = {
   ],
   "test-server": [
     "compile-dev-assets",
-    "karma:firefox"
+    "karma:ie"
   ]
 };
