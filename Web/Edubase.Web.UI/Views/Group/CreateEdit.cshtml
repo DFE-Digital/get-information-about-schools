@@ -63,7 +63,7 @@
     <div class="grid-row">
         <div class="column-half">
             <span class="bold-xsmall">Add establishment to this Academy Trust</span>
-            <p  class="font-xsmall">Enter the establishment URN</p>
+            <p  class="font-xsmall">Enter the establishment <abbr title="Unique Reference Number">URN</abbr></p>
             <div class="form-group">
                 @Html.TextBoxFor(x => x.SearchURN, new { @class = "form-control form-control-1-2 search-box" })
                 <button type="submit" name="action" value="Search" class="button button-find-inline">Find</button>
@@ -144,7 +144,7 @@
                         <dl>
                             <dt>Address:</dt>
                             <dd>@Model.Establishments[i].Address</dd>
-                            <dt>URN:</dt>
+                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                             <dd>@Model.Establishments[i].Urn</dd>
                             <dt>School type:</dt>
                             <dd>@Model.Establishments[i].Type</dd>

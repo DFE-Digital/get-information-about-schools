@@ -10,9 +10,7 @@
     <div class="column-full">
         <h1 class="heading-xlarge">Search Edubase</h1>
     </div>
-
-    
-
+   
     <div class="horizontal-tabs-wrapper">        
         <div class="column-full">
             <div class="tab-wrap">
@@ -45,12 +43,16 @@
                             <li class="search-type-wrapper">
                                 @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                                 {
-                                    <label>
-                                        <input type="radio" id="" class="panel-toggle"/>
-                                        <span class="label-text">Establishment name or reference number</span>
+                                    <label class="block-label selection-button-radio">
+                                        <input type="radio" class="panel-toggle"/>
+                                        Establishment name or reference number
                                     </label>
                                     <div class="expanding-search-field">
-                                        <span class="search-hint">Enter name, URN, LAESTAB or UKPRN</span>
+                                        <span class="search-hint">Enter name,
+                                            <abbr title="Unique Reference Number">URN</abbr>,
+                                            <abbr title="Local Authority and Establishment number">LAESTAB</abbr>
+                                            or <abbr title="UK Provider Reference Number">UKPRN</abbr>
+                                        </span>
                                         @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text="})
                                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                         <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Text">Search</button>
@@ -62,9 +64,9 @@
                             <li class="search-type-wrapper">
                                 @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                                 {
-                                    <label>
-                                        <input type="radio" id="" class="panel-toggle"/>
-                                        <span class="label-text">Location</span>
+                                    <label class="block-label selection-button-radio">
+                                        <input type="radio"  class="panel-toggle"/>
+                                        Location
                                     </label>
                                     <div class="expanding-search-field">
                                         <span class="search-hint">Enter postcode, town or city</span>
@@ -77,11 +79,11 @@
                                 }
                             </li>
                             <li class="search-type-wrapper">
-                                <a name="la"></a>
+                                <a id="la"></a>
                                 @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                                 {
-                                    <label>
-                                        <input type="radio" id="" class="panel-toggle"/>
+                                    <label class="block-label selection-button-radio">
+                                        <input type="radio" class="panel-toggle form-control"/>
                                         <span class="label-text">Local authority</span>
                                     </label>
                                     <div class="expanding-search-field la">
@@ -151,7 +153,7 @@
                                 new {id = "roleid", @class = "form-control"})
                         </div>
                         <div class="edubase-search-element">
-                            <label class="form-checkbox" for="IncludeHistoric">
+                            <label class="block-label selection-button-checkbox" for="IncludeHistoric">
                                 @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new {id = "IncludeHistoric"})
                                 <span class="font-small">Include historic records (Governors stepped down in the last 12 months)</span>
                             </label>
