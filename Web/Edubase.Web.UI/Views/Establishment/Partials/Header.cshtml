@@ -112,12 +112,12 @@
     <tr>
         <th scope="row">ID:</th>
         <td>
-            URN: @Model.Establishment.Urn,
+            <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
             @if (Model.DisplayPolicy.EstablishmentNumber)
             {
                 <text>DfE number: @Model.Establishment.GetLAESTAB()<br /></text>
             }
-            UKPRN: @Model.Establishment.UKPRN
+            <abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN
         </td>
     </tr>
 

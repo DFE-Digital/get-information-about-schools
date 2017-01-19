@@ -111,7 +111,7 @@
                     if (Model.AllowHidingOfAddress)
                     {
                     <div class="form-group">
-                        <label class="form-checkbox">
+                        <label class="block-label selection-button-checkbox">
                             @Html.CheckBoxFor(x => x.AdditionalAddresses[i].IsRestricted, new { @class = "form-control" })
                             Hide address from other users
                         </label>
@@ -215,7 +215,7 @@
                 }
 
                 <div class="form-group">
-                    <label class="form-label">URN</label>
+                    <label class="form-label"><abbr title="Unique Reference Number">URN</abbr></label>
                     @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", placeholder = "auto-generated", @readonly = true, disabled = "disabled" })
                 </div>
 
@@ -630,7 +630,7 @@
                     <h2 class="heading-medium create-edit-section-break">Links</h2>
                     <div class="link-establishment-form">
                         <h2 class="bold-xsmall">Link new school</h2>
-                        <p class="font-xsmall">Enter the Establishment URN</p>
+                        <p class="font-xsmall">Enter the Establishment <abbr title="Unique Reference Number">URN</abbr></p>
                         @Html.TextBoxFor(x => x.LinkedSearchUrn, new { maxlength = 120, id = "linkedsearchurn", @class = "form-control " })
                         &nbsp;&nbsp;
                         <button type="button" class="button button-next font-xsmall" name="action" value="@ViewModel.eAction.FindEstablishment">Search</button>
@@ -705,7 +705,7 @@
                         <table class="estab-links edit-estab-links mi">
                             <thead>
                                 <tr>
-                                    <th>URN</th>
+                                    <th><abbr title="Unique Reference Number">URN</abbr></th>
                                     <th>Establishment name</th>
                                     <th>Link type</th>
                                     <th>Date linked</th>
@@ -744,7 +744,7 @@
                                 <table class="estab-links">
                                     <tbody>
                                         <tr>
-                                            <th>URN</th>
+                                            <th><abbr title="Unique Reference Number">URN</abbr></th>
                                             <td>@Html.ActionLink(l.Urn.ToString(), "Details", "Establishment", new { id = l.Urn }, null)</td>
                                         </tr>
                                         <tr>
@@ -786,7 +786,9 @@
                     <h2 class="heading-medium  create-edit-section-break">Location</h2>
 
                     <div class="form-group">
-                        <label for="RSCRegionId" class="form-label" title="Regional School Comissioner">RSC region</label>
+                        <label for="RSCRegionId" class="form-label" title="Regional School Comissioner">
+                            <abbr title="Regional Schools Commissioner">RSC</abbr> region
+                        </label>
                         @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegionLocalAuthorites, "", new { @class = "form-control" })
                     </div>
 
@@ -816,7 +818,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="GSSLAId" class="form-label">GSS LA code</label>
+                        <label for="GSSLAId" class="form-label"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
                         @Html.DropDownListFor(x => x.GSSLAId, Model.GSSLALookup, "", new { @class = "form-control" })
                     </div>
 

@@ -31,11 +31,11 @@
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.UKPRN)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the UKPRN "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</p>
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.URN)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the URN "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</p>
             }
         }
         else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
@@ -136,7 +136,7 @@
                         <dl>
                             <dt>Address:</dt>
                             <dd>@result.GetAddress()</dd>
-                            <dt>URN:</dt>
+                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                             <dd> @result.Urn</dd>
                             <dt>LAESTAB:</dt>
                             <dd>@result.GetLAESTAB()</dd>
