@@ -128,7 +128,12 @@ namespace Edubase.Web.UI.Models
             SelectedLocalAuthorityIds.Remove(id);
             return this;
         }
-        
 
+        public string GetDownloadName()
+        {
+            if (SearchCollection == eSearchCollection.Establishments) return "establishment";
+            else if (SearchCollection == eSearchCollection.Groups) return "establishment group";
+            else return "governor";
+        }
     }
 }

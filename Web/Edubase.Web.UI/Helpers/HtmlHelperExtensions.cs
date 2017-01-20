@@ -316,6 +316,11 @@ namespace Edubase.Web.UI.Helpers
             return html.BeginForm(action, controller, routeValues, FormMethod.Get);
         }
 
+        /// <summary>
+        /// Puts all the stuff that's current in the querystring into hidden form fields.
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns></returns>
         public static IHtmlString HiddenFieldsFromQueryString(this HtmlHelper html)
         {
             var sb = new StringBuilder();

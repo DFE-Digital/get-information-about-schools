@@ -19,7 +19,19 @@ namespace Edubase.Services
         Task<MessageLoggingService.FlushReport> FlushAsync();
         LogMessage[] GetPending();
         string Push(string text);
+
+        /// <summary>
+        /// Pushes a message into message storage
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns>Message Id</returns>
         string Push(LogMessage log);
+        
+        /// <summary>
+        /// Pushes an exception into message storage
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns>Message Id</returns>
         string Push(Exception ex);
     }
 }

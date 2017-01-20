@@ -524,6 +524,19 @@ namespace Edubase.Services.Establishments.Search
                 ClrType = typeof(string)
             });
 
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = nameof(Data.Entity.Establishment.HeadPreferredJobTitle),
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(string)
+            });
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -1419,8 +1432,6 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(bool)
             });
-            
-
 
             return retVal;
         }

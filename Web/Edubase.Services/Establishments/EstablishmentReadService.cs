@@ -119,8 +119,9 @@ namespace Edubase.Services.Establishments
               || GetPermittedStatusIds(principal).Any(x => x == statusId.Value);
         }
 
-        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment) 
+        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModelBase establishment) 
             => new DisplayPolicyFactory().Create(user, establishment);
+
 
         public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn)
         {
@@ -133,59 +134,34 @@ namespace Edubase.Services.Establishments
 
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
         {
-            if (!user.Identity.IsAuthenticated) throw new PermissionDeniedException("Principal not authorised to view change history");
+            return Enumerable.Empty<EstablishmentChangeDto>();
 
-            var changes = await _dbContext.EstablishmentChangeHistories
-                    .Include(x => x.OriginatorUser)
-                    .Include(x => x.ApproverUser)
-                    .Where(x => x.Urn == urn && x.IsDeleted == false)
-                    .OrderByDescending(x => x.EffectiveDateUtc)
-                    .Take(take)
-                    .Select(x => new EstablishmentChangeDto
-                    {
-                        PropertyName = x.Name,
-                        ApproverUserId = x.ApproverUserId,
-                        EffectiveDateUtc = x.EffectiveDateUtc,
-                        Id = x.Id,
-                        NewValue = x.NewValue,
-                        OldValue = x.OldValue,
-                        OriginatorUserId = x.OriginatorUserId,
-                        RequestedDateUtc = x.RequestedDateUtc,
-                        Urn = x.Urn,
-                        ApproverUserName = x.ApproverUser.UserName,
-                        OriginatorUserName = x.OriginatorUser.UserName
-                    }).ToArrayAsync();
+            //if (!user.Identity.IsAuthenticated) throw new PermissionDeniedException("Principal not authorised to view change history");
 
-            GetLookupNames(changes);
+            //var changes = await _dbContext.EstablishmentChangeHistories
+            //        .Include(x => x.OriginatorUser)
+            //        .Include(x => x.ApproverUser)
+            //        .Where(x => x.Urn == urn && x.IsDeleted == false)
+            //        .OrderByDescending(x => x.EffectiveDateUtc)
+            //        .Take(take)
+            //        .Select(x => new EstablishmentChangeDto
+            //        {
+            //            PropertyName = x.Name,
+            //            ApproverUserId = x.ApproverUserId,
+            //            EffectiveDateUtc = x.EffectiveDateUtc,
+            //            Id = x.Id,
+            //            NewValue = x.NewValue,
+            //            OldValue = x.OldValue,
+            //            OriginatorUserId = x.OriginatorUserId,
+            //            RequestedDateUtc = x.RequestedDateUtc,
+            //            Urn = x.Urn,
+            //            ApproverUserName = x.ApproverUser.UserName,
+            //            OriginatorUserName = x.OriginatorUser.UserName
+            //        }).ToArrayAsync();
 
-            return changes;
-        }
+            //GetLookupNames(changes);
 
-        public async Task<IEnumerable<ChangeDescriptorDto>> GetPendingChangesAsync(int urn, IPrincipal principal)
-        {
-            if (!principal.Identity.IsAuthenticated) throw new PermissionDeniedException("Principal not authorised to view pending changes");
-            var pendingChanges = await _dbContext.EstablishmentApprovalQueue.Where(x => x.Urn == urn
-                && x.IsApproved == false && x.IsDeleted == false && x.IsRejected == false)
-                .Select(x => new ChangeDescriptorDto(x)).ToListAsync();
-
-            GetLookupNames(pendingChanges);
-
-            return pendingChanges;
-        }
-
-        private void GetLookupNames(IEnumerable<ChangeDescriptorDto> pendingChanges)
-        {
-            pendingChanges.ForEach(async x =>
-            {
-                if (_cachedLookupService.IsLookupField(x.PropertyName))
-                {
-                    if (x.OldValue.IsInteger())
-                        x.OldValue = await _cachedLookupService.GetNameAsync(x.PropertyName, x.OldValue.ToInteger().Value);
-
-                    if (x.NewValue.IsInteger())
-                        x.NewValue = await _cachedLookupService.GetNameAsync(x.PropertyName, x.NewValue.ToInteger().Value);
-                }
-            });
+            //return changes;
         }
         
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)

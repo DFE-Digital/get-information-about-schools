@@ -17,13 +17,12 @@
     <tr>
         <th scope="row">Local authority:</th>
         <td>
-            @Html.PendingUpdateFor(x => x.LocalAuthorityId)
             @if (Model.Establishment.LocalAuthorityId.HasValue)
             {
                 <a href="/Search/SearchByLaName?searchTerm=@Model.Establishment.LocalAuthorityId">
                     @Html.NameFor(x => x.Establishment.LocalAuthorityId)
                 </a>
-                        <text>(@Model.Establishment.LocalAuthorityId)</text>
+                <text>(@Model.Establishment.LocalAuthorityId)</text>
             }
         </td>
     </tr>
@@ -33,7 +32,6 @@
         <tr>
             <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel):</th>
             <td>
-                @(Html.PendingUpdatesFor("HeadTitleId", "HeadFirstName", "HeadLastName"))
                 @Html.Raw(Html.NameFor(x => x.Establishment.HeadTitleId).ToString().Replace("Unknown", "")) @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
             </td>
         </tr>

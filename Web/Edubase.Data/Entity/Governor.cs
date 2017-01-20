@@ -33,5 +33,7 @@ namespace Edubase.Data.Entity
         public int? GroupUID { get; set; }
         [ForeignKey("GroupUID")]
         public GroupCollection Group { get; set; }
+
+        public override int? GetId() => Id;
     }
 }

@@ -215,6 +215,15 @@
     <Compile Include="Repositories\Establishments\CachedEstablishmentReadRepository.cs" />
     <Compile Include="Repositories\Establishments\EstablishmentReadRepository.cs" />
     <Compile Include="Repositories\Establishments\IEstablishmentReadRepository.cs" />
+    <Compile Include="Repositories\Groups\Abstract\ICachedEstablishmentGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\Abstract\IEstablishmentGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\CachedEstablishmentGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\CachedGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\EstablishmentGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\GroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\Abstract\ICachedGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\Abstract\IGroupReadRepository.cs" />
+    <Compile Include="Repositories\ICachedRepositoryBase.cs" />
     <Compile Include="Repositories\LocalAuthorities\CachedLAReadRepository.cs" />
     <Compile Include="Repositories\LocalAuthorities\LAReadRepository.cs" />
     <Compile Include="Repositories\LocalAuthorities\ILAReadRepository.cs" />
@@ -247,6 +256,7 @@
       <DependentUpon>201612202018460_EstabAdditionalAddresses.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

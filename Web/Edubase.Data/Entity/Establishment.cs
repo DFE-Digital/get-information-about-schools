@@ -305,5 +305,7 @@ namespace Edubase.Data.Entity
 
         public override string ToString() => base.ToString() + $"({Name})";
 
+        public override int? GetId() => Urn;
+
     }
 }

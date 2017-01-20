@@ -24,5 +24,7 @@ namespace Edubase.Data.Entity
         [Index(IsUnique=false), StringLength(400)]
         public string GroupId { get; set; }
         public int EstablishmentCount { get; set; }
+
+        public override int? GetId() => GroupUID;
     }
 }

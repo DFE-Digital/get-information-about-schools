@@ -13,5 +13,7 @@ namespace Edubase.Data.Entity
         [Timestamp]
         public byte[] RowVersion { get; set; }
 
+        public virtual int? GetId() => null;
+
     }
 }

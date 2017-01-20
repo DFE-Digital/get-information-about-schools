@@ -16,6 +16,7 @@ namespace Edubase.Web.UI.Controllers
     using Services.Establishments.Downloads;
     using Services.Establishments.Search;
     using Services.Groups;
+    using Services.Groups.Downloads;
     using Services.Groups.Models;
     using Services.Groups.Search;
     using Services.Lookup;
@@ -31,16 +32,19 @@ namespace Edubase.Web.UI.Controllers
         IGroupReadService _groupReadService;
         IEstablishmentDownloadService _establishmentDownloadService;
         ICachedLookupService _lookupService;
+        IGroupDownloadService _groupDownloadService;
 
         public SearchController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService,
             IEstablishmentDownloadService establishmentDownloadService,
+            IGroupDownloadService groupDownloadService,
             ICachedLookupService lookupService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _establishmentDownloadService = establishmentDownloadService;
             _lookupService = lookupService;
+            _groupDownloadService = groupDownloadService;
         }
 
         public async Task<ActionResult> Index(ViewModel vm) => View(await PopulateLookups(vm));
@@ -106,6 +110,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 var text = model.GroupSearchModel.Text.Clean();
                 var viewModel = new GroupSearchResultsModel(text) { StartIndex = model.StartIndex, Count = model.Count };
+                viewModel.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
                 using (MiniProfiler.Current.Step("Searching groups..."))
                 {
                     var results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
@@ -117,7 +122,7 @@ namespace Edubase.Web.UI.Controllers
                     }
                     else
                     {
-                        var payload = new GroupSearchPayload(nameof(GroupModel.Name), model.StartIndex, model.PageSize) { Text = text };
+                        GroupSearchPayload payload = GetGroupSearchPayload(model);
                         using (MiniProfiler.Current.Step("Searching groups (in text mode)..."))
                         {
                             results = await _groupReadService.SearchAsync(payload, User);
@@ -144,8 +149,12 @@ namespace Edubase.Web.UI.Controllers
 
             }
         }
-                
-        
+
+        private GroupSearchPayload GetGroupSearchPayload(ViewModel model)
+        {
+            return new GroupSearchPayload(nameof(GroupModel.Name), model.StartIndex, model.PageSize) { Text = model.GroupSearchModel.Text.Clean() };
+        }
+
         [HttpGet]
         public async Task<ActionResult> Suggest(string text) => Json(await _establishmentReadService.SuggestAsync(text, User));
 

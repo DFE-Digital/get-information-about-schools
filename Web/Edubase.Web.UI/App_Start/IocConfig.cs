@@ -20,6 +20,9 @@ using Newtonsoft.Json;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
+using Edubase.Data.Repositories.Groups;
+using Edubase.Data.Repositories.Groups.Abstract;
+using Edubase.Services.Groups.Downloads;
 
 namespace Edubase.Web.UI
 {
@@ -98,6 +101,12 @@ namespace Edubase.Web.UI
             builder.RegisterType<EstablishmentReadRepository>().As<IEstablishmentReadRepository>();
             builder.RegisterType<CachedEstablishmentReadRepository>().As<ICachedEstablishmentReadRepository>();
 
+            builder.RegisterType<GroupReadRepository>().As<IGroupReadRepository>();
+            builder.RegisterType<CachedGroupReadRepository>().As<ICachedGroupReadRepository>();
+
+            builder.RegisterType<EstablishmentGroupReadRepository>().As<IEstablishmentGroupReadRepository>();
+            builder.RegisterType<CachedEstablishmentGroupReadRepository>().As<ICachedEstablishmentGroupReadRepository>();
+
             builder.RegisterType<GroupsWriteService>().As<IGroupsWriteService>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
             builder.RegisterType<EstablishmentDownloadService>().As<IEstablishmentDownloadService>();
@@ -107,6 +116,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();
             builder.RegisterType<LookupService>().As<ILookupService>();
             builder.RegisterType<SecurityService>().As<ISecurityService>();
+            builder.RegisterType<GroupDownloadService>().As<IGroupDownloadService>();
         }
         
     }

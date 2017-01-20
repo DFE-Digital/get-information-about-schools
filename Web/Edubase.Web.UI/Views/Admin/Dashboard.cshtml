@@ -29,14 +29,20 @@
 <h2 class="bold-xsmall">Cache warming status:</h2>
 <ul>
     <li>Establishments warm up status: @ViewBag.EstabWarmUpStatus</li>
+    <li>Groups warm up status: @ViewBag.GroupWarmUpStatus</li>
 </ul>
+
 @using (Html.BeginForm("WarmEstabRepo", "Admin"))
 {
     <input type="submit" value="Warm Establishments cache" 
            onclick="return confirm('Are you sure you wish to warm up the Estab. cache? This will cause a high load within Redis reducing overall performance. Plus it takes several minutes.');" />
 }
 
-
+@using (Html.BeginForm("WarmGroupRepo", "Admin"))
+{
+    <input type="submit" value="Warm Groups cache"
+           onclick="return confirm('Are you sure you wish to warm up the Groups cache? This will cause a high load within Redis reducing overall performance. Plus it takes several minutes.');" />
+}
 
 
 <br />

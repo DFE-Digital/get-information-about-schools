@@ -26,10 +26,13 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         public override bool StatusId { get; set; } = true;
         public override bool OpenDate { get; set; } = true;
         public override bool ReasonEstablishmentOpenedId { get; set; } = true;
+        public override bool Name { get; set; } = true;
 
         public EstablishmentDisplayPolicy()
         {
+            Name = true;
             SetLocationFields(true);
+            SetAddressFields(true);
         }
 
         internal bool IsMatch(EstablishmentModelBase establishment)

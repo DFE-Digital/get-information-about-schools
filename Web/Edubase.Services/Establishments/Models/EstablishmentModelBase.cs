@@ -78,6 +78,8 @@ namespace Edubase.Services.Establishments.Models
 
         public string HeadEmailAddress { get; set; }
 
+        public string HeadPreferredJobTitle { get; set; }
+
         public string Contact_TelephoneNumber { get; set; }
 
         public string Contact_EmailAddress { get; set; }

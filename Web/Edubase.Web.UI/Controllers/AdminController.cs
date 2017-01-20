@@ -20,6 +20,8 @@ using System.Threading.Tasks;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Autofac;
+using Edubase.Data.Repositories.Groups;
+using Edubase.Data.Repositories.Groups.Abstract;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -58,6 +60,9 @@ namespace Edubase.Web.UI.Controllers
 
                 ViewBag.EstabWarmUpStatus = await cache.GetAsync<string>(
                     scope.Resolve<ICachedEstablishmentReadRepository>().GetWarmUpProgressCacheKey());
+
+                ViewBag.GroupWarmUpStatus = await cache.GetAsync<string>(
+                    scope.Resolve<ICachedGroupReadRepository>().GetWarmUpProgressCacheKey());
 
                 return View(nameof(Dashboard));
             }   
@@ -122,7 +127,24 @@ namespace Edubase.Web.UI.Controllers
 
             return RedirectToAction(nameof(Dashboard), new { message = "Establishments cache is now warming." });
         }
-        
+
+        [HttpPost]
+        public ActionResult WarmGroupRepo(int maxBatchSize = 1000,
+            int maxConcurrency = 40,
+            int? maxTotalRecords = null)
+        {
+            HostingEnvironment.QueueBackgroundWorkItem(async x =>
+            {
+                using (var scope = IocConfig.Container.BeginLifetimeScope())
+                {
+                    var repo = scope.Resolve<ICachedGroupReadRepository>();
+                    await repo.WarmAsync(maxBatchSize, maxConcurrency, maxTotalRecords);
+                }
+            });
+
+            return RedirectToAction(nameof(Dashboard), new { message = "Groups cache is now warming." });
+        }
+
         [HttpPost]
         public async Task<ActionResult> ResetAzureSearch()
         {

@@ -759,7 +759,10 @@
         /// <param name="factory"></param>
         /// <param name="paramsCacheKey"></param>
         /// <param name="callerTypeName"></param>
-        /// <param name="relationshipKey"></param>
+        /// <param name="relationshipKey">
+        ///     Rel. key is where a cache key is appended to a relationship key.  This allows you to clear down cache items that
+        ///     relate to a particular entity.
+        /// </param>
         /// <param name="callerFuncName"></param>
         /// <returns></returns>
         public async Task<T> AutoAsync<T>(Func<T> factory, string paramsCacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
@@ -808,6 +811,12 @@
             return retVal;
         }
 
+        /// <summary>
+        /// Using the rel. key passed in, it gets all cache keys that have been created in relation to the key
+        /// and then clears all those cache items including the rel. key item itself.
+        /// </summary>
+        /// <param name="relationshipKey"></param>
+        /// <returns></returns>
         public async Task ClearRelatedCacheKeysAsync(string relationshipKey)
         {
             if (!_config.IsCentralCacheEnabled) return;

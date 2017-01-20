@@ -262,12 +262,12 @@ namespace Edubase.Services.Lookup
         public async Task<IEnumerable<LookupDto>> GroupStatusesGetAllAsync() => await AutoAsync(_lookupService.GroupStatusesGetAllAsync);
 
         public IEnumerable<LookupDto> GroupStatusesGetAll() => Auto(_lookupService.GroupStatusesGetAll);
-        
-        public async Task<string> GetNameAsync(string lookupName, int id) => 
-            await _mappingAsync.Get(lookupName)?.Invoke(id);
+
+        public async Task<string> GetNameAsync(string lookupName, int? id) =>
+            id.HasValue ? await _mappingAsync.Get(lookupName)?.Invoke(id.Value) : null;
          
-        public string GetName(string lookupName, int id) 
-            => _mapping.Get(lookupName)?.Invoke(id);
+        public string GetName(string lookupName, int? id) 
+            => id.HasValue ? _mapping.Get(lookupName)?.Invoke(id.Value) : null;
 
         public bool IsLookupField(string name) => _mapping.ContainsKey(name);
 

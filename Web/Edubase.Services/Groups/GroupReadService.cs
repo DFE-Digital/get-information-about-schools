@@ -15,28 +15,38 @@ using Edubase.Common;
 
 namespace Edubase.Services.Groups
 {
+    using System;
     using Data;
     using Data.DbContext;
+    using Data.Repositories.Groups;
     using eStatus = eLookupGroupStatus;
+    using Data.Repositories.Groups.Abstract;
 
     public class GroupReadService : IGroupReadService
     {
         private IApplicationDbContext _dbContext;
         private IMapper _mapper;
         private IAzureSearchEndPoint _azureSearchService;
+        private ICachedGroupReadRepository _groupRepository;
+        private ICachedEstablishmentGroupReadRepository _cachedEstablishmentGroupReadRepository;
 
         /// <summary>
         /// Allow these roles to see establishments of all statuses
         /// </summary>
         private readonly string[] _nonStatusRestrictiveRoles = new[] { EdubaseRoles.EFA, EdubaseRoles.AOS, EdubaseRoles.FSG,
             EdubaseRoles.IEBT, EdubaseRoles.School, EdubaseRoles.PRU, EdubaseRoles.Admin };
-
         
-        public GroupReadService(IApplicationDbContext dc, IMapper mapper, IAzureSearchEndPoint azureSearchService)
+        public GroupReadService(IApplicationDbContext dc, 
+            IMapper mapper, 
+            IAzureSearchEndPoint azureSearchService,
+            ICachedGroupReadRepository groupRepository,
+            ICachedEstablishmentGroupReadRepository cachedEstablishmentGroupReadRepository)
         {
             _dbContext = dc;
             _mapper = mapper;
             _azureSearchService = azureSearchService;
+            _groupRepository = groupRepository;
+            _cachedEstablishmentGroupReadRepository = cachedEstablishmentGroupReadRepository;
         }
 
         public async Task<GroupModel> GetByEstablishmentUrnAsync(int urn)
@@ -88,6 +98,18 @@ namespace Edubase.Services.Groups
         public async Task<int[]> GetParentGroupIdsAsync(int establishmentUrn)
         {
             return await _dbContext.EstablishmentGroups.Where(x => x.EstablishmentUrn == establishmentUrn && x.IsDeleted == false).Select(x => x.GroupUID).ToArrayAsync();
+        }
+
+        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn)
+        {
+            var retVal = new List<GroupModel>();
+            var links = await _cachedEstablishmentGroupReadRepository.GetForUrnAsync(urn);
+            foreach (var link in links)
+            {
+                var dataModel = await _groupRepository.GetAsync(link.GroupUID);
+                retVal.Add(_mapper.Map<GroupCollection, GroupModel>(dataModel));
+            }
+            return retVal;
         }
     }
 }
