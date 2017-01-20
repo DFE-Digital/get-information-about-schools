@@ -34,9 +34,7 @@
     @if (Model.Error != null)
     {
         <div class="column-two-thirds">
-            <h2 class="heading-medium">Error</h2>
-
-            <p>@Model.Error</p>
+            <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
         </div>
     }
     else if (Model.Results.Count > 0)

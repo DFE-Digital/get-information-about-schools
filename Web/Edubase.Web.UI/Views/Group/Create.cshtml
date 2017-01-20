@@ -39,7 +39,7 @@
                     <table class="borderless trust-details">
                         <tr>
                             <th scope="row">Companies House Number:</th>
-                            <td>@Model.CompaniesHouseNumber</td>
+                            <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber">@Model.CompaniesHouseNumber</a></td>
                         </tr>
                         <tr>
                             <th scope="row">Incorporated:</th>

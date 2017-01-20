@@ -1,24 +1,17 @@
 ﻿// styles for the schools search view
 
-// 'radio button' that opens the search field
-.panel-toggle {
-    display: none;
-    width: 29px;
-    height: 29px;
-    vertical-align: middle;
-    
 
-    .js-enabled & {
-        display: inline-block;
-    }
-}
 
 .search-type-wrapper {
-
+    
+    &:after {
+        content:"";
+        display:block;
+        clear:both;
+    }
     label {
         display: block;
-        background-color: $grey-3;
-        padding: 12px;
+        padding-bottom: 12px;
         margin-bottom: 12px;
         width: 50%;
         overflow: hidden;
@@ -29,7 +22,6 @@
 
         &.selected-search {
             background-color: #fff;
-            border: $black 1px solid;
         }
     }
 

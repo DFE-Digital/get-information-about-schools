@@ -31,11 +31,11 @@
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.UKPRN)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the UKPRN "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</p>
             }
             else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.URN)
             {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the URN "@Model.TextSearchModel.Text".</p>
+                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</p>
             }
         }
         else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
@@ -117,8 +117,9 @@
 
         @if (Model.Error != null)
         {
-            <h2 class="heading-medium">Error</h2>
-            <p>@Model.Error</p>
+            <div class="column-two-thirds">
+                <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
+            </div>
         }
         else if (Model.Results.Count > 0)
         {
@@ -136,7 +137,7 @@
                         <dl>
                             <dt>Address:</dt>
                             <dd>@result.GetAddress()</dd>
-                            <dt>URN:</dt>
+                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                             <dd> @result.Urn</dd>
                             <dt>LAESTAB:</dt>
                             <dd>@result.GetLAESTAB()</dd>

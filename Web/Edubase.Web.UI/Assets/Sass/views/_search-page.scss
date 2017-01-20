@@ -29,8 +29,10 @@
 .edubase-search-element {
     display: block;
     margin-bottom: 20px;
+    padding: 4px;
     width: 100%;
-
+    clear: both;
+    overflow: hidden;
 
     @include media(tablet) {
        .form-control {

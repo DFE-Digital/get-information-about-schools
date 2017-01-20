@@ -36,7 +36,7 @@
         <table class="approval-items">
             <thead>
                 <tr>
-                    <th>URN</th>
+                    <th><abbr title="Unique Reference Number">URN</abbr></th>
                     <th>Establishment name</th>
                     <th>Updated field</th>
                     <th>Old value</th>
@@ -91,7 +91,7 @@
             {
                 <li>
                     <dl>
-                        <dt>URN:</dt>
+                        <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                         <dd>@Html.ActionLink(item.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = item.EstablishmentUrn }, null)</dd>
                         <dt>Establishment name:</dt>
                         <dd>@item.EstablishmentName</dd>
