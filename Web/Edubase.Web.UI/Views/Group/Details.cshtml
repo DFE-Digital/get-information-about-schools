@@ -24,7 +24,7 @@
             {
                 <tr>
                     <th scope="row">Companies House Number</th>
-                    <td>@Model.Group.CompaniesHouseNumber</td>
+                    <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Group.CompaniesHouseNumber">@Model.Group.CompaniesHouseNumber</a></td>
                 </tr>
             }
             <tr>
