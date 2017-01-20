@@ -17,6 +17,7 @@ namespace Edubase.Services.Domain
         public bool IsComplete { get; set; }
         public string FileLocation { get; set; }
         public bool HasErrored => ExceptionMessageId != null;
+        public string FileExtension { get; set; }
 
         public SearchDownloadGenerationProgressDto()
         {

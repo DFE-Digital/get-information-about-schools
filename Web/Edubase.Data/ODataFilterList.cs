@@ -35,7 +35,7 @@ namespace Edubase.Data
 
         public void Add(ODataFilterList inner)
         {
-            Add(string.Concat("(", inner.ToString(), ")"));
+            if(inner.Count > 0) Add(string.Concat("(", inner.ToString(), ")"));
         }
 
         public override string ToString() => string.Join(_op, this);

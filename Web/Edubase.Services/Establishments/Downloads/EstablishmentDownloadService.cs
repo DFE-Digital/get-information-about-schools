@@ -78,10 +78,11 @@ namespace Edubase.Services.Establishments.Downloads
                 var results = await _establishmentReadService.SearchAsync(payload, principal);
                 progress.TotalRecordsCount = results.Count.Value;
                 progress.Status = "Retrieving data...";
+                progress.FileExtension = ToFileExtension(format);
                 await updateProgressCache();
 
                 var tempPath = DirectoryHelper.CreateTempDirectory().FullName;
-                var fileName = Path.Combine(tempPath, string.Concat("edubase-search-results", ToFileExtension(format)));
+                var fileName = Path.Combine(tempPath, string.Concat("edubase-search-results", progress.FileExtension));
 
                 if (format == eFileFormat.CSV)
                 {

@@ -6,6 +6,16 @@
     li ul {
         margin: 5px 0 10px 30px;
     }
+
+    a.download-link {
+        float:none; 
+        display:block; 
+        margin-top:10px;
+        margin-right:10px;
+        @include media(desktop){
+            float:right;
+        }
+    }
 }
 
 .result-info {

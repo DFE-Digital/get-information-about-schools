@@ -14,31 +14,13 @@
         <h1 class="heading-xlarge">Download data</h1>
     </div>
     <div class="horizontal-tabs-wrapper">        
-        <div class="column-full">
-            
-            <h2 class="bold-medium">Download 
-            
-            @Model.GetDownloadName()
-             search results</h2>
+        <div class="column-two-thirds">
+            <h2 class="bold-medium">Download @Model.GetDownloadName()search results</h2>
             <p>@step of @Model.GetTotalSteps()</p>
-            <h2 class="font-medium">Preparing your requested data. Large files may take some time to download.</h2>
-            <p>
-                <!-- todo: Jon; pls do some magic here thanks -->
-                SPINNER HERE
+            <p class="font-small">Preparing your requested data. Large files may take some time to download.</p>
+            <p style="text-align:center; margin-top:30px;">
+                <img src="/public/assets/images/icons/icon-loading.gif" />
             </p>
-            <br />
-            <p>
-                Status: @Model.Progress.Status<br />
-                Percentage completed: @Model.Progress.PercentageComplete <br />
-                @Model.Progress.ProcessedCount of @Model.Progress.TotalRecordsCount processed.<br /><br />
-                @if (Model.Progress.HasErrored)
-                {
-                    <br />
-                    <p>Error occurred</p>
-                    
-                }
-            </p>
-
         </div>
     </div>
 </div>

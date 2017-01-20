@@ -376,6 +376,7 @@
     <Content Include="public\assets\images\icons\icon-important.png" />
     <Content Include="public\assets\images\icons\icon-information-2x.png" />
     <Content Include="public\assets\images\icons\icon-information.png" />
+    <Content Include="public\assets\images\icons\icon-loading.gif" />
     <Content Include="public\assets\images\icons\icon-locator-2x.png" />
     <Content Include="public\assets\images\icons\icon-locator.png" />
     <Content Include="public\assets\images\icons\icon-pointer-2x.png" />

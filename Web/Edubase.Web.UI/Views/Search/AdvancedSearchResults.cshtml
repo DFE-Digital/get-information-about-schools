@@ -8,46 +8,45 @@
 }
 
 <div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="column-full">
         @Html.ActionLink("Go back", "Index", null, new { @class = "home-link" })
 
         <h1 class="heading-xlarge">Search results</h1>
-        @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
-        {
-            if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.EstablishmentName
-                || Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.Unknown)
+        <p>
+            @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
             {
-                <p>
-                    We found <span class="heading-xlarge">@Model.Count</span> establishments
-                    @if (!Model.TextSearchModel.Text.IsEmpty())
+                if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.EstablishmentName
+                    || Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.Unknown)
+                {
+                    <text>
+                        We found <span class="heading-xlarge">@Model.Count</span> establishments
+                        @if (!Model.TextSearchModel.Text.IsEmpty())
                     {
-                        <text>for the search term "@Model.TextSearchModel.Text".</text>
-                    }
-                </p>
-            }
-            else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.LAESTAB)
-            {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</p>
-            }
-            else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.UKPRN)
-            {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</p>
-            }
-            else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.URN)
-            {
-                <p>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</p>
-            }
-        }
-        else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
-        {
-            <p>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</p>
-        }
+                            <text>for the search term "@Model.TextSearchModel.Text".</text>
+                        }
 
-        <!-- todo: Jon; for you. -->
-        <div style="text-align:right;">
-            <a href="@Url.Action("PrepareDownload", "Search")?@Url.CurrentQueryString()">Download these search results</a>
-        </div>
+                    </text>
+                }
+                else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.LAESTAB)
+                {
+                    <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
+                }
+                else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.UKPRN)
+                {
+                    <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
+                }
+                else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.URN)
+                {
+                    <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
+                }
+            }
+            else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
+            {
+                <text>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</text>
+            }
 
+            <a class="download-link" href="@Url.Action("PrepareDownload", "Search")?@Url.CurrentQueryString()">Download these search results</a>
+        </p>
     </div>
 </div>
 

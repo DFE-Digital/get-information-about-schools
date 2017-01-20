@@ -9,24 +9,26 @@
 }
 
 <div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="column-full">
         @Html.ActionLink("Search for MAT", "Index", null, new { @class = "home-link" })
-
         <h1 class="heading-xlarge">Search results</h1>
-        @if (Model.SearchTerm.IsInteger())
-        {
-            <p>We found <span class="heading-xlarge">@Model.Count</span> multi-academy trusts with Companies House Number '@Model.SearchTerm'.</p>
-        }
-        else
-        {
-            <p>We found <span class="heading-xlarge">@Model.Count</span> multi-academy trusts matching "@Model.SearchTerm".</p>
-        } 
-    </div>
-    <div class="column-third">
-        <!-- todo: Jon; for you. -->
-        <div style="text-align:right;">
-            <a href="@Url.Action("PrepareDownload", "Search")?@Url.CurrentQueryString()">Download these search results</a>
-        </div>
+        <p>
+            @if (Model.SearchTerm.IsInteger())
+            {
+                <text>We found <span class="heading-xlarge">@Model.Count</span> multi-academy trusts with Companies House Number '@Model.SearchTerm'.</text>
+            }
+            else
+            {
+                <text>
+                    We found <span class="heading-xlarge">@Model.Count</span> multi-academy trusts
+                    @if (!Model.SearchTerm.IsNullOrEmpty())
+                    {
+                        <text>matching "@Model.SearchTerm".</text>
+                    }
+               </text>
+            }
+            <a class="download-link" href="@Url.Action("PrepareDownload", "Search")?@Url.CurrentQueryString()">Download these search results</a>
+        </p>
     </div>
 </div>
 

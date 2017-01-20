@@ -19,6 +19,7 @@ namespace Edubase.Web.UI.Controllers
     using Services.Groups.Downloads;
     using Services.Groups.Models;
     using Services.Groups.Search;
+    using Services.IntegrationEndPoints.AzureSearch.Models;
     using Services.Lookup;
     using StackExchange.Profiling;
     using System;
@@ -113,9 +114,10 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
                 using (MiniProfiler.Current.Step("Searching groups..."))
                 {
-                    var results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
-
-                    if (results.Count > 0)
+                    AzureSearchResult<SearchGroupDocument> results = null;
+                    if (text != null) results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
+                    
+                    if (results != null && results.Count > 0)
                     {
                         viewModel.Results.Add(results.Items[0]);
                         viewModel.Count = 1;
