@@ -52,7 +52,8 @@
             });
 
             $tabs.on('click', function (e) {
-                e.preventDefault();
+                
+               // e.preventDefault();
                 var targetContent = $(this).attr('href');
                 location.replace(targetContent);
                 
@@ -68,6 +69,7 @@
                 $(targetContent).removeClass('hidden-tab-content')
                     .attr('aria-hidden', false)
                     .focus();
+                $(window).scrollTop($tabs.offset().top);
                 
             });
             

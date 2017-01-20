@@ -337,9 +337,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
+    <Content Include="Assets\Sass\elements\_mobile-nav.scss" />
+    <Content Include="Assets\Sass\elements\forms\_clear-fields.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
     <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
     <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
@@ -367,6 +370,7 @@
     <Content Include="public\assets\images\icons\exclaim-transparent.PNG" />
     <Content Include="public\assets\images\icons\exclaim-transparentx2.PNG" />
     <Content Include="public\assets\images\icons\exclaim.PNG" />
+    <Content Include="public\assets\images\icons\field-clear-cross.png" />
     <Content Include="public\assets\images\icons\icon-calendar-2x.png" />
     <Content Include="public\assets\images\icons\icon-calendar.png" />
     <Content Include="public\assets\images\icons\icon-file-download-2x.png" />

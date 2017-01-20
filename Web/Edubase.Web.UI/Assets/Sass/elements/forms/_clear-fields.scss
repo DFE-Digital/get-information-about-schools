@@ -1,0 +1,35 @@
+﻿
+.field-clear {
+    position: absolute;
+    left: calc(100% - 27px);
+    top: 3px;
+    text-decoration: none;
+    padding: 1px 5px 0;
+    font-weight: bold;
+    font-size: 16px;
+    background: $grey-1 url('/public/assets/images/icons/field-clear-cross.png') no-repeat 50%;
+    background-size: 60%;
+    border: 0;
+    color: #fff;
+    border-radius: 16px;
+    min-height: 24px;
+    min-width: 24px;
+
+    @include media(tablet) {
+        display: none;
+    }
+}
+
+#TextSearchModel_Text-clear-button {
+    top: 6px;
+}
+
+#LocalAuthorityToAdd-clear-button,
+#LocationSearchModel_Text-clear-button {
+    left: calc(60% - 27px);
+    top: 6px;
+}
+
+.clear-wrapper {
+    position: relative;
+}
