@@ -84,9 +84,9 @@ namespace Edubase.Services.Groups
             if (IsRoleRestrictedOnStatus(principal)) outerODataFilters.Add(nameof(GroupModel.StatusId), (int)eStatus.Open);
             
             var innerODataFilters = new ODataFilterList(ODataFilterList.OR);
-            if (groupId != null) innerODataFilters.Add(nameof(GroupModel.GroupId), $"'{groupId}'");
-            if (groupUId.HasValue) innerODataFilters.Add(nameof(GroupModel.GroupUID), $"'{groupUId}'");
-            if (companiesHouseNumber.Clean() != null) innerODataFilters.Add(nameof(GroupModel.CompaniesHouseNumber), $"'{companiesHouseNumber.Clean()}'");
+            if (groupId != null) innerODataFilters.Add(nameof(GroupModel.GroupId), groupId);
+            if (groupUId.HasValue) innerODataFilters.Add(nameof(GroupModel.GroupUID), groupUId);
+            if (companiesHouseNumber.Clean() != null) innerODataFilters.Add(nameof(GroupModel.CompaniesHouseNumber), companiesHouseNumber.Clean());
             outerODataFilters.Add(innerODataFilters);
 
             return await _azureSearchService.SearchAsync<SearchGroupDocument>(GroupsSearchIndex.INDEX_NAME, filter: outerODataFilters.ToString());
