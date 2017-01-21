@@ -30,11 +30,14 @@ namespace Edubase.Web.UI.Controllers
         const string VIEWNAME = "CreateEdit";
         ICachedLookupService _cachedLookupService;
         ISecurityService _securityService;
+        private IGovernorsReadService _governorsReadService;
 
-        public GroupController(ICachedLookupService cachedLookupService, ISecurityService securityService)
+        public GroupController(ICachedLookupService cachedLookupService, ISecurityService securityService,
+            IGovernorsReadService governorsReadService)
         {
             _cachedLookupService = cachedLookupService;
             _securityService = securityService;
+            _governorsReadService = governorsReadService;
         }
 
         [EdubaseAuthorize]
@@ -280,9 +283,8 @@ namespace Edubase.Web.UI.Controllers
                         .First(x => x.Id == estabs.First().Establishment.LocalAuthorityId);
                 }
 
-                var gsvc = new GovernorsReadService();
-                var historicGovernors = await gsvc.GetHistoricalByGroupUID(id);
-                var currentGovernors = await gsvc.GetCurrentByGroupUID(id);
+                var historicGovernors = await _governorsReadService.GetHistoricalByGroupUID(id);
+                var currentGovernors = await _governorsReadService.GetCurrentByGroupUID(id);
 
                 var canUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(id, group.GroupTypeId);
 

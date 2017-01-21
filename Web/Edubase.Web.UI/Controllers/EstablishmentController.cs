@@ -29,12 +29,14 @@ namespace Edubase.Web.UI.Controllers
         private ILAESTABService _laEstabService;
         private IEstablishmentWriteService _establishmentWriteService;
         private ICachedLookupService _cachedLookupService;
+        private IGovernorsReadService _governorsReadService;
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService, IMapper mapper, 
             ILAESTABService laEstabService,
             IEstablishmentWriteService establishmentWriteService,
-            ICachedLookupService cachedLookupService)
+            ICachedLookupService cachedLookupService,
+            IGovernorsReadService governorsReadService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
@@ -42,6 +44,7 @@ namespace Edubase.Web.UI.Controllers
             _laEstabService = laEstabService;
             _establishmentWriteService = establishmentWriteService;
             _cachedLookupService = cachedLookupService;
+            _governorsReadService = governorsReadService;
         }
 
         [HttpGet, EdubaseAuthorize]
@@ -186,14 +189,13 @@ namespace Edubase.Web.UI.Controllers
 
             using (MiniProfiler.Current.Step("Retrieving Group record"))
                 viewModel.Group = await _groupReadService.GetByEstablishmentUrnAsync(id);
-
-            var gsvc = new GovernorsReadService();
+            
 
             using (MiniProfiler.Current.Step("Retrieving HistoricalGovernors"))
-                viewModel.HistoricalGovernors = await gsvc.GetHistoricalByUrn(id);
+                viewModel.HistoricalGovernors = await _governorsReadService.GetHistoricalByUrn(id);
 
             using (MiniProfiler.Current.Step("Retrieving Governors"))
-                viewModel.Governors = await gsvc.GetCurrentByUrn(id);
+                viewModel.Governors = await _governorsReadService.GetCurrentByUrn(id);
 
             using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
                 viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment);

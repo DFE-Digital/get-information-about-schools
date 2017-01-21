@@ -43,10 +43,10 @@ namespace Edubase.Web.UI.Controllers
                 {
                     progressId = await InvokeGroupDownloadGenerationAsync(viewModel);
                 }
-                else if (viewModel.SearchCollection == eSearchCollection.Governors)
-                {
-                    progressId = await InvokeGovernorDownloadGenerationAsync(viewModel);
-                }
+                //else if (viewModel.SearchCollection == eSearchCollection.Governors)
+                //{
+                //    progressId = await InvokeGovernorDownloadGenerationAsync(viewModel);
+                //}
                 else throw new NotImplementedException($"No download generation supported for SearchCollection:'{viewModel.SearchCollection}'");
 
                 return RedirectToAction(nameof(Download), new { id = progressId, collection = viewModel.SearchCollection.ToString().ToLower() });
@@ -78,22 +78,7 @@ namespace Edubase.Web.UI.Controllers
             });
             return progress.Id;
         }
-
-        private async Task<Guid> InvokeGovernorDownloadGenerationAsync(AdvancedSearchDownloadViewModel viewModel)
-        {
-            throw new NotImplementedException();
-            //var payload = GetEstablishmentSearchPayload(viewModel).Object;
-            //var progress = await _establishmentDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
-            //progressId = progress.Id;
-
-            //// todo: if this process is hosted by us post-Texuna, then need to put into a separate process/server that processes in serial/limited parallelism due to memory consumption.
-            //System.Web.Hosting.HostingEnvironment.QueueBackgroundWorkItem(async ct =>
-            //{
-            //    await _establishmentDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, User, viewModel.Dataset.Value, viewModel.FileFormat.Value);
-            //});
-            //return progressId;
-        }
-
+        
         [HttpGet]
         public async Task<ActionResult> Download(Guid id, eSearchCollection collection)
         {

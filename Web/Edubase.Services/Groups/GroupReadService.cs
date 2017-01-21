@@ -111,5 +111,12 @@ namespace Edubase.Services.Groups
             }
             return retVal;
         }
+
+        public async Task<GroupModel> GetAsync(int uid)
+        {
+            var dataModel = await _groupRepository.GetAsync(uid);
+            if (dataModel == null) return null;
+            else return _mapper.Map<GroupCollection, GroupModel>(dataModel);
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model SearchModel
 @{
     int startResult = @Model.StartIndex + 1;
-    int endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
+    var endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
     int currentPage = @Model.StartIndex / @Model.PageSize;
     int totalPages = @Model.Results.Count / @Model.PageSize;
     String action = ViewContext.RouteData.Values["action"].ToString();
@@ -40,7 +40,7 @@
         {
             <li>@Html.ActionLink("Previous",
                      @action,
-                     new { Model.Forename, Model.Surname, Model.IncludeHistoric, Model.RoleId, startIndex = ((currentPage - 1) * Model.PageSize)},
+                     new { Model.Forename, Model.Surname, Model.IncludeHistoric, Model.RoleId, Model.Count, startIndex = ((currentPage - 1) * Model.PageSize)},
                      new { @class = "pagination-prev" })</li>
         }
 
@@ -54,8 +54,10 @@
                 else
                 {
                 <li>@Html.ActionLink(displayPage.ToString(),
-                        @action, 
-                        new { Model.Forename, Model.Surname, Model.IncludeHistoric, Model.RoleId, startIndex = (i * Model.PageSize)},
+                        @action,
+                        new { Model.Forename, Model.Surname, Model.IncludeHistoric, Model.RoleId,
+                            Model.Count,
+                            startIndex = (i * Model.PageSize)},
                         new { @class = "numeric-pagination" })</li>
                 }
          }
@@ -69,6 +71,7 @@
                         Model.Surname,
                         Model.IncludeHistoric,
                         Model.RoleId,
+                        Model.Count,
                         startIndex = ((currentPage + 1) * Model.PageSize)},
                     new { @class = "pagination-next" })</li>
         }

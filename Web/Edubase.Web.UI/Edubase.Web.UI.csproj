@@ -338,6 +338,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
+    <Content Include="Areas\Governors\Views\Search\Download\PreparingFilePleaseWait.cshtml" />
+    <Content Include="Areas\Governors\Views\Search\Download\ReadyToDownload.cshtml" />
+    <Content Include="Areas\Governors\Views\Search\Download\SelectFormat.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />

@@ -23,6 +23,8 @@ using Edubase.Services.Security;
 using Edubase.Data.Repositories.Groups;
 using Edubase.Data.Repositories.Groups.Abstract;
 using Edubase.Services.Groups.Downloads;
+using Edubase.Services.Governors.Downloads;
+using Edubase.Services.Governors;
 
 namespace Edubase.Web.UI
 {
@@ -117,7 +119,11 @@ namespace Edubase.Web.UI
             builder.RegisterType<LookupService>().As<ILookupService>();
             builder.RegisterType<SecurityService>().As<ISecurityService>();
             builder.RegisterType<GroupDownloadService>().As<IGroupDownloadService>();
+
+            builder.RegisterType<GovernorDownloadService>().As<IGovernorDownloadService>();
+            builder.RegisterType<GovernorsReadService>().As<IGovernorsReadService>();
+
         }
-        
+
     }
 }

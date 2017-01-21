@@ -25,5 +25,6 @@ namespace Edubase.Services.Groups
         Task<AzureSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal);
 
         Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn);
+        Task<GroupModel> GetAsync(int uid);
     }
 }

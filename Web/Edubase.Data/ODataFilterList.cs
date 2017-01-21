@@ -10,6 +10,11 @@ namespace Edubase.Data
     {
         public const string AND = " and ";
         public const string OR = " or ";
+        public const string GE = "ge";
+        public const string GT = "gt";
+        public const string LE = "le";
+        public const string LT = "lt";
+
 
         private string _op;
 
@@ -28,9 +33,14 @@ namespace Edubase.Data
             Add(initialFilter);
         }
 
-        public void Add(string fieldName, object value)
+        public void Add(string fieldName, object value, string odataOperator = "eq")
         {
-            Add($"{fieldName} eq {value}");
+            string operand = null;
+            if (value == null) operand = "null";
+            else if (value is string) operand = $"'{value}'";
+            else if (value is DateTime) operand = ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ssZ");
+            else operand = value.ToString();
+            Add($"{fieldName} {odataOperator} {operand}");
         }
 
         public void Add(ODataFilterList inner)

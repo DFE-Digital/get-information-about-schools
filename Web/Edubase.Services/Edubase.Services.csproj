@@ -181,6 +181,11 @@
     <Compile Include="Core\IFileDownloadFactoryService.cs" />
     <Compile Include="Domain\OfstedRatingUrl.cs" />
     <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
+    <Compile Include="Governors\Downloads\GovernorDownloadService.cs" />
+    <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
+    <Compile Include="Governors\IGovernorsReadService.cs" />
+    <Compile Include="Governors\Search\GovernorSearchPayload.cs" />
+    <Compile Include="Governors\Search\SearchGovernorDocument.cs" />
     <Compile Include="Groups\Downloads\GroupDownloadService.cs" />
     <Compile Include="Groups\Downloads\IGroupDownloadService.cs" />
     <Compile Include="Lookup\CachedLookupService.cs" />

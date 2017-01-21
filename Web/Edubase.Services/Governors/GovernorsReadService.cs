@@ -1,16 +1,29 @@
-﻿using Edubase.Data.DbContext;
+﻿using Edubase.Common;
+using Edubase.Data;
+using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
+using Edubase.Services.Governors.Search;
+using Edubase.Services.IntegrationEndPoints.AzureSearch;
+using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Edubase.Services.Governors
 {
-    public class GovernorsReadService
+    public class GovernorsReadService : IGovernorsReadService
     {
+        IAzureSearchEndPoint _azureSearchService;
+
+        public GovernorsReadService(IAzureSearchEndPoint azureSearchService)
+        {
+            _azureSearchService = azureSearchService;
+        }
+
         public async Task<IEnumerable<Governor>> GetCurrentByUrn(int urn)
         {
             return await ApplicationDbContext
@@ -65,6 +78,31 @@ namespace Edubase.Services.Governors
                 .Where(x => (x.AppointmentEndDate != null
                 && x.AppointmentEndDate.Value > date1
                 && x.AppointmentEndDate < date2) && x.IsDeleted == false);
+        }
+
+        public async Task<AzureSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal)
+        {
+            var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
+
+            Func<string, string> titlise = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.ToTitleCase;
+            if (payload.FirstName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_FirstName), titlise(payload.FirstName.ToLower()));
+            if (payload.LastName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_LastName), titlise(payload.LastName.ToLower()));
+            if (payload.RoleId.HasValue) oDataFilters.Add(nameof(SearchGovernorDocument.RoleId), payload.RoleId);
+
+            var date = payload.IncludeHistoric ? DateTime.UtcNow.Date.AddYears(-1) : DateTime.UtcNow.Date;
+
+            var appointmentEndDateFilter = new ODataFilterList(ODataFilterList.OR);
+            appointmentEndDateFilter.Add(nameof(SearchGovernorDocument.AppointmentEndDate), null);
+            appointmentEndDateFilter.Add(nameof(SearchGovernorDocument.AppointmentEndDate), date, ODataFilterList.GE);
+            oDataFilters.Add(appointmentEndDateFilter);
+            
+            return await _azureSearchService.SearchAsync<SearchGovernorDocument>(GovernorsSearchIndex.INDEX_NAME,
+                null,
+                oDataFilters.ToString(),
+                payload.Skip,
+                payload.Take,
+                new[] { nameof(SearchGovernorDocument.Person_LastName) }.ToList(),
+                payload.OrderBy);
         }
     }
 }
