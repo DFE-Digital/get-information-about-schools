@@ -193,5 +193,7 @@ if (DfE.Views.schoolSearch.length) {
     DfE.Views.schoolSearch.searchForm();
 }
 
+
 var $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']");
 new GOVUK.SelectionButtons($blockLabels);
+

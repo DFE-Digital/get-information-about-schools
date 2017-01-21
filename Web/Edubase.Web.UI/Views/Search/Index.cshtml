@@ -53,7 +53,7 @@
                                             <abbr title="Local Authority and Establishment number">LAESTAB</abbr>
                                             or <abbr title="UK Provider Reference Number">UKPRN</abbr>
                                         </span>
-                                        @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text="})
+                                        @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggest?text="})
                                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                         <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Text">Search</button>
                                         <input type="hidden" name="g" value="true" />
@@ -70,7 +70,7 @@
                                     </label>
                                     <div class="expanding-search-field">
                                         <span class="search-hint">Enter postcode, town or city</span>
-                                        @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "form-control", autocomplete = "off"})
+                                        @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "form-control auto-clear", autocomplete = "off"})
                                         @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
                                         <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Location">Search</button>
                                         <input type="hidden" name="g" value="true" />
@@ -96,7 +96,7 @@
                                             <br /><br />
                                         }
 
-                                        @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new { @class = "form-control", autocomplete = "off" })
+                                        @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new { @class = "form-control auto-clear", autocomplete = "off" })
                                         <button type="submit" class="link-button font-small" name="searchtype" value="@VM.eSearchType.LocalAuthorityDisambiguation">Find</button>
                                         @Html.HiddenFieldsFromQueryString()
                                         <br />
@@ -123,7 +123,7 @@
                                 Establishment group
                                 <span class="form-hint">Can include multi academy trust/single academy trust name, companies house number or local authority name</span>
                             </label>
-                            @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text="})
+                            @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text="})
                             @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
                             <input type="hidden" name="g" value="true" />
                         </div>
@@ -139,18 +139,18 @@
                         <div class="edubase-search-element">
                             <label for="forename" class="bold-small">Forename</label>
                             <span class="form-hint">e.g. John</span>
-                            @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control"})
+                            @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control auto-clear" })
                         </div>
                         <div class="edubase-search-element">
                             <label for="surname" class="bold-small">Surname</label>
                             <span class="form-hint">e.g. Evans</span>
-                            @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new {maxlength = 120, id = "surname", @class = "form-control"})
+                            @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new {maxlength = 120, id = "surname", @class = "form-control auto-clear" })
                         </div>
                         <div class="edubase-search-element">
                             <label for="roleid" class="bold-small">Role</label>
                             <span class="form-hint">e.g. Trustee</span>
                             @Html.DropDownListFor(x => x.GovernorSearchModel.RoleId, Model.GovernorRoles.Select(x => new SelectListItem {Text = x.Name, Value = x.Id.ToString()}),
-                                new {id = "roleid", @class = "form-control"})
+                                new {id = "roleid", @class = "form-control", size="4"})
                         </div>
                         <div class="edubase-search-element">
                             <label class="block-label selection-button-checkbox" for="IncludeHistoric">

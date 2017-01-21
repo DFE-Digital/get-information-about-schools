@@ -38,25 +38,25 @@
 
     <!--[if IE 8]>
     <script type="text/javascript">
-      (function () {
-        if (window.opera) {
-          return;
-        }
-          setTimeout(function() {
-              var a = document,
-                  g,
-                  b = {
-                      families: (g =["nta"]),urls: ["@(ViewBag.assetsPath)/stylesheets/fonts-ie8.css?0.12.0"]
-                  },
-                  c = "@(ViewBag.assetsPath)/javascripts/vendor/goog/webfont-debug.js?0.12.0",
-                  d = "script",
-                  e = a.createElement(d),
-                  f = a.getElementsByTagName(d)[0],
-                  h = g.length;
-              WebFontConfig = { custom: b }, e.src = c, f.parentNode.insertBefore(e, f);
-              for (; h = h - 1; a.documentElement.className += ' wf-' + g[h].replace(/\s/g, '').toLowerCase() + '-n4-loading');
-          }, 0);
-      })()
+        (function () {
+            if (window.opera) {
+                return;
+            }
+            setTimeout(function() {
+                var a = document,
+                    g,
+                    b = {
+                        families: (g =["nta"]),urls: ["@(ViewBag.assetsPath)/stylesheets/fonts-ie8.css?0.12.0"]
+                    },
+                    c = "@(ViewBag.assetsPath)/javascripts/vendor/goog/webfont-debug.js?0.12.0",
+                    d = "script",
+                    e = a.createElement(d),
+                    f = a.getElementsByTagName(d)[0],
+                    h = g.length;
+                WebFontConfig = { custom: b }, e.src = c, f.parentNode.insertBefore(e, f);
+                for (; h = h - 1; a.documentElement.className += ' wf-' + g[h].replace(/\s/g, '').toLowerCase() + '-n4-loading');
+            }, 0);
+        })()
     </script>
     <![endif]-->
     <!--[if gte IE 9]><!-->
@@ -83,7 +83,10 @@
 
     @if (!Request.Browser.Browser.Contains("MSIE 8"))
     {
-        <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+        <script type="text/javascript">
+            document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+            if (!('ontouchstart' in document.documentElement)) { document.body.className += ' no-touch'; }
+        </script>
     }
 
     @RenderSection("bodyStart", required: false)
@@ -125,9 +128,10 @@
             </div>
             <div class="header-proposition">
                 <div class="content">
+                    <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
                     <nav id="proposition-menu">
                         <a href="/Home" id="proposition-name">Edubase</a>
-                        
+
                         <ul id="proposition-links">
                             <li><a href="/Search">Search</a></li>
                             <li><a href="/Downloads">Downloads</a></li>
@@ -135,15 +139,15 @@
                             {
                                 <li><a href="/Tools">Tools</a></li>
                                 <li>
-                                    @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)
+                                    @Html.ActionLink("Log off", "LogOff", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, null)
                                 </li>
                             }
                             else
                             {
-                                <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)</li>
+                                <li>@Html.ActionLink("Log in", "LogIn", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, null)</li>
                             }
                         </ul>
-                        
+
                     </nav>
                 </div>
             </div>
