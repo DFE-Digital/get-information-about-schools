@@ -44,6 +44,10 @@
             {
                 <text>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</text>
             }
+            else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Location)
+            {
+                <text>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected location</text>
+            }
 
             <a class="download-link" href="@Url.Action("PrepareDownload", "Search")?@Url.CurrentQueryString()">Download these search results</a>
         </p>

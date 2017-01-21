@@ -82,11 +82,11 @@
                                 <a id="la"></a>
                                 @using (Html.BeginForm("Results", "Search", FormMethod.Get))
                                 {
-                                    <label class="block-label selection-button-radio">
-                                        <input type="radio" class="panel-toggle form-control"/>
+                                    <label class="block-label selection-button-radio @Html.Conditional(Model.SelectedLocalAuthorityIds.Any(), "selected selected-search")">
+                                        <input type="radio" class="panel-toggle form-control" @Html.Conditional(Model.SelectedLocalAuthorityIds.Any(), "checked") />
                                         <span class="label-text">Local authority</span>
                                     </label>
-                                    <div class="expanding-search-field la">
+                                    <div class="expanding-search-field la" style="display:@(Model.SelectedLocalAuthorityIds.Any() ? "block":"none");">
                                         <span class="search-hint">Enter a Local authority</span>
                                         @foreach (var id in Model.SelectedLocalAuthorityIds)
                                         {

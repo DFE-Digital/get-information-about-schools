@@ -6,6 +6,7 @@
     using StackExchange.Redis;
     using System;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -26,6 +27,7 @@
         private const string CHANNEL_KEY_DELETES = "key-deletes";
         private ISubscriber _subscriber = null; // subscription to key-updates
         private MemoryCache _memoryCache;
+        private MemoryCache _fastMemcache;
         private List<CacheAuditLogItem> _auditLog = new List<CacheAuditLogItem>();
         private volatile bool _isPendingSetOperation = false;
 
@@ -94,7 +96,16 @@
         {
             _config = config;
             _exceptionLogger = exceptionLogger;
-            _memoryCache = new MemoryCache(config.Name);
+
+            var cacheSettings = new NameValueCollection(2);
+            cacheSettings.Add("cacheMemoryLimitMegabytes", "2000");
+            cacheSettings.Add("pollingInterval", "00:00:05");
+            _memoryCache = new MemoryCache(config.Name, cacheSettings);
+            
+            cacheSettings = new NameValueCollection(2);
+            cacheSettings.Add("cacheMemoryLimitMegabytes", "300");
+            cacheSettings.Add("pollingInterval", "00:00:02");
+            _fastMemcache = new MemoryCache(config.Name + "-uncloned", cacheSettings);
         }
         
         public static ICacheAccessor Create() => new CacheAccessor(new JsonConverterCollection()) as ICacheAccessor;
@@ -189,6 +200,7 @@
                         if (!_memoryCache.Contains(message.TransactionCacheKey)) // checks whether the message has already been processed (i.e., this node did the op directly)
                         {
                             SetInMemoryCache(message.Key, message.Buffer, message.ExpirationUtc);
+                            if (_fastMemcache.Contains(message.Key)) _fastMemcache.Remove(message.Key);
                             Log(eCacheEvent.KeySetInMemory, message.Key);
                         }
                     }
@@ -412,6 +424,8 @@
             {
                 await InitialiseIfNecessaryAsync(); // attempts to connect, or awaits on a pre-invoked connection. If connection is complete, this [SetAsync] task will continue immediately.
 
+                PutInFastCache(key, value);
+
                 DateTime? expirationUtc = null;
                 if (cacheExpiry.HasValue) expirationUtc = DateTime.UtcNow.Add(cacheExpiry.Value);
                 byte[] buffer = ToByteBuffer(value, _config.IsPayloadCompressionEnabled, new Dictionary<string, object>() { ["ExpirationUtc"] = expirationUtc });
@@ -436,6 +450,9 @@
                 _isPendingSetOperation = false;
             }
         }
+
+        private void PutInFastCache<T>(string key, T value) 
+            => _fastMemcache.Add(key, value, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(10) });
 
         /// <summary>
         /// Puts an item into central redis cache
@@ -572,6 +589,18 @@
         private bool TryGetFromMemoryCache<T>(string key, ref CacheResponseDto<T> dto)
         {
             Log(eCacheEvent.KeyValueGotFromMemoryAttempt, key);
+
+            #region Fast uncloned cache
+            if (_config.IsDistributedCachingEnabled && _fastMemcache.Contains(key))
+            {
+                dto.Data = (T) _fastMemcache.Get(key);
+                dto.IsFromInMemoryCache = true;
+                Log(eCacheEvent.KeyValueGotFromMemory, key);
+                return true;
+            }
+            #endregion
+
+
             byte[] buffer = null;
             if (_config.IsDistributedCachingEnabled && (buffer = (byte[]) _memoryCache.Get(key)) != null)
             {
@@ -597,7 +626,12 @@
             dto.IsFromCentralCacheServer = true;
             if (item != null) Log(eCacheEvent.KeyValueGotFromCentral, key);
             // Put it into the in-memory cache
-            if (item != null) SetInMemoryCache(key, byteBuffer, item.Properties.Get("ExpirationUtc") as DateTime?);
+            if (item != null)
+            {
+                SetInMemoryCache(key, byteBuffer, item.Properties.Get("ExpirationUtc") as DateTime?);
+                PutInFastCache(key, item.Object);
+            }
+
         }
 
         public async Task<T> GetAsync<T>(string key) => (await GetWithMetaDataAsync<T>(key)).Data;
