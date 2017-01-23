@@ -23,32 +23,30 @@
 
             @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
             {
-                <div class="form-group">
-                    <fieldset>
+                <div class="download-step">
+                    <div class="form-group">
+                        <fieldset>
+                            <legend class="visually-hidden">Select your prefered format</legend>
 
-                        <legend class="visually-hidden"></legend>
+                            <label class="block-label selection-button-radio" for="radio-1">
+                                <input id="radio-1" type="radio" name="fileformat" value="csv" checked="checked">
+                                Data in CSV format
+                            </label>
+                            <label class="block-label selection-button-radio" for="radio-2">
+                                <input id="radio-2" type="radio" name="fileformat" value="xlsx">
+                                Data in XLSX (Excel) format
+                            </label>
 
-                        <label class="block-label selection-button-radio" for="radio-1">
-                            <input id="radio-1" type="radio" name="fileformat" value="csv" checked="checked">
-                            Data in CSV format
-                        </label>
-                        <label class="block-label selection-button-radio" for="radio-2">
-                            <input id="radio-2" type="radio" name="fileformat" value="xlsx">
-                            Data in XLSX (Excel) format
-                        </label>
-
-                    </fieldset>
+                        </fieldset>
+                    </div>
                 </div>
 
-                <br />
-                <br />
+                    @Html.HiddenFieldsFromQueryString()
 
-                @Html.HiddenFieldsFromQueryString()
+                    <input class="button button-next" type="submit" value="Save and continue">
+                    }
 
-                <input class="button button-next" type="submit" value="Save and continue">
-            }
-
-        </div>
+                </div>
     </div>
 </div>
 
