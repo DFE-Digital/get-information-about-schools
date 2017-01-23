@@ -1,4 +1,4 @@
-call grunt test-server
+call grunt compile-dev-assets
 @echo off
 echo Exit Code is %errorlevel%
 @echo on
