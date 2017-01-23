@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     {
         public SearchCriteriaModelValidator()
         {
-            RuleFor(x => x).Must(x => x.Forename.Clean() != null || x.RoleId.HasValue || x.Surname.Clean() != null).WithMessage("Please specify some criteria");
+            //RuleFor(x => x).Must(x => x.Forename.Clean() != null || x.RoleId.HasValue || x.Surname.Clean() != null).WithMessage("Please specify some criteria");
         }
     }
 }
