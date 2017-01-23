@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using static Edubase.Web.UI.Models.AdvancedSearchViewModel;
+using static Edubase.Web.UI.Models.Search.AdvancedSearchViewModel;
 
 namespace Edubase.Web.UI.Models
 {

@@ -1,28 +1,13 @@
-﻿using Edubase.Common;
-using Edubase.Web.UI.Models;
-using System.Linq;
+﻿using Edubase.Web.UI.Models;
 using System.Web.Mvc;
-using System.Web.Routing;
-using System;
 
 namespace Edubase.Web.UI.Controllers
 {
-    using Common.Spatial;
     using Models.Search;
-    using Services;
-    using Services.Domain;
-    using Services.Establishments;
-    using Services.Establishments.Search;
-    using Services.Groups;
-    using Services.Groups.Models;
-    using Services.Groups.Search;
-    using StackExchange.Profiling;
     using System;
-    using System.Runtime.ExceptionServices;
     using System.Threading.Tasks;
     using System.Web.Hosting;
-    using static AdvancedSearchViewModel;
-    using ViewModel = AdvancedSearchViewModel;
+    using static Models.Search.AdvancedSearchViewModel;
 
     public partial class SearchController : EduBaseController
     {

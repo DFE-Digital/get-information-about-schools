@@ -18,7 +18,7 @@
             <p>2 of 3</p>
             <p class="font-small">Preparing your requested data. Large files may take some time to download.</p>
             <p style="text-align:center; margin-top:30px;">
-                <img src="/public/assets/images/icons/icon-loading.gif" />
+                <img src="/public/assets/images/icons/icon-loading.gif" title="@(Model.Progress.PercentageComplete)% (@(Model.Progress.ProcessedCount) of @(Model.Progress.TotalRecordsCount)) done. Status: @(Model.Progress.Status)" />
             </p>
         </div>
     </div>

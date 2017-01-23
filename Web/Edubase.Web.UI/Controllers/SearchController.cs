@@ -25,7 +25,7 @@ namespace Edubase.Web.UI.Controllers
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using ViewModel = AdvancedSearchViewModel;
+    using ViewModel = Models.Search.AdvancedSearchViewModel;
 
     public partial class SearchController : EduBaseController
     {

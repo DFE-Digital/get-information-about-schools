@@ -1,19 +1,17 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using Edubase.Common;
-using System.Data.Entity;
-using Edubase.Web.UI.Areas.Governors.Models;
-using System;
-using Edubase.Data.DbContext;
-using System.Threading.Tasks;
-using Edubase.Services.Governors.Downloads;
-using System.Web.Hosting;
-using Edubase.Web.UI.Models;
-using Edubase.Services.Governors.Search;
+﻿using Edubase.Services.Establishments;
 using Edubase.Services.Governors;
-using Edubase.Services.Lookup;
+using Edubase.Services.Governors.Downloads;
+using Edubase.Services.Governors.Search;
 using Edubase.Services.Groups;
-using Edubase.Services.Establishments;
+using Edubase.Services.Lookup;
+using Edubase.Web.UI.Areas.Governors.Models;
+using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models.Search;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Hosting;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {

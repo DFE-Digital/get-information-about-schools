@@ -1,5 +1,6 @@
-﻿@using Edubase.Web.UI.Models
+﻿@using Edubase.Web.UI.Models.Search
 @using Edubase.Web.UI.Helpers
+@using M = Edubase.Web.UI.Models.Search.AdvancedSearchViewModel;
 @model AdvancedSearchViewModel
 @{
     ViewBag.Title = string.Format("Search results for '{0}'", Model.TextSearchModel.Text);
@@ -13,10 +14,10 @@
 
         <h1 class="heading-xlarge">Search results</h1>
         <p>
-            @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
+            @if (Model.SearchType == M.eSearchType.Text)
             {
-                if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.EstablishmentName
-                    || Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.Unknown)
+                if (Model.TextSearchType == M.eTextSearchType.EstablishmentName
+                    || Model.TextSearchType == M.eTextSearchType.Unknown)
                 {
                     <text>
                         We found <span class="heading-xlarge">@Model.Count</span> establishments
@@ -27,24 +28,24 @@
 
                     </text>
                 }
-                else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.LAESTAB)
+                else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
                 {
                     <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
                 }
-                else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.UKPRN)
+                else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
                 {
                     <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
                 }
-                else if (Model.TextSearchType == AdvancedSearchViewModel.eTextSearchType.URN)
+                else if (Model.TextSearchType == M.eTextSearchType.URN)
                 {
                     <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
                 }
             }
-            else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
+            else if (Model.SearchType == M.eSearchType.ByLocalAuthority)
             {
                 <text>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</text>
             }
-            else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Location)
+            else if (Model.SearchType == M.eSearchType.Location)
             {
                 <text>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected location</text>
             }
@@ -72,40 +73,83 @@
                 <div class="filter-divider"></div>
                 <form method="get" action="@Url.Action("Results", "Search")">
 
-                    @Selector("Provider type", "t", Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
+                    @Selector("Provider type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
                     <div class="filter-divider"></div>
 
-                    @Selector("Status", "s", Model.EstablishmentStatuses, Model.SelectedEstablishmentStatusIds)
+                    @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses, Model.SelectedEstablishmentStatusIds)
                     <div class="filter-divider"></div>
 
-                    @Selector("Phase of education", "p", Model.EducationPhases, Model.SelectedEducationPhaseIds)
+                    @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases, Model.SelectedEducationPhaseIds)
                     <div class="filter-divider"></div>
 
-                    @*@if (Model.SearchType != AdvancedSearchViewModel.eSearchType.LocalAuthority)
-                    {*@
-                        @Selector("Local authority", "l", Model.LocalAuthorties, Model.SelectedLocalAuthorityIds)
-                        <div class="filter-divider"></div>
-                    @*}*@
+                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorties, Model.SelectedLocalAuthorityIds)
+                    <div class="filter-divider"></div>
+            
+                    @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
+                    <div class="filter-divider"></div>
 
-                    @Selector("Religious character", "r", Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
+                    @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies, Model.SelectedAdmissionsPolicyIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions, Model.SelectedBoardingProvisionIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses, Model.SelectedDioceseIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts, Model.SelectedDistrictIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes, Model.SelectedFETypeIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders, Model.SelectedGenderIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs, Model.SelectedGORIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions, Model.SelectedNurseryProvisionIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies, Model.SelectedParliamentaryConstituencyIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses, Model.SelectedReligiousEthosIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions, Model.SelectedRSCRegionIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations, Model.SelectedSection41Ids)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions, Model.SelectedSixthFormProvisionIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions, Model.SelectedSpecialClassesProvisionIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions, Model.SelectedTypeOfSENProvisionIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds)
+                    <div class="filter-divider"></div>
+
+                    @Selector("Ward", M.BIND_ALIAS_WARD, Model.Wards, Model.SelectedWardIds)
                     <div class="filter-divider"></div>
 
                     <input type="submit" value="Update" class="button edubase-filter-submit" />
 
-                    @if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Text)
+                    @if (Model.SearchType == M.eSearchType.Text)
                     {
                         @Html.HiddenFor(!Model.TextSearchModel.Text.IsEmpty(), x => x.TextSearchModel.Text)
                         @Html.HiddenFor(!Model.TextSearchModel.AutoSuggestValue.IsEmpty(), x => x.TextSearchModel.AutoSuggestValue)
                     }
-                    else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.Location)
+                    else if (Model.SearchType == M.eSearchType.Location)
                     {
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
-                    }
-                    else if (Model.SearchType == AdvancedSearchViewModel.eSearchType.ByLocalAuthority)
-                    {
-                        @*@Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.Text)
-                        @Html.HiddenFor(!Model.LocalAuthoritySearchModel.Text.IsEmpty(), x => x.LocalAuthoritySearchModel.AutoSuggestValue)*@
                     }
 
                     @Html.HiddenFor(x => x.SearchType)

@@ -20,7 +20,7 @@ namespace Edubase.Web.UI.Controllers
     using StackExchange.Profiling;
     using System;
     using System.Threading.Tasks;
-    using ViewModel = AdvancedSearchViewModel;
+    using ViewModel = Models.Search.AdvancedSearchViewModel;
 
     public partial class SearchController : EduBaseController
     {
@@ -128,6 +128,23 @@ namespace Edubase.Web.UI.Controllers
             {
                 vm.LocalAuthorties = (await _lookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
                 vm.GovernorRoles = (await _lookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.AdmissionsPolicies = (await _lookupService.AdmissionsPoliciesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.BoardingProvisions = (await _lookupService.ProvisionBoardingGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.Dioceses = (await _lookupService.DiocesesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.Districts = (await _lookupService.AdministrativeDistrictsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.FurtherEducationTypes = (await _lookupService.FurtherEducationTypesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.Genders = (await _lookupService.GendersGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.GORs = (await _lookupService.GovernmentOfficeRegionsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.NurseryProvisions = (await _lookupService.ProvisionNurseriesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.ParliamentaryConstituencies = (await _lookupService.ParliamentaryConstituenciesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.ReligiousEthoses = (await _lookupService.ReligiousEthosGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.RSCRegions = (await _lookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.Section41Designations = (await _lookupService.Section41ApprovedGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.SixthFormProvisions = (await _lookupService.ProvisionOfficialSixthFormsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.SpecialClassesProvisions = (await _lookupService.ProvisionSpecialClassesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.TypeOfSENProvisions = (await _lookupService.SpecialEducationNeedsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.UrbanRuralDesignations = (await _lookupService.UrbanRuralGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.Wards = (await _lookupService.AdministrativeWardsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
             }
             return vm;
         }

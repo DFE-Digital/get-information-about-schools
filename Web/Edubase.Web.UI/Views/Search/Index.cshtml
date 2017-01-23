@@ -1,5 +1,5 @@
 ﻿@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
-@using VM = Edubase.Web.UI.Models.AdvancedSearchViewModel;
+@using VM = Edubase.Web.UI.Models.Search.AdvancedSearchViewModel;
 @model VM
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
@@ -127,7 +127,7 @@
                             @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
                             <input type="hidden" name="g" value="true" />
                         </div>
-                        <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Group">Search</button>
+                        <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Group">Search</button>
                     }
 
                 </div>
@@ -160,7 +160,7 @@
                         </div>
                         <div class="edubase-search-element">
                             <input type="hidden" name="g" value="true" />
-                            <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Governor">Search</button>
+                            <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Governor">Search</button>
                         </div>
                     }
 
