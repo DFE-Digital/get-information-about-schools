@@ -244,3 +244,12 @@ ul.approval-items{
     font-size:19px;
 
 }
+
+.add-filters-link {
+    display: none;
+
+    .js-enabled & {
+        display: block;
+        margin-bottom: 2em;
+    }
+}

@@ -87,59 +87,63 @@
             
                     @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
                     <div class="filter-divider"></div>
+                    
+                    <!-- begin opted in filters -->
 
-                    @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies, Model.SelectedAdmissionsPolicyIds)
+                    @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies, Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions, Model.SelectedBoardingProvisionIds)
+                    @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions, Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses, Model.SelectedDioceseIds)
+                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses, Model.SelectedDioceseIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts, Model.SelectedDistrictIds)
+                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts, Model.SelectedDistrictIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes, Model.SelectedFETypeIds)
+                    @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes, Model.SelectedFETypeIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders, Model.SelectedGenderIds)
+                    @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders, Model.SelectedGenderIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs, Model.SelectedGORIds)
+                    @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs, Model.SelectedGORIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions, Model.SelectedNurseryProvisionIds)
+                    @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions, Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies, Model.SelectedParliamentaryConstituencyIds)
+                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies, Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses, Model.SelectedReligiousEthosIds)
+                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses, Model.SelectedReligiousEthosIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions, Model.SelectedRSCRegionIds)
+                    @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions, Model.SelectedRSCRegionIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations, Model.SelectedSection41Ids)
+                    @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations, Model.SelectedSection41Ids, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions, Model.SelectedSixthFormProvisionIds)
+                    @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions, Model.SelectedSixthFormProvisionIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions, Model.SelectedSpecialClassesProvisionIds)
+                    @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions, Model.SelectedSpecialClassesProvisionIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions, Model.SelectedTypeOfSENProvisionIds)
+                    @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions, Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds)
+                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
 
-                    @Selector("Ward", M.BIND_ALIAS_WARD, Model.Wards, Model.SelectedWardIds)
+                    @Selector("Ward", M.BIND_ALIAS_WARD, Model.Wards, Model.SelectedWardIds, "additional-search-critera hidden", "false")
                     <div class="filter-divider"></div>
+                    
+                    <a href="#" class="add-filters-link ">Add more filters</a>
 
-                    <input type="submit" value="Update" class="button edubase-filter-submit" />
+                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
 
                     @if (Model.SearchType == M.eSearchType.Text)
                     {
@@ -211,9 +215,15 @@
 </div>
 
 
-@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems)
+@helper Selector(
+    string label,
+    string name,
+    IEnumerable<LookupItemViewModel> items, List<int> selectedItems,
+    string additionalClassName = "",
+    string closedOnLoad = "true")
 {
-    <div class="govuk-option-select js-collapsible" data-closed-on-load="true">
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@closedOnLoad"
+         id="option-select-@label.ToLower().Replace(" ", "-")">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter"></div>
