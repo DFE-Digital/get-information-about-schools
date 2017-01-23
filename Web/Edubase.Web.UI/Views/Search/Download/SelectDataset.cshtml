@@ -10,17 +10,20 @@
     <div class="horizontal-tabs-wrapper">        
         <div class="column-full">
             
-            <h2 class="bold-medium">Download establishment search results</h2>
-            <p>1 of 4</p>
-            <h2 class="bold-medium">Select the data you are interested in</h2>
-            <p>Core data includes commonly used ﬁelds including <abbr title="Unique Reference Number">URN</abbr>, 
-            establishment name, address, type and phase. Full data includes all data ﬁelds.</p>
+    <h2 class="bold-medium">Download establishment search results</h2>
+    <p>1 of 4</p>
+    <h2 class="bold-medium">Select the data you are interested in</h2>
+    <p>
+        Core data includes commonly used ﬁelds including <abbr title="Unique Reference Number">URN</abbr>,
+        establishment name, address, type and phase. Full data includes all data ﬁelds.
+    </p>
 
-            @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
+    @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
             {
+            <div class="download-step">
                 <div class="form-group">
                     <fieldset>
-                        <legend class="visually-hidden"></legend>
+                        <legend class="visually-hidden">Select a data set</legend>
                         <label class="block-label selection-button-radio" for="radio-1">
                             <input id="radio-1" type="radio" name="dataset" value="core" checked="checked">
                             Core set of data
@@ -32,10 +35,8 @@
 
                     </fieldset>
                 </div>
-
-                <br />
-                <br />
-
+            </div>
+            
                 @Html.HiddenFieldsFromQueryString()
 
                 <input class="button button-next" type="submit" value="Save and continue">
