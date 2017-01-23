@@ -82,6 +82,8 @@ namespace Edubase.Web.UI.Controllers
                     MapToDomainModel(model, domainModel, Request.Form);
 
                     domainModel.AdditionalAddresses = model.AdditionalAddresses;
+                    domainModel.OpenDate = model.OpenDate.ToDateTime();
+                    domainModel.CloseDate = model.CloseDate.ToDateTime();
 
                     await _establishmentWriteService.SaveAsync(domainModel, User);
                     return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
