@@ -53,6 +53,7 @@ fieldset {
   /*float: left;*/ // PJF: fixes height not set correctly
   width: 100%;
   margin-bottom: $gutter-half;
+  clear: both;
 }
 
 .form-group-related {
@@ -313,4 +314,8 @@ hr { height:3px; background-color:$grey-3; border:none; }
 
 input[disabled=disabled], select[disabled=disabled] {
     background-color: #eee;
+}
+
+.download-step {
+    margin-bottom: 3em;
 }

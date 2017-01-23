@@ -12,6 +12,8 @@
         display:block; 
         margin-top:10px;
         margin-right:10px;
+        outline: none;
+        padding: 3px;
         @include media(desktop){
             float:right;
         }
@@ -54,6 +56,14 @@
         clear: left;
         padding-right: 0.5em;
     }
+    .trust-details {
+        float: none;
+
+        @include media(mobile) {
+            width: 100%;
+        }
+    }
+
 }
 
 .pagination {
