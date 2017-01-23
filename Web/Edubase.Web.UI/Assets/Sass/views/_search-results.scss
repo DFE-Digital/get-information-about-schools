@@ -58,7 +58,12 @@
     }
     .trust-details {
         float: none;
+
+        @include media(mobile) {
+            width: 100%;
+        }
     }
+
 }
 
 .pagination {
