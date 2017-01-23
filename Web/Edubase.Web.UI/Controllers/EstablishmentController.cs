@@ -131,8 +131,8 @@ namespace Edubase.Web.UI.Controllers
 
         }
         
-        //[HttpGet, EdubaseAuthorize]
-        //public ActionResult Create() => View(new ViewModel());
+        [HttpGet, EdubaseAuthorize]
+        public ActionResult Create() => RedirectToAction("Index", "Prototype", new { viewName = "Placeholder" });
         
         //[HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
         //public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] ViewModel model)

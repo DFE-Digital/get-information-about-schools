@@ -1,14 +1,14 @@
 ﻿@model SearchModel
 @{
-    int startResult = @Model.StartIndex + 1;
+    var startResult = @Model.StartIndex + 1;
     var endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
-    int currentPage = @Model.StartIndex / @Model.PageSize;
-    int totalPages = @Model.Results.Count / @Model.PageSize;
-    String action = ViewContext.RouteData.Values["action"].ToString();
-    int maxPages = 10;
-    int paginationStart = 0;
-    int paginationFinish = Model.PageCount;
-    
+    var currentPage = @Model.StartIndex / @Model.PageSize;
+    var totalPages = @Model.Results.Count / @Model.PageSize;
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    var maxPages = 10;
+    var paginationStart = 0;
+    var paginationFinish = Model.PageCount;
+
 }
 
 @if (Model.PageCount > maxPages)
