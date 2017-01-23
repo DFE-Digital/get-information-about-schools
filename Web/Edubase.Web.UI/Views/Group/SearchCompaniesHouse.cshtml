@@ -69,14 +69,20 @@
                         {
                             <li>
                                 <h2>@Html.ActionLink(result.Name, "Create", new { id = result.Number }, new { @class = "bold-small" })</h2>
-                                <dl>
-                                    <dt>Companies House Number:</dt>
-                                    <dd>@result.Number</dd>
-                                    <dt>Incorporated:</dt>
-                                    <dd> @(result.IncorporationDate?.ToString("dd MMMM yyyy"))</dd>
-                                    <dt>Address:</dt>
-                                    <dd>@(result.Address ?? "Not recorded")</dd>
-                                </dl>
+                               <table class="borderless trust-details">
+                                    <tr>
+                                        <th scope="row">Companies House Number:</th>
+                                        <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Incorporated:</th>
+                                        <td>@(result.IncorporationDate?.ToString("dd MMMM yyyy"))</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Address:</th>
+                                        <td>@(result.Address ?? "Not recorded")</td>
+                                    </tr>
+                                </table>
                             </li>
                         }
                     </ul>
