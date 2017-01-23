@@ -21,12 +21,10 @@ namespace Edubase.Web.UI.Models.Establishments
 
         public TabDisplayPolicy(EstablishmentModel model, IPrincipal principal)
         {
-            IEBT = model.EstablishmentTypeGroupId.Equals((int)TG.IndependentSchools)
-                && model.TypeId.OneOfThese(ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool)
+            IEBT = model.TypeId.OneOfThese(ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool)
                 && (new[] { EdubaseRoles.IEBT, EdubaseRoles.Admin }).Any(x => principal.IsInRole(x));
 
-            Governance = model.EstablishmentTypeGroupId.OneOfThese(TG.Academies, TG.Colleges, TG.FreeSchools, TG.LAMaintainedSchools)
-                && model.TypeId.OneOfThese(
+            Governance = model.TypeId.OneOfThese(
                     ET.Academy1619Converter, 
                     ET.Academy1619SponsorLed, 
                     ET.AcademyAlternativeProvisionConverter, 
