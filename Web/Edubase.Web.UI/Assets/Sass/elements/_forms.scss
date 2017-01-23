@@ -53,6 +53,7 @@ fieldset {
   /*float: left;*/ // PJF: fixes height not set correctly
   width: 100%;
   margin-bottom: $gutter-half;
+  clear: both;
 }
 
 .form-group-related {

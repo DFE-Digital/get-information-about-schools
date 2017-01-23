@@ -56,6 +56,14 @@
         clear: left;
         padding-right: 0.5em;
     }
+    .trust-details {
+        float: none;
+
+        @include media(mobile) {
+            width: 100%;
+        }
+    }
+
 }
 
 .pagination {
