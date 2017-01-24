@@ -660,6 +660,7 @@
             var retVal = false;
             try
             {
+                _fastMemcache.Remove(key);
                 _memoryCache.Remove(key);
                 Log(eCacheEvent.KeyDeletedInMemory, key);
 

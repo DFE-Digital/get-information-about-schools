@@ -26,6 +26,8 @@
                 <li><a href="/?@QueryStringHelper.ToQueryString("l", Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
             }
         </ul>
+        <br />
+        <a href="/?@QueryStringHelper.ToQueryString("l", Model.SelectedLocalAuthorityIds.ToArray())#la" class="button">Cancel</a>
     }
     else if (Model.MatchingLocalAuthorities.Count == 1)
     {

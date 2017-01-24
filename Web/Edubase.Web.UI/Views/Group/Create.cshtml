@@ -54,18 +54,21 @@
             </ul>
 
             @Html.ActionLink("Change", "SearchCompaniesHouse", null, new { @class = "button mobile-full-width" })
-            
+
             @Html.HiddenFor(x => x.Address)
             @Html.HiddenFor(x => x.Name)
             @Html.HiddenFor(x => x.OpenDate)
             @Html.HiddenFor(x => x.CompaniesHouseNumber)
-
+        </div>
+        <div class="column-half">
             <div class="form-group single-group @Html.ValidationCssClassFor(x => x.TypeId)">
                 <label for="TypeId" class="form-label bold-small">Trust type</label>
                 @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", new { @class = "form-control" })
             </div>
-            
         </div>
+            
+            
+        
     </div>
     <div class="grid-row">
         <div class="column-full">

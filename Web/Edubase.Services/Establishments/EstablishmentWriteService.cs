@@ -62,6 +62,8 @@ namespace Edubase.Services.Establishments
                 await db.SaveChangesAsync();
 
                 await _cachedEstablishmentReadRepository.ClearRelationshipCacheAsync(model.Urn);
+
+                await Task.Delay(1000); // allow enough time for the cache to clear on other servers in the webfarm (could replace this with messaging, or server-affinity).
             }
         }
 
