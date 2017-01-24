@@ -38,5 +38,7 @@ namespace Edubase.Services.Establishments.Search
         
 
         public IList<string> OrderBy { get; set; } = new List<string>();
+
+        public int[] SENIds { get; set; } = new int[0];
     }
 }

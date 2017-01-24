@@ -30,6 +30,7 @@ namespace Edubase.Services.Establishments
     using Common.IO;
     using Ionic.Zip;
     using Lookup;
+    using Doc = Search.SearchEstablishmentDocument;
 
     public class EstablishmentReadService : IEstablishmentReadService
     {
@@ -169,7 +170,7 @@ namespace Edubase.Services.Establishments
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
             if (IsRoleRestrictedOnStatus(principal))
             {
-                oDataFilters.Add(ODataUtil.Or(nameof(SearchEstablishmentDocument.StatusId), _restrictedStatuses));
+                oDataFilters.Add(ODataUtil.Or(nameof(Doc.StatusId), _restrictedStatuses));
             }
             return await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text,oDataFilters.ToString() , take);
         }
@@ -181,7 +182,7 @@ namespace Edubase.Services.Establishments
         }
 
 
-        public async Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
+        public async Task<AzureSearchResult<Doc>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
         {
             if (IsRoleRestrictedOnStatus(principal))
             {
@@ -201,6 +202,15 @@ namespace Edubase.Services.Establishments
                 predicates.Add(geoPredicate.ToFilterODataExpression(nameof(SearchEstablishmentDocument.Location), payload.GeoSearchMaxRadiusInKilometres.Value));
                 var expression = geoPredicate.ToODataExpression(nameof(SearchEstablishmentDocument.Location));
                 if (payload.GeoSearchOrderByDistance && !payload.OrderBy.Contains(expression)) payload.OrderBy.Insert(0, expression);
+            }
+
+            if (payload.SENIds.Any())
+            {
+                var senPredicates = new[] { nameof(Doc.SEN1Id), nameof(Doc.SEN2Id), nameof(Doc.SEN3Id), nameof(Doc.SEN4Id) }
+                    .SelectMany(x => payload.SENIds.Select(s => new { Name = x, Value = s }));
+                var senODataFilter = new ODataFilterList(ODataFilterList.OR);
+                senPredicates.ForEach(x => senODataFilter.Add(x.Name, x.Value));
+                predicates.Add($"({senODataFilter})");
             }
 
             var oDataFilterExpression = string.Join(" and ", predicates);

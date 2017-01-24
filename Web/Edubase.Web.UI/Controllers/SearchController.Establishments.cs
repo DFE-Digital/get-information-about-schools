@@ -68,15 +68,11 @@ namespace Edubase.Web.UI.Controllers
 
             filters.AdmissionsPolicyIds = model.SelectedAdmissionsPolicyIds.ToArray();
             filters.ProvisionBoardingIds = model.SelectedBoardingProvisionIds.ToArray();
-            // todo: close date
             filters.DioceseIds = model.SelectedDioceseIds.ToArray();
             filters.AdministrativeDistrictIds = model.SelectedDistrictIds.ToArray();
             filters.FurtherEducationTypeIds = model.SelectedGenderIds.ToArray();
             filters.GovernmentOfficeRegionIds = model.SelectedGORIds.ToArray();
-            // todo: age high and low
             filters.ProvisionNurseryIds = model.SelectedNurseryProvisionIds.ToArray();
-            // todo: ofsted rating
-            // todo: open date
             filters.ParliamentaryConstituencyIds = model.SelectedParliamentaryConstituencyIds.ToArray();
             filters.ReligiousEthosIds = model.SelectedReligiousEthosIds.ToArray();
             filters.RSCRegionIds = model.SelectedRSCRegionIds.ToArray();
@@ -90,6 +86,7 @@ namespace Edubase.Web.UI.Controllers
             //filters.SEN3Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
             //filters.SEN4Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
 
+            payload.SENIds = model.SelectedTypeOfSENProvisionIds.ToArray();
 
             filters.UrbanRuralIds = model.SelectedUrbanRuralIds.ToArray();
             filters.AdministrativeWardIds = model.SelectedWardIds.ToArray();
