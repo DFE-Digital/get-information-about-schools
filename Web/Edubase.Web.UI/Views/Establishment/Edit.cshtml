@@ -53,12 +53,12 @@
 
                 <div class="form-group">
                     <label for="school-locality" class="form-label">Locality</label>
-                    @Html.TextBoxFor(x => x.Address_Locality, new { maxlength = 120, id = "school-locality", @class = "form-control"})
+                    @Html.TextBoxFor(x => x.Address_Locality, new { maxlength = 120, id = "school-locality", @class = "form-control" })
                 </div>
 
                 <div class="form-group">
                     <label for="school-addressline3" class="form-label">Address line 3</label>
-                    @Html.TextBoxFor(x => x.Address_Line3, new { maxlength = 120, id = "school-addressline3", @class = "form-control"})
+                    @Html.TextBoxFor(x => x.Address_Line3, new { maxlength = 120, id = "school-addressline3", @class = "form-control" })
                 </div>
 
                 <div class="form-group">
@@ -110,12 +110,12 @@
                     </div>
                     if (Model.AllowHidingOfAddress)
                     {
-                    <div class="form-group">
-                        <label class="block-label selection-button-checkbox">
-                            @Html.CheckBoxFor(x => x.AdditionalAddresses[i].IsRestricted, new { @class = "form-control" })
-                            Hide address from other users
-                        </label>
-                    </div>
+                        <div class="form-group">
+                            <label class="block-label selection-button-checkbox">
+                                @Html.CheckBoxFor(x => x.AdditionalAddresses[i].IsRestricted, new { @class = "form-control" })
+                                Hide address from other users
+                            </label>
+                        </div>
                     }
                     <div class="form-group">
                         <button type="submit" name="@nameof(Model.AddressToRemoveId)"
@@ -202,7 +202,7 @@
                 {
                     <div class="form-group">
                         <label class="form-label" for="FurtherEducationTypeId">Further education type</label>
-                        @Html.DropDownListFor(x => x.FurtherEducationTypeId, Model.FurtherEducationTypes, "", new { @class="form-control" })
+                        @Html.DropDownListFor(x => x.FurtherEducationTypeId, Model.FurtherEducationTypes, "", new { @class = "form-control" })
                     </div>
                 }
 
@@ -293,7 +293,7 @@
                         <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
                     </div>
                 }
-                
+
                 @if (Model.DisplayPolicy.InspectorateId)
                 {
                     <div class="form-group">
@@ -301,7 +301,7 @@
                         @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "form-control" })
                     </div>
                 }
-                
+
                 @if (Model.DisplayPolicy.ProprietorName)
                 {
                     <div class="form-group">
@@ -427,44 +427,44 @@
 
 
                 <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.CloseDate)">
-                        <fieldset>
-                            <legend>Close date</legend>
-                            <div class="form-hint">For example, 20 03 2003</div>
+                    <fieldset>
+                        <legend>Close date</legend>
+                        <div class="form-hint">For example, 20 03 2003</div>
 
-                            @Html.ValidationMessageFor(x => x.CloseDate)
-                            <span class="inline-form-control">
-                                <label for="Closedate-day">Day</label>
-                                @Html.EduDayDropDownFor(x => x.CloseDate.Day,
+                        @Html.ValidationMessageFor(x => x.CloseDate)
+                        <span class="inline-form-control">
+                            <label for="Closedate-day">Day</label>
+                            @Html.EduDayDropDownFor(x => x.CloseDate.Day,
                                 new
                                 {
                                     id = "Closedate-day",
                                     @class = "form-control",
                                     aria_describedby = "help-Closedate-day",
                                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="Closedate-month">Month</label>
-                                @Html.EduMonthDropDownFor(x => x.CloseDate.Month,
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="Closedate-month">Month</label>
+                            @Html.EduMonthDropDownFor(x => x.CloseDate.Month,
                                 new
                                 {
                                     id = "Closedate-month",
                                     @class = "form-control",
                                     aria_describedby = "help-Closedate-month",
                                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="Closedate-year">Year</label>
-                                @Html.EduYearDropDownFor(x => x.CloseDate.Year,
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="Closedate-year">Year</label>
+                            @Html.EduYearDropDownFor(x => x.CloseDate.Year,
                                 new
                                 {
                                     id = "Closedate-year",
                                     @class = "form-control",
                                     aria_describedby = "help-Closedate-year",
                                 })
-                            </span>
-                        </fieldset>
-                    </div>
-                
+                        </span>
+                    </fieldset>
+                </div>
+
                 <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
                     <label for="reason-establishment-closed">Reason establishment closed</label>
                     @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control", id = "reason-establishment-closed" })
@@ -479,7 +479,7 @@
                         @Html.DropDownListFor(x => x.ProvisionSpecialClassesId, Model.SpecialClassesProvisions, "", new { @class = "form-control", id = "special-classes" })
                     </div>
                 }
-                
+
                 @if (Model.DisplayPolicy.TypeOfSENProvisionList)
                 {
                     <div class="form-group grouped-controls">
@@ -533,7 +533,7 @@
                         @Html.DropDownListFor(x => x.BSOInspectorateId, Model.BSOInspectorates, "", new { @class = "form-control", id = "bso-inspectorate" })
                     </div>
                 }
-                
+
                 @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
                 {
                     <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.BSODateOfLastInspectionVisit)">
@@ -554,7 +554,7 @@
                             </span>
                             <span class="inline-form-control">
                                 <label for="Closedate-month">Month</label>
-                                @Html.EduMonthDropDownFor(x => x.BSODateOfLastInspectionVisit.Month, 
+                                @Html.EduMonthDropDownFor(x => x.BSODateOfLastInspectionVisit.Month,
                                 new
                                 {
                                     id = "Closedate-month",
@@ -617,7 +617,7 @@
                     </div>
                 }
 
-    
+
                 @if (Model.TabDisplayPolicy.Governance)
                 {
                     <h2 class="heading-medium  create-edit-section-break">Governance</h2>
@@ -780,7 +780,7 @@
 
                     <h3>Placeholder</h3>
                 }
-                    
+
                 @if (Model.DisplayPolicy.LocationDetails)
                 {
                     <h2 class="heading-medium  create-edit-section-break">Location</h2>
@@ -854,15 +854,17 @@
 
                 }
 
-            
+
             </div>
-
+            <div class="submit-cancel-panel">
+                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.Save">Submit</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+            </div>
         </div>
-
-        <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.Save">Submit</button>
     </div>
 
 
-    
+
+
 
 }
