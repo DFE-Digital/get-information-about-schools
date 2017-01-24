@@ -66,6 +66,35 @@ namespace Edubase.Web.UI.Controllers
             filters.LocalAuthorityIds = model.SelectedLocalAuthorityIds.ToArray();
             filters.ReligiousCharacterIds = model.SelectedReligiousCharacterIds.ToArray();
 
+            filters.AdmissionsPolicyIds = model.SelectedAdmissionsPolicyIds.ToArray();
+            filters.ProvisionBoardingIds = model.SelectedBoardingProvisionIds.ToArray();
+            // todo: close date
+            filters.DioceseIds = model.SelectedDioceseIds.ToArray();
+            filters.AdministrativeDistrictIds = model.SelectedDistrictIds.ToArray();
+            filters.FurtherEducationTypeIds = model.SelectedGenderIds.ToArray();
+            filters.GovernmentOfficeRegionIds = model.SelectedGORIds.ToArray();
+            // todo: age high and low
+            filters.ProvisionNurseryIds = model.SelectedNurseryProvisionIds.ToArray();
+            // todo: ofsted rating
+            // todo: open date
+            filters.ParliamentaryConstituencyIds = model.SelectedParliamentaryConstituencyIds.ToArray();
+            filters.ReligiousEthosIds = model.SelectedReligiousEthosIds.ToArray();
+            filters.RSCRegionIds = model.SelectedRSCRegionIds.ToArray();
+            filters.Section41ApprovedIds = model.SelectedSection41Ids.ToArray();
+            filters.ProvisionOfficialSixthFormIds = model.SelectedSixthFormProvisionIds.ToArray();
+            filters.ProvisionSpecialClassesIds = model.SelectedSpecialClassesProvisionIds.ToArray();
+
+            // todo: combine in an inner ORed odata filter expression 
+            //filters.SEN1Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
+            //filters.SEN2Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
+            //filters.SEN3Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
+            //filters.SEN4Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
+
+
+            filters.UrbanRuralIds = model.SelectedUrbanRuralIds.ToArray();
+            filters.AdministrativeWardIds = model.SelectedWardIds.ToArray();
+            
+
             return retVal.Set(payload);
         }
 

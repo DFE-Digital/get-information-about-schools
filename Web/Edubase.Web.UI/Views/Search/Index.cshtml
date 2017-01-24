@@ -109,7 +109,7 @@
                             </li>
                         </ul>
                         <p class="search-all-shortcut">
-                            <a href="/Search/Results?@(QueryStringHelper.ToQueryString("s", (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all establishments</a>
+                            <a href="/Search/Results?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all establishments</a>
                         </p>
                     </fieldset>
 
