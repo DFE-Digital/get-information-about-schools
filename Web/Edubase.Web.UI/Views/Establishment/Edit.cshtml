@@ -21,7 +21,6 @@
 {
     @Html.AntiForgeryToken();
     @Html.HiddenFor(x => x.Urn)
-    @*@Html.HiddenFor(x => x.EstablishmentTypeGroupId)*@
     <div class="column-full">
         <div class="grid-row">
             <button type="submit" name="action" value="@ViewModel.eAction.Save" class="button header-submit">Submit</button>
@@ -279,7 +278,7 @@
                 {
                     <div class="form-group ofstead-rating">
                         <label for="ofsted-rating" class="form-label">Ofsted rating</label>
-                        <span>@Model.OfstedRating</span>
+                        <span>@(Model.OfstedRating?.ToString() ?? "--")</span>
                         <input type="text" class="form-control" id="ofsted-rating" disabled="disabled" value="@Model.OfstedRatingText" />
                     </div>
 
