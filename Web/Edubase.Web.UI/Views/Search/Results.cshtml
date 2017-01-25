@@ -22,11 +22,11 @@
         }
         else if (Model.SearchType == SearchResultsModel.eSearchType.LAESTAB)
         {
-            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the LAESTAB "@Model.SearchTerm".</p>
+            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the <abbr title="Local Authority and Establishment number">LAESTAB</abbr> "@Model.SearchTerm".</p>
         }
         else if (Model.SearchType == SearchResultsModel.eSearchType.URN)
         {
-            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the URN "@Model.SearchTerm".</p>
+            <p>We found <span class="heading-xlarge">@Model.Count</span> schools or colleges with the <abbr title="Unique Reference Number">URN</abbr> "@Model.SearchTerm".</p>
         }
 
     </div>
@@ -36,10 +36,9 @@
     @if (Model.Error != null)
     {
         <div class="column-two-thirds">
-            <h2 class="heading-medium">Error</h2>
-
-            <p>@Model.Error</p>
+            <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
         </div>
+        
     }
     else if (Model.Results.Count > 0)
     {
@@ -58,7 +57,7 @@
                         <dl>
                             <dt>Address:</dt>
                             <dd>@SchoolDetailsHelpers.GetAddress(result)</dd>
-                            <dt>URN:</dt>
+                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                             <dd> @result.Urn</dd>
                             <dt>LAESTAB:</dt>
                             <dd>@result.LAESTAB</dd>

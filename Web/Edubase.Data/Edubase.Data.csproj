@@ -120,6 +120,10 @@
       <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MiniProfiler, Version=3.2.0.157, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiniProfiler.3.2.0.157\lib\net40\MiniProfiler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
@@ -187,17 +191,9 @@
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
     <Compile Include="DbContext\InMemoryApplicationDbContext.cs" />
-    <Compile Include="Migrations\201612081432298_Initial.cs" />
-    <Compile Include="Migrations\201612081432298_Initial.Designer.cs">
-      <DependentUpon>201612081432298_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612120829468_AddedEstabCountCol.cs" />
-    <Compile Include="Migrations\201612120829468_AddedEstabCountCol.Designer.cs">
-      <DependentUpon>201612120829468_AddedEstabCountCol.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612120857427_RenamedCols.cs" />
-    <Compile Include="Migrations\201612120857427_RenamedCols.Designer.cs">
-      <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
+    <Compile Include="Migrations\201701251519545_InitialCreate.cs" />
+    <Compile Include="Migrations\201701251519545_InitialCreate.Designer.cs">
+      <DependentUpon>201701251519545_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -207,6 +203,15 @@
     <Compile Include="Repositories\Establishments\CachedEstablishmentReadRepository.cs" />
     <Compile Include="Repositories\Establishments\EstablishmentReadRepository.cs" />
     <Compile Include="Repositories\Establishments\IEstablishmentReadRepository.cs" />
+    <Compile Include="Repositories\Groups\Abstract\ICachedEstablishmentGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\Abstract\IEstablishmentGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\CachedEstablishmentGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\CachedGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\EstablishmentGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\GroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\Abstract\ICachedGroupReadRepository.cs" />
+    <Compile Include="Repositories\Groups\Abstract\IGroupReadRepository.cs" />
+    <Compile Include="Repositories\ICachedRepositoryBase.cs" />
     <Compile Include="Repositories\LocalAuthorities\CachedLAReadRepository.cs" />
     <Compile Include="Repositories\LocalAuthorities\LAReadRepository.cs" />
     <Compile Include="Repositories\LocalAuthorities\ILAReadRepository.cs" />
@@ -226,14 +231,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612081432298_Initial.resx">
-      <DependentUpon>201612081432298_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612120829468_AddedEstabCountCol.resx">
-      <DependentUpon>201612120829468_AddedEstabCountCol.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612120857427_RenamedCols.resx">
-      <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201701251519545_InitialCreate.resx">
+      <DependentUpon>201701251519545_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -31,6 +31,8 @@
                 </text>
             }
     </script>
+
+    @(RenderSection("Head", required: false))
 }
 
 <main id="content" class="page @(ViewBag.pageClass)" role="main" tabindex="-1">

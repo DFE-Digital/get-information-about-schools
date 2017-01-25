@@ -1,28 +1,20 @@
 ﻿namespace Edubase.Common.Cache
 {
+    using MoreLinq;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Bson;
     using StackExchange.Redis;
     using System;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Net;
+    using System.Reflection;
     using System.Runtime.Caching;
     using System.Runtime.CompilerServices;
-    using System.Runtime.Serialization.Formatters.Binary;
     using System.Threading.Tasks;
-    using MoreLinq;
-    using System.Reflection;
-    using Newtonsoft.Json.Bson;
-    using Newtonsoft.Json;
 
-    /// <summary>
-    /// Responsibilies:
-    ///     - allow for asynchronously getting and setting cache items
-    ///     - act as a facade over the cache; transiently deal with exceptions.
-    ///     - it is thread-safe
-    ///     - distributes the cache in-memory and syncs all peers automatically
-    /// </summary>
     public class CacheAccessor : ICacheAccessor, IDisposable
     {
         private ConnectionMultiplexer _connection;
@@ -35,6 +27,7 @@
         private const string CHANNEL_KEY_DELETES = "key-deletes";
         private ISubscriber _subscriber = null; // subscription to key-updates
         private MemoryCache _memoryCache;
+        private MemoryCache _fastMemcache;
         private List<CacheAuditLogItem> _auditLog = new List<CacheAuditLogItem>();
         private volatile bool _isPendingSetOperation = false;
 
@@ -103,10 +96,25 @@
         {
             _config = config;
             _exceptionLogger = exceptionLogger;
-            _memoryCache = new MemoryCache(config.Name);
+
+            var cacheSettings = new NameValueCollection(2);
+            cacheSettings.Add("cacheMemoryLimitMegabytes", "2000");
+            cacheSettings.Add("pollingInterval", "00:00:05");
+            _memoryCache = new MemoryCache(config.Name, cacheSettings);
+            
+            cacheSettings = new NameValueCollection(2);
+            cacheSettings.Add("cacheMemoryLimitMegabytes", "300");
+            cacheSettings.Add("pollingInterval", "00:00:02");
+            _fastMemcache = new MemoryCache(config.Name + "-uncloned", cacheSettings);
         }
         
         public static ICacheAccessor Create() => new CacheAccessor(new JsonConverterCollection()) as ICacheAccessor;
+
+        public CacheAccessor SetJsonConverterCollection(JsonConverterCollection jsonConverterCollection)
+        {
+            _jsonConverterCollection = jsonConverterCollection;
+            return this;
+        }
 
         #region Async methods
 
@@ -163,12 +171,12 @@
 
                 _cacheDatabase = _connection.GetDatabase();
 
-                //if (_config.IsDistributedCachingEnabled)
-                //{
-                //    _subscriber = _connection.GetSubscriber();
-                //    await _subscriber.SubscribeAsync(CHANNEL_KEY_UPDATES, OnKeyValueUpdated);
-                //    await _subscriber.SubscribeAsync(CHANNEL_KEY_DELETES, OnKeyDeleted);
-                //}
+                if (_config.IsDistributedCachingEnabled)
+                {
+                    _subscriber = _connection.GetSubscriber();
+                    await _subscriber.SubscribeAsync(CHANNEL_KEY_UPDATES, OnKeyValueUpdated);
+                    await _subscriber.SubscribeAsync(CHANNEL_KEY_DELETES, OnKeyDeleted);
+                }
 
                 Status = State.Connected;
                 Log(eCacheEvent.ConnectedToServer, null);
@@ -181,31 +189,34 @@
         }
 
 
-        ///// <summary>
-        ///// Invoked whenever a cache key-value-pair is updated on another node.
-        ///// </summary>
-        ///// <param name="channel"></param>
-        ///// <param name="value"></param>
-        //private void OnKeyValueUpdated(RedisChannel channel, RedisValue value)
-        //{
-        //    try
-        //    {
-        //        var message = Deserialize<DistributedCacheMessage>(value);
-        //        if (message.SenderCacheName != Name) // don't process messages sent by the sender instance, as the job should have been synchronously
-        //        {
-        //            if (!_memoryCache.Contains(message.TransactionCacheKey)) // checks whether the message has already been processed (i.e., this node did the op directly)
-        //            {
-        //                Cacheable cacheable = Deserialize<Cacheable>(message.Value);
-        //                SetInMemoryCache(message.Key, cacheable.Payload, cacheable.ExpirationUtc);
-        //                Log(eCacheEvent.KeySetInMemory, message.Key);
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log(ex);
-        //    }
-        //}
+        /// <summary>
+        /// Invoked whenever a cache key-value-pair is updated on another node.
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="value"></param>
+        private void OnKeyValueUpdated(RedisChannel channel, RedisValue value)
+        {
+            try
+            {
+                if (value.HasValue)
+                {
+                    var message = FromByteBuffer<DistributedCacheMessage>(value, false)?.Object;
+                    if (message.SenderCacheName != Name) // don't process messages sent by the sender instance, as the job should have been synchronously
+                    {
+                        if (!_memoryCache.Contains(message.TransactionCacheKey)) // checks whether the message has already been processed (i.e., this node did the op directly)
+                        {
+                            SetInMemoryCache(message.Key, message.Buffer, message.ExpirationUtc);
+                            if (_fastMemcache.Contains(message.Key)) _fastMemcache.Remove(message.Key);
+                            Log(eCacheEvent.KeySetInMemory, message.Key);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(ex);
+            }
+        }
 
         /// <summary>
         /// Helper function that waits for a caching event on this instance
@@ -255,13 +266,13 @@
         ///     so when ShouldRecordKeysInSession is true and we're recording that a msg has been processed, then this ensures
         ///     that subsequent queued messages do not get processed.
         /// </param>
-        private void SetInMemoryCache(string key, object value, DateTime? expirationUtc = null, bool recordAsSessionKey = true)
+        private void SetInMemoryCache(string key, byte[] data, DateTime? expirationUtc = null, bool recordAsSessionKey = true)
         {
             key = CleanKey(key);
             var policy = new CacheItemPolicy();
             if (expirationUtc.HasValue) policy.AbsoluteExpiration = new DateTimeOffset(expirationUtc.Value);
-            if (value == null) _memoryCache.Remove(key);
-            else _memoryCache.Set(key, value, policy);
+            if (data == null) _memoryCache.Remove(key);
+            else _memoryCache.Set(key, data, policy);
             if (ShouldRecordKeysInSession && recordAsSessionKey)
             {
                 lock (_mutex2)
@@ -277,23 +288,22 @@
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="expiration"></param>
-        private void SetInMemoryCache(string key, object value, TimeSpan? expiration = null, bool recordAsSessionKey = true)
+        private void SetInMemoryCache(string key, byte[] value, TimeSpan? expiration = null, bool recordAsSessionKey = true)
         {
             DateTime? expires = (!expiration.HasValue ? null as DateTime? : (DateTime.UtcNow.Add(expiration.Value)));
             SetInMemoryCache(key, value, expires, recordAsSessionKey);
         }
 
         /// <summary>
-        /// Removes an item from the cache
+        /// Removes an item from MemoryCache
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="value"></param>
-        //private void OnKeyDeleted(RedisChannel channel, RedisValue value)
-        //{
-        //    string key = Deserialize<string>(value);
-        //    _memoryCache.Remove(key);
-        //    Log(eCacheEvent.KeyDeletedInMemory, key);
-        //}
+        private void OnKeyDeleted(RedisChannel channel, RedisValue value)
+        {
+            _memoryCache.Remove(value);
+            Log(eCacheEvent.KeyDeletedInMemory, value);
+        }
 
 
         private void Log(eCacheEvent cachingEvent, string key, [CallerMemberName] string callerName = null)
@@ -387,7 +397,7 @@
         /// <param name="value"></param>
         /// <param name="cacheExpiry"></param>
         /// <returns></returns>
-        public void Set<T>(string key, T value, TimeSpan? cacheExpiry)
+        public void Set<T>(string key, T value, TimeSpan? cacheExpiry = null)
         {
             var t = SetAsync(key, value, cacheExpiry);
         }
@@ -401,11 +411,7 @@
         /// <param name="value"></param>
         /// <param name="cacheExpiry">Pass in null for no cache expiry</param>
         /// <returns></returns>
-        public void Set<T>(string domain, string key, T value, TimeSpan? cacheExpiry)
-        {
-            Set(CreateKey(domain, key), value, cacheExpiry);
-        }
-
+        public void Set<T>(string domain, string key, T value, TimeSpan? cacheExpiry) => Set(CreateKey(domain, key), value, cacheExpiry);
 
         /// <summary>
         /// Use 'Set'; this way validation errors will propagate into client code.
@@ -424,21 +430,19 @@
             {
                 await InitialiseIfNecessaryAsync(); // attempts to connect, or awaits on a pre-invoked connection. If connection is complete, this [SetAsync] task will continue immediately.
 
-                // Create and serialize the Cacheable<T>
-                var item = new Cacheable<T>(value);
-                if (cacheExpiry.HasValue) item.ExpirationUtc = DateTime.UtcNow.Add(cacheExpiry.Value);
-                byte[] buffer = Serialize(item);
+                PutInFastCache(key, value);
 
-                // Create a clone and put it in memory for this instance
-                var clone = Deserialize<Cacheable<T>>(buffer);
-                SetInMemoryCache(key, clone.Payload, cacheExpiry);
+                DateTime? expirationUtc = null;
+                if (cacheExpiry.HasValue) expirationUtc = DateTime.UtcNow.Add(cacheExpiry.Value);
+                byte[] buffer = ToByteBuffer(value, _config.IsPayloadCompressionEnabled, new Dictionary<string, object>() { ["ExpirationUtc"] = expirationUtc });
+                SetInMemoryCache(key, buffer, cacheExpiry);
                 Log(eCacheEvent.KeySetInMemory, key);
 
                 if (Status == State.Connected)
                 {
                     if (_cacheDatabase == null) throw new Exception("The cache database is null, in-spite of it being connected");
                     await PutItemIntoCentralCache(key, buffer, cacheExpiry);
-                    //await DistributeCacheItem(key, buffer);
+                    await DistributeCacheItem(key, buffer, expirationUtc);
                 }
 
             }
@@ -453,6 +457,9 @@
             }
         }
 
+        private void PutInFastCache<T>(string key, T value) 
+            => _fastMemcache.Add(key, value, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(10) });
+
         /// <summary>
         /// Puts an item into central redis cache
         /// </summary>
@@ -464,11 +471,6 @@
         {
             if (_config.IsCentralCacheEnabled && Status == State.Connected)
             {
-                if (_config.IsPayloadCompressionEnabled)
-                {
-                    buffer = new IO.Compression().Compress(buffer);
-                }
-
                 // Set the item into the central cache
                 await _cacheDatabase.StringSetAsync(key, buffer, expiry);
                 Log(eCacheEvent.KeySetCentrally, key);
@@ -481,21 +483,21 @@
         /// <param name="key"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        //private async Task DistributeCacheItem(string key, byte[] data)
-        //{
-        //    if (_config.IsDistributedCachingEnabled && _subscriber != null)
-        //    {
-        //        var msg = new DistributedCacheMessage
-        //        {
-        //            Key = key,
-        //            Value = data,
-        //            SenderCacheName = Name
-        //        };
-
-        //        var buffer = Serialize(msg);
-        //        await _subscriber.PublishAsync(CHANNEL_KEY_UPDATES, buffer);
-        //    }
-        //}
+        private async Task DistributeCacheItem(string key, byte[] data, DateTime? expirationUtc)
+        {
+            if (_config.IsDistributedCachingEnabled && _subscriber != null)
+            {
+                var msg = new DistributedCacheMessage
+                {
+                    Key = key,
+                    Buffer = data,
+                    SenderCacheName = Name,
+                    ExpirationUtc = expirationUtc
+                };
+                
+                await _subscriber.PublishAsync(CHANNEL_KEY_UPDATES, ToByteBuffer(msg, false));
+            }
+        }
 
         /// <summary>
         /// Retrieves an item from the cache, if possible.
@@ -512,13 +514,13 @@
             var dto = new CacheResponseDto<T>().StartTiming();
             try
             {
-                if (!TryGetFromMemoryCache<T>(key, ref dto)) // try memory cache first
+                if (!TryGetFromMemoryCache(key, ref dto)) // try memory cache first
                 {
                     if (IsRedisAccessible()) // Couldn't get it from memory, so try redis
                     {
                         var byteBuffer = await _cacheDatabase.StringGetAsync(key);
                         Log(eCacheEvent.KeyValueGotFromCentralAttempt, key);
-                        PostProcessRedisBuffer<T>(key, ref dto, byteBuffer);
+                        PostProcessRedisBuffer(key, ref dto, byteBuffer);
                     }
                 }
             }
@@ -546,12 +548,12 @@
             var dto = new CacheResponseDto<T>().StartTiming();
             try
             {
-                if (!TryGetFromMemoryCache<T>(key, ref dto))
+                if (!TryGetFromMemoryCache(key, ref dto))
                 {
                     if (IsRedisAccessible())
                     {
                         var byteBuffer = _cacheDatabase.StringGet(key);
-                        PostProcessRedisBuffer<T>(key, ref dto, byteBuffer);
+                        PostProcessRedisBuffer(key, ref dto, byteBuffer);
                     }
                 }
             }
@@ -593,10 +595,22 @@
         private bool TryGetFromMemoryCache<T>(string key, ref CacheResponseDto<T> dto)
         {
             Log(eCacheEvent.KeyValueGotFromMemoryAttempt, key);
-            object objectBuffer = null;
-            if (_config.IsDistributedCachingEnabled && (objectBuffer = _memoryCache.Get(key)) != null)
+
+            #region Fast uncloned cache
+            if (_fastMemcache.Contains(key))
             {
-                dto.Data = Clone<T>(objectBuffer);
+                dto.Data = (T) _fastMemcache.Get(key);
+                dto.IsFromInMemoryCache = true;
+                Log(eCacheEvent.KeyValueGotFromMemory, key);
+                return true;
+            }
+            #endregion
+
+
+            byte[] buffer = null;
+            if ((buffer = (byte[]) _memoryCache.Get(key)) != null)
+            {
+                dto.Data = FromByteBuffer<T>(buffer, true).Object;
                 dto.IsFromInMemoryCache = true;
                 Log(eCacheEvent.KeyValueGotFromMemory, key);
                 return true;
@@ -613,23 +627,20 @@
         /// <param name="byteBuffer"></param>
         private void PostProcessRedisBuffer<T>(string key, ref CacheResponseDto<T> dto, byte[] byteBuffer)
         {
-            if (_config.IsPayloadCompressionEnabled)
-            {
-                byteBuffer = new IO.Compression().Decompress(byteBuffer);
-            }
-
-            var item = Deserialize<Cacheable<T>>(byteBuffer);
-            if (item != null) dto.Data = item.Payload;
+            var item = FromByteBuffer<T>(byteBuffer, true);
+            if (item != null) dto.Data = item.Object;
             dto.IsFromCentralCacheServer = true;
             if (item != null) Log(eCacheEvent.KeyValueGotFromCentral, key);
             // Put it into the in-memory cache
-            if (item != null) SetInMemoryCache(key, Clone<T>(item.Payload), item.ExpirationUtc);
+            if (item != null)
+            {
+                SetInMemoryCache(key, byteBuffer, item.Properties.Get("ExpirationUtc") as DateTime?);
+                PutInFastCache(key, item.Object);
+            }
+
         }
 
-        public async Task<T> GetAsync<T>(string key)
-        {
-            return (await GetWithMetaDataAsync<T>(key)).Data;
-        }
+        public async Task<T> GetAsync<T>(string key) => (await GetWithMetaDataAsync<T>(key)).Data;
 
         /// <summary>
         /// Retrieves an item from the cache, if possible.
@@ -655,6 +666,7 @@
             var retVal = false;
             try
             {
+                _fastMemcache.Remove(key);
                 _memoryCache.Remove(key);
                 Log(eCacheEvent.KeyDeletedInMemory, key);
 
@@ -669,7 +681,7 @@
                     Log(eCacheEvent.KeyDeletedCentrally, key);
 
                     if (_config.IsDistributedCachingEnabled)
-                        await _subscriber.PublishAsync(CHANNEL_KEY_DELETES, Serialize(key));
+                        await _subscriber.PublishAsync(CHANNEL_KEY_DELETES, key);
                 }
             }
             catch (Exception ex)
@@ -686,71 +698,45 @@
             return key.ToLower();
         }
 
-        public string CreateKey(string domain, string key)
-        {
-            return CreateKey(string.Concat(domain, "_", key));
-        }
-
-        public string CreateKey(string key)
-        {
-            return key.ToLower();
-        }
-
-        public T Get<T>(string domain, string key)
-        {
-            return Get<T>(CreateKey(domain, key));
-        }
-
-        public async Task<T> GetAsync<T>(string domain, string key)
-        {
-            return await GetAsync<T>(CreateKey(domain, key));
-        }
-
-        public async Task<bool> DeleteAsync(string domain, string key)
-        {
-            return await DeleteAsync(CreateKey(domain, key));
-        }
+        public string CreateKey(string domain, string key) => CreateKey(string.Concat(domain, "_", key));
+        public string CreateKey(string key) => key.ToLower();
+        public T Get<T>(string domain, string key) => Get<T>(CreateKey(domain, key));
+        public async Task<T> GetAsync<T>(string domain, string key) => await GetAsync<T>(CreateKey(domain, key));
+        public async Task<bool> DeleteAsync(string domain, string key) => await DeleteAsync(CreateKey(domain, key));
 
         #endregion
-
-        public class BsonEnvelope<T>
-        {
-            public T Value { get; set; }
-
-            public BsonEnvelope()
-            {
-
-            }
-
-            public BsonEnvelope(T payload)
-            {
-                Value = payload;
-            }
-        }
         
-        private byte[] Serialize<T>(T o)
+        
+        private byte[] ToByteBuffer<T>(T o, bool compress, Dictionary<string, object> metadata = null)
         {
-            if (o == null) return null;
+            byte[] retVal = null;
 
-            using (var memoryStream = new MemoryStream())
+            if (o != null)
             {
-                using (var writer = new BsonWriter(memoryStream))
+                using (var memoryStream = new MemoryStream())
                 {
-                    CreateJsonSerializer().Serialize(writer, new BsonEnvelope<T>(o));
+                    using (var writer = new BsonWriter(memoryStream))
+                    {
+                        CreateJsonSerializer().Serialize(writer, new ObjectEnvelope<T>(o, metadata));
+                    }
+                    retVal = memoryStream.ToArray();
                 }
-                return memoryStream.ToArray();
+
+                if (compress) retVal = retVal.Compress();
             }
+            return retVal;
         }
 
-        private T Deserialize<T>(byte[] buffer)
+        private ObjectEnvelope<T> FromByteBuffer<T>(byte[] buffer, bool decompress)
         {
-            if (buffer == null) return default(T);
+            if (buffer == null) return new ObjectEnvelope<T>(default(T), null);
+            if (decompress) buffer = buffer.Decompress();
             
             using (var memoryStream = new MemoryStream(buffer))
             {
                 using (var reader = new BsonReader(memoryStream))
                 {
-                    return CreateJsonSerializer().Deserialize<BsonEnvelope<T>>(reader).Value;
+                    return CreateJsonSerializer().Deserialize<ObjectEnvelope<T>>(reader);
                 }
             }
         }
@@ -760,19 +746,6 @@
             var retVal = new JsonSerializer();
             _jsonConverterCollection.ForEach(x => retVal.Converters.Add(x));
             return retVal;
-        }
-
-        /// <summary>
-        /// Clones an object by serializing it and then deserializing it.
-        /// It's done this way rather than cloning because cloning is not supported by .NET list/dictionary objects.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        private T Clone<T>(object obj)
-        {
-            if (obj == null) return default(T);
-            return Deserialize<T>(Serialize(obj));
         }
 
         public void Dispose()
@@ -795,28 +768,112 @@
         /// Automatically caches an items and calls the factory if it doesn't exist.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="factory"></param>
-        /// <param name="cacheKey"></param>
+        /// <param name="asyncFactory">An async factory method</param>
+        /// <param name="paramsCacheKey">The main cache key comes from the caller type name and caller func. name. This is purely the parameters, as a concatenated string</param>
         /// <param name="callerTypeName"></param>
         /// <param name="callerFuncName"></param>
+        /// <param name="relationshipKey">Appends this cache item with this key value</param>
         /// <returns></returns>
-        public async Task<T> AutoAsync<T>(Func<Task<T>> factory, string cacheKey, string callerTypeName, [CallerMemberName] string callerFuncName = null)
+        public async Task<T> AutoAsync<T>(Func<Task<T>> asyncFactory, string paramsCacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
         {
-            var key = $"{callerTypeName}.{callerFuncName}({cacheKey})";
+            var key = $"{callerTypeName}.{callerFuncName}({paramsCacheKey})".ToLower();
             var retVal = await GetAsync<T>(key);
 
             if (retVal == null)
             {
-                retVal = await factory();
+                retVal = await asyncFactory();
                 if (retVal != null)
                 {
                     await SetAsync(key, retVal);
+
+                    if (relationshipKey != null && _config.IsCentralCacheEnabled)
+                        await _cacheDatabase.StringAppendAsync(relationshipKey.ToLower(), string.Concat(key, ";"));
                 }
             }
             return retVal;
         }
 
+        /// <summary>
+        /// Automatically sets the cache key based on the caller function name
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="factory"></param>
+        /// <param name="paramsCacheKey"></param>
+        /// <param name="callerTypeName"></param>
+        /// <param name="relationshipKey">
+        ///     Rel. key is where a cache key is appended to a relationship key.  This allows you to clear down cache items that
+        ///     relate to a particular entity.
+        /// </param>
+        /// <param name="callerFuncName"></param>
+        /// <returns></returns>
+        public async Task<T> AutoAsync<T>(Func<T> factory, string paramsCacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
+        {
+            var key = $"{callerTypeName}.{callerFuncName}({paramsCacheKey})".ToLower();
+            var retVal = await GetAsync<T>(key);
 
+            if (retVal == null)
+            {
+                retVal = factory();
+                if (retVal != null)
+                {
+                    await SetAsync(key, retVal);
+                    if (relationshipKey != null && _config.IsCentralCacheEnabled)
+                        await _cacheDatabase.StringAppendAsync(relationshipKey.ToLower(), string.Concat(key, ";"));
+                }
+            }
+            return retVal;
+        }
+        
+        /// <summary>
+        /// Automatically sets the cache key based on the caller function name
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="factory"></param>
+        /// <param name="paramsCacheKey"></param>
+        /// <param name="callerTypeName"></param>
+        /// <param name="relationshipKey"></param>
+        /// <param name="callerFuncName"></param>
+        /// <returns></returns>
+        public T Auto<T>(Func<T> factory, string paramsCacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null)
+        {
+            var key = $"{callerTypeName}.{callerFuncName}({paramsCacheKey})".ToLower();
+            var retVal = Get<T>(key);
+
+            if (retVal == null)
+            {
+                retVal = factory();
+                if (retVal != null)
+                {
+                    Set(key, retVal);
+                    if (relationshipKey != null && _config.IsCentralCacheEnabled)
+                        _cacheDatabase.StringAppend(relationshipKey.ToLower(), string.Concat(key, ";"));
+                }
+            }
+            return retVal;
+        }
+
+        /// <summary>
+        /// Using the rel. key passed in, it gets all cache keys that have been created in relation to the key
+        /// and then clears all those cache items including the rel. key item itself.
+        /// </summary>
+        /// <param name="relationshipKey"></param>
+        /// <returns></returns>
+        public async Task ClearRelatedCacheKeysAsync(string relationshipKey)
+        {
+            if (!_config.IsCentralCacheEnabled) return;
+
+            var data = (string) await _cacheDatabase.StringGetAsync(relationshipKey);
+            if (data != null)
+            {
+                var cacheKeys = data.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Where(x => x.Clean() != null).ToArray();
+                foreach (var cacheKey in cacheKeys)
+                {
+                    await DeleteAsync(cacheKey);
+                }
+                await DeleteAsync(relationshipKey);
+            }
+        }
+        
         public long GetMemoryCacheApproximateSize()
         {
             var statsField = typeof(MemoryCache).GetField("_stats", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -829,12 +886,9 @@
             return (long)approxProp.GetValue(sizeValue, null);
         }
 
-
-        public IGrouping<string, KeyValuePair<string, string>>[] GetRedisMemoryUsage()
-        {
-            return _connection.GetServer(_connection.GetEndPoints()[0]).Info("Memory");
-        }
-
+        public IGrouping<string, KeyValuePair<string, string>>[] GetRedisMemoryUsage() => 
+            _connection.GetServer(_connection.GetEndPoints()[0]).Info("Memory");
+        
     }
 
 

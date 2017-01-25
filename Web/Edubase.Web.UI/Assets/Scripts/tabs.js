@@ -41,8 +41,19 @@
             $tabbedContent.attr('tab-index', 0);
             $tabbedContent.addClass('hidden-tab-content').attr('aria-hidden', true);
 
-            $tabs.on('click', function (e) {
+            $('.tab-manipulator').on('click', function (e) {
                 e.preventDefault();
+                var hash = $(this).attr('href'),
+                    hasTab = $.inArray(hash, validHashes);
+                if (hasTab > -1) {
+                    $tabs.eq(hasTab).click();
+                    $(window).scrollTop($tabs.offset().top);
+                }
+            });
+
+            $tabs.on('click', function (e) {
+                
+               // e.preventDefault();
                 var targetContent = $(this).attr('href');
                 location.replace(targetContent);
                 
@@ -58,6 +69,7 @@
                 $(targetContent).removeClass('hidden-tab-content')
                     .attr('aria-hidden', false)
                     .focus();
+                $(window).scrollTop($tabs.offset().top);
                 
             });
             

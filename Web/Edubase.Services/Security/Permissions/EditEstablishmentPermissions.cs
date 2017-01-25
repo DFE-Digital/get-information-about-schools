@@ -28,12 +28,12 @@ namespace Edubase.Services.Security.Permissions
             && !GroupIds.Any()
             && !EstablishmentTypeIds.Any();
 
-        public bool CanEdit(int urn, int? typeId, int? groupId, int? localAuthorityId, int? typeGroupId)
+        public bool CanEdit(int urn, int? typeId, int[] groupIds, int? localAuthorityId, int? typeGroupId)
             => IsUrnAllowed(urn)
-            && IsGroupAllowed(groupId)
+            && IsGroupAllowed(groupIds)
             && IsLAAllowed(localAuthorityId)
             && IsTypeAllowed(typeId)
-            && IsTypeGroupAllowed(typeGroupId); //todo: need to support anding and oring!!!!
+            && IsTypeGroupAllowed(typeGroupId);
     }
 
     public class CreateEstablishmentPermissions : EstablishmentPermissions
@@ -83,8 +83,8 @@ namespace Edubase.Services.Security.Permissions
         public bool IsLAAllowed(int? localAuthorityId)
             => !LocalAuthorityIds.Any() || (localAuthorityId.HasValue && LocalAuthorityIds.Contains(localAuthorityId.Value));
 
-        public bool IsGroupAllowed(int? groupId)
-            => !GroupIds.Any() || (groupId.HasValue && GroupIds.Contains(groupId.Value));
+        public bool IsGroupAllowed(int[] groupIds)
+            => !GroupIds.Any() || (groupIds != null && groupIds.Intersect(GroupIds).Any());
 
         public bool IsEstabTypeRestricted() => EstablishmentTypeIds.Any();
         public bool IsLARestricted() => LocalAuthorityIds.Any();

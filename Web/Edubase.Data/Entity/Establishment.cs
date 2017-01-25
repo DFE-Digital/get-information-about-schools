@@ -25,8 +25,21 @@ namespace Edubase.Data.Entity
         
         public int? EstablishmentNumber { get; set; }
 
-        
-        public string Name { get; set; }
+
+        private string _name;
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                NameDistilled = StringUtil.DistillEstablishmentName(value);
+            }
+        }
+
+        public string NameDistilled { get; set; }
+
 
         [Column("Type")]
         public LookupEstablishmentType EstablishmentType { get; set; }
@@ -279,6 +292,7 @@ namespace Edubase.Data.Entity
         public string BSOInspectorateReportUrl { get; set; }
         public DateTime? BSODateOfLastInspectionVisit { get; set; }
         public DateTime? BSODateOfNextInspectionVisit { get; set; }
+        public string HeadPreferredJobTitle { get; set; }
 
         private string _fullAddress = null;
 
@@ -289,6 +303,12 @@ namespace Edubase.Data.Entity
             set { _fullAddress = value; }
         }
 
+        /// <summary>
+        /// Addtional addresses data (JSON encoded object)
+        /// - No need for querying or indexing of this data, hence JSON is fine.
+        /// </summary>
+        public string AdditionalAddresses { get; set; }
+
         public Establishment()
         {
             Contact = new ContactDetail();
@@ -297,6 +317,8 @@ namespace Edubase.Data.Entity
         }
 
         public override string ToString() => base.ToString() + $"({Name})";
+
+        public override int? GetId() => Urn;
 
     }
 }

@@ -10,6 +10,9 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Models.Establishments;
+using System.Web;
+using System.Linq.Expressions;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
 {
@@ -72,7 +75,8 @@ namespace Edubase.Web.UI.Models
 
         }
 
-        public string OfstedRatingReportUrl => (Establishment.OfstedRating.HasValue ? $"http://www.ofsted.gov.uk/oxedu_providers/full/(urn)/{Establishment.Urn}" : null as string);
-
+        public string OfstedRatingReportUrl => (Establishment.OfstedRating.HasValue 
+            ? new OfstedRatingUrl(Establishment.Urn).ToString() : null as string);
+        
     }
 }

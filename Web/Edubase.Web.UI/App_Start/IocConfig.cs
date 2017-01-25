@@ -17,6 +17,15 @@ using Edubase.Data;
 using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Data.DbContext;
 using Newtonsoft.Json;
+using Edubase.Services.Establishments.Downloads;
+using Edubase.Services.Lookup;
+using Edubase.Services.Security;
+using Edubase.Data.Repositories.Groups;
+using Edubase.Data.Repositories.Groups.Abstract;
+using Edubase.Services.Groups.Downloads;
+using Edubase.Services.Governors.Downloads;
+using Edubase.Services.Governors;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI
 {
@@ -38,6 +47,8 @@ namespace Edubase.Web.UI
 
             // OPTIONAL: Register web abstractions like HttpContextBase.
             builder.RegisterModule<AutofacWebTypesModule>();
+
+            builder.RegisterModule<ValidationModule>();
 
             // OPTIONAL: Enable property injection in view pages.
             builder.RegisterSource(new ViewRegistrationSource());
@@ -65,16 +76,20 @@ namespace Edubase.Web.UI
                 .As<IExceptionLogger>()
                 .SingleInstance();
 
-            var jsonConverterCollection = new JsonConverterCollection();
-            jsonConverterCollection.Add(new DbGeographyConverter());
-            builder.RegisterInstance(jsonConverterCollection);
+            builder.RegisterInstance(new JsonConverterCollection() { new DbGeographyConverter() });
 
-            builder.RegisterType<CacheAccessor>().As<ICacheAccessor>()
-                .UsingConstructor(typeof(JsonConverterCollection)).SingleInstance().AsSelf();
+            builder.RegisterType<CacheAccessor>()
+                .SingleInstance().As<ICacheAccessor>()
+                .UsingConstructor(typeof(JsonConverterCollection));
 
             builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
                 ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString)
                 .As<IAzureSearchEndPoint>();
+
+            builder.RegisterInstance(Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(
+                ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString));
+
+            builder.RegisterType<BlobService>().As<IBlobService>();
 
             builder.RegisterType<ApplicationDbContextFactory<ApplicationDbContext>>()
                 .As<IApplicationDbContextFactory>();
@@ -91,12 +106,27 @@ namespace Edubase.Web.UI
             builder.RegisterType<EstablishmentReadRepository>().As<IEstablishmentReadRepository>();
             builder.RegisterType<CachedEstablishmentReadRepository>().As<ICachedEstablishmentReadRepository>();
 
+            builder.RegisterType<GroupReadRepository>().As<IGroupReadRepository>();
+            builder.RegisterType<CachedGroupReadRepository>().As<ICachedGroupReadRepository>();
+
+            builder.RegisterType<EstablishmentGroupReadRepository>().As<IEstablishmentGroupReadRepository>();
+            builder.RegisterType<CachedEstablishmentGroupReadRepository>().As<ICachedEstablishmentGroupReadRepository>();
+
             builder.RegisterType<GroupsWriteService>().As<IGroupsWriteService>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
+            builder.RegisterType<EstablishmentDownloadService>().As<IEstablishmentDownloadService>();
             builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
+            builder.RegisterType<EstablishmentWriteService>().As<IEstablishmentWriteService>();
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();
+            builder.RegisterType<LookupService>().As<ILookupService>();
+            builder.RegisterType<SecurityService>().As<ISecurityService>();
+            builder.RegisterType<GroupDownloadService>().As<IGroupDownloadService>();
+
+            builder.RegisterType<GovernorDownloadService>().As<IGovernorDownloadService>();
+            builder.RegisterType<GovernorsReadService>().As<IGovernorsReadService>();
+
         }
-        
+
     }
 }

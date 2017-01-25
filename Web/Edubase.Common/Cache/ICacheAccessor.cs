@@ -1,6 +1,8 @@
 ﻿namespace Edubase.Common.Cache
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
@@ -105,6 +107,16 @@
 
         string Keyify(params object[] items);
 
-        Task<T> AutoAsync<T>(Func<Task<T>> factory, string cacheKey, string callerTypeName, [CallerMemberName] string callerFuncName = null);
+        Task<T> AutoAsync<T>(Func<Task<T>> asyncFactory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null);
+        Task<T> AutoAsync<T>(Func<T> factory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null);
+        T Auto<T>(Func<T> factory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null);
+
+        Task ClearRelatedCacheKeysAsync(string relationshipKey);
+
+        long GetMemoryCacheApproximateSize();
+
+        IGrouping<string, KeyValuePair<string, string>>[] GetRedisMemoryUsage();
+
+        Task ClearAsync();
     }
 }

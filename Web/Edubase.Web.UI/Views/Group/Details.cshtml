@@ -12,7 +12,7 @@
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 
-@if (Model.IsUserLoggedOn)
+@if (Model.CanUserEdit)
 {
     @Html.ActionLink("Edit", "Edit", "Group", new { id = Model.Group.GroupUID }, new { @class = "button mobile-full-width" })
 }
@@ -24,7 +24,7 @@
             {
                 <tr>
                     <th scope="row">Companies House Number</th>
-                    <td>@Model.Group.CompaniesHouseNumber</td>
+                    <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Group.CompaniesHouseNumber">@Model.Group.CompaniesHouseNumber</a></td>
                 </tr>
             }
             <tr>
@@ -137,12 +137,14 @@
                                 <dl>
                                     <dt>Address:</dt>
                                     <dd>@result.Establishment.Address</dd>
-                                    <dt>URN:</dt>
+                                    <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                                     <dd> @result.Establishment.Urn</dd>
                                     <dt>School type:</dt>
                                     <dd>@result.Establishment.EstablishmentType</dd>
                                     <dt>Headteacher name:</dt>
                                     <dd>@result.Establishment.HeadTitle @result.Establishment.HeadFirstName @result.Establishment.HeadLastName</dd>
+                                    <dt>Joined date:</dt>
+                                    <dd>@(result.JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
                                 </dl>
                             </li>
                         }

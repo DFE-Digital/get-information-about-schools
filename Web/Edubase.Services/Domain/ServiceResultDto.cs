@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Edubase.Services.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,17 @@ namespace Edubase.Services.Domain
         public ServiceResultDto(eServiceResultStatus status)
         {
             Status = status;
+        }
 
+        /// <summary>
+        /// Gets the results, throwing an appropriate exception if the op was unsuccessful
+        /// </summary>
+        /// <returns></returns>
+        public T GetResult()
+        {
+            if (Status == eServiceResultStatus.NotFound) throw new EntityNotFoundException();
+            else if (Status == eServiceResultStatus.PermissionDenied) throw new PermissionDeniedException();
+            return ReturnValue;
         }
     }
 

@@ -13,6 +13,7 @@ using System.Linq;
 namespace Edubase.Import
 {
     using Common;
+    using Common.Cache;
     using Data;
     using Data.DbContext;
     using Data.Entity;
@@ -21,18 +22,33 @@ namespace Edubase.Import
     using Helpers;
     using Mapping;
     using Migrations;
+    using Newtonsoft.Json;
     using Services.Domain;
+    using Services.Lookup;
     using System.IO;
 
     public class Program
     {
         private static Dictionary<Type, DataTable> _tables;
         private static IMapper _mapper;
+        private static ICacheAccessor _cache;
         
         private static List<string> _lookupTableNames = new List<string>();
 
         static void Main(string[] args)
         {
+            using (Timing("Connecting to the cache"))
+            {
+                _cache = new CacheAccessor(new CacheConfig
+                {
+                    IsCentralCacheEnabled = false,
+                    IsDistributedCachingEnabled = false,
+                    IsExceptionPropagationEnabled = true,
+                    IsPayloadCompressionEnabled = false,
+                    IsAuditingEnabled = false
+                }).SetJsonConverterCollection(new JsonConverterCollection() { new DbGeographyConverter() });
+            }
+
             using (Timing("Recreating the DB"))
             {
                 Database.SetInitializer(new DropRecreateDatabase());
@@ -45,7 +61,7 @@ namespace Edubase.Import
                 {
                     var ofstedRatings = source.Ofstedratings.ToDictionary(x => x.URN.ToInteger().Value);
                     var laContacts = source.Cclacontacts.ToDictionary(x => x.code.ToInteger().Value);
-                    _mapper = MappingConfiguration.Create(ofstedRatings, laContacts);
+                    _mapper = MappingConfiguration.Create(ofstedRatings, laContacts, new CachedLookupService(new LookupService(), _cache));
                 }
 
                 Disposer.Using(CreateSqlConnection, x => x.Open(), x => x.Close(), connection =>

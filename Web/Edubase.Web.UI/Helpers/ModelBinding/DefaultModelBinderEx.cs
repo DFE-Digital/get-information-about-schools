@@ -7,8 +7,7 @@ namespace Edubase.Web.UI.Helpers.ModelBinding
 {
     internal class DefaultModelBinderEx : DefaultModelBinder
     {
-        protected override PropertyDescriptorCollection
-          GetModelProperties(ControllerContext controllerContext,
+        protected override PropertyDescriptorCollection GetModelProperties(ControllerContext controllerContext,
                             ModelBindingContext bindingContext)
         {
             var toReturn = base.GetModelProperties(controllerContext, bindingContext);
@@ -28,5 +27,6 @@ namespace Edubase.Web.UI.Helpers.ModelBinding
 
             return new PropertyDescriptorCollection(toReturn.Cast<PropertyDescriptor>().Concat(additional).ToArray());
         }
+
     }
 }

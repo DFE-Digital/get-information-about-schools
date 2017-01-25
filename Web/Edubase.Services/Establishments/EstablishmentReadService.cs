@@ -25,15 +25,22 @@ namespace Edubase.Services.Establishments
     using IntegrationEndPoints.AzureSearch.Models;
     using Security;
     using Data.DbContext;
+    using Common.Cache;
+    using System.IO;
+    using Common.IO;
+    using Ionic.Zip;
+    using Lookup;
 
     public class EstablishmentReadService : IEstablishmentReadService
     {
-        private IApplicationDbContext _dbContext;
-        private IMapper _mapper;
-        private ICachedLookupService _cachedLookupService;
-        private IAzureSearchEndPoint _azureSearchService;
-        private IEstablishmentReadRepository _establishmentRepository;
-        private ILAReadRepository _laRepository;
+        private readonly IApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
+        private readonly ICachedLookupService _cachedLookupService;
+        private readonly IAzureSearchEndPoint _azureSearchService;
+        private readonly IEstablishmentReadRepository _establishmentRepository;
+        private readonly ILAReadRepository _laRepository;
+        private ICacheAccessor _cacheAccessor;
+        private IBlobService _blobService;
 
         /// <summary>
         /// Allow these roles to see establishments of all statuses
@@ -49,6 +56,7 @@ namespace Edubase.Services.Establishments
             eLookupEstablishmentStatus.OpenButProposedToClose,
             eLookupEstablishmentStatus.ProposedToOpen
         }.Select(x => (int)x).ToArray();
+        
 
         public EstablishmentReadService(
             IApplicationDbContext dbContext, 
@@ -56,7 +64,9 @@ namespace Edubase.Services.Establishments
             ICachedLookupService cachedLookupService, 
             IAzureSearchEndPoint azureSearchService,
             ICachedEstablishmentReadRepository establishmentRepository,
-            ICachedLAReadRepository laRepository)
+            ICachedLAReadRepository laRepository,
+            ICacheAccessor cacheAccessor,
+            IBlobService blobService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
@@ -64,6 +74,8 @@ namespace Edubase.Services.Establishments
             _establishmentRepository = establishmentRepository;
             _azureSearchService = azureSearchService;
             _laRepository = laRepository;
+            _cacheAccessor = cacheAccessor;
+            _blobService = blobService;
         }
         
         public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
@@ -75,6 +87,17 @@ namespace Edubase.Services.Establishments
                 if (HasAccess(principal, dataModel.StatusId))
                 {
                     var domainModel = _mapper.Map<Establishment, EstablishmentModel>(dataModel);
+                    domainModel.AdditionalAddressesCount = domainModel.AdditionalAddresses.Count;
+
+                    if (!principal.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT))
+                    {
+                        var toRemove = domainModel.AdditionalAddresses.Where(x => x.IsRestricted == true).ToArray();
+                        for (int i = 0; i < toRemove.Length; i++)
+                        {
+                            domainModel.AdditionalAddresses.Remove(toRemove[i]);
+                        }
+                    }
+
                     if (domainModel.TypeId == (int)eLookupEstablishmentType.ChildrensCentre
                         && domainModel.LocalAuthorityId.HasValue) // supply LA contact details
                     {
@@ -96,8 +119,9 @@ namespace Edubase.Services.Establishments
               || GetPermittedStatusIds(principal).Any(x => x == statusId.Value);
         }
 
-        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModel establishment, GroupModel group) 
-            => new DisplayPolicyFactory().Create(user, establishment, group);
+        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModelBase establishment) 
+            => new DisplayPolicyFactory().Create(user, establishment);
+
 
         public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn)
         {
@@ -110,62 +134,8 @@ namespace Edubase.Services.Establishments
 
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
         {
-            if (!user.Identity.IsAuthenticated) throw new PermissionDeniedException("Principal not authorised to view change history");
-
-            var changes = await _dbContext.EstablishmentChangeHistories
-                    .Include(x => x.OriginatorUser)
-                    .Include(x => x.ApproverUser)
-                    .Where(x => x.Urn == urn && x.IsDeleted == false)
-                    .OrderByDescending(x => x.EffectiveDateUtc)
-                    .Take(take)
-                    .Select(x => new EstablishmentChangeDto
-                    {
-                        PropertyName = x.Name,
-                        ApproverUserId = x.ApproverUserId,
-                        EffectiveDateUtc = x.EffectiveDateUtc,
-                        Id = x.Id,
-                        NewValue = x.NewValue,
-                        OldValue = x.OldValue,
-                        OriginatorUserId = x.OriginatorUserId,
-                        RequestedDateUtc = x.RequestedDateUtc,
-                        Urn = x.Urn,
-                        ApproverUserName = x.ApproverUser.UserName,
-                        OriginatorUserName = x.OriginatorUser.UserName
-                    }).ToArrayAsync();
-
-            GetLookupNames(changes);
-
-            return changes;
+            return Enumerable.Empty<EstablishmentChangeDto>();
         }
-
-        public async Task<IEnumerable<ChangeDescriptorDto>> GetPendingChangesAsync(int urn, IPrincipal principal)
-        {
-            if (!principal.Identity.IsAuthenticated) throw new PermissionDeniedException("Principal not authorised to view pending changes");
-            var pendingChanges = await _dbContext.EstablishmentApprovalQueue.Where(x => x.Urn == urn
-                && x.IsApproved == false && x.IsDeleted == false && x.IsRejected == false)
-                .Select(x => new ChangeDescriptorDto(x)).ToListAsync();
-
-            GetLookupNames(pendingChanges);
-
-            return pendingChanges;
-        }
-
-        private void GetLookupNames(IEnumerable<ChangeDescriptorDto> pendingChanges)
-        {
-            pendingChanges.ForEach(async x =>
-            {
-                if (_cachedLookupService.IsLookupField(x.PropertyName))
-                {
-                    if (x.OldValue.IsInteger())
-                        x.OldValue = await _cachedLookupService.GetNameAsync(x.PropertyName, x.OldValue.ToInteger().Value);
-
-                    if (x.NewValue.IsInteger())
-                        x.NewValue = await _cachedLookupService.GetNameAsync(x.PropertyName, x.NewValue.ToInteger().Value);
-                }
-            });
-        }
-
-        private IQueryable<Establishment> GetEstablishmentsQuery() => _dbContext.Establishments.Where(x => x.IsDeleted == false);
         
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
@@ -174,7 +144,7 @@ namespace Edubase.Services.Establishments
             {
                 oDataFilters.Add(ODataUtil.Or(nameof(SearchEstablishmentDocument.StatusId), _restrictedStatuses));
             }
-            return await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text,oDataFilters.ToString() , take);
+            return await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text, oDataFilters.ToString(), take);
         }
 
         public int[] GetPermittedStatusIds(IPrincipal principal)
@@ -202,7 +172,8 @@ namespace Edubase.Services.Establishments
             {
                 var geoPredicate = new ODataGeographyExpression(payload.GeoSearchLocation);
                 predicates.Add(geoPredicate.ToFilterODataExpression(nameof(SearchEstablishmentDocument.Location), payload.GeoSearchMaxRadiusInKilometres.Value));
-                if (payload.GeoSearchOrderByDistance) payload.OrderBy.Insert(0, geoPredicate.ToODataExpression(nameof(SearchEstablishmentDocument.Location)));
+                var expression = geoPredicate.ToODataExpression(nameof(SearchEstablishmentDocument.Location));
+                if (payload.GeoSearchOrderByDistance && !payload.OrderBy.Contains(expression)) payload.OrderBy.Insert(0, expression);
             }
 
             var oDataFilterExpression = string.Join(" and ", predicates);
@@ -229,6 +200,9 @@ namespace Edubase.Services.Establishments
             }
             else return new ServiceResultDto<bool>(eServiceResultStatus.NotFound);
         }
+
+
+        
 
 
     }

@@ -49,7 +49,7 @@
                     .attr('aria-hidden', false);
 
                 $radios.not(this).prop('checked', false);
-                $labels.not($(this).parent()).removeClass(opts.openPanelClass);
+                $labels.not($(this).parent()).removeClass(opts.openPanelClass + ' selected');
                 $el.find(opts.panelClass).attr('aria-hidden', true);
 
 
@@ -186,9 +186,14 @@
 }($));
 
 
+
 DfE.Views.schoolSearch = $('#content').find('.search-type-list');
 
 if (DfE.Views.schoolSearch.length) {
     DfE.Views.schoolSearch.searchForm();
 }
+
+
+var $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']");
+new GOVUK.SelectionButtons($blockLabels);
 

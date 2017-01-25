@@ -16,7 +16,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Edubase.Services.Security
 {
-    public class SecurityService
+    public class SecurityService : ISecurityService
     {
         public EditEstablishmentPermissions GetEditEstablishmentPermission(IPrincipal principal)
             => principal.AsClaimsPrincipal().GetEditEstablishmentPermissions();
@@ -46,5 +46,12 @@ namespace Edubase.Services.Security
 
             return claimsIdConverter.Convert(id, userId);
         }
+
+        /// <summary>
+        /// Creates a system principal whose permissions are the same as Admin.
+        /// This allows internal services to gain full permissions.
+        /// </summary>
+        /// <returns></returns>
+        public IPrincipal CreateSystemPrincipal() => new GenericPrincipal(new GenericIdentity("SYSTEM"), new[] { EdubaseRoles.Admin });
     }
 }

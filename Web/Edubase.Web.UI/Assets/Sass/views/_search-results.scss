@@ -6,6 +6,18 @@
     li ul {
         margin: 5px 0 10px 30px;
     }
+
+    a.download-link {
+        float:none; 
+        display:block; 
+        margin-top:10px;
+        margin-right:10px;
+        outline: none;
+        padding: 3px;
+        @include media(desktop){
+            float:right;
+        }
+    }
 }
 
 .result-info {
@@ -44,6 +56,14 @@
         clear: left;
         padding-right: 0.5em;
     }
+    .trust-details {
+        float: none;
+
+        @include media(mobile) {
+            width: 100%;
+        }
+    }
+
 }
 
 .pagination {
@@ -187,6 +207,25 @@ ul.approval-items{
 
         a { color:white; }
     }
+
+.dismissable-warning {
+    background-color: $red;
+
+    .exclaim {
+        background-image: url('/public/assets/images/icons/exclaim-transparent.PNG');
+        width: 35px;
+        height: 35px;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        left: 0;
+
+         @include device-pixel-ratio() {
+            background-image: url('/public/assets/images/icons/exclaim-transparentx2.PNG');
+            background-size: 100%;
+          }
+    }
+}
 
 .clear-selections {
     display: none;

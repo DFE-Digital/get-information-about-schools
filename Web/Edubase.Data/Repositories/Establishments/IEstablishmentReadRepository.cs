@@ -10,15 +10,9 @@ namespace Edubase.Data.Repositories.Establishments
         Task<int?> GetStatusAsync(int urn);
         Task<int[]> GetUrns(int skip, int take);
     }
-    
 
-    public interface IInMemoryEstablishmentReadRepository : IEstablishmentReadRepository
+    public interface ICachedEstablishmentReadRepository : IEstablishmentReadRepository, ICachedRepositoryBase<Establishment>
     {
-    }
-
-    public interface ICachedEstablishmentReadRepository : IEstablishmentReadRepository
-    {
-        Task<string> WarmAsync(int maxBatchSize = 1000, int maxConcurrency = 40, int? maxTotalRecords = null);
-        string GetWarmUpProgressCacheKey();
+        Task ClearRelationshipCacheAsync(int? urn);
     }
 }

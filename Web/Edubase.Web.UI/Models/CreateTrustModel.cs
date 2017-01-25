@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Edubase.Services.Domain;
 using System.ComponentModel;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
 {
@@ -18,11 +19,18 @@ namespace Edubase.Web.UI.Models
             OpenDate = companyProfile.IncorporationDate;
             CompaniesHouseNumber = companyProfile.Number;
             Address = companyProfile.Address;
+            TrustExists = false;
         }
 
         public CreateGroupModel()
         {
 
+        }
+
+        public CreateGroupModel(CompanyProfileDto companyProfile, IEnumerable<SelectListItem> groupTypes) 
+            : this(companyProfile)
+        {
+            GroupTypes = groupTypes;
         }
 
         public string Name { get; set; }
@@ -32,5 +40,7 @@ namespace Edubase.Web.UI.Models
         public DateTime? OpenDate { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
+        public bool TrustExists { get; internal set; }
+        public IEnumerable<SelectListItem> GroupTypes { get; set; }
     }
 }

@@ -67,6 +67,19 @@ namespace Edubase.Services.Establishments.Search
             {
                 Name = "Name",
                 IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = true,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(string)
+            });
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "NameDistilled",
+                IsFacetable = false,
                 IsSearchable = true,
                 IsFilterable = true,
                 IsRetrievable = true,
@@ -514,6 +527,19 @@ namespace Edubase.Services.Establishments.Search
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = "HeadEmailAddress",
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(string)
+            });
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = nameof(Data.Entity.Establishment.HeadPreferredJobTitle),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,
@@ -1419,8 +1445,6 @@ namespace Edubase.Services.Establishments.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(bool)
             });
-            
-
 
             return retVal;
         }

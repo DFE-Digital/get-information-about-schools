@@ -7,12 +7,12 @@
 }
 
 <div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="column-full">
         @Html.ActionLink("Search for governors", "Index", null, new { @class = "home-link" })
-
         <h1 class="heading-xlarge">Search results</h1>
-        
-            <p>We found <span class="heading-xlarge">@Model.Count</span> result@(Model.Count == 1 ? "" : "") matching 
+        <p>
+            We found <span class="heading-xlarge">@Model.Count</span> result@(Model.Count == 1 ? "" : "") matching
+                 
             @if (Model.Forename.Clean() != null)
             {
                 <text>Forename <span class="bold-small">'@Model.Forename'</span>&nbsp;</text>
@@ -28,8 +28,8 @@
                 <text>Role <span class="bold-small">'@Model.RoleName'</span>&nbsp;</text>
             }
 
+            <a class="download-link" href="@Url.Action("PrepareDownload", "Search")?@Url.CurrentQueryString()">Download these search results</a>
         </p>
-        
     </div>
 </div>
 
@@ -52,24 +52,24 @@
         }
         <div class="column-two-thirds">
             <ul class="school-results-listing">
-                @foreach (var result in Model.Results)
+                @foreach (var result in Model.Results.Items)
                 {
                     <li>
-                        <h2 class="bold-small">@result.Person.FullName &ndash; @result.Role.Name</h2>
+                        <h2 class="bold-small">@result.GetFullName() &ndash; @(Model.GovernorRoles.FirstOrDefault(x=>x.Id==result.RoleId)?.Name)</h2>
                         <dl>
                             @if (result.EstablishmentUrn.HasValue)
                             {
-                                <dt>URN:</dt>
+                                <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                                 <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
                                 <dt>Establishment:</dt>
-                                <dd>@Html.ActionLink(result.Establishment.Name, "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
+                                <dd>@Html.ActionLink(Model.EstablishmentNames.Get(result), "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
                             }
                             else
                             {
                                 <dt>UID:</dt>
                                 <dd>@Html.ActionLink(result.GroupUID.ToString(), "Details", "Group", new { id = result.GroupUID, area = "" }, null)</dd>
                                 <dt>Group:</dt>
-                                <dd>@Html.ActionLink(result.Group.Name, "Details", "Group", new { id = result.GroupUID, area = "" }, null)</dd>
+                                <dd>@Html.ActionLink(Model.GroupNames.Get(result), "Details", "Group", new { id = result.GroupUID, area = "" }, null)</dd>
                             }
                             
                             <dt>GID:</dt>
@@ -85,7 +85,7 @@
                             @if (result.AppointingBodyId.HasValue)
                             {
                                 <dt>Appointing body:</dt>
-                                <dd>@result.AppointingBody</dd>
+                                <dd>@(Model.AppointingBodies.FirstOrDefault(x => x.Id == result.AppointingBodyId)?.Name)</dd>
                             }
 
                         </dl>

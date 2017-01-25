@@ -18,23 +18,23 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         {
             HeadteacherDetails = true;
             AgeRange = true;
-            GenderOfEntry = true;
-            LAESTAB = true;
-            AdmissionsPolicy = true;
-            WebsiteAddress = true;
-            ReligiousCharacter = true;
-            ReligiousEhtos = true;
-            BoardingProvision = true;
-            Section41Approved = true;
+            GenderId = true;
+            EstablishmentNumber = true;
+            AdmissionsPolicyId = true;
+            Contact_WebsiteAddress = true;
+            ReligiousCharacterId = true;
+            ReligiousEthosId = true;
+            ProvisionBoardingId = true;
+            Section41ApprovedId = true;
             Capacity = true;
             CloseDate = IsSchoolClosed;
-            ReasonEstablishmentClosed = IsSchoolClosed;
-            SpecialClasses = true;
-            MainEmailAddress = IsUserLoggedIn;
-            AlternativeEmailAddress = MainEmailAddress;
+            ReasonEstablishmentClosedId = IsSchoolClosed;
+            ProvisionSpecialClassesId = true;
+            Contact_EmailAddress= IsUserLoggedIn;
+            ContactAlt_EmailAddress = IsUserLoggedIn;
             LastChangedDate = IsUserLoggedIn;
-            Inspectorate = true;
-            Proprietor = true;
+            InspectorateId = true;
+            ProprietorName = true;
             SENStat = true;
             SENNoStat = true;
 

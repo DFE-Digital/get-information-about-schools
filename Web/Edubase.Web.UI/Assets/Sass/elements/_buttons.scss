@@ -117,7 +117,9 @@ $path: $images-path;
 .button-grey {
   @include button-variant($grey-1, $btn-secondary-bg , $btn-default-border);
 }
-
+input.button-grey,button.button-grey {
+    background-color:#e6e6e6;
+}
 .button-comparison {
   @include core-19;
   color: black;
@@ -193,26 +195,15 @@ input[type="button"] {
 
 
 .submit-cancel-panel {
-    float: right;
-
+    padding-top: 40px;
+    clear: both;
     .button {
         display: inline-block;
     }
 
-    .submit{
-        float:right;
-    }
-
     @include media(mobile) {
-        float: none;
-        .submit{
-            float:none;
-        }
+        
         .button {
-            float:none;
-            -moz-box-sizing: border-box;
-            -webkit-box-sizing: border-box;
-            box-sizing: border-box;
             width: 100%;
             display: block;
         }

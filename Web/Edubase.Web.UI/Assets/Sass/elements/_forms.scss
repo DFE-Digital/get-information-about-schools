@@ -53,6 +53,7 @@ fieldset {
   /*float: left;*/ // PJF: fixes height not set correctly
   width: 100%;
   margin-bottom: $gutter-half;
+  clear: both;
 }
 
 .form-group-related {
@@ -147,9 +148,9 @@ legend {
   @include core-19;
   width: 100%;
 
-  padding: 4px;
+  padding: 5px 4px 4px;
   background-color: $white;
-  border: 1px solid $border-colour;
+  border: 2px solid;
 
   /*@include media(tablet) {
     width: 50%;
@@ -234,8 +235,7 @@ legend {
 
 .mobile-full-width {
     display: block;
-    clear: both;
-    float: right;
+    float: left;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -314,4 +314,8 @@ hr { height:3px; background-color:$grey-3; border:none; }
 
 input[disabled=disabled], select[disabled=disabled] {
     background-color: #eee;
+}
+
+.download-step {
+    margin-bottom: 3em;
 }

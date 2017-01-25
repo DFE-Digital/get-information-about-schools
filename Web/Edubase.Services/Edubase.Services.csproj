@@ -64,6 +64,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
@@ -124,6 +128,10 @@
       <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MiniProfiler, Version=3.2.0.157, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiniProfiler.3.2.0.157\lib\net40\MiniProfiler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
       <Private>True</Private>
@@ -169,14 +177,25 @@
     <Compile Include="ApprovalService.cs" />
     <Compile Include="BlobService.cs" />
     <Compile Include="BusMessagingService.cs" />
-    <Compile Include="CachedLookupService.cs" />
+    <Compile Include="Core\FileDownloadFactoryService.cs" />
+    <Compile Include="Core\IFileDownloadFactoryService.cs" />
+    <Compile Include="Domain\OfstedRatingUrl.cs" />
+    <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
+    <Compile Include="Governors\Downloads\GovernorDownloadService.cs" />
+    <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
+    <Compile Include="Governors\IGovernorsReadService.cs" />
+    <Compile Include="Governors\Search\GovernorSearchPayload.cs" />
+    <Compile Include="Governors\Search\SearchGovernorDocument.cs" />
+    <Compile Include="Groups\Downloads\GroupDownloadService.cs" />
+    <Compile Include="Groups\Downloads\IGroupDownloadService.cs" />
+    <Compile Include="Lookup\CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
     <Compile Include="Domain\ChildrensCentreLocalAuthorityDto.cs" />
     <Compile Include="Domain\CompanyProfileDto.cs" />
     <Compile Include="Domain\CompanySearchDto.cs" />
     <Compile Include="Domain\ContactDetailDto.cs" />
-    <Compile Include="Domain\DomainException.cs" />
+    <Compile Include="Exceptions\DomainException.cs" />
     <Compile Include="Domain\EstablishmentChangeDto.cs" />
     <Compile Include="Domain\EstablishmentDto.cs" />
     <Compile Include="Domain\LAESTAB.cs" />
@@ -185,6 +204,7 @@
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="Domain\ChangeDescriptor.cs" />
     <Compile Include="Domain\PersonDto.cs" />
+    <Compile Include="Domain\SearchDownloadGenerationProgressDto.cs" />
     <Compile Include="Domain\ServiceResultDto.cs" />
     <Compile Include="Enums\eLocalAuthority.cs" />
     <Compile Include="Enums\eLookupAccommodationChanged.cs" />
@@ -252,10 +272,19 @@
     <Compile Include="Establishments\DisplayPolicies\PRUDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\SpecialPost16InstitutionDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\WelshDisplayPolicy.cs" />
+    <Compile Include="Establishments\Downloads\EstablishmentDownloadFullFieldList.cs" />
+    <Compile Include="Establishments\Downloads\EstablishmentDownloadCoreFieldList.cs" />
+    <Compile Include="Establishments\Downloads\EstablishmentDownloadService.cs" />
+    <Compile Include="Establishments\Downloads\IEstablishmentDownloadService.cs" />
     <Compile Include="Establishments\Enums\EstabNumberEntryPolicy.cs" />
     <Compile Include="Establishments\EstablishmentReadService.cs" />
+    <Compile Include="Establishments\IEstablishmentWriteService.cs" />
     <Compile Include="Establishments\ILAESTABService.cs" />
     <Compile Include="Establishments\LAESTABService.cs" />
+    <Compile Include="Establishments\Models\AdditionalAddressModel.cs" />
+    <Compile Include="Establishments\Models\EstablishmentFieldList.cs" />
+    <Compile Include="Establishments\Models\EstablishmentFieldListBase.cs" />
+    <Compile Include="Establishments\Models\EstablishmentModelBase.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchFiltersLookups.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchFilters.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchPayload.cs" />
@@ -267,7 +296,6 @@
     <Compile Include="Establishments\Models\LinkedEstablishmentModel.cs" />
     <Compile Include="Establishments\Search\EstablishmentSuggestionItem.cs" />
     <Compile Include="Establishments\Search\SearchEstablishmentDocument.cs" />
-    <Compile Include="Establishments\Search\SearchEstablishmentDocumentBase.cs" />
     <Compile Include="Governors\GovernorsReadService.cs" />
     <Compile Include="Governors\Search\GovernorsSearchIndex.cs" />
     <Compile Include="Governors\Search\GovernorSuggestionItem.cs" />
@@ -277,6 +305,7 @@
     <Compile Include="Groups\Search\GroupSearchPayload.cs" />
     <Compile Include="Groups\Search\GroupSuggestionItem.cs" />
     <Compile Include="Groups\Search\GroupsSearchIndex.cs" />
+    <Compile Include="IBlobService.cs" />
     <Compile Include="IMessageLoggingService.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\IAzureSearchEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\Models\AzureSearchResult.cs" />
@@ -288,11 +317,9 @@
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Exceptions\PermissionDeniedException.cs" />
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="GovernorService.cs" />
     <Compile Include="Groups\GroupReadService.cs" />
     <Compile Include="Groups\IGroupReadService.cs" />
     <Compile Include="Groups\Models\GroupModel.cs" />
-    <Compile Include="ICachedLookupService.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\AzureSearchEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\Base64String.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\BlobStorageEndPoint.cs" />
@@ -303,9 +330,11 @@
     <Compile Include="IntegrationEndPoints\Smtp\MockSmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\Smtp\SmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\TableStorageEndPoint.cs" />
+    <Compile Include="Lookup\ICachedLookupService.cs" />
+    <Compile Include="Lookup\ILookupService.cs" />
     <Compile Include="Mapping\AutoMapperServicesProfile.cs" />
     <Compile Include="MessageLoggingService.cs" />
-    <Compile Include="LookupService.cs" />
+    <Compile Include="Lookup\LookupService.cs" />
     <Compile Include="LogMessageReadService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\StubClaimsIdConverter.cs" />
@@ -313,6 +342,7 @@
     <Compile Include="Security\ClaimsIdentityConverters\SecureAccessClaimsIdConverter.cs" />
     <Compile Include="Security\EdubaseRoles.cs" />
     <Compile Include="Security\EduClaimTypes.cs" />
+    <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\Permissions\EditGroupPermissions.cs" />
     <Compile Include="Security\Permissions\EditEstablishmentPermissions.cs" />
     <Compile Include="Security\Permissions\Permission.cs" />
