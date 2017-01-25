@@ -31,7 +31,24 @@ namespace Edubase.Common
             else return defaultValue;
         }
 
-        
+        /// <summary>
+        /// Preprocesses an establishment name removing special chars and converting "st" => "saint"
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string DistillEstablishmentName(string text)
+        {
+            text = text?.Distill()?.ToLower().Clean();
+            if (text != null)
+            {
+                if (text.StartsWith("st. ")) text = string.Concat("saint ", text.Remove(0, 4));
+                if (text.Contains(" st. ")) text = text.Replace(" st. ", " saint ");
+
+                if (text.StartsWith("st ")) text = string.Concat("saint ", text.Remove(0, 3));
+                if (text.Contains(" st ")) text = text.Replace(" st ", " saint ");
+            }
+            return text;
+        }
 
     }
 }

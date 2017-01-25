@@ -46,7 +46,7 @@ namespace Edubase.Import
                     IsExceptionPropagationEnabled = true,
                     IsPayloadCompressionEnabled = false,
                     IsAuditingEnabled = false
-                });
+                }).SetJsonConverterCollection(new JsonConverterCollection() { new DbGeographyConverter() });
             }
 
             using (Timing("Recreating the DB"))

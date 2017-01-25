@@ -191,21 +191,9 @@
     <Compile Include="Identity\IdentityConfig.cs" />
     <Compile Include="Identity\Roles.cs" />
     <Compile Include="DbContext\InMemoryApplicationDbContext.cs" />
-    <Compile Include="Migrations\201612081432298_Initial.cs" />
-    <Compile Include="Migrations\201612081432298_Initial.Designer.cs">
-      <DependentUpon>201612081432298_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612120829468_AddedEstabCountCol.cs" />
-    <Compile Include="Migrations\201612120829468_AddedEstabCountCol.Designer.cs">
-      <DependentUpon>201612120829468_AddedEstabCountCol.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612120857427_RenamedCols.cs" />
-    <Compile Include="Migrations\201612120857427_RenamedCols.Designer.cs">
-      <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612202018460_EstabAdditionalAddresses.cs" />
-    <Compile Include="Migrations\201612202018460_EstabAdditionalAddresses.Designer.cs">
-      <DependentUpon>201612202018460_EstabAdditionalAddresses.cs</DependentUpon>
+    <Compile Include="Migrations\201701251519545_InitialCreate.cs" />
+    <Compile Include="Migrations\201701251519545_InitialCreate.Designer.cs">
+      <DependentUpon>201701251519545_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -243,20 +231,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612081432298_Initial.resx">
-      <DependentUpon>201612081432298_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612120829468_AddedEstabCountCol.resx">
-      <DependentUpon>201612120829468_AddedEstabCountCol.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612120857427_RenamedCols.resx">
-      <DependentUpon>201612120857427_RenamedCols.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612202018460_EstabAdditionalAddresses.resx">
-      <DependentUpon>201612202018460_EstabAdditionalAddresses.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201701251519545_InitialCreate.resx">
+      <DependentUpon>201701251519545_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -9,6 +9,7 @@ namespace Edubase.Services.Groups.Models
     {
         public int GroupUID { get; set; }
         public string Name { get; set; }
+        public string NameDistilled { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public int? GroupTypeId { get; set; }
         public DateTime? ClosedDate { get; set; }
@@ -18,6 +19,7 @@ namespace Edubase.Services.Groups.Models
         public string ManagerEmailAddress { get; set; }
         public string GroupId { get; set; }
         public int EstablishmentCount { get; set; }
+        public int? LocalAuthorityId { get; set; }
 
         public string Head_Title { get; set; }
         public string Head_FirstName { get; set; }

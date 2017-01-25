@@ -158,10 +158,10 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Suggest(string text) => Json(await _establishmentReadService.SuggestAsync(text, User));
+        public async Task<ActionResult> Suggest(string text) => Json(await _establishmentReadService.SuggestAsync(StringUtil.DistillEstablishmentName(text), User));
 
         [HttpGet]
-        public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text, User));
+        public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text.Distill(), User));
         
         
 

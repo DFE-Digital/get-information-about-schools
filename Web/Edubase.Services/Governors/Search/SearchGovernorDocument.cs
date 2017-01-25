@@ -13,10 +13,20 @@ namespace Edubase.Services.Governors.Search
         public string Person_MiddleName { get; set; }
         public string Person_LastName { get; set; }
 
+        public string Person_TitleDistilled { get; set; }
+        public string Person_FirstNameDistilled { get; set; }
+        public string Person_MiddleNameDistilled { get; set; }
+        public string Person_LastNameDistilled { get; set; }
+
         public string PreviousPerson_Title { get; set; }
         public string PreviousPerson_FirstName { get; set; }
         public string PreviousPerson_MiddleName { get; set; }
         public string PreviousPerson_LastName { get; set; }
+
+        public string PreviousPerson_TitleDistilled { get; set; }
+        public string PreviousPerson_FirstNameDistilled { get; set; }
+        public string PreviousPerson_MiddleNameDistilled { get; set; }
+        public string PreviousPerson_LastNameDistilled { get; set; }
 
         public DateTime? AppointmentStartDate { get; set; }
         public DateTime? AppointmentEndDate { get; set; }

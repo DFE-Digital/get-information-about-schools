@@ -67,6 +67,19 @@ namespace Edubase.Services.Establishments.Search
             {
                 Name = "Name",
                 IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = true,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(string)
+            });
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = "NameDistilled",
+                IsFacetable = false,
                 IsSearchable = true,
                 IsFilterable = true,
                 IsRetrievable = true,
