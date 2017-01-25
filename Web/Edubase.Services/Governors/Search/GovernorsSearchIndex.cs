@@ -207,7 +207,61 @@ namespace Edubase.Services.Governors.Search
                 IncludeInSuggester = false,
                 ClrType = typeof(string)
             });
-            
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = nameof(SearchGovernorDocument.PreviousPerson_TitleDistilled),
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = false,
+                IsKey = false,
+                IncludeInSuggester = true,
+                ClrType = typeof(string)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = nameof(SearchGovernorDocument.PreviousPerson_FirstNameDistilled),
+                IsFacetable = false,
+                IsSearchable = true,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = true,
+                IsKey = false,
+                IncludeInSuggester = true,
+                ClrType = typeof(string)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = nameof(SearchGovernorDocument.PreviousPerson_MiddleNameDistilled),
+                IsFacetable = false,
+                IsSearchable = true,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = true,
+                IsKey = false,
+                IncludeInSuggester = true,
+                ClrType = typeof(string)
+            });
+
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = nameof(SearchGovernorDocument.PreviousPerson_LastNameDistilled),
+                IsFacetable = false,
+                IsSearchable = true,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = true,
+                IsKey = false,
+                IncludeInSuggester = true,
+                ClrType = typeof(string)
+            });
 
             retVal.Fields.Add(new SearchIndexField
             {

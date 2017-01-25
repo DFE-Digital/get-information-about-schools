@@ -190,6 +190,6 @@
 
         public virtual bool BSODateOfNextInspectionVisit { get; set; }
 
-        public virtual bool HeadPreferredJobTitle { get; set; }
+        public virtual bool HeadPreferredJobTitle { get; set; } = true;
     }
 }
