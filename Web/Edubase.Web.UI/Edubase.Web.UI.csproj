@@ -297,6 +297,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
+    <Compile Include="Helpers\AutofacValidationModule.cs" />
+    <Compile Include="Helpers\AutofacValidatorFactory.cs" />
     <Compile Include="Helpers\FormatHelpers.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\JsonCamelCaseResult.cs" />

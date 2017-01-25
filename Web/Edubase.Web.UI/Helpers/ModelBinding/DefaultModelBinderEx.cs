@@ -27,5 +27,6 @@ namespace Edubase.Web.UI.Helpers.ModelBinding
 
             return new PropertyDescriptorCollection(toReturn.Cast<PropertyDescriptor>().Concat(additional).ToArray());
         }
+
     }
 }

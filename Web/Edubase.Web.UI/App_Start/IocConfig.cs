@@ -25,6 +25,7 @@ using Edubase.Data.Repositories.Groups.Abstract;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Governors;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI
 {
@@ -46,6 +47,8 @@ namespace Edubase.Web.UI
 
             // OPTIONAL: Register web abstractions like HttpContextBase.
             builder.RegisterModule<AutofacWebTypesModule>();
+
+            builder.RegisterModule<ValidationModule>();
 
             // OPTIONAL: Enable property injection in view pages.
             builder.RegisterSource(new ViewRegistrationSource());

@@ -34,8 +34,8 @@
                 <h1 class="heading-xlarge">Edit school or college</h1>
             }
 
+            @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-            @Html.ValidationSummary(null, new { @class = "error-summary" })
             <div class="column-half">
                 <!-- address -->
                 <div class="form-group">
@@ -837,17 +837,20 @@
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.MSOACode)">
                         <label for="msoa">
                             Middle Super Output Area (MSOA)
                         </label>
+                        @Html.ValidationMessageFor(x => x.MSOACode)
                         @Html.TextBoxFor(x => x.MSOACode, new { @class = "form-control" })
                     </div>
 
-                    <div class="form-group">
+
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.LSOACode)">
                         <label for="lsoa">
                             Lower Super Output Area (MSOA)
                         </label>
+                        @Html.ValidationMessageFor(x => x.LSOACode)
                         @Html.TextBoxFor(x => x.LSOACode, new { @class = "form-control" })
                     </div>
 

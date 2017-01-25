@@ -11,6 +11,7 @@ using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
+using FluentValidation.Mvc;
 using StackExchange.Profiling;
 using System.Collections.Specialized;
 using System.Linq;
@@ -21,7 +22,7 @@ using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
 {
-    public class EstablishmentController : Controller
+    public class EstablishmentController : EduBaseController
     {
         private IEstablishmentReadService _establishmentReadService;
         private IGroupReadService _groupReadService;
