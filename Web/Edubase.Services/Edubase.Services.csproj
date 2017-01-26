@@ -195,7 +195,6 @@
     <Compile Include="Domain\CompanyProfileDto.cs" />
     <Compile Include="Domain\CompanySearchDto.cs" />
     <Compile Include="Domain\ContactDetailDto.cs" />
-    <Compile Include="Exceptions\DomainException.cs" />
     <Compile Include="Domain\EstablishmentChangeDto.cs" />
     <Compile Include="Domain\EstablishmentDto.cs" />
     <Compile Include="Domain\LAESTAB.cs" />

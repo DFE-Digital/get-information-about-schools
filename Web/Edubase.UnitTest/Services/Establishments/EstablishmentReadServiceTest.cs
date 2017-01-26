@@ -155,7 +155,7 @@ namespace Edubase.UnitTest.Services.Establishments
             var subject = new EstablishmentReadService(new MockApplicationDbContext(), CreateMapper(), 
                 cacheLookupSvc.Object, azs.Object, null, null, null, null);
 
-            var result = await subject.SearchAsync(new EstablishmentSearchPayload("Name", 10, 20), user);
+            var result = await subject.SearchAsync(new EstablishmentSearchPayload(10, 20), user);
 
             var p = new EstablishmentSearchPayload();
             p.Filters.StatusIds = new[]
@@ -187,7 +187,7 @@ namespace Edubase.UnitTest.Services.Establishments
 
             var subject = new EstablishmentReadService(new MockApplicationDbContext(), CreateMapper(), 
                 cacheLookupSvc.Object, azs.Object, null, null, null, null);
-            var result = await subject.SearchAsync(new EstablishmentSearchPayload("Name", 10, 20), user);
+            var result = await subject.SearchAsync(new EstablishmentSearchPayload(10, 20), user);
 
             azs.Verify(x => x.SearchAsync<SearchEstablishmentDocument>(EstablishmentsSearchIndex.INDEX_NAME, null,
                 It.Is<string>(y => y.Equals(AzureSearchEndPoint.ODATA_FILTER_DELETED)), 10, 20,

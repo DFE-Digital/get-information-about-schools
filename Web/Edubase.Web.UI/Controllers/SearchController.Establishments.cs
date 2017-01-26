@@ -27,7 +27,7 @@ namespace Edubase.Web.UI.Controllers
         private Returns<EstablishmentSearchPayload> GetEstablishmentSearchPayload(ViewModel model)
         {
             var retVal = new Returns<EstablishmentSearchPayload>();
-            var payload = new EstablishmentSearchPayload(nameof(SearchEstablishmentDocument.Name), model.StartIndex, model.PageSize);
+            var payload = new EstablishmentSearchPayload(model.StartIndex, model.PageSize);
             var filters = payload.Filters;
 
             if (model.SearchType == ViewModel.eSearchType.Text)
@@ -50,14 +50,13 @@ namespace Edubase.Web.UI.Controllers
             }
             else if (model.SearchType == ViewModel.eSearchType.Location)
             {
-                var coord = LatLon.Parse(model.LocationSearchModel.AutoSuggestValue);
+                var coord = model.LocationSearchCoordinate;
                 if (coord != null)
                 {
                     payload.GeoSearchLocation = coord;
-                    payload.GeoSearchMaxRadiusInKilometres = 10;
-                    payload.GeoSearchOrderByDistance = true;
+                    payload.RadiusInMiles = model.GetRadiusOption();
                 }
-                else retVal.ErrorMessage = "The co-ordinate could not be parsed.";
+                else retVal.ErrorMessage = "The co-ordinate could not be parsed."; // todo: need to support Location-disambiguation page and non-JS scenario.
             }
 
             filters.EducationPhaseIds = model.SelectedEducationPhaseIds.ToArray();
@@ -79,18 +78,13 @@ namespace Edubase.Web.UI.Controllers
             filters.Section41ApprovedIds = model.SelectedSection41Ids.ToArray();
             filters.ProvisionOfficialSixthFormIds = model.SelectedSixthFormProvisionIds.ToArray();
             filters.ProvisionSpecialClassesIds = model.SelectedSpecialClassesProvisionIds.ToArray();
-
-            // todo: combine in an inner ORed odata filter expression 
-            //filters.SEN1Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
-            //filters.SEN2Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
-            //filters.SEN3Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
-            //filters.SEN4Ids = model.SelectedTypeOfSENProvisionIds.ToArray();
-
+            
             payload.SENIds = model.SelectedTypeOfSENProvisionIds.ToArray();
 
             filters.UrbanRuralIds = model.SelectedUrbanRuralIds.ToArray();
             filters.AdministrativeWardIds = model.SelectedWardIds.ToArray();
-            
+
+            payload.SortBy = model.GetSortOption();
 
             return retVal.Set(payload);
         }
@@ -152,7 +146,7 @@ namespace Edubase.Web.UI.Controllers
         {
             using (MiniProfiler.Current.Step($"{GetType().Name}.{nameof(PopulateLookups)}"))
             {
-                vm.LocalAuthorties = (await _lookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
                 vm.GovernorRoles = (await _lookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
                 vm.AdmissionsPolicies = (await _lookupService.AdmissionsPoliciesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
                 vm.BoardingProvisions = (await _lookupService.ProvisionBoardingGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));

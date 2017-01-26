@@ -31,6 +31,8 @@ namespace Edubase.Services.Establishments
     using Ionic.Zip;
     using Lookup;
     using Doc = Search.SearchEstablishmentDocument;
+    using static Search.EstablishmentSearchPayload;
+    using Common.Spatial;
 
     public class EstablishmentReadService : IEstablishmentReadService
     {
@@ -162,20 +164,24 @@ namespace Edubase.Services.Establishments
                 if (payload.Filters.StatusIds.Any())
                 {
                     if (!payload.Filters.StatusIds.All(x => _restrictedStatuses.Any(s => s == x)))
-                        throw new Exception("One or more of the status ids requested are outside the permissions of the current principal");
+                        throw new EdubaseException("One or more of the status ids requested are outside the permissions of the current principal");
                 }
                 else payload.Filters.StatusIds = _restrictedStatuses.ToArray();
             }
 
             var predicates = payload.Filters.ToODataPredicateList(AzureSearchEndPoint.ODATA_FILTER_DELETED);
-            
+
+            string orderByODataExpression = null;
             if (payload.GeoSearchLocation != null)
             {
-                var geoPredicate = new ODataGeographyExpression(payload.GeoSearchLocation);
-                predicates.Add(geoPredicate.ToFilterODataExpression(nameof(SearchEstablishmentDocument.Location), payload.GeoSearchMaxRadiusInKilometres.Value));
-                var expression = geoPredicate.ToODataExpression(nameof(SearchEstablishmentDocument.Location));
-                if (payload.GeoSearchOrderByDistance && !payload.OrderBy.Contains(expression)) payload.OrderBy.Insert(0, expression);
+                var distance = new Distance(payload.RadiusInMiles ?? 3);
+                var geoPredicate = new ODataGeographyExpression(payload.GeoSearchLocation, nameof(Doc.Location));
+                predicates.Add(geoPredicate.ToFilterODataExpression(distance.Kilometres));
+                if(payload.SortBy == eSortBy.Distance) orderByODataExpression = geoPredicate.ToODataExpression();
             }
+
+            if (payload.SortBy.OneOfThese(eSortBy.NameAlphabeticalAZ, eSortBy.NameAlphabeticalZA))
+                orderByODataExpression = string.Concat(nameof(Doc.NameDistilled), " ", (payload.SortBy == eSortBy.NameAlphabeticalAZ ? "asc" : "desc"));
 
             if (payload.SENIds.Any())
             {
@@ -188,13 +194,13 @@ namespace Edubase.Services.Establishments
 
             var oDataFilterExpression = string.Join(" and ", predicates);
 
-            return await _azureSearchService.SearchAsync<SearchEstablishmentDocument>(EstablishmentsSearchIndex.INDEX_NAME, 
-                payload.Text, 
-                oDataFilterExpression, 
-                payload.Skip, 
-                payload.Take,  
-                new[] { nameof(SearchEstablishmentDocument.NameDistilled) }.ToList(), 
-                payload.OrderBy); 
+            return await _azureSearchService.SearchAsync<Doc>(EstablishmentsSearchIndex.INDEX_NAME,
+                payload.Text,
+                oDataFilterExpression,
+                payload.Skip,
+                payload.Take,
+                new List<string> { nameof(Doc.NameDistilled) },
+                new List<string> { orderByODataExpression });
         }
 
         private bool IsRoleRestrictedOnStatus(IPrincipal principal)

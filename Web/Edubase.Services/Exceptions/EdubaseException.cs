@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.Exceptions
 {
+    /// <summary>
+    /// Represents an exception that's purposeful; i.e., as a result of a business rule.
+    /// </summary>
 
     [Serializable]
     public class EdubaseException : Exception

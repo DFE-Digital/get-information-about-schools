@@ -55,7 +55,8 @@ namespace Edubase.Web.UI.Controllers
         {
             if (model.LocalAuthorityToRemove.HasValue)
             {
-                return Redirect("/?" + QueryStringHelper.ToQueryString("l", model.RemoveLocalAuthorityId(model.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
+                return Redirect("/?" + QueryStringHelper.ToQueryString(ViewModel.BIND_ALIAS_LAIDS, 
+                    model.RemoveLocalAuthorityId(model.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
             }
             else if (model.SearchType == ViewModel.eSearchType.LocalAuthorityDisambiguation)
             {
@@ -82,7 +83,8 @@ namespace Edubase.Web.UI.Controllers
         {
             var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
             var localAuthority = localAuthorities.FirstOrDefault(x => x.Name.Equals(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase));
-            if (localAuthority != null) return Redirect("/?" + QueryStringHelper.ToQueryString("l", model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
+            if (localAuthority != null) return Redirect("/?" + QueryStringHelper.ToQueryString(ViewModel.BIND_ALIAS_LAIDS, 
+                model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
             else
             {
                 var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(model.SelectedLocalAuthorityIds, model.LocalAuthorityToAdd,

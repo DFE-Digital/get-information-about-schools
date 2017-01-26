@@ -39,9 +39,16 @@
         var $selectedFilters = $('#additional-filter-wrap').find('input:checked');
 
         $additionalFilters.addClass('hidden');
+
+        var $ele = $('#selected-search-filters');
+        $ele.val("");
+
         $selectedFilters.each(function () {
             var idToShow = $(this).val();
             $(idToShow).removeClass('hidden');
+            var bindAlias = $(idToShow).data('bind-alias'); // bind-alias is a one-letter specifier that the server-side uses to know which extra filters were selected, and can open them on the next page load.
+            var specifier = $ele.val() + bindAlias;
+            $ele.val(specifier); 
         });
 
     });

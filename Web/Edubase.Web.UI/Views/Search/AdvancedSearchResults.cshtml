@@ -1,7 +1,9 @@
 ﻿@using Edubase.Web.UI.Models.Search
 @using Edubase.Web.UI.Helpers
+@using Edubase.Common
 @using M = Edubase.Web.UI.Models.Search.AdvancedSearchViewModel;
-@model AdvancedSearchViewModel
+@using P = Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
+@model M
 @{
     ViewBag.Title = string.Format("Search results for '{0}'", Model.TextSearchModel.Text);
     ViewBag.PageClass = "search-results";
@@ -73,6 +75,15 @@
                 <div class="filter-divider"></div>
                 <form method="get" action="@Url.Action("Results", "Search")">
 
+                    @if (Model.SearchType == M.eSearchType.Location)
+                    {
+                        @RadiusSelector("Within radius of")
+                        <div class="filter-divider"></div>
+                    }
+
+                    @SortBySelector("Sort by")
+                    <div class="filter-divider"></div>
+                    
                     @Selector("Provider type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
                     <div class="filter-divider"></div>
 
@@ -82,7 +93,7 @@
                     @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases, Model.SelectedEducationPhaseIds)
                     <div class="filter-divider"></div>
 
-                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorties, Model.SelectedLocalAuthorityIds)
+                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities, Model.SelectedLocalAuthorityIds)
                     <div class="filter-divider"></div>
             
                     @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
@@ -90,58 +101,58 @@
                     
                     <!-- begin opted in filters -->
 
-                    @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies, Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", "false")
+                    @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies, Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions, Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", "false")
+                    @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions, Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses, Model.SelectedDioceseIds, "additional-search-critera hidden", "false")
+                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses, Model.SelectedDioceseIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts, Model.SelectedDistrictIds, "additional-search-critera hidden", "false")
+                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts, Model.SelectedDistrictIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes, Model.SelectedFETypeIds, "additional-search-critera hidden", "false")
+                    @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes, Model.SelectedFETypeIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders, Model.SelectedGenderIds, "additional-search-critera hidden", "false")
+                    @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders, Model.SelectedGenderIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs, Model.SelectedGORIds, "additional-search-critera hidden", "false")
+                    @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs, Model.SelectedGORIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions, Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", "false")
+                    @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions, Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies, Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", "false")
+                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies, Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses, Model.SelectedReligiousEthosIds, "additional-search-critera hidden", "false")
+                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses, Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions, Model.SelectedRSCRegionIds, "additional-search-critera hidden", "false")
+                    @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions, Model.SelectedRSCRegionIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations, Model.SelectedSection41Ids, "additional-search-critera hidden", "false")
+                    @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations, Model.SelectedSection41Ids, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions, Model.SelectedSixthFormProvisionIds, "additional-search-critera hidden", "false")
+                    @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions, Model.SelectedSixthFormProvisionIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions, Model.SelectedSpecialClassesProvisionIds, "additional-search-critera hidden", "false")
+                    @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions, Model.SelectedSpecialClassesProvisionIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions, Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", "false")
+                    @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions, Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds, "additional-search-critera hidden", "false")
+                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
 
-                    @Selector("Ward", M.BIND_ALIAS_WARD, Model.Wards, Model.SelectedWardIds, "additional-search-critera hidden", "false")
+                    @Selector("Ward", M.BIND_ALIAS_WARD, Model.Wards, Model.SelectedWardIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
                     
-                    <a href="#" class="add-filters-link ">Add more filters</a>
+                    <a href="#" class="add-filters-link">Add more filters</a>
 
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
 
@@ -156,8 +167,10 @@
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                     }
 
-                    @Html.HiddenFor(x => x.SearchType)
+                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
 
+                    @Html.HiddenFor(x=>x.SearchType)
+                    
                 </form>
             </div>
 
@@ -188,12 +201,26 @@
                         <dl>
                             <dt>Address:</dt>
                             <dd>@result.GetAddress()</dd>
+                            <dt>Phase / type:</dt>
+                            <dd>
+                                @(Model.EducationPhases.FirstOrDefault(x => x.Id == result.EducationPhaseId)?.Name ?? "Not recorded"),
+                                @(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == result.TypeId)?.Name ?? "Not recorded")
+                            </dd>
                             <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                            <dd> @result.Urn</dd>
+                            <dd>@result.Urn</dd> 
+                            <!-- TODO: Jon: pls make urn and laestab all on one line -->
                             <dt>LAESTAB:</dt>
                             <dd>@result.GetLAESTAB()</dd>
                             <dt>Status:</dt>
-                            <dd>@(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "--")</dd>
+                            <dd>@(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "Not recorded")</dd>
+                            <dt>Local authority name:</dt>
+                            <dd>@(Model.LocalAuthorities.FirstOrDefault(x => x.Id == result.LocalAuthorityId)?.Name ?? "Not recorded")</dd>
+                            @if (Model.SearchType == M.eSearchType.Location)
+                            {
+                                var distanceInMiles = Math.Round(Edubase.Common.Spatial.DistanceCalculator.Calculate(Model.LocationSearchCoordinate, result.Coordinate).Miles, 2);
+                                <dt>Distance:</dt>
+                                <dd>@distanceInMiles mile@(Html.Conditional(distanceInMiles != 1, "s"))</dd>
+                            }
                         </dl>
                     </li>
                 }
@@ -215,19 +242,18 @@
 </div>
 
 
-@helper Selector(
-    string label,
-    string name,
-    IEnumerable<LookupItemViewModel> items, List<int> selectedItems,
-    string additionalClassName = "",
-    string closedOnLoad = "true")
+@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
 {
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@closedOnLoad"
-         id="option-select-@label.ToLower().Replace(" ", "-")">
+    var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
+    if (!closed)
+    {
+        additionalClassName = additionalClassName.RemoveSubstring("hidden");
+    }
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
+         id="option-select-@label.ToLower().Replace(" ", "-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter"></div>
-            
         </div>
         <a href="#" class="clear-selections">Clear</a>
         <div class="options-container" id="">
@@ -246,5 +272,43 @@
             </div>
         </div>
     </div>
+}
 
+
+@helper SortBySelector(string label)
+{
+    <div class="govuk-option-select js-collapsible"
+         id="option-select-@label.ToLower().Replace(" ", "-")">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">@label</div>
+            <div class="js-selected-counter"></div>
+        </div>
+        <select class="form-control" name="@M.BIND_ALIAS_SORT_BY">
+            @if (Model.SearchType == M.eSearchType.Location)
+            {
+                <option value="d" @Html.Conditional(Model.GetSortOption() == P.eSortBy.Distance, "selected")>distance</option>
+            }
+            <option value="a" @Html.Conditional(Model.GetSortOption() == P.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
+            <option value="z" @Html.Conditional(Model.GetSortOption() == P.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
+        </select>
+    </div>
+}
+
+@helper RadiusSelector(string label)
+{
+    
+    <div class="govuk-option-select js-collapsible"
+            id="option-select-@label.ToLower().Replace(" ", "-")">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">@label</div>
+            <div class="js-selected-counter"></div>
+        </div>
+        <select class="form-control" name="@M.BIND_ALIAS_RADIUS">
+            @foreach (var value in Model.GetRadiusOptions())
+            {
+                <option value="@value" @Html.Conditional(Model.GetRadiusOption() == value, "selected")>@value mile@(Html.Conditional(value != 1, "s"))</option>
+            }
+        </select>
+    </div>
+    
 }

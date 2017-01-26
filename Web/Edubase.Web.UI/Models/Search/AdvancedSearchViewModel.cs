@@ -4,6 +4,10 @@ using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using System;
 using System.Collections.Generic;
+using static Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
+using MoreLinq;
+using System.Linq;
+using Edubase.Common.Spatial;
 
 namespace Edubase.Web.UI.Models.Search
 {
@@ -15,6 +19,15 @@ namespace Edubase.Web.UI.Models.Search
             { 6, eTextSearchType.URN },
             { 7, eTextSearchType.LAESTAB },
             { 8, eTextSearchType.UKPRN }
+        };
+
+        private readonly int[] _radiuses = new int[] { 1, 3, 5, 10, 15, 20, 25 };
+
+        private Dictionary<char, eSortBy> _sortByMap = new Dictionary<char, eSortBy>
+        {
+            { 'd', eSortBy.Distance },
+            { 'a', eSortBy.NameAlphabeticalAZ },
+            { 'z', eSortBy.NameAlphabeticalZA }
         };
 
         public const string BIND_ALIAS_TYPEIDS = "a";
@@ -31,7 +44,7 @@ namespace Edubase.Web.UI.Models.Search
         public const string BIND_ALIAS_GENDER = "l";
         public const string BIND_ALIAS_GOR = "m";
         public const string BIND_ALIAS_NURSERY = "n";
-        public const string BIND_ALIAS_RATING = "o"; // TODO: need more info!
+        public const string BIND_ALIAS_RATING = "o"; 
         public const string BIND_ALIAS_PARLCONST = "p";
         public const string BIND_ALIAS_RELETHOS = "q";
         public const string BIND_ALIAS_RSCREG = "r";
@@ -41,6 +54,9 @@ namespace Edubase.Web.UI.Models.Search
         public const string BIND_ALIAS_TYPEOFSENPRV = "v";
         public const string BIND_ALIAS_URBRUR = "w";
         public const string BIND_ALIAS_WARD = "x";
+        public const string BIND_ALIAS_SELECTED_SEARCH_FILTERS = "y";
+        public const string BIND_ALIAS_SORT_BY = "z";
+        public const string BIND_ALIAS_RADIUS = "aa";
 
         public class Payload
         {
@@ -76,6 +92,7 @@ namespace Edubase.Web.UI.Models.Search
             EstablishmentName,
             UKPRN
         }
+        
 
         #endregion
 
@@ -92,9 +109,37 @@ namespace Edubase.Web.UI.Models.Search
         public int StartIndex { get; set; }
         public bool HasError => !Error.IsNullOrEmpty();
 
+        public int[] GetRadiusOptions() => _radiuses;
+
+        [BindAlias(BIND_ALIAS_RADIUS)]
+        public int? RadiusInMiles { get; set; }
+
+        [BindAlias(BIND_ALIAS_SORT_BY)]
+        public char? SortBy { get; set; }
+
+        public eSortBy GetSortOption()
+        {
+            var retVal = SortBy.HasValue ? _sortByMap.Get(SortBy.Value, GetDefaultSortOption()) : GetDefaultSortOption();
+            if (SearchType != eSearchType.Location && retVal == eSortBy.Distance) retVal = eSortBy.NameAlphabeticalAZ;
+            return retVal;
+        }
+
+        private eSortBy GetDefaultSortOption() => SearchType == eSearchType.Location ? eSortBy.Distance : eSortBy.NameAlphabeticalAZ;
+        
+
+        public int GetRadiusOption()
+        {
+            if (!RadiusInMiles.HasValue || !_radiuses.Contains(RadiusInMiles.Value)) return _radiuses[2];
+            else return RadiusInMiles.Value;
+        }
+
+        private Lazy<LatLon> _coordinate;
+
+        public LatLon LocationSearchCoordinate => _coordinate.Value;
+
         public AdvancedSearchViewModel()
         {
-
+            _coordinate = new Lazy<LatLon>(() => LatLon.Parse(LocationSearchModel.AutoSuggestValue));
         }
 
         public SearchModel GovernorSearchModel { get; set; } = new SearchModel();
@@ -106,6 +151,9 @@ namespace Edubase.Web.UI.Models.Search
         public Payload GroupSearchModel { get; set; } = new Payload();
 
         public eSearchType SearchType { get; set; }
+
+        [BindAlias(BIND_ALIAS_SELECTED_SEARCH_FILTERS)]
+        public string SelectedExtraSearchFilters { get; set; }
 
         public eSearchCollection SearchCollection => SearchType == eSearchType.Governor ? eSearchCollection.Governors : (SearchType == eSearchType.Group ? eSearchCollection.Groups : eSearchCollection.Establishments);
         
@@ -124,7 +172,7 @@ namespace Edubase.Web.UI.Models.Search
         [BindAlias(BIND_ALIAS_PHASEIDS)]
         public List<int> SelectedEducationPhaseIds { get; set; } = new List<int>();
 
-        public IEnumerable<LookupItemViewModel> LocalAuthorties { get; set; }
+        public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }
 
         [BindAlias(BIND_ALIAS_LAIDS)]
         public List<int> SelectedLocalAuthorityIds { get; set; } = new List<int>();

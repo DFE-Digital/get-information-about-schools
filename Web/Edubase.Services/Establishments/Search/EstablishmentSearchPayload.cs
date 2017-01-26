@@ -10,14 +10,31 @@ namespace Edubase.Services.Establishments.Search
 {
     public class EstablishmentSearchPayload
     {
+        public enum eSortBy
+        {
+            /// <summary>
+            /// The distance from the centre-point of the location supplied (nearest first)
+            /// </summary>
+            Distance,
+
+            /// <summary>
+            /// Alphabetical on the Establishment name (ascending)
+            /// </summary>
+            NameAlphabeticalAZ,
+
+            /// <summary>
+            /// Alphabetical on the Establishment name (descending)
+            /// </summary>
+            NameAlphabeticalZA
+        }
+
         public EstablishmentSearchPayload()
         {
 
         }
 
-        public EstablishmentSearchPayload(string orderBy, int skip, int take)
+        public EstablishmentSearchPayload(int skip, int take)
         {
-            OrderBy = new List<string> { orderBy };
             Skip = skip;
             Take = take;
         }
@@ -30,14 +47,11 @@ namespace Edubase.Services.Establishments.Search
 
         public int Take { get; set; } = 10;
 
-        public int? GeoSearchMaxRadiusInKilometres { get; set; } = 10;
+        public int? RadiusInMiles { get; set; }
 
         public LatLon GeoSearchLocation { get; set; }
 
-        public bool GeoSearchOrderByDistance { get; set; }
-        
-
-        public IList<string> OrderBy { get; set; } = new List<string>();
+        public eSortBy SortBy { get; set; }
 
         public int[] SENIds { get; set; } = new int[0];
     }

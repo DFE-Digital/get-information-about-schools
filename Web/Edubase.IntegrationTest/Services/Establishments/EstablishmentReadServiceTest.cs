@@ -20,7 +20,7 @@ namespace Edubase.IntegrationTest.Services.Establishments
         {
             var svc = new EstablishmentReadService(null, null, null, 
                 new AzureSearchEndPoint(AzureSearchEndPointTest.GetAZSConnStr()), null, null, null, null);
-            var result = await svc.SearchAsync(new EstablishmentSearchPayload(nameof(SearchEstablishmentDocument.Name), 0, 200)
+            var result = await svc.SearchAsync(new EstablishmentSearchPayload(0, 200)
             {
                 Text = "Academy",
                 Filters = new EstablishmentSearchFilters { EstablishmentTypeGroupIds = new int[] { (int)eLookupEstablishmentTypeGroup.Academies } }
@@ -33,11 +33,10 @@ namespace Edubase.IntegrationTest.Services.Establishments
         [Test]
         public async Task SearchAsync_WithLocation_Test()
         {
-            var payload = new EstablishmentSearchPayload(nameof(SearchEstablishmentDocument.Name), 0, 200);
+            var payload = new EstablishmentSearchPayload(0, 200);
 
             payload.GeoSearchLocation = new LatLon(50.5811800, -3.4664400);
-            payload.GeoSearchOrderByDistance = true;
-            payload.GeoSearchMaxRadiusInKilometres = 20;
+            payload.RadiusInMiles = 20;
 
             var svc = new EstablishmentReadService(null, null, null, new AzureSearchEndPoint(AzureSearchEndPointTest.GetAZSConnStr()), null, null, null, null);
             var result = await svc.SearchAsync(payload, new GenericPrincipal(new GenericIdentity(""), new string[0]));

@@ -56,7 +56,7 @@
                                         @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggest?text="})
                                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                         <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Text">Search</button>
-                                        <input type="hidden" name="g" value="true" />
+                                        <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                                     </div>
                                 }
                             </li>
@@ -73,7 +73,7 @@
                                         @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "form-control auto-clear", autocomplete = "off"})
                                         @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
                                         <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Location">Search</button>
-                                        <input type="hidden" name="g" value="true" />
+                                        <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                                     </div>
 
                                 }
@@ -90,7 +90,7 @@
                                         <span class="search-hint">Enter a Local authority</span>
                                         @foreach (var id in Model.SelectedLocalAuthorityIds)
                                         {
-                                            var la = Model.LocalAuthorties.First(x => x.Id == id);
+                                            var la = Model.LocalAuthorities.First(x => x.Id == id);
                                             <input value="@la.Name" disabled="disabled" class="form-control" />
                                             <button type="submit" class="link-button font-small" name="LocalAuthorityToRemove" value="@id">Remove</button>
                                             <br /><br />
@@ -102,7 +102,7 @@
                                         <br />
                                         <br />
 
-                                        <input type="hidden" name="g" value="true" />
+                                        <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                                         <button type="submit" class="button button-next button-below" name="searchtype" value="@VM.eSearchType.ByLocalAuthority">Search</button>
                                     </div>
                                 }
@@ -193,7 +193,7 @@
     </script>
     @*<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw"></script>*@
     <script type="text/javascript">
-        window.localAuthorities = @Html.Json(Model.LocalAuthorties);
+        window.localAuthorities = @Html.Json(Model.LocalAuthorities);
     </script>
 }
 
