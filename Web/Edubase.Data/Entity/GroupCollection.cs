@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity.ComplexTypes;
+﻿using Edubase.Common;
+using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Data.Entity.Lookups;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,21 @@ namespace Edubase.Data.Entity
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int GroupUID { get; set; }
-        public string Name { get; set; }
+
+        private string _name;
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                NameDistilled = value.Distill();
+            }
+        }
+
+        public string NameDistilled { get; set; }
+
         public string CompaniesHouseNumber { get; set; }
         public LookupGroupType GroupType { get; set; }
         public int? GroupTypeId { get; set; }
@@ -24,6 +39,9 @@ namespace Edubase.Data.Entity
         [Index(IsUnique=false), StringLength(400)]
         public string GroupId { get; set; }
         public int EstablishmentCount { get; set; }
+
+        public LocalAuthority LocalAuthority { get; set; }
+        public int? LocalAuthorityId { get; set; }
 
         public override int? GetId() => GroupUID;
     }

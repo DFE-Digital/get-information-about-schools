@@ -42,8 +42,15 @@ namespace Edubase.Web.UI
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
             Database.SetInitializer(m);
 
-            FluentValidationModelValidatorProvider.Configure();
+            //FluentValidationModelValidatorProvider.Configure();
+
+            var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.Container));
+            DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
+            fluentValidationModelValidatorProvider.AddImplicitRequiredValidator = false;
+            ModelValidatorProviders.Providers.Add(fluentValidationModelValidatorProvider);
+
             FlushLogMessages();
+
             ModelBinders.Binders.DefaultBinder = new Helpers.ModelBinding.DefaultModelBinderEx();
 
             MiniProfiler.Settings.Results_Authorize = IsUserAllowedToSeeMiniProfilerUI;
@@ -57,13 +64,13 @@ namespace Edubase.Web.UI
                 var task = scope.Resolve<IMessageLoggingService>().FlushAsync();
             }
 
-            var interval = RandomNumber.Next(10, 30);
+            var interval = RandomNumber.Next(10, 30); // random so that in a webfarm, where nodes start simultaneously, flushing is staggered across a 30 second time window.
 #if (DEBUG)
             interval = 5;
 #endif
             MemoryCache.Default.Set(new CacheItem(nameof(FlushLogMessages), 0), new CacheItemPolicy()
             {
-                AbsoluteExpiration = DateTime.UtcNow.AddSeconds(interval), // random so that in a webfarm, where nodes start simultaneously, flushing is staggered across a 30 second time window.
+                AbsoluteExpiration = DateTime.UtcNow.AddSeconds(interval), 
                 RemovedCallback = FlushLogMessages
             });
         }

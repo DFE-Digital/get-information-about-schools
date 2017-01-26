@@ -25,8 +25,21 @@ namespace Edubase.Data.Entity
         
         public int? EstablishmentNumber { get; set; }
 
-        
-        public string Name { get; set; }
+
+        private string _name;
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                NameDistilled = StringUtil.DistillEstablishmentName(value);
+            }
+        }
+
+        public string NameDistilled { get; set; }
+
 
         [Column("Type")]
         public LookupEstablishmentType EstablishmentType { get; set; }

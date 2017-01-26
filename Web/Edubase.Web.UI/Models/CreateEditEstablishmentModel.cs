@@ -1,25 +1,13 @@
-﻿using Edubase.Data.Entity;
-using Edubase.Web.UI.Models.Validators;
-using FluentValidation.Attributes;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
-using System.Web.Mvc;
-using System.Data.Entity;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Collections.Generic;
-using Edubase.Services;
-using Edubase.Services.Establishments;
-using Edubase.Common;
+﻿using Edubase.Common;
 using Edubase.Services.Establishments.DisplayPolicies;
-using Edubase.Web.UI.Models.Establishments;
 using Edubase.Services.Establishments.Models;
+using Edubase.Web.UI.Models.Establishments;
+using System;
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
 {
-    [Validator(typeof(CreateEditEstablishmentModelValidator))]
     public class CreateEditEstablishmentModel
     {
         private static readonly IDictionary<byte?, string> _ofstedRatingsLookup =

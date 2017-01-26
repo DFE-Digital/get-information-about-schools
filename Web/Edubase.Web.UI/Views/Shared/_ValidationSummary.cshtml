@@ -1,14 +1,16 @@
 ﻿@model ModelStateDictionary
+@{ 
+    var validationResult = (FluentValidation.Results.ValidationResult) ViewBag.FVErrors;
+}
 
 @if (!Model.IsValid)
 {
     <div class="error-summary">
-        <h2 class="heading-medium error-summary-heading">Please correct the following error(s).</h2>
+        <h2 class="heading-medium error-summary-heading">Validation error</h2>
         <ul class="error-summary-list">
-            @foreach (var modelError in Model.SelectMany(keyValuePair => keyValuePair.Value.Errors))
-            {
-                <!-- in an ideal world the target for this link would be the associated form field-->
-                <li class="error-message"><a href="#">@modelError.ErrorMessage</a></li>
+            @foreach (var modelError in validationResult.Errors)
+            { 
+                <li class="error-message"><a href="#@modelError.PropertyName">@(modelError.CustomState?.ToString() ?? modelError.ErrorMessage)</a></li>
             }
         </ul>
     </div>

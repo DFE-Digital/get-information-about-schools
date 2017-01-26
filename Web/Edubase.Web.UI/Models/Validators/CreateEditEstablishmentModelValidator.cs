@@ -1,31 +1,41 @@
-﻿using Edubase.Services;
-using Edubase.Services.Establishments;
-using Edubase.Services.Establishments.Enums;
+﻿using Edubase.Services.Lookup;
 using FluentValidation;
+using System.Linq;
+using Edubase.Common;
+using FluentValidation.Results;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentValidation.Mvc;
+using System;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models.Validators
 {
-    public class CreateEditEstablishmentModelValidator : AbstractValidator<CreateEditEstablishmentModel>
+    public class CreateEditEstablishmentModelValidator : AbstractValidator<CreateEditEstablishmentModel>, IValidatorInterceptor
     {
-        public CreateEditEstablishmentModelValidator()
+        private ICachedLookupService _lookupService;
+
+        public CreateEditEstablishmentModelValidator(ICachedLookupService lookupService)
         {
+            _lookupService = lookupService;
+
             When(x => x.Action == CreateEditEstablishmentModel.eAction.Save, () =>
             {
                 ConfigureRules();
+
                 RuleSet("oncreate", () =>
                 {
                     ConfigureRules();
                     RuleFor(x => x.OpenDate).Must(x => x.IsNotEmpty()).WithMessage("Please specify an Open Date");
                     RuleFor(x => x.ReasonEstablishmentOpenedId).NotEmpty().WithMessage("Reason opened should be specified");
                     RuleFor(x => x.EducationPhaseId).NotEmpty().WithMessage("Phase should be set");
-                    ConfigureLAEstabRule();
                 });
             });
 
             When(x => x.Action == CreateEditEstablishmentModel.eAction.AddLinkedSchool, () =>
             {
                 RuleFor(x => x.LinkedDateToAdd).Must(x => x.IsValid()).When(x => x.LinkedDateToAdd.IsNotEmpty()).WithMessage("Linked date is invalid");
-                RuleFor(x => x.LinkedDateToAdd).Must(x => x.IsNotEmpty()).WithMessage("Please specify a Linked date ");
+                RuleFor(x => x.LinkedDateToAdd).Must(x => x.IsNotEmpty()).WithMessage("Please specify a Linked date");
                 RuleFor(x => x.LinkTypeToAdd).NotNull().WithMessage("Please specify a Link Type");
             });
         }
@@ -37,29 +47,37 @@ namespace Edubase.Web.UI.Models.Validators
             RuleFor(x => x.LocalAuthorityId).NotEmpty().WithMessage("Local authority is invalid");
             RuleFor(x => x.TypeId).NotEmpty().WithMessage("Type is invalid");
             RuleFor(x => x.StatusId).NotEmpty().WithMessage("Status is invalid");
+
+            RuleFor(x => x.LSOACode).MustAsync(async (x, ct) => (await _lookupService.LSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
+                .When(x => !x.LSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithState(x => "Area not found for Middle Super Output Area (MSOA)");
+
+            RuleFor(x => x.MSOACode).MustAsync(async (x, ct) => (await _lookupService.MSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
+                .When(x => !x.MSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithState(x => "Area not found for Lower Super Output Area (LSOA)");
+            
         }
 
-        private void ConfigureLAEstabRule()
-        {
-            //When(x => x.TypeId.HasValue && x.EducationPhaseId.HasValue, () =>
-            //{
-            //    When(x => new LAESTABService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstabNumberEntryPolicy.UserDefined, () =>
-            //    {
-            //        RuleFor(x => x.LAESTAB)
-            //        .Cascade(CascadeMode.StopOnFirstFailure)
-            //        .NotEmpty()
-            //        .WithMessage("LAESTAB is invalid")
-            //        .Must((m, v) => v.ToString().StartsWith(m.LocalAuthorityId.ToString()))
-            //        .WithMessage("LAESTAB should be a numeric value of LA Code + Establishment Number")
-            //        .Must(x => x.ToString().Length == 7)
-            //        .WithMessage("The LAESTAB should be 7 characters long");
-            //    });
 
-            //    When(x => new LAESTABService().GetEstabNumberEntryPolicy(x.TypeId.Value, x.EducationPhaseId.Value) == EstabNumberEntryPolicy.NonePermitted, () =>
-            //    {
-            //        RuleFor(x => x.LAESTAB).Empty().WithMessage("The LAESTAB should be empty for this combination of phase and establishment type.");
-            //    });
-            //});
+        public override ValidationResult Validate(ValidationContext<CreateEditEstablishmentModel> context)
+        {
+            return base.Validate(context);
+        }
+
+        public override ValidationResult Validate(CreateEditEstablishmentModel instance)
+        {
+            return base.Validate(instance);
+        }
+
+        public override Task<ValidationResult> ValidateAsync(ValidationContext<CreateEditEstablishmentModel> context, CancellationToken cancellation = default(CancellationToken))
+        {
+            return base.ValidateAsync(context, cancellation);
+        }
+
+        public ValidationContext BeforeMvcValidation(ControllerContext controllerContext, ValidationContext validationContext) => validationContext;
+
+        public ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result)
+        {
+            controllerContext.Controller.ViewBag.FVErrors = result;
+            return result;
         }
     }
 }

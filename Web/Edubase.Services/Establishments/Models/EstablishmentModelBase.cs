@@ -13,6 +13,7 @@ namespace Edubase.Services.Establishments.Models
         public int? EstablishmentNumber { get; set; }
 
         public string Name { get; set; }
+        public string NameDistilled { get; set; }
 
         public int? StatusId { get; set; }
 

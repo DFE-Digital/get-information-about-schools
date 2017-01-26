@@ -136,33 +136,6 @@ namespace Edubase.Services.Establishments
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
         {
             return Enumerable.Empty<EstablishmentChangeDto>();
-
-            //if (!user.Identity.IsAuthenticated) throw new PermissionDeniedException("Principal not authorised to view change history");
-
-            //var changes = await _dbContext.EstablishmentChangeHistories
-            //        .Include(x => x.OriginatorUser)
-            //        .Include(x => x.ApproverUser)
-            //        .Where(x => x.Urn == urn && x.IsDeleted == false)
-            //        .OrderByDescending(x => x.EffectiveDateUtc)
-            //        .Take(take)
-            //        .Select(x => new EstablishmentChangeDto
-            //        {
-            //            PropertyName = x.Name,
-            //            ApproverUserId = x.ApproverUserId,
-            //            EffectiveDateUtc = x.EffectiveDateUtc,
-            //            Id = x.Id,
-            //            NewValue = x.NewValue,
-            //            OldValue = x.OldValue,
-            //            OriginatorUserId = x.OriginatorUserId,
-            //            RequestedDateUtc = x.RequestedDateUtc,
-            //            Urn = x.Urn,
-            //            ApproverUserName = x.ApproverUser.UserName,
-            //            OriginatorUserName = x.OriginatorUser.UserName
-            //        }).ToArrayAsync();
-
-            //GetLookupNames(changes);
-
-            //return changes;
         }
         
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
@@ -172,7 +145,7 @@ namespace Edubase.Services.Establishments
             {
                 oDataFilters.Add(ODataUtil.Or(nameof(Doc.StatusId), _restrictedStatuses));
             }
-            return await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text,oDataFilters.ToString() , take);
+            return await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text, oDataFilters.ToString(), take);
         }
 
         public int[] GetPermittedStatusIds(IPrincipal principal)
@@ -219,8 +192,8 @@ namespace Edubase.Services.Establishments
                 payload.Text, 
                 oDataFilterExpression, 
                 payload.Skip, 
-                payload.Take, 
-                new[] { nameof(SearchEstablishmentDocument.Name) }.ToList(), 
+                payload.Take,  
+                new[] { nameof(SearchEstablishmentDocument.NameDistilled) }.ToList(), 
                 payload.OrderBy); 
         }
 

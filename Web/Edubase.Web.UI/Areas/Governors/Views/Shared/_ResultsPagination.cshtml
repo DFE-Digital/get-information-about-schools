@@ -3,7 +3,7 @@
     var startResult = @Model.StartIndex + 1;
     var endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
     var currentPage = @Model.StartIndex / @Model.PageSize;
-    var totalPages = @Model.Results.Count / @Model.PageSize;
+    var totalPages = @Model.Count / @Model.PageSize;
     var action = ViewContext.RouteData.Values["action"].ToString();
     var maxPages = 10;
     var paginationStart = 0;

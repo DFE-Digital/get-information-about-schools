@@ -27,8 +27,6 @@ namespace Edubase.Data
             : null as LatLon;
 
         public static DataTable Get<T>(this Dictionary<Type, DataTable> dictionary) => dictionary.Get(typeof(T));
-
-        
     }
     
 }

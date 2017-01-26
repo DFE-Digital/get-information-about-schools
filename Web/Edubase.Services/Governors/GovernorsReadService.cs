@@ -84,9 +84,8 @@ namespace Edubase.Services.Governors
         {
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
 
-            Func<string, string> titlise = System.Globalization.CultureInfo.CurrentUICulture.TextInfo.ToTitleCase;
-            if (payload.FirstName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_FirstName), titlise(payload.FirstName.ToLower()));
-            if (payload.LastName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_LastName), titlise(payload.LastName.ToLower()));
+            if (payload.FirstName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_FirstNameDistilled), payload.FirstName.Distill());
+            if (payload.LastName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_LastNameDistilled), payload.LastName.Distill());
             if (payload.RoleId.HasValue) oDataFilters.Add(nameof(SearchGovernorDocument.RoleId), payload.RoleId);
 
             var date = payload.IncludeHistoric ? DateTime.UtcNow.Date.AddYears(-1) : DateTime.UtcNow.Date;

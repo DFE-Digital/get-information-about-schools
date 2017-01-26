@@ -198,7 +198,10 @@ namespace Edubase.Services.Groups.Downloads
             fields.Add(item.OpenDate?.ToString("dd/MM/yyyy"));
             fields.Add(item.Address);
             fields.Add(item.ManagerEmailAddress);
-            fields.Add(""); // todo: Need to finish story 6597 first; at the moment there's no column for this.
+
+            if (item.LocalAuthorityId.HasValue) fields.Add((await _cachedLookupService.LocalAuthorityGetAllAsync()).FirstOrDefault(x => x.Id == item.LocalAuthorityId)?.Name);
+            else fields.Add(string.Empty);
+
             fields.Add(item.GroupUID.ToString());
             fields.Add(item.GroupId);
             if (principal.Identity.IsAuthenticated)

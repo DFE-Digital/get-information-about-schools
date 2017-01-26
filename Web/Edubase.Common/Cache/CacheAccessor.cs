@@ -110,6 +110,12 @@
         
         public static ICacheAccessor Create() => new CacheAccessor(new JsonConverterCollection()) as ICacheAccessor;
 
+        public CacheAccessor SetJsonConverterCollection(JsonConverterCollection jsonConverterCollection)
+        {
+            _jsonConverterCollection = jsonConverterCollection;
+            return this;
+        }
+
         #region Async methods
 
         /// <summary>
@@ -591,7 +597,7 @@
             Log(eCacheEvent.KeyValueGotFromMemoryAttempt, key);
 
             #region Fast uncloned cache
-            if (_config.IsDistributedCachingEnabled && _fastMemcache.Contains(key))
+            if (_fastMemcache.Contains(key))
             {
                 dto.Data = (T) _fastMemcache.Get(key);
                 dto.IsFromInMemoryCache = true;
@@ -602,7 +608,7 @@
 
 
             byte[] buffer = null;
-            if (_config.IsDistributedCachingEnabled && (buffer = (byte[]) _memoryCache.Get(key)) != null)
+            if ((buffer = (byte[]) _memoryCache.Get(key)) != null)
             {
                 dto.Data = FromByteBuffer<T>(buffer, true).Object;
                 dto.IsFromInMemoryCache = true;

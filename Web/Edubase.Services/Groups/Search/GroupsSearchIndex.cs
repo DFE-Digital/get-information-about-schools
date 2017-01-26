@@ -33,6 +33,19 @@ namespace Edubase.Services.Groups.Search
             {
                 Name = nameof(GroupCollection.Name),
                 IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = true,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(string)
+            });
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = nameof(GroupCollection.NameDistilled),
+                IsFacetable = false,
                 IsSearchable = true,
                 IsFilterable = true,
                 IsRetrievable = true,
@@ -41,7 +54,7 @@ namespace Edubase.Services.Groups.Search
                 IncludeInSuggester = true,
                 ClrType = typeof(string)
             });
-            
+
 
             retVal.Fields.Add(new SearchIndexField
             {
@@ -241,6 +254,19 @@ namespace Edubase.Services.Groups.Search
             retVal.Fields.Add(new SearchIndexField
             {
                 Name = nameof(GroupCollection.EstablishmentCount),
+                IsFacetable = false,
+                IsSearchable = false,
+                IsFilterable = true,
+                IsRetrievable = true,
+                IsSortable = true,
+                IsKey = false,
+                IncludeInSuggester = false,
+                ClrType = typeof(int)
+            });
+
+            retVal.Fields.Add(new SearchIndexField
+            {
+                Name = nameof(GroupCollection.LocalAuthorityId),
                 IsFacetable = false,
                 IsSearchable = false,
                 IsFilterable = true,

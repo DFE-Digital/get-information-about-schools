@@ -89,12 +89,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (!viewModel.FileFormat.HasValue) return View("Download\\SelectFormat", viewModel);
             else
             {
-                var progressId = await InvokeEstablishmentDownloadGenerationAsync(viewModel);
+                var progressId = await InvokeDownloadGenerationAsync(viewModel);
                 return RedirectToAction(nameof(Download), new { id = progressId });
             }
         }
 
-        private async Task<Guid> InvokeEstablishmentDownloadGenerationAsync(SearchModel viewModel)
+        private async Task<Guid> InvokeDownloadGenerationAsync(SearchModel viewModel)
         {
             var payload = new GovernorSearchPayload
             {
