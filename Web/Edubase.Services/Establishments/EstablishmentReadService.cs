@@ -182,8 +182,8 @@ namespace Edubase.Services.Establishments
                 payload.Text, 
                 oDataFilterExpression, 
                 payload.Skip, 
-                payload.Take, 
-                new[] { nameof(SearchEstablishmentDocument.Name) }.ToList(), 
+                payload.Take,  
+                new[] { nameof(SearchEstablishmentDocument.NameDistilled) }.ToList(), 
                 payload.OrderBy); 
         }
 

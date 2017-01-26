@@ -74,7 +74,7 @@ namespace Edubase.Services.Groups
                 oDataFilters.ToString(),
                 payload.Skip,
                 payload.Take,
-                new[] { nameof(GroupModel.Name) }.ToList(),
+                new[] { nameof(SearchGroupDocument.NameDistilled) }.ToList(),
                 payload.OrderBy);
         }
 
