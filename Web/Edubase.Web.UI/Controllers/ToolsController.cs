@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    [RoutePrefix("Tools"), Route("{action=index}")]
     public class ToolsController : Controller
     {
         // GET: Tools

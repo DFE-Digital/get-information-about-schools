@@ -156,7 +156,16 @@ namespace Edubase.Services.Establishments
             else return null;
         }
 
-
+        /// <summary>
+        /// Searches establishments based on the supplied payload/filters.
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <param name="principal"></param>
+        /// <returns></returns>
+        /// <exception cref="SearchQueryTooLargeException">
+        ///     There's a chance that when you pass in a large query with 100s of filters
+        ///     you'll get a SearchQueryTooLargeException.  There is no work-around; the size of the query needs to be reduced; this is due to a limitation in Azure Search.
+        /// </exception>
         public async Task<AzureSearchResult<Doc>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
         {
             if (IsRoleRestrictedOnStatus(principal))
@@ -164,7 +173,7 @@ namespace Edubase.Services.Establishments
                 if (payload.Filters.StatusIds.Any())
                 {
                     if (!payload.Filters.StatusIds.All(x => _restrictedStatuses.Any(s => s == x)))
-                        throw new EdubaseException("One or more of the status ids requested are outside the permissions of the current principal");
+                        throw new EduSecurityException("One or more of the status ids requested are outside the permissions of the current principal");
                 }
                 else payload.Filters.StatusIds = _restrictedStatuses.ToArray();
             }

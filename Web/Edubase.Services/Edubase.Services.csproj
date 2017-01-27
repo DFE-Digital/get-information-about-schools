@@ -181,6 +181,7 @@
     <Compile Include="Core\IFileDownloadFactoryService.cs" />
     <Compile Include="Domain\OfstedRatingUrl.cs" />
     <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
+    <Compile Include="Exceptions\SearchQueryTooLargeException.cs" />
     <Compile Include="Governors\Downloads\GovernorDownloadService.cs" />
     <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
     <Compile Include="Governors\IGovernorsReadService.cs" />

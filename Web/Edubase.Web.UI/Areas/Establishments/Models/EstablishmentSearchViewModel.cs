@@ -8,10 +8,12 @@ using static Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
 using MoreLinq;
 using System.Linq;
 using Edubase.Common.Spatial;
+using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models.Search;
 
-namespace Edubase.Web.UI.Models.Search
+namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {
-    public class AdvancedSearchViewModel
+    public class EstablishmentSearchViewModel
     {
         private Dictionary<int, eTextSearchType> _textSearchTypeMap = new Dictionary<int, eTextSearchType>
         {
@@ -57,32 +59,17 @@ namespace Edubase.Web.UI.Models.Search
         public const string BIND_ALIAS_SELECTED_SEARCH_FILTERS = "y";
         public const string BIND_ALIAS_SORT_BY = "z";
         public const string BIND_ALIAS_RADIUS = "aa";
-
-        public class Payload
-        {
-            public string Text { get; set; }
-            public string AutoSuggestValue { get; set; }
-            public int? AutoSuggestValueAsInt => AutoSuggestValue.ToInteger();
-        }
+        
 
         #region Enums
 
-        public enum eSearchCollection
-        {
-            Establishments,
-            Groups,
-            Governors
-        }
+        //public enum eSearchCollection
+        //{
+        //    Establishments,
+        //    Groups,
+        //    Governors
+        //}
 
-        public enum eSearchType
-        {
-            Text,
-            Location,
-            ByLocalAuthority,
-            Group,
-            Governor,
-            LocalAuthorityDisambiguation
-        }
 
         public enum eTextSearchType
         {
@@ -129,7 +116,7 @@ namespace Edubase.Web.UI.Models.Search
 
         public int GetRadiusOption()
         {
-            if (!RadiusInMiles.HasValue || !_radiuses.Contains(RadiusInMiles.Value)) return _radiuses[2];
+            if (!RadiusInMiles.HasValue || !_radiuses.Contains(RadiusInMiles.Value)) return _radiuses[1];
             else return RadiusInMiles.Value;
         }
 
@@ -137,25 +124,25 @@ namespace Edubase.Web.UI.Models.Search
 
         public LatLon LocationSearchCoordinate => _coordinate.Value;
 
-        public AdvancedSearchViewModel()
+        public EstablishmentSearchViewModel()
         {
             _coordinate = new Lazy<LatLon>(() => LatLon.Parse(LocationSearchModel.AutoSuggestValue));
         }
 
-        public SearchModel GovernorSearchModel { get; set; } = new SearchModel();
+        //public SearchModel GovernorSearchModel { get; set; } = new SearchModel();
 
         
-        public Payload TextSearchModel { get; set; } = new Payload();
-        public Payload LocationSearchModel { get; set; } = new Payload();
+        public SearchPayloadViewModel TextSearchModel { get; set; } = new SearchPayloadViewModel();
+        public SearchPayloadViewModel LocationSearchModel { get; set; } = new SearchPayloadViewModel();
         
-        public Payload GroupSearchModel { get; set; } = new Payload();
+        //public SearchPayloadViewModel GroupSearchModel { get; set; } = new SearchPayloadViewModel();
 
         public eSearchType SearchType { get; set; }
 
         [BindAlias(BIND_ALIAS_SELECTED_SEARCH_FILTERS)]
         public string SelectedExtraSearchFilters { get; set; }
 
-        public eSearchCollection SearchCollection => SearchType == eSearchType.Governor ? eSearchCollection.Governors : (SearchType == eSearchType.Group ? eSearchCollection.Groups : eSearchCollection.Establishments);
+        //public eSearchCollection SearchCollection => SearchType == eSearchType.Governor ? eSearchCollection.Governors : (SearchType == eSearchType.Group ? eSearchCollection.Groups : eSearchCollection.Establishments);
         
         public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
 
@@ -279,27 +266,13 @@ namespace Edubase.Web.UI.Models.Search
         public bool GoToDetailPageOnOneResult { get; set; }
 
 
-        public string LocalAuthorityToAdd { get; set; }
+        
 
-        public int? LocalAuthorityToRemove { get; set; }
-
-        public AdvancedSearchViewModel AddLocalAuthorityId(int id)
-        {
-            SelectedLocalAuthorityIds.Add(id);
-            return this;
-        }
-
-        public AdvancedSearchViewModel RemoveLocalAuthorityId(int id)
-        {
-            SelectedLocalAuthorityIds.Remove(id);
-            return this;
-        }
-
-        public string GetDownloadName()
-        {
-            if (SearchCollection == eSearchCollection.Establishments) return "establishment";
-            else if (SearchCollection == eSearchCollection.Groups) return "establishment group";
-            else return "governor";
-        }
+        //public string GetDownloadName()
+        //{
+        //    if (SearchCollection == eSearchCollection.Establishments) return "establishment";
+        //    else if (SearchCollection == eSearchCollection.Groups) return "establishment group";
+        //    else return "governor";
+        //}
     }
 }

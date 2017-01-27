@@ -25,6 +25,7 @@ using System.Collections.Generic;
 
 namespace Edubase.Web.UI.Controllers
 {
+    [RoutePrefix("Group")]
     public class GroupController : Controller
     {
         const string VIEWNAME = "CreateEdit";
@@ -40,7 +41,7 @@ namespace Edubase.Web.UI.Controllers
             _governorsReadService = governorsReadService;
         }
 
-        [EdubaseAuthorize]
+        [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
             if (!viewModel.SearchText.IsNullOrEmpty())
@@ -53,7 +54,7 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize]
+        [HttpGet, EdubaseAuthorize, Route(nameof(Create) + "/{id}")]
         public async Task<ActionResult> Create(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) return HttpNotFound();
@@ -70,7 +71,7 @@ namespace Edubase.Web.UI.Controllers
             return View("Create", vm);
         }
         
-        [HttpPost, EdubaseAuthorize]
+        [HttpPost, EdubaseAuthorize, Route(nameof(Create) + "/{id}")]
         public async Task<ActionResult> Create(CreateGroupModel viewModel)
         {
             if (ModelState.IsValid)
@@ -92,7 +93,7 @@ namespace Edubase.Web.UI.Controllers
                 .ToSelectList(typeId);
         }
 
-        [HttpGet, EdubaseAuthorize]
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
         public async Task<ActionResult> Edit(int id)
         {
             var viewModel = new CreateEditGroupModel();
@@ -121,7 +122,7 @@ namespace Edubase.Web.UI.Controllers
             return View(VIEWNAME, viewModel);
         }
         
-        [HttpPost, EdubaseAuthorize]
+        [HttpPost, EdubaseAuthorize, Route("Edit/{id:int}")]
         public async Task<ActionResult> Edit(CreateEditGroupModel viewModel)
         {
             if (viewModel.Action == "Search")
@@ -264,7 +265,7 @@ namespace Edubase.Web.UI.Controllers
             return View(VIEWNAME, viewModel);
         }
 
-
+        [Route("Details/{id}")]
         public async Task<ActionResult> Details(int id)
         {
             using (var dc = new ApplicationDbContext())

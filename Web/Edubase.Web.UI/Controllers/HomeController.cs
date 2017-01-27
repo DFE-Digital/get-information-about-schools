@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    [RoutePrefix("Home"), Route("{action=index}")]
     public class HomeController : EduBaseController
     {
         public HomeController()
@@ -14,6 +15,7 @@ namespace Edubase.Web.UI.Controllers
 
         }
 
+        [Route]
         public ActionResult Index()
         {
             var model = new Models.HomepageViewModel();
@@ -22,8 +24,5 @@ namespace Edubase.Web.UI.Controllers
             model.AllowTrustCreation = User.Identity.IsAuthenticated;
             return View(model);
         }
-        
-
-
     }
 }

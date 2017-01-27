@@ -22,6 +22,7 @@ using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
 {
+    [RoutePrefix("Establishment")]
     public class EstablishmentController : EduBaseController
     {
         private IEstablishmentReadService _establishmentReadService;
@@ -48,7 +49,7 @@ namespace Edubase.Web.UI.Controllers
             _governorsReadService = governorsReadService;
         }
 
-        [HttpGet, EdubaseAuthorize]
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
@@ -65,7 +66,7 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
         public async Task<ActionResult> Edit(ViewModel model)
         {
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
@@ -159,7 +160,7 @@ namespace Edubase.Web.UI.Controllers
         //    else return View(model);
         //}
 
-        [HttpGet]
+        [HttpGet, Route("Details/{id}")]
         public async Task<ActionResult> Details(int id)
         {
             var viewModel = new EstablishmentDetailViewModel()

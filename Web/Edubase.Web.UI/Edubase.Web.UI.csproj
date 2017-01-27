@@ -179,6 +179,10 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RouteDebugger, Version=2.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\routedebugger.2.1.5\lib\net40\RouteDebugger.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="StackExchange.Profiling.DeepProfiling.Autofac, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MiniProfiler.DeepProfiling.Autofac.2.1.0.8\lib\NET40\StackExchange.Profiling.DeepProfiling.Autofac.dll</HintPath>
       <Private>True</Private>
@@ -265,13 +269,13 @@
     <Compile Include="App_Start\AutoMapperWebProfile.cs" />
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\ODataConfig.cs" />
+    <Compile Include="Areas\Establishments\Controllers\SearchController.cs" />
+    <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Controllers\SearchController.cs" />
-    <Compile Include="Areas\Governors\GovernorsAreaRegistration.cs" />
     <Compile Include="Areas\Governors\Models\SearchModel.cs" />
     <Compile Include="Controllers\Api\EstablishmentsController.cs" />
     <Compile Include="Controllers\Api\GovernorsController.cs" />
     <Compile Include="Controllers\Api\GroupsController.cs" />
-    <Compile Include="Controllers\ApprovalController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EduBaseController.cs" />
     <Compile Include="Controllers\EstablishmentController.cs" />
@@ -284,9 +288,10 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\SearchController.Establishments.cs" />
-    <Compile Include="Controllers\SearchController.Download.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\SearchController_old.Establishments.cs" />
+    <Compile Include="Controllers\SearchController_old.Download.cs" />
+    <Compile Include="Controllers\SearchController_old.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
@@ -312,9 +317,8 @@
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Admin\LogMessagesViewModel.cs" />
     <Compile Include="Models\ApprovalsViewModel.cs" />
-    <Compile Include="Models\SearchDownloadGenerationProgressViewModel.cs" />
-    <Compile Include="Models\Search\AdvancedSearchDownloadViewModel.cs" />
-    <Compile Include="Models\Search\AdvancedSearchViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
     <Compile Include="Models\CreateTrustModel.cs" />
@@ -330,9 +334,13 @@
     <Compile Include="Models\MATDetailViewModel.cs" />
     <Compile Include="Models\MATASSearchResultsModel.cs" />
     <Compile Include="Models\PendingChangeViewModel.cs" />
-    <Compile Include="Models\SearchResultsModel.cs" />
     <Compile Include="Models\GroupEstabViewModel.cs" />
+    <Compile Include="Models\Search\eSearchType.cs" />
+    <Compile Include="Models\Search\IDownloadGenerationProgressModel.cs" />
     <Compile Include="Models\Search\LocalAuthorityDisambiguationViewModel.cs" />
+    <Compile Include="Models\Search\GovernorSearchPayloadViewModel.cs" />
+    <Compile Include="Models\Search\SearchPayloadViewModel.cs" />
+    <Compile Include="Models\Search\SearchViewModel.cs" />
     <Compile Include="Models\Validators\CreateEditGroupModelValidator.cs" />
     <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
     <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
@@ -349,6 +357,8 @@
     <Content Include="Assets\Sass\elements\_mobile-nav.scss" />
     <Content Include="Assets\Sass\elements\forms\_clear-fields.scss" />
     <Content Include="Areas\Governors\Views\Search\Download\SelectFormat.cshtml" />
+    <Content Include="Areas\Establishments\Views\Web.config" />
+    <Content Include="Areas\Establishments\Views\_ViewStart.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -779,7 +789,7 @@
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Search\GroupResults.cshtml" />
-    <Content Include="Views\Search\AdvancedSearchResults.cshtml" />
+    <Content Include="Areas\Establishments\Views\Search\Index.cshtml" />
     <Content Include="Views\Establishment\Partials\TabDetails.cshtml" />
     <Content Include="Views\Establishment\Partials\TabIEBT.cshtml" />
     <Content Include="Views\Establishment\Partials\TabLinks.cshtml" />
@@ -787,12 +797,13 @@
     <Content Include="Views\Establishment\Partials\TabLocation.cshtml" />
     <Content Include="Views\Establishment\Partials\TabChangeHistory.cshtml" />
     <Content Include="Views\Establishment\Partials\Header.cshtml" />
-    <Content Include="Views\Search\Download\SelectFormat.cshtml" />
-    <Content Include="Views\Search\Download\SelectDataset.cshtml" />
-    <Content Include="Views\Search\Download\PreparingFilePleaseWait.cshtml" />
-    <Content Include="Views\Search\Download\ReadyToDownload.cshtml" />
+    <Content Include="Views\Shared\Downloads\SelectFormat.cshtml" />
+    <Content Include="Views\Shared\Downloads\SelectDataset.cshtml" />
+    <Content Include="Views\Shared\Downloads\PreparingFilePleaseWait.cshtml" />
+    <Content Include="Views\Shared\Downloads\ReadyToDownload.cshtml" />
     <Content Include="Views\Search\LocalAuthorityDisambiguation.cshtml" />
-    <None Include="Views\Search\Results.cshtml" />
+    <Content Include="Areas\Establishments\Views\Search\Partials\_EstablishmentSearchResults.cshtml" />
+    <Content Include="Views\Search\Partials\_GroupSearchResults.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
@@ -809,6 +820,7 @@
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Groups\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
   </ItemGroup>

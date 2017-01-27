@@ -1,9 +1,11 @@
 ﻿using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services.Establishments.Models;
+using Edubase.Services.Exceptions;
 using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
+using Microsoft.Rest.Azure;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -76,25 +78,32 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch
 
         public async Task<AzureSearchResult<T>> SearchAsync<T>(string indexName, string text = null, string filter = null, int skip = 0, int take = 10, IList<string> fullTextSearchFields = null, IList<string> orderBy = null) where T : class
         {
-            if (skip > 100000) throw new Exception($"The skip parameter cannot be greater than 100,000");
-            if (take == 0) throw new Exception($"Argument {nameof(take)} cannot be zero.");
-            var fields = _fieldLists.Get(typeof(T), () => ReflectionHelper.GetProperties(typeof(T), writeableOnly: true));
-
-            var result = await GetIndexClient(indexName).Documents.SearchAsync<T>(text, new SearchParameters()
+            try
             {
-                Skip = skip,
-                Top = take,
-                SearchMode = SearchMode.All,
-                Filter = filter,
-                OrderBy = orderBy,
-                IncludeTotalResultCount = (skip == 0),
-                Select = fields,
-                SearchFields = fullTextSearchFields
-            });
+                if (skip > 100000) throw new Exception($"The skip parameter cannot be greater than 100,000");
+                if (take == 0) throw new Exception($"Argument {nameof(take)} cannot be zero.");
+                var fields = _fieldLists.Get(typeof(T), () => ReflectionHelper.GetProperties(typeof(T), writeableOnly: true));
 
-            var retVal = new AzureSearchResult<T>(result);
-            if (skip > 0) retVal.CountAccessor = () => { throw new Exception("Count is not populated when the Skip value is greater than 0"); };
-            return retVal;
+                var result = await GetIndexClient(indexName).Documents.SearchAsync<T>(text, new SearchParameters()
+                {
+                    Skip = skip,
+                    Top = take,
+                    SearchMode = SearchMode.All,
+                    Filter = filter,
+                    OrderBy = orderBy,
+                    IncludeTotalResultCount = (skip == 0),
+                    Select = fields,
+                    SearchFields = fullTextSearchFields
+                });
+
+                var retVal = new AzureSearchResult<T>(result);
+                if (skip > 0) retVal.CountAccessor = () => { throw new Exception("Count is not populated when the Skip value is greater than 0"); };
+                return retVal;
+            }
+            catch (CloudException ex) when (ex.Message.Contains("The filter expression has too many clauses"))
+            {
+                throw new SearchQueryTooLargeException("The search query is too large/complex. Please reduce the complexity/size and try again.", ex);
+            }
         }
         
 

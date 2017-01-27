@@ -68,7 +68,7 @@
                         @foreach (var result in Model.Results.Items)
                         {
                             <li>
-                                <h2>@Html.ActionLink(result.Name, "Create", new { id = result.Number }, new { @class = "bold-small" })</h2>
+                                <h2>@Html.ActionLink(result.Name, "Create", "Group", new { id = result.Number, area = "" }, new { @class = "bold-small" })</h2>
                                <table class="borderless trust-details">
                                     <tr>
                                         <th scope="row">Companies House Number:</th>

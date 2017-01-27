@@ -1,7 +1,7 @@
 ﻿@using Edubase.Web.UI.Models.Search
 @using Edubase.Web.UI.Helpers
 @using Edubase.Common
-@using M = Edubase.Web.UI.Models.Search.AdvancedSearchViewModel;
+@using M = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
 @using P = Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
 @model M
 @{
@@ -12,11 +12,12 @@
 
 <div class="grid-row">
     <div class="column-full">
-        @Html.ActionLink("Go back", "Index", null, new { @class = "home-link" })
+        @Html.ActionLink("Go back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
 
         <h1 class="heading-xlarge">Search results</h1>
         <p>
-            @if (Model.SearchType == M.eSearchType.Text)
+            <!--  TODO: Jon; you can upload the span.heading-xlarge item with the correct count by using the x-count item in the http response of the partial request -->
+            @if (Model.SearchType == eSearchType.Text)
             {
                 if (Model.TextSearchType == M.eTextSearchType.EstablishmentName
                     || Model.TextSearchType == M.eTextSearchType.Unknown)
@@ -24,7 +25,7 @@
                     <text>
                         We found <span class="heading-xlarge">@Model.Count</span> establishments
                         @if (!Model.TextSearchModel.Text.IsEmpty())
-                    {
+                        {
                             <text>for the search term "@Model.TextSearchModel.Text".</text>
                         }
 
@@ -43,19 +44,21 @@
                     <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
                 }
             }
-            else if (Model.SearchType == M.eSearchType.ByLocalAuthority)
+            else if (Model.SearchType == eSearchType.ByLocalAuthority)
             {
                 <text>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</text>
             }
-            else if (Model.SearchType == M.eSearchType.Location)
+            else if (Model.SearchType == eSearchType.Location)
             {
                 <text>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected location</text>
             }
 
+            <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
             <a class="download-link" href="@Url.Action("PrepareDownload", "Search")?@Url.CurrentQueryString()">Download these search results</a>
         </p>
     </div>
 </div>
+
 
 <div class="grid-row">
 
@@ -67,15 +70,15 @@
                  data-track="search-results||edit-search"
                  aria-controls="EditSearchCollapse"
                  role="button">
-                <a class="help-toggle" href="/Search">Edit search</a>
+                <a class="help-toggle" href="/">Edit search</a>
             </div>
 
             <div id="EditSearchCollapse" aria-expanded="true">
 
                 <div class="filter-divider"></div>
-                <form method="get" action="@Url.Action("Results", "Search")">
+                <form method="get" action="@Url.Action("Index", "Search")">
 
-                    @if (Model.SearchType == M.eSearchType.Location)
+                    @if (Model.SearchType == eSearchType.Location)
                     {
                         @RadiusSelector("Within radius of")
                         <div class="filter-divider"></div>
@@ -156,12 +159,12 @@
 
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
 
-                    @if (Model.SearchType == M.eSearchType.Text)
+                    @if (Model.SearchType == eSearchType.Text)
                     {
                         @Html.HiddenFor(!Model.TextSearchModel.Text.IsEmpty(), x => x.TextSearchModel.Text)
                         @Html.HiddenFor(!Model.TextSearchModel.AutoSuggestValue.IsEmpty(), x => x.TextSearchModel.AutoSuggestValue)
                     }
-                    else if (Model.SearchType == M.eSearchType.Location)
+                    else if (Model.SearchType == eSearchType.Location)
                     {
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
@@ -169,7 +172,7 @@
 
                     <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
 
-                    @Html.HiddenFor(x=>x.SearchType)
+                    @Html.HiddenFor(x => x.SearchType)
                     
                 </form>
             </div>
@@ -177,65 +180,9 @@
         </div>
     </div>
 
-    <div class="column-two-thirds">
+    <div class="column-two-thirds" id="results-container">
 
-        @if (Model.Error != null)
-        {
-            <div class="column-two-thirds">
-                <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
-            </div>
-        }
-        else if (Model.Results.Count > 0)
-        {
-            if (Model.PageCount > 1)
-            {
-                <div class="top-pagination">
-                    @Html.Partial("_ResultsPaginationAdvSearch")
-                </div>
-            }
-            <ul class="school-results-listing">
-                @foreach (var result in Model.Results)
-                {
-                    <li>
-                        <h2>@Html.ActionLink(result.Name, "Details", "Establishment", new { id = result.Urn }, new { @class = "bold-small" })</h2>
-                        <dl>
-                            <dt>Address:</dt>
-                            <dd>@result.GetAddress()</dd>
-                            <dt>Phase / type:</dt>
-                            <dd>
-                                @(Model.EducationPhases.FirstOrDefault(x => x.Id == result.EducationPhaseId)?.Name ?? "Not recorded"),
-                                @(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == result.TypeId)?.Name ?? "Not recorded")
-                            </dd>
-                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                            <dd>@result.Urn</dd> 
-                            <!-- TODO: Jon: pls make urn and laestab all on one line -->
-                            <dt>LAESTAB:</dt>
-                            <dd>@result.GetLAESTAB()</dd>
-                            <dt>Status:</dt>
-                            <dd>@(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "Not recorded")</dd>
-                            <dt>Local authority name:</dt>
-                            <dd>@(Model.LocalAuthorities.FirstOrDefault(x => x.Id == result.LocalAuthorityId)?.Name ?? "Not recorded")</dd>
-                            @if (Model.SearchType == M.eSearchType.Location)
-                            {
-                                var distanceInMiles = Math.Round(Edubase.Common.Spatial.DistanceCalculator.Calculate(Model.LocationSearchCoordinate, result.Coordinate).Miles, 2);
-                                <dt>Distance:</dt>
-                                <dd>@distanceInMiles mile@(Html.Conditional(distanceInMiles != 1, "s"))</dd>
-                            }
-                        </dl>
-                    </li>
-                }
-            </ul>
-            if (Model.PageCount > 1)
-            {
-                <div class="lower-pagination">
-                    @Html.Partial("_ResultsPaginationAdvSearch")
-                </div>
-            }
-        }
-        else
-        {
-            <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
-        }
+        @{Html.RenderPartial("Partials/_EstablishmentSearchResults");}
 
     </div>
 
@@ -284,7 +231,7 @@
             <div class="js-selected-counter"></div>
         </div>
         <select class="form-control" name="@M.BIND_ALIAS_SORT_BY">
-            @if (Model.SearchType == M.eSearchType.Location)
+            @if (Model.SearchType == eSearchType.Location)
             {
                 <option value="d" @Html.Conditional(Model.GetSortOption() == P.eSortBy.Distance, "selected")>distance</option>
             }

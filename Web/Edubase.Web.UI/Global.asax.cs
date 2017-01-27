@@ -27,7 +27,7 @@ namespace Edubase.Web.UI
 #if (QA)
             GlobalConfiguration.Configure(ODataConfig.Register);
 #endif
-            AreaRegistration.RegisterAllAreas();
+            //AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             IocConfig.Register();

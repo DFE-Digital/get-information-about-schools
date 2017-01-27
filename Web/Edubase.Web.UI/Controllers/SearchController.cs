@@ -1,89 +1,79 @@
 ﻿using Edubase.Common;
+using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Downloads;
+using Edubase.Services.Groups;
+using Edubase.Services.Groups.Downloads;
+using Edubase.Services.Lookup;
+using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Edubase.Web.UI.Models.Search;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    using Common.Spatial;
-    using Helpers;
-    using Models.Search;
-    using Services;
-    using Services.Domain;
-    using Services.Establishments;
-    using Services.Establishments.Downloads;
-    using Services.Establishments.Search;
-    using Services.Groups;
-    using Services.Groups.Downloads;
-    using Services.Groups.Models;
-    using Services.Groups.Search;
-    using Services.IntegrationEndPoints.AzureSearch.Models;
-    using Services.Lookup;
-    using StackExchange.Profiling;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using ViewModel = Models.Search.AdvancedSearchViewModel;
-
-    public partial class SearchController : EduBaseController
+    public class SearchController : EduBaseController
     {
-        IEstablishmentReadService _establishmentReadService;
-        IGroupReadService _groupReadService;
-        IEstablishmentDownloadService _establishmentDownloadService;
-        ICachedLookupService _lookupService;
-        IGroupDownloadService _groupDownloadService;
+        private IEstablishmentReadService _establishmentReadService;
+        private ICachedLookupService _cachedLookupService;
+        private IGroupReadService _groupReadService;
 
-        public SearchController(IEstablishmentReadService establishmentReadService, 
-            IGroupReadService groupReadService,
-            IEstablishmentDownloadService establishmentDownloadService,
-            IGroupDownloadService groupDownloadService,
-            ICachedLookupService lookupService)
+        public SearchController(IEstablishmentReadService establishmentReadService,
+            ICachedLookupService cachedLookupService,
+            IGroupReadService groupReadService)
         {
+            _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
-            _establishmentDownloadService = establishmentDownloadService;
-            _lookupService = lookupService;
-            _groupDownloadService = groupDownloadService;
         }
-
-        public async Task<ActionResult> Index(ViewModel vm) => View(await PopulateLookups(vm));
         
-        [HttpGet]
-        public async Task<ActionResult> Results(ViewModel model)
+        [HttpGet, Route]
+        public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
-            if (model.LocalAuthorityToRemove.HasValue)
+            if (viewModel.SearchType.HasValue)
             {
-                return Redirect("/?" + QueryStringHelper.ToQueryString(ViewModel.BIND_ALIAS_LAIDS, 
-                    model.RemoveLocalAuthorityId(model.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
+                if (viewModel.LocalAuthorityToRemove.HasValue)
+                {
+                    return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
+                        viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
+                }
+                else if (viewModel.SearchType == eSearchType.LocalAuthorityDisambiguation)
+                {
+                    return await ProcessLocalAuthorityDisambiguation(viewModel);
+                }
+                else if (ModelState.IsValid)
+                {
+                    if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text))
+                        return Redirect(Url.Action("Index", "Search", new { area = "Establishments" }) + "?" + Request.QueryString);
+                    else if (viewModel.SearchType == eSearchType.Group)
+                        return Redirect(Url.Action("Results", "Search", new { area = "Groups" }) + "?" + Request.QueryString);
+                    else if (viewModel.SearchType == eSearchType.Governor)
+                        return Redirect(Url.Action("Results", "Search", new { area = "Governors" }) + "?" + Request.QueryString);
+                    else throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
+                }
             }
-            else if (model.SearchType == ViewModel.eSearchType.LocalAuthorityDisambiguation)
-            {
-                return await ProcessLocalAuthorityDisambiguation(model);
-            }
-            else if (model.SearchCollection == ViewModel.eSearchCollection.Establishments)
-            {
-                var retVal = await SearchByUrnAsync(model);
-                if (retVal != null) return retVal;
 
-                var payload = GetEstablishmentSearchPayload(model);
-                if (!payload.Success) model.Error = payload.ErrorMessage;
-                return await ProcessEstablishmentsSearch(model, payload.Object);
-            }
-            else
-            {
-                if (model.SearchType == ViewModel.eSearchType.Group) return await SearchGroups(model);
-                else if (model.SearchType == ViewModel.eSearchType.Governor) return SearchGovernors(model.GovernorSearchModel);
-                throw new NotImplementedException();
-            }
+            viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+
+            return View(viewModel);
         }
 
-        private async Task<ActionResult> ProcessLocalAuthorityDisambiguation(ViewModel model)
+        [Route("Search/Suggest"), HttpGet]
+        public async Task<ActionResult> Suggest(string text) => Json(await _establishmentReadService.SuggestAsync(StringUtil.DistillEstablishmentName(text), User));
+
+        [Route("Search/SuggestGroup"), HttpGet]
+        public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text.Distill(), User));
+
+        private async Task<ActionResult> ProcessLocalAuthorityDisambiguation(SearchViewModel model)
         {
-            var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
+            var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
             var localAuthority = localAuthorities.FirstOrDefault(x => x.Name.Equals(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase));
-            if (localAuthority != null) return Redirect("/?" + QueryStringHelper.ToQueryString(ViewModel.BIND_ALIAS_LAIDS, 
+            if (localAuthority != null) return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
                 model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
             else
             {
@@ -92,80 +82,5 @@ namespace Edubase.Web.UI.Controllers
                 return View("LocalAuthorityDisambiguation", localAuthorityDisambiguationViewModel);
             }
         }
-
-        private ActionResult SearchGovernors(Areas.Governors.Models.SearchModel governorSearchModel)
-        {
-            return Redirect("/Governors/Search?Forename=" + governorSearchModel.Forename + "&Surname=" + governorSearchModel.Surname + "&RoleId=" + governorSearchModel.RoleId + "&IncludeHistoric=" + governorSearchModel.IncludeHistoric);
-        }
-        
-        private async Task<ActionResult> SearchGroups(ViewModel model)
-        {
-            if (model.GroupSearchModel.AutoSuggestValueAsInt.HasValue)
-            {
-                return new RedirectToRouteResult(null, new RouteValueDictionary
-                {
-                    { "action", "Details" },
-                    { "controller", "Group" },
-                    { "id", model.GroupSearchModel.AutoSuggestValueAsInt }
-                });
-            }
-            else
-            {
-                var text = model.GroupSearchModel.Text.Clean();
-                var viewModel = new GroupSearchResultsModel(text) { StartIndex = model.StartIndex, Count = model.Count };
-                viewModel.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
-                using (MiniProfiler.Current.Step("Searching groups..."))
-                {
-                    AzureSearchResult<SearchGroupDocument> results = null;
-                    if (text != null) results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
-                    
-                    if (results != null && results.Count > 0)
-                    {
-                        viewModel.Results.Add(results.Items[0]);
-                        viewModel.Count = 1;
-                    }
-                    else
-                    {
-                        GroupSearchPayload payload = GetGroupSearchPayload(model);
-                        using (MiniProfiler.Current.Step("Searching groups (in text mode)..."))
-                        {
-                            results = await _groupReadService.SearchAsync(payload, User);
-                            viewModel.Results = results.Items;
-                            if (model.StartIndex == 0) viewModel.Count = results.Count.Value;
-                        }
-                    }
-                }
-                
-                viewModel.SearchType = "Groups";
-
-                if (viewModel.Count == 1)
-                {
-                    return new RedirectToRouteResult(null, new RouteValueDictionary
-                                {
-                                    { "action", "Details" },
-                                    { "controller", "Group" },
-                                    { "id", viewModel.Results.Single().GroupUID }
-                                });
-                }
-                else viewModel.CalculatePageStats(model.PageSize);
-
-                return View("GroupResults", viewModel);
-
-            }
-        }
-
-        private GroupSearchPayload GetGroupSearchPayload(ViewModel model)
-        {
-            return new GroupSearchPayload(nameof(GroupModel.Name), model.StartIndex, model.PageSize) { Text = model.GroupSearchModel.Text.Clean() };
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Suggest(string text) => Json(await _establishmentReadService.SuggestAsync(StringUtil.DistillEstablishmentName(text), User));
-
-        [HttpGet]
-        public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text.Distill(), User));
-        
-        
-
     }
 }
