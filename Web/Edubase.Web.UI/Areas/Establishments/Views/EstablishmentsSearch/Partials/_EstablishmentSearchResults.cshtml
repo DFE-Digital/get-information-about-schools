@@ -14,7 +14,7 @@ else if (Model.Results.Count > 0)
     if (Model.PageCount > 1)
     {
         <div class="top-pagination">
-            @Html.Partial("_ResultsPaginationAdvSearch")
+            @Html.Partial("_GenericPagination")
         </div>
     }
     <ul class="school-results-listing">
@@ -52,7 +52,7 @@ else if (Model.Results.Count > 0)
     if (Model.PageCount > 1)
     {
         <div class="lower-pagination">
-            @Html.Partial("_ResultsPaginationAdvSearch")
+            @Html.Partial("_GenericPagination")
         </div>
     }
 }

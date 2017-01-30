@@ -31,8 +31,8 @@ namespace Edubase.Services.Establishments
     using Ionic.Zip;
     using Lookup;
     using Doc = Search.SearchEstablishmentDocument;
-    using static Search.EstablishmentSearchPayload;
     using Common.Spatial;
+    using Services.Core.Search;
 
     public class EstablishmentReadService : IEstablishmentReadService
     {

@@ -10,6 +10,7 @@ using System.Linq;
 using Edubase.Common.Spatial;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
+using Edubase.Services.Core.Search;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {

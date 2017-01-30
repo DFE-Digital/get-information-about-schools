@@ -14,7 +14,7 @@ else if (Model.Results.Count > 0)
     if (Model.PageCount > 1)
     {
         <div class="column-two-thirds top-pagination">
-            @Html.Partial("_ResultsPaginationAdvSearch")
+            @Html.Partial("_GenericPagination")
         </div>
     }
     <div class="column-two-thirds">
@@ -44,7 +44,7 @@ else if (Model.Results.Count > 0)
     if (Model.PageCount > 1)
     {
         <div class="column-two-thirds lower-pagination">
-            @Html.Partial("_ResultsPaginationAdvSearch")
+            @Html.Partial("_GenericPagination")
         </div>
     }
 }
@@ -53,11 +53,11 @@ else
     <div class="column-two-thirds">
         @if (Model.GroupSearchModel.Text.IsInteger())
         {
-            <p class="no-school-results">Please check the number entered or try @Html.ActionLink("searching again", "Index") using the multi-academy trust name.</p>
+            <p class="no-school-results">Please check the number entered or try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using the group name.</p>
         }
         else
         {
-            <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
+            <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
         }
     </div>
 }

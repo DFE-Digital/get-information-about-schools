@@ -233,10 +233,10 @@
         <select class="form-control" name="@M.BIND_ALIAS_SORT_BY">
             @if (Model.SearchType == eSearchType.Location)
             {
-                <option value="d" @Html.Conditional(Model.GetSortOption() == P.eSortBy.Distance, "selected")>distance</option>
+                <option value="d" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.Distance, "selected")>distance</option>
             }
-            <option value="a" @Html.Conditional(Model.GetSortOption() == P.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
-            <option value="z" @Html.Conditional(Model.GetSortOption() == P.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
+            <option value="a" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
+            <option value="z" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
         </select>
     </div>
 }

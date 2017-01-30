@@ -271,8 +271,12 @@
     <Compile Include="App_Start\ODataConfig.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
+    <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
     <Compile Include="Areas\Governors\Controllers\SearchController.cs" />
-    <Compile Include="Areas\Governors\Models\SearchModel.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\SearchModel_old.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
@@ -355,15 +359,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
-    <Content Include="Areas\Governors\Views\Search\Download\PreparingFilePleaseWait.cshtml" />
-    <Content Include="Areas\Governors\Views\Search\Download\ReadyToDownload.cshtml" />
     <Content Include="Assets\Sass\elements\_mobile-nav.scss" />
     <Content Include="Assets\Sass\elements\forms\_clear-fields.scss" />
-    <Content Include="Areas\Governors\Views\Search\Download\SelectFormat.cshtml" />
     <Content Include="Areas\Establishments\Views\Web.config" />
     <Content Include="Areas\Establishments\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Groups\Views\Web.config" />
     <Content Include="Areas\Groups\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Governors\Views\GovernorSearch\Partials\_GovernorSearchResults.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -736,7 +738,7 @@
     <Content Include="packages.config" />
     <Content Include="Areas\Governors\Views\web.config" />
     <Content Include="Areas\Governors\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Governors\Views\Search\Results.cshtml" />
+    <Content Include="Areas\Governors\Views\GovernorSearch\Index.cshtml" />
     <Content Include="Assets\Sass\views\_search-page.scss" />
     <Content Include="Assets\Sass\views\_view-logs.scss" />
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
@@ -814,18 +816,15 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Areas\Governors\Views\Shared\_ResultsPagination.cshtml" />
     <Content Include="Views\Group\CreateEdit.cshtml" />
-    <Content Include="Views\Shared\_ResultsPagination2.cshtml" />
-    <Content Include="Views\Shared\_ResultsPagination.cshtml" />
     <Content Include="Views\Group\SearchCompaniesHouse.cshtml" />
     <Content Include="Views\Group\Create.cshtml" />
-    <Content Include="Views\Shared\_ResultsPagination3.cshtml" />
-    <Content Include="Views\Shared\_ResultsPaginationAdvSearch.cshtml" />
+    <Content Include="Views\Shared\_GenericPagination.cshtml" />
     <Content Include="Views\Shared\_Governors.cshtml" />
     <Content Include="Views\Tools\Index.cshtml" />
-    <Content Include="Views\Shared\_Pagination.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Governors\Views\Search\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
   </ItemGroup>

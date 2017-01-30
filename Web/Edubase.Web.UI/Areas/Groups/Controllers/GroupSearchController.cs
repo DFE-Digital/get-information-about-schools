@@ -28,7 +28,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         ICachedLookupService _lookupService;
         IGroupDownloadService _groupDownloadService;
 
-        public GroupSearchController(IEstablishmentReadService establishmentReadService,
+        public GroupSearchController(
             IGroupReadService groupReadService,
             IGroupDownloadService groupDownloadService,
             ICachedLookupService lookupService)

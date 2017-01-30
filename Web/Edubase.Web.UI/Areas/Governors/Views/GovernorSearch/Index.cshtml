@@ -1,8 +1,7 @@
 ﻿@using Edubase.Common;
-@using Edubase.Services.Groups.Search;
-@model GroupSearchViewModel
+@model GovernorSearchViewModel
 @{
-    ViewBag.Title = string.Format("Search results for '{0}'", Model.GroupSearchModel.Text);
+    ViewBag.Title = string.Format("Governor search results");
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 }
@@ -12,25 +11,27 @@
         @Html.ActionLink("Go back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
         <h1 class="heading-xlarge">Search results</h1>
         <p>
-            @if (Model.GroupSearchModel.Text.IsInteger())
+            We found <span class="heading-xlarge">@Model.Count</span> result@(Model.Count == 1 ? "" : "s") matching
+                 
+            @if (Model.GovernorSearchModel.Forename.Clean() != null)
             {
-                <text>We found <span class="heading-xlarge">@Model.Count</span> groups with Companies House Number '@Model.GroupSearchModel.Text'.</text>
+                <text>Forename <span class="bold-small">'@Model.GovernorSearchModel.Forename'</span>&nbsp;</text>
             }
-            else
+            
+            @if (Model.GovernorSearchModel.Surname.Clean() != null)
             {
-                <text>
-                    We found <span class="heading-xlarge">@Model.Count</span> groups
-                    @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
-                    {
-                        <text>matching "@Model.GroupSearchModel.Text".</text>
-                    }
-               </text>
+                <text>Surname <span class="bold-small">'@Model.GovernorSearchModel.Surname'</span>&nbsp;</text>
             }
-            <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
+
+            @if (Model.SelectedRoleIds.Any())
+            {
+                <text>roles <span class="bold-small">@Model.RoleNames</span>&nbsp;</text>
+            }
+
+            <a class="download-link" href="@Url.Action("PrepareDownload", "GovernorSearch", new { area = "Governors" })?@Url.CurrentQueryString()">Download these search results</a>
         </p>
     </div>
 </div>
-
 
 <div class="grid-row">
 
@@ -48,7 +49,7 @@
             <div id="EditSearchCollapse" aria-expanded="true">
 
                 <div class="filter-divider"></div>
-                <form method="get" action="@Url.Action("Index", "GroupSearch", new { area = "Groups" })">
+                <form method="get" action="@Url.Action("Index", "GovernorSearch", new { area = "Governors" })">
 
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-sort-by">
@@ -57,7 +58,7 @@
                             <div class="js-selected-counter"></div>
                         </div>
                         <select class="form-control" name="SortBy">
-                            <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ , "selected")>alphabetical a-z</option>
+                            <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
                             <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
                         </select>
                     </div>
@@ -66,7 +67,7 @@
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-group-type">
                         <div class="container-head js-container-head">
-                            <div class="option-select-label">Group type</div>
+                            <div class="option-select-label">Role</div>
                             <div class="js-selected-counter"></div>
                         </div>
                         <a href="#" class="clear-selections">Clear</a>
@@ -74,10 +75,10 @@
                             <div class="js-auto-height-inner">
                                 <fieldset>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
-                                    @foreach (var item in Model.GroupTypes)
+                                    @foreach (var item in Model.GovernorRoles)
                                     {
                                         <label for="group-type_@item.Id">
-                                            <input name="t" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
+                                            <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked") />
                                             @item
                                             <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                         </label>
@@ -89,8 +90,9 @@
                     <div class="filter-divider"></div>
 
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
-                    @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)
-                    @Html.HiddenFor(!Model.GroupSearchModel.AutoSuggestValue.IsEmpty(), x => x.GroupSearchModel.AutoSuggestValue)
+                    @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
+                    @Html.HiddenFor(!Model.GovernorSearchModel.Surname.IsEmpty(), x => x.GovernorSearchModel.Surname)
+                    @Html.HiddenFor(Model.GovernorSearchModel.IncludeHistoric, x => x.GovernorSearchModel.IncludeHistoric)
                 </form>
             </div>
 
@@ -99,7 +101,7 @@
 
     <div class="column-two-thirds" id="results-container">
 
-        @{Html.RenderPartial("Partials/_GroupSearchResults");}
+        @{Html.RenderPartial("Partials/_GovernorSearchResults");}
 
     </div>
 

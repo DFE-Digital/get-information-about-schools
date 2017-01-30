@@ -1,22 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Edubase.Services.Core.Search;
+using System.Collections.Generic;
 
 namespace Edubase.Services.Groups.Search
 {
     public class GroupSearchPayload
     {
-        public enum eSortBy
-        {
-            /// <summary>
-            /// Alphabetical on the group name (ascending)
-            /// </summary>
-            NameAlphabeticalAZ,
-
-            /// <summary>
-            /// Alphabetical on the group name (descending)
-            /// </summary>
-            NameAlphabeticalZA
-        }
-
         public GroupSearchPayload()
         {
 

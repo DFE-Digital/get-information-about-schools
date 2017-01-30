@@ -24,6 +24,8 @@ namespace Edubase.Services.Groups
     using Data.Repositories.Groups.Abstract;
     using static GroupSearchPayload;
     using Doc = SearchGroupDocument;
+    using Core.Search;
+    using Exceptions;
 
     public class GroupReadService : IGroupReadService
     {
@@ -69,6 +71,8 @@ namespace Edubase.Services.Groups
 
         public async Task<AzureSearchResult<Doc>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {
+            Guard.IsFalse(payload.SortBy == eSortBy.Distance, () => new EdubaseException("Sorting by distance is not supported with Groups"));
+
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
             if (IsRoleRestrictedOnStatus(principal)) oDataFilters.Add(nameof(Doc.StatusId), (int)eStatus.Open);
 
