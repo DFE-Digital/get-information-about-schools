@@ -54,7 +54,7 @@
             }
 
             <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
-            <a class="download-link" href="@Url.Action("PrepareDownload", "Search")?@Url.CurrentQueryString()">Download these search results</a>
+            <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new { area = "Establishments" })?@Url.CurrentQueryString()">Download these search results</a>
         </p>
     </div>
 </div>
@@ -76,7 +76,7 @@
             <div id="EditSearchCollapse" aria-expanded="true">
 
                 <div class="filter-divider"></div>
-                <form method="get" action="@Url.Action("Index", "Search")">
+                <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new { area = "" })">
 
                     @if (Model.SearchType == eSearchType.Location)
                     {

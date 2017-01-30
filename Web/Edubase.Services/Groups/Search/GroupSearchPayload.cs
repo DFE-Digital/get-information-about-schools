@@ -4,25 +4,38 @@ namespace Edubase.Services.Groups.Search
 {
     public class GroupSearchPayload
     {
+        public enum eSortBy
+        {
+            /// <summary>
+            /// Alphabetical on the group name (ascending)
+            /// </summary>
+            NameAlphabeticalAZ,
+
+            /// <summary>
+            /// Alphabetical on the group name (descending)
+            /// </summary>
+            NameAlphabeticalZA
+        }
+
         public GroupSearchPayload()
         {
 
         }
 
-        public GroupSearchPayload(string orderBy, int skip, int take)
+        public GroupSearchPayload(int skip, int take)
         {
-            OrderBy = new List<string> { orderBy };
             Skip = skip;
             Take = take;
         }
+
+        public int[] GroupTypeIds { get; set; }
 
         public string Text { get; set; }
         
         public int Skip { get; set; }
 
         public int Take { get; set; } = 10;
-        
 
-        public IList<string> OrderBy { get; set; } = new List<string>();
+        public eSortBy SortBy { get; set; }
     }
 }

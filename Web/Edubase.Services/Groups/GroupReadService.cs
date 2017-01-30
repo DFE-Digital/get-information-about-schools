@@ -12,6 +12,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Linq;
 using Edubase.Common;
+using MoreLinq;
 
 namespace Edubase.Services.Groups
 {
@@ -21,6 +22,8 @@ namespace Edubase.Services.Groups
     using Data.Repositories.Groups;
     using eStatus = eLookupGroupStatus;
     using Data.Repositories.Groups.Abstract;
+    using static GroupSearchPayload;
+    using Doc = SearchGroupDocument;
 
     public class GroupReadService : IGroupReadService
     {
@@ -64,32 +67,39 @@ namespace Edubase.Services.Groups
             return await _azureSearchService.SuggestAsync<GroupSuggestionItem>(GroupsSearchIndex.INDEX_NAME, GroupsSearchIndex.SUGGESTER_NAME, text, oDataFilters.ToString(), take);
         }
 
-        public async Task<AzureSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
+        public async Task<AzureSearchResult<Doc>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
-            if (IsRoleRestrictedOnStatus(principal)) oDataFilters.Add(nameof(GroupModel.StatusId), (int)eStatus.Open);
+            if (IsRoleRestrictedOnStatus(principal)) oDataFilters.Add(nameof(Doc.StatusId), (int)eStatus.Open);
+
+            if (payload.GroupTypeIds.Any())
+            {
+                var typeIdODataFilter = new ODataFilterList(ODataFilterList.OR);
+                payload.GroupTypeIds.ForEach(x => typeIdODataFilter.Add(nameof(Doc.GroupTypeId), x));
+                oDataFilters.Add(typeIdODataFilter);
+            }
             
-            return await _azureSearchService.SearchAsync<SearchGroupDocument>(GroupsSearchIndex.INDEX_NAME,
+            return await _azureSearchService.SearchAsync<Doc>(GroupsSearchIndex.INDEX_NAME,
                 payload.Text,
                 oDataFilters.ToString(),
                 payload.Skip,
                 payload.Take,
-                new[] { nameof(SearchGroupDocument.NameDistilled) }.ToList(),
-                payload.OrderBy);
+                new[] { nameof(Doc.NameDistilled) }.ToList(),
+                ODataUtil.OrderBy(nameof(Doc.NameDistilled), (payload.SortBy == eSortBy.NameAlphabeticalAZ)));
         }
 
-        public async Task<AzureSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
+        public async Task<AzureSearchResult<Doc>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
         {
             var outerODataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
             if (IsRoleRestrictedOnStatus(principal)) outerODataFilters.Add(nameof(GroupModel.StatusId), (int)eStatus.Open);
             
             var innerODataFilters = new ODataFilterList(ODataFilterList.OR);
-            if (groupId != null) innerODataFilters.Add(nameof(GroupModel.GroupId), groupId);
-            if (groupUId.HasValue) innerODataFilters.Add(nameof(GroupModel.GroupUID), groupUId);
-            if (companiesHouseNumber.Clean() != null) innerODataFilters.Add(nameof(GroupModel.CompaniesHouseNumber), companiesHouseNumber.Clean());
+            if (groupId != null) innerODataFilters.Add(nameof(Doc.GroupId), groupId);
+            if (groupUId.HasValue) innerODataFilters.Add(nameof(Doc.GroupUID), groupUId);
+            if (companiesHouseNumber.Clean() != null) innerODataFilters.Add(nameof(Doc.CompaniesHouseNumber), companiesHouseNumber.Clean());
             outerODataFilters.Add(innerODataFilters);
 
-            return await _azureSearchService.SearchAsync<SearchGroupDocument>(GroupsSearchIndex.INDEX_NAME, filter: outerODataFilters.ToString());
+            return await _azureSearchService.SearchAsync<Doc>(GroupsSearchIndex.INDEX_NAME, filter: outerODataFilters.ToString());
         }
 
         private bool IsRoleRestrictedOnStatus(IPrincipal principal)

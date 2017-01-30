@@ -1,12 +1,12 @@
-﻿@using Edubase.Web.UI.Models
+﻿@using Edubase.Web.UI.Areas.Groups.Models
 @using Edubase.Common;
-@using Edubase.Services.Enums
-@model GroupSearchResultsModel
+@using Edubase.Services.Enums;
+@model GroupSearchViewModel
 
 @if (Model.Error != null)
 {
     <div class="column-two-thirds">
-        <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index") using different spelling or words.</p>
+        <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
     </div>
 }
 else if (Model.Results.Count > 0)
@@ -22,17 +22,19 @@ else if (Model.Results.Count > 0)
             @foreach (var result in Model.Results)
                 {
                 <li>
-                    <h2>@Html.ActionLink(result.Name ?? "s", "Details", "Group", new { id = result.GroupUID }, new { @class = "bold-small" })</h2>
+                    <h2>@Html.ActionLink(result.Name, "Details", "Group", new { id = result.GroupUID }, new { @class = "bold-small" })</h2>
                     <dl>
+                        <dt>Type:</dt>
+                        <dd>@(Model.GroupTypes.FirstOrDefault(x => x.Id == result.GroupTypeId)?.Name)</dd>
                         @if (result.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                         {
                             <dt>Companies House Number:</dt>
-                                <dd>@result.CompaniesHouseNumber</dd>
+                            <dd>@result.CompaniesHouseNumber</dd>
                         }
-                        <dt>Type:</dt>
-                        <dd>@(Model.GroupTypes.FirstOrDefault(x => x.Id == result.GroupTypeId)?.Name)</dd>
-                        <dt>Number of schools belonging to the MAT:</dt>
-                        <dd>@result.EstablishmentCount</dd>
+                        <dt>Group UID:</dt>
+                        <dd>@result.GroupUID</dd>
+                        <dt>Group ID:</dt>
+                        <dd>@result.GroupId</dd>
                     </dl>
                 </li>
             }
@@ -49,7 +51,7 @@ else if (Model.Results.Count > 0)
 else
 {
     <div class="column-two-thirds">
-        @if (Model.SearchTerm.IsInteger())
+        @if (Model.GroupSearchModel.Text.IsInteger())
         {
             <p class="no-school-results">Please check the number entered or try @Html.ActionLink("searching again", "Index") using the multi-academy trust name.</p>
         }

@@ -269,10 +269,14 @@
     <Compile Include="App_Start\AutoMapperWebProfile.cs" />
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\ODataConfig.cs" />
-    <Compile Include="Areas\Establishments\Controllers\SearchController.cs" />
+    <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Controllers\SearchController.cs" />
     <Compile Include="Areas\Governors\Models\SearchModel.cs" />
+    <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
+    <Compile Include="Areas\Groups\Models\GroupSearchDownloadGenerationProgressViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
     <Compile Include="Controllers\Api\EstablishmentsController.cs" />
     <Compile Include="Controllers\Api\GovernorsController.cs" />
     <Compile Include="Controllers\Api\GroupsController.cs" />
@@ -332,7 +336,6 @@
     <Compile Include="Models\LinkedEstabViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MATDetailViewModel.cs" />
-    <Compile Include="Models\MATASSearchResultsModel.cs" />
     <Compile Include="Models\PendingChangeViewModel.cs" />
     <Compile Include="Models\GroupEstabViewModel.cs" />
     <Compile Include="Models\Search\eSearchType.cs" />
@@ -359,6 +362,8 @@
     <Content Include="Areas\Governors\Views\Search\Download\SelectFormat.cshtml" />
     <Content Include="Areas\Establishments\Views\Web.config" />
     <Content Include="Areas\Establishments\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Groups\Views\Web.config" />
+    <Content Include="Areas\Groups\Views\_ViewStart.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -788,8 +793,8 @@
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
-    <Content Include="Views\Search\GroupResults.cshtml" />
-    <Content Include="Areas\Establishments\Views\Search\Index.cshtml" />
+    <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
+    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Index.cshtml" />
     <Content Include="Views\Establishment\Partials\TabDetails.cshtml" />
     <Content Include="Views\Establishment\Partials\TabIEBT.cshtml" />
     <Content Include="Views\Establishment\Partials\TabLinks.cshtml" />
@@ -802,8 +807,8 @@
     <Content Include="Views\Shared\Downloads\PreparingFilePleaseWait.cshtml" />
     <Content Include="Views\Shared\Downloads\ReadyToDownload.cshtml" />
     <Content Include="Views\Search\LocalAuthorityDisambiguation.cshtml" />
-    <Content Include="Areas\Establishments\Views\Search\Partials\_EstablishmentSearchResults.cshtml" />
-    <Content Include="Views\Search\Partials\_GroupSearchResults.cshtml" />
+    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_EstablishmentSearchResults.cshtml" />
+    <Content Include="Areas\Groups\Views\GroupSearch\Partials\_GroupSearchResults.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
@@ -817,10 +822,10 @@
     <Content Include="Views\Shared\_ResultsPaginationAdvSearch.cshtml" />
     <Content Include="Views\Shared\_Governors.cshtml" />
     <Content Include="Views\Tools\Index.cshtml" />
+    <Content Include="Views\Shared\_Pagination.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\Groups\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
   </ItemGroup>

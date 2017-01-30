@@ -23,15 +23,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     using UI.Models.Search;
 
     [RouteArea("Establishments"), RoutePrefix("Search"), Route("{action=index}")]
-    public partial class SearchController : EduBaseController
+    public class EstablishmentsSearchController : EduBaseController
     {
         IEstablishmentReadService _establishmentReadService;
         IGroupReadService _groupReadService;
         IEstablishmentDownloadService _establishmentDownloadService;
         ICachedLookupService _lookupService;
-        IGroupDownloadService _groupDownloadService;
 
-        public SearchController(IEstablishmentReadService establishmentReadService,
+        public EstablishmentsSearchController(IEstablishmentReadService establishmentReadService,
             IGroupReadService groupReadService,
             IEstablishmentDownloadService establishmentDownloadService,
             IGroupDownloadService groupDownloadService,
@@ -41,7 +40,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _groupReadService = groupReadService;
             _establishmentDownloadService = establishmentDownloadService;
             _lookupService = lookupService;
-            _groupDownloadService = groupDownloadService;
         }
         
 
@@ -98,7 +96,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 { "action", "Details" },
                 { "controller", "Establishment" },
-                { "id", urn }
+                { "id", urn },
+                { "area", string.Empty }
             });
 
 

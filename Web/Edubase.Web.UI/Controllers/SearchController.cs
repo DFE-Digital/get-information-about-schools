@@ -48,9 +48,9 @@ namespace Edubase.Web.UI.Controllers
                 else if (ModelState.IsValid)
                 {
                     if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text))
-                        return Redirect(Url.Action("Index", "Search", new { area = "Establishments" }) + "?" + Request.QueryString);
+                        return Redirect(Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" }) + "?" + Request.QueryString);
                     else if (viewModel.SearchType == eSearchType.Group)
-                        return Redirect(Url.Action("Results", "Search", new { area = "Groups" }) + "?" + Request.QueryString);
+                        return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
                     else if (viewModel.SearchType == eSearchType.Governor)
                         return Redirect(Url.Action("Results", "Search", new { area = "Governors" }) + "?" + Request.QueryString);
                     else throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");

@@ -32,6 +32,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
             { 'z', eSortBy.NameAlphabeticalZA }
         };
 
+        #region Bind alias constants
         public const string BIND_ALIAS_TYPEIDS = "a";
         public const string BIND_ALIAS_STATUSIDS = "b";
         public const string BIND_ALIAS_PHASEIDS = "c";
@@ -59,17 +60,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public const string BIND_ALIAS_SELECTED_SEARCH_FILTERS = "y";
         public const string BIND_ALIAS_SORT_BY = "z";
         public const string BIND_ALIAS_RADIUS = "aa";
-        
-
-        #region Enums
-
-        //public enum eSearchCollection
-        //{
-        //    Establishments,
-        //    Groups,
-        //    Governors
-        //}
-
+        #endregion
 
         public enum eTextSearchType
         {
@@ -79,9 +70,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
             EstablishmentName,
             UKPRN
         }
-        
-
-        #endregion
 
         public IList<SearchEstablishmentDocument> Results { get; set; }
         public string Error { get; set; }
@@ -128,22 +116,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         {
             _coordinate = new Lazy<LatLon>(() => LatLon.Parse(LocationSearchModel.AutoSuggestValue));
         }
-
-        //public SearchModel GovernorSearchModel { get; set; } = new SearchModel();
-
         
         public SearchPayloadViewModel TextSearchModel { get; set; } = new SearchPayloadViewModel();
         public SearchPayloadViewModel LocationSearchModel { get; set; } = new SearchPayloadViewModel();
         
-        //public SearchPayloadViewModel GroupSearchModel { get; set; } = new SearchPayloadViewModel();
-
         public eSearchType SearchType { get; set; }
+
+        #region Filters / bind aliases
 
         [BindAlias(BIND_ALIAS_SELECTED_SEARCH_FILTERS)]
         public string SelectedExtraSearchFilters { get; set; }
 
-        //public eSearchCollection SearchCollection => SearchType == eSearchType.Governor ? eSearchCollection.Governors : (SearchType == eSearchType.Group ? eSearchCollection.Groups : eSearchCollection.Establishments);
-        
         public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
 
         [BindAlias(BIND_ALIAS_TYPEIDS)]
@@ -256,23 +239,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public List<int> SelectedWardIds { get; set; } = new List<int>();
         public IEnumerable<LookupItemViewModel> Wards { get; set; }
 
-
-
-
+        
         /// <summary>
         /// When one result is found, whether to redirect the user to the detail page
         /// </summary>
         [BindAlias(BIND_ALIAS_GOONERES)]
         public bool GoToDetailPageOnOneResult { get; set; }
 
-
-        
-
-        //public string GetDownloadName()
-        //{
-        //    if (SearchCollection == eSearchCollection.Establishments) return "establishment";
-        //    else if (SearchCollection == eSearchCollection.Groups) return "establishment group";
-        //    else return "governor";
-        //}
+        #endregion
     }
 }
