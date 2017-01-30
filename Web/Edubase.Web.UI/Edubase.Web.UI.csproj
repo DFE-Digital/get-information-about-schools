@@ -272,7 +272,6 @@
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
-    <Compile Include="Areas\Governors\Controllers\SearchController.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
@@ -297,9 +296,6 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\SearchController_old.Establishments.cs" />
-    <Compile Include="Controllers\SearchController_old.Download.cs" />
-    <Compile Include="Controllers\SearchController_old.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
@@ -814,7 +810,6 @@
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Areas\Governors\Views\Shared\_ResultsPagination.cshtml" />
     <Content Include="Views\Group\CreateEdit.cshtml" />
     <Content Include="Views\Group\SearchCompaniesHouse.cshtml" />
     <Content Include="Views\Group\Create.cshtml" />
