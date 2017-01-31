@@ -23,7 +23,7 @@
                     || Model.TextSearchType == M.eTextSearchType.Unknown)
                 {
                     <text>
-                        We found <span class="heading-xlarge">@Model.Count</span> establishments
+                        We found <span class="heading-xlarge count">@Model.Count</span> establishments
                         @if (!Model.TextSearchModel.Text.IsEmpty())
                         {
                             <text>for the search term "@Model.TextSearchModel.Text".</text>
@@ -33,28 +33,28 @@
                 }
                 else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
                 {
-                    <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
                 }
                 else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
                 {
-                    <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
                 }
                 else if (Model.TextSearchType == M.eTextSearchType.URN)
                 {
-                    <text>We found <span class="heading-xlarge">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
                 }
             }
             else if (Model.SearchType == eSearchType.ByLocalAuthority)
             {
-                <text>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected local authorities</text>
+                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected local authorities</text>
             }
             else if (Model.SearchType == eSearchType.Location)
             {
-                <text>We found <span class="heading-xlarge">@Model.Count</span> establishments in the selected location</text>
+                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected location</text>
             }
 
             <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
-            <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new { area = "Establishments" })?@Url.CurrentQueryString()">Download these search results</a>
+            <a class="download-link" style="display:@(Html.Conditional(Model.Count == 0, "none"));" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new { area = "Establishments" })?@Url.CurrentQueryString()">Download these search results</a>
         </p>
     </div>
 </div>
@@ -73,7 +73,9 @@
                 <a class="help-toggle" href="/">Edit search</a>
             </div>
 
-            <div id="EditSearchCollapse" aria-expanded="true">
+            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
+
+                <div class="blanket"></div>
 
                 <div class="filter-divider"></div>
                 <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new { area = "" })">
@@ -233,10 +235,10 @@
         <select class="form-control" name="@M.BIND_ALIAS_SORT_BY">
             @if (Model.SearchType == eSearchType.Location)
             {
-                <option value="d" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.Distance, "selected")>distance</option>
+                <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.Distance, "selected")>distance</option>
             }
-            <option value="a" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
-            <option value="z" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
+            <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
+            <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
         </select>
     </div>
 }

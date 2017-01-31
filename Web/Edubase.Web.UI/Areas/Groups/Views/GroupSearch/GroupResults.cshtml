@@ -14,12 +14,12 @@
         <p>
             @if (Model.GroupSearchModel.Text.IsInteger())
             {
-                <text>We found <span class="heading-xlarge">@Model.Count</span> groups with Companies House Number '@Model.GroupSearchModel.Text'.</text>
+                <text>We found <span class="heading-xlarge count">@Model.Count</span> groups with Companies House Number '@Model.GroupSearchModel.Text'.</text>
             }
             else
             {
                 <text>
-                    We found <span class="heading-xlarge">@Model.Count</span> groups
+                    We found <span class="heading-xlarge count">@Model.Count</span> groups
                     @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
                     {
                         <text>matching "@Model.GroupSearchModel.Text".</text>
@@ -45,8 +45,8 @@
                 <a class="help-toggle" href="@Url.Action("Index", "Search", new { area = "" })">Edit search</a>
             </div>
 
-            <div id="EditSearchCollapse" aria-expanded="true">
-
+            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
+                <div class="blanket"></div>
                 <div class="filter-divider"></div>
                 <form method="get" action="@Url.Action("Index", "GroupSearch", new { area = "Groups" })">
 

@@ -11,7 +11,7 @@
         @Html.ActionLink("Go back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
         <h1 class="heading-xlarge">Search results</h1>
         <p>
-            We found <span class="heading-xlarge">@Model.Count</span> result@(Model.Count == 1 ? "" : "s") matching
+            We found <span class="heading-xlarge count">@Model.Count</span> result@(Model.Count == 1 ? "" : "s") matching
                  
             @if (Model.GovernorSearchModel.Forename.Clean() != null)
             {
@@ -46,8 +46,8 @@
                 <a class="help-toggle" href="@Url.Action("Index", "Search", new { area = "" })">Edit search</a>
             </div>
 
-            <div id="EditSearchCollapse" aria-expanded="true">
-
+            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
+                <div class="blanket"></div>
                 <div class="filter-divider"></div>
                 <form method="get" action="@Url.Action("Index", "GovernorSearch", new { area = "Governors" })">
 
