@@ -103,6 +103,14 @@ namespace Edubase.StubUserBuilder
                                 LocalAuthorities = new[] { eLocalAuthority.Westminster },
                                 EstablishmentTypeGroups = new [] { eLookupEstablishmentTypeGroup.LAMaintainedSchools }
                             }
+                        },
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.CreateGroup,
+                            ValueObject = new CreateGroupPermissions
+                            {
+                                Types = new eLookupGroupType [] { eLookupGroupType.Federation, eLookupGroupType.Trust }
+                            }
                         }
                     }
                 }
