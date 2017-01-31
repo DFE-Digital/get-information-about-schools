@@ -7,14 +7,14 @@
     ViewBag.PageClass = "mat-details";
 }
 <p>
-    <a class="font-xsmall" href="/Search#groups">Back to search</a>
+    <a class="font-xsmall" href="/#groups">Back to search</a>
 </p>
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 
 @if (Model.CanUserEdit)
 {
-    @Html.ActionLink("Edit", "Edit", "Group", new { id = Model.Group.GroupUID }, new { @class = "button mobile-full-width" })
+    @Html.ActionLink("Edit", "Edit", "Group", new { id = Model.Group.GroupUID, area = "" }, new { @class = "button mobile-full-width" })
 }
 
 <div class="grid-row summary">
