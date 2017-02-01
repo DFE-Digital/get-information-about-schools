@@ -28,7 +28,7 @@ namespace Edubase.Services.Security.Permissions
             && !GroupIds.Any()
             && !EstablishmentTypeIds.Any();
 
-        public bool CanEdit(int urn, int? typeId, int[] groupIds, int? localAuthorityId, int? typeGroupId)
+        public virtual bool CanEdit(int urn, int? typeId, int[] groupIds, int? localAuthorityId, int? typeGroupId)
             => IsUrnAllowed(urn)
             && IsGroupAllowed(groupIds)
             && IsLAAllowed(localAuthorityId)
@@ -38,6 +38,17 @@ namespace Edubase.Services.Security.Permissions
 
     public class CreateEstablishmentPermissions : EstablishmentPermissions
     {
+        public virtual bool CanCreate() => true;
+    }
+
+    public class NoCreateEstablishmentPermissions : CreateEstablishmentPermissions
+    {
+        public override bool CanCreate() => false;
+    }
+
+    public class NoEditEstablishmentPermissions : EditEstablishmentPermissions
+    {
+        public override bool CanEdit(int urn, int? typeId, int[] groupIds, int? localAuthorityId, int? typeGroupId) => false;
     }
 
     public abstract class EstablishmentPermissions : Permission

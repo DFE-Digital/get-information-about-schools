@@ -10,24 +10,24 @@ namespace Edubase.Services.Security
     public static class SecurityExtensionMethods
     {
         public static EditEstablishmentPermissions GetEditEstablishmentPermissions(this ClaimsPrincipal principal) 
-            => principal.GetFromClaim<EditEstablishmentPermissions>(EduClaimTypes.EditEstablishment);
+            => principal.GetFromClaim<EditEstablishmentPermissions, NoEditEstablishmentPermissions>(EduClaimTypes.EditEstablishment);
 
         public static CreateEstablishmentPermissions GetCreateEstablishmentPermissions(this ClaimsPrincipal principal) 
-            => principal.GetFromClaim<CreateEstablishmentPermissions>(EduClaimTypes.CreateEstablishment);
+            => principal.GetFromClaim<CreateEstablishmentPermissions, NoCreateEstablishmentPermissions>(EduClaimTypes.CreateEstablishment);
 
         public static CreateGroupPermissions GetCreateGroupPermissions(this ClaimsPrincipal principal)
-                    => principal.GetFromClaim<CreateGroupPermissions>(EduClaimTypes.EditEstablishment);
+                    => principal.GetFromClaim<CreateGroupPermissions, NoCreateGroupPermissions>(EduClaimTypes.EditEstablishment);
 
         public static EditGroupPermissions GetEditGroupPermissions(this ClaimsPrincipal principal)
-                            => principal.GetFromClaim<EditGroupPermissions>(EduClaimTypes.EditGroup);
+                            => principal.GetFromClaim<EditGroupPermissions, NoEditGroupPermissions>(EduClaimTypes.EditGroup);
 
-        private static T GetFromClaim<T>(this ClaimsPrincipal principal, string claimType) where T : new()
+        private static T GetFromClaim<T, TDefault>(this ClaimsPrincipal principal, string claimType) where TDefault : T, new()
         {
             Guard.IsNotNull(principal, () => new ArgumentNullException(nameof(principal)));
 
             var token = principal.FindFirst(claimType)?.Value;
             if (token != null) return UriHelper.DeserializeUrlToken<T>(token);
-            else return new T();
+            else return new TDefault();
         }
 
         internal static ClaimsPrincipal AsClaimsPrincipal(this IPrincipal principal)

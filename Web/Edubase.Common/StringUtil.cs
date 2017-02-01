@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -56,6 +57,13 @@ namespace Edubase.Common
                 if (text.Contains(" st ")) text = text.Replace(" st ", " saint ");
             }
             return text;
+        }
+
+        public static TEnum? ToEnum<TEnum>(string text) where TEnum : struct
+        {
+            TEnum output;
+            if (Enum.TryParse(text, out output)) return output;
+            else return null;
         }
 
     }

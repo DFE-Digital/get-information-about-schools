@@ -13,6 +13,9 @@ using System.Web.Mvc;
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
     using Common;
+    using Exceptions;
+    using Helpers;
+    using Services.Exceptions;
     using Services.Governors;
     using Services.Groups.Models;
     using static GroupDetailViewModel;
@@ -58,7 +61,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (model.GroupTypeId.Equals((int)GT.ChildrensCentresGroup)) viewModel.Address = "!FROM LEAD CENTRE!"; // TODO: get from the 'lead centre'; need IsLeadCentre on the estabgroup table
             else if(model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust)) viewModel.Address = model.Address;
 
-            viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID, model.GroupTypeId.Value);
+            viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID, model.GroupTypeId.Value, model.LocalAuthorityId);
             viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
             await PopulateEstablishmentList(viewModel, model);
@@ -68,6 +71,43 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             return View(viewModel);
         }
+
+        [Route(nameof(Create) + "/{type}")]
+        public async Task<ActionResult> Create(string type)
+        {
+            var mode = StringUtil.ToEnum<GroupEditorViewModel.eGroupTypeMode>(type);
+            Guard.IsTrue(mode.HasValue, () => new InvalidParameterException($"Invalid type parameter supplied"));
+
+            var viewModel = new GroupEditorViewModel
+            {
+                GroupTypeMode = mode.Value
+            };
+
+            if (viewModel.GroupTypeMode == GroupEditorViewModel.eGroupTypeMode.ChildrensCentre)
+            {
+                var permission = _securityService.GetCreateGroupPermission(User);
+
+                viewModel.CCGroupTypes = (await _lookup.GroupTypesGetAllAsync())
+                    .Where(x => ((GT)x.Id).OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)).ToSelectList(viewModel.GroupTypeId);
+
+                if (permission.LocalAuthorityIds.Any())
+                {
+                    viewModel.IsLocalAuthorityEditable = false;
+                    viewModel.LocalAuthorityId = permission.LocalAuthorityIds[0];
+                    viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
+                }
+                else
+                {
+                    viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
+                    viewModel.IsLocalAuthorityEditable = true;
+                }
+            }
+
+            viewModel.Statuses = (await _lookup.GroupStatusesGetAllAsync()).ToSelectList(viewModel.GroupStatusId);
+            
+            return View("CreateEdit", viewModel);
+        }
+
 
         private async Task PopulateEstablishmentList(GroupDetailViewModel viewModel, GroupModel model)
         {
