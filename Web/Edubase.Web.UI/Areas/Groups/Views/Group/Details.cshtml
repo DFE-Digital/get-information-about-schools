@@ -36,6 +36,18 @@
                 <td>@(Model.Group.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
             </tr>
 
+            @if (Model.IsUserLoggedOn)
+            {
+                <tr>
+                    <th scope="col">Closed date</th>
+                    <td>@(Model.Group.ClosedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
+                </tr>
+
+                <tr>
+                    <th scope="col">Status</th>
+                    <td>@(Model.GroupStatusName ?? "Not recorded")</td>
+                </tr>
+            }
 
             @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
             {

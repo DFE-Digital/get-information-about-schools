@@ -46,16 +46,20 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var viewModel = new GroupDetailViewModel();
-            var model = await _groupReadService.GetAsync(id);
+            var result = await _groupReadService.GetAsync(id, User);
+
+            var model = result.GetResult();
             viewModel.Group = model;
 
             if (model.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => model.GroupTypeId));
             if (model.LocalAuthorityId.HasValue) viewModel.LocalAuthorityName = (await _lookup.GetNameAsync(() => model.LocalAuthorityId));
+            if (model.StatusId.HasValue) viewModel.GroupStatusName = (await _lookup.GetNameAsync(() => model.StatusId, "Group"));
 
             if (model.GroupTypeId.Equals((int)GT.ChildrensCentresGroup)) viewModel.Address = "!FROM LEAD CENTRE!"; // TODO: get from the 'lead centre'; need IsLeadCentre on the estabgroup table
             else if(model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust)) viewModel.Address = model.Address;
 
             viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID, model.GroupTypeId.Value);
+            viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
             await PopulateEstablishmentList(viewModel, model);
 

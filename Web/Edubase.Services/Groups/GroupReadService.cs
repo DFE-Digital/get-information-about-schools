@@ -26,6 +26,7 @@ namespace Edubase.Services.Groups
     using Doc = SearchGroupDocument;
     using Core.Search;
     using Exceptions;
+    using Domain;
 
     public class GroupReadService : IGroupReadService
     {
@@ -126,11 +127,15 @@ namespace Edubase.Services.Groups
             return retVal;
         }
 
-        public async Task<GroupModel> GetAsync(int uid)
+        public async Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal)
         {
             var dataModel = await _groupRepository.GetAsync(uid);
-            if (dataModel == null) return null;
-            else return _mapper.Map<GroupCollection, GroupModel>(dataModel);
+            if (dataModel == null) return new ServiceResultDto<GroupModel>(eServiceResultStatus.NotFound);
+            else if (!IsRoleRestrictedOnStatus(principal) || dataModel.StatusId.Equals((int)eStatus.Open))
+            {
+                return new ServiceResultDto<GroupModel>(_mapper.Map<GroupCollection, GroupModel>(dataModel));
+            }
+            else return new ServiceResultDto<GroupModel>(eServiceResultStatus.PermissionDenied);
         }
 
         /// <summary>

@@ -33,6 +33,7 @@ namespace Edubase.Services.Lookup
                 { "RSCRegionId", async id => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "TypeId", async id => (await EstablishmentTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "GroupTypeId", async id => (await GroupTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "Group.StatusId", async id => (await GroupStatusesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "StatusId", async id => (await EstablishmentStatusesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ReasonEstablishmentOpenedId", async id => (await ReasonEstablishmentOpenedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ReasonEstablishmentClosedId", async id => (await ReasonEstablishmentClosedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -88,6 +89,7 @@ namespace Edubase.Services.Lookup
                 { "RSCRegionId",  id => LocalAuthorityGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "TypeId",  id => EstablishmentTypesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "GroupTypeId",  id => GroupTypesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "Group.StatusId",  id => GroupStatusesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "StatusId",  id => EstablishmentStatusesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "ReasonEstablishmentOpenedId",  id => ReasonEstablishmentOpenedGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "ReasonEstablishmentClosedId",  id => ReasonEstablishmentClosedGetAll().FirstOrDefault(x => x.Id == id)?.Name },
@@ -266,11 +268,11 @@ namespace Edubase.Services.Lookup
 
         public IEnumerable<LookupDto> GroupStatusesGetAll() => Auto(_lookupService.GroupStatusesGetAll);
 
-        public async Task<string> GetNameAsync(string lookupName, int? id) =>
-            id.HasValue ? await _mappingAsync.Get(lookupName)?.Invoke(id.Value) : null;
+        public async Task<string> GetNameAsync(string lookupName, int? id, string domain = null) =>
+            id.HasValue ? await _mappingAsync.Get((domain != null ? string.Concat(domain, ".", lookupName) : lookupName))?.Invoke(id.Value) : null;
 
-        public async Task<string> GetNameAsync(Expression<Func<int?>> expression) 
-            => await GetNameAsync(((MemberExpression)expression.Body).Member.Name, expression.Compile()());
+        public async Task<string> GetNameAsync(Expression<Func<int?>> expression, string domain = null) 
+            => await GetNameAsync(((MemberExpression)expression.Body).Member.Name, expression.Compile()(), domain);
 
         public string GetName(string lookupName, int? id) 
             => id.HasValue ? _mapping.Get(lookupName)?.Invoke(id.Value) : null;

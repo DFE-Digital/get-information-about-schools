@@ -1,4 +1,5 @@
 ﻿using Edubase.Data.Entity;
+using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
@@ -26,7 +27,7 @@ namespace Edubase.Services.Groups
         Task<AzureSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal);
 
         Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn);
-        Task<GroupModel> GetAsync(int uid);
+        Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal);
 
         /// <summary>
         /// Retrieves the list of Establishment Groups associated with a Group

@@ -120,8 +120,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                         if (item.GroupUID.HasValue)
                         {
-                            var group = await _groupReadService.GetAsync(item.GroupUID.Value);
-                            if (group != null) model.GroupNames[item] = group.Name;
+                            var result = await _groupReadService.GetAsync(item.GroupUID.Value, User);
+                            if (result.Success) model.GroupNames[item] = result.ReturnValue.Name;
+                            else model.GroupNames[item] = "n/a"; // permission denied
                         }
                     }
                 }

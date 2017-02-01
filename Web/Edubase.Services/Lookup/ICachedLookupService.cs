@@ -9,8 +9,8 @@ namespace Edubase.Services.Lookup
     public interface ICachedLookupService : ILookupService
     {
         string GetName(string lookupName, int? id);
-        Task<string> GetNameAsync(string lookupName, int? id);
-        Task<string> GetNameAsync(Expression<Func<int?>> expression);
+        Task<string> GetNameAsync(string lookupName, int? id, string domain = null);
+        Task<string> GetNameAsync(Expression<Func<int?>> expression, string domain = null);
         bool IsLookupField(string name);
     }
 }
