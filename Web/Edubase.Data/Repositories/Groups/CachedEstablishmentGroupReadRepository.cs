@@ -46,5 +46,8 @@ namespace Edubase.Data.Repositories.Groups
 
         public async Task<List<EstablishmentGroup>> GetForUrnAsync(int urn)
             => await AutoAsync(async () => await _repo.GetForUrnAsync(urn), Keyify(urn));
+
+        public async Task<List<EstablishmentGroup>> GetForGroupAsync(int groupUId)
+            => await AutoAsync(async () => await _repo.GetForGroupAsync(groupUId), Keyify(groupUId));
     }
 }

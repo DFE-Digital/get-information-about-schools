@@ -29,5 +29,9 @@ namespace Edubase.Data.Repositories.Groups
         public override IOrderedQueryable<EstablishmentGroup> GetBatchQuery(IApplicationDbContext dbContext) =>
             dbContext.EstablishmentGroups.AsNoTracking().Where(x => x.IsDeleted == false).OrderBy(x => x.GroupUID);
 
+        public async Task<List<EstablishmentGroup>> GetForGroupAsync(int groupUId)
+            => await ObtainDbContext().EstablishmentGroups
+                .Where(x => x.GroupUID == groupUId && x.IsDeleted == false).ToListAsync();
+
     }
 }

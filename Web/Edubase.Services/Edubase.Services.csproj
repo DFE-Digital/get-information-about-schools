@@ -186,6 +186,7 @@
     <Compile Include="Governors\Downloads\GovernorDownloadService.cs" />
     <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
     <Compile Include="Governors\IGovernorsReadService.cs" />
+    <Compile Include="Governors\Models\GovernorModel.cs" />
     <Compile Include="Governors\Search\GovernorSearchPayload.cs" />
     <Compile Include="Governors\Search\SearchGovernorDocument.cs" />
     <Compile Include="Groups\Downloads\GroupDownloadService.cs" />

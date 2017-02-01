@@ -18,5 +18,6 @@ namespace Edubase.Services.Groups.Models
         public string ManagerEmailAddress { get; set; }
         public string GroupId { get; set; }
         public int EstablishmentCount { get; set; }
+        public int? LocalAuthorityId { get; set; }
     }
 }

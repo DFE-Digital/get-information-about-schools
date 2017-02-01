@@ -276,7 +276,9 @@
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
     <Compile Include="Areas\Governors\Models\SearchModel_old.cs" />
+    <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
+    <Compile Include="Areas\Groups\Models\GroupDetailViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
@@ -296,7 +298,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\GroupController.cs" />
+    <Content Include="Controllers\GroupController.txt" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
     <Compile Include="Filters\EdubaseAuthorizeAttribute.cs" />
@@ -335,7 +337,7 @@
     <Compile Include="Models\HomepageViewModel.cs" />
     <Compile Include="Models\LinkedEstabViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\MATDetailViewModel.cs" />
+    <Content Include="Models\MATDetailViewModel.txt" />
     <Compile Include="Models\PendingChangeViewModel.cs" />
     <Compile Include="Models\GroupEstabViewModel.cs" />
     <Compile Include="Models\Search\eSearchType.cs" />
@@ -344,6 +346,7 @@
     <Compile Include="Models\Search\GovernorSearchPayloadViewModel.cs" />
     <Compile Include="Models\Search\SearchPayloadViewModel.cs" />
     <Compile Include="Models\Search\SearchViewModel.cs" />
+    <Compile Include="Models\ToolsViewModel.cs" />
     <Compile Include="Models\Validators\CreateEditGroupModelValidator.cs" />
     <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
     <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
@@ -362,6 +365,7 @@
     <Content Include="Areas\Groups\Views\Web.config" />
     <Content Include="Areas\Groups\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Governors\Views\GovernorSearch\Partials\_GovernorSearchResults.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\Details.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -821,6 +825,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />
+    <Folder Include="Models\Groups\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
   </ItemGroup>

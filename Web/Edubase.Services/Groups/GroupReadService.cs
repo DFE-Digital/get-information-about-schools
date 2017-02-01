@@ -132,5 +132,12 @@ namespace Edubase.Services.Groups
             if (dataModel == null) return null;
             else return _mapper.Map<GroupCollection, GroupModel>(dataModel);
         }
+
+        /// <summary>
+        /// Retrieves the list of Establishment Groups associated with a Group
+        /// </summary>
+        /// <param name="groupUid"></param>
+        /// <returns></returns>
+        public async Task<List<EstablishmentGroup>> GetEstablishmentGroupsAsync(int groupUid) => await _cachedEstablishmentGroupReadRepository.GetForGroupAsync(groupUid);
     }
 }

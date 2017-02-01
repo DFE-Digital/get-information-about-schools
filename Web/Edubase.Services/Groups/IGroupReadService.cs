@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Groups.Models;
+﻿using Edubase.Data.Entity;
+using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System.Collections.Generic;
@@ -26,5 +27,12 @@ namespace Edubase.Services.Groups
 
         Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn);
         Task<GroupModel> GetAsync(int uid);
+
+        /// <summary>
+        /// Retrieves the list of Establishment Groups associated with a Group
+        /// </summary>
+        /// <param name="groupUid"></param>
+        /// <returns></returns>
+        Task<List<EstablishmentGroup>> GetEstablishmentGroupsAsync(int groupUid);
     }
 }

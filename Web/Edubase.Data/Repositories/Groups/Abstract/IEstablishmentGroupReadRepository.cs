@@ -10,5 +10,6 @@ namespace Edubase.Data.Repositories.Groups.Abstract
     {
         Task<EstablishmentGroup> GetAsync(int id);
         Task<List<EstablishmentGroup>> GetForUrnAsync(int urn);
+        Task<List<EstablishmentGroup>> GetForGroupAsync(int groupUId);
     }
 }
