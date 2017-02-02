@@ -29,7 +29,9 @@
 
     $(function () {
         var $resultsElement = $("#results-container");
-        if ($resultsElement.length == 0) return;
+        if ($resultsElement.length === 0) {
+            return;
+        }
 
         $("#filter-submit").hide();
         var initialState = captureInitialState();
@@ -42,12 +44,16 @@
             $resultsElement.html(progressHtml);
             $blanket.show();
             captureFormState();
-            var queryString = queryString ? queryString : $("form").serialize();
+            queryString = queryString ? queryString : $("form").serialize();
             $.get("Search/results-js?" + queryString, function (html, textStatus, jqXHR) {
                 var count = jqXHR.getResponseHeader("x-count");
                 $("span.count").html(count);
-                if (Number.parseInt(count) == 0) $("a.download-link").hide();
-                else $("a.download-link").show();
+                if (parseInt(count, 10) === 0) {
+                    $("a.download-link").addClass('hidden');
+                    window.scrollTo(0,0);
+                } else {
+                    $("a.download-link").removeClass('hidden');
+                }
 
                 $blanket.hide();
                 $resultsElement.html(html);
@@ -63,7 +69,7 @@
             });
         };
 
-        $(document).on("change", "select, input[type='checkbox']", function () {
+        $(document).on("change", ".trigger-result-update", function () {
             if (ci) window.clearTimeout(ci);
             ci = setTimeout(refreshResults, 200); // when the clear button is clicked on the filters, multiple events come through; so using timer to prevent extraneous requests
         });
