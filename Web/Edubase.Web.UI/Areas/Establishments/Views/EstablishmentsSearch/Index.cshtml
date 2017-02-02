@@ -217,7 +217,7 @@
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
     <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
-         id="option-select-@label.ToLower().Replace(" ", "-")" data-bind-alias="@name">
+         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter"></div>
