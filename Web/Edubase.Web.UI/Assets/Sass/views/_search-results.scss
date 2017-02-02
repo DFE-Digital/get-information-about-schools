@@ -55,6 +55,11 @@
     dt {
         clear: left;
         padding-right: 0.5em;
+
+        &.inline-details {
+            clear: none;
+            margin-left: 12px;
+        }
     }
     .trust-details {
         float: none;
