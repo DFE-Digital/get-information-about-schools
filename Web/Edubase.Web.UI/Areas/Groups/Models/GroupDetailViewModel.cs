@@ -14,18 +14,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
     public class GroupDetailViewModel
     {
-        public class EstablishmentGroupViewModel
-        {
-            public string Name { get; set; }
-            public int Urn { get; set; }
-            public string Address { get; set; }
-            public string TypeName { get; set; }
-            public string HeadFirstName { get; set; }
-            public string HeadLastName { get; set; }
-            public DateTime? JoinedDate { get; set; }
-            public string HeadTitleName { get; set; }
-        }
-
         public bool CanUserEdit { get; set; }
         public bool IsUserLoggedOn { get; set; }
         public GroupModel Group { get; set; }

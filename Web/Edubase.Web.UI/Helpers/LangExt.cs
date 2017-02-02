@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Edubase.Services.Domain;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Edubase.Web.UI.Helpers
+namespace Edubase.Web.UI
 {
     public static class LangExt
     {
@@ -41,6 +42,16 @@ namespace Edubase.Web.UI.Helpers
             var key = ExpressionHelper.GetExpressionText(ex);
             modelState.AddModelError(key, message);
         }
+
+        /// <summary>
+        /// Adds a message that will appear in the validation summary, in addition to the field-level message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TProperty"></typeparam>
+        /// <param name="rule"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, TProperty> WithSummaryMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string message) => rule.WithState(x => message);
 
 
     }

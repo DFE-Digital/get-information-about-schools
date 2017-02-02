@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Edubase.Web.UI.Helpers
+namespace Edubase.Web.UI.Validation
 {
     public class AutofacValidatorFactory : ValidatorFactoryBase
     {

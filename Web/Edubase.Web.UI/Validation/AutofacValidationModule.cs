@@ -1,4 +1,7 @@
 ﻿using Autofac;
+using Edubase.Web.UI.Areas.Groups.Models;
+using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
+using Edubase.Web.UI.Areas.Groups.Models.Validators;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
@@ -7,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Edubase.Web.UI.Helpers
+namespace Edubase.Web.UI.Validation
 {
     public class ValidationModule : Module
     {
@@ -16,6 +19,10 @@ namespace Edubase.Web.UI.Helpers
             builder.RegisterType<CreateEditEstablishmentModelValidator>()
                     .Keyed<IValidator>(typeof(IValidator<CreateEditEstablishmentModel>))
                     .As<IValidator>();
+
+            //builder.RegisterType<GroupEditorViewModelValidator>()
+            //        .Keyed<IValidator>(typeof(IValidator<GroupEditorViewModel>))
+            //        .As<IValidator>();
         }
     }
 }

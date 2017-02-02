@@ -227,6 +227,13 @@ namespace Edubase.Services.Establishments
         }
 
 
+        public async Task<bool> ExistsAsync(string name, int? localAuthorityId = null)
+        {
+            using (var dc = new ApplicationDbContext()) // no point in putting this into a repo, as Texuna will be doing an API
+            {
+                return await dc.Establishments.AnyAsync(x => x.Name == name && (localAuthorityId == null || x.LocalAuthorityId == localAuthorityId));
+            }
+        }
         
 
 

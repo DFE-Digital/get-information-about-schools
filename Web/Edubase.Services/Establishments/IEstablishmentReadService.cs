@@ -32,5 +32,6 @@ namespace Edubase.Services.Establishments
         /// </exception>
         Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
         int[] GetPermittedStatusIds(IPrincipal principal);
+        Task<bool> ExistsAsync(string name, int? localAuthorityId = null);
     }
 }

@@ -21,10 +21,9 @@
                     <li>@Html.ActionLink("Create new school", "Create", "Establishment")</li>
                     <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group")</li><!-- TODO: UPDATE!! -->
 
-                    <li>@Html.ActionLink("Create new children's centre group or collaboration", "Create", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
-                    <li>@Html.ActionLink("Create new federation", "Create", "Group", new { area = "Groups", type = "Federation" }, null)</li>
-                    <li>@Html.ActionLink("Create new school trust", "Create", "Group", new { area = "Groups", type = "Trust" }, null)</li>
-
+                    <li>@Html.ActionLink("Create new children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
+                    <li>@Html.ActionLink("Create new federation", "CreateNewGroup", "Group", new { area = "Groups", type = "Federation" }, null)</li>
+                    <li>@Html.ActionLink("Create new school trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null)</li>
                 </ul>
             }
 

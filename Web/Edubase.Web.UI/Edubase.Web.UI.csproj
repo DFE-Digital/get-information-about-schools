@@ -278,11 +278,15 @@
     <Compile Include="Areas\Governors\Models\SearchModel_old.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\LinkedEstablishmentSearchViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\EstablishmentGroupViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupDetailViewModel.cs" />
-    <Compile Include="Areas\Groups\Models\GroupEditorModel.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditorViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\GroupLinkedEstablishmentsViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\Validators\GroupEditorViewModelValidator.cs" />
     <Compile Include="Controllers\Api\EstablishmentsController.cs" />
     <Compile Include="Controllers\Api\GovernorsController.cs" />
     <Compile Include="Controllers\Api\GroupsController.cs" />
@@ -310,8 +314,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
-    <Compile Include="Helpers\AutofacValidationModule.cs" />
-    <Compile Include="Helpers\AutofacValidatorFactory.cs" />
+    <Compile Include="Validation\AutofacValidationModule.cs" />
+    <Compile Include="Validation\AutofacValidatorFactory.cs" />
     <Compile Include="Helpers\FormatHelpers.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\JsonCamelCaseResult.cs" />
@@ -355,6 +359,7 @@
     <Compile Include="MvcResult\ChallengeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Validation\EdubaseAbstractValidator.cs" />
     <Compile Include="ValueConverters\Governor2StringValueConverter.cs" />
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
