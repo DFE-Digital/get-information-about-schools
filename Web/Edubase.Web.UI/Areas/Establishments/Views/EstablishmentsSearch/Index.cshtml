@@ -180,6 +180,24 @@
             </div>
 
         </div>
+        <div id="additional-filter-wrap" class="hidden">
+            <div class="govuk-option-select js-collapsible" data-closed-on-load="false" id="option-select-additional-filters">
+                <button class="js-container-head" aria-expanded="false">
+                    <div class="option-select-label">Add more filters</div>
+                    <div class="js-selected-counter"></div>
+                </button>
+                <a href="#" class="clear-selections">Clear</a>
+                <div class="options-container">
+                    <div class="js-auto-height-inner">
+                        <fieldset id="filter-type-target">
+                            <legend class="visuallyhidden">Select an option below to filter the results</legend>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <input value="Update" class="button edubase-filter-submit" id="filter-refine" type="submit">
+        </div>
+
     </div>
 
     <div class="column-two-thirds" id="results-container">
@@ -212,7 +230,7 @@
                     @foreach (var item in items)
                     {
                         <label for="@(name)_@item.Id">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
                             @item
                             <span class="visuallyhidden">- changing the selection will refresh the results</span>
                         </label>
@@ -232,7 +250,7 @@
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter"></div>
         </div>
-        <select class="form-control" name="@M.BIND_ALIAS_SORT_BY">
+        <select class="form-control trigger-result-update" name="@M.BIND_ALIAS_SORT_BY">
             @if (Model.SearchType == eSearchType.Location)
             {
                 <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.Distance, "selected")>distance</option>
