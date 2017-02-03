@@ -13,6 +13,7 @@ using Edubase.Services.Enums;
 namespace Edubase.Services.Groups
 {
     using Common;
+    using Data.Repositories.Groups.Abstract;
     using Establishments;
     using Exceptions;
     using Security;
@@ -25,21 +26,29 @@ namespace Edubase.Services.Groups
         private readonly IEstablishmentReadService _establishmentsReadService;
         private readonly IGroupReadService _groupReadService;
         private readonly ISecurityService _securityService;
-
+        private readonly ICachedGroupReadRepository _groupRepository;
+        private readonly ICachedEstablishmentGroupReadRepository _cachedEstablishmentGroupReadRepository;
 
         public GroupsWriteService(IApplicationDbContext dbContext, IEstablishmentReadService establishmentsReadService, 
-            ISecurityService securityService, IGroupReadService groupReadService)
+            ISecurityService securityService, 
+            IGroupReadService groupReadService, 
+            ICachedGroupReadRepository groupRepository,
+            ICachedEstablishmentGroupReadRepository cachedEstablishmentGroupReadRepository)
         {
             _dbContext = dbContext;
             _establishmentsReadService = establishmentsReadService;
             _securityService = securityService;
             _groupReadService = groupReadService;
+            _groupRepository = groupRepository;
+            _cachedEstablishmentGroupReadRepository = cachedEstablishmentGroupReadRepository;
         }
 
         public async Task<int> SaveAsync(SaveGroupDto dto, IPrincipal principal)
         {
-            var validator = new SaveGroupDtoValidator(principal, _establishmentsReadService, _securityService, _groupReadService).Validate(dto);
-            if (!validator.IsValid) throw new AggregateException(validator.Errors.Select(x => new EdubaseException(x.ErrorMessage)));
+            var newRecord = dto.IsNewEntity;
+            var validator = new SaveGroupDtoValidator(principal, _establishmentsReadService, _securityService, _groupReadService);
+            var validationResult = await validator.ValidateAsync(dto);
+            if (!validationResult.IsValid) throw new EdubaseException("Validation errors: \r\n" + string.Join(Environment.NewLine, validationResult.Errors.Select(x => x.ErrorMessage)));
             else
             {
                 if(dto.Group.GroupTypeId == (int)GT.ChildrensCentresGroup)
@@ -50,6 +59,7 @@ namespace Edubase.Services.Groups
                 }
                 
                 var dataModel = !dto.IsNewEntity ? _dbContext.Groups.SingleOrThrow(x => x.GroupUID == dto.Group.GroupUID) : new GroupCollection();
+
                 dataModel.Address = dto.Group.Address;
                 dataModel.ClosedDate = dto.Group.ClosedDate;
                 dataModel.CompaniesHouseNumber = dto.Group.CompaniesHouseNumber;
@@ -61,21 +71,26 @@ namespace Edubase.Services.Groups
                 dataModel.Name = dto.Group.Name;
                 dataModel.OpenDate = dto.Group.OpenDate;
                 dataModel.StatusId = dto.Group.StatusId;
+
                 if (dto.IsNewEntity) _dbContext.Groups.Add(dataModel);
 
-                foreach (var e in dto.LinkedEstablishments)
+                if (dto.LinkedEstablishments != null && dto.LinkedEstablishments.Any())
                 {
-                    var linkedEstabDataModel = e.Id.HasValue ? _dbContext.EstablishmentGroups.SingleOrThrow(x => x.Id == e.Id) : new EstablishmentGroup();
-                    linkedEstabDataModel.EstablishmentUrn = e.EstablishmentUrn;
-                    linkedEstabDataModel.Group = dataModel;
-                    linkedEstabDataModel.JoinedDate = e.JoinedDate;
-                    //linkedEstabDataModel.CCIsLeadCentre = e.CCIsLeadCentre; todo!
-                    if (!e.Id.HasValue) _dbContext.EstablishmentGroups.Add(linkedEstabDataModel);
+                    foreach (var e in dto.LinkedEstablishments)
+                    {
+                        var linkedEstabDataModel = e.Id.HasValue ? _dbContext.EstablishmentGroups.SingleOrThrow(x => x.Id == e.Id) : new EstablishmentGroup();
+                        linkedEstabDataModel.EstablishmentUrn = e.EstablishmentUrn;
+                        linkedEstabDataModel.Group = dataModel;
+                        linkedEstabDataModel.JoinedDate = e.JoinedDate;
+                        linkedEstabDataModel.CCIsLeadCentre = e.CCIsLeadCentre;
+                        if (!e.Id.HasValue) _dbContext.EstablishmentGroups.Add(linkedEstabDataModel);
+                    }
                 }
-                
-                // todo: clear cache on this item, if existing record.
 
                 await _dbContext.SaveChangesAsync();
+
+                if (!newRecord) await _groupRepository.ClearRelationshipCacheAsync(dataModel.GroupUID);
+
                 return dataModel.GroupUID;
             }
         }

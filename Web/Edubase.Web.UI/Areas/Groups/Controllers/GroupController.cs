@@ -17,9 +17,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
     using Common;
     using Exceptions;
+    using Filters;
     using Helpers;
     using Models.CreateEdit;
     using Models.Validators;
+    using Services;
+    using Services.Domain;
     using Services.Exceptions;
     using Services.Governors;
     using Services.Groups.Models;
@@ -36,6 +39,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         ISecurityService _securityService;
         IGovernorsReadService _governorsReadService;
         IGroupsWriteService _groupWriteService;
+        ICompaniesHouseService _companiesHouseService;
 
         public GroupController(
             ICachedLookupService cachedLookupService, 
@@ -43,7 +47,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
             IGovernorsReadService governorsReadService,
-            IGroupsWriteService groupWriteService)
+            IGroupsWriteService groupWriteService,
+            ICompaniesHouseService companiesHouseService)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
@@ -51,6 +56,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _establishmentReadService = establishmentReadService;
             _governorsReadService = governorsReadService;
             _groupWriteService = groupWriteService;
+            _companiesHouseService = companiesHouseService;
         }
 
 
@@ -58,22 +64,20 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var viewModel = new GroupDetailViewModel();
-            var result = await _groupReadService.GetAsync(id, User);
-
-            var model = result.GetResult();
+            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
+            
             viewModel.Group = model;
 
             if (model.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => model.GroupTypeId));
             if (model.LocalAuthorityId.HasValue) viewModel.LocalAuthorityName = (await _lookup.GetNameAsync(() => model.LocalAuthorityId));
             if (model.StatusId.HasValue) viewModel.GroupStatusName = (await _lookup.GetNameAsync(() => model.StatusId, "Group"));
 
-            if (model.GroupTypeId.Equals((int)GT.ChildrensCentresGroup)) viewModel.Address = "!FROM LEAD CENTRE!"; // TODO: get from the 'lead centre'; need IsLeadCentre on the estabgroup table
-            else if(model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust)) viewModel.Address = model.Address;
+            if (model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup)) viewModel.Address = model.Address;
 
             viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID.Value, model.GroupTypeId.Value, model.LocalAuthorityId);
             viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
-            await PopulateEstablishmentList(viewModel, model);
+            await PopulateEstablishmentList(viewModel.Establishments, model.GroupUID.Value);
 
             viewModel.HistoricalGovernors = await _governorsReadService.GetHistoricalByGroupUID(id);
             viewModel.Governors = await _governorsReadService.GetCurrentByGroupUID(id);
@@ -89,7 +93,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             Guard.IsTrue(mode.HasValue, () => new InvalidParameterException($"Invalid type parameter supplied"));
 
             var viewModel = await PopulateSelectLists(new GroupEditorViewModel(mode.Value));
-            
+
+            await PopulateLocalAuthorityFields(viewModel);
+
+            return View("CreateEdit", viewModel);
+        }
+
+        private async Task PopulateLocalAuthorityFields(GroupEditorViewModel viewModel)
+        {
             if (viewModel.GroupTypeMode == GroupEditorViewModel.eGroupTypeMode.ChildrensCentre)
             {
                 var permission = _securityService.GetCreateGroupPermission(User);
@@ -101,10 +112,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
                 else viewModel.IsLocalAuthorityEditable = true;
             }
-
-            viewModel.Statuses = (await _lookup.GroupStatusesGetAllAsync()).ToSelectList(viewModel.GroupStatusId);
-            
-            return View("CreateEdit", viewModel);
         }
 
         [HttpPost]
@@ -126,6 +133,100 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("CreateEdit", viewModel);
         }
 
+        [HttpGet]
+        [Route("Edit/{id:int}")]
+        public async Task<ActionResult> Edit(int id)
+        {
+            var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
+            var viewModel = new GroupEditorViewModel();
+            viewModel.Address = domainModel.Address;
+            viewModel.ClosedDate = new DateTimeViewModel(domainModel.ClosedDate);
+            viewModel.OpenDate = new DateTimeViewModel(domainModel.OpenDate);
+            viewModel.LocalAuthorityId = domainModel.LocalAuthorityId;
+            viewModel.GroupStatusId = domainModel.StatusId;
+            viewModel.GroupTypeId = domainModel.GroupTypeId;
+            viewModel.GroupManagerEmailAddress = domainModel.ManagerEmailAddress;
+            viewModel.Name = domainModel.Name;
+            viewModel.CompaniesHouseNumber = domainModel.CompaniesHouseNumber;
+            viewModel.GroupUID = domainModel.GroupUID;
+
+            await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id);
+            await PopulateSelectLists(viewModel);
+
+            return View("CreateEdit", viewModel);
+        }
+        
+        [HttpPost]
+        [Route("Edit")]
+        public async Task<ActionResult> EditGroup(GroupEditorViewModel viewModel)
+        {
+            var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, _securityService).ValidateAsync(viewModel);
+            result.AddToModelState(ModelState, string.Empty);
+            ViewBag.FVErrors = result;
+
+            await PopulateSelectLists(viewModel);
+
+            if (ModelState.IsValid)
+            {
+                var actionResult = await ProcessCreateEditGroup(viewModel);
+                if (actionResult != null) return actionResult;
+            }
+
+            return View("CreateEdit", viewModel);
+        }
+
+        [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
+        public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
+        {
+            if (!viewModel.SearchText.IsNullOrEmpty())
+            {
+                if (viewModel.SearchText.IsInteger()) viewModel.Results = await _companiesHouseService.SearchByCompaniesHouseNumber(viewModel.SearchText);
+                else viewModel.Results = await _companiesHouseService.SearchByName(viewModel.SearchText, viewModel.StartIndex, viewModel.PageSize);
+                viewModel.NotFound = !viewModel.Results.Items.Any();
+            }
+            return View(viewModel);
+        }
+
+
+        [HttpGet, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
+        public async Task<ActionResult> CreateAcademyTrust(string companiesHouseNumber)
+        {
+            if (string.IsNullOrWhiteSpace(companiesHouseNumber)) return HttpNotFound();
+
+            var companyProfile = await _companiesHouseService.SearchByCompaniesHouseNumber(companiesHouseNumber);
+            var groupTypes = await GetAcademyTrustGroupTypes();
+
+            var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
+            vm.TrustExists = await _groupReadService.ExistsAsync(CompaniesHouseNumber.Parse(companiesHouseNumber));
+            
+            return View(vm);
+        }
+
+        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
+        public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var dto = new SaveGroupDto(new GroupModel
+                {
+                    Address = viewModel.Address,
+                    CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
+                    GroupTypeId = viewModel.TypeId,
+                    Name = viewModel.Name,
+                    OpenDate = viewModel.OpenDate,
+                    StatusId = (int)Services.Enums.eLookupGroupStatus.Open
+                });
+
+                var groupUId = await _groupWriteService.SaveAsync(dto, User);
+                return RedirectToAction("Details", new { groupUId });
+            }
+            else viewModel.GroupTypes = await GetAcademyTrustGroupTypes(viewModel.TypeId);
+            return View("CreateAcademyTrust", viewModel);
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetAcademyTrustGroupTypes(int? typeId = null) 
+            => (await _lookup.GroupTypesGetAllAsync()).Where(x => x.Id == (int)GT.MultiacademyTrust || x.Id == (int)GT.SingleacademyTrust).ToSelectList(typeId);
+        
         private async Task<ActionResult> ProcessCreateEditGroup(GroupEditorViewModel viewModel)
         {
             var suppressClearModelState = false;
@@ -196,7 +297,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CCIsLeadCentre = x.CCIsLeadCentre
             }).ToList());
             
-            await _groupWriteService.SaveAsync(dto, User);
+            viewModel.GroupUID = await _groupWriteService.SaveAsync(dto, User);
         }
 
         private async Task AddLinkedEstablishment(GroupEditorViewModel viewModel)
@@ -235,18 +336,18 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return viewModel;
         }
 
-
-        private async Task PopulateEstablishmentList(GroupDetailViewModel viewModel, GroupModel model)
+        private async Task PopulateEstablishmentList(List<EstablishmentGroupViewModel> list, int groupUId)
         {
-            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(model.GroupUID.Value);
+            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(groupUId);
             foreach (var establishmentGroup in establishmentGroups)
             {
                 var result = await _establishmentReadService.GetAsync(establishmentGroup.EstablishmentUrn, User);
                 if (result.Success)
                 {
                     var estabModel = result.GetResult();
-                    viewModel.Establishments.Add(new EstablishmentGroupViewModel
+                    list.Add(new EstablishmentGroupViewModel
                     {
+                        Id = establishmentGroup.Id,
                         Address = estabModel.GetAddress(),
                         HeadFirstName = estabModel.HeadFirstName,
                         HeadLastName = estabModel.HeadLastName,

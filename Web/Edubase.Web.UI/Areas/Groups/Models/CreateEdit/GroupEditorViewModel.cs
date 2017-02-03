@@ -1,15 +1,12 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
-    using Exceptions;
     using GT = eLookupGroupType;
 
     public class GroupEditorViewModel
@@ -78,6 +75,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public bool IsLocalAuthorityEditable { get; set; }
         public string LocalAuthorityName { get; set; }
 
+        public string OpenDateLabel => GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on" : "Open date";
+
         public GT? GroupType => GroupTypeId.HasValue ? (GT) GroupTypeId.Value : null as GT?;
 
         public string Name { get; set; }
@@ -91,8 +90,14 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public void SetCCLeadCentreUrn()
         {
-            LinkedEstablishments.Establishments.ForEach(x => x.CCIsLeadCentre = false);
-            LinkedEstablishments.Establishments.Single(x => x.Urn == CCLeadCentreUrn).CCIsLeadCentre = true;
+            if (GroupType == GT.ChildrensCentresCollaboration || GroupType == GT.ChildrensCentresGroup)
+            {
+                if (CCLeadCentreUrn.HasValue && LinkedEstablishments.Establishments.Count > 0)
+                {
+                    LinkedEstablishments.Establishments.ForEach(x => x.CCIsLeadCentre = false);
+                    LinkedEstablishments.Establishments.Single(x => x.Urn == CCLeadCentreUrn).CCIsLeadCentre = true;
+                }
+            }
         }
 
         public void GetCCLeadCentreUrn()
@@ -122,6 +127,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public GroupEditorViewModel(eGroupTypeMode mode)
         {
             GroupTypeMode = mode;
+
+            if (GroupTypeMode == eGroupTypeMode.ChildrensCentre) GroupTypeId = (int)GT.ChildrensCentresCollaboration;
+            else if (GroupTypeMode == eGroupTypeMode.Federation) GroupTypeId = (int)GT.Federation;
+            else if (GroupTypeMode == eGroupTypeMode.Trust) GroupTypeId = (int)GT.Trust;
         }
 
 

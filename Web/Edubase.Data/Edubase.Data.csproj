@@ -195,6 +195,10 @@
     <Compile Include="Migrations\201701251519545_InitialCreate.Designer.cs">
       <DependentUpon>201701251519545_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702030842307_AddCCIsLeadCentreColumn.cs" />
+    <Compile Include="Migrations\201702030842307_AddCCIsLeadCentreColumn.Designer.cs">
+      <DependentUpon>201702030842307_AddCCIsLeadCentreColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ODataFilterList.cs" />
@@ -233,6 +237,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701251519545_InitialCreate.resx">
       <DependentUpon>201701251519545_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702030842307_AddCCIsLeadCentreColumn.resx">
+      <DependentUpon>201702030842307_AddCCIsLeadCentreColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

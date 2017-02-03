@@ -31,9 +31,11 @@ namespace Edubase.Services.Groups.Validation
             _establishmentReadService = establishmentReadService;
             _securityService = securityService;
             _groupReadService = groupReadService;
+
+            CreateRules();
         }
 
-        public SaveGroupDtoValidator()
+        public void CreateRules()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -44,7 +46,7 @@ namespace Edubase.Services.Groups.Validation
                 .When(x => x.Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup));
 
             RuleFor(x => x.Group.Name).NotEmpty().WithMessage("The Group Name must not be empty")
-                .MustAsync(async (model, name, ct) => !await _groupReadService.ExistsAsync(name, model.Group.LocalAuthorityId))
+                .MustAsync(async (model, name, ct) => !await _groupReadService.ExistsAsync(name, model.Group.LocalAuthorityId, model.Group.GroupUID))
                 .WithMessage("The specified group name already exists");
 
             RuleFor(x => x.Group.GroupTypeId).NotEmpty().WithMessage("The Group Type must not be empty");
@@ -56,8 +58,9 @@ namespace Edubase.Services.Groups.Validation
             RuleFor(x => x.Group.ManagerEmailAddress).Empty().When(x => x.Group.GroupTypeId != (int)GT.ChildrensCentresGroup)
                 .WithMessage("'ManagerEmailAddress' should only be supplied when the group type is ChildrensCentresGroup");
 
-            RuleFor(x => x.LinkedEstablishments).Must((model, x) => x.GroupBy(e => e.EstablishmentUrn).Where(g => g.Count() > 1).Any())
-                .WithMessage("There are duplicate linked establishments defined");
+            RuleFor(x => x.LinkedEstablishments).Must((model, x) => !x.GroupBy(e => e.EstablishmentUrn).Where(g => g.Count() > 1).Any())
+                .WithMessage("There are duplicate linked establishments defined")
+                .When(x => x.LinkedEstablishments != null && x.LinkedEstablishments.Count >= 2);
                              
             // When NOT an MAT/SAT group type
             When(x => !x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust), () =>
@@ -125,9 +128,6 @@ namespace Edubase.Services.Groups.Validation
             {
                 RuleFor(x => x.Group.LocalAuthorityId).Null().WithMessage("LocalAuthorityId can only be supplied for group types ChildrensCentresCollaboration and ChildrensCentresGroup");
             });
-
-            // TODO: Establishment users can create and add themselves to a federation but can only edit federations that they belong to. 
-
         }
     }
 }

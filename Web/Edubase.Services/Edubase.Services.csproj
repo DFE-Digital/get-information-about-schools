@@ -184,6 +184,7 @@
     <Compile Include="Core\FileDownloadFactoryService.cs" />
     <Compile Include="Core\IFileDownloadFactoryService.cs" />
     <Compile Include="Core\Search\eSortBy.cs" />
+    <Compile Include="Domain\CompaniesHouseNumber.cs" />
     <Compile Include="Domain\OfstedRatingUrl.cs" />
     <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
     <Compile Include="Exceptions\SearchQueryTooLargeException.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Groups\Models\EstablishmentGroupModel.cs" />
     <Compile Include="Groups\Models\SaveGroupDto.cs" />
     <Compile Include="Groups\Validation\SaveGroupDtoValidator.cs" />
+    <Compile Include="ICompaniesHouseService.cs" />
     <Compile Include="Lookup\CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
@@ -357,7 +359,7 @@
     <Compile Include="Security\Permissions\Permission.cs" />
     <Compile Include="Security\SecurityExtensionMethods.cs" />
     <Compile Include="Security\SecurityService.cs" />
-    <Content Include="TrustService.txt" />
+    <Compile Include="CompaniesHouseService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">

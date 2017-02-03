@@ -9,7 +9,7 @@
 }
 
 
-@using (Html.BeginForm((Model.GroupUID == null ? "Create" : "Edit"), "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm((Model.GroupUID == null ? "Create" : "EditGroup"), "Group", new { area = "Groups" }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUID)
     @Html.HiddenFor(x => x.GroupTypeMode)
@@ -42,12 +42,15 @@
                         <label for="name">@Model.FieldNamePrefix type</label>
                         @Html.DropDownListFor(x => x.GroupTypeId, Model.CCGroupTypes, new { @class = "form-control" })
                     </div>
+                }else
+                {
+                    @Html.HiddenFor(x => x.GroupTypeId)
                 }
 
                 @if (Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                 {
                     <div class="form-group">
-                        <label for="name">Incorporated on</label>
+                        <label for="name">@Model.OpenDateLabel</label>
                         <input value="@(Model.OpenDate.ToDateTime()?.ToString("dd/MM/yyyy") ?? "Not recorded")" disabled class="form-control" />
                         @Html.HiddenFor(x => x.OpenDate.Day)
                         @Html.HiddenFor(x => x.OpenDate.Month)
@@ -58,7 +61,7 @@
                 {
                     <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
                         <fieldset>
-                            <legend>Open date</legend>
+                            <legend>@Model.OpenDateLabel</legend>
 
                             <div class="form-hint">For exampe, 20 03 2003</div>
                             @Html.ValidationMessageFor(x => x.OpenDate)
@@ -166,8 +169,9 @@
                     </div>
                 }
 
-                <div class="form-group">
+                <div class="form-group @Html.ValidationCssClassFor(x => x.GroupStatusId)">
                     <label for="name">@Model.FieldNamePrefix status</label>
+                    @Html.ValidationMessageFor(x => x.GroupStatusId)
                     @Html.DropDownListFor(x => x.GroupStatusId, Model.Statuses, "", new { @class = "form-control" })
                 </div>
 
@@ -183,7 +187,7 @@
                 {
                     <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
                         <label for="name">Local authority</label>
-                        @Html.ValidationMessageFor(x=>x.LocalAuthorityId)
+                        @Html.ValidationMessageFor(x => x.LocalAuthorityId)
                         @if (Model.IsLocalAuthorityEditable)
                         {
                             @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
@@ -364,12 +368,13 @@
                             else if (Model.LinkedEstablishments.Establishments[i].EditMode)
                             {
                                 <div class="form-group">
-                                    <input type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit" />
+                                    <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit">Cancel</button>
                                     <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
                                 </div>
                             }
 
 
+                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
                             @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Name)
                             @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Urn)
                             @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Address)

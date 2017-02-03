@@ -126,6 +126,7 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<GovernorDownloadService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadService>().As<IGovernorsReadService>();
+            builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
 
         }
 

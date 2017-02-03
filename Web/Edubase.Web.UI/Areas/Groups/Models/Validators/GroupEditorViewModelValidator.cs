@@ -100,15 +100,28 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                         .WithMessage("Please select one children's centre to be a group lead")
                         .When(x => x.LinkedEstablishments.Establishments.Count > 0);
                 });
-                
+
+                RuleFor(x => x.GroupTypeId).NotNull().WithMessage("Group Type must be supplied");
+
+                RuleFor(x => x.GroupStatusId).NotNull().WithMessage("This is a mandatory field").WithSummaryMessage("Status must be set");
+
+                RuleFor(x => x.OpenDate)
+                    .Must(x => x.IsEmpty() || x.IsValid())
+                    .WithMessage("Open date is invalid")
+                    .Must(x => x.IsNotEmpty() && x.IsValid())
+                    .WithMessage("{0} is a mandatory field", m => m.OpenDateLabel)
+                    .When(x => !x.GroupUID.HasValue, ApplyConditionTo.CurrentValidator);
 
                 RuleFor(x => x.Name)
                     .NotEmpty()
                     .WithMessage("This field is mandatory").WithSummaryMessage("Please enter a name for the group")
-                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, model.LocalAuthorityId.Value)))
+                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, model.LocalAuthorityId.Value, model.GroupUID)))
                     .WithMessage("Group name already exists at this authority, please select another name")
                     .When(x => x.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue, ApplyConditionTo.CurrentValidator);
 
+                RuleFor(x => x.Name).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, existingGroupUId: model.GroupUID)))
+                    .WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
+                    .When(x => x.GroupTypeMode != VM.eGroupTypeMode.ChildrensCentre, ApplyConditionTo.CurrentValidator);
             });
         }
 

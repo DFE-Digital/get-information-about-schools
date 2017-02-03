@@ -6,5 +6,5 @@
     ViewBag.suppressHomeLink = true;
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">@ViewBag.PublicErrorMessage</h2>
+<h1 class="text-danger bold-large">Error</h1><br />
+<h2 class="text-danger">@FormatHelpers.HtmlizeNewLines(ViewBag.PublicErrorMessage)</h2>

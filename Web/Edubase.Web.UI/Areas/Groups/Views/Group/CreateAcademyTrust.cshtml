@@ -1,4 +1,4 @@
-﻿@*@model CreateGroupModel
+﻿@model CreateAcademyTrustViewModel
 @{
     ViewBag.bodyClasses = "create-edit-school";
     ViewBag.hideLogo = true;
@@ -7,8 +7,8 @@
 
 
 
-@using (Html.BeginForm("Create", "Group", FormMethod.Post))
-{ 
+@using (Html.BeginForm("SaveNewAcademyTrust", "Group", new { area = "Groups" }, FormMethod.Post))
+{
     <div class="grid-row">
         <div class="column-full">
             @Html.ActionLink("Back", "Index", "Search", null, new { @class = "home-link" })
@@ -53,7 +53,7 @@
                 </li>
             </ul>
 
-            @Html.ActionLink("Change", "SearchCompaniesHouse", null, new { @class = "button mobile-full-width" })
+            @Html.ActionLink("Change", "SearchCompaniesHouse", "Group", new { area = "Groups" }, new { @class = "button mobile-full-width" })
 
             @Html.HiddenFor(x => x.Address)
             @Html.HiddenFor(x => x.Name)
@@ -66,17 +66,15 @@
                 @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", new { @class = "form-control" })
             </div>
         </div>
-            
-            
         
     </div>
     <div class="grid-row">
         <div class="column-full">
-            @Html.ActionLink("Cancel", "SearchCompaniesHouse", null, null, new { @class = "button button-grey mobile-full-width cancel" })
+            @Html.ActionLink("Cancel", "SearchCompaniesHouse", "Group", new { area = "Groups" }, new { @class = "button button-grey mobile-full-width cancel" })
             @if (!Model.TrustExists)
             {
                 <button type="submit" class="button submit mobile-full-width">Submit</button>
             }
         </div>
     </div>
-}*@
+}

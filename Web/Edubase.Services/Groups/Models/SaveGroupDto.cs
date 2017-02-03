@@ -18,6 +18,11 @@ namespace Edubase.Services.Groups.Models
 
         }
 
+        public SaveGroupDto(GroupModel group) 
+            : this(group, null)
+        {
+        }
+
         public SaveGroupDto(GroupModel group, List<EstablishmentGroupModel> linkedEstablishments)
         {
             Group = group;

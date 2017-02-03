@@ -20,5 +20,7 @@ namespace Edubase.Data.Entity
         public GroupCollection Group { get; set; }
 
         public DateTime? JoinedDate { get; set; }
+
+        public bool CCIsLeadCentre { get; set; }
     }
 }

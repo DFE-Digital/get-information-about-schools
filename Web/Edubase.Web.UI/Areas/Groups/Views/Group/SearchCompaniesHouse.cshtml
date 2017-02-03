@@ -5,8 +5,6 @@
     ViewBag.Title = "Create academy trust";
 }
 
-
-
 @using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Get))
 { 
     <div class="grid-row">
@@ -54,7 +52,7 @@
         {
             <div class="grid-row">
                 <div class="column-two-thirds top-pagination">
-                    @Html.Partial("_ResultsPagination3", Model)
+                    @Html.Partial("_GenericPagination", Model)
                 </div>
             </div>
         }
@@ -68,7 +66,7 @@
                         @foreach (var result in Model.Results.Items)
                         {
                             <li>
-                                <h2>@Html.ActionLink(result.Name, "Create", "Group", new { id = result.Number, area = "" }, new { @class = "bold-small" })</h2>
+                                <h2>@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, new { @class = "bold-small" })</h2>
                                <table class="borderless trust-details">
                                     <tr>
                                         <th scope="row">Companies House Number:</th>
@@ -94,7 +92,7 @@
         {
             <div class="grid-row">
                 <div class="column-two-thirds lower-pagination">
-                    @Html.Partial("_ResultsPagination3", Model)
+                    @Html.Partial("_GenericPagination", Model)
                 </div>
             </div>
         }
@@ -112,4 +110,4 @@
 
 
 }
-@Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "button button-grey cancel mobile-full-width" })
+@Html.ActionLink("Cancel", "Index", "Home", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })

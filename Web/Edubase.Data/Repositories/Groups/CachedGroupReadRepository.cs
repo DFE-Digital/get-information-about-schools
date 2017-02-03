@@ -35,11 +35,11 @@ namespace Edubase.Data.Repositories.Groups
         public override async Task<GroupCollection> GetAsync(int id)
             => await AutoAsync(async () => await _repo.GetAsync(id), Keyify(id), GetRelationshipCacheKey(id));
 
-        public static string GetRelationshipCacheKey(int urn) => string.Concat(RelationshipKey, "-", urn).ToLower();
+        public static string GetRelationshipCacheKey(int uid) => string.Concat(RelationshipKey, "-", uid).ToLower();
 
-        public async Task ClearRelationshipCacheAsync(int? urn)
+        public async Task ClearRelationshipCacheAsync(int? id)
         {
-            if (urn.HasValue) await CacheAccessor.ClearRelatedCacheKeysAsync(GetRelationshipCacheKey(urn.Value));
+            if (id.HasValue) await CacheAccessor.ClearRelatedCacheKeysAsync(GetRelationshipCacheKey(id.Value));
         }
 
         protected override DbSet<GroupCollection> GetEntityDbSet(IApplicationDbContext dbContext) => dbContext.Groups;
