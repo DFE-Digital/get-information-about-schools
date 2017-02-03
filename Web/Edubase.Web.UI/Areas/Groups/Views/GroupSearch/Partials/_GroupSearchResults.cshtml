@@ -29,7 +29,7 @@ else if (Model.Results.Count > 0)
                         @if (result.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                         {
                             <dt>Companies House Number:</dt>
-                            <dd>@result.CompaniesHouseNumber</dd>
+                            <dd><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.CompaniesHouseNumber">@result.CompaniesHouseNumber</a></dd>
                         }
                         <dt>Group UID:</dt>
                         <dd>@result.GroupUID</dd>
