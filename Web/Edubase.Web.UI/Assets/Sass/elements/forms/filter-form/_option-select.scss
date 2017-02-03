@@ -127,7 +127,7 @@ category: Forms
 
   .option-select-label {
     @include core-19;
-    margin-right: 40px;
+    margin-right: 60px;
     font-weight: bold;
     padding-top: 5px;
     padding-left: 10px;
@@ -176,7 +176,7 @@ category: Forms
 
     .js-selected-counter {
       @include core-14;
-      padding-left: $gutter-half;
+      padding-left: 10px;
       width: 40%;
     }
 
@@ -235,4 +235,13 @@ category: Forms
       }
     }
   }
+}
+
+#option-select-sort-by,
+#option-select-within-radius-of {
+    select {
+          width: 90%;
+          margin-left: 10px;
+          margin-bottom: 12px;
+      }
 }

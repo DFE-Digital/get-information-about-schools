@@ -32,8 +32,9 @@ else if (Model.Results.Count > 0)
                     </dd>
                     <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                     <dd>@result.Urn</dd>
-                    <!-- TODO: Jon: pls make urn and laestab all on one line -->
-                    <dt>LAESTAB:</dt>
+                    <dt class="inline-details">
+                        <abbr title="Local authority - Establishment number">LAESTAB</abbr>:
+                    </dt>
                     <dd>@result.GetLAESTAB()</dd>
                     <dt>Status:</dt>
                     <dd>@(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "Not recorded")</dd>

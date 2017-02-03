@@ -55,6 +55,11 @@
     dt {
         clear: left;
         padding-right: 0.5em;
+
+        &.inline-details {
+            clear: none;
+            margin-left: 12px;
+        }
     }
     .trust-details {
         float: none;
@@ -247,9 +252,17 @@ ul.approval-items{
 
 .add-filters-link {
     display: none;
-
     .js-enabled & {
         display: block;
-        margin-bottom: 2em;
+        margin-bottom: 2em
     }
+
+    &.hidden {
+        display: none;
+    }
+}
+
+
+.edubase-filter-submit {
+    margin-top: 12px;
 }
