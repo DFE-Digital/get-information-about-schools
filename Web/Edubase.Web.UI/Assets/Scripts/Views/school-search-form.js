@@ -39,7 +39,7 @@
                 $elem.css({ display: 'block' })
                     .attr('aria-hidden', false);
 
-                $elem.find('.form-control').slice(0, 1).focus();
+                $elem.find('.form-control:not(:disabled)').slice(0, 1).focus();
             }
 
             // attach events
@@ -60,6 +60,7 @@
 
             if (typeof jScriptVersion ==='undefined' || jScriptVersion >= 9) {
                 var self = this;
+                
                 $(function() {
                     setTimeout(function() {
                             self.bindAutosuggest('#TextSearchModel_Text',
@@ -68,7 +69,7 @@
                             self.bindAutosuggest('#GroupSearchModel_Text',
                                 '#GroupSearchModel_AutoSuggestValue',
                                 self.getTrustSuggestionHandler);
-                            //self.bindAutosuggest('#LocalAuthoritySearchModel_Text', '#LocalAuthoritySearchModel_AutoSuggestValue', { data: window.localAuthorities, name: "name", value: "id" });
+                            self.bindAutosuggest('#LocalAuthorityToAdd', '#LocalAuthoritySearchModel_AutoSuggestValue', { data: window.localAuthorities, name: "name", value: "id" });
                         },
                         500);
 
@@ -92,7 +93,7 @@
 
         bindAutosuggest: function (targetInputElementName, targetResolvedInputElementName, suggestionSource) {
 
-            if ($(targetInputElementName).length == 0) {
+            if ($(targetInputElementName).length === 0) {
                 console.log("The input field '"+targetInputElementName+"' does not exist.");
                 return;
             }
@@ -101,6 +102,27 @@
             var value = "id";
             var source = null;
             var minChars = 0;
+            var selectedLaTextTemplate = '<div class="form-group"><input type="text" class="form-control user-selected-la" disabled="disabled" value="{0}"/><a href="#" data-remove="{1}" class="la-removal" title="remove {0} from search">X</div>',
+                selectedLaHiddenTemplate = '<input type="hidden" name="d" value="{0}" id="{1}" />',
+                re = /\{0\}/g,
+                addedLaCount = 0;
+
+            function includeLa(la) {
+                var idString = "la-" + la.id + addedLaCount;
+                var hiddenField = selectedLaHiddenTemplate.replace(re, la.id).replace('{1}', idString);
+                var textField = selectedLaTextTemplate.replace(re, la.name).replace('{1}', idString);
+
+                addedLaCount ++;
+                $('#user-selected-la').append(textField);
+                $('#la-id-target').append(hiddenField);
+            }
+
+            $('#user-selected-la').on('click', '.la-removal', function(e) {
+                e.preventDefault();
+                $('#' + $(this).data().remove).remove();
+                $(this).parent('.form-group').remove();
+
+            });
 
             if (typeof (suggestionSource) === "function") { // remote source
                 //console.log("suggestionSource is a function");
@@ -158,6 +180,10 @@
             $(targetInputElementName).bind("typeahead:select", function (src, suggestion) {
                 $(targetResolvedInputElementName).val(suggestion[value]);
                 currentSuggestionName = suggestion[field];
+
+                includeLa(suggestion);
+                $(targetInputElementName).typeahead('val','');
+
             });
 
             $(targetInputElementName).bind("typeahead:autocomplete", function (src, suggestion) {
@@ -168,7 +194,7 @@
             $(targetInputElementName).bind("input propertychange", function (event) {
                 // When the user changes the value in the search having already selected an item, ensure the selection resets
                 var currentValue = $(event.target).val();
-                if (currentValue != currentSuggestionName) {
+                if (currentValue !== currentSuggestionName) {
                     $(targetResolvedInputElementName).val("");
                 }
             });
