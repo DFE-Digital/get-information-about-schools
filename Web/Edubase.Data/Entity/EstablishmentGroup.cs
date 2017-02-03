@@ -17,7 +17,7 @@ namespace Edubase.Data.Entity
         [ForeignKey("Establishment")]
         public int EstablishmentUrn { get; set; }
 
-        public GroupCollection Group { get; set; }
+        public virtual GroupCollection Group { get; set; }
 
         public DateTime? JoinedDate { get; set; }
 

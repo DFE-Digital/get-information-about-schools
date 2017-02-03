@@ -74,7 +74,7 @@ namespace Edubase.Services.Groups
 
                 if (dto.IsNewEntity) _dbContext.Groups.Add(dataModel);
 
-                if (dto.LinkedEstablishments != null && dto.LinkedEstablishments.Any())
+                if (dto.LinkedEstablishments != null)
                 {
                     foreach (var e in dto.LinkedEstablishments)
                     {
@@ -85,7 +85,19 @@ namespace Edubase.Services.Groups
                         linkedEstabDataModel.CCIsLeadCentre = e.CCIsLeadCentre;
                         if (!e.Id.HasValue) _dbContext.EstablishmentGroups.Add(linkedEstabDataModel);
                     }
+
+                    if (!dto.IsNewEntity)
+                    {
+                        var urns = dto.LinkedEstablishments.Select(x => x.EstablishmentUrn).ToArray();
+                        var toRemove = _dbContext.EstablishmentGroups.Where(x => x.GroupUID == dto.Group.GroupUID && !urns.Contains(x.EstablishmentUrn)).ToList();
+                        foreach (var item in toRemove)
+                        {
+                            item.IsDeleted = true;
+                        }
+                    }
                 }
+
+                
 
                 await _dbContext.SaveChangesAsync();
 

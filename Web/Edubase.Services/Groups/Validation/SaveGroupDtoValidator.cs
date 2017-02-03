@@ -79,7 +79,8 @@ namespace Edubase.Services.Groups.Validation
             When(x => x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust), () =>
             {
                 RuleFor(x => x.Group.Address)
-                    .NotEmpty().WithMessage("The Address field should be supplied for types: MultiAcademyTrust and SingleAcademyTrust.");
+                    .NotEmpty().WithMessage("The Address field should be supplied for types: MultiAcademyTrust and SingleAcademyTrust.")
+                    .When(x => x.IsNewEntity);
 
                 RuleFor(x => x.Group.CompaniesHouseNumber)
                     .NotEmpty().WithMessage("The CompaniesHouseNumber field should be supplied for types: MultiAcademyTrust and SingleAcademyTrust.");

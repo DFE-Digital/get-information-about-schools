@@ -304,7 +304,6 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
-    <Content Include="Controllers\GroupController.txt" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
     <Compile Include="Exceptions\InvalidParameterException.cs" />
