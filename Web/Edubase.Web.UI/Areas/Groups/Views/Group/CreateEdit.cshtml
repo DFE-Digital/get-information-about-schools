@@ -27,7 +27,7 @@
                     @Html.ValidationMessageFor(x => x.Name)
                     @if (Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                     {
-                        <input value="@Model.Name" disabled class="form-control" />
+                        <input value="@Model.Name" disabled="disabled" class="form-control" />
                         @Html.HiddenFor(x => x.Name)
                     }
                     else
@@ -51,7 +51,7 @@
                 {
                     <div class="form-group">
                         <label for="name">@Model.OpenDateLabel</label>
-                        <input value="@(Model.OpenDate.ToDateTime()?.ToString("dd/MM/yyyy") ?? "Not recorded")" disabled class="form-control" />
+                        <input value="@(Model.OpenDate.ToDateTime()?.ToString("dd/MM/yyyy") ?? "Not recorded")" disabled="disabled" class="form-control" />
                         @Html.HiddenFor(x => x.OpenDate.Day)
                         @Html.HiddenFor(x => x.OpenDate.Month)
                         @Html.HiddenFor(x => x.OpenDate.Year)
@@ -169,11 +169,18 @@
                     </div>
                 }
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.GroupStatusId)">
-                    <label for="name">@Model.FieldNamePrefix status</label>
-                    @Html.ValidationMessageFor(x => x.GroupStatusId)
-                    @Html.DropDownListFor(x => x.GroupStatusId, Model.Statuses, "", new { @class = "form-control" })
-                </div>
+                @if (!Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.GroupStatusId)">
+                        <label for="name">@Model.FieldNamePrefix status</label>
+                        @Html.ValidationMessageFor(x => x.GroupStatusId)
+                        @Html.DropDownListFor(x => x.GroupStatusId, Model.Statuses, "", new { @class = "form-control" })
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(x => x.GroupStatusId)
+                }
 
                 @if (Model.InEditMode && Model.GroupType == eLookupGroupType.ChildrensCentresGroup)
                 {
@@ -194,7 +201,7 @@
                         }
                         else
                         {
-                            <input value="@(Model.LocalAuthorityName)" disabled class="form-control" />
+                            <input value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" />
                             @Html.HiddenFor(x => x.LocalAuthorityName)
                             @Html.HiddenFor(x => x.LocalAuthorityId)
                         }
@@ -206,7 +213,7 @@
                 {
                     <div class="form-group">
                         <label>UID</label>
-                        <input value="@Model.GroupUID" disabled class="form-control" />
+                        <input value="@Model.GroupUID" disabled="disabled" class="form-control" />
                     </div>
                 }
 
@@ -218,7 +225,7 @@
     {
         <div class="grid-row">
             <div class="column-half">
-                <span class="bold-xsmall">Add establishment to this @Model.FieldNamePrefix</span>
+                <span class="bold-xsmall">Add establishment to this @Model.FieldNamePrefix.ToLower()</span>
                 <p class="font-xsmall">Enter the establishment <abbr title="Unique Reference Number">URN</abbr></p>
                 <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
                     @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)

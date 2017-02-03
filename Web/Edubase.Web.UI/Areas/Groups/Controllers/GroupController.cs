@@ -149,9 +149,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.Name = domainModel.Name;
             viewModel.CompaniesHouseNumber = domainModel.CompaniesHouseNumber;
             viewModel.GroupUID = domainModel.GroupUID;
+            viewModel.GroupId = domainModel.GroupId;
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id);
             await PopulateSelectLists(viewModel);
+
+            viewModel.DeriveGroupTypeMode();
 
             return View("CreateEdit", viewModel);
         }
@@ -218,7 +221,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 });
 
                 var groupUId = await _groupWriteService.SaveAsync(dto, User);
-                return RedirectToAction("Details", new { groupUId });
+                return RedirectToAction("Details", new { id = groupUId });
             }
             else viewModel.GroupTypes = await GetAcademyTrustGroupTypes(viewModel.TypeId);
             return View("CreateAcademyTrust", viewModel);

@@ -121,7 +121,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
                 RuleFor(x => x.Name).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, existingGroupUId: model.GroupUID)))
                     .WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
-                    .When(x => x.GroupTypeMode != VM.eGroupTypeMode.ChildrensCentre, ApplyConditionTo.CurrentValidator);
+                    .When(x => x.GroupTypeMode != VM.eGroupTypeMode.ChildrensCentre && x.GroupTypeMode != VM.eGroupTypeMode.AcademyTrust, ApplyConditionTo.CurrentValidator);
             });
         }
 

@@ -41,19 +41,25 @@ namespace Edubase.Services.Groups.Validation
 
             var permission = _securityService.GetCreateGroupPermission(_principal);
 
-            RuleFor(x => x.Group.LocalAuthorityId).Must(x => permission.IsLAAllowed(x))
+            RuleFor(x => x.Group.LocalAuthorityId)
+                .Must(x => permission.IsLAAllowed(x))
                 .WithMessage("Permission denied creating/editing a children's centre group for the local authority (LocalAuthorityId) supplied")
                 .When(x => x.Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup));
 
-            RuleFor(x => x.Group.Name).NotEmpty().WithMessage("The Group Name must not be empty")
+            RuleFor(x => x.Group.Name)
+                .NotEmpty()
+                .WithMessage("The Group Name must not be empty")
                 .MustAsync(async (model, name, ct) => !await _groupReadService.ExistsAsync(name, model.Group.LocalAuthorityId, model.Group.GroupUID))
-                .WithMessage("The specified group name already exists");
+                .WithMessage("The specified group name already exists")
+                .When(x => x.Group.GroupTypeId != (int)GT.MultiacademyTrust 
+                    && x.Group.GroupTypeId != (int)GT.SingleacademyTrust, ApplyConditionTo.CurrentValidator); // user has no control over academy trust names
 
             RuleFor(x => x.Group.GroupTypeId).NotEmpty().WithMessage("The Group Type must not be empty");
             RuleFor(x => x.Group.StatusId).NotEmpty().WithMessage("The Group Status must not be empty");
 
-            RuleFor(x => x.Group.GroupId).NotEmpty().WithMessage("The Group ID must not be empty for MATs, SATs and School Sponsors")
-                .When(x => x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SchoolSponsor, GT.SingleacademyTrust));
+            // TODO: TBC
+            //RuleFor(x => x.Group.GroupId).NotEmpty().WithMessage("The Group ID must not be empty for MATs, SATs and School Sponsors")
+            //    .When(x => x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SchoolSponsor, GT.SingleacademyTrust));
 
             RuleFor(x => x.Group.ManagerEmailAddress).Empty().When(x => x.Group.GroupTypeId != (int)GT.ChildrensCentresGroup)
                 .WithMessage("'ManagerEmailAddress' should only be supplied when the group type is ChildrensCentresGroup");
@@ -84,16 +90,11 @@ namespace Edubase.Services.Groups.Validation
             // When creating a new group record
             When(x => x.IsNewEntity, () =>
             {
-                RuleFor(x => x.LinkedEstablishments.Count).Empty()
+                RuleFor(x => x.LinkedEstablishments).Must(x=>x == null || x.Count == 0)
                     .WithMessage("For groups of type 'ChildrensCentresCollaboration' or 'ChildrensCentresGroup' no linked establishments must be defined at the point of creation of the entity.")
                     .When(x => !x.Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup));
 
                 RuleFor(x => x.Group.OpenDate).NotNull().WithMessage("The open date / incorporated date must be supplied for new groups.");
-            });
-
-            // Editing an existing record
-            When(x => !x.IsNewEntity, () =>
-            {
             });
 
             // When group type is a trust or federation

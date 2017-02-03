@@ -63,7 +63,7 @@ namespace Edubase.Services.Groups
                 dataModel.Address = dto.Group.Address;
                 dataModel.ClosedDate = dto.Group.ClosedDate;
                 dataModel.CompaniesHouseNumber = dto.Group.CompaniesHouseNumber;
-                dataModel.EstablishmentCount = dto.LinkedEstablishments.Count;
+                dataModel.EstablishmentCount = (dto.LinkedEstablishments?.Count).GetValueOrDefault();
                 dataModel.GroupId = dto.Group.GroupId;
                 dataModel.GroupTypeId = dto.Group.GroupTypeId;
                 dataModel.LocalAuthorityId = dto.Group.LocalAuthorityId;

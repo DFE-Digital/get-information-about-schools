@@ -334,8 +334,6 @@
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
-    <Compile Include="Models\CreateTrustModel.cs" />
-    <Compile Include="Models\CreateEditTrustModel.cs" />
     <Compile Include="Models\Establishments\TabDisplayPolicy.cs" />
     <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\SearchCompaniesHouseModel.cs" />
@@ -343,8 +341,6 @@
     <Compile Include="Models\EstablishmentDetailViewModel.cs" />
     <Compile Include="Models\HomepageViewModel.cs" />
     <Compile Include="Models\LinkedEstabViewModel.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
-    <Content Include="Models\MATDetailViewModel.txt" />
     <Compile Include="Models\PendingChangeViewModel.cs" />
     <Compile Include="Models\GroupEstabViewModel.cs" />
     <Compile Include="Models\Search\eSearchType.cs" />
@@ -354,7 +350,6 @@
     <Compile Include="Models\Search\SearchPayloadViewModel.cs" />
     <Compile Include="Models\Search\SearchViewModel.cs" />
     <Compile Include="Models\ToolsViewModel.cs" />
-    <Compile Include="Models\Validators\CreateEditGroupModelValidator.cs" />
     <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
     <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
     <Compile Include="MvcResult\ChallengeResult.cs" />
