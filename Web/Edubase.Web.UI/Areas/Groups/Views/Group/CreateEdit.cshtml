@@ -34,11 +34,9 @@
                     {
                         @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
                     }
-
                 </div>
 
-
-                @if (Model.GroupTypeMode == GroupEditorViewModel.eGroupTypeMode.ChildrensCentre)
+                @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
                 {
                     <div class="form-group">
                         <label for="name">@Model.FieldNamePrefix type</label>
@@ -55,7 +53,6 @@
                         @Html.HiddenFor(x => x.OpenDate.Month)
                         @Html.HiddenFor(x => x.OpenDate.Year)
                     </div>
-
                 }
                 else
                 {
@@ -97,6 +94,75 @@
                                  })
                             </span>
                         </fieldset>
+                    </div>
+                }
+
+                @if (!Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust) && Model.InEditMode)
+                {
+                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.ClosedDate)">
+                        <fieldset>
+                            <legend>Closed date</legend>
+
+                            <div class="form-hint">For exampe, 20 03 2003</div>
+                            @Html.ValidationMessageFor(x => x.ClosedDate)
+                            <span class="inline-form-control">
+                                <label for="opendate-day">Day</label>
+                                @Html.EduDayDropDownFor(x => x.ClosedDate.Day,
+                                 new
+                                 {
+                                     id = "closeddate-day",
+                                     @class = "form-control",
+                                     aria_describedby = "help-closeddate-day",
+                                 })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="opendate-month">Month</label>
+                                @Html.EduMonthDropDownFor(x => x.ClosedDate.Month,
+                                 new
+                                 {
+                                     id = "closeddate-month",
+                                     @class = "form-control",
+                                     aria_describedby = "help-closeddate-month",
+                                 })
+
+                            </span>
+                            <span class="inline-form-contol">
+                                <label for="opendate-year">Year</label>
+                                @Html.EduYearDropDownFor(x => x.ClosedDate.Year,
+                                 new
+                                 {
+                                     id = "closeddate-year",
+                                     @class = "form-control",
+                                     aria_describedby = "help-closeddate-year",
+                                 })
+                            </span>
+                        </fieldset>
+                    </div>
+                }
+
+                @if (Model.InEditMode && Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+                {
+                    <div class="form-group">
+                        <label>Companies house number</label>
+                        <input type="text" value="@Model.CompaniesHouseNumber" class="form-control" disabled="disabled" />
+                        @Html.HiddenFor(x => x.CompaniesHouseNumber)
+                    </div>
+                }
+                
+                @if (Model.InEditMode && Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
+                {
+                    <div class="form-group">
+                        <label for="groupid">Group ID</label>
+                        @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
+                    </div>
+                }
+
+                @if (Model.InEditMode && Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.ChildrensCentresGroup))
+                {
+                    <div class="form-group">
+                        <label for="groupid">Address</label>
+                        <input type="text" value="@Model.Address" class="form-control" disabled="disabled" />
+                        @Html.HiddenFor(x => x.Address)
                     </div>
                 }
 

@@ -35,19 +35,22 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         IGroupReadService _groupReadService;
         ISecurityService _securityService;
         IGovernorsReadService _governorsReadService;
+        IGroupsWriteService _groupWriteService;
 
         public GroupController(
             ICachedLookupService cachedLookupService, 
             ISecurityService securityService,
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
-            IGovernorsReadService governorsReadService)
+            IGovernorsReadService governorsReadService,
+            IGroupsWriteService groupWriteService)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
             _groupReadService = groupReadService;
             _establishmentReadService = establishmentReadService;
             _governorsReadService = governorsReadService;
+            _groupWriteService = groupWriteService;
         }
 
 
@@ -67,7 +70,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (model.GroupTypeId.Equals((int)GT.ChildrensCentresGroup)) viewModel.Address = "!FROM LEAD CENTRE!"; // TODO: get from the 'lead centre'; need IsLeadCentre on the estabgroup table
             else if(model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust)) viewModel.Address = model.Address;
 
-            viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID, model.GroupTypeId.Value, model.LocalAuthorityId);
+            viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID.Value, model.GroupTypeId.Value, model.LocalAuthorityId);
             viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
             await PopulateEstablishmentList(viewModel, model);
@@ -116,13 +119,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (ModelState.IsValid)
             {
-                await ProcessCreateEditGroup(viewModel);
+                var actionResult = await ProcessCreateEditGroup(viewModel);
+                if (actionResult != null) return actionResult;
             }
 
             return View("CreateEdit", viewModel);
         }
 
-        private async Task ProcessCreateEditGroup(GroupEditorViewModel viewModel)
+        private async Task<ActionResult> ProcessCreateEditGroup(GroupEditorViewModel viewModel)
         {
             var suppressClearModelState = false;
 
@@ -157,15 +161,42 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 suppressClearModelState = true;
                 await SaveGroup(viewModel);
+                return RedirectToAction(nameof(Details), new { id = viewModel.GroupUID.Value });
             }
             else throw new InvalidParameterException("The action parameter is invalid");
             
             if(!suppressClearModelState) ModelState.Clear();
+
+            return null;
         }
 
-        private Task SaveGroup(GroupEditorViewModel viewModel)
+        private async Task SaveGroup(GroupEditorViewModel viewModel)
         {
-            throw new NotImplementedException();
+            viewModel.SetCCLeadCentreUrn();
+
+            var dto = new SaveGroupDto(new GroupModel
+            {
+                Address = viewModel.Address,
+                CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
+                GroupId = viewModel.GroupId,
+                GroupTypeId = viewModel.GroupTypeId,
+                GroupUID = viewModel.GroupUID,
+                LocalAuthorityId = viewModel.LocalAuthorityId,
+                ManagerEmailAddress = viewModel.GroupManagerEmailAddress,
+                Name = viewModel.Name,
+                OpenDate = viewModel.OpenDate.ToDateTime(),
+                StatusId = viewModel.GroupStatusId,
+                ClosedDate = viewModel.ClosedDate.ToDateTime()
+
+            }, viewModel.LinkedEstablishments.Establishments.Select(x => new EstablishmentGroupModel
+            {
+                EstablishmentUrn = x.Urn,
+                Id = x.Id,
+                JoinedDate = x.JoinedDate,
+                CCIsLeadCentre = x.CCIsLeadCentre
+            }).ToList());
+            
+            await _groupWriteService.SaveAsync(dto, User);
         }
 
         private async Task AddLinkedEstablishment(GroupEditorViewModel viewModel)
@@ -207,7 +238,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private async Task PopulateEstablishmentList(GroupDetailViewModel viewModel, GroupModel model)
         {
-            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(model.GroupUID);
+            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(model.GroupUID.Value);
             foreach (var establishmentGroup in establishmentGroups)
             {
                 var result = await _establishmentReadService.GetAsync(establishmentGroup.EstablishmentUrn, User);

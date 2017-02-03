@@ -81,9 +81,25 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public GT? GroupType => GroupTypeId.HasValue ? (GT) GroupTypeId.Value : null as GT?;
 
         public string Name { get; set; }
+        public string GroupId { get; set; }
+        public string CompaniesHouseNumber { get; set; }
+        public string Address { get; set; }
         public DateTimeViewModel OpenDate { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel ClosedDate { get; set; } = new DateTimeViewModel();
 
         public int? CCLeadCentreUrn { get; set; }
+
+        public void SetCCLeadCentreUrn()
+        {
+            LinkedEstablishments.Establishments.ForEach(x => x.CCIsLeadCentre = false);
+            LinkedEstablishments.Establishments.Single(x => x.Urn == CCLeadCentreUrn).CCIsLeadCentre = true;
+        }
+
+        public void GetCCLeadCentreUrn()
+        {
+            LinkedEstablishments.Establishments.ForEach(x => x.CCIsLeadCentre = false);
+            CCLeadCentreUrn = LinkedEstablishments.Establishments.Where(x => x.CCIsLeadCentre).Select(x => new int?(x.Urn)).SingleOrDefault();
+        }
 
 
         public GroupLinkedEstablishmentsViewModel LinkedEstablishments { get; set; } = new GroupLinkedEstablishmentsViewModel();
@@ -107,6 +123,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         {
             GroupTypeMode = mode;
         }
+
 
 
 

@@ -211,7 +211,7 @@ namespace Edubase.Web.UI.Controllers
             viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
                 .CanEdit(viewModel.Establishment.Urn.Value, 
                     viewModel.Establishment.TypeId,
-                    viewModel.Group != null ? new[] { viewModel.Group.GroupUID } : null as int[], 
+                    viewModel.Group != null ? new [] { viewModel.Group.GroupUID.Value } : null as int[], 
                     viewModel.Establishment.LocalAuthorityId, 
                     viewModel.Establishment.EstablishmentTypeGroupId);
 

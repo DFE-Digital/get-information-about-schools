@@ -68,6 +68,10 @@
       <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
@@ -191,6 +195,9 @@
     <Compile Include="Governors\Search\SearchGovernorDocument.cs" />
     <Compile Include="Groups\Downloads\GroupDownloadService.cs" />
     <Compile Include="Groups\Downloads\IGroupDownloadService.cs" />
+    <Compile Include="Groups\Models\EstablishmentGroupModel.cs" />
+    <Compile Include="Groups\Models\SaveGroupDto.cs" />
+    <Compile Include="Groups\Validation\SaveGroupDtoValidator.cs" />
     <Compile Include="Lookup\CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
@@ -350,7 +357,7 @@
     <Compile Include="Security\Permissions\Permission.cs" />
     <Compile Include="Security\SecurityExtensionMethods.cs" />
     <Compile Include="Security\SecurityService.cs" />
-    <Compile Include="TrustService.cs" />
+    <Content Include="TrustService.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">

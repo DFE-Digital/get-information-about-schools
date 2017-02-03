@@ -105,7 +105,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 RuleFor(x => x.Name)
                     .NotEmpty()
                     .WithMessage("This field is mandatory").WithSummaryMessage("Please enter a name for the group")
-                    .MustAsync(async (model, name, ct) => !(await _establishmentReadService.ExistsAsync(name, model.LocalAuthorityId.Value)))
+                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, model.LocalAuthorityId.Value)))
                     .WithMessage("Group name already exists at this authority, please select another name")
                     .When(x => x.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue, ApplyConditionTo.CurrentValidator);
 

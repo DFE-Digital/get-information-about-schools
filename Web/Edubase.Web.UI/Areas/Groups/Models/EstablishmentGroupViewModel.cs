@@ -9,6 +9,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 {
     public class EstablishmentGroupViewModel
     {
+        public int? Id { get; set; }
         public string Name { get; set; }
         public int Urn { get; set; }
         public string Address { get; set; }

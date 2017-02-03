@@ -144,5 +144,14 @@ namespace Edubase.Services.Groups
         /// <param name="groupUid"></param>
         /// <returns></returns>
         public async Task<List<EstablishmentGroup>> GetEstablishmentGroupsAsync(int groupUid) => await _cachedEstablishmentGroupReadRepository.GetForGroupAsync(groupUid);
+
+
+        public async Task<bool> ExistsAsync(string name, int? localAuthorityId = null)
+        {
+            using (var dc = new ApplicationDbContext()) // no point in putting this into a repo, as Texuna will be doing an API
+            {
+                return await dc.Groups.AnyAsync(x => x.Name == name && (localAuthorityId == null || x.LocalAuthorityId == localAuthorityId));
+            }
+        }
     }
 }
