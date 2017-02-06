@@ -269,7 +269,6 @@
     <Compile Include="Enums\eLookupTeenageMothersProvision.cs" />
     <Compile Include="Enums\eLookupTypeOfResourcedProvision.cs" />
     <Compile Include="Enums\eLookupUrbanRural.cs" />
-    <Compile Include="EstablishmentService.cs" />
     <Compile Include="Establishments\DisplayPolicies\AcademyDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\BSODisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\ChildrensCentreLinkedSitesDisplayPolicy.cs" />

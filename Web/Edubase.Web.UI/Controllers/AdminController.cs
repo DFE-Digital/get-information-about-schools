@@ -74,7 +74,7 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [Route("LogDetail")]
+        [Route("LogDetail/{id}")]
         public async Task<ActionResult> LogDetail(string id)
         {
             var message = await new LogMessageReadService().GetAsync(id);

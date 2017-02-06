@@ -128,6 +128,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<GovernorsReadService>().As<IGovernorsReadService>();
             builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
 
+            builder.RegisterType<BusMessagingService>().AsSelf();
+
         }
 
     }

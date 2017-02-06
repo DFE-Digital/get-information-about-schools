@@ -1,52 +1,49 @@
-﻿//using Edubase.Data.Entity;
-//using Microsoft.ServiceBus.Messaging;
-//using Newtonsoft.Json;
-//using System;
-//using System.Configuration;
-//using System.Threading.Tasks;
+﻿using Edubase.Data.Entity;
+using Edubase.Services.Lookup;
+using Microsoft.ServiceBus.Messaging;
+using Newtonsoft.Json;
+using System;
+using System.Configuration;
+using System.Threading.Tasks;
 
-//namespace Edubase.Services
-//{
-//    public class BusMessagingService
-//    {
-//        public async Task SendEstablishmentUpdateMessageAsync(Establishment establishment)
-//        {
-//            throw new NotImplementedException();
+namespace Edubase.Services
+{
+    public class BusMessagingService
+    {
+        private IMessageLoggingService _messageLoggingService;
+        private ICachedLookupService _lookup;
 
-//            //var title = await (establishment.HeadTitleId.HasValue 
-//            //    ? new CachedLookupService().GetNameAsync("HeadTitleId", establishment.HeadTitleId.Value) 
-//            //    : Task.FromResult(null as string));
+        public BusMessagingService(IMessageLoggingService messageLoggingService, ICachedLookupService lookup)
+        {
+            _messageLoggingService = messageLoggingService;
+            _lookup = lookup;
+        }
 
-//            //var client = QueueClient.CreateFromConnectionString(ConfigurationManager.ConnectionStrings["ServiceBusConnectionString"].ConnectionString, "updates");
+        public async Task SendEstablishmentUpdateMessageAsync(Establishment establishment)
+        {   
+            var title = await (establishment.HeadTitleId.HasValue
+                ? _lookup.GetNameAsync("HeadTitleId", establishment.HeadTitleId.Value)
+                : Task.FromResult(null as string));
 
-//            //var payload = JsonConvert.SerializeObject(new
-//            //{
-//            //    HeadTitle = title,
-//            //    HeadFirstName = establishment.HeadFirstName,
-//            //    HeadLastName = establishment.HeadLastName,
-//            //    URN = establishment.Urn,
-//            //    Name = establishment.Name
-//            //});
-//            //var message = new BrokeredMessage(payload);
-//            //await client.SendAsync(message);
+            var client = QueueClient.CreateFromConnectionString(ConfigurationManager.ConnectionStrings["ServiceBusConnectionString"].ConnectionString, "updates");
 
-//            //MessageLoggingService.Instance.Push(new LogMessage
-//            //{
-//            //    Level = LogMessage.eLevel.Information,
-//            //    Text = "Estab upd msg sent: " + payload
-//            //});
-//        }
+            var payload = JsonConvert.SerializeObject(new
+            {
+                HeadTitle = title,
+                HeadFirstName = establishment.HeadFirstName,
+                HeadLastName = establishment.HeadLastName,
+                URN = establishment.Urn,
+                Name = establishment.Name
+            });
+            var message = new BrokeredMessage(payload);
+            await client.SendAsync(message);
 
-//        /// <summary>
-//        /// Broadcasts a message to all listeners.
-//        /// </summary>
-//        /// <param name="topic"></param>
-//        /// <param name="message"></param>
-//        /// <returns></returns>
-//        public async Task Broadcast(string topic, string message)
-//        {
-//            throw new NotImplementedException();
-//        }
+            _messageLoggingService.Push(new LogMessage
+            {
+                Level = LogMessage.eLevel.Information,
+                Text = "Estab upd msg sent: " + payload
+            });
+        }
 
-//    }
-//}
+    }
+}

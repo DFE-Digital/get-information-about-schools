@@ -389,7 +389,7 @@
         {
             CreateCloningMemoryCache();
             CreateFastUncloningMemoryCache();
-            await _subscriber.PublishAsync(CHANNEL_CLEAR_CACHE, RedisValue.Null);
+            await _subscriber.PublishAsync(CHANNEL_CLEAR_CACHE, RedisValue.EmptyString);
 
             var endPoints = _connection.GetEndPoints();
             foreach (var endPoint in endPoints)
@@ -406,7 +406,7 @@
         {
             CreateCloningMemoryCache();
             CreateFastUncloningMemoryCache();
-            _subscriber.Publish(CHANNEL_CLEAR_CACHE, RedisValue.Null);
+            _subscriber.Publish(CHANNEL_CLEAR_CACHE, RedisValue.EmptyString);
 
             var endPoints = _connection.GetEndPoints();
             foreach (var endPoint in endPoints)
