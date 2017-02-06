@@ -56,7 +56,7 @@
                             <div class="option-select-label">Sort by</div>
                             <div class="js-selected-counter"></div>
                         </div>
-                        <select class="form-control" name="SortBy">
+                        <select class="form-control trigger-result-update" name="SortBy">
                             <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ , "selected")>alphabetical a-z</option>
                             <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
                         </select>
@@ -77,7 +77,7 @@
                                     @foreach (var item in Model.GroupTypes)
                                     {
                                         <label for="group-type_@item.Id">
-                                            <input name="t" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
+                                            <input name="t" value="@item.Id" class="trigger-result-update" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
                                             @item
                                             <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                         </label>
