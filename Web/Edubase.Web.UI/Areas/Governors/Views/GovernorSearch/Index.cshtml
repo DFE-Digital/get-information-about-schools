@@ -57,7 +57,7 @@
                             <div class="option-select-label">Sort by</div>
                             <div class="js-selected-counter"></div>
                         </div>
-                        <select class="form-control" name="SortBy">
+                        <select class="form-control trigger-result-update" name="SortBy">
                             <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
                             <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
                         </select>
@@ -78,7 +78,7 @@
                                     @foreach (var item in Model.GovernorRoles)
                                     {
                                         <label for="group-type_@item.Id">
-                                            <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked") />
+                                            <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked") />
                                             @item
                                             <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                         </label>
