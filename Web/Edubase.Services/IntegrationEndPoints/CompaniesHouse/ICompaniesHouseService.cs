@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Edubase.Services.Domain;
 
-namespace Edubase.Services
+namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
 {
     public interface ICompaniesHouseService
     {

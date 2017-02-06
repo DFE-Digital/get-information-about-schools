@@ -6,7 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Edubase.Services
+namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
 {
     public class CompaniesHouseService : ICompaniesHouseService
     {

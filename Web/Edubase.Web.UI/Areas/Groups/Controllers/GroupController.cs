@@ -26,6 +26,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Services.Exceptions;
     using Services.Governors;
     using Services.Groups.Models;
+    using Services.IntegrationEndPoints.CompaniesHouse;
     using UI.Models;
     using static GroupDetailViewModel;
     using GT = Services.Enums.eLookupGroupType;

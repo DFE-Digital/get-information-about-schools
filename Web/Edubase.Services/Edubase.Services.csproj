@@ -178,9 +178,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApprovalService.cs" />
     <Compile Include="BlobService.cs" />
-    <Compile Include="BusMessagingService.cs" />
+    <Compile Include="IntegrationEndPoints\ServiceBus\IServiceBusEndPoint.cs" />
+    <Compile Include="IntegrationEndPoints\ServiceBus\ServiceBusEndPoint.cs" />
     <Compile Include="Core\FileDownloadFactoryService.cs" />
     <Compile Include="Core\IFileDownloadFactoryService.cs" />
     <Compile Include="Core\Search\eSortBy.cs" />
@@ -199,7 +199,7 @@
     <Compile Include="Groups\Models\EstablishmentGroupModel.cs" />
     <Compile Include="Groups\Models\SaveGroupDto.cs" />
     <Compile Include="Groups\Validation\SaveGroupDtoValidator.cs" />
-    <Compile Include="ICompaniesHouseService.cs" />
+    <Compile Include="IntegrationEndPoints\CompaniesHouse\ICompaniesHouseService.cs" />
     <Compile Include="Lookup\CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
@@ -334,12 +334,9 @@
     <Compile Include="IntegrationEndPoints\BlobStorage\Base64String.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\BlobStorageEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\PathComponents.cs" />
-    <Compile Include="IntegrationEndPoints\RedisEndPoint.cs" />
-    <Compile Include="IntegrationEndPoints\ServiceBusEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\Smtp\ISmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\Smtp\MockSmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\Smtp\SmtpEndPoint.cs" />
-    <Compile Include="IntegrationEndPoints\TableStorageEndPoint.cs" />
     <Compile Include="Lookup\ICachedLookupService.cs" />
     <Compile Include="Lookup\ILookupService.cs" />
     <Compile Include="Mapping\AutoMapperServicesProfile.cs" />
@@ -358,7 +355,7 @@
     <Compile Include="Security\Permissions\Permission.cs" />
     <Compile Include="Security\SecurityExtensionMethods.cs" />
     <Compile Include="Security\SecurityService.cs" />
-    <Compile Include="CompaniesHouseService.cs" />
+    <Compile Include="IntegrationEndPoints\CompaniesHouse\CompaniesHouseService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">

@@ -187,8 +187,8 @@ namespace Edubase.Web.UI.Controllers
                 using (MiniProfiler.Current.Step("Retrieving ChangeHistory"))
                     viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
 
-                using (MiniProfiler.Current.Step("Retrieving UserHasPendingApprovals flag"))
-                    viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
+                //using (MiniProfiler.Current.Step("Retrieving UserHasPendingApprovals flag"))
+                //    viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
             }
 
             using (MiniProfiler.Current.Step("Retrieving Group record"))
