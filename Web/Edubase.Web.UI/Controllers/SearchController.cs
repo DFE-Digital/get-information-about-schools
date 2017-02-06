@@ -34,14 +34,15 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
+            if (viewModel.LocalAuthorityToRemove.HasValue)
+            {
+                return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
+                    viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
+            }
+
             if (viewModel.SearchType.HasValue)
             {
-                if (viewModel.LocalAuthorityToRemove.HasValue)
-                {
-                    return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
-                        viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
-                }
-                else if (viewModel.SearchType == eSearchType.LocalAuthorityDisambiguation)
+                if (viewModel.SearchType == eSearchType.LocalAuthorityDisambiguation)
                 {
                     return await ProcessLocalAuthorityDisambiguation(viewModel);
                 }
