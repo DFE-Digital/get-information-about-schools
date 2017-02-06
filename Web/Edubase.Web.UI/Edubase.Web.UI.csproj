@@ -786,7 +786,6 @@
     <Content Include="Views\GOVUK\Views\ga\google-analytics.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Group\Details.cshtml" />
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
@@ -820,8 +819,6 @@
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Group\CreateEdit.cshtml" />
-    <Content Include="Views\Group\Create.cshtml" />
     <Content Include="Views\Shared\_GenericPagination.cshtml" />
     <Content Include="Views\Shared\_Governors.cshtml" />
     <Content Include="Views\Tools\Index.cshtml" />

@@ -305,7 +305,7 @@
                     <h2 class="heading-large">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
                 }
 
-                <ul class="school-results-listing">
+                <ul class="school-results-listing establishment-list">
                     @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
                     {
                         <li>
@@ -327,12 +327,18 @@
                                     @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
                                 }
 
-                                @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
-                                {
-                                    <dt></dt>
-                                    <dd>@Html.RadioButtonFor(x=> x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { @class = "form-control" }) Make this children's centre a lead centre</dd>
-                                }
                             </dl>
+
+                            @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
+                            {
+                                <div class="form-radio cc-lead-centre">
+                                    <label>
+                                        @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { @class = "" }) 
+                                        Make this children's centre a lead centre
+                                    </label>
+                                </div>
+                                
+                            }
 
                             @if (Model.LinkedEstablishments.Establishments[i].EditMode)
                             {

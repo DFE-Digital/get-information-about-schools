@@ -155,6 +155,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             await PopulateSelectLists(viewModel);
 
             viewModel.DeriveGroupTypeMode();
+            viewModel.DeriveCCLeadCentreUrn();
 
             return View("CreateEdit", viewModel);
         }
@@ -334,7 +335,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
             viewModel.CCGroupTypes = (await _lookup.GroupTypesGetAllAsync())
-                    .Where(x => ((GT)x.Id).OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)).ToSelectList(viewModel.GroupTypeId);
+                    .Where(x => x.Id.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)).ToSelectList(viewModel.GroupTypeId);
             viewModel.Statuses = (await _lookup.GroupStatusesGetAllAsync()).ToSelectList(viewModel.GroupStatusId);
             return viewModel;
         }
@@ -358,7 +359,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                         Urn = estabModel.Urn.Value,
                         TypeName = await _lookup.GetNameAsync(() => estabModel.LocalAuthorityId),
                         HeadTitleName = await _lookup.GetNameAsync(() => estabModel.HeadTitleId),
-                        JoinedDate = establishmentGroup.JoinedDate
+                        JoinedDate = establishmentGroup.JoinedDate,
+                        CCIsLeadCentre = establishmentGroup.CCIsLeadCentre
                     });
                 }
             }

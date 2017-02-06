@@ -25,6 +25,7 @@
         private Task _connectingTask = null;
         private const string CHANNEL_KEY_UPDATES = "key-updates";
         private const string CHANNEL_KEY_DELETES = "key-deletes";
+        private const string CHANNEL_CLEAR_CACHE = "clear-cache";
         private ISubscriber _subscriber = null; // subscription to key-updates
         private MemoryCache _memoryCache;
         private MemoryCache _fastMemcache;
@@ -96,16 +97,10 @@
         {
             _config = config;
             _exceptionLogger = exceptionLogger;
-
-            var cacheSettings = new NameValueCollection(2);
-            cacheSettings.Add("cacheMemoryLimitMegabytes", "2000");
-            cacheSettings.Add("pollingInterval", "00:00:05");
-            _memoryCache = new MemoryCache(config.Name, cacheSettings);
             
-            cacheSettings = new NameValueCollection(2);
-            cacheSettings.Add("cacheMemoryLimitMegabytes", "300");
-            cacheSettings.Add("pollingInterval", "00:00:02");
-            _fastMemcache = new MemoryCache(config.Name + "-uncloned", cacheSettings);
+            CreateFastUncloningMemoryCache();
+            CreateCloningMemoryCache();
+            
         }
         
         public static ICacheAccessor Create() => new CacheAccessor(new JsonConverterCollection()) as ICacheAccessor;
@@ -114,6 +109,44 @@
         {
             _jsonConverterCollection = jsonConverterCollection;
             return this;
+        }
+
+        /// <summary>
+        /// Creates a memory caches that's used for serialised, compressed and cloned payloads.
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        private void CreateCloningMemoryCache()
+        {
+            if(_memoryCache != null)
+            {
+                _memoryCache.Dispose();
+                _memoryCache = null;
+            }
+
+            var cacheSettings = new NameValueCollection(2);
+            cacheSettings.Add("cacheMemoryLimitMegabytes", "2000");
+            cacheSettings.Add("pollingInterval", "00:00:05");
+            _memoryCache = new MemoryCache(_config.Name, cacheSettings);
+        }
+
+        /// <summary>
+        /// Creates a memory cache that's used for frequently used immutable uncloned objects (v. fast, but immutable objects only)
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        private void CreateFastUncloningMemoryCache()
+        {
+            if (_fastMemcache != null)
+            {
+                _fastMemcache.Dispose();
+                _fastMemcache = null;
+            }
+
+            var cacheSettings = new NameValueCollection(2);
+            cacheSettings.Add("cacheMemoryLimitMegabytes", "300");
+            cacheSettings.Add("pollingInterval", "00:00:02");
+            _fastMemcache = new MemoryCache(_config.Name + "-uncloned", cacheSettings);
         }
 
         #region Async methods
@@ -176,6 +209,7 @@
                     _subscriber = _connection.GetSubscriber();
                     await _subscriber.SubscribeAsync(CHANNEL_KEY_UPDATES, OnKeyValueUpdated);
                     await _subscriber.SubscribeAsync(CHANNEL_KEY_DELETES, OnKeyDeleted);
+                    await _subscriber.SubscribeAsync(CHANNEL_CLEAR_CACHE, OnClearCache);
                 }
 
                 Status = State.Connected;
@@ -305,6 +339,18 @@
             Log(eCacheEvent.KeyDeletedInMemory, value);
         }
 
+        /// <summary>
+        /// Clears the local memory caches
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="value"></param>
+        private void OnClearCache(RedisChannel channel, RedisValue value)
+        {
+            CreateCloningMemoryCache();
+            CreateFastUncloningMemoryCache();
+            Log(eCacheEvent.ClearedCache, "");
+        }
+
 
         private void Log(eCacheEvent cachingEvent, string key, [CallerMemberName] string callerName = null)
         {
@@ -341,8 +387,10 @@
         /// <returns></returns>
         public async Task ClearAsync()
         {
-            _memoryCache.Dispose();
-            _memoryCache = new MemoryCache(_config.Name);
+            CreateCloningMemoryCache();
+            CreateFastUncloningMemoryCache();
+            await _subscriber.PublishAsync(CHANNEL_CLEAR_CACHE, RedisValue.Null);
+
             var endPoints = _connection.GetEndPoints();
             foreach (var endPoint in endPoints)
             {
@@ -356,8 +404,10 @@
         /// <returns></returns>
         public void Clear()
         {
-            _memoryCache.Dispose();
-            _memoryCache = new MemoryCache(_config.Name);
+            CreateCloningMemoryCache();
+            CreateFastUncloningMemoryCache();
+            _subscriber.Publish(CHANNEL_CLEAR_CACHE, RedisValue.Null);
+
             var endPoints = _connection.GetEndPoints();
             foreach (var endPoint in endPoints)
             {

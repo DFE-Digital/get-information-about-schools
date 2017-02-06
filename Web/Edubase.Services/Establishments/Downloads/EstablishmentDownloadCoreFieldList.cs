@@ -31,6 +31,7 @@ namespace Edubase.Services.Establishments.Downloads
             ProvisionOfficialSixthFormId = true;
             OpenDate = true;
             CloseDate = true;
+            HeadPreferredJobTitle = false;
         }
     }
 }

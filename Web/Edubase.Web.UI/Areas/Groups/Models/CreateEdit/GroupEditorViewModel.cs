@@ -102,9 +102,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             }
         }
 
-        public void GetCCLeadCentreUrn()
+        public void DeriveCCLeadCentreUrn()
         {
-            LinkedEstablishments.Establishments.ForEach(x => x.CCIsLeadCentre = false);
             CCLeadCentreUrn = LinkedEstablishments.Establishments.Where(x => x.CCIsLeadCentre).Select(x => new int?(x.Urn)).SingleOrDefault();
         }
 
