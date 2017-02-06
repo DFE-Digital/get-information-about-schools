@@ -15,12 +15,12 @@
                  
             @if (Model.GovernorSearchModel.Forename.Clean() != null)
             {
-                <text>Forename <span class="bold-small">'@Model.GovernorSearchModel.Forename'</span>&nbsp;</text>
+                <text>first name <span class="bold-small">'@Model.GovernorSearchModel.Forename'</span>&nbsp;</text>
             }
             
             @if (Model.GovernorSearchModel.Surname.Clean() != null)
             {
-                <text>Surname <span class="bold-small">'@Model.GovernorSearchModel.Surname'</span>&nbsp;</text>
+                <text>last name <span class="bold-small">'@Model.GovernorSearchModel.Surname'</span>&nbsp;</text>
             }
 
             @if (Model.SelectedRoleIds.Any())
