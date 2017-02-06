@@ -158,6 +158,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.DeriveGroupTypeMode();
             viewModel.DeriveCCLeadCentreUrn();
 
+            if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+
             return View("CreateEdit", viewModel);
         }
         
@@ -170,6 +172,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             ViewBag.FVErrors = result;
 
             await PopulateSelectLists(viewModel);
+            if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
 
             if (ModelState.IsValid)
             {

@@ -49,15 +49,21 @@
 
 
 
-                @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
+                @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre && !Model.InEditMode)
                 {
                     <div class="form-group">
                         <label for="name">@Model.FieldNamePrefix type</label>
                         @Html.DropDownListFor(x => x.GroupTypeId, Model.CCGroupTypes, new { @class = "form-control" })
                     </div>
-                }else
+                }
+                else
                 {
-                    @Html.HiddenFor(x => x.GroupTypeId)
+                    <div class="form-group">
+                        <label>@Model.FieldNamePrefix type</label>
+                        <input type="text" value="@Model.GroupTypeName" class="form-control" disabled="disabled" />
+                        @Html.HiddenFor(x => x.GroupTypeId)
+                    </div>
+                    
                 }
 
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
@@ -113,10 +119,6 @@
                     </div>
                 }
 
-                
-
-                
-
 
                 @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust) && Model.InEditMode)
                 {
@@ -162,19 +164,12 @@
                 }
 
 
-                @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
-                {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.GroupStatusId)">
-                        <label for="name">@Model.FieldNamePrefix status</label>
-                        @Html.ValidationMessageFor(x => x.GroupStatusId)
-                        @Html.DropDownListFor(x => x.GroupStatusId, Model.Statuses, "", new { @class = "form-control" })
-                    </div>
-                }
-                else
-                {
-                    @Html.HiddenFor(x => x.GroupStatusId)
-                }
-
+                <div class="form-group @Html.ValidationCssClassFor(x => x.GroupStatusId)">
+                    <label for="name">@Model.FieldNamePrefix status</label>
+                    @Html.ValidationMessageFor(x => x.GroupStatusId)
+                    @Html.DropDownListFor(x => x.GroupStatusId, Model.Statuses, "", new { @class = "form-control" })
+                </div>
+                
                 @if (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
                 {
                     <div class="form-group">
