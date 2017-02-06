@@ -30,7 +30,12 @@
 }
 
 .school-results-listing {
-    margin: 15px 0;
+    margin: 35px 0 15px;
+
+   .top-pagination + &  {
+        margin-top: 15px;
+    }
+
     li {
         clear: both;
         margin-bottom: 20px;
@@ -89,7 +94,6 @@
     overflow: hidden;
     position: relative;
     font-size: 16px;
-    padding-bottom: 8px;
 
     .top-pagination & {
         border-bottom: $black 1px solid;
@@ -112,7 +116,7 @@
 
     .pagination-links {
         clear: left;
-        margin: 0;
+        margin: 0.2631578947em 0 0;
         padding: 0;
 
         @media (min-width: 640px) {
@@ -120,13 +124,23 @@
             right: 0;
         }
 
-        @media(max-width: 640px) {
+        @media(max-width: 940px) {
             .numeric-pagination {
                 display: none;
             }
+            
+        }
 
+        @media (max-width: 740px) {
             .pagination-prev {
                 margin-right: 12px;
+            }
+        }
+        .tablet-pagination,
+        .go-nowhere {
+            display: block;
+            @media (max-width: 740px) {
+                display: none;
             }
         }
     }
@@ -138,8 +152,9 @@
 
     a, .go-nowhere {
         display: block;
-        min-width: 30px;
+        min-width: 28px;
     }
+
 }
 
 div.approval-data
