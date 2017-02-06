@@ -1,6 +1,7 @@
 ﻿@using Edubase.Services.Enums
 @using Edubase.Common;
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
+@using L = Edubase.Services.Enums.eLookupGroupType;
 @model VM
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
@@ -25,7 +26,7 @@
                 <div class="form-group @Html.ValidationCssClassFor(x=>x.Name)">
                     <label for="name">@Model.FieldNamePrefix name</label>
                     @Html.ValidationMessageFor(x => x.Name)
-                    @if (Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+                    @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                     {
                         <input value="@Model.Name" disabled="disabled" class="form-control" />
                         @Html.HiddenFor(x => x.Name)
@@ -35,6 +36,18 @@
                         @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
                     }
                 </div>
+
+
+                @if (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
+                {
+                    <div class="form-group">
+                        <label>Companies house number</label>
+                        <input type="text" value="@Model.CompaniesHouseNumber" class="form-control" disabled="disabled" />
+                        @Html.HiddenFor(x => x.CompaniesHouseNumber)
+                    </div>
+                }
+
+
 
                 @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
                 {
@@ -47,7 +60,7 @@
                     @Html.HiddenFor(x => x.GroupTypeId)
                 }
 
-                @if (Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+                @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                 {
                     <div class="form-group">
                         <label for="name">@Model.OpenDateLabel</label>
@@ -100,7 +113,12 @@
                     </div>
                 }
 
-                @if (!Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust) && Model.InEditMode)
+                
+
+                
+
+
+                @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust) && Model.InEditMode)
                 {
                     <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.ClosedDate)">
                         <fieldset>
@@ -143,33 +161,8 @@
                     </div>
                 }
 
-                @if (Model.InEditMode && Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
-                {
-                    <div class="form-group">
-                        <label>Companies house number</label>
-                        <input type="text" value="@Model.CompaniesHouseNumber" class="form-control" disabled="disabled" />
-                        @Html.HiddenFor(x => x.CompaniesHouseNumber)
-                    </div>
-                }
-                
-                @if (Model.InEditMode && Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
-                {
-                    <div class="form-group">
-                        <label for="groupid">Group ID</label>
-                        @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
-                    </div>
-                }
 
-                @if (Model.InEditMode && Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.ChildrensCentresGroup))
-                {
-                    <div class="form-group">
-                        <label for="groupid">Address</label>
-                        <input type="text" value="@Model.Address" class="form-control" disabled="disabled" />
-                        @Html.HiddenFor(x => x.Address)
-                    </div>
-                }
-
-                @if (!Model.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+                @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                 {
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GroupStatusId)">
                         <label for="name">@Model.FieldNamePrefix status</label>
@@ -182,7 +175,16 @@
                     @Html.HiddenFor(x => x.GroupStatusId)
                 }
 
-                @if (Model.InEditMode && Model.GroupType == eLookupGroupType.ChildrensCentresGroup)
+                @if (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
+                {
+                    <div class="form-group">
+                        <label for="groupid">Address</label>
+                        <input type="text" value="@Model.Address" class="form-control" disabled="disabled" />
+                        @Html.HiddenFor(x => x.Address)
+                    </div>
+                }
+
+                @if (Model.InEditMode && Model.GroupType == L.ChildrensCentresGroup)
                 {
                     <div class="form-group">
                         <label for="name">Group manager email</label>
@@ -214,6 +216,14 @@
                     <div class="form-group">
                         <label>UID</label>
                         <input value="@Model.GroupUID" disabled="disabled" class="form-control" />
+                    </div>
+                }
+
+                @if (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SchoolSponsor))
+                {
+                    <div class="form-group">
+                        <label for="groupid">Group ID</label>
+                        @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
                     </div>
                 }
 
