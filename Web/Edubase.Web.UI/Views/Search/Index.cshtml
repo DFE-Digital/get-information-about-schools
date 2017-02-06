@@ -1,7 +1,9 @@
 ﻿@using Edubase.Web.UI.Models.Search;
 @using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
+@using Edubase.Web.UI.Helpers;
 @model VM
+    
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
@@ -23,7 +25,7 @@
                     <li>
                         <a href="#groups" class="horizontal-tab group">
                             Find an establishment group<br />
-                            <span class="sub">e.g. Trust, Sponsor or Federation</span>
+                            <span class="sub">For example, trust, sponsor or federation</span>
                         </a>
                     </li>
                     <li>
@@ -45,7 +47,7 @@
                                 {
                                     <label class="block-label selection-button-radio">
                                         <input type="radio" class="panel-toggle" />
-                                        Establishment name or reference number
+                                        Name or reference number
                                     </label>
                                     <div class="expanding-search-field">
                                         <span class="search-hint">
@@ -132,8 +134,13 @@
                         <div class="edubase-search-element">
                             <label class="bold-small">
                                 Establishment group
-                                <span class="form-hint">Can include multi academy trust/single academy trust name, companies house number or local authority name</span>
                             </label>
+                            <dl class="form-hint">
+                                <dt>Search by anyone of these:</dt>
+                                <dd>Multi academy trust name</dd>
+                                <dd>Academy trust name</dd>
+                                <dd>Companies house number</dd>
+                            </dl>
                             @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=" })
                             @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
                             <input type="hidden" name="g" value="true" />
@@ -149,25 +156,23 @@
                     {
                         @Html.ValidationSummary(null, new { @class = "error-summary" })
                         <div class="edubase-search-element">
-                            <label for="forename" class="bold-small">Forename</label>
-                            <span class="form-hint">e.g. John</span>
+                            <label for="forename" class="bold-small">First name</label>
                             @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new { maxlength = 120, id = "forename", @class = "form-control auto-clear" })
                         </div>
                         <div class="edubase-search-element">
-                            <label for="surname" class="bold-small">Surname</label>
-                            <span class="form-hint">e.g. Evans</span>
+                            <label for="surname" class="bold-small">Last name</label>
                             @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new { maxlength = 120, id = "surname", @class = "form-control auto-clear" })
                         </div>
                         <div class="edubase-search-element">
                             <label for="roleid" class="bold-small">Role</label>
-                            <span class="form-hint">e.g. Trustee</span>
-                            @Html.DropDownListFor(x => x.GovernorSearchModel.RoleId, Model.GovernorRoles.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                            <span class="form-hint">For example, trustee</span>
+                            @Html.DropDownListFor(x => x.GovernorSearchModel.RoleId, Model.GovernorRoles.Select(x => new SelectListItem { Text = @FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = x.Id.ToString() }),
                                 new { id = "roleid", @class = "form-control", size = "4" })
                         </div>
                         <div class="edubase-search-element">
                             <label class="block-label selection-button-checkbox" for="IncludeHistoric">
                                 @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new { id = "IncludeHistoric" })
-                                <span class="font-small">Include historic records (Governors stepped down in the last 12 months)</span>
+                                <span class="font-small">Include historic records (governors who stepped down in the last 12 months)</span>
                             </label>
                         </div>
                         <div class="edubase-search-element">
