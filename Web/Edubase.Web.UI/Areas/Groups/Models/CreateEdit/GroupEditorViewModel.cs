@@ -63,7 +63,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public string ListOfEstablishmentsPluralName => _pluralEstablishmentNames[GroupTypeMode];
 
-        public string PageTitle => string.Concat(GroupUID.HasValue ? "Edit " : "Create new ", EntityName);
+        public string PageTitle => string.Concat(GroupUID.HasValue ? "Edit " : "Create ", EntityName);
 
         public bool InEditMode => GroupUID.HasValue;
 
