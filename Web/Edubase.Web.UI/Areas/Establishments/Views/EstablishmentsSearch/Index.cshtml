@@ -270,7 +270,7 @@
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter"></div>
         </div>
-        <select class="form-control" name="@M.BIND_ALIAS_RADIUS">
+        <select class="form-control trigger-result-update" name="@M.BIND_ALIAS_RADIUS">
             @foreach (var value in Model.GetRadiusOptions())
             {
                 <option value="@value" @Html.Conditional(Model.GetRadiusOption() == value, "selected")>@value mile@(Html.Conditional(value != 1, "s"))</option>
