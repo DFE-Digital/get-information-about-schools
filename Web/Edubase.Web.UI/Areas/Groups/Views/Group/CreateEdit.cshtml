@@ -63,7 +63,10 @@
                         <input type="text" value="@Model.GroupTypeName" class="form-control" disabled="disabled" />
                         @Html.HiddenFor(x => x.GroupTypeId)
                     </div>
-                    
+                }
+                else
+                {
+                    @Html.HiddenFor(x => x.GroupTypeId)
                 }
 
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
