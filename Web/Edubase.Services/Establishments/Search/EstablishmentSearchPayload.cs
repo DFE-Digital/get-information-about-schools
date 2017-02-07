@@ -1,4 +1,5 @@
 ﻿using Edubase.Common.Spatial;
+using Edubase.Services.Core.Search;
 using Edubase.Services.Establishments.Models;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,8 @@ namespace Edubase.Services.Establishments.Search
 
         }
 
-        public EstablishmentSearchPayload(string orderBy, int skip, int take)
+        public EstablishmentSearchPayload(int skip, int take)
         {
-            OrderBy = new List<string> { orderBy };
             Skip = skip;
             Take = take;
         }
@@ -30,13 +30,12 @@ namespace Edubase.Services.Establishments.Search
 
         public int Take { get; set; } = 10;
 
-        public int? GeoSearchMaxRadiusInKilometres { get; set; } = 10;
+        public int? RadiusInMiles { get; set; }
 
         public LatLon GeoSearchLocation { get; set; }
 
-        public bool GeoSearchOrderByDistance { get; set; }
-        
+        public eSortBy SortBy { get; set; }
 
-        public IList<string> OrderBy { get; set; } = new List<string>();
+        public int[] SENIds { get; set; } = new int[0];
     }
 }

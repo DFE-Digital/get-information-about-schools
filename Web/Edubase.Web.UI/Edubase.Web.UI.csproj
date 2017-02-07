@@ -179,6 +179,10 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RouteDebugger, Version=2.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\routedebugger.2.1.5\lib\net40\RouteDebugger.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="StackExchange.Profiling.DeepProfiling.Autofac, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MiniProfiler.DeepProfiling.Autofac.2.1.0.8\lib\NET40\StackExchange.Profiling.DeepProfiling.Autofac.dll</HintPath>
       <Private>True</Private>
@@ -265,13 +269,28 @@
     <Compile Include="App_Start\AutoMapperWebProfile.cs" />
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\ODataConfig.cs" />
-    <Compile Include="Areas\Governors\Controllers\SearchController.cs" />
-    <Compile Include="Areas\Governors\GovernorsAreaRegistration.cs" />
-    <Compile Include="Areas\Governors\Models\SearchModel.cs" />
+    <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
+    <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
+    <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\SearchModel_old.cs" />
+    <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
+    <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\CreateAcademyTrustViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\LinkedEstablishmentSearchViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\EstablishmentGroupViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\GroupDetailViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditorViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\GroupLinkedEstablishmentsViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\GroupSearchDownloadGenerationProgressViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\Validators\GroupEditorViewModelValidator.cs" />
     <Compile Include="Controllers\Api\EstablishmentsController.cs" />
     <Compile Include="Controllers\Api\GovernorsController.cs" />
     <Compile Include="Controllers\Api\GroupsController.cs" />
-    <Compile Include="Controllers\ApprovalController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EduBaseController.cs" />
     <Compile Include="Controllers\EstablishmentController.cs" />
@@ -284,12 +303,10 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\SearchController.Establishments.cs" />
-    <Compile Include="Controllers\SearchController.Download.cs" />
     <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
+    <Compile Include="Exceptions\InvalidParameterException.cs" />
     <Compile Include="Filters\EdubaseAuthorizeAttribute.cs" />
     <Compile Include="Filters\ExceptionFilter.cs" />
     <Compile Include="Filters\PendingApprovalsFilter.cs" />
@@ -297,8 +314,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
-    <Compile Include="Helpers\AutofacValidationModule.cs" />
-    <Compile Include="Helpers\AutofacValidatorFactory.cs" />
+    <Compile Include="Validation\AutofacValidationModule.cs" />
+    <Compile Include="Validation\AutofacValidatorFactory.cs" />
     <Compile Include="Helpers\FormatHelpers.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\JsonCamelCaseResult.cs" />
@@ -312,46 +329,52 @@
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Admin\LogMessagesViewModel.cs" />
     <Compile Include="Models\ApprovalsViewModel.cs" />
-    <Compile Include="Models\SearchDownloadGenerationProgressViewModel.cs" />
-    <Compile Include="Models\Search\AdvancedSearchDownloadViewModel.cs" />
-    <Compile Include="Models\Search\AdvancedSearchViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\CreateEditEstablishmentModel.cs" />
-    <Compile Include="Models\CreateTrustModel.cs" />
-    <Compile Include="Models\CreateEditTrustModel.cs" />
     <Compile Include="Models\Establishments\TabDisplayPolicy.cs" />
     <Compile Include="Models\LookupItemViewModel.cs" />
-    <Compile Include="Models\SearchCompaniesHouseModel.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\SearchCompaniesHouseModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
     <Compile Include="Models\EstablishmentDetailViewModel.cs" />
     <Compile Include="Models\HomepageViewModel.cs" />
     <Compile Include="Models\LinkedEstabViewModel.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\MATDetailViewModel.cs" />
-    <Compile Include="Models\MATASSearchResultsModel.cs" />
     <Compile Include="Models\PendingChangeViewModel.cs" />
-    <Compile Include="Models\SearchResultsModel.cs" />
     <Compile Include="Models\GroupEstabViewModel.cs" />
+    <Compile Include="Models\Search\eSearchType.cs" />
+    <Compile Include="Models\Search\IDownloadGenerationProgressModel.cs" />
     <Compile Include="Models\Search\LocalAuthorityDisambiguationViewModel.cs" />
-    <Compile Include="Models\Validators\CreateEditGroupModelValidator.cs" />
+    <Compile Include="Models\Search\GovernorSearchPayloadViewModel.cs" />
+    <Compile Include="Models\Search\SearchPayloadViewModel.cs" />
+    <Compile Include="Models\Search\SearchViewModel.cs" />
+    <Compile Include="Models\ToolsViewModel.cs" />
     <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
     <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
     <Compile Include="MvcResult\ChallengeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Validation\EdubaseAbstractValidator.cs" />
     <Compile Include="ValueConverters\Governor2StringValueConverter.cs" />
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
-    <Content Include="Areas\Governors\Views\Search\Download\PreparingFilePleaseWait.cshtml" />
-    <Content Include="Areas\Governors\Views\Search\Download\ReadyToDownload.cshtml" />
     <Content Include="Assets\Sass\elements\_mobile-nav.scss" />
     <Content Include="Assets\Sass\elements\forms\_clear-fields.scss" />
-    <Content Include="Areas\Governors\Views\Search\Download\SelectFormat.cshtml" />
+    <Content Include="Areas\Establishments\Views\Web.config" />
+    <Content Include="Areas\Establishments\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Groups\Views\Web.config" />
+    <Content Include="Areas\Groups\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Governors\Views\GovernorSearch\Partials\_GovernorSearchResults.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\Details.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\CreateEdit.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\SearchCompaniesHouse.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\CreateAcademyTrust.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
     <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
@@ -721,7 +744,7 @@
     <Content Include="packages.config" />
     <Content Include="Areas\Governors\Views\web.config" />
     <Content Include="Areas\Governors\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Governors\Views\Search\Results.cshtml" />
+    <Content Include="Areas\Governors\Views\GovernorSearch\Index.cshtml" />
     <Content Include="Assets\Sass\views\_search-page.scss" />
     <Content Include="Assets\Sass\views\_view-logs.scss" />
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
@@ -763,7 +786,6 @@
     <Content Include="Views\GOVUK\Views\ga\google-analytics.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Group\Details.cshtml" />
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
@@ -778,8 +800,8 @@
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
-    <Content Include="Views\Search\GroupResults.cshtml" />
-    <Content Include="Views\Search\AdvancedSearchResults.cshtml" />
+    <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
+    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Index.cshtml" />
     <Content Include="Views\Establishment\Partials\TabDetails.cshtml" />
     <Content Include="Views\Establishment\Partials\TabIEBT.cshtml" />
     <Content Include="Views\Establishment\Partials\TabLinks.cshtml" />
@@ -787,28 +809,25 @@
     <Content Include="Views\Establishment\Partials\TabLocation.cshtml" />
     <Content Include="Views\Establishment\Partials\TabChangeHistory.cshtml" />
     <Content Include="Views\Establishment\Partials\Header.cshtml" />
-    <Content Include="Views\Search\Download\SelectFormat.cshtml" />
-    <Content Include="Views\Search\Download\SelectDataset.cshtml" />
-    <Content Include="Views\Search\Download\PreparingFilePleaseWait.cshtml" />
-    <Content Include="Views\Search\Download\ReadyToDownload.cshtml" />
+    <Content Include="Views\Shared\Downloads\SelectFormat.cshtml" />
+    <Content Include="Views\Shared\Downloads\SelectDataset.cshtml" />
+    <Content Include="Views\Shared\Downloads\PreparingFilePleaseWait.cshtml" />
+    <Content Include="Views\Shared\Downloads\ReadyToDownload.cshtml" />
     <Content Include="Views\Search\LocalAuthorityDisambiguation.cshtml" />
-    <None Include="Views\Search\Results.cshtml" />
+    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_EstablishmentSearchResults.cshtml" />
+    <Content Include="Areas\Groups\Views\GroupSearch\Partials\_GroupSearchResults.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
     <Content Include="Views\Shared\Placeholder.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Areas\Governors\Views\Shared\_ResultsPagination.cshtml" />
-    <Content Include="Views\Group\CreateEdit.cshtml" />
-    <Content Include="Views\Shared\_ResultsPagination2.cshtml" />
-    <Content Include="Views\Shared\_ResultsPagination.cshtml" />
-    <Content Include="Views\Group\SearchCompaniesHouse.cshtml" />
-    <Content Include="Views\Group\Create.cshtml" />
-    <Content Include="Views\Shared\_ResultsPagination3.cshtml" />
-    <Content Include="Views\Shared\_ResultsPaginationAdvSearch.cshtml" />
+    <Content Include="Views\Shared\_GenericPagination.cshtml" />
     <Content Include="Views\Shared\_Governors.cshtml" />
     <Content Include="Views\Tools\Index.cshtml" />
+    <Content Include="Views\Shared\DomainError.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Governors\Views\Search\" />
+    <Folder Include="Models\Groups\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
   </ItemGroup>

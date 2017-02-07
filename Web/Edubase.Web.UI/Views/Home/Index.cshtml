@@ -44,9 +44,10 @@
                     {
                         <li>@Html.ActionLink("Create new school", "Create", "Establishment")</li>
                     }
+
                     @if (Model.AllowTrustCreation)
                     {
-                        <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group")</li>
+                        <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)</li>
                     }
                 </ul>
             }

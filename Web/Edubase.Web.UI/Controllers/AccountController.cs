@@ -16,6 +16,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    [RoutePrefix("Account")]
     public class AccountController : Controller
     {
         
@@ -44,7 +45,7 @@ namespace Edubase.Web.UI.Controllers
 
         //
         // GET: /Account/Login
-        [AllowAnonymous]
+        [Route(nameof(Login)), AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             return new ChallengeResult(AuthenticationManager.GetExternalAuthenticationTypes()
@@ -52,7 +53,7 @@ namespace Edubase.Web.UI.Controllers
                 Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl.Clean() ?? "/Search" }));
         }
 
-        [AllowAnonymous]
+        [Route(nameof(ExternalLoginCallback)), AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
@@ -75,7 +76,7 @@ namespace Edubase.Web.UI.Controllers
          */
         private Lazy<StubUserBuilder.Config> _stubUserConfig = new Lazy<StubUserBuilder.Config>(() => new StubUserBuilder.Configurator().Configure());
 
-        [AllowAnonymous]
+        [Route(nameof(QA_Login)), AllowAnonymous]
         public async Task<ActionResult> QA_Login(string username)
         {
             var u = _stubUserConfig.Value.UserList.FirstOrDefault(x => x.Assertion.NameId == username);
@@ -92,7 +93,7 @@ namespace Edubase.Web.UI.Controllers
 #endif
 
 
-        [HttpGet]
+        [Route(nameof(LogOff)), HttpGet]
         public ActionResult LogOff(string returnUrl)
         {
             AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = returnUrl.Clean() ?? "/Search" });

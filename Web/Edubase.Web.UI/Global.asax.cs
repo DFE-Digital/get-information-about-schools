@@ -17,6 +17,7 @@ using Edubase.Web.UI.Helpers;
 using Autofac;
 using Edubase.Data.DbContext;
 using StackExchange.Profiling;
+using Edubase.Web.UI.Validation;
 
 namespace Edubase.Web.UI
 {
@@ -27,7 +28,7 @@ namespace Edubase.Web.UI
 #if (QA)
             GlobalConfiguration.Configure(ODataConfig.Register);
 #endif
-            AreaRegistration.RegisterAllAreas();
+            //AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             IocConfig.Register();
@@ -41,9 +42,7 @@ namespace Edubase.Web.UI
             // REMOVE WHEN IN WEBFARM!!!!!
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
             Database.SetInitializer(m);
-
-            //FluentValidationModelValidatorProvider.Configure();
-
+            
             var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.Container));
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
             fluentValidationModelValidatorProvider.AddImplicitRequiredValidator = false;

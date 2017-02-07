@@ -14,23 +14,15 @@
     {
         <div class="column-half">
 
-            @if (User.Identity.IsAuthenticated)
-            {
-                <h2 class="heading-medium">Approvals</h2>
-                <ul>
-                    <li>@Html.ActionLink("View my approval items" + (ViewBag.PendingApprovalItemsCount > 0 ? " (" + ViewBag.PendingApprovalItemsCount + ")" : "") as string, "Index", "Approval")</li>
-                </ul>
-            }
-
-            @if (User.Identity.IsAuthenticated)
-            {
-                <h2 class="heading-medium">Create</h2>
-                <ul>
-                        <li>@Html.ActionLink("Create new school", "Create", "Establishment")</li>
-                        <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group")</li>
-                </ul>
-            }
-
+            <h2 class="heading-medium">Create</h2>
+            <ul>
+                <li>@Html.ActionLink("Create new School", "Create", "Establishment")</li>
+                <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)</li>
+                <li>@Html.ActionLink("Create new Children's Centre Group or Collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
+                <li>@Html.ActionLink("Create new Federation", "CreateNewGroup", "Group", new { area = "Groups", type = "Federation" }, null)</li>
+                <li>@Html.ActionLink("Create new School Trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null)</li>
+            </ul>
+            
         </div>
     }
 </div>

@@ -12,6 +12,7 @@ using Edubase.Services.Domain;
 using Edubase.Data.DbContext;
 using Edubase.Common.Cache;
 using System.Runtime.CompilerServices;
+using System.Linq.Expressions;
 
 namespace Edubase.Services.Lookup
 {
@@ -31,6 +32,8 @@ namespace Edubase.Services.Lookup
                 { "LocalAuthorityId", async id => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "RSCRegionId", async id => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "TypeId", async id => (await EstablishmentTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "GroupTypeId", async id => (await GroupTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "Group.StatusId", async id => (await GroupStatusesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "StatusId", async id => (await EstablishmentStatusesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ReasonEstablishmentOpenedId", async id => (await ReasonEstablishmentOpenedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ReasonEstablishmentClosedId", async id => (await ReasonEstablishmentClosedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -82,56 +85,58 @@ namespace Edubase.Services.Lookup
 
             _mapping = new Dictionary<string, Func<int, string>>()
             {
-                { "LocalAuthorityId",  id => ( LocalAuthorityGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "RSCRegionId",  id => ( LocalAuthorityGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "TypeId",  id => ( EstablishmentTypesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "StatusId",  id => ( EstablishmentStatusesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ReasonEstablishmentOpenedId",  id => ( ReasonEstablishmentOpenedGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ReasonEstablishmentClosedId",  id => ( ReasonEstablishmentClosedGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "EducationPhaseId",  id => ( EducationPhasesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ProvisionBoardingId",  id => ( ProvisionBoardingGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ProvisionNurseryId",  id => ( ProvisionNurseriesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ProvisionOfficialSixthFormId",  id => ( ProvisionOfficialSixthFormsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "GenderId",  id => ( GendersGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ReligiousCharacterId",  id => ( ReligiousCharactersGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ReligiousEthosId",  id => ( ReligiousEthosGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "DioceseId",  id => ( DiocesesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "AdmissionsPolicyId",  id => ( AdmissionsPoliciesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ProvisionSpecialClassesId",  id => ( ProvisionSpecialClassesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "HeadTitleId",  id => ( HeadTitlesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "EstablishmentTypeGroupId",  id => ( EstablishmentTypeGroupsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "InspectorateId",  id => ( InspectoratesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "Section41ApprovedId",  id => ( Section41ApprovedGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN1Id",  id => ( SpecialEducationNeedsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN2Id",  id => ( SpecialEducationNeedsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN3Id",  id => ( SpecialEducationNeedsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN4Id",  id => ( SpecialEducationNeedsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "TeenageMothersProvisionId",  id => ( TeenageMothersProvisionsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ChildcareFacilitiesId",  id => ( ChildcareFacilitiesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "PRUSENId",  id => ( PRUSENsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "PRUEBDId",  id => ( PRUEBDsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "PruFulltimeProvisionId",  id => ( PruFulltimeProvisionsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "PruEducatedByOthersId",  id => ( PruEducatedByOthersGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "TypeOfResourcedProvisionId",  id => ( TypeOfResourcedProvisionsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "GovernmentOfficeRegionId",  id => ( GovernmentOfficeRegionsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "AdministrativeDistrictId",  id => ( AdministrativeDistrictsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "AdministrativeWardId",  id => ( AdministrativeWardsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ParliamentaryConstituencyId",  id => ( ParliamentaryConstituenciesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "UrbanRuralId",  id => ( UrbanRuralGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "GSSLAId",  id => ( GSSLAGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "CASWardId",  id => ( CASWardsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "MSOAId",  id => ( MSOAsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "LSOAId",  id => ( LSOAsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "FurtherEducationTypeId",  id => ( FurtherEducationTypesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "InspectorateNameId",  id => ( InspectorateNamesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "BSOInspectorateId",  id => ( InspectorateNamesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "CCOperationalHoursId",  id => ( CCOperationalHoursGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "CCGovernanceId",  id => ( CCGovernanceGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "CCPhaseTypeId",  id => ( CCPhaseTypesGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "CCDisadvantagedAreaId",  id => ( CCDisadvantagedAreasGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "CCDirectProvisionOfEarlyYearsId",  id => ( DirectProvisionOfEarlyYearsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "CCDeliveryModelId",  id => ( CCDeliveryModelsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "CCGroupLeadId",  id => ( CCGroupLeadsGetAll()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "LocalAuthorityId",  id => LocalAuthorityGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "RSCRegionId",  id => LocalAuthorityGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "TypeId",  id => EstablishmentTypesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "GroupTypeId",  id => GroupTypesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "Group.StatusId",  id => GroupStatusesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "StatusId",  id => EstablishmentStatusesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ReasonEstablishmentOpenedId",  id => ReasonEstablishmentOpenedGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ReasonEstablishmentClosedId",  id => ReasonEstablishmentClosedGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "EducationPhaseId",  id => EducationPhasesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ProvisionBoardingId",  id => ProvisionBoardingGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ProvisionNurseryId",  id => ProvisionNurseriesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ProvisionOfficialSixthFormId",  id => ProvisionOfficialSixthFormsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "GenderId",  id => GendersGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ReligiousCharacterId",  id => ReligiousCharactersGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ReligiousEthosId",  id => ReligiousEthosGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "DioceseId",  id => DiocesesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "AdmissionsPolicyId",  id => AdmissionsPoliciesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ProvisionSpecialClassesId",  id => ProvisionSpecialClassesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "HeadTitleId",  id => HeadTitlesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "EstablishmentTypeGroupId",  id => EstablishmentTypeGroupsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "InspectorateId",  id => InspectoratesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "Section41ApprovedId",  id => Section41ApprovedGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "SEN1Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "SEN2Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "SEN3Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "SEN4Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "TeenageMothersProvisionId",  id => TeenageMothersProvisionsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ChildcareFacilitiesId",  id => ChildcareFacilitiesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "PRUSENId",  id => PRUSENsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "PRUEBDId",  id => PRUEBDsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "PruFulltimeProvisionId",  id => PruFulltimeProvisionsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "PruEducatedByOthersId",  id => PruEducatedByOthersGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "TypeOfResourcedProvisionId",  id => TypeOfResourcedProvisionsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "GovernmentOfficeRegionId",  id => GovernmentOfficeRegionsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "AdministrativeDistrictId",  id => AdministrativeDistrictsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "AdministrativeWardId",  id => AdministrativeWardsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "ParliamentaryConstituencyId",  id => ParliamentaryConstituenciesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "UrbanRuralId",  id => UrbanRuralGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "GSSLAId",  id => GSSLAGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CASWardId",  id => CASWardsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "MSOAId",  id => MSOAsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "LSOAId",  id => LSOAsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "FurtherEducationTypeId",  id => FurtherEducationTypesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "InspectorateNameId",  id => InspectorateNamesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "BSOInspectorateId",  id => InspectorateNamesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CCOperationalHoursId",  id => CCOperationalHoursGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CCGovernanceId",  id => CCGovernanceGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CCPhaseTypeId",  id => CCPhaseTypesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CCDisadvantagedAreaId",  id => CCDisadvantagedAreasGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CCDirectProvisionOfEarlyYearsId",  id => DirectProvisionOfEarlyYearsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CCDeliveryModelId",  id => CCDeliveryModelsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CCGroupLeadId",  id => CCGroupLeadsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
             };
         }
 
@@ -263,9 +268,12 @@ namespace Edubase.Services.Lookup
 
         public IEnumerable<LookupDto> GroupStatusesGetAll() => Auto(_lookupService.GroupStatusesGetAll);
 
-        public async Task<string> GetNameAsync(string lookupName, int? id) =>
-            id.HasValue ? await _mappingAsync.Get(lookupName)?.Invoke(id.Value) : null;
-         
+        public async Task<string> GetNameAsync(string lookupName, int? id, string domain = null) =>
+            id.HasValue ? await _mappingAsync.Get((domain != null ? string.Concat(domain, ".", lookupName) : lookupName))?.Invoke(id.Value) : null;
+
+        public async Task<string> GetNameAsync(Expression<Func<int?>> expression, string domain = null) 
+            => await GetNameAsync(((MemberExpression)expression.Body).Member.Name, expression.Compile()(), domain);
+
         public string GetName(string lookupName, int? id) 
             => id.HasValue ? _mapping.Get(lookupName)?.Invoke(id.Value) : null;
 

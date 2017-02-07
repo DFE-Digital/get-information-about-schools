@@ -1,17 +1,12 @@
-﻿using Edubase.Services.Lookup;
+﻿using Edubase.Common;
+using Edubase.Services.Lookup;
+using Edubase.Web.UI.Validation;
 using FluentValidation;
 using System.Linq;
-using Edubase.Common;
-using FluentValidation.Results;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentValidation.Mvc;
-using System;
-using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models.Validators
 {
-    public class CreateEditEstablishmentModelValidator : AbstractValidator<CreateEditEstablishmentModel>, IValidatorInterceptor
+    public class CreateEditEstablishmentModelValidator : EdubaseAbstractValidator<CreateEditEstablishmentModel>
     {
         private ICachedLookupService _lookupService;
 
@@ -49,35 +44,13 @@ namespace Edubase.Web.UI.Models.Validators
             RuleFor(x => x.StatusId).NotEmpty().WithMessage("Status is invalid");
 
             RuleFor(x => x.LSOACode).MustAsync(async (x, ct) => (await _lookupService.LSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
-                .When(x => !x.LSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithState(x => "Area not found for Middle Super Output Area (MSOA)");
+                .When(x => !x.LSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithSummaryMessage("Area not found for Middle Super Output Area (MSOA)");
 
             RuleFor(x => x.MSOACode).MustAsync(async (x, ct) => (await _lookupService.MSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
-                .When(x => !x.MSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithState(x => "Area not found for Lower Super Output Area (LSOA)");
+                .When(x => !x.MSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithSummaryMessage("Area not found for Lower Super Output Area (LSOA)");
             
         }
+        
 
-
-        public override ValidationResult Validate(ValidationContext<CreateEditEstablishmentModel> context)
-        {
-            return base.Validate(context);
-        }
-
-        public override ValidationResult Validate(CreateEditEstablishmentModel instance)
-        {
-            return base.Validate(instance);
-        }
-
-        public override Task<ValidationResult> ValidateAsync(ValidationContext<CreateEditEstablishmentModel> context, CancellationToken cancellation = default(CancellationToken))
-        {
-            return base.ValidateAsync(context, cancellation);
-        }
-
-        public ValidationContext BeforeMvcValidation(ControllerContext controllerContext, ValidationContext validationContext) => validationContext;
-
-        public ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result)
-        {
-            controllerContext.Controller.ViewBag.FVErrors = result;
-            return result;
-        }
     }
 }

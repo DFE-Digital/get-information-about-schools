@@ -11,24 +11,27 @@ namespace Edubase.Services.Establishments
     using Data.Repositories.Establishments;
     using Exceptions;
     using Groups;
+    using IntegrationEndPoints.ServiceBus;
     using Models;
     using Security;
 
     public class EstablishmentWriteService : IEstablishmentWriteService
     {
-        private IEstablishmentReadService _readService;
-        private IGroupReadService _groupReadService;
-        private IApplicationDbContextFactory _dbContextFactory;
-        private IMapper _mapper;
-        private ICachedEstablishmentReadRepository _cachedEstablishmentReadRepository;
-        private ISecurityService _securityService;
+        private readonly IEstablishmentReadService _readService;
+        private readonly IGroupReadService _groupReadService;
+        private readonly IApplicationDbContextFactory _dbContextFactory;
+        private readonly IMapper _mapper;
+        private readonly ICachedEstablishmentReadRepository _cachedEstablishmentReadRepository;
+        private readonly ISecurityService _securityService;
+        private readonly IServiceBusEndPoint _serviceBusEndPoint;
 
         public EstablishmentWriteService(IEstablishmentReadService readService, 
             IGroupReadService groupReadService, 
             IApplicationDbContextFactory dbContextFactory,
             IMapper mapper, 
             ICachedEstablishmentReadRepository cachedEstablishmentReadRepository,
-            ISecurityService securityService)
+            ISecurityService securityService,
+            IServiceBusEndPoint serviceBusEndPoint)
         {
             _readService = readService;
             _groupReadService = groupReadService;
@@ -36,6 +39,7 @@ namespace Edubase.Services.Establishments
             _mapper = mapper;
             _cachedEstablishmentReadRepository = cachedEstablishmentReadRepository;
             _securityService = securityService;
+            _serviceBusEndPoint = serviceBusEndPoint;
         }
 
         public async Task SaveAsync(EstablishmentModel model, IPrincipal principal)
@@ -63,7 +67,10 @@ namespace Edubase.Services.Establishments
 
                 await _cachedEstablishmentReadRepository.ClearRelationshipCacheAsync(model.Urn);
 
-                await Task.Delay(1000); // allow enough time for the cache to clear on other servers in the webfarm (could replace this with messaging, or server-affinity).
+                await Task.Delay(2000); // allow enough time for the cache to clear on other servers in the webfarm (could replace this with messaging, or server-affinity).
+
+                await _serviceBusEndPoint.SendEstablishmentUpdateMessageAsync(entity);
+
             }
         }
 

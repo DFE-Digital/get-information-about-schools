@@ -12,6 +12,7 @@
         KeyValueGotFromMemory, 
         KeyValueGotFromCentralAttempt,
         KeyValueGotFromMemoryAttempt,
-        Exception
+        Exception,
+        ClearedCache
     }
 }

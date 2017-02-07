@@ -22,6 +22,7 @@ using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
 {
+    [RoutePrefix("Establishment")]
     public class EstablishmentController : EduBaseController
     {
         private IEstablishmentReadService _establishmentReadService;
@@ -48,7 +49,7 @@ namespace Edubase.Web.UI.Controllers
             _governorsReadService = governorsReadService;
         }
 
-        [HttpGet, EdubaseAuthorize]
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
@@ -65,7 +66,7 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
         public async Task<ActionResult> Edit(ViewModel model)
         {
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
@@ -159,7 +160,7 @@ namespace Edubase.Web.UI.Controllers
         //    else return View(model);
         //}
 
-        [HttpGet]
+        [HttpGet, Route("Details/{id}")]
         public async Task<ActionResult> Details(int id)
         {
             var viewModel = new EstablishmentDetailViewModel()
@@ -186,8 +187,8 @@ namespace Edubase.Web.UI.Controllers
                 using (MiniProfiler.Current.Step("Retrieving ChangeHistory"))
                     viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
 
-                using (MiniProfiler.Current.Step("Retrieving UserHasPendingApprovals flag"))
-                    viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
+                //using (MiniProfiler.Current.Step("Retrieving UserHasPendingApprovals flag"))
+                //    viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
             }
 
             using (MiniProfiler.Current.Step("Retrieving Group record"))
@@ -210,7 +211,7 @@ namespace Edubase.Web.UI.Controllers
             viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
                 .CanEdit(viewModel.Establishment.Urn.Value, 
                     viewModel.Establishment.TypeId,
-                    viewModel.Group != null ? new[] { viewModel.Group.GroupUID } : null as int[], 
+                    viewModel.Group != null ? new [] { viewModel.Group.GroupUID.Value } : null as int[], 
                     viewModel.Establishment.LocalAuthorityId, 
                     viewModel.Establishment.EstablishmentTypeGroupId);
 

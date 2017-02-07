@@ -112,7 +112,7 @@
             </div>
 
             <div class="form-group create-edit-form-group @Html.ValidationCssClassFor(x => x.LAESTAB)">
-                <label for="laestab" class="form-label"><abbr title="Local Authority and Establishment number">LAESTAB</abbr></label>
+                <label for="laestab" class="form-label"><abbr title="Local Authority - Establishment number">LAESTAB</abbr></label>
                 @Html.EduTextBoxFor(x => x.LAESTAB,
                             new { id = "laestab", @class = "form-control", aria_describedby = "help-laestab", type = "number", maxlength = 7 },
                             "EstablishmentNumber")

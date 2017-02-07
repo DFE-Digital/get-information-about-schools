@@ -25,7 +25,7 @@ using Edubase.Data.Repositories.Groups.Abstract;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [EdubaseAuthorize(Roles = EdubaseRoles.Admin)]
+    [EdubaseAuthorize(Roles = EdubaseRoles.Admin), RoutePrefix("Admin"), Route("{action=dashboard}")]
     public class AdminController : EduBaseController
     {
         private IAzureSearchEndPoint _azureSearchEndPoint;
@@ -35,8 +35,6 @@ namespace Edubase.Web.UI.Controllers
             _azureSearchEndPoint = azureSearchEndPoint;
         }
 
-        // GET: Admin
-        public ActionResult Index() => View();
         
         public async Task<ActionResult> Dashboard(string message = null)
         {
@@ -68,6 +66,7 @@ namespace Edubase.Web.UI.Controllers
             }   
         }
 
+        [Route("Logs")]
         public async Task<ActionResult> Logs(string date, string skipToken)
         {
             var dto = await new LogMessageReadService().GetAllAsync(10, skipToken, date.ToDateTime("yyyyMMdd"));
@@ -75,6 +74,7 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
+        [Route("LogDetail/{id}")]
         public async Task<ActionResult> LogDetail(string id)
         {
             var message = await new LogMessageReadService().GetAsync(id);
@@ -84,7 +84,7 @@ namespace Edubase.Web.UI.Controllers
 
         public ActionResult DoException() { throw new System.Exception("This is a test exception"); }
 
-        [HttpGet]
+        [HttpGet, Route("GetPendingErrors")]
         public ActionResult GetPendingErrors(string pwd)
         {
             if (pwd == "c7634") return Json(DependencyResolver.Current
@@ -92,16 +92,17 @@ namespace Edubase.Web.UI.Controllers
             else return new EmptyResult();
         }
 
-        [HttpGet]
+        [HttpGet, Route("GetPendingErrorsId")]
         public ActionResult GetPendingErrorsId()
         {
             return Json(DependencyResolver.Current
                 .GetService<IMessageLoggingService>().InstanceId);
         }
 
-        [Authorize]
+        [Authorize, Route("Secure")]
         public ActionResult Secure() => View((User.Identity as ClaimsIdentity).Claims);
 
+        [Route("ClearCache")]
         public async Task<ActionResult> ClearCache()
         {
             using (var scope = IocConfig.Container.BeginLifetimeScope())
@@ -111,7 +112,7 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToAction(nameof(Dashboard), new { message = "Redis cache and MemoryCache cleared successfully." });
         }
 
-        [HttpPost]
+        [HttpPost, Route("WarmEstabRepo")]
         public ActionResult WarmEstabRepo(int maxBatchSize = 1000, 
             int maxConcurrency = 40, 
             int? maxTotalRecords = null)
@@ -128,7 +129,7 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToAction(nameof(Dashboard), new { message = "Establishments cache is now warming." });
         }
 
-        [HttpPost]
+        [HttpPost, Route("WarmGroupRepo")]
         public ActionResult WarmGroupRepo(int maxBatchSize = 1000,
             int maxConcurrency = 40,
             int? maxTotalRecords = null)
@@ -145,7 +146,7 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToAction(nameof(Dashboard), new { message = "Groups cache is now warming." });
         }
 
-        [HttpPost]
+        [HttpPost, Route("ResetAzureSearch")]
         public async Task<ActionResult> ResetAzureSearch()
         {
             await DeleteAzureSearchItems(EstablishmentsSearchIndex.INDEX_NAME);
@@ -196,7 +197,7 @@ namespace Edubase.Web.UI.Controllers
             await _azureSearchEndPoint.DeleteDataSourceAsync(indexName + "-ds");
             await _azureSearchEndPoint.DeleteIndexerAsync(indexName + "-indexer");
         }
-
+        
         public async Task FlushErrors() => await DependencyResolver.Current
                 .GetService<IMessageLoggingService>().FlushAsync();
     }

@@ -1,4 +1,6 @@
-﻿@using VM = Edubase.Web.UI.Models.Search.LocalAuthorityDisambiguationViewModel;
+﻿@using Edubase.Web.UI.Models.Search;
+@using Edubase.Web.UI
+@using VM = Edubase.Web.UI.Models.Search.LocalAuthorityDisambiguationViewModel;
 @model VM
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
@@ -23,23 +25,23 @@
         <ul>
             @foreach (var item in Model.MatchingLocalAuthorities)
             {
-                <li><a href="/?@QueryStringHelper.ToQueryString("l", Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
+                <li><a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
             }
         </ul>
         <br />
-        <a href="/?@QueryStringHelper.ToQueryString("l", Model.SelectedLocalAuthorityIds.ToArray())#la" class="button">Cancel</a>
+        <a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.ToArray())#la" class="button">Cancel</a>
     }
     else if (Model.MatchingLocalAuthorities.Count == 1)
     {
         <p>Did you mean 
-            <a href="/?@QueryStringHelper.ToQueryString("l", Model.SelectedLocalAuthorityIds.AddUnique(Model.MatchingLocalAuthorities[0].Id).ToArray())#la">
+            <a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(Model.MatchingLocalAuthorities[0].Id).ToArray())#la">
                 @Model.MatchingLocalAuthorities[0].Name
             </a>?
         </p>
     }else
     {
         <p class="bold-small">No results were found. Please reﬁne your search criteria.<br /></p>
-        <a href="/?@QueryStringHelper.ToQueryString("l", Model.SelectedLocalAuthorityIds.ToArray())#la" class="button button-next">Continue</a>
+        <a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.ToArray())#la" class="button button-next">Continue</a>
     }
 
 

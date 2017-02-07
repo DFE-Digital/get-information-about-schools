@@ -106,7 +106,7 @@ namespace Edubase.Services.Establishments
                 }
             }
 
-            throw new DomainException($"All estab numbers have been allocated across all ranges for this rule: \"{rule}\"; input: establishmentTypeId:{establishmentTypeId}, "
+            throw new EdubaseException($"All estab numbers have been allocated across all ranges for this rule: \"{rule}\"; input: establishmentTypeId:{establishmentTypeId}, "
                 + $"educationPhaseId:{educationPhaseId}, localAuthorityId:{localAuthorityId}");
         }
 

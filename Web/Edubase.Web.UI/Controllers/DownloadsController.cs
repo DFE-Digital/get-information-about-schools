@@ -9,6 +9,7 @@ using System.Configuration;
 
 namespace Edubase.Web.UI.Controllers
 {
+    [RoutePrefix("Downloads"), Route("{action=index}")]
     public class DownloadsController : Controller
     {
         // GET: Downloads

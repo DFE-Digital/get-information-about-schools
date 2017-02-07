@@ -11,6 +11,7 @@ namespace Edubase.Common
     public static class LanguageExtensions
     {
         public static bool OneOfThese(this int? id, params Enum[] items) => items.Cast<int>().Any(x => x == id);
+        public static bool OneOfThese(this int id, params Enum[] items) => items.Cast<int>().Any(x => x == id);
         public static bool OneOfThese(this Enum flag, params Enum[] items) => items.Cast<int>().Any(x => x == Convert.ToInt32(flag));
 
         public static bool IsValidEmail(this string text)
@@ -88,6 +89,17 @@ namespace Edubase.Common
             if (text.IsNullOrEmpty()) return null;
             else return text;
         }
+
+        public static string Append(this string text, string toAppend)
+        {
+            text = text.Clean();
+            toAppend.Clean();
+
+            if (text == null) return null;
+            else if (toAppend != null) return string.Concat(text, toAppend);
+            else return text;
+        }
+
         public static DateTime? ToDateTime(this string data, string format)
         {
             if (data == null) return null;

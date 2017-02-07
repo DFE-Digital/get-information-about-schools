@@ -34,6 +34,7 @@ namespace Edubase.Data.Migrations
 
             context.SaveChanges();
 
+            context.Database.ExecuteSqlCommand("DELETE FROM LookupEstablishmentType WHERE Code IN ('22', '17', '9', '98', '23')"); // Story: 7714
 
             if(!context.Groups.Any(x => x.EstablishmentCount > 0))
             {

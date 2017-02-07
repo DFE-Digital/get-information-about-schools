@@ -26,6 +26,9 @@ using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Governors;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Validation;
+using Edubase.Services.IntegrationEndPoints.ServiceBus;
+using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 
 namespace Edubase.Web.UI
 {
@@ -125,6 +128,9 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<GovernorDownloadService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadService>().As<IGovernorsReadService>();
+            builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
+
+            builder.RegisterType<ServiceBusEndPoint>().As<IServiceBusEndPoint>();
 
         }
 

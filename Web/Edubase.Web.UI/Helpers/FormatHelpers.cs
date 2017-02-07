@@ -43,5 +43,10 @@ namespace Edubase.Web.UI.Helpers
             if (string.IsNullOrWhiteSpace(text)) return null;
             else return new MvcHtmlString(HttpUtility.HtmlEncode(text).Replace("\n", "<br/>"));
         }
+
+        public static string FirstCharToUpper(string input)
+        {
+            return input.First().ToString().ToUpper() + String.Join("", input.Skip(1));
+        }
     }
 }

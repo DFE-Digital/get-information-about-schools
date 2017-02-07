@@ -5,6 +5,6 @@ namespace Edubase.Data.Repositories.Groups.Abstract
 {
     public interface ICachedGroupReadRepository : ICachedRepositoryBase<GroupCollection>
     {
-        Task ClearRelationshipCacheAsync(int? urn);
+        Task ClearRelationshipCacheAsync(int? id);
     }
 }

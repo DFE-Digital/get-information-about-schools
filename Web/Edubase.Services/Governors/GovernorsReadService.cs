@@ -12,6 +12,9 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using MoreLinq;
+using Edubase.Services.Exceptions;
+using Edubase.Services.Core.Search;
 
 namespace Edubase.Services.Governors
 {
@@ -82,26 +85,33 @@ namespace Edubase.Services.Governors
 
         public async Task<AzureSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal)
         {
+            Guard.IsFalse(payload.SortBy == eSortBy.Distance, () => new EdubaseException("Sorting by distance is not supported with Governors"));
+
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
 
             if (payload.FirstName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_FirstNameDistilled), payload.FirstName.Distill());
             if (payload.LastName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_LastNameDistilled), payload.LastName.Distill());
-            if (payload.RoleId.HasValue) oDataFilters.Add(nameof(SearchGovernorDocument.RoleId), payload.RoleId);
-
+            
             var date = payload.IncludeHistoric ? DateTime.UtcNow.Date.AddYears(-1) : DateTime.UtcNow.Date;
-
             var appointmentEndDateFilter = new ODataFilterList(ODataFilterList.OR);
             appointmentEndDateFilter.Add(nameof(SearchGovernorDocument.AppointmentEndDate), null);
             appointmentEndDateFilter.Add(nameof(SearchGovernorDocument.AppointmentEndDate), date, ODataFilterList.GE);
             oDataFilters.Add(appointmentEndDateFilter);
-            
+
+            if (payload.RoleIds.Any())
+            {
+                var roleIdODataFilter = new ODataFilterList(ODataFilterList.OR);
+                payload.RoleIds.ForEach(x => roleIdODataFilter.Add(nameof(SearchGovernorDocument.RoleId), x));
+                oDataFilters.Add(roleIdODataFilter);
+            }
+
             return await _azureSearchService.SearchAsync<SearchGovernorDocument>(GovernorsSearchIndex.INDEX_NAME,
                 null,
                 oDataFilters.ToString(),
                 payload.Skip,
                 payload.Take,
                 new[] { nameof(SearchGovernorDocument.Person_LastName) }.ToList(),
-                payload.OrderBy);
+                ODataUtil.OrderBy(nameof(SearchGovernorDocument.Person_LastNameDistilled), (payload.SortBy == eSortBy.NameAlphabeticalAZ)));
         }
     }
 }

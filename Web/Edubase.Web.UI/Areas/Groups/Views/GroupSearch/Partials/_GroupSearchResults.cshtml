@@ -1,0 +1,63 @@
+﻿@using Edubase.Web.UI.Areas.Groups.Models
+@using Edubase.Common;
+@using Edubase.Services.Enums;
+@model GroupSearchViewModel
+
+@if (Model.Error != null)
+{
+    <div class="column-two-thirds">
+        <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
+    </div>
+}
+else if (Model.Results.Count > 0)
+{
+    if (Model.PageCount > 1)
+    {
+        <div class="column-full top-pagination">
+            @Html.Partial("_GenericPagination")
+        </div>
+    }
+    <div class="column-full">
+        <ul class="school-results-listing">
+            @foreach (var result in Model.Results)
+                {
+                <li>
+                    <h2>@Html.ActionLink(result.Name, "Details", "Group", new { id = result.GroupUID, area = "groups" }, new { @class = "bold-small" })</h2>
+                    <dl>
+                        <dt>Type:</dt>
+                        <dd>@(Model.GroupTypes.FirstOrDefault(x => x.Id == result.GroupTypeId)?.Name)</dd>
+                        @if (result.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+                        {
+                            <dt>Companies House Number:</dt>
+                            <dd><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.CompaniesHouseNumber">@result.CompaniesHouseNumber</a></dd>
+                        }
+                        <dt>Group UID:</dt>
+                        <dd>@result.GroupUID</dd>
+                        <dt>Group ID:</dt>
+                        <dd>@result.GroupId</dd>
+                    </dl>
+                </li>
+            }
+        </ul>
+    </div>
+
+    if (Model.PageCount > 1)
+    {
+        <div class="column-full lower-pagination">
+            @Html.Partial("_GenericPagination")
+        </div>
+    }
+}
+else
+{
+    <div class="column-two-thirds">
+        @if (Model.GroupSearchModel.Text.IsInteger())
+        {
+            <p class="no-school-results">Please check the number entered or try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using the group name.</p>
+        }
+        else
+        {
+            <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
+        }
+    </div>
+}

@@ -30,6 +30,9 @@ namespace Edubase.Services.Establishments
     using Common.IO;
     using Ionic.Zip;
     using Lookup;
+    using Doc = Search.SearchEstablishmentDocument;
+    using Common.Spatial;
+    using Services.Core.Search;
 
     public class EstablishmentReadService : IEstablishmentReadService
     {
@@ -142,7 +145,7 @@ namespace Edubase.Services.Establishments
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
             if (IsRoleRestrictedOnStatus(principal))
             {
-                oDataFilters.Add(ODataUtil.Or(nameof(SearchEstablishmentDocument.StatusId), _restrictedStatuses));
+                oDataFilters.Add(ODataUtil.Or(nameof(Doc.StatusId), _restrictedStatuses));
             }
             return await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text, oDataFilters.ToString(), take);
         }
@@ -153,38 +156,60 @@ namespace Edubase.Services.Establishments
             else return null;
         }
 
-
-        public async Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
+        /// <summary>
+        /// Searches establishments based on the supplied payload/filters.
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <param name="principal"></param>
+        /// <returns></returns>
+        /// <exception cref="SearchQueryTooLargeException">
+        ///     There's a chance that when you pass in a large query with 100s of filters
+        ///     you'll get a SearchQueryTooLargeException.  There is no work-around; the size of the query needs to be reduced; this is due to a limitation in Azure Search.
+        /// </exception>
+        public async Task<AzureSearchResult<Doc>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
         {
             if (IsRoleRestrictedOnStatus(principal))
             {
                 if (payload.Filters.StatusIds.Any())
                 {
                     if (!payload.Filters.StatusIds.All(x => _restrictedStatuses.Any(s => s == x)))
-                        throw new Exception("One or more of the status ids requested are outside the permissions of the current principal");
+                        throw new EduSecurityException("One or more of the status ids requested are outside the permissions of the current principal");
                 }
                 else payload.Filters.StatusIds = _restrictedStatuses.ToArray();
             }
 
             var predicates = payload.Filters.ToODataPredicateList(AzureSearchEndPoint.ODATA_FILTER_DELETED);
-            
+
+            string orderByODataExpression = null;
             if (payload.GeoSearchLocation != null)
             {
-                var geoPredicate = new ODataGeographyExpression(payload.GeoSearchLocation);
-                predicates.Add(geoPredicate.ToFilterODataExpression(nameof(SearchEstablishmentDocument.Location), payload.GeoSearchMaxRadiusInKilometres.Value));
-                var expression = geoPredicate.ToODataExpression(nameof(SearchEstablishmentDocument.Location));
-                if (payload.GeoSearchOrderByDistance && !payload.OrderBy.Contains(expression)) payload.OrderBy.Insert(0, expression);
+                var distance = new Distance(payload.RadiusInMiles ?? 3);
+                var geoPredicate = new ODataGeographyExpression(payload.GeoSearchLocation, nameof(Doc.Location));
+                predicates.Add(geoPredicate.ToFilterODataExpression(distance.Kilometres));
+                if(payload.SortBy == eSortBy.Distance) orderByODataExpression = geoPredicate.ToODataExpression();
+            }
+
+            if (payload.SortBy.OneOfThese(eSortBy.NameAlphabeticalAZ, eSortBy.NameAlphabeticalZA))
+                orderByODataExpression = string.Concat(nameof(Doc.NameDistilled), " ", (payload.SortBy == eSortBy.NameAlphabeticalAZ ? "asc" : "desc"));
+
+            if (payload.SENIds.Any())
+            {
+                var senPredicates = new[] { nameof(Doc.SEN1Id), nameof(Doc.SEN2Id), nameof(Doc.SEN3Id), nameof(Doc.SEN4Id) }
+                    .SelectMany(x => payload.SENIds.Select(s => new { Name = x, Value = s }));
+                var senODataFilter = new ODataFilterList(ODataFilterList.OR);
+                senPredicates.ForEach(x => senODataFilter.Add(x.Name, x.Value));
+                predicates.Add($"({senODataFilter})");
             }
 
             var oDataFilterExpression = string.Join(" and ", predicates);
 
-            return await _azureSearchService.SearchAsync<SearchEstablishmentDocument>(EstablishmentsSearchIndex.INDEX_NAME, 
-                payload.Text, 
-                oDataFilterExpression, 
-                payload.Skip, 
-                payload.Take,  
-                new[] { nameof(SearchEstablishmentDocument.NameDistilled) }.ToList(), 
-                payload.OrderBy); 
+            return await _azureSearchService.SearchAsync<Doc>(EstablishmentsSearchIndex.INDEX_NAME,
+                payload.Text,
+                oDataFilterExpression,
+                payload.Skip,
+                payload.Take,
+                new List<string> { nameof(Doc.NameDistilled) },
+                new List<string> { orderByODataExpression });
         }
 
         private bool IsRoleRestrictedOnStatus(IPrincipal principal)
@@ -202,6 +227,7 @@ namespace Edubase.Services.Establishments
         }
 
 
+        
         
 
 

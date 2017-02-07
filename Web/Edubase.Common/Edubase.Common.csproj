@@ -59,6 +59,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Device" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
@@ -98,6 +99,7 @@
     <Compile Include="Reflection\PropInfo.cs" />
     <Compile Include="Retry.cs" />
     <Compile Include="Returns.cs" />
+    <Compile Include="Spatial\Distance.cs" />
     <Compile Include="Spatial\DistanceCalculator.cs" />
     <Compile Include="Spatial\LatLon.cs" />
     <Compile Include="Spatial\OSGB36Converter.cs" />

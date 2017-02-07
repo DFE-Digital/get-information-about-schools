@@ -10,8 +10,7 @@ namespace Edubase.Web.UI
         {
             filters.Add(new UnauthorizedAccessAttribute());
             filters.Add(new HandleErrorAttribute());
-            //filters.Add(new PendingApprovalsFilter());
-            if(bool.Parse(ConfigurationManager.AppSettings["EnableErrorReporting"])) filters.Add(new ExceptionHandler());
+            filters.Add(new ExceptionHandler());
         }
     }
 }

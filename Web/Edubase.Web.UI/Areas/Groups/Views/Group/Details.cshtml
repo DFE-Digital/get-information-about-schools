@@ -1,0 +1,192 @@
+﻿@using Edubase.Common
+@using Edubase.Services.Enums
+@model GroupDetailViewModel
+@{
+    ViewBag.Title = Model.Group.Name;
+    ViewBag.PageClass = "mat-details";
+}
+<p>
+    <a class="font-xsmall" href="/#groups">Back to search</a>
+</p>
+
+<h1 class="heading-large">@Model.Group.Name</h1>
+
+@if (Model.CanUserEdit)
+{
+    @Html.ActionLink("Edit", "Edit", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button mobile-full-width" })
+}
+
+<div class="grid-row summary">
+    <div class="column-full">
+        <table class="borderless no-padding">
+            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+            {
+                <tr>
+                    <th scope="row">Companies House Number</th>
+                    <td>
+                        @if (Model.Group.CompaniesHouseNumber.IsNullOrEmpty())
+                        {
+                            <text>Not recorded</text>
+                        }
+                        else
+                        {
+                            <a href="@Model.CompaniesHouseUrl">@Model.Group.CompaniesHouseNumber</a>
+                        }
+                    </td>
+                </tr>
+            }
+            <tr>
+                <th scope="row">Type</th>
+                <td>@Model.GroupTypeName</td>
+            </tr>
+            
+            <tr>
+                <th scope="col">@Model.OpenDateLabel</th>
+                <td>@(Model.Group.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
+            </tr>
+
+            @if (Model.IsUserLoggedOn)
+            {
+                <tr>
+                    <th scope="col">Closed date</th>
+                    <td>@(Model.Group.ClosedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
+                </tr>
+
+                <tr>
+                    <th scope="col">Status</th>
+                    <td>@(Model.GroupStatusName ?? "Not recorded")</td>
+                </tr>
+            }
+
+            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
+            {
+                <tr>
+                    <th scope="col">Address</th>
+                    <td>@(Model.Address ?? "Not recorded")</td>
+                </tr>
+            }
+
+            @if (Model.Group.GroupTypeId == (int) eLookupGroupType.ChildrensCentresGroup)
+            {
+                <tr>
+                    <th scope="col">Group manager email</th>
+                    <td>@(Model.Group.ManagerEmailAddress ?? "Not recorded")</td>
+                </tr>
+            }
+
+            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration))
+            {
+                <tr>
+                    <th scope="col">Local authority</th>
+                    <td>@(Model.LocalAuthorityName ?? "Not recorded")</td>
+                </tr>
+            }
+
+            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
+            {
+                <tr>
+                    <th scope="col">Group ID</th>
+                    <td>@(Model.Group.GroupId.Clean() ?? "Not recorded")</td>
+                </tr>
+            }
+
+            <tr>
+                <th scope="col">UID</th>
+                <td>@Model.Group.GroupUID</td>
+            </tr>
+            
+
+        </table>
+        <br />
+    </div>
+</div>
+
+
+
+<div class="grid-row horizontal-tabs-wrapper">
+    <div class="column-full">
+
+        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+        {
+            <div class="tab-wrap">
+                <ul class="horizontal-tabs">
+                    <li>
+                        <a href="#list" class="horizontal-tab">
+                            @Model.EstablishmentsPluralName
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#governance" class="horizontal-tab">Governance</a>
+                    </li>
+                </ul>
+            </div>
+        }
+        <div class="tab-content-wrapper horizontal-tabs-content">
+            <div id="list" class="tab-content">
+                @if (Model.Establishments.Any())
+                {
+                    <h3 class="heading-medium">
+                        List of @Model.EstablishmentsPluralName.ToLower() (@Model.Group.EstablishmentCount)
+                    </h3>
+                }
+                <div class="column-full2">
+                    <ul class="school-results-listing">
+                        @foreach (var result in Model.Establishments)
+                        {
+                            <li>
+                                <h2>
+                                    @Html.ActionLink(result.Name, "Details", "Establishment", new { id = result.Urn }, new { @class = "bold-small" }) 
+                                    @if (result.CCIsLeadCentre)
+                                    {
+                                        <text>(Lead centre)</text>
+                                    }
+                                </h2>
+                                <dl>
+                                    <dt>Address:</dt>
+                                    <dd>@result.Address</dd>
+                                    <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
+                                    <dd> @result.Urn</dd>
+                                    <dt>School type:</dt>
+                                    <dd>@result.TypeName</dd>
+                                    <dt>Headteacher name:</dt>
+                                    <dd>@result.HeadFullName</dd>
+                                    <dt>Joined date:</dt>
+                                    <dd>@(result.JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                                </dl>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+            </div>
+            <div id="governance" class="tab-content">
+                
+                @if (!Model.Governors.Any() && !Model.HistoricalGovernors.Any())
+                {
+                    <p>There is no governance information for this establishment</p>
+                }
+                else
+                {
+                    if (Model.Governors.Any())
+                    {
+                        @Html.Partial("_Governors", Model.Governors)
+                        if (Model.HistoricalGovernors.Any())
+                        {
+                            <br />
+                            <hr />
+                            <br />
+                        }
+                    }
+
+                    if (Model.HistoricalGovernors.Any())
+                    {
+                        <h3 class="bold-xsmall">Historic (left with past 12 months)</h3>
+                        @Html.Partial("_Governors", Model.HistoricalGovernors)
+                    }
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>

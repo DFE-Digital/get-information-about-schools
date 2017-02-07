@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Edubase.Services.Core.Search;
+using System.Collections.Generic;
 
 namespace Edubase.Services.Groups.Search
 {
@@ -9,20 +10,20 @@ namespace Edubase.Services.Groups.Search
 
         }
 
-        public GroupSearchPayload(string orderBy, int skip, int take)
+        public GroupSearchPayload(int skip, int take)
         {
-            OrderBy = new List<string> { orderBy };
             Skip = skip;
             Take = take;
         }
+
+        public int[] GroupTypeIds { get; set; }
 
         public string Text { get; set; }
         
         public int Skip { get; set; }
 
         public int Take { get; set; } = 10;
-        
 
-        public IList<string> OrderBy { get; set; } = new List<string>();
+        public eSortBy SortBy { get; set; }
     }
 }

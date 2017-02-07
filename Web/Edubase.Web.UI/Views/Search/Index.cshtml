@@ -1,6 +1,9 @@
-﻿@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
-@using VM = Edubase.Web.UI.Models.AdvancedSearchViewModel;
+﻿@using Edubase.Web.UI.Models.Search;
+@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
+@using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
+@using Edubase.Web.UI.Helpers;
 @model VM
+    
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
@@ -10,9 +13,8 @@
     <div class="column-full">
         <h1 class="heading-xlarge">Search Edubase</h1>
     </div>
-   
-    <div class="horizontal-tabs-wrapper">        
-        <div class="column-full">
+    <div class="column-full">
+        <div class="horizontal-tabs-wrapper">
             <div class="tab-wrap">
                 <ul class="horizontal-tabs">
                     <li>
@@ -22,8 +24,8 @@
                     </li>
                     <li>
                         <a href="#groups" class="horizontal-tab group">
-                            Find an establishment group<br/>
-                            <span class="sub">e.g. Trust, Sponsor or Federation</span>
+                            Find an establishment group<br />
+                            <span class="sub">For example, trust, sponsor or federation</span>
                         </a>
                     </li>
                     <li>
@@ -41,126 +43,140 @@
 
                         <ul class="search-type-list">
                             <li class="search-type-wrapper">
-                                @using (Html.BeginForm("Results", "Search", FormMethod.Get))
+                                @using (Html.BeginForm("Index", "Search", FormMethod.Get))
                                 {
                                     <label class="block-label selection-button-radio">
-                                        <input type="radio" class="panel-toggle"/>
-                                        Establishment name or reference number
+                                        <input type="radio" class="panel-toggle" />
+                                        Name or reference number
                                     </label>
                                     <div class="expanding-search-field">
-                                        <span class="search-hint">Enter name,
+                                        <span class="search-hint">
+                                            Enter name,
                                             <abbr title="Unique Reference Number">URN</abbr>,
-                                            <abbr title="Local Authority and Establishment number">LAESTAB</abbr>
+                                            <abbr title="Local Authority - Establishment number">LAESTAB</abbr>
                                             or <abbr title="UK Provider Reference Number">UKPRN</abbr>
                                         </span>
-                                        @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggest?text="})
+                                        @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggest?text=" })
                                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                                        <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Text">Search</button>
-                                        <input type="hidden" name="g" value="true" />
+                                        <button type="submit" class="button button-next" name="searchtype" value="@eSearchType.Text">Search</button>
+                                        <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                                     </div>
                                 }
                             </li>
 
                             <li class="search-type-wrapper">
-                                @using (Html.BeginForm("Results", "Search", FormMethod.Get))
+                                @using (Html.BeginForm("Index", "Search", FormMethod.Get))
                                 {
                                     <label class="block-label selection-button-radio">
-                                        <input type="radio"  class="panel-toggle"/>
+                                        <input type="radio" class="panel-toggle" />
                                         Location
                                     </label>
                                     <div class="expanding-search-field">
                                         <span class="search-hint">Enter postcode, town or city</span>
-                                        @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "form-control auto-clear", autocomplete = "off"})
+                                        @Html.TextBoxFor(x => x.LocationSearchModel.Text, new { @class = "form-control auto-clear", autocomplete = "off" })
                                         @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
-                                        <button type="submit" class="button button-next" name="searchtype" value="@VM.eSearchType.Location">Search</button>
-                                        <input type="hidden" name="g" value="true" />
+                                        <button type="submit" class="button button-next" name="searchtype" value="@eSearchType.Location">Search</button>
                                     </div>
 
                                 }
                             </li>
                             <li class="search-type-wrapper">
                                 <a id="la"></a>
-                                @using (Html.BeginForm("Results", "Search", FormMethod.Get))
-                                {
-                                    <label class="block-label selection-button-radio @Html.Conditional(Model.SelectedLocalAuthorityIds.Any(), "selected selected-search")">
-                                        <input type="radio" class="panel-toggle form-control" @Html.Conditional(Model.SelectedLocalAuthorityIds.Any(), "checked") />
-                                        <span class="label-text">Local authority</span>
-                                    </label>
-                                    <div class="expanding-search-field la" style="display:@(Model.SelectedLocalAuthorityIds.Any() ? "block":"none");">
+
+                                <label class="block-label selection-button-radio @Html.Conditional(Model.SelectedLocalAuthorityIds.Any(), "selected selected-search")">
+                                    <input type="radio" class="panel-toggle form-control" @Html.Conditional(Model.SelectedLocalAuthorityIds.Any(), "checked") />
+                                    <span class="label-text">Local authority</span>
+                                </label>
+                                <div class="expanding-search-field la">
+
+                                    @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+                                    {
                                         <span class="search-hint">Enter a Local authority</span>
-                                        @foreach (var id in Model.SelectedLocalAuthorityIds)
-                                        {
-                                            var la = Model.LocalAuthorties.First(x => x.Id == id);
-                                            <input value="@la.Name" disabled="disabled" class="form-control" />
-                                            <button type="submit" class="link-button font-small" name="LocalAuthorityToRemove" value="@id">Remove</button>
-                                            <br /><br />
-                                        }
+                                        <div id="user-selected-la"></div>  @*target for the JS to insert the LA fields*@
+                                    foreach (var id in Model.SelectedLocalAuthorityIds)
+                                    {
+                                        var la = Model.LocalAuthorities.First(x => x.Id == id);
+                                        <div class="form-group">
+                                            <input value="@la.Name" disabled="disabled" class="form-control user-selected-la" />
+                                            <button type="submit" class="link-button font-small no-js-remove" name="LocalAuthorityToRemove" value="@id">Remove</button>
+                                        </div>
 
+                                    }
+                                    <div class="form-group">
                                         @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new { @class = "form-control auto-clear", autocomplete = "off" })
-                                        <button type="submit" class="link-button font-small" name="searchtype" value="@VM.eSearchType.LocalAuthorityDisambiguation">Find</button>
-                                        @Html.HiddenFieldsFromQueryString()
-                                        <br />
-                                        <br />
-
-                                        <input type="hidden" name="g" value="true" />
-                                        <button type="submit" class="button button-next button-below" name="searchtype" value="@VM.eSearchType.ByLocalAuthority">Search</button>
+                                        <button type="submit" class="link-button font-small no-js-remove" name="searchtype" value="@eSearchType.LocalAuthorityDisambiguation">Find</button>
                                     </div>
-                                }
+                                        @Html.HiddenFieldsFromQueryString()
+                                    }
+
+                                    @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+                                    {
+                                        <button type="submit" class="button button-next button-below" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>
+                                        @Html.HiddenFieldsFromQueryString()
+
+                                        <div id="la-id-target"></div>
+                                    }
+                                </div>
+
                             </li>
                         </ul>
                         <p class="search-all-shortcut">
-                            <a href="/Search/Results?@(QueryStringHelper.ToQueryString("s", (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all establishments</a>
+                            <a href="@Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all establishments</a>
                         </p>
                     </fieldset>
 
                 </div>
+
                 <div id="groups" class="tab-content">
 
-                    @using (Html.BeginForm("Results", "Search", FormMethod.Get))
+                    @using (Html.BeginForm("Index", "Search", FormMethod.Get))
                     {
                         <div class="edubase-search-element">
                             <label class="bold-small">
                                 Establishment group
-                                <span class="form-hint">Can include multi academy trust/single academy trust name, companies house number or local authority name</span>
                             </label>
-                            @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text="})
+                            <dl class="form-hint">
+                                <dt>Search by anyone of these:</dt>
+                                <dd>Multi academy trust name</dd>
+                                <dd>Academy trust name</dd>
+                                <dd>Companies House number</dd>
+                            </dl>
+                            @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=" })
                             @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
                             <input type="hidden" name="g" value="true" />
                         </div>
-                        <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Group">Search</button>
+                        <button type="submit" class="button button-next" name="searchtype" value="@eSearchType.Group">Search</button>
                     }
 
                 </div>
+
                 <div id="governors" class="tab-content">
 
-                    @using (Html.BeginForm("Results", "Search", FormMethod.Get))
+                    @using (Html.BeginForm("Index", "Search", FormMethod.Get))
                     {
-                        @Html.ValidationSummary(null, new {@class = "error-summary"})
+                        @Html.ValidationSummary(null, new { @class = "error-summary" })
                         <div class="edubase-search-element">
-                            <label for="forename" class="bold-small">Forename</label>
-                            <span class="form-hint">e.g. John</span>
-                            @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control auto-clear" })
+                            <label for="forename" class="bold-small">First name</label>
+                            @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new { maxlength = 120, id = "forename", @class = "form-control auto-clear" })
                         </div>
                         <div class="edubase-search-element">
-                            <label for="surname" class="bold-small">Surname</label>
-                            <span class="form-hint">e.g. Evans</span>
-                            @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new {maxlength = 120, id = "surname", @class = "form-control auto-clear" })
+                            <label for="surname" class="bold-small">Last name</label>
+                            @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new { maxlength = 120, id = "surname", @class = "form-control auto-clear" })
                         </div>
                         <div class="edubase-search-element">
                             <label for="roleid" class="bold-small">Role</label>
-                            <span class="form-hint">e.g. Trustee</span>
-                            @Html.DropDownListFor(x => x.GovernorSearchModel.RoleId, Model.GovernorRoles.Select(x => new SelectListItem {Text = x.Name, Value = x.Id.ToString()}),
-                                new {id = "roleid", @class = "form-control", size="4"})
+                            <span class="form-hint">For example, trustee</span>
+                            @Html.DropDownListFor(x => x.GovernorSearchModel.RoleId, Model.GovernorRoles.Select(x => new SelectListItem { Text = @FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = x.Id.ToString() }),
+                                new { id = "roleid", @class = "form-control", size = "4" })
                         </div>
                         <div class="edubase-search-element">
                             <label class="block-label selection-button-checkbox" for="IncludeHistoric">
-                                @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new {id = "IncludeHistoric"})
-                                <span class="font-small">Include historic records (Governors stepped down in the last 12 months)</span>
+                                @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new { id = "IncludeHistoric" })
+                                <span class="font-small">Include historic records (governors who stepped down in the last 12 months)</span>
                             </label>
                         </div>
                         <div class="edubase-search-element">
-                            <input type="hidden" name="g" value="true" />
-                            <button type="submit" class="button button-next" name="searchtype" value="@AdvancedSearchViewModel.eSearchType.Governor">Search</button>
+                            <button type="submit" class="button button-next" name="searchtype" value="@eSearchType.Governor">Search</button>
                         </div>
                     }
 
@@ -169,15 +185,15 @@
             </div>
 
         </div>
-
-
     </div>
+
 </div>
 
 @section ViewScripts{
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-    <script>
+    <script type="text/javascript">
         var jScriptVersion;
+        window.localAuthorities = @Html.Json(Model.LocalAuthorities);
         /*@@cc_on
         // only IE <= 10 enter this block
             jScriptVersion = @@_jscript_version;
@@ -188,12 +204,9 @@
                 s.src = "https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw";
                 document.getElementsByTagName('body')[0].appendChild(s);
             },0);
-            
+
         }
     </script>
-    @*<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw"></script>*@
-    <script type="text/javascript">
-        window.localAuthorities = @Html.Json(Model.LocalAuthorties);
-    </script>
+   
 }
 

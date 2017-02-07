@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Edubase.Common;
+using Edubase.Services.Exceptions;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -16,17 +17,31 @@ namespace Edubase.Web.UI.Filters
         public void OnException(ExceptionContext filterContext)
         {
             if (filterContext == null) throw new ArgumentNullException(nameof(filterContext));
-            var msg = Log(filterContext.HttpContext, filterContext.Exception);
 
-            if (StringUtil.Boolify(ConfigurationManager.AppSettings["EnableFriendlyErrorPage"], true))
+            if (filterContext.Exception is EdubaseException) // domain / purposeful exception - not logged
             {
-                filterContext.Result = new ViewResult
-                {
-                    ViewName = "~/Views/Shared/Error.cshtml",
-                    ViewData = new ViewDataDictionary() { { "ErrorCode", msg.Id } }
-                };
+                //filterContext.Result = new ViewResult
+                //{
+                //    ViewName = "~/Views/Shared/DomainError.cshtml",
+                //    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", (filterContext.Exception as EdubaseException).Message } }
+                //};
 
-                filterContext.ExceptionHandled = true;
+                //filterContext.ExceptionHandled = true;
+            }
+            else // unhandled/unexpected exception; log it and tell the user.
+            {
+                var msg = Log(filterContext.HttpContext, filterContext.Exception);
+
+                if (StringUtil.Boolify(ConfigurationManager.AppSettings["EnableFriendlyErrorPage"], true))
+                {
+                    filterContext.Result = new ViewResult
+                    {
+                        ViewName = "~/Views/Shared/Error.cshtml",
+                        ViewData = new ViewDataDictionary() { { "ErrorCode", msg.Id } }
+                    };
+
+                    filterContext.ExceptionHandled = true;
+                }
             }
         }
 
