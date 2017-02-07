@@ -23,7 +23,16 @@
             {
                 <tr>
                     <th scope="row">Companies House Number</th>
-                    <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Group.CompaniesHouseNumber">@Model.Group.CompaniesHouseNumber</a></td>
+                    <td>
+                        @if (Model.Group.CompaniesHouseNumber.IsNullOrEmpty())
+                        {
+                            <text>Not recorded</text>
+                        }
+                        else
+                        {
+                            <a href="@Model.CompaniesHouseUrl">@Model.Group.CompaniesHouseNumber</a>
+                        }
+                    </td>
                 </tr>
             }
             <tr>
@@ -77,7 +86,7 @@
             {
                 <tr>
                     <th scope="col">Group ID</th>
-                    <td>@Model.Group.GroupId</td>
+                    <td>@(Model.Group.GroupId.Clean() ?? "Not recorded")</td>
                 </tr>
             }
 

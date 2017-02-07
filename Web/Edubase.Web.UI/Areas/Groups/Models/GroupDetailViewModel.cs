@@ -11,6 +11,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
     using GT = Services.Enums.eLookupGroupType;
     using Services.Governors.Models;
     using Data.Entity;
+    using System.Configuration;
 
     public class GroupDetailViewModel
     {
@@ -26,5 +27,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public List<EstablishmentGroupViewModel> Establishments { get; private set; } = new List<EstablishmentGroupViewModel>();
         public IEnumerable<Governor> Governors { get; internal set; }
         public IEnumerable<Governor> HistoricalGovernors { get; internal set; }
+
+        public string CompaniesHouseUrl => ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"].Append(Group.CompaniesHouseNumber);
     }
 }

@@ -56,7 +56,7 @@
                         @Html.DropDownListFor(x => x.GroupTypeId, Model.CCGroupTypes, new { @class = "form-control" })
                     </div>
                 }
-                else
+                else if(Model.InEditMode)
                 {
                     <div class="form-group">
                         <label>@Model.FieldNamePrefix type</label>
@@ -230,6 +230,7 @@
     {
         <div class="grid-row">
             <div class="column-half">
+                <br /><br/>
                 <span class="bold-xsmall">Add establishment to this @Model.FieldNamePrefix.ToLower()</span>
                 <p class="font-xsmall">Enter the establishment <abbr title="Unique Reference Number">URN</abbr></p>
                 <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
@@ -407,6 +408,10 @@
     }
     <div class="grid-row">
         <div class="column-full">
+
+            <br />
+            <br />
+            <br />
 
             @if (Model.InEditMode)
             {
