@@ -246,11 +246,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var payload = GetEstablishmentSearchPayload(viewModel).Object;
             var progress = await _establishmentDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
+            var principal = User;
 
             // todo: if this process is hosted by us post-Texuna, then need to put into a separate process/server that processes in serial/limited parallelism due to memory consumption.
             HostingEnvironment.QueueBackgroundWorkItem(async ct =>
             {
-                await _establishmentDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, User, viewModel.Dataset.Value, viewModel.FileFormat.Value);
+                await _establishmentDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.Dataset.Value, viewModel.FileFormat.Value);
             });
             return progress.Id;
         }
