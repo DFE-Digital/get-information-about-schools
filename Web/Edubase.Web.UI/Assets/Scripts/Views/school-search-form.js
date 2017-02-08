@@ -180,9 +180,12 @@
             $(targetInputElementName).bind("typeahead:select", function (src, suggestion) {
                 $(targetResolvedInputElementName).val(suggestion[value]);
                 currentSuggestionName = suggestion[field];
-
-                includeLa(suggestion);
-                $(targetInputElementName).typeahead('val','');
+                console.log(targetInputElementName);
+                if (targetInputElementName === '#LocalAuthorityToAdd') {
+                     includeLa(suggestion);
+                    $(targetInputElementName).typeahead('val','');
+                }
+               
 
             });
 

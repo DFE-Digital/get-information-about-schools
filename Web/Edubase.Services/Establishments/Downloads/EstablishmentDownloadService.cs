@@ -21,6 +21,7 @@ using MoreLinq;
 using Edubase.Services.Groups;
 using Edubase.Services.Enums;
 using Edubase.Services.Core;
+using Edubase.Common;
 
 namespace Edubase.Services.Establishments.Downloads
 {
@@ -63,6 +64,9 @@ namespace Edubase.Services.Establishments.Downloads
         /// <returns></returns>
         public async Task SearchWithDownloadGenerationAsync(Guid taskId, EstablishmentSearchPayload payload, IPrincipal principal, eDataSet dataSet, eFileFormat format)
         {
+            Guard.IsNotNull(principal, () => new ArgumentNullException(nameof(principal)));
+            Guard.IsNotNull(payload, () => new ArgumentNullException(nameof(payload)));
+
             var progress = await _cacheAccessor.GetAsync<SearchDownloadGenerationProgressDto>(taskId.ToString());
             if (progress == null) throw new Exception($"Search download has not been initialised; call {nameof(SearchWithDownloadGeneration_InitialiseAsync)} first");
 
