@@ -18,8 +18,8 @@ namespace Edubase.IntegrationTest.Services.Establishments
         [Test]
         public async Task SearchAsyncTest()
         {
-            var svc = new EstablishmentReadService(null, null, null, 
-                new AzureSearchEndPoint(AzureSearchEndPointTest.GetAZSConnStr()), null, null, null, null);
+            var svc = new EstablishmentReadService(null, null, null,
+                new AzureSearchEndPoint(AzureSearchEndPointTest.GetAZSConnStr()), null, null, null, null, null);
             var result = await svc.SearchAsync(new EstablishmentSearchPayload(0, 200)
             {
                 Text = "Academy",
@@ -38,7 +38,7 @@ namespace Edubase.IntegrationTest.Services.Establishments
             payload.GeoSearchLocation = new LatLon(50.5811800, -3.4664400);
             payload.RadiusInMiles = 20;
 
-            var svc = new EstablishmentReadService(null, null, null, new AzureSearchEndPoint(AzureSearchEndPointTest.GetAZSConnStr()), null, null, null, null);
+            var svc = new EstablishmentReadService(null, null, null, new AzureSearchEndPoint(AzureSearchEndPointTest.GetAZSConnStr()), null, null, null, null, null);
             var result = await svc.SearchAsync(payload, new GenericPrincipal(new GenericIdentity(""), new string[0]));
             Assert.IsTrue(result.Count > 10);
         }

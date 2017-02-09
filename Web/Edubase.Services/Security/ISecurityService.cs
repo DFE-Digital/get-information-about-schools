@@ -20,5 +20,6 @@ namespace Edubase.Services.Security
         EditEstablishmentPermissions GetEditEstablishmentPermission(IPrincipal principal);
         EditGroupPermissions GetEditGroupPermission(IPrincipal principal);
         Task<ClaimsIdentity> LoginAsync(ClaimsIdentity id, IClaimsIdConverter claimsIdConverter, ApplicationUserManager userManager);
+        string GetUserId(IPrincipal principal);
     }
 }

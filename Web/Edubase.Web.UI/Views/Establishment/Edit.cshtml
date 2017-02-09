@@ -906,9 +906,9 @@
                             <dt>Field:</dt>
                             <dd>@item.Name</dd>
                             <dt>Old value:</dt>
-                            <dd>@item.OldValue</dd>
+                            <dd>@(item.OldValue ?? "<empty>")</dd>
                             <dt>New value:</dt>
-                            <dd>@item.NewValue</dd>
+                            <dd>@(item.NewValue ?? "<empty>")</dd>
                         </dl>
                     }
                 </div>

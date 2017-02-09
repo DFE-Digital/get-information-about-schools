@@ -2,7 +2,9 @@
 using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services;
+using Edubase.Services.Core;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Governors;
 using Edubase.Services.Groups;
@@ -28,20 +30,22 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("Establishment")]
     public class EstablishmentController : EduBaseController
     {
-        private IEstablishmentReadService _establishmentReadService;
-        private IGroupReadService _groupReadService;
-        private IMapper _mapper;
-        private ILAESTABService _laEstabService;
-        private IEstablishmentWriteService _establishmentWriteService;
-        private ICachedLookupService _cachedLookupService;
-        private IGovernorsReadService _governorsReadService;
+        private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly IGroupReadService _groupReadService;
+        private readonly IMapper _mapper;
+        private readonly ILAESTABService _laEstabService;
+        private readonly IEstablishmentWriteService _establishmentWriteService;
+        private readonly ICachedLookupService _cachedLookupService;
+        private readonly IGovernorsReadService _governorsReadService;
+        private readonly IFileDownloadFactoryService _downloadService;
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService, IMapper mapper, 
             ILAESTABService laEstabService,
             IEstablishmentWriteService establishmentWriteService,
             ICachedLookupService cachedLookupService,
-            IGovernorsReadService governorsReadService)
+            IGovernorsReadService governorsReadService,
+            IFileDownloadFactoryService downloadService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
@@ -50,6 +54,7 @@ namespace Edubase.Web.UI.Controllers
             _establishmentWriteService = establishmentWriteService;
             _cachedLookupService = cachedLookupService;
             _governorsReadService = governorsReadService;
+            _downloadService = downloadService;
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
@@ -84,7 +89,7 @@ namespace Edubase.Web.UI.Controllers
                     model.OriginalEstablishmentName = domainModel.Name;
                     await PrepareModels(model, domainModel);
 
-                    var changes = await GetModelChangesAsync(domainModel);
+                    var changes = await _establishmentReadService.GetModelChangesAsync(domainModel);
 
                     if (model.RequireConfirmationOfChanges && changes.Any()) model.ChangesSummary = changes;
                     else
@@ -124,37 +129,9 @@ namespace Edubase.Web.UI.Controllers
             }
             return View(model);
         }
+        
 
-        private async Task<List<ChangeDescriptorViewModel>> GetModelChangesAsync(EstablishmentModel domainModel)
-        {
-            var retVal = new List<ChangeDescriptorViewModel>();
-
-            var changes = await _establishmentWriteService.GetModelChangesAsync(domainModel);
-
-            foreach (var change in changes)
-            {
-                if (_cachedLookupService.IsLookupField(change.Name))
-                {
-                    change.OldValue = await _cachedLookupService.GetNameAsync(change.Name, change.OldValue.ToInteger());
-                    change.NewValue = await _cachedLookupService.GetNameAsync(change.Name, change.NewValue.ToInteger());
-                }
-
-                if (change.Name.EndsWith("Id", StringComparison.Ordinal)) change.Name = change.Name.Substring(0, change.Name.Length - 2);
-                change.Name = change.Name.Replace("_", "");
-                change.Name = change.Name.ToProperCase(true);
-
-                retVal.Add(new ChangeDescriptorViewModel
-                {
-                    Name = change.DisplayName ?? change.Name,
-                    NewValue = change.NewValue.Clean() ?? "<empty>",
-                    OldValue = change.OldValue.Clean() ?? "<empty>"
-                });
-            }
-
-            return retVal;
-        }
-
-    private async Task PrepareModels(ViewModel model, EstablishmentModel domainModel)
+        private async Task PrepareModels(ViewModel model, EstablishmentModel domainModel)
         {
             model.LSOAId = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.LSOACode)?.Id;
             model.MSOAId = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.MSOACode)?.Id;
@@ -162,8 +139,8 @@ namespace Edubase.Web.UI.Controllers
             MapToDomainModel(model, domainModel, Request.Form);
 
             domainModel.AdditionalAddresses = model.AdditionalAddresses;
-            domainModel.OpenDate = model.OpenDate.ToDateTime();
-            domainModel.CloseDate = model.CloseDate.ToDateTime();
+            domainModel.OpenDate = model.OpenDate.ToDateTime()?.Date;
+            domainModel.CloseDate = model.CloseDate.ToDateTime()?.Date;
         }
 
         /// <summary>
@@ -192,27 +169,6 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, EdubaseAuthorize]
         public ActionResult Create() => RedirectToAction("Index", "Prototype", new { viewName = "Placeholder" });
         
-        //[HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize]
-        //public ActionResult Create([CustomizeValidator(RuleSet = "oncreate")] ViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        using (var dc = ApplicationDbContext.Create())
-        //        {
-        //            var dataModel = _mapper.Map<Establishment>(model);
-        //            var pol = _laEstabService.GetEstabNumberEntryPolicy(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value);
-        //            if(pol == EstabNumberEntryPolicy.SystemGenerated)
-        //            {
-        //                dataModel.EstablishmentNumber = _laEstabService.GenerateEstablishmentNumber(dataModel.TypeId.Value, dataModel.EducationPhaseId.Value, dataModel.LocalAuthorityId.Value);
-        //            }
-
-        //            dc.Establishments.Add(dataModel);
-        //            dc.SaveChanges();
-        //            return RedirectToAction("Details", "Establishment", new { id = dataModel.Urn });
-        //        }
-        //    }
-        //    else return View(model);
-        //}
 
         [HttpGet, Route("Details/{id}")]
         public async Task<ActionResult> Details(int id)
@@ -240,9 +196,6 @@ namespace Edubase.Web.UI.Controllers
             {
                 using (MiniProfiler.Current.Step("Retrieving ChangeHistory"))
                     viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
-
-                //using (MiniProfiler.Current.Step("Retrieving UserHasPendingApprovals flag"))
-                //    viewModel.UserHasPendingApprovals = new ApprovalService().Any(User as ClaimsPrincipal, id);
             }
 
             using (MiniProfiler.Current.Step("Retrieving Group record"))
@@ -270,6 +223,59 @@ namespace Edubase.Web.UI.Controllers
                     viewModel.Establishment.EstablishmentTypeGroupId);
 
             return View(viewModel);
+        }
+
+        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/csv/{id}")]
+        public async Task<ActionResult> DownloadCsvChangeHistory(int id)
+        {
+            var model = (await _establishmentReadService.GetAsync(id, User)).GetResult();
+            var data = await GetChangeHistoryDownloadDataAsync(id);
+            var csvStream = await _downloadService.CreateCsvStreamAsync(data.Item1, data.Item2);
+            return File(csvStream, "text/csv", string.Concat(model.Name, $"({id})", "-change-history.csv"));
+        }
+
+        
+        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/xlsx/{id}")]
+        public async Task<ActionResult> DownloadXlsxChangeHistory(int id)
+        {
+            var model = (await _establishmentReadService.GetAsync(id, User)).GetResult();
+            var data = await GetChangeHistoryDownloadDataAsync(id);
+            var xlsxStream = _downloadService.CreateXlsxStream($"Change history for {model.Name} ({model.Urn})", $"Change history for {model.Name} ({model.Urn})", data.Item1, data.Item2);
+            return File(xlsxStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
+                string.Concat(model.Name, $"({id})", "-change-history.xlsx"));
+        }
+
+        private async Task<Tuple<List<string>, List<List<string>>>> GetChangeHistoryDownloadDataAsync(int urn)
+        {
+            var headers = new List<string>
+            {
+                "Updated field",
+                "New value",
+                "Old value",
+                "Date changed",
+                "Effective date",
+                "Date requested",
+                "Suggested by",
+                "Approved by",
+                "Reason"
+            };
+
+            var changes = await _establishmentReadService.GetChangeHistoryAsync(urn, 200, User);
+
+            var data = changes.Select(x => new List<string>
+            {
+                x.Name,
+                x.NewValue,
+                x.OldValue,
+                x.RequestedDateUtc?.ToString("dd/MM/yyyy"),
+                x.EffectiveDateUtc?.ToString("dd/MM/yyyy"),
+                x.RequestedDateUtc?.ToString("dd/MM/yyyy"),
+                x.OriginatorUserName,
+                string.Empty, 
+                string.Empty
+            }).ToList();
+
+            return new Tuple<List<string>, List<List<string>>>(headers, data);
         }
 
         private async Task PopulateSelectLists(ViewModel viewModel)

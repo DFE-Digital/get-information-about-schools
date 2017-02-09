@@ -189,7 +189,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="DbContext\IApplicationDbContext.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
-    <Compile Include="Identity\Roles.cs" />
     <Compile Include="DbContext\InMemoryApplicationDbContext.cs" />
     <Compile Include="Migrations\201701251519545_InitialCreate.cs" />
     <Compile Include="Migrations\201701251519545_InitialCreate.Designer.cs">

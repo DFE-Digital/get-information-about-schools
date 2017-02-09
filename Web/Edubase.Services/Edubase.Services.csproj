@@ -213,7 +213,7 @@
     <Compile Include="Domain\LogMessagesDto.cs" />
     <Compile Include="Domain\LookupDto.cs" />
     <Compile Include="Domain\PagedResultDto.cs" />
-    <Compile Include="Domain\ChangeDescriptor.cs" />
+    <Compile Include="Domain\ChangeDescriptorDto.cs" />
     <Compile Include="Domain\PersonDto.cs" />
     <Compile Include="Domain\SearchDownloadGenerationProgressDto.cs" />
     <Compile Include="Domain\ServiceResultDto.cs" />

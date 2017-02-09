@@ -9,6 +9,5 @@ namespace Edubase.Services.Establishments
     public interface IEstablishmentWriteService
     {
         Task SaveAsync(EstablishmentModel model, IPrincipal principal);
-        Task<List<ChangeDescriptor>> GetModelChangesAsync(EstablishmentModel model);
     }
 }

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
 {
+    using Services.Domain;
     using ET = Services.Enums.eLookupEstablishmentType;
 
     public class CreateEditEstablishmentModel
@@ -187,7 +188,7 @@ namespace Edubase.Web.UI.Models
 
         public bool AllowHidingOfAddress { get; set; }
 
-        public List<ChangeDescriptorViewModel> ChangesSummary { get; set; }
+        public List<ChangeDescriptorDto> ChangesSummary { get; set; }
 
         public bool RequireConfirmationOfChanges => IsLAMaintained || IsAcademy;
 

@@ -65,9 +65,9 @@ namespace Edubase.Common.Reflection
 
 
 
-        public static List<ChangeDescriptor> DetectChanges(object obj, object obj2, params Type[] types)
+        public static List<ChangeDescriptor> DetectChanges(object newModel, object oldModel, params Type[] types)
         {
-            return DetectChanges(obj, obj2, null, types);
+            return DetectChanges(newModel, oldModel, null, types);
         }
         
         public static List<ChangeDescriptor> DetectChanges(object newModel, object oldModel, string prefixer, params Type[] types)

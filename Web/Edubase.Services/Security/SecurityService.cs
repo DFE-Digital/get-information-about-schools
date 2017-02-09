@@ -47,6 +47,9 @@ namespace Edubase.Services.Security
             return claimsIdConverter.Convert(id, userId);
         }
 
+        public string GetUserId(IPrincipal principal) => principal.Identity.GetUserId();
+        
+
         /// <summary>
         /// Creates a system principal whose permissions are the same as Admin.
         /// This allows internal services to gain full permissions.
