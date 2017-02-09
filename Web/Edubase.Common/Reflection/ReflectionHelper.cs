@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 
 namespace Edubase.Common.Reflection
 {
@@ -78,9 +80,13 @@ namespace Edubase.Common.Reflection
             {
                 var p = newModel.GetType().GetProperty(prop);
                 var p2 = oldModel.GetType().GetProperty(prop);
+
+                var propertyName = p.Name;
+                var displayName = p.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+
                 if (types.Any(x => x == p.PropertyType))
                 {
-                    retVal.AddRange(DetectChanges(p.GetValue(newModel), p2.GetValue(oldModel), p.Name, types));
+                    retVal.AddRange(DetectChanges(p.GetValue(newModel), p2.GetValue(oldModel), propertyName, types));
                 }
                 else if(p.PropertyType.IsValueType)
                 {
@@ -91,7 +97,7 @@ namespace Edubase.Common.Reflection
                         || (v1 != null && !v1.Equals(v2) 
                         || (v2 != null && !v2.Equals(v1))))
                     {
-                        retVal.Add(new ChangeDescriptor(prefixer + p.Name, v1, v2));
+                        retVal.Add(new ChangeDescriptor(prefixer + propertyName, displayName, v1, v2));
                     }
                 }
                 else if (p.PropertyType == typeof(string))
@@ -100,7 +106,7 @@ namespace Edubase.Common.Reflection
                     var v2 = p2.GetValue(oldModel)?.ToString();
                     if (v1 != v2)
                     {
-                        retVal.Add(new ChangeDescriptor(prefixer + p.Name, v1, v2));
+                        retVal.Add(new ChangeDescriptor(prefixer + propertyName, displayName, v1, v2));
                     }
                 }
             }

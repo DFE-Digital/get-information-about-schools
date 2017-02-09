@@ -6,6 +6,8 @@ using System.Data.Entity;
 namespace Edubase.Services.Establishments
 {
     using AutoMapper;
+    using Common;
+    using Common.Reflection;
     using Data.DbContext;
     using Data.Entity;
     using Data.Repositories.Establishments;
@@ -14,6 +16,7 @@ namespace Edubase.Services.Establishments
     using IntegrationEndPoints.ServiceBus;
     using Models;
     using Security;
+    using System.Collections.Generic;
 
     public class EstablishmentWriteService : IEstablishmentWriteService
     {
@@ -72,6 +75,12 @@ namespace Edubase.Services.Establishments
                 await _serviceBusEndPoint.SendEstablishmentUpdateMessageAsync(entity);
 
             }
+        }
+
+        public async Task<List<ChangeDescriptor>> GetModelChangesAsync(EstablishmentModel model)
+        {
+            var originalModel = (await _readService.GetAsync(model.Urn.Value, _securityService.CreateSystemPrincipal())).GetResult();
+            return ReflectionHelper.DetectChanges(model, originalModel);
         }
 
         private void RestoreRestrictedAddresses(EstablishmentModel model, IPrincipal principal, EstablishmentModel originalModel)

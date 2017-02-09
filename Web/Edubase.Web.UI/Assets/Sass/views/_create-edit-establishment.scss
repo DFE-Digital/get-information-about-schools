@@ -157,5 +157,26 @@ select#headtitleid {
         font-size: 18px;
     }
 
+    .change-list {
+        @extend .school-results-listing;
+        dl {
+            font-size:16px;
+            dd {
+                font-weight:bold;
+            }
+            &.border {
+                padding-bottom:15px;
+                border-bottom:3px solid $grey-3;
+            }
+            &.last {
+                margin-bottom:0;
+            }
+        }
+    }
+
+    legend.effective-date {
+        font-weight:bold;
+    }
+
 }
 

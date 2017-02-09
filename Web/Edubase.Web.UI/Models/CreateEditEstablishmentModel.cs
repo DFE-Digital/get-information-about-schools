@@ -8,6 +8,8 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
 {
+    using ET = Services.Enums.eLookupEstablishmentType;
+
     public class CreateEditEstablishmentModel
     {
         private static readonly IDictionary<byte?, string> _ofstedRatingsLookup =
@@ -25,10 +27,12 @@ namespace Edubase.Web.UI.Models
             Edit,
             FindEstablishment,
             Save,
+            Confirm,
             AddLinkedSchool,
             RemoveLinkedSchool,
             AddAddress,
-            RemoveAddress
+            RemoveAddress,
+            CancelChanges
         }
 
         public enum eLinkType
@@ -183,9 +187,21 @@ namespace Edubase.Web.UI.Models
 
         public bool AllowHidingOfAddress { get; set; }
 
+        public List<ChangeDescriptorViewModel> ChangesSummary { get; set; }
+
+        public bool RequireConfirmationOfChanges => IsLAMaintained || IsAcademy;
+
+        public bool IsLAMaintained => TypeId.OneOfThese(ET.CommunitySchool, ET.FoundationSchool, ET.LANurserySchool, ET.PupilReferralUnit, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool, ET.CommunitySpecialSchool, ET.FoundationSpecialSchool);
+
+        public bool IsAcademy => TypeId.OneOfThese(ET.Academy1619Converter, ET.Academy1619SponsorLed, ET.AcademyAlternativeProvisionConverter, ET.AcademyAlternativeProvisionSponsorLed, ET.AcademyConverter, ET.AcademySpecialConverter, ET.AcademySpecialSponsorLed, ET.AcademySponsorLed, ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsAlternativeProvision, ET.FreeSchoolsSpecial, ET.StudioSchools, ET.UniversityTechnicalCollege, ET.CityTechnologyCollege);
+
+        public DateTimeViewModel ChangeEffectiveDate { get; set; } = new DateTimeViewModel();
+
+        public string OriginalEstablishmentName { get; set; }
+
         public CreateEditEstablishmentModel()
         {
-            //SimplifiedLAESTABRules = new LAESTABService().GetSimplifiedRules();
+
         }
     }
 }

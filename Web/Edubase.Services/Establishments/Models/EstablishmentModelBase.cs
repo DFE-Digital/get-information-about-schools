@@ -1,6 +1,8 @@
 ﻿using Edubase.Common;
 using Edubase.Common.Spatial;
 using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Edubase.Services.Establishments.Models
 {
@@ -9,11 +11,12 @@ namespace Edubase.Services.Establishments.Models
         public int? Urn { get; set; }
 
         public int? LocalAuthorityId { get; set; }
-
+        
         public int? EstablishmentNumber { get; set; }
 
         public string Name { get; set; }
-        public string NameDistilled { get; set; }
+
+        public string NameDistilled { get; internal set; }
 
         public int? StatusId { get; set; }
 
@@ -31,12 +34,16 @@ namespace Edubase.Services.Establishments.Models
 
         public int? StatutoryHighAge { get; set; }
 
+        [DisplayName("Boarders")]
         public int? ProvisionBoardingId { get; set; }
 
+        [DisplayName("Nursery provision")]
         public int? ProvisionNurseryId { get; set; }
 
+        [DisplayName("Official sixth form")]
         public int? ProvisionOfficialSixthFormId { get; set; }
 
+        [DisplayName("Gender of entry")]
         public int? GenderId { get; set; }
 
         public int? ReligiousCharacterId { get; set; }
@@ -49,8 +56,10 @@ namespace Edubase.Services.Establishments.Models
 
         public int? Capacity { get; set; }
 
+        [DisplayName("Special classes")]
         public int? ProvisionSpecialClassesId { get; set; }
 
+        [DisplayName("UKPRN")]
         public int? UKPRN { get; set; }
 
         public DateTime? LastChangedDate { get; set; }
@@ -71,10 +80,13 @@ namespace Edubase.Services.Establishments.Models
 
         public string Address_PostCode { get; set; }
 
+        [DisplayName("Headteacher/Principal first name")]
         public string HeadFirstName { get; set; }
 
+        [DisplayName("Headteacher/Principal last name")]
         public string HeadLastName { get; set; }
 
+        [DisplayName("Headteacher/Principal title")]
         public int? HeadTitleId { get; set; }
 
         public string HeadEmailAddress { get; set; }
@@ -97,6 +109,7 @@ namespace Edubase.Services.Establishments.Models
 
         public string ContactAlt_FaxNumber { get; set; }
 
+        [DisplayName("Establishment type")]
         public int? TypeId { get; set; }
 
         public int? Easting { get; set; }
@@ -121,11 +134,19 @@ namespace Edubase.Services.Establishments.Models
 
         public int? SENNoStat { get; set; }
 
+        [DisplayName("Type of SEN provision 1")]
+
         public int? SEN1Id { get; set; }
+
+        [DisplayName("Type of SEN provision 2")]
 
         public int? SEN2Id { get; set; }
 
+        [DisplayName("Type of SEN provision 3")]
+
         public int? SEN3Id { get; set; }
+
+        [DisplayName("Type of SEN provision 4")]
 
         public int? SEN4Id { get; set; }
 
@@ -159,14 +180,19 @@ namespace Edubase.Services.Establishments.Models
 
         public int? ParliamentaryConstituencyId { get; set; }
 
+        [DisplayName("Urban / Rural description")]
         public int? UrbanRuralId { get; set; }
 
+        [DisplayName("GSS LA code")]
         public int? GSSLAId { get; set; }
 
+        [DisplayName("Census ward")]
         public int? CASWardId { get; set; }
 
+        [DisplayName("Middle Super Output Area (MSOA)")]
         public int? MSOAId { get; set; }
 
+        [DisplayName("Lower Super Output Area (LSOA)")]
         public int? LSOAId { get; set; }
 
         public int? FurtherEducationTypeId { get; set; }
@@ -196,6 +222,7 @@ namespace Edubase.Services.Establishments.Models
         /// <summary>
         /// Local Authority Id
         /// </summary>
+        [DisplayName("RSC Region")]
         public int? RSCRegionId { get; set; }
 
         public int? BSOInspectorateId { get; set; }

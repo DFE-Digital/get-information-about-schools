@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services;
 using Edubase.Services.Establishments;
@@ -13,6 +14,8 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
 using FluentValidation.Mvc;
 using StackExchange.Profiling;
+using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Claims;
@@ -78,15 +81,26 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    model.LSOAId = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.LSOACode)?.Id;
-                    model.MSOAId = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.MSOACode)?.Id;
+                    model.OriginalEstablishmentName = domainModel.Name;
+                    await PrepareModels(model, domainModel);
 
-                    MapToDomainModel(model, domainModel, Request.Form);
-
-                    domainModel.AdditionalAddresses = model.AdditionalAddresses;
-                    domainModel.OpenDate = model.OpenDate.ToDateTime();
-                    domainModel.CloseDate = model.CloseDate.ToDateTime();
-
+                    if (model.RequireConfirmationOfChanges)
+                    {
+                        model.ChangesSummary = await GetModelChangesAsync(domainModel);
+                    }
+                    else
+                    {
+                        await _establishmentWriteService.SaveAsync(domainModel, User);
+                        return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
+                    }
+                    
+                }
+            }
+            else if (model.Action == ViewModel.eAction.Confirm)
+            {
+                if (ModelState.IsValid)
+                {
+                    await PrepareModels(model, domainModel);
                     await _establishmentWriteService.SaveAsync(domainModel, User);
                     return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                 }
@@ -111,7 +125,48 @@ namespace Edubase.Web.UI.Controllers
             }
             return View(model);
         }
-        
+
+        private async Task<List<ChangeDescriptorViewModel>> GetModelChangesAsync(EstablishmentModel domainModel)
+        {
+            var retVal = new List<ChangeDescriptorViewModel>();
+
+            var changes = await _establishmentWriteService.GetModelChangesAsync(domainModel);
+
+            foreach (var change in changes)
+            {
+                if (_cachedLookupService.IsLookupField(change.Name))
+                {
+                    change.OldValue = await _cachedLookupService.GetNameAsync(change.Name, change.OldValue.ToInteger());
+                    change.NewValue = await _cachedLookupService.GetNameAsync(change.Name, change.NewValue.ToInteger());
+                }
+
+                if (change.Name.EndsWith("Id", StringComparison.Ordinal)) change.Name = change.Name.Substring(0, change.Name.Length - 2);
+                change.Name = change.Name.Replace("_", "");
+                change.Name = change.Name.ToProperCase(true);
+
+                retVal.Add(new ChangeDescriptorViewModel
+                {
+                    Name = change.DisplayName ?? change.Name,
+                    NewValue = change.NewValue.Clean() ?? "<empty>",
+                    OldValue = change.OldValue.Clean() ?? "<empty>"
+                });
+            }
+
+            return retVal;
+        }
+
+    private async Task PrepareModels(ViewModel model, EstablishmentModel domainModel)
+        {
+            model.LSOAId = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.LSOACode)?.Id;
+            model.MSOAId = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.MSOACode)?.Id;
+
+            MapToDomainModel(model, domainModel, Request.Form);
+
+            domainModel.AdditionalAddresses = model.AdditionalAddresses;
+            domainModel.OpenDate = model.OpenDate.ToDateTime();
+            domainModel.CloseDate = model.CloseDate.ToDateTime();
+        }
+
         /// <summary>
         /// Transfers property values from the view model to the domain model
         /// where the value is passed into the form; i.e., the key is present.
