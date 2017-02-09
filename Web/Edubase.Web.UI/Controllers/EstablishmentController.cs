@@ -84,10 +84,9 @@ namespace Edubase.Web.UI.Controllers
                     model.OriginalEstablishmentName = domainModel.Name;
                     await PrepareModels(model, domainModel);
 
-                    if (model.RequireConfirmationOfChanges)
-                    {
-                        model.ChangesSummary = await GetModelChangesAsync(domainModel);
-                    }
+                    var changes = await GetModelChangesAsync(domainModel);
+
+                    if (model.RequireConfirmationOfChanges && changes.Any()) model.ChangesSummary = changes;
                     else
                     {
                         await _establishmentWriteService.SaveAsync(domainModel, User);
