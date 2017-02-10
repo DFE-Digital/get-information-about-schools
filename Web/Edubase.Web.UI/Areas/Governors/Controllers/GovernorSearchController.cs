@@ -107,7 +107,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 var payload = CreateSearchPayload(model);
                 using (MiniProfiler.Current.Step("Searching governors (in text mode)..."))
                 {
-                    var results = await _governorsReadService.SearchAsync(payload, User);
+                    var results = await _governorsReadService.SearchAsync(payload);
                     model.Results = results.Items;
                     if (model.StartIndex == 0) model.Count = results.Count.Value;
 

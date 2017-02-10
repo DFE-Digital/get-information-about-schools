@@ -57,7 +57,7 @@ namespace Edubase.Services.Governors.Downloads
             {
                 payload.Skip = 0;
                 payload.Take = 1000;
-                var results = await _governorsReadService.SearchAsync(payload, principal);
+                var results = await _governorsReadService.SearchAsync(payload);
                 progress.TotalRecordsCount = results.Count.Value;
                 progress.Status = "Retrieving data...";
                 progress.FileExtension = ToFileExtension(format);
@@ -129,7 +129,7 @@ namespace Edubase.Services.Governors.Downloads
                     }
 
                     payload.Skip += 1000;
-                    results = await _governorsReadService.SearchAsync(payload, principal);
+                    results = await _governorsReadService.SearchAsync(payload);
                     await updateProgressCache();
                 }
 
@@ -157,7 +157,7 @@ namespace Edubase.Services.Governors.Downloads
                         }
 
                         payload.Skip += 1000;
-                        results = await _governorsReadService.SearchAsync(payload, principal);
+                        results = await _governorsReadService.SearchAsync(payload);
                         await updateProgressCache();
                     }
                 }

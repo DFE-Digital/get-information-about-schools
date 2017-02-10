@@ -179,6 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlobService.cs" />
+    <Compile Include="Enums\EnumSets.cs" />
+    <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
+    <Compile Include="Governors\Models\GovernorsListDto.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\IServiceBusEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\ServiceBusEndPoint.cs" />
     <Compile Include="Core\FileDownloadFactoryService.cs" />
