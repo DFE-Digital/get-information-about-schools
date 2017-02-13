@@ -10,12 +10,7 @@ namespace Edubase.Services.Governors
 {
     public interface IGovernorsReadService
     {
-        Task<IEnumerable<Governor>> GetCurrentByGroupUID(int groupUID);
-        Task<IEnumerable<Governor>> GetCurrentByUrn(int urn);
-        Task<IEnumerable<Governor>> GetHistoricalByGroupUID(int groupUID);
-        Task<IEnumerable<Governor>> GetHistoricalByUrn(int urn);
-
         Task<AzureSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload);
-        Task<GovernorsListDto> GetGovernorListAsync(int? urn = null, int? groupUId = null, IPrincipal principal = null);
+        Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = null, int? groupUId = null, IPrincipal principal = null);
     }
 }

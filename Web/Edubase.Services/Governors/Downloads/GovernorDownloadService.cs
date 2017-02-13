@@ -3,6 +3,8 @@ using Edubase.Common.IO;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Governors.Search;
+using Edubase.Services.Groups;
+using Edubase.Services.Groups.Models;
 using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using Edubase.Services.Lookup;
 using MoreLinq;
@@ -18,22 +20,25 @@ namespace Edubase.Services.Governors.Downloads
 {
     public class GovernorDownloadService : FileDownloadFactoryService, IGovernorDownloadService
     {
-        private ICacheAccessor _cacheAccessor;
-        private ICachedLookupService _cachedLookupService;
-        private IMessageLoggingService _messageLoggingService;
-        private IGovernorsReadService _governorsReadService;
+        private readonly ICacheAccessor _cacheAccessor;
+        private readonly ICachedLookupService _cachedLookupService;
+        private readonly IMessageLoggingService _messageLoggingService;
+        private readonly IGovernorsReadService _governorsReadService;
+        private readonly IGroupReadService _groupReadService;
 
         public GovernorDownloadService(ICacheAccessor cacheAccessor,
             IGovernorsReadService governorsReadService,
             IBlobService blobService,
             ICachedLookupService cachedLookupService,
-            IMessageLoggingService messageLoggingService)
+            IMessageLoggingService messageLoggingService,
+            IGroupReadService groupReadService)
             : base(cacheAccessor, blobService)
         {
             _cacheAccessor = cacheAccessor;
             _governorsReadService = governorsReadService;
             _cachedLookupService = cachedLookupService;
             _messageLoggingService = messageLoggingService;
+            _groupReadService = groupReadService;
         }
 
         /// <summary>
@@ -171,6 +176,7 @@ namespace Edubase.Services.Governors.Downloads
             items.Add("GID");
             items.Add("URN");
             items.Add("UID");
+            items.Add("Companies House Number");
             items.Add("Role");
             items.Add("Title");
             items.Add("Forename 1");
@@ -184,10 +190,18 @@ namespace Edubase.Services.Governors.Downloads
 
         private async Task<List<string>> GetRowData(SearchGovernorDocument item, IPrincipal principal)
         {
+            GroupModel groupModel = null;
+            if (item.GroupUID.HasValue)
+            { 
+                var serviceReturn = (await _groupReadService.GetAsync(item.GroupUID.Value, principal));
+                if (serviceReturn.Success) groupModel = serviceReturn.ReturnValue;
+            }
+
             var items = new List<string>();
             items.Add(item.Id.ToString());
             items.Add(item.EstablishmentUrn?.ToString());
             items.Add(item.GroupUID?.ToString());
+            items.Add(groupModel?.CompaniesHouseNumber ?? string.Empty);
             items.Add((await _cachedLookupService.GovernorRolesGetAllAsync()).FirstOrDefault(x => x.Id == item.RoleId)?.Name);
             items.Add(item.Person_Title);
             items.Add(item.Person_FirstName);

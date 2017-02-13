@@ -201,12 +201,8 @@ namespace Edubase.Web.UI.Controllers
             using (MiniProfiler.Current.Step("Retrieving Group record"))
                 viewModel.Group = await _groupReadService.GetByEstablishmentUrnAsync(id);
             
-
-            using (MiniProfiler.Current.Step("Retrieving HistoricalGovernors"))
-                viewModel.HistoricalGovernors = await _governorsReadService.GetHistoricalByUrn(id);
-
-            using (MiniProfiler.Current.Step("Retrieving Governors"))
-                viewModel.Governors = await _governorsReadService.GetCurrentByUrn(id);
+            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
+                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(urn: id, principal: User));
 
             using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
                 viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment);

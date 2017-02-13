@@ -4,7 +4,7 @@ using System;
 
 namespace Edubase.Services.Governors.Search
 {
-    public class SearchGovernorDocument : GovernorModel
+    public class SearchGovernorDocument : GovernorModelBase
     {
         
     }

@@ -180,3 +180,45 @@ select#headtitleid {
 
 }
 
+
+div.governor-list, div.governor-grid {
+    margin-bottom:30px;
+    table {
+        th, td {
+            text-align:left;
+            font-size:16px;
+            padding:15px 8px 15px 0px;
+        }
+        th {
+            font-weight:bold;
+        }
+    }
+    p.none { font-size:16px; }
+}
+
+div.governor-list {
+    dl {
+        overflow: hidden;
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        @media (min-width: 640px) {
+            font-size: 14px;
+        }
+    }
+    dt, dd {
+        float: left;
+    }
+    dt {
+        clear: left;
+        padding-right: 0.5em;
+
+        &.inline-details {
+            clear: none;
+            margin-left: 12px;
+        }
+    }
+    h2 {
+        margin-bottom:15px;
+    }
+}

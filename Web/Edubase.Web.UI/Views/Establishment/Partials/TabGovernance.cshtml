@@ -1,29 +1,12 @@
 ﻿@model EstablishmentDetailViewModel
 
 <div id="school-governance" class="tab-content">
-
-    @if (!Model.Governors.Any() && !Model.HistoricalGovernors.Any())
+    @if (Model.GovernorsDetails.DomainModel.HasGovernors)
     {
-        <p>There is no governance information for this establishment</p>
+        Html.RenderPartial("_Governors", Model.GovernorsDetails);
     }
     else
     {
-        if (Model.Governors.Any())
-        {
-            @Html.Partial("_Governors", Model.Governors)
-            if (Model.HistoricalGovernors.Any())
-            {
-                <br />
-                <hr />
-                <br />
-            }
-        }
-
-        if (Model.HistoricalGovernors.Any())
-        {
-            <h3 class="bold-xsmall">Historic (left with past 12 months)</h3>
-            @Html.Partial("_Governors", Model.HistoricalGovernors)
-        }
+        <p>There is no governance information for this establishment</p>
     }
-
 </div>

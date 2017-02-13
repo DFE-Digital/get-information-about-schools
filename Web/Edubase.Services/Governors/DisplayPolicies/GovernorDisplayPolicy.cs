@@ -26,15 +26,16 @@ namespace Edubase.Services.Governors.DisplayPolicies
 
         internal GovernorDisplayPolicy SetFullAccess(bool flag = false)
         {
-            HasFullAccess = Id = EmailAddress = DOB = Nationality = PostCode = PreviousFullName = TelephoneNumber = flag;
+            Id = EmailAddress = DOB = Nationality = PostCode = PreviousFullName = TelephoneNumber = flag;
             return this;
         }
 
-        public bool HasFullAccess { get; private set; }
-
         internal GovernorDisplayPolicy()
         {
-
+            
         }
+
+        public GovernorDisplayPolicy Clone() => MemberwiseClone() as GovernorDisplayPolicy;
+        
     }
 }

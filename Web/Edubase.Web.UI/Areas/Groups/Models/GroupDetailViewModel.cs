@@ -12,6 +12,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
     using Services.Governors.Models;
     using Data.Entity;
     using System.Configuration;
+    using UI.Models;
 
     public class GroupDetailViewModel
     {
@@ -29,5 +30,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public IEnumerable<Governor> HistoricalGovernors { get; internal set; }
 
         public string CompaniesHouseUrl => ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"].Append(Group.CompaniesHouseNumber);
+
+        public GovernorsGridViewModel GovernorsDetails { get; internal set; }
     }
 }

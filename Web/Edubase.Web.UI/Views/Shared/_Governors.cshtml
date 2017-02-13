@@ -1,34 +1,79 @@
-﻿@using Edubase.Services.Enums;
-@using Edubase.Data.Entity;
-@using Edubase.Web.UI.ValueConverters;
-@model IEnumerable<Governor>
-@{ 
-    var conv = new Governor2StringValueConverter();
-}
+﻿@using Edubase.Services.Governors.Models;
+@using Edubase.Services.Governors.DisplayPolicies;
+@using Edubase.Services.Enums;
+@model GovernorsGridViewModel
 
-@RenderGovernors("Chair of Trustees", "Chairs of Trustees", eLookupGovernorRole.ChairOfTrustees, conv)
-@RenderGovernors("Trustee", "Trustees", eLookupGovernorRole.Trustee, conv)
-@RenderGovernors("Member", "Members", eLookupGovernorRole.Member, conv)
-@RenderGovernors("Accounting Officer", "Accounting Officers", eLookupGovernorRole.AccountingOfficer, conv)
-@RenderGovernors("Chief Financial Officer", "Chief Financial Officers", eLookupGovernorRole.ChiefFinancialOfficer, conv)
-@RenderGovernors("Chair of Governors", "Chairs of Governors", eLookupGovernorRole.ChairOfGovernors, conv)
-@RenderGovernors("Chair of Local Governing Body", "Chairs of Local Governing Body", eLookupGovernorRole.ChairOfLocalGoverningBody, conv)
-@RenderGovernors("Governor", "Governors", eLookupGovernorRole.Governor, conv)
-@RenderGovernors("Local Governor", "Local Governors", eLookupGovernorRole.LocalGovernor, conv)
-
-@helper RenderGovernors(string labelSingular, string labelPlural, eLookupGovernorRole role, Governor2StringValueConverter conv)
-{ 
-    var items = Model.Where(x => x.RoleId == (int)role);
-    if (items.Any())
-    {
-        <p class="bold-xsmall" style="margin-bottom:6px; margin-top:6px;">@(items.Count() == 1 ? labelSingular : labelPlural)</p>
-        foreach (var item in items)
+<div class="grid-row">
+    <div class="column-two-thirds">
+        @if (Model.DomainModel.HasFullAccess)
         {
-            <p class="font-xsmall" style="margin-bottom:@(item==items.Last()?"15":"10")px;">
-                @conv.Convert(item, User.Identity.IsAuthenticated)
-            </p>
+            // Render lists
+            foreach (var grid in Model.Grids)
+            {
+                <div class="governor-list">
+                    <h2 class="bold-xsmall">@grid.Title</h2>
+                    @if (grid.Rows.Any())
+                    {
+                        foreach (var row in grid.Rows)
+                        {
+                            <h2 class="bold-xsmall">@row.Cells[0].Text</h2>
+                            <dl>
+                                @foreach (var cell in row.Cells.Skip(1))
+                                {
+                                    <dt>@cell.Parent.Text:</dt>
+                                    <dd>@(cell.Text ?? "Not recorded")</dd>
+                                }
+                            </dl>
+                        }
+                    }
+                    else
+                    {
+                        <p class="none">Not recorded</p>
+                    }
+                    <hr />
+                </div>
+            }
         }
-    }
-}
+        else
+        {
+            // Render tables
+            foreach (var grid in Model.Grids)
+            {
+                <div class="governor-grid">
+                    <h2 class="bold-small">@grid.Title</h2>
+                    @if (grid.Rows.Any())
+                    {
+                        <table>
+                            <thead>
+                                <tr>
+                                    @foreach (var column in grid.HeaderCells)
+                                    {
+                                        <th>@(column.Text ?? "Not recorded")</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var row in grid.Rows)
+                        {
+                                    <tr>
+                                        @foreach (var cell in row.Cells)
+                                        {
+                                            <td>@(cell.Text ?? "Not recorded")</td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="none">Not recorded</p>
+                    }
+                </div>
+                <br />
+            }
+        }
 
+    </div>
+</div>
 
