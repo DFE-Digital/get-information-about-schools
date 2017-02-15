@@ -196,6 +196,16 @@ div.governor-list, div.governor-grid {
     p.none { font-size:16px; }
 }
 
+div.governor-grid {
+    display:none;
+    @include media(desktop){
+        display:block;
+    }
+    @include media(tablet){
+        display:block;
+    }
+}
+
 div.governor-list {
     dl {
         overflow: hidden;
@@ -220,5 +230,21 @@ div.governor-list {
     }
     h2 {
         margin-bottom:15px;
+    }
+
+    &.mobile-view {
+        display:none;
+        @include media(mobile){
+            display:block;
+        }
+        td {
+            padding:10px 8px 10px 0px;
+            font-size: 12px;
+            border-bottom:2px solid $grey-2;
+            &.name {
+                font-weight:bold;
+            }
+        }
+        p.none { font-size: 12px; }
     }
 }

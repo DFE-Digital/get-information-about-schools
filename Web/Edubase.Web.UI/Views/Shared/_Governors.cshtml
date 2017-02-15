@@ -69,9 +69,42 @@
                     {
                         <p class="none">Not recorded</p>
                     }
+                    <br />
                 </div>
-                <br />
+                
             }
+
+            
+            // Render mobile table/list combo
+            foreach (var grid in Model.Grids)
+            {
+                <div class="governor-list mobile-view">
+                    <h2 class="bold-xsmall">@grid.Title</h2>
+                    @if (grid.Rows.Any())
+                    {
+                        <table>
+                            <tbody>
+                                @foreach (var row in grid.Rows)
+                                {
+                                    foreach (var cell in row.Cells)
+                                    {
+                                        <tr>
+                                            <td class="label">@cell.Parent.Text</td>
+                                            <td class="@Html.Conditional(cell == row.Cells.First(), "name")">@(cell.Text ?? "Not recorded")</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="none">Not recorded</p>
+                    }
+                </div>
+            }
+
+            
         }
 
     </div>
