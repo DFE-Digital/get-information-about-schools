@@ -27,6 +27,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Services.Governors;
     using Services.Groups.Models;
     using Services.IntegrationEndPoints.CompaniesHouse;
+    using StackExchange.Profiling;
     using UI.Models;
     using static GroupDetailViewModel;
     using GT = Services.Enums.eLookupGroupType;
@@ -80,8 +81,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUID.Value);
 
-            viewModel.HistoricalGovernors = await _governorsReadService.GetHistoricalByGroupUID(id);
-            viewModel.Governors = await _governorsReadService.GetCurrentByGroupUID(id);
+            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
+                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User));
 
             return View(viewModel);
         }

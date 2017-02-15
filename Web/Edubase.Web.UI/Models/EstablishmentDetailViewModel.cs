@@ -13,6 +13,7 @@ using Edubase.Web.UI.Models.Establishments;
 using System.Web;
 using System.Linq.Expressions;
 using System.Web.Mvc;
+using Edubase.Services.Governors.Models;
 
 namespace Edubase.Web.UI.Models
 {
@@ -23,7 +24,6 @@ namespace Edubase.Web.UI.Models
             [(int)eLookupGroupType.SingleacademyTrust] = "Single Academy trust",
             [(int)eLookupGroupType.MultiacademyTrust] = "Academy trust",
             [(int)eLookupGroupType.SchoolSponsor] = "Academy sponsor",
-            //[eLookupGroupType.cosponsor] = "Academy co-sponsor" //todo: need to add that one to the lookup on DB seeding
             [(int)eLookupGroupType.Trust] = "Trust",
             [(int)eLookupGroupType.Federation] = "Federation"
         };
@@ -52,20 +52,14 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<EstablishmentChangeDto> ChangeHistory { get; set; }
 
         public IEnumerable<LinkedEstabViewModel> LinkedEstablishments { get; set; }
-
-        public List<PendingChangeViewModel> PendingChanges { get; set; } = new List<PendingChangeViewModel>();
-        public bool ShowPendingMessage { get; set; }
-
-        public bool HasPendingUpdate(string fieldName) => PendingChanges.Any(x => x.DataField.Equals(fieldName));
-        public bool UserHasPendingApprovals { get; set; }
-
+        
+        
         public bool IsUserLoggedOn { get; set; }
 
         public bool UserCanEdit { get; set; }
 
-        public IEnumerable<Governor> Governors { get; set; }
-        public IEnumerable<Governor> HistoricalGovernors { get; set; }
-        
+        public GovernorsGridViewModel GovernorsDetails { get; set; }
+
         public string GroupFieldLabel => Group != null ? _groupType2FieldLabelMappings.Get(Group.GroupTypeId.GetValueOrDefault()) : string.Empty;
 
         public bool IsClosed => Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;

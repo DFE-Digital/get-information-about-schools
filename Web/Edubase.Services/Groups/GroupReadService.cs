@@ -100,7 +100,7 @@ namespace Edubase.Services.Groups
             
             var innerODataFilters = new ODataFilterList(ODataFilterList.OR);
             if (groupId != null) innerODataFilters.Add(nameof(Doc.GroupId), groupId);
-            if (groupUId.HasValue) innerODataFilters.Add(nameof(Doc.GroupUID), groupUId);
+            if (groupUId.HasValue) innerODataFilters.Add(nameof(Doc.GroupUID), groupUId?.ToString());
             if (companiesHouseNumber.Clean() != null) innerODataFilters.Add(nameof(Doc.CompaniesHouseNumber), companiesHouseNumber.Clean());
             outerODataFilters.Add(innerODataFilters);
 
