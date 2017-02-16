@@ -97,7 +97,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private async Task<ActionResult> SearchGovernors(GovernorSearchViewModel model)
         {
-            if (model.GovernorSearchModel.RoleId.HasValue) model.SelectedRoleIds.Add(model.GovernorSearchModel.RoleId.Value);
+            if (model.GovernorSearchModel.RoleId.HasValue && !model.SelectedRoleIds.Contains(model.GovernorSearchModel.RoleId.Value))
+            {
+                model.SelectedRoleIds.Add(model.GovernorSearchModel.RoleId.Value);
+            }
 
             model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
             model.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();

@@ -41,7 +41,7 @@ namespace Edubase.Services.Establishments.DisplayPolicies
 
             if (Establishment.TypeOfResourcedProvisionId
                 .OneOfThese(eLookupTypeOfResourcedProvision.ResourceProvisionAndSENUnit,
-                eLookupTypeOfResourcedProvision.SENUnit))
+                eLookupTypeOfResourcedProvision.ResourceProvision))
             {
                 ResourcedProvisionOnRoll = true;
                 ResourcedProvisionCapacity = true;
