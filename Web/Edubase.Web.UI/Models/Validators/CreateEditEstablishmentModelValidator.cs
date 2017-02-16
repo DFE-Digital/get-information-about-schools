@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Edubase.Web.UI.Models.Validators
 {
-    public class CreateEditEstablishmentModelValidator : EdubaseAbstractValidator<CreateEditEstablishmentModel>
+    public class CreateEditEstablishmentModelValidator : EdubaseAbstractValidator<EditEstablishmentModel>
     {
         private ICachedLookupService _lookupService;
 
@@ -14,7 +14,7 @@ namespace Edubase.Web.UI.Models.Validators
         {
             _lookupService = lookupService;
 
-            When(x => x.Action == CreateEditEstablishmentModel.eAction.Save, () =>
+            When(x => x.Action == EditEstablishmentModel.eAction.Save, () =>
             {
                 ConfigureRules();
 
@@ -27,7 +27,7 @@ namespace Edubase.Web.UI.Models.Validators
                 });
             });
 
-            When(x => x.Action == CreateEditEstablishmentModel.eAction.AddLinkedSchool, () =>
+            When(x => x.Action == EditEstablishmentModel.eAction.AddLinkedSchool, () =>
             {
                 RuleFor(x => x.LinkedDateToAdd).Must(x => x.IsValid()).When(x => x.LinkedDateToAdd.IsNotEmpty()).WithMessage("Linked date is invalid");
                 RuleFor(x => x.LinkedDateToAdd).Must(x => x.IsNotEmpty()).WithMessage("Please specify a Linked date");

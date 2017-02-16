@@ -23,7 +23,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel;
+using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -61,28 +61,52 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Edit(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
+            ViewModel viewModel = await CreateEditViewModel(id);
+            return View(viewModel);
+        }
 
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
+        public async Task<ActionResult> EditIEBT(int? id)
+        {
+            if (!id.HasValue) return HttpNotFound();
+            ViewModel viewModel = await CreateEditViewModel(id);
+            return View("EditIEBT", viewModel);
+        }
+
+        private async Task<ViewModel> CreateEditViewModel(int? id)
+        {
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
             var viewModel = _mapper.Map<ViewModel>(domainModel);
-            
+
             viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, domainModel);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
 
             viewModel.AllowHidingOfAddress = User.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT);
 
             await PopulateSelectLists(viewModel);
-            return View(viewModel);
+            return viewModel;
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
         public async Task<ActionResult> Edit(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
+        public async Task<ActionResult> EditIEBT(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
+
+        private async Task<ActionResult> SaveEstablishment(ViewModel model)
         {
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
             model.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, domainModel);
             model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
             await PopulateSelectLists(model);
 
-            if (model.Action == ViewModel.eAction.Save)
+            if (model.Action == ViewModel.eAction.Save || model.Action == ViewModel.eAction.SaveIEBT)
             {
                 if (ModelState.IsValid)
                 {
@@ -97,7 +121,7 @@ namespace Edubase.Web.UI.Controllers
                         await _establishmentWriteService.SaveAsync(domainModel, User);
                         return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                     }
-                    
+
                 }
             }
             else if (model.Action == ViewModel.eAction.Confirm)
@@ -127,9 +151,9 @@ namespace Edubase.Web.UI.Controllers
 
                 ModelState.Clear();
             }
+
             return View(model);
         }
-        
 
         private async Task PrepareModels(ViewModel model, EstablishmentModel domainModel)
         {

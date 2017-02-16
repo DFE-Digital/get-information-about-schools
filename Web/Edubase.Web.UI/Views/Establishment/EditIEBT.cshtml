@@ -1,0 +1,103 @@
+﻿@using System.Linq
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@model ViewModel
+@{
+    Layout = "_EditLayoutPage.cshtml";
+}
+<div class="tab-content">
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Urn)
+    <div class="" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
+            @Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+            <h2 class="heading-medium" style="margin-top:0;">Independent Education and Boarding Team</h2>
+            <div class="column-half">
+                
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
+                    <label for="boarders">Boarders</label>
+                    @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control", id = "boarders" })
+                </div>
+                
+
+                <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
+                    <fieldset>
+                        <legend>Open date</legend>
+
+                        <div class="form-hint">For example, 20 03 2003</div>
+                        @Html.ValidationMessageFor(x => x.OpenDate)
+                        <span class="inline-form-control">
+                            <label for="opendate-day">Day</label>
+                            @Html.EduDayDropDownFor(x => x.OpenDate.Day,
+                                new
+                                {
+                                    id = "opendate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-opendate-day",
+                                })
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="opendate-month">Month</label>
+                            @Html.EduMonthDropDownFor(x => x.OpenDate.Month,
+                                new
+                                {
+                                    id = "opendate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-opendate-month",
+                                })
+
+                        </span>
+                        <span class="inline-form-contol">
+                            <label for="opendate-year">Year</label>
+                            @Html.EduYearDropDownFor(x => x.OpenDate.Year,
+                                new
+                                {
+                                    id = "opendate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-opendate-year",
+                                })
+                        </span>
+                    </fieldset>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sen-unit-number">SEN unit number on roll</label>
+                    @Html.TextBoxFor(x => x.SenUnitOnRoll, new { @class = "form-control", id = "sen-unit-number", type = "number" })
+                </div>
+                
+                <br />
+                @buttons()
+
+            </div>
+            
+        
+    </div>
+
+    @if (Model.ChangesSummary != null)
+    {
+        Html.RenderPartial("_ConfirmChanges");
+    }
+    
+</div>
+
+@helper buttons()
+{
+    <div class="grid-row">
+        <div class="column-full">
+            @if (Model.ChangesSummary != null)
+            {
+                <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
+                <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
+            }
+            else
+            {
+                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveIEBT">Submit</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+            }
+        </div>
+    </div>
+}
+
+@section topbuttons {
+    @buttons()
+}
