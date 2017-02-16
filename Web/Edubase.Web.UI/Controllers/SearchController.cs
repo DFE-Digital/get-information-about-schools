@@ -53,7 +53,7 @@ namespace Edubase.Web.UI.Controllers
                     else if (viewModel.SearchType == eSearchType.Group)
                         return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
                     else if (viewModel.SearchType == eSearchType.Governor)
-                        return Redirect(Url.Action("Index", "GovernorSearch", new { area = "Governors" }) + "?" + Request.QueryString);
+                        return Redirect(Url.Action("Index", "GovernorSearch", new { area = "Governors" }) + "?" + Request.QueryString + (viewModel.GovernorSearchModel.RoleId.HasValue ? "&t=" + viewModel.GovernorSearchModel.RoleId : ""));
                     else throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
                 }
             }
