@@ -22,7 +22,10 @@
                 <div class="tab-wrap">
                     <ul class="horizontal-tabs">
                         <li><a href="@Url.Action("Edit", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "Edit", "selected-tab")">Details</a></li>
-                        <li><a href="@Url.Action("EditIEBT", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "EditIEBT", "selected-tab")">IEBT</a></li>
+                        @if (Model.TabDisplayPolicy.IEBT)
+                        {
+                            <li><a href="@Url.Action("EditIEBT", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "EditIEBT", "selected-tab")">IEBT</a></li>
+                        }
                     </ul>
                 </div>
                 <div class="tab-content-wrapper horizontal-tabs-content">

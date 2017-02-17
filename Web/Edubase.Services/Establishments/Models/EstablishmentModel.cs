@@ -2,6 +2,7 @@
 using Edubase.Services.Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Edubase.Services.Establishments.Models
 {
@@ -28,15 +29,28 @@ namespace Edubase.Services.Establishments.Models
         public string Notes { get; set; }
         public DateTime? DateOfTheLastBridgeVisit { get; set; }
         //public DateTime? DateOfTheLastOfstedVisit { get; set; }//OfstedInspectionDate
+
+        [DisplayName("Date of the last ISI visit")]
         public DateTime? DateOfTheLastISIVisit { get; set; }
+
         public DateTime? DateOfTheLastWelfareVisit { get; set; }
+
+        [DisplayName("Date of the last FP visit")]
         public DateTime? DateOfTheLastFPVisit { get; set; }
+
+        [DisplayName("Date of the last SIS visit")]
         public DateTime? DateOfTheLastSISVisit { get; set; }
         public DateTime? NextOfstedVisit { get; set; }
         public DateTime? NextGeneralActionRequired { get; set; }
+
+        [DisplayName("Next action required by WEL")]
         public DateTime? NextActionRequiredByWEL { get; set; }
+
+        [DisplayName("Next action required by FP")]
         public DateTime? NextActionRequiredByFP { get; set; }
+
         //public Lookup Inspectorate { get; set; } //InspectorateId
+
         public int? IndependentSchoolTypeId { get; set; } // LookupIndependentSchoolType
         public string CharityOrganisation { get; set; }
         public int? CharityRegistrationNumber { get; set; }

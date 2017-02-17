@@ -193,7 +193,7 @@ namespace Edubase.Web.UI.Models
 
         public List<ChangeDescriptorDto> ChangesSummary { get; set; }
 
-        public bool RequireConfirmationOfChanges => IsLAMaintained || IsAcademy;
+        public bool RequireConfirmationOfChanges => true;
 
         public bool IsLAMaintained => TypeId.OneOfThese(ET.CommunitySchool, ET.FoundationSchool, ET.LANurserySchool, ET.PupilReferralUnit, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool, ET.CommunitySpecialSchool, ET.FoundationSpecialSchool);
 

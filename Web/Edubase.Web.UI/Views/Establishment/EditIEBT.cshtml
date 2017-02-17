@@ -17,7 +17,7 @@
                 
                 <div class="form-group">
                     <label for="notes">Notes</label>
-                    @Html.TextAreaFor(x=>x.Notes, new { @class = "form-control" })
+                    @Html.TextAreaFor(x=>x.Notes, new { @class = "form-control", rows = "10" })
                 </div>
 
 
@@ -28,8 +28,8 @@
                 
                 @RenderDateSelector(x => x.DateOfTheLastBridgeVisit, x => x.DateOfTheLastBridgeVisit.Day, x => x.DateOfTheLastBridgeVisit.Month, x => x.DateOfTheLastBridgeVisit.Year, "Date of last Bridge visit")
                 @RenderDateSelector(x => x.OfstedInspectionDate, x => x.OfstedInspectionDate.Day, x => x.OfstedInspectionDate.Month, x => x.OfstedInspectionDate.Year, "Date of last Ofsted visit")
-                @RenderDateSelector(x => x.DateOfTheLastISIVisit, x => x.DateOfTheLastISIVisit.Day, x => x.DateOfTheLastISIVisit.Month, x => x.DateOfTheLastISIVisit.Year, "Date of last ISI visit ")
-                @RenderDateSelector(x => x.DateOfTheLastWelfareVisit, x => x.DateOfTheLastWelfareVisit.Day, x => x.DateOfTheLastWelfareVisit.Month, x => x.DateOfTheLastWelfareVisit.Year, "Date of last welfare visit ")
+                @RenderDateSelector(x => x.DateOfTheLastISIVisit, x => x.DateOfTheLastISIVisit.Day, x => x.DateOfTheLastISIVisit.Month, x => x.DateOfTheLastISIVisit.Year, "Date of last ISI visit")
+                @RenderDateSelector(x => x.DateOfTheLastWelfareVisit, x => x.DateOfTheLastWelfareVisit.Day, x => x.DateOfTheLastWelfareVisit.Month, x => x.DateOfTheLastWelfareVisit.Year, "Date of last welfare visit")
                 @RenderDateSelector(x => x.DateOfTheLastFPVisit, x => x.DateOfTheLastFPVisit.Day, x => x.DateOfTheLastFPVisit.Month, x => x.DateOfTheLastFPVisit.Year, "Date of last FP visit")
                 @RenderDateSelector(x => x.DateOfTheLastSISVisit, x => x.DateOfTheLastSISVisit.Day, x => x.DateOfTheLastSISVisit.Month, x => x.DateOfTheLastSISVisit.Year, "Date of last SIS visit")
                 @RenderDateSelector(x => x.NextOfstedVisit, x => x.NextOfstedVisit.Day, x => x.NextOfstedVisit.Month, x => x.NextOfstedVisit.Year, "Next Ofsted visit")
@@ -52,16 +52,16 @@
                 @RenderNumericTextBox("Total number of full time pupils", x => x.TotalNumberOfFullTimePupils)
                 @RenderNumericTextBox("Total number of part time pupils", x => x.TotalNumberOfPartTimePupils)
                 @RenderNumericTextBox("Total number of pupils of compulsory school age", x => x.TotalNumberOfPupilsOfCompulsorySchoolAge)
-                @RenderNumericTextBox("Total number of special pupils under a SEN statement/ECHP ", x => x.NumberOfSpecialPupilsUnderASENStatementEHCP)
+                @RenderNumericTextBox("Total number of special pupils under a SEN statement/ECHP", x => x.NumberOfSpecialPupilsUnderASENStatementEHCP)
                 @RenderNumericTextBox("Number of special pupils not under a SEN statement/EHCP", x => x.NumberOfSpecialPupilsNotUnderASENStatementEHCP)
                 @RenderNumericTextBox("Total number of pupils in public care", x => x.TotalNumberOfPupilsInPublicCare)
                 
-                @RenderNumericTextBox("PT boys (aged 2 and under) ", x => x.PTBoysAged2AndUnder)
+                @RenderNumericTextBox("PT boys (aged 2 and under)", x => x.PTBoysAged2AndUnder)
                 @RenderNumericTextBox("PT boys (aged 3)", x => x.PTBoysAged3)
                 @RenderNumericTextBox("PT boys (aged 4a)", x => x.PTBoysAged4A)
                 @RenderNumericTextBox("PT boys (aged 4b)", x => x.PTBoysAged4B)
                 @RenderNumericTextBox("PT boys (aged 4c)", x => x.PTBoysAged4C)
-                @RenderNumericTextBox("Total number of boys in boarding schools ", x => x.TotalNumberOfBoysInBoardingSchools)
+                @RenderNumericTextBox("Total number of boys in boarding schools", x => x.TotalNumberOfBoysInBoardingSchools)
 
                 @RenderNumericTextBox("PT girls (aged 2 and under) ", x => x.PTGirlsAged2AndUnder)
                 @RenderNumericTextBox("PT girls (aged 3)", x => x.PTGirlsAged3)
@@ -74,14 +74,14 @@
                 @RenderNumericTextBox("Total number of part time staff", x => x.TotalNumberOfPartTimeStaff)
 
 
-                @RenderNumericTextBox("Lowest annual rate for day pupils ", x => x.HighestAnnualRateForDayPupils)
-                @RenderNumericTextBox("Highest annual rate for day pupils ", x => x.LowestAnnualRateForDayPupils)
-                @RenderNumericTextBox("Lowest annual rate for boarding pupils ", x => x.HighestAnnualRateForBoardingPupils)
-                @RenderNumericTextBox("Highest annual rate for boarding pupils ", x => x.LowestAnnualRateForBoardingPupils)
+                @RenderNumericTextBox("Lowest annual rate for day pupils", x => x.HighestAnnualRateForDayPupils)
+                @RenderNumericTextBox("Highest annual rate for day pupils", x => x.LowestAnnualRateForDayPupils)
+                @RenderNumericTextBox("Lowest annual rate for boarding pupils", x => x.HighestAnnualRateForBoardingPupils)
+                @RenderNumericTextBox("Highest annual rate for boarding pupils", x => x.LowestAnnualRateForBoardingPupils)
 
 
                 <div class="form-group">
-                    @Html.LabelFor(x=>x.ProvisionBoardingId, "Boarding establishment ")
+                    @Html.LabelFor(x=>x.ProvisionBoardingId, "Boarding establishment")
                     @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control" })
                 </div>
 
@@ -125,7 +125,7 @@
 
     @if (Model.ChangesSummary != null)
     {
-        Html.RenderPartial("_ConfirmChanges");
+        Html.RenderPartial("Partials/_ConfirmChanges");
     }
     
 </div>

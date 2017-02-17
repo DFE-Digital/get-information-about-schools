@@ -6,6 +6,7 @@ using Edubase.Services.Core;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
+using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
@@ -70,6 +71,9 @@ namespace Edubase.Web.UI.Controllers
         {
             if (!id.HasValue) return HttpNotFound();
             ViewModel viewModel = await CreateEditViewModel(id);
+
+            if (!viewModel.TabDisplayPolicy.IEBT) throw new PermissionDeniedException();
+
             return View("EditIEBT", viewModel);
         }
 
@@ -163,8 +167,8 @@ namespace Edubase.Web.UI.Controllers
             MapToDomainModel(model, domainModel, Request.Form);
 
             domainModel.AdditionalAddresses = model.AdditionalAddresses;
-            domainModel.OpenDate = model.OpenDate.ToDateTime()?.Date;
-            domainModel.CloseDate = model.CloseDate.ToDateTime()?.Date;
+            //domainModel.OpenDate = model.OpenDate.ToDateTime()?.Date;
+            //domainModel.CloseDate = model.CloseDate.ToDateTime()?.Date;
         }
 
         /// <summary>
@@ -176,18 +180,27 @@ namespace Edubase.Web.UI.Controllers
         /// <param name="form"></param>
         private void MapToDomainModel(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)
         {
+            var keys = form.AllKeys.Select(x => x.GetPart(".")).Distinct();
+
             var properties = ReflectionHelper.GetProperties(domainModel, writeableOnly: true);
-            properties = properties.Where(x => form.AllKeys.Contains(x)).ToList();
+            properties = properties.Where(x => keys.Contains(x)).ToList();
 
             var viewModelProperties = ReflectionHelper.GetProperties(viewModel);
 
             foreach (var item in properties.Intersect(viewModelProperties))
             {
-                var value = ReflectionHelper.GetPropertyValue(viewModel, item);
-                ReflectionHelper.SetProperty(domainModel, item, value);
+                var info = ReflectionHelper.GetPropertyInfo(viewModel, item);
+                if(info.Type == typeof(DateTimeViewModel))
+                {
+                    var value = (ReflectionHelper.GetPropertyValue(viewModel, item) as DateTimeViewModel).ToDateTime()?.Date;
+                    ReflectionHelper.SetProperty(domainModel, item, value);
+                }
+                else
+                {
+                    var value = ReflectionHelper.GetPropertyValue(viewModel, item);
+                    ReflectionHelper.SetProperty(domainModel, item, value);
+                }
             }
-
-
         }
         
         [HttpGet, EdubaseAuthorize]
