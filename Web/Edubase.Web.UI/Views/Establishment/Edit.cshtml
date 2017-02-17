@@ -206,7 +206,7 @@
                     <div class="form-group">
                         <fieldset class="inline-fields">
                             <legend>DfE number</legend>
-                            <p class="form-hint">LA code + Establishment number</p>
+                            <p class="form-hint">LA code and Establishment number</p>
                             <label class="form-label visually-hidden" for="lacode"> LA code</label>
                             <input type="text" id="lacode" class="form-control" size="5" disabled="disabled" value="@Model.LocalAuthorityId" />
                             <label class="form-label visually-hidden" for="establishmentnumber">Establishment number</label>
@@ -784,12 +784,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="ParliamentaryConstituencyId" class="form-label">Parliamentary Constituency</label>
+                        <label for="ParliamentaryConstituencyId" class="form-label">Parliamentary constituency</label>
                         @Html.DropDownListFor(x => x.ParliamentaryConstituencyId, Model.ParliamentaryConstituencies, "", new { @class = "form-control" })
                     </div>
 
                     <div class="form-group">
-                        <label for="UrbanRuralId" class="form-label">Urban / Rural description</label>
+                        <label for="UrbanRuralId" class="form-label">Urban/rural description</label>
                         @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { @class = "form-control" })
                     </div>
 
