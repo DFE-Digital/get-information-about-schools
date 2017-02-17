@@ -402,6 +402,8 @@
     <Content Include="public\assets\images\icon-location.png" />
     <Content Include="public\assets\images\icon-pupils.png" />
     <Content Include="public\assets\images\icons\cross.PNG" />
+    <Content Include="public\assets\images\icons\exclaim-red-x2.png" />
+    <Content Include="public\assets\images\icons\exclaim-red.png" />
     <Content Include="public\assets\images\icons\exclaim-transparent.PNG" />
     <Content Include="public\assets\images\icons\exclaim-transparentx2.PNG" />
     <Content Include="public\assets\images\icons\exclaim.PNG" />
