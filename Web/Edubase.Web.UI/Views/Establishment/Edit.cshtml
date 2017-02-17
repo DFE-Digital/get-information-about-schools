@@ -230,7 +230,7 @@
                     <div class="form-group">
                         <fieldset class="inline-fields">
                             <legend>DfE number</legend>
-                            <p class="form-hint">LA code + Establishment number</p>
+                            <p class="form-hint">LA code and establishment number</p>
                             <label class="form-label visually-hidden" for="lacode"> LA code</label>
                             <input type="text" id="lacode" class="form-control" size="5" disabled="disabled" value="@Model.LocalAuthorityId" />
                             <label class="form-label visually-hidden" for="establishmentnumber">Establishment number</label>
@@ -808,12 +808,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="ParliamentaryConstituencyId" class="form-label">Parliamentary Constituency</label>
+                        <label for="ParliamentaryConstituencyId" class="form-label">Parliamentary constituency</label>
                         @Html.DropDownListFor(x => x.ParliamentaryConstituencyId, Model.ParliamentaryConstituencies, "", new { @class = "form-control" })
                     </div>
 
                     <div class="form-group">
-                        <label for="UrbanRuralId" class="form-label">Urban / Rural description</label>
+                        <label for="UrbanRuralId" class="form-label">Urban/rural description</label>
                         @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { @class = "form-control" })
                     </div>
 
@@ -878,16 +878,16 @@
                     @if (Model.IsAcademy)
                     {
                         <p class="red-exclaim">
-                            In submitting this change I conﬁrm that in making significant changes the academy have followed the
+                            I confirm that in making these changes the academy has followed the 
                             <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
-                            and have submitted a deed of variation to the funding agreement where required.
+                             and has submitted a deed of variation to the funding agreement where required.                            
                         </p>
                     }
                     else
                     {
                         <p class="red-exclaim">
-                            In submitting this change I conﬁrm that in making prescribed alterations the governing body or local authority have followed and completed the
-                            <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process</a>.
+                            I confirm that in making prescribed alterations the governing body or local authority has followed and completed the 
+                            <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process</a>.                           
                         </p>
                     }
                 </div>
