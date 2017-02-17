@@ -301,8 +301,10 @@
         background-size: 28px;
         left: 0;
         top: 0;
+        
+         @include device-pixel-ratio() {
+            background-image: file-url("icons/exclaim-red-x2.png");
+        } 
     }
-     @include device-pixel-ratio() {
-        background-image: file-url("icons/exclaim-red-x2.png");
-    } 
+    
 }
