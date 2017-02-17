@@ -6,6 +6,7 @@ using Edubase.Services.Core;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
+using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
@@ -23,7 +24,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel;
+using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -61,28 +62,55 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Edit(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
+            ViewModel viewModel = await CreateEditViewModel(id);
+            return View(viewModel);
+        }
 
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
+        public async Task<ActionResult> EditIEBT(int? id)
+        {
+            if (!id.HasValue) return HttpNotFound();
+            ViewModel viewModel = await CreateEditViewModel(id);
+
+            if (!viewModel.TabDisplayPolicy.IEBT) throw new PermissionDeniedException();
+
+            return View("EditIEBT", viewModel);
+        }
+
+        private async Task<ViewModel> CreateEditViewModel(int? id)
+        {
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
             var viewModel = _mapper.Map<ViewModel>(domainModel);
-            
+
             viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, domainModel);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
 
             viewModel.AllowHidingOfAddress = User.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT);
 
             await PopulateSelectLists(viewModel);
-            return View(viewModel);
+            return viewModel;
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
         public async Task<ActionResult> Edit(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
+        public async Task<ActionResult> EditIEBT(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
+
+        private async Task<ActionResult> SaveEstablishment(ViewModel model)
         {
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
             model.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, domainModel);
             model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
             await PopulateSelectLists(model);
 
-            if (model.Action == ViewModel.eAction.Save)
+            if (model.Action == ViewModel.eAction.Save || model.Action == ViewModel.eAction.SaveIEBT)
             {
                 if (ModelState.IsValid)
                 {
@@ -97,7 +125,7 @@ namespace Edubase.Web.UI.Controllers
                         await _establishmentWriteService.SaveAsync(domainModel, User);
                         return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                     }
-                    
+
                 }
             }
             else if (model.Action == ViewModel.eAction.Confirm)
@@ -127,9 +155,9 @@ namespace Edubase.Web.UI.Controllers
 
                 ModelState.Clear();
             }
+
             return View(model);
         }
-        
 
         private async Task PrepareModels(ViewModel model, EstablishmentModel domainModel)
         {
@@ -139,8 +167,8 @@ namespace Edubase.Web.UI.Controllers
             MapToDomainModel(model, domainModel, Request.Form);
 
             domainModel.AdditionalAddresses = model.AdditionalAddresses;
-            domainModel.OpenDate = model.OpenDate.ToDateTime()?.Date;
-            domainModel.CloseDate = model.CloseDate.ToDateTime()?.Date;
+            //domainModel.OpenDate = model.OpenDate.ToDateTime()?.Date;
+            //domainModel.CloseDate = model.CloseDate.ToDateTime()?.Date;
         }
 
         /// <summary>
@@ -152,18 +180,27 @@ namespace Edubase.Web.UI.Controllers
         /// <param name="form"></param>
         private void MapToDomainModel(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)
         {
+            var keys = form.AllKeys.Select(x => x.GetPart(".")).Distinct();
+
             var properties = ReflectionHelper.GetProperties(domainModel, writeableOnly: true);
-            properties = properties.Where(x => form.AllKeys.Contains(x)).ToList();
+            properties = properties.Where(x => keys.Contains(x)).ToList();
 
             var viewModelProperties = ReflectionHelper.GetProperties(viewModel);
 
             foreach (var item in properties.Intersect(viewModelProperties))
             {
-                var value = ReflectionHelper.GetPropertyValue(viewModel, item);
-                ReflectionHelper.SetProperty(domainModel, item, value);
+                var info = ReflectionHelper.GetPropertyInfo(viewModel, item);
+                if(info.Type == typeof(DateTimeViewModel))
+                {
+                    var value = (ReflectionHelper.GetPropertyValue(viewModel, item) as DateTimeViewModel).ToDateTime()?.Date;
+                    ReflectionHelper.SetProperty(domainModel, item, value);
+                }
+                else
+                {
+                    var value = ReflectionHelper.GetPropertyValue(viewModel, item);
+                    ReflectionHelper.SetProperty(domainModel, item, value);
+                }
             }
-
-
         }
         
         [HttpGet, EdubaseAuthorize]
@@ -276,6 +313,7 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task PopulateSelectLists(ViewModel viewModel)
         {
+            viewModel.AccommodationChanges = (await _cachedLookupService.AccommodationChangedGetAllAsync()).ToSelectList(viewModel.AccommodationChangedId);
             viewModel.FurtherEducationTypes = (await _cachedLookupService.FurtherEducationTypesGetAllAsync()).ToSelectList(viewModel.FurtherEducationTypeId);
             viewModel.Genders = (await _cachedLookupService.GendersGetAllAsync()).ToSelectList(viewModel.GenderId);
             viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
@@ -284,6 +322,7 @@ namespace Edubase.Web.UI.Controllers
             viewModel.Statuses = (await _cachedLookupService.EstablishmentStatusesGetAllAsync()).ToSelectList(viewModel.StatusId);
             viewModel.AdmissionsPolicies = (await _cachedLookupService.AdmissionsPoliciesGetAllAsync()).ToSelectList(viewModel.AdmissionsPolicyId);
             viewModel.Inspectorates = (await _cachedLookupService.InspectoratesGetAllAsync()).ToSelectList(viewModel.InspectorateId);
+            viewModel.IndependentSchoolTypes = (await _cachedLookupService.IndependentSchoolTypesGetAllAsync()).ToSelectList(viewModel.IndependentSchoolTypeId);
             viewModel.BSOInspectorates = (await _cachedLookupService.InspectorateNamesGetAllAsync()).ToSelectList(viewModel.BSOInspectorateId);
             viewModel.ReligiousCharacters = (await _cachedLookupService.ReligiousCharactersGetAllAsync()).ToSelectList(viewModel.ReligiousCharacterId);
             viewModel.ReligiousEthoses = (await _cachedLookupService.ReligiousEthosGetAllAsync()).ToSelectList(viewModel.ReligiousEthosId);

@@ -1,0 +1,100 @@
+﻿@using System.Linq
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@model ViewModel
+
+<div class="grid-row">
+    <div class="column-full">
+
+        <h1 class="bold-large">Confirm updates to establishment</h1>
+
+        @if (Model.IsAcademy || Model.IsLAMaintained)
+        {
+            <div class="error-summary">
+                @if (Model.IsAcademy)
+                {
+                    <p class="red-exclaim">
+                        I confirm that in making these changes the academy has followed the 
+                        <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
+                        and have submitted a deed of variation to the funding agreement where required.
+                    </p>
+                }
+                else if (Model.IsLAMaintained)
+                {
+                    <p class="red-exclaim">
+                        I confirm that in making prescribed alterations the governing body or local authority has followed and completed the 
+                        <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process</a>.
+                    </p>
+                }
+            </div>
+        }
+        <p>Please conﬁrm updates to the following items for the Establishment ‘@Model.OriginalEstablishmentName’. Select cancel to return to the establishment record.</p>
+        <hr />
+    </div>
+</div>
+
+    <div class="column-half">
+        <div class="change-list">
+            @foreach (var item in Model.ChangesSummary)
+            {
+                <dl class="@(item != Model.ChangesSummary.Last() ? "border" : "last"))">
+                    <dt>Field:</dt>
+                    <dd>@item.Name</dd>
+                    <dt>Old value:</dt>
+                    <dd>@(item.OldValue ?? "<empty>")</dd>
+                    <dt>New value:</dt>
+                    <dd>@(item.NewValue ?? "<empty>")</dd>
+                </dl>
+            }
+        </div>
+        <br />
+    </div>
+
+<div class="grid-row">
+    <div class="column-full">
+
+        <hr />
+        <br />
+
+        <div class="form-group create-edit-form-group drop-down-date range-group">
+            <fieldset>
+                <legend class="effective-date">Effective date (optional)</legend>
+
+                <div class="form-hint">For example, 20 03 2003</div>
+                @Html.ValidationMessageFor(x => x.ChangeEffectiveDate)
+                <span class="inline-form-control">
+                    <label for="effectivedate-day">Day</label>
+                    @Html.EduDayDropDownFor(x => x.ChangeEffectiveDate.Day,
+                                new
+                                {
+                                    id = "effectivedate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-effectivedate-day",
+                                })
+                </span>
+                <span class="inline-form-control">
+                    <label for="effectivedate-month">Month</label>
+                    @Html.EduMonthDropDownFor(x => x.ChangeEffectiveDate.Month,
+                                new
+                                {
+                                    id = "effectivedate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-effectivedate-month",
+                                })
+
+                </span>
+                <span class="inline-form-contol">
+                    <label for="effectivedate-year">Year</label>
+                    @Html.EduYearDropDownFor(x => x.ChangeEffectiveDate.Year,
+                                new
+                                {
+                                    id = "effectivedate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-effectivedate-year",
+                                })
+                </span>
+            </fieldset>
+        </div>
+
+    </div>
+</div>
+

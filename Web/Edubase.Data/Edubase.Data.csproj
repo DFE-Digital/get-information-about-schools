@@ -202,6 +202,10 @@
     <Compile Include="Migrations\201702061023059_Story7714RemoveOldEstabTypes.Designer.cs">
       <DependentUpon>201702061023059_Story7714RemoveOldEstabTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702171012486_EstabIEBTfields.cs" />
+    <Compile Include="Migrations\201702171012486_EstabIEBTfields.Designer.cs">
+      <DependentUpon>201702171012486_EstabIEBTfields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ODataFilterList.cs" />
@@ -246,6 +250,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702061023059_Story7714RemoveOldEstabTypes.resx">
       <DependentUpon>201702061023059_Story7714RemoveOldEstabTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702171012486_EstabIEBTfields.resx">
+      <DependentUpon>201702171012486_EstabIEBTfields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

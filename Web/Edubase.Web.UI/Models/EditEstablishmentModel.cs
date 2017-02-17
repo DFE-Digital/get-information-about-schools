@@ -11,7 +11,7 @@ namespace Edubase.Web.UI.Models
     using Services.Domain;
     using ET = Services.Enums.eLookupEstablishmentType;
 
-    public class CreateEditEstablishmentModel
+    public class EditEstablishmentModel
     {
         private static readonly IDictionary<byte?, string> _ofstedRatingsLookup =
             new Dictionary<byte?, string>
@@ -28,6 +28,7 @@ namespace Edubase.Web.UI.Models
             Edit,
             FindEstablishment,
             Save,
+            SaveIEBT,
             Confirm,
             AddLinkedSchool,
             RemoveLinkedSchool,
@@ -115,7 +116,7 @@ namespace Edubase.Web.UI.Models
         public string Contact_TelephoneNumber { get; set; }
         public byte? OfstedRating { get; set; }
         public string OfstedRatingText => _ofstedRatingsLookup.Get(OfstedRating);
-        public DateTime? OfstedInspectionDate { get; set; }
+        public DateTimeViewModel OfstedInspectionDate { get; set; } = new DateTimeViewModel();
         public int? InspectorateId { get; set; }
         public string ProprietorName { get; set; }
         public int? Section41ApprovedId { get; set; }
@@ -149,6 +150,7 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel BSODateOfNextInspectionVisit { get; set; } = new DateTimeViewModel();
 
+        public IEnumerable<SelectListItem> AccommodationChanges { get; set; }
         public IEnumerable<SelectListItem> FurtherEducationTypes { get; set; }
         public IEnumerable<SelectListItem> Genders { get; set; }
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
@@ -158,6 +160,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> Statuses { get; set; }
         public IEnumerable<SelectListItem> AdmissionsPolicies { get; set; }
         public IEnumerable<SelectListItem> Inspectorates { get; set; }
+        public IEnumerable<SelectListItem> IndependentSchoolTypes { get; set; }
         public IEnumerable<SelectListItem> BSOInspectorates { get; set; }
         public IEnumerable<SelectListItem> ReligiousCharacters { get; set; }
         public IEnumerable<SelectListItem> ReligiousEthoses { get; set; }
@@ -190,7 +193,7 @@ namespace Edubase.Web.UI.Models
 
         public List<ChangeDescriptorDto> ChangesSummary { get; set; }
 
-        public bool RequireConfirmationOfChanges => IsLAMaintained || IsAcademy;
+        public bool RequireConfirmationOfChanges => true;
 
         public bool IsLAMaintained => TypeId.OneOfThese(ET.CommunitySchool, ET.FoundationSchool, ET.LANurserySchool, ET.PupilReferralUnit, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool, ET.CommunitySpecialSchool, ET.FoundationSpecialSchool);
 
@@ -200,7 +203,75 @@ namespace Edubase.Web.UI.Models
 
         public string OriginalEstablishmentName { get; set; }
 
-        public CreateEditEstablishmentModel()
+
+        #region IEBT properties
+        public string Notes { get; set; }
+        public DateTimeViewModel DateOfTheLastBridgeVisit { get; set; } = new DateTimeViewModel();
+        //public DateTime? DateOfTheLastOfstedVisit { get; set; }//OfstedInspectionDate
+        public DateTimeViewModel DateOfTheLastISIVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel DateOfTheLastWelfareVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel DateOfTheLastFPVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel DateOfTheLastSISVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel NextOfstedVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel NextGeneralActionRequired { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel NextActionRequiredByWEL { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel NextActionRequiredByFP { get; set; } = new DateTimeViewModel();
+        //public Lookup Inspectorate { get; set; } //InspectorateId
+        public int? IndependentSchoolTypeId { get; set; } // LookupIndependentSchoolType
+        public string CharityOrganisation { get; set; }
+        public int? CharityRegistrationNumber { get; set; }
+        public int? TotalNumberOfFullTimePupils { get; set; }
+        public int? TotalNumberOfPartTimePupils { get; set; }
+        public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
+        public int? NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
+        public int? NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
+        public int? TotalNumberOfPupilsInPublicCare { get; set; }
+        public int? PTBoysAged2AndUnder { get; set; }
+        public int? PTBoysAged3 { get; set; }
+        public int? PTBoysAged4A { get; set; }
+        public int? PTBoysAged4B { get; set; }
+        public int? PTBoysAged4C { get; set; }
+        public int? TotalNumberOfBoysInBoardingSchools { get; set; }
+        public int? PTGirlsAged2AndUnder { get; set; }
+        public int? PTGirlsAged3 { get; set; }
+        public int? PTGirlsAged4A { get; set; }
+        public int? PTGirlsAged4B { get; set; }
+        public int? PTGirlsAged4C { get; set; }
+        public int? TotalNumberOfGirlsInBoardingSchools { get; set; }
+        public int? TotalNumberOfFullTimeStaff { get; set; }
+        public int? TotalNumberOfPartTimeStaff { get; set; }
+        public int? LowestAnnualRateForDayPupils { get; set; }
+        public int? HighestAnnualRateForDayPupils { get; set; }
+        public int? LowestAnnualRateForBoardingPupils { get; set; }
+        public int? HighestAnnualRateForBoardingPupils { get; set; }
+        //public Lookup BoardingEstablishment { get; set; } //ProvisionBoardingId
+        //public string ProprietorsName { get; set; } //ProprietorName
+        public string ProprietorsStreet { get; set; }
+        public string ProprietorsLocality { get; set; }
+        public string ProprietorsAddress3 { get; set; }
+        public string ProprietorsTown { get; set; }
+        public string ProprietorsCounty { get; set; }
+        public string ProprietorsPostcode { get; set; }
+        public string ProprietorsTelephoneNumber { get; set; }
+        public string ProprietorsFaxNumber { get; set; }
+        public string ProprietorsEmail { get; set; }
+        public string ProprietorsPreferredJobTitle { get; set; }
+        public string ChairOfProprietorsBodyName { get; set; }
+        public string ChairOfProprietorsBodyStreet { get; set; }
+        public string ChairOfProprietorsBodyLocality { get; set; }
+        public string ChairOfProprietorsBodyAddress3 { get; set; }
+        public string ChairOfProprietorsBodyTown { get; set; }
+        public string ChairOfProprietorsBodyCounty { get; set; }
+        public string ChairOfProprietorsBodyPostcode { get; set; }
+        public string ChairOfProprietorsBodyTelephoneNumber { get; set; }
+        public string ChairOfProprietorsBodyFaxNumber { get; set; }
+        public string ChairOfProprietorsBodyEmail { get; set; }
+        public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
+        public int? AccommodationChangedId { get; set; }
+
+        #endregion
+        
+        public EditEstablishmentModel()
         {
 
         }

@@ -335,7 +335,7 @@
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
-    <Compile Include="Models\CreateEditEstablishmentModel.cs" />
+    <Compile Include="Models\EditEstablishmentModel.cs" />
     <Compile Include="Models\Establishments\TabDisplayPolicy.cs" />
     <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\SearchCompaniesHouseModel.cs" />
@@ -827,6 +827,9 @@
     <Content Include="Views\Tools\Index.cshtml" />
     <Content Include="Views\Shared\DomainError.cshtml" />
     <Content Include="Views\Shared\_Governors.cshtml" />
+    <Content Include="Views\Establishment\_EditLayoutPage.cshtml" />
+    <Content Include="Views\Establishment\Partials\_ConfirmChanges.cshtml" />
+    <Content Include="Views\Establishment\EditIEBT.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

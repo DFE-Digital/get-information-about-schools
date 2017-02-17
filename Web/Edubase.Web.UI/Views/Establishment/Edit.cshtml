@@ -1,39 +1,15 @@
-﻿@using Edubase.Web.UI.Models
-@using System.Linq
-@using ViewModel = Edubase.Web.UI.Models.CreateEditEstablishmentModel
+﻿@using System.Linq
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 @{
-    ViewBag.bodyClasses = "create-edit-school school-details";
-    ViewBag.hideLogo = true;
-    ViewBag.Title = "Create/Edit establishment";
+    Layout = "_EditLayoutPage.cshtml";
 }
+<div class="tab-content">
 
-@section ViewScripts {
-
-    @if (Model.ScrollToLinksSection)
-    {
-        <script type="text/javascript">
-            setTimeout(function () { window.location.href = '#addlinkedschool'; }, 300);
-        </script>
-    }
-}
-
-@using (Html.BeginForm((Model.Urn == null ? "Create" : "Edit"), "Establishment", FormMethod.Post))
-{
-    @Html.AntiForgeryToken();
+    @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.Urn)
     <div class="column-full" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
         <div class="grid-row">
-            <button type="submit" name="action" value="@ViewModel.eAction.Save" class="button header-submit">Submit</button>
-
-            @if (Model.Urn == null)
-            {
-                <h1 class="heading-xlarge">Create a new school or college</h1>
-            }
-            else
-            {
-                <h1 class="heading-xlarge">Edit school or college</h1>
-            }
 
             @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
@@ -230,7 +206,7 @@
                     <div class="form-group">
                         <fieldset class="inline-fields">
                             <legend>DfE number</legend>
-                            <p class="form-hint">LA code and establishment number</p>
+                            <p class="form-hint">LA code and Establishment number</p>
                             <label class="form-label visually-hidden" for="lacode"> LA code</label>
                             <input type="text" id="lacode" class="form-control" size="5" disabled="disabled" value="@Model.LocalAuthorityId" />
                             <label class="form-label visually-hidden" for="establishmentnumber">Establishment number</label>
@@ -285,7 +261,7 @@
 
                     <div class="form-group">
                         <label for="ofsted-inspection-date" class="form-label">Ofsted last inspection</label>
-                        <input type="text" class="form-control" id="ofsted-inspection-date" disabled="disabled" value="@(Model.OfstedInspectionDate?.ToString("dd/MM/yyyy"))" />
+                        <input type="text" class="form-control" id="ofsted-inspection-date" disabled="disabled" value="@(Model.OfstedInspectionDate.ToDateTime()?.ToString("dd/MM/yyyy"))" />
                     </div>
 
                     <div class="form-group">
@@ -857,116 +833,39 @@
 
                 }
 
+                <br />
+                @buttons()
 
             </div>
-            <div class="submit-cancel-panel">
-                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.Save">Submit</button>
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
-            </div>
+
         </div>
     </div>
 
-    if (Model.ChangesSummary != null)
+    @if (Model.ChangesSummary != null)
     {
-        <br />
-        <div class="grid-row">
-            <div class="column-full">
-
-                <h1 class="bold-large">Confirm updates to establishment</h1>
-
-                <div class="error-summary">
-                    @if (Model.IsAcademy)
-                    {
-                        <p class="red-exclaim">
-                            I confirm that in making these changes the academy has followed the 
-                            <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
-                             and has submitted a deed of variation to the funding agreement where required.                            
-                        </p>
-                    }
-                    else
-                    {
-                        <p class="red-exclaim">
-                            I confirm that in making prescribed alterations the governing body or local authority has followed and completed the 
-                            <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process</a>.                           
-                        </p>
-                    }
-                </div>
-
-                <p>Please conﬁrm updates to the following items for the Establishment ‘@Model.OriginalEstablishmentName’. Select cancel to return to the establishment record.</p>
-                <hr />
-            </div>
-        </div>
-
-        <div class="grid-row">
-            <div class="column-half">
-                <div class="change-list">
-                    @foreach (var item in Model.ChangesSummary)
-                    {
-                        <dl class="@(item != Model.ChangesSummary.Last() ? "border" : "last"))">
-                            <dt>Field:</dt>
-                            <dd>@item.Name</dd>
-                            <dt>Old value:</dt>
-                            <dd>@(item.OldValue ?? "<empty>")</dd>
-                            <dt>New value:</dt>
-                            <dd>@(item.NewValue ?? "<empty>")</dd>
-                        </dl>
-                    }
-                </div>
-                <br />
-            </div>
-        </div>
-
-        <div class="grid-row">
-            <div class="column-full">
-
-                <hr />
-                <br />
-
-                <div class="form-group create-edit-form-group drop-down-date range-group">
-                    <fieldset>
-                        <legend class="effective-date">Effective date (optional)</legend>
-
-                        <div class="form-hint">For example, 20 03 2003</div>
-                        @Html.ValidationMessageFor(x => x.ChangeEffectiveDate)
-                        <span class="inline-form-control">
-                            <label for="effectivedate-day">Day</label>
-                            @Html.EduDayDropDownFor(x => x.ChangeEffectiveDate.Day,
-                                new
-                                {
-                                    id = "effectivedate-day",
-                                    @class = "form-control",
-                                    aria_describedby = "help-effectivedate-day",
-                                })
-                        </span>
-                        <span class="inline-form-control">
-                            <label for="effectivedate-month">Month</label>
-                            @Html.EduMonthDropDownFor(x => x.ChangeEffectiveDate.Month,
-                                new
-                                {
-                                    id = "effectivedate-month",
-                                    @class = "form-control",
-                                    aria_describedby = "help-effectivedate-month",
-                                })
-
-                        </span>
-                        <span class="inline-form-contol">
-                            <label for="effectivedate-year">Year</label>
-                            @Html.EduYearDropDownFor(x => x.ChangeEffectiveDate.Year,
-                                new
-                                {
-                                    id = "effectivedate-year",
-                                    @class = "form-control",
-                                    aria_describedby = "help-effectivedate-year",
-                                })
-                        </span>
-                    </fieldset>
-                </div>
-
-            </div>
-        </div>
-        <div class="submit-cancel-panel">
-            <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button">Confirm</button>
-            <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey cancel mobile-full-width">Cancel</button>
-        </div>
+        Html.RenderPartial("Partials/_ConfirmChanges");
     }
+    
+</div>
+
+@helper buttons()
+{
+    <div class="grid-row">
+        <div class="column-full">
+            @if (Model.ChangesSummary != null)
+            {
+                <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
+                <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
+            }
+            else
+            {
+                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.Save">Submit</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+            }
+        </div>
+    </div>
+}
+
+@section topbuttons {
+    @buttons()
 }
