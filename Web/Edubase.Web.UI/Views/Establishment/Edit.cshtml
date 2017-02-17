@@ -877,7 +877,7 @@
                 <div class="error-summary">
                     @if (Model.IsAcademy)
                     {
-                        <p>
+                        <p class="red-exclaim">
                             In submitting this change I conﬁrm that in making significant changes the academy have followed the
                             <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
                             and have submitted a deed of variation to the funding agreement where required.
@@ -885,7 +885,7 @@
                     }
                     else
                     {
-                        <p>
+                        <p class="red-exclaim">
                             In submitting this change I conﬁrm that in making prescribed alterations the governing body or local authority have followed and completed the
                             <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process</a>.
                         </p>
@@ -965,7 +965,7 @@
             </div>
         </div>
         <div class="submit-cancel-panel">
-            <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button header-submit">Confirm</button>
+            <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button">Confirm</button>
             <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey cancel mobile-full-width">Cancel</button>
         </div>
     }

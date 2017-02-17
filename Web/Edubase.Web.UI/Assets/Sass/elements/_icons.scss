@@ -287,3 +287,22 @@
     background: transparent url(/public/assets/images/icons/icon-loading.gif) no-repeat center;
 }
 
+.red-exclaim {
+    position: relative;
+    padding-left: 32px;
+
+    &:before {
+        position: absolute;
+        content: '';
+        width: 32px;
+        height: 32px;
+        background-image: file-url("icons/exclaim-red.png");   
+        background-repeat: no-repeat;
+        background-size: 28px;
+        left: 0;
+        top: 0;
+    }
+     @include device-pixel-ratio() {
+        background-image: file-url("icons/exclaim-red-x2.png");
+    } 
+}
