@@ -87,7 +87,7 @@ namespace Edubase.Services.Establishments.Models
         public string ChairOfProprietorsBodyFaxNumber { get; set; }
         public string ChairOfProprietorsBodyEmail { get; set; }
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
-        public int? AccomodationChangedId { get; set; }
+        public int? AccommodationChangedId { get; set; }
 
         #endregion
 

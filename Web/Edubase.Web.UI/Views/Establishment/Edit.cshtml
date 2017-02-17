@@ -261,7 +261,7 @@
 
                     <div class="form-group">
                         <label for="ofsted-inspection-date" class="form-label">Ofsted last inspection</label>
-                        <input type="text" class="form-control" id="ofsted-inspection-date" disabled="disabled" value="@(Model.OfstedInspectionDate?.ToString("dd/MM/yyyy"))" />
+                        <input type="text" class="form-control" id="ofsted-inspection-date" disabled="disabled" value="@(Model.OfstedInspectionDate.ToDateTime()?.ToString("dd/MM/yyyy"))" />
                     </div>
 
                     <div class="form-group">

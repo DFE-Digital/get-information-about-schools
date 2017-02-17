@@ -116,7 +116,7 @@ namespace Edubase.Web.UI.Models
         public string Contact_TelephoneNumber { get; set; }
         public byte? OfstedRating { get; set; }
         public string OfstedRatingText => _ofstedRatingsLookup.Get(OfstedRating);
-        public DateTime? OfstedInspectionDate { get; set; }
+        public DateTimeViewModel OfstedInspectionDate { get; set; } = new DateTimeViewModel();
         public int? InspectorateId { get; set; }
         public string ProprietorName { get; set; }
         public int? Section41ApprovedId { get; set; }
@@ -150,6 +150,7 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel BSODateOfNextInspectionVisit { get; set; } = new DateTimeViewModel();
 
+        public IEnumerable<SelectListItem> AccommodationChanges { get; set; }
         public IEnumerable<SelectListItem> FurtherEducationTypes { get; set; }
         public IEnumerable<SelectListItem> Genders { get; set; }
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
@@ -159,6 +160,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> Statuses { get; set; }
         public IEnumerable<SelectListItem> AdmissionsPolicies { get; set; }
         public IEnumerable<SelectListItem> Inspectorates { get; set; }
+        public IEnumerable<SelectListItem> IndependentSchoolTypes { get; set; }
         public IEnumerable<SelectListItem> BSOInspectorates { get; set; }
         public IEnumerable<SelectListItem> ReligiousCharacters { get; set; }
         public IEnumerable<SelectListItem> ReligiousEthoses { get; set; }
@@ -204,16 +206,16 @@ namespace Edubase.Web.UI.Models
 
         #region IEBT properties
         public string Notes { get; set; }
-        public DateTime? DateOfTheLastBridgeVisit { get; set; }
+        public DateTimeViewModel DateOfTheLastBridgeVisit { get; set; } = new DateTimeViewModel();
         //public DateTime? DateOfTheLastOfstedVisit { get; set; }//OfstedInspectionDate
-        public DateTime? DateOfTheLastISIVisit { get; set; }
-        public DateTime? DateOfTheLastWelfareVisit { get; set; }
-        public DateTime? DateOfTheLastFPVisit { get; set; }
-        public DateTime? DateOfTheLastSISVisit { get; set; }
-        public DateTime? NextOfstedVisit { get; set; }
-        public DateTime? NextGeneralActionRequired { get; set; }
-        public DateTime? NextActionRequiredByWEL { get; set; }
-        public DateTime? NextActionRequiredByFP { get; set; }
+        public DateTimeViewModel DateOfTheLastISIVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel DateOfTheLastWelfareVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel DateOfTheLastFPVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel DateOfTheLastSISVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel NextOfstedVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel NextGeneralActionRequired { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel NextActionRequiredByWEL { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel NextActionRequiredByFP { get; set; } = new DateTimeViewModel();
         //public Lookup Inspectorate { get; set; } //InspectorateId
         public int? IndependentSchoolTypeId { get; set; } // LookupIndependentSchoolType
         public string CharityOrganisation { get; set; }
@@ -265,7 +267,7 @@ namespace Edubase.Web.UI.Models
         public string ChairOfProprietorsBodyFaxNumber { get; set; }
         public string ChairOfProprietorsBodyEmail { get; set; }
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
-        public int? AccomodationChangedId { get; set; }
+        public int? AccommodationChangedId { get; set; }
 
         #endregion
         

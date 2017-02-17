@@ -40,7 +40,7 @@ namespace Edubase.Services.Mapping
                 })
                 .ReverseMap() // in
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Name))
-                .ForMember(x=>x.LAESTAB, opt => opt.Ignore())
+                .ForMember(x => x.LAESTAB, opt => opt.Ignore())
                 .ForMember(x => x.Address, opt => opt.MapFrom(x => new Address
                 {
                     Country = x.Address_Country,
