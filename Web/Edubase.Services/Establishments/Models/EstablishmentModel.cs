@@ -57,20 +57,46 @@ namespace Edubase.Services.Establishments.Models
         public int? TotalNumberOfFullTimePupils { get; set; }
         public int? TotalNumberOfPartTimePupils { get; set; }
         public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
+
+        [DisplayName("Total number of special pupils under a SEN statement/ECHP")]
         public int? NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
+
+        [DisplayName("Number of special pupils not under a SEN statement/EHCP")]
         public int? NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
         public int? TotalNumberOfPupilsInPublicCare { get; set; }
+
+        [DisplayName("PT boys (aged 2 and under)")]
         public int? PTBoysAged2AndUnder { get; set; }
+
+        [DisplayName("PT boys (aged 3)")]
         public int? PTBoysAged3 { get; set; }
+
+        [DisplayName("PT boys (aged 4a)")]
         public int? PTBoysAged4A { get; set; }
+
+        [DisplayName("PT boys (aged 4b)")]
         public int? PTBoysAged4B { get; set; }
+
+        [DisplayName("PT boys (aged 4c)")]
         public int? PTBoysAged4C { get; set; }
+
         public int? TotalNumberOfBoysInBoardingSchools { get; set; }
+
+        [DisplayName("PT girls (aged 2 and under)")]
         public int? PTGirlsAged2AndUnder { get; set; }
+
+        [DisplayName("PT girls (aged 3)")]
         public int? PTGirlsAged3 { get; set; }
+
+        [DisplayName("PT girls (aged 4a)")]
         public int? PTGirlsAged4A { get; set; }
+
+        [DisplayName("PT girls (aged 4b)")]
         public int? PTGirlsAged4B { get; set; }
+
+        [DisplayName("PT girls (aged 4c)")]
         public int? PTGirlsAged4C { get; set; }
+
         public int? TotalNumberOfGirlsInBoardingSchools { get; set; }
         public int? TotalNumberOfFullTimeStaff { get; set; }
         public int? TotalNumberOfPartTimeStaff { get; set; }

@@ -223,7 +223,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     GroupTypeId = viewModel.TypeId,
                     Name = viewModel.Name,
                     OpenDate = viewModel.OpenDate,
-                    StatusId = (int)Services.Enums.eLookupGroupStatus.Open
+                    StatusId = (int)Services.Enums.eLookupGroupStatus.Open,
+                    GroupId = viewModel.GroupId
                 });
 
                 var groupUId = await _groupWriteService.SaveAsync(dto, User);

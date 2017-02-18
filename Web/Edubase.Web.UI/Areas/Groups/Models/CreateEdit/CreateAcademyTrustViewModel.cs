@@ -35,6 +35,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         [Required, DisplayName("Trust type")]
         public int? TypeId { get; set; }
+
+        [Required, DisplayName("Group ID")]
+        public string GroupId { get; set; }
+
         public DateTime? OpenDate { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }

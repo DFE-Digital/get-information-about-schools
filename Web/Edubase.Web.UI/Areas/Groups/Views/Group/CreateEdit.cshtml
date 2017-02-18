@@ -176,7 +176,7 @@
                 @if (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
                 {
                     <div class="form-group">
-                        <label for="groupid">Address</label>
+                        <label>Address</label>
                         <input type="text" value="@Model.Address" class="form-control" disabled="disabled" />
                         @Html.HiddenFor(x => x.Address)
                     </div>
