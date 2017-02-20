@@ -1,4 +1,5 @@
 ﻿@using Edubase.Web.UI.ValueConverters;
+@using Edubase.Web.UI.Areas.Establishments.Models.Search;
 @model EstablishmentDetailViewModel
 
 <table class="borderless">
@@ -19,7 +20,7 @@
         <td>
             @if (Model.Establishment.LocalAuthorityId.HasValue)
             {
-                <a href="/Search/SearchByLaName?searchTerm=@Model.Establishment.LocalAuthorityId">
+                <a href="/Establishments/Search?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
                     @Html.NameFor(x => x.Establishment.LocalAuthorityId)
                 </a>
                 <text>(@Model.Establishment.LocalAuthorityId)</text>
@@ -92,7 +93,7 @@
         <tr>
             <th scope="row">@(Model.GroupFieldLabel):</th>
             <td>
-                @Html.ActionLink(Model.Group.Name, "Details", "Group", new { id = Model.Group.GroupUID }, null)
+                @Html.ActionLink(Model.Group.Name, "Details", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, null)
             </td>
         </tr>
     }

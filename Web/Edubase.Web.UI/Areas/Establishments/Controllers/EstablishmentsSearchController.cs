@@ -139,7 +139,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.EducationPhaseIds = model.SelectedEducationPhaseIds.ToArray();
             filters.StatusIds = model.SelectedEstablishmentStatusIds.ToArray();
             filters.TypeIds = model.SelectedEstablishmentTypeIds.ToArray();
-            filters.LocalAuthorityIds = model.SelectedLocalAuthorityIds.ToArray();
+            if(!filters.LocalAuthorityIds.Any()) filters.LocalAuthorityIds = model.SelectedLocalAuthorityIds.ToArray();
             filters.ReligiousCharacterIds = model.SelectedReligiousCharacterIds.ToArray();
 
             filters.AdmissionsPolicyIds = model.SelectedAdmissionsPolicyIds.ToArray();

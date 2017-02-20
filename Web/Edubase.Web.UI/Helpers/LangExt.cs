@@ -1,8 +1,10 @@
 ﻿using Autofac;
+using Edubase.Common;
 using Edubase.Services.Domain;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
@@ -41,6 +43,28 @@ namespace Edubase.Web.UI
         {
             var key = ExpressionHelper.GetExpressionText(ex);
             modelState.AddModelError(key, message);
+        }
+
+        /// <summary>
+        /// Adds one or more items under the same key and returns the new collection (incoming ref is treated as immutable).
+        /// Only distinct values will be added. If the key/value combination exists, it's ignored.
+        /// </summary>
+        /// <param name="nvc"></param>
+        /// <param name="key"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static NameValueCollection AddIfNonExistent(this NameValueCollection nvc, string key, params object[] values)
+        {
+            nvc = HttpUtility.ParseQueryString(nvc.ToString());
+            Guard.IsNotNull(key.Clean(), () => new ArgumentNullException(nameof(key)));
+            Guard.IsNotNull(values, () => new ArgumentNullException(nameof(values)));
+            var items = values.Select(x => x?.ToString().Clean()).Distinct();
+            foreach (var value in items)
+            {
+                var data = nvc.GetValues(key);
+                if (data == null || (data != null && !data.Contains(value))) nvc.Add(key, value);
+            }
+            return nvc;
         }
 
         /// <summary>

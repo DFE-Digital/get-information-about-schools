@@ -1,21 +1,19 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Establishments;
-using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Groups;
-using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using eStatus = Services.Enums.eLookupEstablishmentStatus;
+
     public class SearchController : EduBaseController
     {
         private IEstablishmentReadService _establishmentReadService;
@@ -49,11 +47,13 @@ namespace Edubase.Web.UI.Controllers
                 else if (ModelState.IsValid)
                 {
                     if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text))
-                        return Redirect(Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" }) + "?" + Request.QueryString);
+                        return Redirect(Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" }) + "?" 
+                            + Request.QueryString.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eStatus.Open, (int)eStatus.OpenButProposedToClose).ToString());
                     else if (viewModel.SearchType == eSearchType.Group)
                         return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
                     else if (viewModel.SearchType == eSearchType.Governor)
-                        return Redirect(Url.Action("Index", "GovernorSearch", new { area = "Governors" }) + "?" + Request.QueryString + (viewModel.GovernorSearchModel.RoleId.HasValue ? "&t=" + viewModel.GovernorSearchModel.RoleId : ""));
+                        return Redirect(Url.Action("Index", "GovernorSearch", new { area = "Governors" }) + "?" + Request.QueryString + (viewModel.GovernorSearchModel.RoleId.HasValue 
+                            ? $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}=" + viewModel.GovernorSearchModel.RoleId : ""));
                     else throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
                 }
             }

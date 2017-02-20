@@ -185,7 +185,7 @@ namespace Edubase.Web.UI.Helpers
                 if (cachedLookupService.IsLookupField(expressionText))
                 {
                     if (id.HasValue) return new MvcHtmlString(cachedLookupService.GetName(expressionText, id.Value));
-                    else return MvcHtmlString.Empty;
+                    else return new MvcHtmlString("Not recorded");
                 }
                 else throw new Exception($"The lookup name '{expressionText}' was not recognised");
             }
