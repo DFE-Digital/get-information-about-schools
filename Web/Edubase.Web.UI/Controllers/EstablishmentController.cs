@@ -125,7 +125,6 @@ namespace Edubase.Web.UI.Controllers
                         await _establishmentWriteService.SaveAsync(domainModel, User);
                         return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                     }
-
                 }
             }
             else if (model.Action == ViewModel.eAction.Confirm)
@@ -167,8 +166,6 @@ namespace Edubase.Web.UI.Controllers
             MapToDomainModel(model, domainModel, Request.Form);
 
             domainModel.AdditionalAddresses = model.AdditionalAddresses;
-            //domainModel.OpenDate = model.OpenDate.ToDateTime()?.Date;
-            //domainModel.CloseDate = model.CloseDate.ToDateTime()?.Date;
         }
 
         /// <summary>
@@ -340,6 +337,8 @@ namespace Edubase.Web.UI.Controllers
             viewModel.SENProvisions3 = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToSelectList(viewModel.SEN3Id);
             viewModel.SENProvisions4 = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToSelectList(viewModel.SEN4Id);
             viewModel.TypeOfResourcedProvisions = (await _cachedLookupService.TypeOfResourcedProvisionsGetAllAsync()).ToSelectList(viewModel.TypeOfResourcedProvisionId);
+            viewModel.TeenageMothersProvisions = (await _cachedLookupService.TeenageMothersProvisionsGetAllAsync()).ToSelectList(viewModel.TeenageMothersProvisionId);
+            viewModel.ChildcareFacilitiesProvisions = (await _cachedLookupService.ChildcareFacilitiesGetAllAsync()).ToSelectList(viewModel.ChildcareFacilitiesId);
             viewModel.RSCRegionLocalAuthorites = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.RSCRegionId);
             viewModel.GovernmentOfficeRegions = (await _cachedLookupService.GovernmentOfficeRegionsGetAllAsync()).ToSelectList(viewModel.GovernmentOfficeRegionId);
             viewModel.AdministrativeDistricts = (await _cachedLookupService.AdministrativeDistrictsGetAllAsync()).ToSelectList(viewModel.AdministrativeDistrictId);
@@ -348,6 +347,10 @@ namespace Edubase.Web.UI.Controllers
             viewModel.UrbanRuralLookup = (await _cachedLookupService.UrbanRuralGetAllAsync()).ToSelectList(viewModel.UrbanRuralId);
             viewModel.GSSLALookup = (await _cachedLookupService.GSSLAGetAllAsync()).ToSelectList(viewModel.GSSLAId);
             viewModel.CASWards = (await _cachedLookupService.CASWardsGetAllAsync()).ToSelectList(viewModel.CASWardId);
+            viewModel.PruFulltimeProvisionOptions = (await _cachedLookupService.PruFulltimeProvisionsGetAllAsync()).ToSelectList(viewModel.PruFulltimeProvisionId);
+            viewModel.PruEducatedByOthersOptions = (await _cachedLookupService.PruEducatedByOthersGetAllAsync()).ToSelectList(viewModel.PruEducatedByOthersId);
+            viewModel.PRUEBDOptions = (await _cachedLookupService.PRUEBDsGetAllAsync()).ToSelectList(viewModel.PRUEBDId);
+            viewModel.PRUSENOptions = (await _cachedLookupService.PRUSENsGetAllAsync()).ToSelectList(viewModel.PRUSENId);
 
             if (viewModel.MSOAId.HasValue) viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.MSOAId.Value)?.Code;
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;

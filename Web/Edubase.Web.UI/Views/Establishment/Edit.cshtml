@@ -43,6 +43,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="school-county" class="form-label">County</label>
+                    @Html.TextBoxFor(x => x.Address_County, new { maxlength = 120, id = "school-county", @class = "form-control" })
+                </div>
+
+                <div class="form-group">
                     <label for="school-postcode" class="form-label">Post code</label>
                     @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control" })
                 </div>
@@ -253,17 +258,51 @@
 
                 @if (Model.DisplayPolicy.OfstedRatingDetails)
                 {
-                    <div class="form-group ofstead-rating">
-                        <label for="ofsted-rating" class="form-label">Ofsted rating</label>
-                        <span>@(Model.OfstedRating?.ToString() ?? "--")</span>
-                        <input type="text" class="form-control" id="ofsted-rating" disabled="disabled" value="@Model.OfstedRatingText" />
+
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.OfstedRating)">
+                        @Html.LabelFor(x => x.OfstedRating, "Ofsted rating")
+                        @Html.TextBoxFor(x => x.OfstedRating, new { @class = "form-control", type = "number", min = "0", max = "5" })
                     </div>
 
-                    <div class="form-group">
-                        <label for="ofsted-inspection-date" class="form-label">Ofsted last inspection</label>
-                        <input type="text" class="form-control" id="ofsted-inspection-date" disabled="disabled" value="@(Model.OfstedInspectionDate.ToDateTime()?.ToString("dd/MM/yyyy"))" />
-                    </div>
+                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OfstedInspectionDate)">
+                        <fieldset>
+                            <legend>Ofsted last inspection</legend>
+                            <div class="form-hint">For example, 20 03 2003</div>
 
+                            @Html.ValidationMessageFor(x => x.OfstedInspectionDate)
+                            <span class="inline-form-control">
+                                <label for="ofstedinspectiondate-day">Day</label>
+                                @Html.EduDayDropDownFor(x => x.OfstedInspectionDate.Day,
+                                new
+                                {
+                                    id = "ofstedinspectiondate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-ofstedinspectiondate-day",
+                                })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="ofstedinspectiondate-month">Month</label>
+                                @Html.EduMonthDropDownFor(x => x.OfstedInspectionDate.Month,
+                                new
+                                {
+                                    id = "ofstedinspectiondate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-ofstedinspectiondate-month",
+                                })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="ofstedinspectiondate-year">Year</label>
+                                @Html.EduYearDropDownFor(x => x.OfstedInspectionDate.Year,
+                                new
+                                {
+                                    id = "ofstedinspectiondate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-ofstedinspectiondate-year",
+                                })
+                            </span>
+                        </fieldset>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="ofsted-report" class="form-label">Ofsted report link</label>
                         <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
@@ -456,6 +495,39 @@
                     </div>
                 }
 
+                @if (Model.DisplayPolicy.SENStat)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.SENStat)
+                        @Html.TextBoxFor(x => x.SENStat, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.SENNoStat)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.SENNoStat)
+                        @Html.TextBoxFor(x => x.SENNoStat, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.Contact_EmailAddress)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Contact_EmailAddress, "Email address")
+                        @Html.TextBoxFor(x => x.Contact_EmailAddress, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ContactAlt_EmailAddress, "Alternative email address")
+                        @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new { @class = "form-control" })
+                    </div>
+                }
+
+
                 @if (Model.DisplayPolicy.TypeOfSENProvisionList)
                 {
                     <div class="form-group grouped-controls">
@@ -464,6 +536,70 @@
                         @Html.DropDownListFor(x => x.SEN2Id, Model.SENProvisions2, "", new { @class = "form-control", id = "sen-provision1" })
                         @Html.DropDownListFor(x => x.SEN3Id, Model.SENProvisions3, "", new { @class = "form-control", id = "sen-provision2" })
                         @Html.DropDownListFor(x => x.SEN4Id, Model.SENProvisions4, "", new { @class = "form-control", id = "sen-provision3" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.TeenageMothersProvisionId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.TeenageMothersProvisionId)
+                        @Html.DropDownListFor(x => x.TeenageMothersProvisionId, Model.TeenageMothersProvisions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.TeenageMothersCapacity)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.TeenageMothersCapacity)
+                        @Html.TextBoxFor(x => x.TeenageMothersCapacity, new { @class = "form-control", type = "number" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ChildcareFacilitiesId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ChildcareFacilitiesId)
+                        @Html.DropDownListFor(x => x.ChildcareFacilitiesId, Model.ChildcareFacilitiesProvisions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PRUSENId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PRUSENId)
+                        @Html.DropDownListFor(x => x.PRUSENId, Model.PRUSENOptions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PRUEBDId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PRUEBDId)
+                        @Html.DropDownListFor(x => x.PRUEBDId, Model.PRUEBDOptions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PlacesPRU)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PlacesPRU)
+                        @Html.TextBoxFor(x => x.PlacesPRU, new { @class = "form-control", type = "number" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PruFulltimeProvisionId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PruFulltimeProvisionId)
+                        @Html.DropDownListFor(x => x.PruFulltimeProvisionId, Model.PruFulltimeProvisionOptions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PruEducatedByOthersId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PruEducatedByOthersId)
+                        @Html.DropDownListFor(x => x.PruEducatedByOthersId, Model.PruEducatedByOthersOptions, "", new { @class = "form-control" })
                     </div>
                 }
 
@@ -507,6 +643,14 @@
                     <div class="form-group">
                         <label for="bso-inspectorate">BSO: Inspectorate name</label>
                         @Html.DropDownListFor(x => x.BSOInspectorateId, Model.BSOInspectorates, "", new { @class = "form-control", id = "bso-inspectorate" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.BSOInspectorateReportUrl, "Inspectorate report")
+                        @Html.TextBoxFor(x => x.BSOInspectorateReportUrl, new { @class = "form-control" })
                     </div>
                 }
 

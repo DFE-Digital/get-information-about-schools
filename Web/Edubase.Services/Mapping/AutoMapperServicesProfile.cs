@@ -52,6 +52,20 @@ namespace Edubase.Services.Mapping
                     PostCode = x.Address_PostCode,
                     CityOrTown = x.Address_CityOrTown
                 }))
+                .ForMember(x => x.Contact, opt => opt.MapFrom(x => new ContactDetail
+                {
+                    EmailAddress = x.Contact_EmailAddress,
+                    FaxNumber = x.Contact_FaxNumber,
+                    TelephoneNumber = x.Contact_TelephoneNumber,
+                    WebsiteAddress = x.Contact_WebsiteAddress
+                }))
+                .ForMember(x => x.ContactAlt, opt => opt.MapFrom(x => new ContactDetail
+                {
+                    EmailAddress = x.ContactAlt_EmailAddress,
+                    FaxNumber = x.ContactAlt_FaxNumber,
+                    TelephoneNumber = x.ContactAlt_TelephoneNumber,
+                    WebsiteAddress = x.ContactAlt_WebsiteAddress
+                }))
                 .ForMember(x => x.AdditionalAddresses, opt => opt.MapFrom(x => x.AdditionalAddresses));
 
             CreateMap<GroupCollection, GroupModel>();

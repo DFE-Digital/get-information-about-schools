@@ -130,8 +130,10 @@ namespace Edubase.Services.Establishments.Models
 
         public string ProprietorName { get; set; }
 
+        [DisplayName("Number of special pupils under a SEN statement/EHCP")]
         public int? SENStat { get; set; }
 
+        [DisplayName("Number of special pupils not under a SEN statement/EHCP")]
         public int? SENNoStat { get; set; }
 
         [DisplayName("Type of SEN provision 1")]
@@ -150,20 +152,28 @@ namespace Edubase.Services.Establishments.Models
 
         public int? SEN4Id { get; set; }
 
+        [DisplayName("Teenage mothers provision")]
         public int? TeenageMothersProvisionId { get; set; }
 
+        [DisplayName("Teenage mothers capacity")]
         public int? TeenageMothersCapacity { get; set; }
 
+        [DisplayName("Childcare facilities provision")]
         public int? ChildcareFacilitiesId { get; set; }
 
+        [DisplayName("SEN facilities")]
         public int? PRUSENId { get; set; }
 
+        [DisplayName("Pupils with EBD")]
         public int? PRUEBDId { get; set; }
 
+        [DisplayName("Number of places")]
         public int? PlacesPRU { get; set; }
 
+        [DisplayName("Full time provision")]
         public int? PruFulltimeProvisionId { get; set; }
 
+        [DisplayName("Pupils educated by other providers")]
         public int? PruEducatedByOthersId { get; set; }
 
         public int? TypeOfResourcedProvisionId { get; set; }

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 namespace Edubase.Web.UI.Models
 {
     using Services.Domain;
+    using System.ComponentModel;
     using ET = Services.Enums.eLookupEstablishmentType;
 
     public class EditEstablishmentModel
@@ -177,6 +178,8 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> SENProvisions3 { get; set; }
         public IEnumerable<SelectListItem> SENProvisions4 { get; set; }
         public IEnumerable<SelectListItem> TypeOfResourcedProvisions { get; set; }
+        public IEnumerable<SelectListItem> TeenageMothersProvisions { get; set; }
+        public IEnumerable<SelectListItem> ChildcareFacilitiesProvisions { get; set; }
         public IEnumerable<SelectListItem> RSCRegionLocalAuthorites { get; internal set; }
         public IEnumerable<SelectListItem> GovernmentOfficeRegions { get; internal set; }
         public IEnumerable<SelectListItem> AdministrativeDistricts { get; internal set; }
@@ -185,6 +188,10 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> UrbanRuralLookup { get; internal set; }
         public IEnumerable<SelectListItem> GSSLALookup { get; internal set; }
         public IEnumerable<SelectListItem> CASWards { get; internal set; }
+
+        public IEnumerable<SelectListItem> PRUSENOptions { get; internal set; }
+        public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }
+
         public TabDisplayPolicy TabDisplayPolicy { get; internal set; }
 
         public Guid? AddressToRemoveId { get; set; }
@@ -203,6 +210,38 @@ namespace Edubase.Web.UI.Models
 
         public string OriginalEstablishmentName { get; set; }
 
+        public string Contact_EmailAddress { get; set; }
+        public string ContactAlt_EmailAddress { get; set; }
+
+        [DisplayName("Number of special pupils under a SEN statement/EHCP")]
+        public int? SENStat { get; set; }
+
+        [DisplayName("Number of special pupils not under a SEN statement/EHCP")]
+        public int? SENNoStat { get; set; }
+
+        [DisplayName("Teenage mothers provision")]
+        public int? TeenageMothersProvisionId { get; set; }
+
+        [DisplayName("Teenage mothers capacity")]
+        public int? TeenageMothersCapacity { get; set; }
+
+        [DisplayName("Childcare facilities provision")]
+        public int? ChildcareFacilitiesId { get; set; }
+
+        [DisplayName("SEN facilities")]
+        public int? PRUSENId { get; set; }
+
+        [DisplayName("Pupils with EBD")]
+        public int? PRUEBDId { get; set; }
+
+        [DisplayName("Number of places")]
+        public int? PlacesPRU { get; set; }
+
+        [DisplayName("Full time provision")]
+        public int? PruFulltimeProvisionId { get; set; }
+
+        [DisplayName("Pupils educated by other providers")]
+        public int? PruEducatedByOthersId { get; set; }
 
         #region IEBT properties
         public string Notes { get; set; }
@@ -268,9 +307,12 @@ namespace Edubase.Web.UI.Models
         public string ChairOfProprietorsBodyEmail { get; set; }
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
         public int? AccommodationChangedId { get; set; }
+        public IEnumerable<SelectListItem> PruFulltimeProvisionOptions { get; internal set; }
+        public IEnumerable<SelectListItem> PruEducatedByOthersOptions { get; internal set; }
+
 
         #endregion
-        
+
         public EditEstablishmentModel()
         {
 
