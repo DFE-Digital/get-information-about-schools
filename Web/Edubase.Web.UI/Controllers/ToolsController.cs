@@ -14,5 +14,10 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
+
+        public ActionResult BulkAcademies()
+        {
+            return View();
+        }
     }
 }

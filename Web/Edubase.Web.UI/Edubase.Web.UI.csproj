@@ -373,11 +373,13 @@
     <Content Include="Areas\Groups\Views\Group\CreateEdit.cshtml" />
     <Content Include="Areas\Groups\Views\Group\SearchCompaniesHouse.cshtml" />
     <Content Include="Areas\Groups\Views\Group\CreateAcademyTrust.cshtml" />
+    <Content Include="Assets\Sass\views\_bulk-academies.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
+    <Content Include="Assets\Scripts\Views\bulk-academies.js" />
     <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
     <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
@@ -830,6 +832,7 @@
     <Content Include="Views\Establishment\_EditLayoutPage.cshtml" />
     <Content Include="Views\Establishment\Partials\_ConfirmChanges.cshtml" />
     <Content Include="Views\Establishment\EditIEBT.cshtml" />
+    <Content Include="Views\Tools\BulkAcademies.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,41 @@
+﻿
+
+.academies-list-wrapper {
+    clear: both;
+}
+
+.bulk-academy-create {
+    .error-message {
+        display: none;
+
+    }
+    .error .error-message {
+        display: block;
+    }
+
+    .result-list .button-row {
+        display: none;     
+        padding: 0;   
+    }
+
+    .button-row {
+        padding-top: 12px;
+    }
+
+    .academies-bulk-list > li {
+        border-bottom: $grey-2 1px solid;
+        padding: 20px 0;
+    }
+
+
+
+    .help-with-this-tool {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #f0f0f0;
+        border: $black 1px solid;
+        width: 200px;
+        padding: 12px;
+    }
+}
