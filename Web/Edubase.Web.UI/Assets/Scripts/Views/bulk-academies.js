@@ -67,6 +67,7 @@
                 if ($('#opendate-day').val() === '' ||
                     $('#opendate-month').val() === '' ||
                     $('#opendate-year').val() === '') {
+
                     self.showErrors('.missing-date');
 
                 } else {
@@ -78,7 +79,9 @@
             // remove a previously added item
             $(self.el).on('click', '.remove-item', function (e) {
                 e.preventDefault();
-                $(this).parents('li').remove();
+                var urn = $(this).parents('li').find('.estab-detail').data().urn;
+               
+                $('li[data-urn="' + urn + '"]').parents('li').remove();
 
                 selectedCount--;
                 $('.academy-count').text(selectedCount);
@@ -89,8 +92,8 @@
                 e.preventDefault();
                 var urn = $(this).parents('li').find('.estab-detail').data().urn;
 
-                $(this).parents('li').remove();
-
+                $('li[data-urn="' + urn + '"]').parents('li').remove();
+                
                 selectedCount--;
                 $('.academy-count').text(selectedCount);
 
