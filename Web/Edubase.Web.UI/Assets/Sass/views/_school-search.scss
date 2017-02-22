@@ -95,15 +95,7 @@
         float: none;
     }
 
-    .horizontal-tabs {
-        .horizontal-tab {
-            font-weight: bold;
-            min-height: 45px;
-        }
-    }
-
-
-    .twitter-typeahead {
+     .twitter-typeahead {
         width: 50%;
 
         @include media(mobile) {
