@@ -37,7 +37,7 @@
                 return maxHeight;
             }
 
-            if (window.matchMedia('(min-width:641px)').matches) {
+            if ($(window).width() > 641) {
                 $tabs.height(setTabHeight());
             }
             
