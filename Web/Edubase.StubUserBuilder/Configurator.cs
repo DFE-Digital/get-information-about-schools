@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.StubUserBuilder
 {
+    using ET = eLookupEstablishmentType;
     public class Configurator
     {
         public Config Configure()
@@ -101,7 +102,7 @@ namespace Edubase.StubUserBuilder
                             {
                                 AllUrns = true,
                                 LocalAuthorities = new[] { eLocalAuthority.Westminster },
-                                EstablishmentTypeGroups = new [] { eLookupEstablishmentTypeGroup.LAMaintainedSchools }
+                                EstablishmentTypes = new [] { ET.CommunitySchool, ET.CommunitySpecialSchool, ET.FoundationSchool, ET.FoundationSpecialSchool, ET.LANurserySchool, ET.PupilReferralUnit, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool }
                             }
                         },
                         new AttributeStatement
@@ -118,7 +119,7 @@ namespace Edubase.StubUserBuilder
 
             config.UserList.Add(new User
             {
-                DisplayName = "Local authority CC (Kent) (code:886) ",
+                DisplayName = "Local authority CC (Kent) (code:886)",
                 Description = "Creating and updating children's centre records within own authority.",
                 Assertion = new Assertion
                 {
@@ -137,7 +138,7 @@ namespace Edubase.StubUserBuilder
                             {
                                 AllUrns = true,
                                 LocalAuthorities = new[] { eLocalAuthority.Kent },
-                                EstablishmentTypeGroups = new [] { eLookupEstablishmentTypeGroup.ChildrensCentres }
+                                EstablishmentTypes = new [] { ET.ChildrensCentre, ET.ChildrensCentreLinkedSite }
                             }
                         }
                     }
@@ -161,7 +162,7 @@ namespace Edubase.StubUserBuilder
                             ValueObject = new EditEstablishmentPermissions
                             {
                                 AllUrns = true,
-                                EstablishmentTypeGroups = new [] { eLookupEstablishmentTypeGroup.Academies, eLookupEstablishmentTypeGroup.FreeSchools }
+                                EstablishmentTypes = new [] { ET.Academy1619Converter, ET.Academy1619SponsorLed, ET.AcademyAlternativeProvisionConverter, ET.AcademyAlternativeProvisionSponsorLed, ET.AcademyConverter, ET.AcademySpecialConverter, ET.AcademySpecialSponsorLed, ET.AcademySponsorLed, ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsAlternativeProvision, ET.FreeSchoolsSpecial, ET.CityTechnologyCollege, ET.UniversityTechnicalCollege, ET.StudioSchools }
                             }
                         },
                         new AttributeStatement
@@ -211,7 +212,7 @@ namespace Edubase.StubUserBuilder
                             ValueObject = new EditEstablishmentPermissions
                             {
                                 AllUrns = true,
-                                EstablishmentTypeGroups = new [] { eLookupEstablishmentTypeGroup.Academies }
+                                EstablishmentTypes = new [] { ET.Academy1619Converter, ET.Academy1619SponsorLed, ET.AcademyAlternativeProvisionConverter, ET.AcademyAlternativeProvisionSponsorLed, ET.AcademyConverter, ET.AcademySpecialConverter, ET.AcademySpecialSponsorLed, ET.AcademySponsorLed, ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsAlternativeProvision, ET.FreeSchoolsSpecial, ET.CityTechnologyCollege, ET.UniversityTechnicalCollege, ET.StudioSchools }
                             }
                         },
                         new AttributeStatement
@@ -261,7 +262,7 @@ namespace Edubase.StubUserBuilder
                             ValueObject = new EditEstablishmentPermissions
                             {
                                 AllUrns = true,
-                                EstablishmentTypeGroups = new [] { eLookupEstablishmentTypeGroup.FreeSchools }
+                                EstablishmentTypes = new [] { ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsAlternativeProvision, ET.FreeSchoolsSpecial, ET.UniversityTechnicalCollege, ET.StudioSchools }
                             }
                         },
                         new AttributeStatement
@@ -293,8 +294,7 @@ namespace Edubase.StubUserBuilder
                             ValueObject = new EditEstablishmentPermissions
                             {
                                 AllUrns = true,
-                                EstablishmentTypeGroups = new [] { eLookupEstablishmentTypeGroup.IndependentSchools },
-                                EstablishmentTypes = new [] { eLookupEstablishmentType.BritishSchoolsOverseas, eLookupEstablishmentType.NonmaintainedSpecialSchool }
+                                EstablishmentTypes = new [] { ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool, ET.NonmaintainedSpecialSchool, ET.BritishSchoolsOverseas }
                             }
                         },
                         new AttributeStatement
@@ -326,7 +326,7 @@ namespace Edubase.StubUserBuilder
                             ValueObject = new EditEstablishmentPermissions
                             {
                                 AllUrns = true,
-                                EstablishmentTypeGroups = new [] { eLookupEstablishmentTypeGroup.LAMaintainedSchools }
+                                EstablishmentTypes = new [] { ET.CommunitySchool, ET.CommunitySpecialSchool, ET.FoundationSchool, ET.FoundationSpecialSchool, ET.LANurserySchool, ET.PupilReferralUnit, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool }
                             }
                         },
                         new AttributeStatement
@@ -376,7 +376,7 @@ namespace Edubase.StubUserBuilder
                             ValueObject = new EditEstablishmentPermissions
                             {
                                 AllUrns = true,
-                                EstablishmentTypes = new [] { eLookupEstablishmentType.PupilReferralUnit }
+                                EstablishmentTypes = new [] { ET.PupilReferralUnit }
                             }
                         },
                         new AttributeStatement
@@ -384,7 +384,7 @@ namespace Edubase.StubUserBuilder
                             Type = EduClaimTypes.CreateEstablishment,
                             ValueObject = new CreateEstablishmentPermissions
                             {
-                                EstablishmentTypes = new [] { eLookupEstablishmentType.PupilReferralUnit }
+                                EstablishmentTypes = new [] { ET.PupilReferralUnit }
                             }
                         }
                     }
@@ -407,7 +407,7 @@ namespace Edubase.StubUserBuilder
                             ValueObject = new EditEstablishmentPermissions
                             {
                                 AllUrns = true,
-                                EstablishmentTypeGroups = new [] { eLookupEstablishmentTypeGroup.ChildrensCentres }
+                                EstablishmentTypes = new [] { ET.ChildrensCentre, ET.ChildrensCentreLinkedSite }
                             }
                         },
                         new AttributeStatement

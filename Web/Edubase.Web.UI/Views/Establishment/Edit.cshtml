@@ -622,6 +622,14 @@
                     </div>
                 }
 
+                @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x=>x.ResourcedProvisionCapacity, "Resourced provision capacity")
+                        @Html.TextBoxFor(x => x.ResourcedProvisionCapacity, new { @class = "form-control", type = "number" })
+                    </div>
+                }
+
                 @if (Model.DisplayPolicy.SenUnitOnRoll)
                 {
                     <div class="form-group">

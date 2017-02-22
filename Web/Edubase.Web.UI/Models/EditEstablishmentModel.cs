@@ -127,6 +127,7 @@ namespace Edubase.Web.UI.Models
         public int? SEN4Id { get; set; }
         public int? TypeOfResourcedProvisionId { get; set; }
         public int? ResourcedProvisionOnRoll { get; set; }
+        public int? ResourcedProvisionCapacity { get; set; }
         public int? SenUnitOnRoll { get; set; }
         public int? SenUnitCapacity { get; set; }
         public int? BSOInspectorateId { get; set; }
