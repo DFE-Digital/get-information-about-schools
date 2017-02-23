@@ -54,6 +54,11 @@ namespace Edubase.Web.UI
 
             MiniProfiler.Settings.Results_Authorize = IsUserAllowedToSeeMiniProfilerUI;
             MiniProfiler.Settings.Results_List_Authorize = IsUserAllowedToSeeMiniProfilerUI;
+            using (var scope = IocConfig.Container.BeginLifetimeScope())
+            {
+                MiniProfiler.Settings.Storage = new Common.MiniProfilerExtensions.RedisStorage(TimeSpan.FromHours(1), scope.Resolve<ICacheAccessor>());
+            }
+                
         }
 
         private void FlushLogMessages(CacheEntryRemovedArguments arguments = null)
