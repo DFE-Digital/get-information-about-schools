@@ -215,6 +215,10 @@
     <Compile Include="Migrations\201702231108016_AddedGroupChangeHistory2.Designer.cs">
       <DependentUpon>201702231108016_AddedGroupChangeHistory2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702231510271_MiniProfilerSeed.cs" />
+    <Compile Include="Migrations\201702231510271_MiniProfilerSeed.Designer.cs">
+      <DependentUpon>201702231510271_MiniProfilerSeed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ODataFilterList.cs" />
@@ -268,6 +272,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702231108016_AddedGroupChangeHistory2.resx">
       <DependentUpon>201702231108016_AddedGroupChangeHistory2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702231510271_MiniProfilerSeed.resx">
+      <DependentUpon>201702231510271_MiniProfilerSeed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

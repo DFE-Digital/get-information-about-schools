@@ -18,6 +18,7 @@ using Autofac;
 using Edubase.Data.DbContext;
 using StackExchange.Profiling;
 using Edubase.Web.UI.Validation;
+using StackExchange.Profiling.Storage;
 
 namespace Edubase.Web.UI
 {
@@ -54,11 +55,7 @@ namespace Edubase.Web.UI
 
             MiniProfiler.Settings.Results_Authorize = IsUserAllowedToSeeMiniProfilerUI;
             MiniProfiler.Settings.Results_List_Authorize = IsUserAllowedToSeeMiniProfilerUI;
-            using (var scope = IocConfig.Container.BeginLifetimeScope())
-            {
-                MiniProfiler.Settings.Storage = new Common.MiniProfilerExtensions.RedisStorage(TimeSpan.FromHours(1), scope.Resolve<ICacheAccessor>());
-            }
-                
+            MiniProfiler.Settings.Storage = new SqlServerStorage(System.Configuration.ConfigurationManager.ConnectionStrings["EdubaseSqlDb"]);    
         }
 
         private void FlushLogMessages(CacheEntryRemovedArguments arguments = null)
