@@ -39,11 +39,11 @@ namespace Edubase.Web.UI
                 scope.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
                 scope.Resolve<IBlobService>().Initialise("downloads");
             }
-            
+
             // REMOVE WHEN IN WEBFARM!!!!!
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
             Database.SetInitializer(m);
-            
+
             var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.Container));
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
             fluentValidationModelValidatorProvider.AddImplicitRequiredValidator = false;
@@ -53,9 +53,10 @@ namespace Edubase.Web.UI
 
             ModelBinders.Binders.DefaultBinder = new Helpers.ModelBinding.DefaultModelBinderEx();
 
+            //MiniProfiler.Settings.Storage = new SqlServerStorage(System.Configuration.ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString);
             MiniProfiler.Settings.Results_Authorize = IsUserAllowedToSeeMiniProfilerUI;
             MiniProfiler.Settings.Results_List_Authorize = IsUserAllowedToSeeMiniProfilerUI;
-            MiniProfiler.Settings.Storage = new SqlServerStorage(System.Configuration.ConfigurationManager.ConnectionStrings["EdubaseSqlDb"]);    
+
         }
 
         private void FlushLogMessages(CacheEntryRemovedArguments arguments = null)
