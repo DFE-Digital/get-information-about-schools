@@ -1,5 +1,6 @@
 ﻿using Edubase.Services.Domain;
 using System;
+using System.ComponentModel;
 
 namespace Edubase.Services.Groups.Models
 {
@@ -16,7 +17,10 @@ namespace Edubase.Services.Groups.Models
         public PersonDto Head { get; set; } = new PersonDto();
         public string Address { get; set; }
         public string ManagerEmailAddress { get; set; }
+
+        [DisplayName("Group Id")]
         public string GroupId { get; set; }
+
         public int EstablishmentCount { get; set; }
         public int? LocalAuthorityId { get; set; }
     }

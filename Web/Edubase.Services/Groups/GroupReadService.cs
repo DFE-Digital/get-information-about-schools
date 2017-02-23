@@ -27,32 +27,40 @@ namespace Edubase.Services.Groups
     using Core.Search;
     using Exceptions;
     using Domain;
+    using Common.Reflection;
+    using Lookup;
 
     public class GroupReadService : IGroupReadService
     {
-        private IApplicationDbContext _dbContext;
-        private IMapper _mapper;
-        private IAzureSearchEndPoint _azureSearchService;
-        private ICachedGroupReadRepository _groupRepository;
-        private ICachedEstablishmentGroupReadRepository _cachedEstablishmentGroupReadRepository;
+        private readonly IApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
+        private readonly IAzureSearchEndPoint _azureSearchService;
+        private readonly ICachedGroupReadRepository _groupRepository;
+        private readonly ICachedEstablishmentGroupReadRepository _cachedEstablishmentGroupReadRepository;
+        private readonly ICachedLookupService _cachedLookupService;
+        private readonly ISecurityService _securityService;
 
         /// <summary>
         /// Allow these roles to see establishments of all statuses
         /// </summary>
         private readonly string[] _nonStatusRestrictiveRoles = new[] { EdubaseRoles.EFA, EdubaseRoles.AOS, EdubaseRoles.FSG,
             EdubaseRoles.IEBT, EdubaseRoles.School, EdubaseRoles.PRU, EdubaseRoles.Admin };
-        
+
         public GroupReadService(IApplicationDbContext dc, 
             IMapper mapper, 
             IAzureSearchEndPoint azureSearchService,
             ICachedGroupReadRepository groupRepository,
-            ICachedEstablishmentGroupReadRepository cachedEstablishmentGroupReadRepository)
+            ICachedEstablishmentGroupReadRepository cachedEstablishmentGroupReadRepository,
+            ICachedLookupService cachedLookupService,
+            ISecurityService securityService)
         {
             _dbContext = dc;
             _mapper = mapper;
             _azureSearchService = azureSearchService;
             _groupRepository = groupRepository;
             _cachedEstablishmentGroupReadRepository = cachedEstablishmentGroupReadRepository;
+            _cachedLookupService = cachedLookupService;
+            _securityService = securityService;
         }
 
         public async Task<GroupModel> GetByEstablishmentUrnAsync(int urn)
@@ -159,6 +167,60 @@ namespace Edubase.Services.Groups
             var v = number.Number;
             using (var dc = new ApplicationDbContext())
                 return await dc.Groups.AnyAsync(x => x.CompaniesHouseNumber == v);
+        }
+
+        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel original, GroupModel model)
+        {
+            var changes = ReflectionHelper.DetectChanges(model, original);
+            var retVal = new List<ChangeDescriptorDto>();
+
+            foreach (var change in changes)
+            {
+                if (_cachedLookupService.IsLookupField(change.Name))
+                {
+                    change.OldValue = await _cachedLookupService.GetNameAsync(change.Name, change.OldValue.ToInteger());
+                    change.NewValue = await _cachedLookupService.GetNameAsync(change.Name, change.NewValue.ToInteger());
+                }
+
+                if (change.Name.EndsWith("Id", StringComparison.Ordinal)) change.Name = change.Name.Substring(0, change.Name.Length - 2);
+                change.Name = change.Name.Replace("_", "");
+                change.Name = change.Name.ToProperCase(true);
+
+                retVal.Add(new ChangeDescriptorDto
+                {
+                    Name = change.DisplayName ?? change.Name,
+                    NewValue = change.NewValue.Clean(),
+                    OldValue = change.OldValue.Clean()
+                });
+            }
+
+            return retVal;
+        }
+
+        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model)
+        {
+            var originalModel = (await GetAsync(model.GroupUID.Value, _securityService.CreateSystemPrincipal())).GetResult();
+            return await GetModelChangesAsync(originalModel, model);
+        }
+
+        public async Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal user)
+        {
+            return await _dbContext.GroupChangeHistories
+                .Join(_dbContext.Users, x => x.OriginatorUserId, x => x.Id, (ch, u) => new { Change = ch, Originator = u })
+                .Where(x => x.Change.GroupUId == uid)
+                .OrderByDescending(x => x.Change.CreatedUtc)
+                .Skip(0).Take(take).Select(x => new GroupChangeDto
+                {
+                    EffectiveDateUtc = x.Change.EffectiveDateUtc,
+                    Id = x.Change.Id,
+                    Name = x.Change.Name,
+                    NewValue = x.Change.NewValue,
+                    OldValue = x.Change.OldValue,
+                    OriginatorUserId = x.Change.OriginatorUserId,
+                    RequestedDateUtc = x.Change.RequestedDateUtc,
+                    GroupUId = x.Change.GroupUId,
+                    OriginatorUserName = x.Originator.UserName
+                }).ToListAsync();
         }
     }
 }

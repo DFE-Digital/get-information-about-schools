@@ -12,6 +12,7 @@ namespace Edubase.Data.DbContext
     {
         DbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
         DbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; }
+        DbSet<GroupChangeHistory> GroupChangeHistories { get; set; }
         DbSet<EstablishmentLink> EstablishmentLinks { get; set; }
         DbSet<Establishment> Establishments { get; set; }
         DbSet<EstablishmentGroup> EstablishmentGroups { get; set; }

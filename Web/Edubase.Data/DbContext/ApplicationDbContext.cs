@@ -21,6 +21,7 @@ namespace Edubase.Data.DbContext
         public DbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; }
         public DbSet<Governor> Governors { get; set; }
         public DbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; }
+        public DbSet<GroupChangeHistory> GroupChangeHistories { get; set; }
 
         public override IDbSet<ApplicationUser> Users
         {

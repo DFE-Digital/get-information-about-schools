@@ -14,6 +14,7 @@ namespace Edubase.Services.Groups
 {
     using Common;
     using Data.Repositories.Groups.Abstract;
+    using Domain;
     using Establishments;
     using Exceptions;
     using Security;
@@ -29,7 +30,9 @@ namespace Edubase.Services.Groups
         private readonly ICachedGroupReadRepository _groupRepository;
         private readonly ICachedEstablishmentGroupReadRepository _cachedEstablishmentGroupReadRepository;
 
-        public GroupsWriteService(IApplicationDbContext dbContext, IEstablishmentReadService establishmentsReadService, 
+        public GroupsWriteService(
+            IApplicationDbContext dbContext, 
+            IEstablishmentReadService establishmentsReadService, 
             ISecurityService securityService, 
             IGroupReadService groupReadService, 
             ICachedGroupReadRepository groupRepository,
@@ -51,6 +54,11 @@ namespace Edubase.Services.Groups
             if (!validationResult.IsValid) throw new EdubaseException("Validation errors: \r\n" + string.Join(Environment.NewLine, validationResult.Errors.Select(x => x.ErrorMessage)));
             else
             {
+                dto.Group.EstablishmentCount = (dto.LinkedEstablishments?.Count).GetValueOrDefault();
+
+                var changes = Enumerable.Empty<ChangeDescriptorDto>();
+                if (!dto.IsNewEntity) changes = await _groupReadService.GetModelChangesAsync(dto.Group);
+
                 if(dto.Group.GroupTypeId == (int)GT.ChildrensCentresGroup)
                 {
                     var leadCentreUrn = dto.LinkedEstablishments.Single(x => x.CCIsLeadCentre).EstablishmentUrn;
@@ -96,9 +104,22 @@ namespace Edubase.Services.Groups
                         }
                     }
                 }
-
                 
-
+                foreach (var change in changes)
+                {
+                    _dbContext.GroupChangeHistories.Add(new GroupChangeHistory
+                    {
+                        ApproverUserId = _securityService.GetUserId(principal),
+                        EffectiveDateUtc = DateTime.UtcNow,
+                        Name = change.Name,
+                        NewValue = change.NewValue,
+                        OldValue = change.OldValue,
+                        OriginatorUserId = _securityService.GetUserId(principal),
+                        RequestedDateUtc = DateTime.UtcNow,
+                        GroupUId = dataModel.GroupUID
+                    });
+                }
+                
                 await _dbContext.SaveChangesAsync();
 
                 if (!newRecord) await _groupRepository.ClearRelationshipCacheAsync(dataModel.GroupUID);

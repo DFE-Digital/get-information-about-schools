@@ -39,5 +39,9 @@ namespace Edubase.Services.Groups
         Task<bool> ExistsAsync(string name, int? localAuthorityId = null, int? existingGroupUId = null);
 
         Task<bool> ExistsAsync(CompaniesHouseNumber number);
+
+        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel original, GroupModel model);
+        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model);
+        Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal user);
     }
 }
