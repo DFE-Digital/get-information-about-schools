@@ -795,7 +795,7 @@
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
-    <Content Include="Views\Establishment\Edit.cshtml" />
+    <Content Include="Views\Establishment\EditDetails.cshtml" />
     <Content Include="Views\Prototype\Placeholder.cshtml" />
     <Content Include="Views\Approval\Index.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
@@ -833,6 +833,7 @@
     <Content Include="Views\Establishment\Partials\_ConfirmChanges.cshtml" />
     <Content Include="Views\Establishment\EditIEBT.cshtml" />
     <Content Include="Views\Tools\BulkAcademies.cshtml" />
+    <Content Include="Views\Establishment\EditLocation.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

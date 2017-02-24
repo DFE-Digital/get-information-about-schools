@@ -28,7 +28,8 @@ namespace Edubase.Web.UI.Models
         {
             Edit,
             FindEstablishment,
-            Save,
+            SaveDetails,
+            SaveLocation,
             SaveIEBT,
             Confirm,
             AddLinkedSchool,

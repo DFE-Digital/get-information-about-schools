@@ -14,12 +14,21 @@
             @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
             <div class="column-half">
-                <!-- address -->
-                <div class="form-group">
+            
+                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                
+
+                <div class="form-group first">
                     <label class="form-label" for="school-name">
-                        Establishment name
+                        School / College name
                     </label>
                     @Html.TextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><abbr title="Unique Reference Number">URN</abbr></label>
+                    @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", placeholder = "auto-generated", @readonly = true, disabled = "disabled" })
                 </div>
 
                 <div class="form-group">
@@ -194,11 +203,6 @@
                         @Html.DropDownListFor(x => x.GenderId, Model.Genders, "", new { @class = "form-control" })
                     </div>
                 }
-
-                <div class="form-group">
-                    <label class="form-label"><abbr title="Unique Reference Number">URN</abbr></label>
-                    @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", placeholder = "auto-generated", @readonly = true, disabled = "disabled" })
-                </div>
 
                 <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
                     <label for="LocalAuthorityId" class="form-label">Local authority</label>
@@ -752,7 +756,8 @@
                     <p>Placeholder</p>
                 }
 
-                @if (Model.Urn.HasValue)
+
+                @*@if (Model.Urn.HasValue)
                 {
                     <a id="addlinkedschool"></a>
                     <h2 class="heading-medium create-edit-section-break">Links</h2>
@@ -907,86 +912,13 @@
                     <h2 class="heading-medium create-edit-section-break">Links</h2>
 
                     <h3>Placeholder</h3>
-                }
-
-                @if (Model.DisplayPolicy.LocationDetails)
-                {
-                    <h2 class="heading-medium  create-edit-section-break">Location</h2>
-
-                    <div class="form-group">
-                        <label for="RSCRegionId" class="form-label" title="Regional School Comissioner">
-                            <abbr title="Regional Schools Commissioner">RSC</abbr> region
-                        </label>
-                        @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegionLocalAuthorites, "", new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="GovernmentOfficeRegionId" class="form-label">Government office region</label>
-                        @Html.DropDownListFor(x => x.GovernmentOfficeRegionId, Model.GovernmentOfficeRegions, "", new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="AdministrativeDistrictId" class="form-label">District</label>
-                        @Html.DropDownListFor(x => x.AdministrativeDistrictId, Model.AdministrativeDistricts, "", new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="AdministrativeWardId" class="form-label">Ward</label>
-                        @Html.DropDownListFor(x => x.AdministrativeWardId, Model.AdministrativeWards, "", new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="ParliamentaryConstituencyId" class="form-label">Parliamentary constituency</label>
-                        @Html.DropDownListFor(x => x.ParliamentaryConstituencyId, Model.ParliamentaryConstituencies, "", new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="UrbanRuralId" class="form-label">Urban/rural description</label>
-                        @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="GSSLAId" class="form-label"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
-                        @Html.DropDownListFor(x => x.GSSLAId, Model.GSSLALookup, "", new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Easting">Easting</label>
-                        @Html.TextBoxFor(x => x.Easting, new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Northing">Northing</label>
-                        @Html.TextBoxFor(x => x.Northing, new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="CASWardId" class="form-label">Census ward</label>
-                        @Html.DropDownListFor(x => x.CASWardId, Model.CASWards, "", new { @class = "form-control" })
-                    </div>
+                }*@
 
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.MSOACode)">
-                        <label for="msoa">
-                            Middle Super Output Area (MSOA)
-                        </label>
-                        @Html.ValidationMessageFor(x => x.MSOACode)
-                        @Html.TextBoxFor(x => x.MSOACode, new { @class = "form-control" })
-                    </div>
-
-
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.LSOACode)">
-                        <label for="lsoa">
-                            Lower Super Output Area (LSOA)
-                        </label>
-                        @Html.ValidationMessageFor(x => x.LSOACode)
-                        @Html.TextBoxFor(x => x.LSOACode, new { @class = "form-control" })
-                    </div>
-
-                }
-
-                <br />
-                @buttons()
+                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                
+                
 
             </div>
 
@@ -996,28 +928,9 @@
     @if (Model.ChangesSummary != null)
     {
         Html.RenderPartial("Partials/_ConfirmChanges");
+        <br />
+        <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
+        <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
     }
     
 </div>
-
-@helper buttons()
-{
-    <div class="grid-row">
-        <div class="column-full">
-            @if (Model.ChangesSummary != null)
-            {
-                <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
-                <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
-            }
-            else
-            {
-                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.Save">Submit</button>
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
-            }
-        </div>
-    </div>
-}
-
-@section topbuttons {
-    @buttons()
-}

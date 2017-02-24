@@ -48,6 +48,8 @@ namespace Edubase.Web.UI.Models.Establishments
                     ET.PupilReferralUnit,
                     ET.VoluntaryAidedSchool,
                     ET.VoluntaryControlledSchool);
+
+            Location = !model.TypeId.OneOfThese(ET.BritishSchoolsOverseas);
         }
     }
 }

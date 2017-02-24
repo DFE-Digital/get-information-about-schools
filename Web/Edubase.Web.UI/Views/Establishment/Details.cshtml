@@ -10,13 +10,14 @@
 
 
 <h1 class="heading-large">@Model.Establishment.Name</h1>
+<p class="urn">URN: @Model.Establishment.Urn</p>
 
 @if (Model.UserCanEdit)
 {
-    @Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
+    @Html.ActionLink("Edit", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
 }
 
-@Html.ActionLink("Download", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
+@*@Html.ActionLink("Download", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })*@
 
 
 <div class="column-full">

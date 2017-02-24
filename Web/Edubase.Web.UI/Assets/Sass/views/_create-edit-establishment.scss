@@ -80,6 +80,11 @@ select#headtitleid {
 }
 
 .create-edit-school {
+
+    .form-group.first {
+        padding-top:16px;
+    }
+
     label {
         font-size: 16px;
     }

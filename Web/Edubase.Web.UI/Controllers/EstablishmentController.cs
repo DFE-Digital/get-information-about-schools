@@ -59,10 +59,19 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> EditDetails(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
             ViewModel viewModel = await CreateEditViewModel(id);
+            return View(viewModel);
+        }
+
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
+        public async Task<ActionResult> EditLocation(int? id)
+        {
+            if (!id.HasValue) return HttpNotFound();
+            var viewModel = await CreateEditViewModel(id);
+            if (!viewModel.TabDisplayPolicy.Location) throw new PermissionDeniedException();
             return View(viewModel);
         }
 
@@ -70,10 +79,8 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditIEBT(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
-            ViewModel viewModel = await CreateEditViewModel(id);
-
+            var viewModel = await CreateEditViewModel(id);
             if (!viewModel.TabDisplayPolicy.IEBT) throw new PermissionDeniedException();
-
             return View("EditIEBT", viewModel);
         }
 
@@ -92,7 +99,13 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
-        public async Task<ActionResult> Edit(ViewModel model)
+        public async Task<ActionResult> EditDetails(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
+        public async Task<ActionResult> EditLocation(ViewModel model)
         {
             return await SaveEstablishment(model);
         }
@@ -110,7 +123,7 @@ namespace Edubase.Web.UI.Controllers
             model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
             await PopulateSelectLists(model);
 
-            if (model.Action == ViewModel.eAction.Save || model.Action == ViewModel.eAction.SaveIEBT)
+            if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
             {
                 if (ModelState.IsValid)
                 {

@@ -14,7 +14,7 @@ namespace Edubase.Web.UI.Models.Validators
         {
             _lookupService = lookupService;
 
-            When(x => x.Action == EditEstablishmentModel.eAction.Save, () =>
+            When(x => x.Action == EditEstablishmentModel.eAction.SaveDetails, () =>
             {
                 ConfigureRules();
 
@@ -25,6 +25,15 @@ namespace Edubase.Web.UI.Models.Validators
                     RuleFor(x => x.ReasonEstablishmentOpenedId).NotEmpty().WithMessage("Reason opened should be specified");
                     RuleFor(x => x.EducationPhaseId).NotEmpty().WithMessage("Phase should be set");
                 });
+            });
+
+            When(x => x.Action == EditEstablishmentModel.eAction.SaveLocation, () =>
+            {
+                RuleFor(x => x.LSOACode).MustAsync(async (x, ct) => (await _lookupService.LSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
+                    .When(x => !x.LSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithSummaryMessage("Area not found for Middle Super Output Area (MSOA)");
+
+                RuleFor(x => x.MSOACode).MustAsync(async (x, ct) => (await _lookupService.MSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
+                    .When(x => !x.MSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithSummaryMessage("Area not found for Lower Super Output Area (LSOA)");
             });
 
             When(x => x.Action == EditEstablishmentModel.eAction.AddLinkedSchool, () =>
@@ -42,13 +51,6 @@ namespace Edubase.Web.UI.Models.Validators
             RuleFor(x => x.LocalAuthorityId).NotEmpty().WithMessage("Local authority is invalid");
             RuleFor(x => x.TypeId).NotEmpty().WithMessage("Type is invalid");
             RuleFor(x => x.StatusId).NotEmpty().WithMessage("Status is invalid");
-
-            RuleFor(x => x.LSOACode).MustAsync(async (x, ct) => (await _lookupService.LSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
-                .When(x => !x.LSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithSummaryMessage("Area not found for Middle Super Output Area (MSOA)");
-
-            RuleFor(x => x.MSOACode).MustAsync(async (x, ct) => (await _lookupService.MSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
-                .When(x => !x.MSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithSummaryMessage("Area not found for Lower Super Output Area (LSOA)");
-            
         }
         
 
