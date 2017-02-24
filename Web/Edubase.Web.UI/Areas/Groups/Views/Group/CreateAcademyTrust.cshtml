@@ -61,9 +61,17 @@
             @Html.HiddenFor(x => x.CompaniesHouseNumber)
         </div>
         <div class="column-half">
-            <div class="form-group single-group @Html.ValidationCssClassFor(x => x.TypeId)">
-                <label for="TypeId" class="form-label bold-small">Trust type</label>
-                @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", new { @class = "form-control" })
+            <div class="single-group">
+                <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
+                    <label for="TypeId" class="form-label bold-small">Trust type</label>
+                    @Html.ValidationMessageFor(x => x.TypeId)
+                    @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", new { @class = "form-control" })
+                </div>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.GroupId)">
+                    @Html.LabelFor(x => x.GroupId)
+                    @Html.ValidationMessageFor(x => x.GroupId)
+                    @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120 })
+                </div>
             </div>
         </div>
         

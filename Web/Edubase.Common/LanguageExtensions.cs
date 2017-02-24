@@ -54,7 +54,27 @@ namespace Edubase.Common
             if (!text.IsNullOrEmpty() && int.TryParse(text, out retVal)) return retVal;
             else return null;
         }
-        
+
+        public static string ToProperCase(this string the_string, bool lowerCaseAllBarFirstChar = false)
+        {
+            // If there are 0 or 1 characters, just return the string.
+            if (the_string == null) return the_string;
+            if (the_string.Length < 2) return the_string.ToUpper();
+
+            // Start with the first character.
+            string result = the_string.Substring(0, 1).ToUpper();
+
+            // Add the remaining characters.
+            for (int i = 1; i < the_string.Length; i++)
+            {
+                if (char.IsUpper(the_string[i])) result += " ";
+                if (char.IsDigit(the_string[i])) result += " ";
+                result += lowerCaseAllBarFirstChar ? char.ToLower(the_string[i]) : the_string[i];
+            }
+
+            return result;
+        }
+
         public static bool IsInteger(this string text) => text.ToInteger() != null;
 
         public static int ToInteger(this string text, int defaultValue)

@@ -169,6 +169,7 @@
     <Compile Include="DbGeographyConverter.cs" />
     <Compile Include="DbUtil.cs" />
     <Compile Include="Entity\ComplexTypes\Person.cs" />
+    <Compile Include="Entity\GroupChangeHistory.cs" />
     <Compile Include="Entity\EstablishmentChangeHistory.cs" />
     <Compile Include="Entity\LogMessage.cs" />
     <Compile Include="Entity\EstablishmentApprovalQueue.cs" />
@@ -189,7 +190,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="DbContext\IApplicationDbContext.cs" />
     <Compile Include="Identity\IdentityConfig.cs" />
-    <Compile Include="Identity\Roles.cs" />
     <Compile Include="DbContext\InMemoryApplicationDbContext.cs" />
     <Compile Include="Migrations\201701251519545_InitialCreate.cs" />
     <Compile Include="Migrations\201701251519545_InitialCreate.Designer.cs">
@@ -202,6 +202,22 @@
     <Compile Include="Migrations\201702061023059_Story7714RemoveOldEstabTypes.cs" />
     <Compile Include="Migrations\201702061023059_Story7714RemoveOldEstabTypes.Designer.cs">
       <DependentUpon>201702061023059_Story7714RemoveOldEstabTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702171012486_EstabIEBTfields.cs" />
+    <Compile Include="Migrations\201702171012486_EstabIEBTfields.Designer.cs">
+      <DependentUpon>201702171012486_EstabIEBTfields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702231104204_AddedGroupChangeHistory.cs" />
+    <Compile Include="Migrations\201702231104204_AddedGroupChangeHistory.Designer.cs">
+      <DependentUpon>201702231104204_AddedGroupChangeHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702231108016_AddedGroupChangeHistory2.cs" />
+    <Compile Include="Migrations\201702231108016_AddedGroupChangeHistory2.Designer.cs">
+      <DependentUpon>201702231108016_AddedGroupChangeHistory2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702231510271_MiniProfilerSeed.cs" />
+    <Compile Include="Migrations\201702231510271_MiniProfilerSeed.Designer.cs">
+      <DependentUpon>201702231510271_MiniProfilerSeed.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -247,6 +263,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702061023059_Story7714RemoveOldEstabTypes.resx">
       <DependentUpon>201702061023059_Story7714RemoveOldEstabTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702171012486_EstabIEBTfields.resx">
+      <DependentUpon>201702171012486_EstabIEBTfields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702231104204_AddedGroupChangeHistory.resx">
+      <DependentUpon>201702231104204_AddedGroupChangeHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702231108016_AddedGroupChangeHistory2.resx">
+      <DependentUpon>201702231108016_AddedGroupChangeHistory2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702231510271_MiniProfilerSeed.resx">
+      <DependentUpon>201702231510271_MiniProfilerSeed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

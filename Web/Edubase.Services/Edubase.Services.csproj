@@ -179,6 +179,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlobService.cs" />
+    <Compile Include="Enums\EnumSets.cs" />
+    <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
+    <Compile Include="Governors\Models\GovernorModelBase.cs" />
+    <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\IServiceBusEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\ServiceBusEndPoint.cs" />
     <Compile Include="Core\FileDownloadFactoryService.cs" />
@@ -213,7 +217,7 @@
     <Compile Include="Domain\LogMessagesDto.cs" />
     <Compile Include="Domain\LookupDto.cs" />
     <Compile Include="Domain\PagedResultDto.cs" />
-    <Compile Include="Domain\ChangeDescriptor.cs" />
+    <Compile Include="Domain\ChangeDescriptorDto.cs" />
     <Compile Include="Domain\PersonDto.cs" />
     <Compile Include="Domain\SearchDownloadGenerationProgressDto.cs" />
     <Compile Include="Domain\ServiceResultDto.cs" />

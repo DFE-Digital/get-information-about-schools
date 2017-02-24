@@ -29,7 +29,7 @@
             function setTabHeight() {
                 var maxHeight = 0;
                 $tabs.each(function() {
-                    var tabHeight = $(this).height();
+                    var tabHeight = $(this).outerHeight();
                     if (tabHeight > maxHeight) {
                         maxHeight = tabHeight;
                     }
@@ -37,7 +37,10 @@
                 return maxHeight;
             }
 
-            $tabs.height(setTabHeight());
+            if ($(window).width() > 641) {
+                $tabs.height(setTabHeight());
+            }
+            
             $tabbedContent.attr('tab-index', 0);
             $tabbedContent.addClass('hidden-tab-content').attr('aria-hidden', true);
 
@@ -53,7 +56,7 @@
 
             $tabs.on('click', function (e) {
                 
-               // e.preventDefault();
+                e.preventDefault();
                 var targetContent = $(this).attr('href');
                 location.replace(targetContent);
                 
@@ -69,7 +72,6 @@
                 $(targetContent).removeClass('hidden-tab-content')
                     .attr('aria-hidden', false)
                     .focus();
-                $(window).scrollTop($tabs.offset().top);
                 
             });
             

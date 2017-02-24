@@ -9,20 +9,8 @@ namespace Edubase.Services.Domain
 {
     public class ChangeDescriptorDto
     {
-        public string PropertyName { get; set; }
+        public string Name { get; set; }
         public string OldValue { get; set; }
         public string NewValue { get; set; }
-
-        public ChangeDescriptorDto()
-        {
-
-        }
-
-        public ChangeDescriptorDto(EstablishmentApprovalQueue entity)
-        {
-            PropertyName = entity.Name;
-            OldValue = entity.OldValue;
-            NewValue = entity.NewValue;
-        }
     }
 }

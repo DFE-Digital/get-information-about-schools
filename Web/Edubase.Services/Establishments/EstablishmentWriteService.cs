@@ -6,14 +6,19 @@ using System.Data.Entity;
 namespace Edubase.Services.Establishments
 {
     using AutoMapper;
+    using Common;
+    using Common.Reflection;
     using Data.DbContext;
     using Data.Entity;
     using Data.Repositories.Establishments;
+    using Domain;
     using Exceptions;
     using Groups;
     using IntegrationEndPoints.ServiceBus;
     using Models;
     using Security;
+    using System;
+    using System.Collections.Generic;
 
     public class EstablishmentWriteService : IEstablishmentWriteService
     {
@@ -61,8 +66,26 @@ namespace Edubase.Services.Establishments
 
             using (var db = _dbContextFactory.Obtain())
             {
+                var changes = await _readService.GetModelChangesAsync(model);
+
                 var entity = await db.Establishments.FirstOrDefaultAsync(x => x.Urn == model.Urn);
                 _mapper.Map(model, entity);
+                
+                foreach (var change in changes)
+                {
+                    db.EstablishmentChangeHistories.Add(new EstablishmentChangeHistory
+                    {
+                        ApproverUserId = _securityService.GetUserId(principal),
+                        EffectiveDateUtc = DateTime.UtcNow,
+                        Name = change.Name,
+                        NewValue = change.NewValue,
+                        OldValue = change.OldValue,
+                        OriginatorUserId = _securityService.GetUserId(principal),
+                        RequestedDateUtc = DateTime.UtcNow,
+                        Urn = entity.Urn
+                    });
+                }
+                
                 await db.SaveChangesAsync();
 
                 await _cachedEstablishmentReadRepository.ClearRelationshipCacheAsync(model.Urn);

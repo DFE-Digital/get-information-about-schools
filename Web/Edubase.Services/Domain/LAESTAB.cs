@@ -8,6 +8,8 @@ namespace Edubase.Services.Domain
         public int EstablishmentNumber { get; set; }
         public static LAESTAB? TryParse(string text)
         {
+            text = text.RemoveSubstring("/");
+
             var retVal = new LAESTAB();
             if (text.IsInteger() && text.Length == 7)
             {

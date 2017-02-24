@@ -75,9 +75,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public IList<SearchEstablishmentDocument> Results { get; set; }
         public string Error { get; set; }
 
-        public eTextSearchType TextSearchType => TextSearchModel.Text.IsInteger()
-            ? _textSearchTypeMap.Get(TextSearchModel.Text.Length, eTextSearchType.Unknown)
-            : eTextSearchType.EstablishmentName;
+        public eTextSearchType TextSearchType
+        {
+            get
+            {
+                var text = TextSearchModel.Text.RemoveSubstring("/").Clean();
+                return text.IsInteger() ? _textSearchTypeMap.Get(text.Length, eTextSearchType.Unknown) : eTextSearchType.EstablishmentName;
+            }
+        }
 
         public long Count { get; set; }
         public int PageCount => (int)Math.Ceiling(Count / (double)PageSize);

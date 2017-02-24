@@ -54,6 +54,9 @@ namespace Edubase.Data.Migrations
             .Concat(new[] { "Establishment", "Governor", "GroupCollection" }
                 .Select(x => $@"ALTER TABLE {x} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = ON)"));
             commands.ForEach(x => Common.Invoker.IgnoringException(() => context.Database.ExecuteSqlCommand(x)));
+
+
+            Common.Invoker.IgnoringException(() => context.Database.ExecuteSqlCommand(StackExchange.Profiling.Storage.SqlServerStorage.TableCreationScript));
         }
     }
 }

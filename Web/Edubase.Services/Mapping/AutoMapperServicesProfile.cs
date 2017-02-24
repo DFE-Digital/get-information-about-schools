@@ -40,7 +40,7 @@ namespace Edubase.Services.Mapping
                 })
                 .ReverseMap() // in
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Name))
-                .ForMember(x=>x.LAESTAB, opt => opt.Ignore())
+                .ForMember(x => x.LAESTAB, opt => opt.Ignore())
                 .ForMember(x => x.Address, opt => opt.MapFrom(x => new Address
                 {
                     Country = x.Address_Country,
@@ -51,6 +51,20 @@ namespace Edubase.Services.Mapping
                     Locality = x.Address_Locality,
                     PostCode = x.Address_PostCode,
                     CityOrTown = x.Address_CityOrTown
+                }))
+                .ForMember(x => x.Contact, opt => opt.MapFrom(x => new ContactDetail
+                {
+                    EmailAddress = x.Contact_EmailAddress,
+                    FaxNumber = x.Contact_FaxNumber,
+                    TelephoneNumber = x.Contact_TelephoneNumber,
+                    WebsiteAddress = x.Contact_WebsiteAddress
+                }))
+                .ForMember(x => x.ContactAlt, opt => opt.MapFrom(x => new ContactDetail
+                {
+                    EmailAddress = x.ContactAlt_EmailAddress,
+                    FaxNumber = x.ContactAlt_FaxNumber,
+                    TelephoneNumber = x.ContactAlt_TelephoneNumber,
+                    WebsiteAddress = x.ContactAlt_WebsiteAddress
                 }))
                 .ForMember(x => x.AdditionalAddresses, opt => opt.MapFrom(x => x.AdditionalAddresses));
 

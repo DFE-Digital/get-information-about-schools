@@ -4,11 +4,15 @@
 }
 <br />
 <h1 class="bold-large">Dashboard</h1>
+
 @if(ViewBag.Message != null)
 {
     <p style="color:red;">@ViewBag.Message</p>
 }
 <br />
+<a href="/mini-profiler-resources/results-index">Profiler results</a>
+<br />
+
 <ul class="font-xsmall">
     <li>DB name: @ViewBag.DbName</li>
     <li>Smtp EndPoint Name: @ViewBag.SmtpEndPointName</li>

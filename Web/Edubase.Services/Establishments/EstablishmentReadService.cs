@@ -33,6 +33,7 @@ namespace Edubase.Services.Establishments
     using Doc = Search.SearchEstablishmentDocument;
     using Common.Spatial;
     using Services.Core.Search;
+    using Common.Reflection;
 
     public class EstablishmentReadService : IEstablishmentReadService
     {
@@ -42,8 +43,9 @@ namespace Edubase.Services.Establishments
         private readonly IAzureSearchEndPoint _azureSearchService;
         private readonly IEstablishmentReadRepository _establishmentRepository;
         private readonly ILAReadRepository _laRepository;
-        private ICacheAccessor _cacheAccessor;
-        private IBlobService _blobService;
+        private readonly ICacheAccessor _cacheAccessor;
+        private readonly IBlobService _blobService;
+        private readonly ISecurityService _securityService;
 
         /// <summary>
         /// Allow these roles to see establishments of all statuses
@@ -69,7 +71,8 @@ namespace Edubase.Services.Establishments
             ICachedEstablishmentReadRepository establishmentRepository,
             ICachedLAReadRepository laRepository,
             ICacheAccessor cacheAccessor,
-            IBlobService blobService)
+            IBlobService blobService,
+            ISecurityService securityService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
@@ -79,6 +82,7 @@ namespace Edubase.Services.Establishments
             _laRepository = laRepository;
             _cacheAccessor = cacheAccessor;
             _blobService = blobService;
+            _securityService = securityService;
         }
         
         public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
@@ -137,9 +141,58 @@ namespace Edubase.Services.Establishments
 
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
         {
-            return Enumerable.Empty<EstablishmentChangeDto>();
+            return await _dbContext.EstablishmentChangeHistories
+                .Join(_dbContext.Users, x => x.OriginatorUserId, x => x.Id, (ch, u) => new { Change = ch, Originator = u })
+                .Where(x => x.Change.Urn == urn)
+                .OrderByDescending(x => x.Change.CreatedUtc)
+                .Skip(0).Take(take).Select(x => new EstablishmentChangeDto
+                {
+                    EffectiveDateUtc = x.Change.EffectiveDateUtc,
+                    Id = x.Change.Id,
+                    Name = x.Change.Name,
+                    NewValue = x.Change.NewValue,
+                    OldValue = x.Change.OldValue,
+                    OriginatorUserId = x.Change.OriginatorUserId,
+                    RequestedDateUtc = x.Change.RequestedDateUtc,
+                    Urn = x.Change.Urn,
+                    OriginatorUserName = x.Originator.UserName
+                }).ToListAsync();
         }
-        
+
+        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model)
+        {
+            var changes = ReflectionHelper.DetectChanges(model, original);
+            var retVal = new List<ChangeDescriptorDto>();
+
+            foreach (var change in changes)
+            {
+                if (_cachedLookupService.IsLookupField(change.Name))
+                {
+                    change.OldValue = await _cachedLookupService.GetNameAsync(change.Name, change.OldValue.ToInteger());
+                    change.NewValue = await _cachedLookupService.GetNameAsync(change.Name, change.NewValue.ToInteger());
+                }
+
+                if (change.Name.EndsWith("Id", StringComparison.Ordinal)) change.Name = change.Name.Substring(0, change.Name.Length - 2);
+                change.Name = change.Name.Replace("_", "");
+                change.Name = change.Name.ToProperCase(true);
+
+                retVal.Add(new ChangeDescriptorDto
+                {
+                    Name = change.DisplayName ?? change.Name,
+                    NewValue = change.NewValue.Clean(),
+                    OldValue = change.OldValue.Clean()
+                });
+            }
+
+            return retVal;
+        }
+
+        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model)
+        {
+            var originalModel = (await GetAsync(model.Urn.Value, _securityService.CreateSystemPrincipal())).GetResult();
+            return await GetModelChangesAsync(originalModel, model);
+        }
+
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);

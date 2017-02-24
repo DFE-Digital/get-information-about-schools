@@ -8,6 +8,12 @@
     }
     else
     {
+        <p>
+            @Html.ActionLink("Download data in CSV format", "DownloadCsvChangeHistory", new { id = Model.Establishment.Urn, area = "" }, new { style = "margin-bottom:10px; display:block;" })
+            @Html.ActionLink("Download data in XLSX format", "DownloadXlsxChangeHistory", new { id = Model.Establishment.Urn, area = "" })
+            <br />
+        </p>
+        
         <table class="approval-items">
             <thead>
                 <tr>
@@ -18,19 +24,21 @@
                     <th>Date requested</th>
                     <th>Suggested from</th>
                     <th>Approved by</th>
+                    <th>Reason</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.ChangeHistory)
                 {
                     <tr>
-                        <td>@item.PropertyName</td>
+                        <td>@item.Name</td>
                         <td>@item.OldValue</td>
                         <td>@item.NewValue</td>
                         <td>@item.EffectiveDateUtc</td>
                         <td>@item.RequestedDateUtc</td>
                         <td>@item.OriginatorUserName</td>
-                        <td>@item.ApproverUserName</td>
+                        <td>@(item.ApproverUserName ?? "--")</td>
+                        <td>--</td><!-- Reason field will be implemented by Texuna -->
                     </tr>
                 }
             </tbody>
@@ -42,7 +50,7 @@
                             <li>
                                 <dl>
                                     <dt>Updated field:</dt>
-                                    <dd>@item.PropertyName</dd>
+                                    <dd>@item.Name</dd>
                                     <dt>Old value:</dt>
                                     <dd>@item.OldValue</dd>
                                     <dt>New value:</dt>
@@ -54,7 +62,9 @@
                                     <dt>Suggested from:</dt>
                                     <dd>@item.OriginatorUserName</dd>
                                     <dt>Approved by:</dt>
-                                    <dd>@item.ApproverUserName</dd>
+                                    <dd>@(item.ApproverUserName ?? "--")</dd>
+                                    <dt>Reason:</dt>
+                                    <dd>--</dd> <!-- Reason field will be implemented by Texuna -->
                                 </dl>
                             </li>
                         }

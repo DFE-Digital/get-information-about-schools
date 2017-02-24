@@ -22,11 +22,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Models.CreateEdit;
     using Models.Validators;
     using Services;
+    using Services.Core;
     using Services.Domain;
     using Services.Exceptions;
     using Services.Governors;
     using Services.Groups.Models;
     using Services.IntegrationEndPoints.CompaniesHouse;
+    using StackExchange.Profiling;
     using UI.Models;
     using static GroupDetailViewModel;
     using GT = Services.Enums.eLookupGroupType;
@@ -34,13 +36,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
     {
-        ICachedLookupService _lookup;
-        IEstablishmentReadService _establishmentReadService;
-        IGroupReadService _groupReadService;
-        ISecurityService _securityService;
-        IGovernorsReadService _governorsReadService;
-        IGroupsWriteService _groupWriteService;
-        ICompaniesHouseService _companiesHouseService;
+        private readonly ICachedLookupService _lookup;
+        private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly IGroupReadService _groupReadService;
+        private readonly ISecurityService _securityService;
+        private readonly IGovernorsReadService _governorsReadService;
+        private readonly IGroupsWriteService _groupWriteService;
+        private readonly ICompaniesHouseService _companiesHouseService;
+        private readonly IFileDownloadFactoryService _downloadService;
 
         public GroupController(
             ICachedLookupService cachedLookupService, 
@@ -49,7 +52,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             IEstablishmentReadService establishmentReadService,
             IGovernorsReadService governorsReadService,
             IGroupsWriteService groupWriteService,
-            ICompaniesHouseService companiesHouseService)
+            ICompaniesHouseService companiesHouseService,
+            IFileDownloadFactoryService downloadService)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
@@ -58,6 +62,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _governorsReadService = governorsReadService;
             _groupWriteService = groupWriteService;
             _companiesHouseService = companiesHouseService;
+            _downloadService = downloadService;
         }
 
 
@@ -78,10 +83,16 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID.Value, model.GroupTypeId.Value, model.LocalAuthorityId);
             viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
+            if (viewModel.IsUserLoggedOn)
+            {
+                using (MiniProfiler.Current.Step("Retrieving change history"))
+                    viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, 20, User);
+            }
+
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUID.Value);
 
-            viewModel.HistoricalGovernors = await _governorsReadService.GetHistoricalByGroupUID(id);
-            viewModel.Governors = await _governorsReadService.GetCurrentByGroupUID(id);
+            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
+                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User));
 
             return View(viewModel);
         }
@@ -222,7 +233,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     GroupTypeId = viewModel.TypeId,
                     Name = viewModel.Name,
                     OpenDate = viewModel.OpenDate,
-                    StatusId = (int)Services.Enums.eLookupGroupStatus.Open
+                    StatusId = (int)Services.Enums.eLookupGroupStatus.Open,
+                    GroupId = viewModel.GroupId
                 });
 
                 var groupUId = await _groupWriteService.SaveAsync(dto, User);
@@ -368,6 +380,60 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     });
                 }
             }
+        }
+
+
+        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/csv/{id}")]
+        public async Task<ActionResult> DownloadCsvChangeHistory(int id)
+        {
+            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
+            var data = await GetChangeHistoryDownloadDataAsync(id);
+            var csvStream = await _downloadService.CreateCsvStreamAsync(data.Item1, data.Item2);
+            return File(csvStream, "text/csv", string.Concat(model.Name, $"({id})", "-change-history.csv"));
+        }
+
+
+        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/xlsx/{id}")]
+        public async Task<ActionResult> DownloadXlsxChangeHistory(int id)
+        {
+            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
+            var data = await GetChangeHistoryDownloadDataAsync(id);
+            var xlsxStream = _downloadService.CreateXlsxStream($"Change history for {model.Name} ({model.GroupUID})", $"Change history for {model.Name} ({model.GroupUID})", data.Item1, data.Item2);
+            return File(xlsxStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                string.Concat(model.Name, $"({id})", "-change-history.xlsx"));
+        }
+
+        private async Task<Tuple<List<string>, List<List<string>>>> GetChangeHistoryDownloadDataAsync(int uid)
+        {
+            var headers = new List<string>
+            {
+                "Updated field",
+                "New value",
+                "Old value",
+                "Date changed",
+                "Effective date",
+                "Date requested",
+                "Suggested by",
+                "Approved by",
+                "Reason"
+            };
+
+            var changes = await _groupReadService.GetChangeHistoryAsync(uid, 200, User);
+
+            var data = changes.Select(x => new List<string>
+            {
+                x.Name,
+                x.NewValue,
+                x.OldValue,
+                x.RequestedDateUtc?.ToString("dd/MM/yyyy"),
+                x.EffectiveDateUtc?.ToString("dd/MM/yyyy"),
+                x.RequestedDateUtc?.ToString("dd/MM/yyyy"),
+                x.OriginatorUserName,
+                string.Empty,
+                string.Empty
+            }).ToList();
+
+            return new Tuple<List<string>, List<List<string>>>(headers, data);
         }
     }
 }

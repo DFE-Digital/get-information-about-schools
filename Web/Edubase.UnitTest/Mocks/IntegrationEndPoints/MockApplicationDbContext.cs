@@ -14,6 +14,7 @@ namespace Edubase.UnitTest.Mocks.IntegrationEndPoints
     {
         public DbSet<EstablishmentApprovalQueue> EstablishmentApprovalQueue { get; set; } = new MockDbSet<EstablishmentApprovalQueue>();
         public DbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; } = new MockDbSet<EstablishmentChangeHistory>();
+        public DbSet<GroupChangeHistory> GroupChangeHistories { get; set; } = new MockDbSet<GroupChangeHistory>();
         public DbSet<EstablishmentLink> EstablishmentLinks { get; set; } = new MockDbSet<EstablishmentLink>();
         public DbSet<Establishment> Establishments { get; set; } = new MockDbSet<Establishment>();
         public DbSet<EstablishmentGroup> EstablishmentGroups { get; set; } = new MockDbSet<EstablishmentGroup>();

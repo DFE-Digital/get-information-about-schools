@@ -1,7 +1,8 @@
 ﻿namespace Edubase.Common
 {
-    public struct ChangeDescriptor
+    public class ChangeDescriptor
     {
+        public string DisplayName { get; set; }
         public string Name { get; set; }
         public string NewValue { get; set; }
         public string OldValue { get; set; }
@@ -11,6 +12,12 @@
             Name = name;
             NewValue = newValue?.ToString();
             OldValue = oldValue?.ToString();
+        }
+
+        public ChangeDescriptor(string name, string displayName, object newValue, object oldValue)
+            : this(name, newValue, oldValue)
+        {
+            DisplayName = displayName;
         }
 
         public override string ToString() => 

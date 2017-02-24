@@ -275,7 +275,6 @@
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\SearchModel_old.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\CreateAcademyTrustViewModel.cs" />
@@ -314,6 +313,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
+    <Compile Include="Models\GovernorsGridViewModel.cs" />
+    <Compile Include="Models\Grid\GridCellViewModel.cs" />
+    <Compile Include="Models\Grid\GridRowViewModel.cs" />
+    <Compile Include="Models\Grid\GridViewModel.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />
     <Compile Include="Validation\AutofacValidatorFactory.cs" />
     <Compile Include="Helpers\FormatHelpers.cs" />
@@ -332,7 +335,7 @@
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
-    <Compile Include="Models\CreateEditEstablishmentModel.cs" />
+    <Compile Include="Models\EditEstablishmentModel.cs" />
     <Compile Include="Models\Establishments\TabDisplayPolicy.cs" />
     <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\SearchCompaniesHouseModel.cs" />
@@ -355,7 +358,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Validation\EdubaseAbstractValidator.cs" />
-    <Compile Include="ValueConverters\Governor2StringValueConverter.cs" />
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -371,11 +373,13 @@
     <Content Include="Areas\Groups\Views\Group\CreateEdit.cshtml" />
     <Content Include="Areas\Groups\Views\Group\SearchCompaniesHouse.cshtml" />
     <Content Include="Areas\Groups\Views\Group\CreateAcademyTrust.cshtml" />
+    <Content Include="Assets\Sass\views\_bulk-academies.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
+    <Content Include="Assets\Scripts\Views\bulk-academies.js" />
     <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
     <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
@@ -400,6 +404,8 @@
     <Content Include="public\assets\images\icon-location.png" />
     <Content Include="public\assets\images\icon-pupils.png" />
     <Content Include="public\assets\images\icons\cross.PNG" />
+    <Content Include="public\assets\images\icons\exclaim-red-x2.png" />
+    <Content Include="public\assets\images\icons\exclaim-red.png" />
     <Content Include="public\assets\images\icons\exclaim-transparent.PNG" />
     <Content Include="public\assets\images\icons\exclaim-transparentx2.PNG" />
     <Content Include="public\assets\images\icons\exclaim.PNG" />
@@ -820,14 +826,17 @@
     <Content Include="Views\Shared\Placeholder.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_GenericPagination.cshtml" />
-    <Content Include="Views\Shared\_Governors.cshtml" />
     <Content Include="Views\Tools\Index.cshtml" />
     <Content Include="Views\Shared\DomainError.cshtml" />
+    <Content Include="Views\Shared\_Governors.cshtml" />
+    <Content Include="Views\Establishment\_EditLayoutPage.cshtml" />
+    <Content Include="Views\Establishment\Partials\_ConfirmChanges.cshtml" />
+    <Content Include="Views\Establishment\EditIEBT.cshtml" />
+    <Content Include="Views\Tools\BulkAcademies.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />
-    <Folder Include="Models\Groups\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
   </ItemGroup>

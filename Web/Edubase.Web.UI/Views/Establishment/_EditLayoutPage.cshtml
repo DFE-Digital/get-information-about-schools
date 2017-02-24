@@ -1,0 +1,40 @@
+﻿@using Edubase.Web.UI.Models
+@using System.Linq
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@model ViewModel
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = "Edit establishment";
+    Layout = "~/Views/Dfe/Layouts/template.cshtml";
+}
+
+<h1 class="heading-large">@Model.Name</h1>
+
+@using (Html.BeginForm())
+{
+    @RenderSection("topbuttons", true)
+    
+    <div class="grid-row">
+        <div class="column-full">
+
+            <div>
+                <div class="tab-wrap">
+                    <ul class="horizontal-tabs">
+                        <li><a href="@Url.Action("Edit", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "Edit", "selected-tab")">Details</a></li>
+                        @if (Model.TabDisplayPolicy.IEBT)
+                        {
+                            <li><a href="@Url.Action("EditIEBT", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "EditIEBT", "selected-tab")">IEBT</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="tab-content-wrapper horizontal-tabs-content">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+}

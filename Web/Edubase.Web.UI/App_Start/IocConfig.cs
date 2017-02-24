@@ -29,6 +29,7 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
 using Edubase.Services.IntegrationEndPoints.ServiceBus;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
+using Edubase.Services.Core;
 
 namespace Edubase.Web.UI
 {
@@ -131,6 +132,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
 
             builder.RegisterType<ServiceBusEndPoint>().As<IServiceBusEndPoint>();
+            builder.RegisterType<FileDownloadFactoryService>().As<IFileDownloadFactoryService>();
+
 
         }
 

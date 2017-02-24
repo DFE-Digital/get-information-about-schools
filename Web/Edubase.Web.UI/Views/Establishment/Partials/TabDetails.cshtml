@@ -252,8 +252,8 @@
         @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
         {
             <tr>
-                <th scope="row">Email:</th>
-                <td>@Model.Establishment.ContactAlt_EmailAddress</td>
+                <th scope="row">Alternative email:</th>
+                <td>@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</td>
             </tr>
         }
 

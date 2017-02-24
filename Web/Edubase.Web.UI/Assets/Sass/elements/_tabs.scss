@@ -111,11 +111,10 @@ nav.tabs {
 
 
 .tab-wrap {
-    border-bottom: $black 1px solid;
-
-    @include media(mobile) {
-        border-bottom: 0;
-        margin-bottom: 20px;
+    border-bottom: 0;
+    margin-bottom: 20px;
+    @include media(tablet) {
+        border-bottom: $grey-2 1px solid;
     }
 
     &:after {
@@ -127,65 +126,58 @@ nav.tabs {
 
 .horizontal-tabs {
     position: relative;
+    top: 1px;
 
     li {
-        float: left;
+        width: 100%;
+        border: $grey-2 1px solid;
+        text-align: center;
+        padding: 0;
 
-        @include media(mobile) {
-            width: 48%;
-            margin: 1%;
-            text-align: left;
+        @include media(tablet) {
+            float: left;
+            border: 0;
+            width: auto;
+            margin: 0 0.8em;
+            min-width: 160px;
+            max-width: 380px;
 
-            &:nth-child(odd) {
-                clear: left;
-            }
+            
         }
     }
-
-    .horizontal-tab {
-        text-decoration: none;
-        background-color: $grey-2;
-        display: block;
-        padding: 12px 24px;
-        margin-right: 8px;
-        text-align: center;
-        color: $black;
-
-        &:visited {
-            color: $black;
-        }
-
-        span.sub {
-            font-size: 16px;
-            font-weight: normal;
-
-            @include media(mobile) {
-                font-size: 12px;
+    &.trio-tabs { // chunky search page tabs
+        li {
+            @include media(tablet) {
+                width: 30%;
+                margin-right: 1%;
             }
-        }
+        }            
+    }
+    .horizontal-tab {
+        display: block;
+        padding: 1em 0 0.5em;
+        background-color: #fff;
 
-        @include media(mobile) {
-            font-size: 14px;
-            text-align: left;
-            padding-left: 8px;
+        @include media(tablet) {
+            padding: 0.5em 1.3em 0.25em;
+            
         }
-
 
         &.selected-tab {
+            text-decoration: none;
             color: $black;
-            background: #fff;
-            border: $black 1px solid;
-            border-bottom: #fff 1px solid;
-            position: relative;
-            top: 1px;
 
-            @include media(mobile) {
-                
-                border-bottom: $black 1px solid;
-                
+             @include media(tablet) {
+                border: $grey-2 1px solid;
+                border-bottom: 0;
             }
         }
     }
+
+    .sub {
+        display: block;
+    }
+  
 }
 
 .horizontal-tabs-content {
@@ -197,6 +189,9 @@ nav.tabs {
     .tab-content {
         margin: 0;
         padding: 48px 0 24px;
+        @include media(mobile){
+            padding-top:16px;
+        }
         h3 {
             clear: both;
             margin: 0 8px 0.2em;
