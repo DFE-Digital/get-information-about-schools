@@ -178,8 +178,8 @@ namespace Edubase.Services.Groups
             {
                 if (_cachedLookupService.IsLookupField(change.Name))
                 {
-                    change.OldValue = await _cachedLookupService.GetNameAsync(change.Name, change.OldValue.ToInteger());
-                    change.NewValue = await _cachedLookupService.GetNameAsync(change.Name, change.NewValue.ToInteger());
+                    change.OldValue = await _cachedLookupService.GetNameAsync(change.Name, change.OldValue.ToInteger(), "Group");
+                    change.NewValue = await _cachedLookupService.GetNameAsync(change.Name, change.NewValue.ToInteger(), "Group");
                 }
 
                 if (change.Name.EndsWith("Id", StringComparison.Ordinal)) change.Name = change.Name.Substring(0, change.Name.Length - 2);

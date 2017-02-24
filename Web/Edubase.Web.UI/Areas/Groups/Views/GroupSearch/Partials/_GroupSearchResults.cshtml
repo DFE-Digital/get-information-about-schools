@@ -34,7 +34,7 @@ else if (Model.Results.Count > 0)
                         <dt>Group UID:</dt>
                         <dd>@result.GroupUID</dd>
                         <dt>Group ID:</dt>
-                        <dd>@result.GroupId</dd>
+                        <dd>@(result.GroupId ?? "Not recorded")</dd>
                     </dl>
                 </li>
             }
