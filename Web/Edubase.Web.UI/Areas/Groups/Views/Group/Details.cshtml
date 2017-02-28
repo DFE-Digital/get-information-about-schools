@@ -13,7 +13,7 @@
 
 @if (Model.CanUserEdit)
 {
-    @Html.ActionLink("Edit", "Edit", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button mobile-full-width" })
+    @Html.ActionLink("Edit", "EditDetails", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button mobile-full-width" })
 }
 
 <div class="grid-row summary">

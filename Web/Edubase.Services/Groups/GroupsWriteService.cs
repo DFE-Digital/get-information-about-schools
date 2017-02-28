@@ -49,6 +49,10 @@ namespace Edubase.Services.Groups
         public async Task<int> SaveAsync(SaveGroupDto dto, IPrincipal principal)
         {
             var newRecord = dto.IsNewEntity;
+
+            if (dto.Group == null && dto.GetGroupUId().HasValue) dto.Group = (await _groupReadService.GetAsync(dto.GetGroupUId().Value, _securityService.CreateSystemPrincipal())).GetResult();
+            else if (dto.Group == null && !dto.GetGroupUId().HasValue) throw new InvalidOperationException($"The Group object is null and no UId was supplied.  I cannot work with this.");
+
             var validator = new SaveGroupDtoValidator(principal, _establishmentsReadService, _securityService, _groupReadService);
             var validationResult = await validator.ValidateAsync(dto);
             if (!validationResult.IsValid) throw new EdubaseException("Validation errors: \r\n" + string.Join(Environment.NewLine, validationResult.Errors.Select(x => x.ErrorMessage)));
@@ -59,7 +63,7 @@ namespace Edubase.Services.Groups
                 var changes = Enumerable.Empty<ChangeDescriptorDto>();
                 if (!dto.IsNewEntity) changes = await _groupReadService.GetModelChangesAsync(dto.Group);
 
-                if(dto.Group.GroupTypeId == (int)GT.ChildrensCentresGroup)
+                if(dto.Group.GroupTypeId == (int)GT.ChildrensCentresGroup && dto.LinkedEstablishments != null)
                 {
                     var leadCentreUrn = dto.LinkedEstablishments.Single(x => x.CCIsLeadCentre).EstablishmentUrn;
                     var e = (await _establishmentsReadService.GetAsync(leadCentreUrn, principal)).GetResult();
@@ -126,6 +130,7 @@ namespace Edubase.Services.Groups
 
                 return dataModel.GroupUID;
             }
+            
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Domain;
+﻿using Edubase.Common.Reflection;
+using Edubase.Services.Domain;
 using System;
 using System.ComponentModel;
 
@@ -21,6 +22,7 @@ namespace Edubase.Services.Groups.Models
         [DisplayName("Group Id")]
         public string GroupId { get; set; }
 
+        [IgnoreChanges]
         public int EstablishmentCount { get; set; }
         public int? LocalAuthorityId { get; set; }
     }

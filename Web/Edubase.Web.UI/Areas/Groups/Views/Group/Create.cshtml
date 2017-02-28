@@ -10,10 +10,12 @@
 }
 
 
-@using (Html.BeginForm((Model.GroupUID == null ? "Create" : "EditGroup"), "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUID)
     @Html.HiddenFor(x => x.GroupTypeMode)
+    @Html.HiddenFor(x => x.SaveMode)
+
     <div class="grid-row">
         <div class="column-full">
             @Html.ActionLink("Back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
@@ -228,8 +230,8 @@
             </div>
         </div>
     </div>
-
-    if (Model.AllowUserToAddLinkedEstablishments)
+    
+    if (Model.SaveEstabLinks)
     {
         <div class="grid-row">
             <div class="column-half">
@@ -409,6 +411,7 @@
             </div>
         </div>
     }
+
     <div class="grid-row">
         <div class="column-full">
 

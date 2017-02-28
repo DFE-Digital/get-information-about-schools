@@ -3,35 +3,29 @@ using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Groups.Models;
+using FluentValidation.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using FluentValidation;
-using FluentValidation.Mvc;
-using MoreLinq;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
     using Common;
     using Exceptions;
     using Filters;
-    using Helpers;
     using Models.CreateEdit;
     using Models.Validators;
-    using Services;
     using Services.Core;
     using Services.Domain;
-    using Services.Exceptions;
     using Services.Governors;
     using Services.Groups.Models;
     using Services.IntegrationEndPoints.CompaniesHouse;
     using StackExchange.Profiling;
     using UI.Models;
-    using static GroupDetailViewModel;
     using GT = Services.Enums.eLookupGroupType;
+    using static Models.CreateEdit.GroupEditorViewModel;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -101,19 +95,27 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [Route("Create/{type}")]
         public async Task<ActionResult> CreateNewGroup(string type)
         {
-            var mode = StringUtil.ToEnum<GroupEditorViewModel.eGroupTypeMode>(type);
-            Guard.IsTrue(mode.HasValue, () => new InvalidParameterException($"Invalid type parameter supplied"));
+            var groupTypeMode = StringUtil.ToEnum<eGroupTypeMode>(type);
+            Guard.IsTrue(groupTypeMode.HasValue, () => new InvalidParameterException($"Invalid type parameter supplied"));
 
-            var viewModel = await PopulateSelectLists(new GroupEditorViewModel(mode.Value));
+            var viewModel = await PopulateSelectLists(new GroupEditorViewModel(eSaveMode.Details));
 
+            if (groupTypeMode == eGroupTypeMode.ChildrensCentre)
+            {
+                viewModel.GroupTypeId = (int)GT.ChildrensCentresCollaboration;
+                viewModel.SaveMode = eSaveMode.DetailsAndLinks;
+            }
+            else if (groupTypeMode == eGroupTypeMode.Federation) viewModel.GroupTypeId = (int)GT.Federation;
+            else if (groupTypeMode == eGroupTypeMode.Trust) viewModel.GroupTypeId = (int)GT.Trust;
+            
             await PopulateLocalAuthorityFields(viewModel);
 
-            return View("CreateEdit", viewModel);
+            return View("Create", viewModel);
         }
 
         private async Task PopulateLocalAuthorityFields(GroupEditorViewModel viewModel)
         {
-            if (viewModel.GroupTypeMode == GroupEditorViewModel.eGroupTypeMode.ChildrensCentre)
+            if (viewModel.GroupTypeMode == eGroupTypeMode.ChildrensCentre)
             {
                 var permission = _securityService.GetCreateGroupPermission(User);
                 if (permission.LocalAuthorityIds.Any())
@@ -142,15 +144,16 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 if (actionResult != null) return actionResult;
             }
 
-            return View("CreateEdit", viewModel);
+            return View("Create", viewModel);
         }
 
+
         [HttpGet]
-        [Route("Edit/{id:int}")]
-        public async Task<ActionResult> Edit(int id)
+        [Route("Edit/{id:int}/Details")]
+        public async Task<ActionResult> EditDetails(int id)
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
-            var viewModel = new GroupEditorViewModel();
+            var viewModel = new GroupEditorViewModel(eSaveMode.Details);
             viewModel.Address = domainModel.Address;
             viewModel.ClosedDate = new DateTimeViewModel(domainModel.ClosedDate);
             viewModel.OpenDate = new DateTimeViewModel(domainModel.OpenDate);
@@ -166,17 +169,17 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id);
             await PopulateSelectLists(viewModel);
 
-            viewModel.DeriveGroupTypeMode();
+            viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
             viewModel.DeriveCCLeadCentreUrn();
 
             if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
 
-            return View("CreateEdit", viewModel);
+            return View("EditDetails", viewModel);
         }
-        
+
         [HttpPost]
-        [Route("Edit")]
-        public async Task<ActionResult> EditGroup(GroupEditorViewModel viewModel)
+        [Route("Edit/{id:int}/Details")]
+        public async Task<ActionResult> EditDetails(GroupEditorViewModel viewModel)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
@@ -191,8 +194,49 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 if (actionResult != null) return actionResult;
             }
 
-            return View("CreateEdit", viewModel);
+            return View("EditDetails", viewModel);
         }
+
+        [HttpGet]
+        [Route("Edit/{id:int}/Links")]
+        public async Task<ActionResult> EditLinks(int id)
+        {
+            var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
+            var viewModel = new GroupEditorViewModel
+            {
+                SaveMode = eSaveMode.Links,
+                Name = domainModel.Name,
+                GroupUID = domainModel.GroupUID,
+                GroupTypeId = domainModel.GroupTypeId
+            };
+            
+            await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id);
+            
+            viewModel.DeriveCCLeadCentreUrn();
+
+            if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Route("Edit/{id:int}/Links")]
+        public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
+        {
+            var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, _securityService).ValidateAsync(viewModel);
+            result.AddToModelState(ModelState, string.Empty);
+            ViewBag.FVErrors = result;
+
+            if (ModelState.IsValid)
+            {
+                var actionResult = await ProcessCreateEditGroup(viewModel);
+                if (actionResult != null) return actionResult;
+            }
+
+            return View(viewModel);
+        }
+
+        
 
         [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
@@ -238,7 +282,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 });
 
                 var groupUId = await _groupWriteService.SaveAsync(dto, User);
-                return RedirectToAction("Details", new { id = groupUId });
+                return RedirectToAction(nameof(Details), new { id = groupUId });
             }
             else viewModel.GroupTypes = await GetAcademyTrustGroupTypes(viewModel.TypeId);
             return View("CreateAcademyTrust", viewModel);
@@ -251,34 +295,34 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var suppressClearModelState = false;
 
-            if (viewModel.Action == GroupEditorViewModel.ActionLinkedEstablishmentAdd)
+            if (viewModel.Action == ActionLinkedEstablishmentAdd)
             {
                 await AddLinkedEstablishment(viewModel);
             }
-            else if (viewModel.Action == GroupEditorViewModel.ActionLinkedEstablishmentCancelEdit)
+            else if (viewModel.Action == ActionLinkedEstablishmentCancelEdit)
             {
                 viewModel.LinkedEstablishments.Establishments.ForEach(x => x.EditMode = false);
             }
-            else if (viewModel.Action.StartsWith(GroupEditorViewModel.ActionLinkedEstablishmentEdit, StringComparison.OrdinalIgnoreCase))
+            else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit, StringComparison.OrdinalIgnoreCase))
             {
                 var m = viewModel.LinkedEstablishments.Establishments.Single(x => x.Urn == viewModel.ActionUrn);
                 m.SetEditMode().JoinedDateEditable = new DateTimeViewModel(m.JoinedDate);
             }
-            else if (viewModel.Action.StartsWith(GroupEditorViewModel.ActionLinkedEstablishmentRemove, StringComparison.OrdinalIgnoreCase))
+            else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove, StringComparison.OrdinalIgnoreCase))
             {
                 var index = viewModel.LinkedEstablishments.Establishments.FindIndex(x => x.Urn == viewModel.ActionUrn);
                 if (index >= 0) viewModel.LinkedEstablishments.Establishments.RemoveAt(index);
             }
-            else if (viewModel.Action == GroupEditorViewModel.ActionLinkedEstablishmentSave)
+            else if (viewModel.Action == ActionLinkedEstablishmentSave)
             {
                 var model = viewModel.LinkedEstablishments.Establishments.First(x => x.EditMode == true);
                 model.SetEditMode(false).JoinedDate = model.JoinedDateEditable.ToDateTime();
             }
-            else if (viewModel.Action == GroupEditorViewModel.ActionLinkedEstablishmentSearch)
+            else if (viewModel.Action == ActionLinkedEstablishmentSearch)
             {
                 await SearchForLinkedEstablishment(viewModel);
             }
-            else if (viewModel.Action == GroupEditorViewModel.ActionSave)
+            else if (viewModel.Action == ActionSave)
             {
                 suppressClearModelState = true;
                 await SaveGroup(viewModel);
@@ -295,7 +339,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             viewModel.SetCCLeadCentreUrn();
 
-            var dto = new SaveGroupDto(new GroupModel
+            Func<GroupModel> createDomainModel = () => new GroupModel
             {
                 Address = viewModel.Address,
                 CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
@@ -308,14 +352,21 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 OpenDate = viewModel.OpenDate.ToDateTime(),
                 StatusId = viewModel.GroupStatusId,
                 ClosedDate = viewModel.ClosedDate.ToDateTime()
+            };
 
-            }, viewModel.LinkedEstablishments.Establishments.Select(x => new EstablishmentGroupModel
+            Func<List<EstablishmentGroupModel>> createLinksDomainModel = () => viewModel.LinkedEstablishments.Establishments.Select(x => new EstablishmentGroupModel
             {
                 EstablishmentUrn = x.Urn,
                 Id = x.Id,
                 JoinedDate = x.JoinedDate,
                 CCIsLeadCentre = x.CCIsLeadCentre
-            }).ToList());
+            }).ToList();
+
+            SaveGroupDto dto = null;
+            if (viewModel.SaveMode == eSaveMode.Details) dto = new SaveGroupDto(createDomainModel());
+            else if (viewModel.SaveMode == eSaveMode.DetailsAndLinks) dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
+            else if (viewModel.SaveMode == eSaveMode.Links) dto = new SaveGroupDto(viewModel.GroupUID.Value, createLinksDomainModel());
+            else throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
             
             viewModel.GroupUID = await _groupWriteService.SaveAsync(dto, User);
         }

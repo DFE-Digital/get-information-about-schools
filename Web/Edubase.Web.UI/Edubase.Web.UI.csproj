@@ -370,10 +370,13 @@
     <Content Include="Areas\Groups\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Governors\Views\GovernorSearch\Partials\_GovernorSearchResults.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Details.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\CreateEdit.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\Create.cshtml" />
     <Content Include="Areas\Groups\Views\Group\SearchCompaniesHouse.cshtml" />
     <Content Include="Areas\Groups\Views\Group\CreateAcademyTrust.cshtml" />
     <Content Include="Assets\Sass\views\_bulk-academies.scss" />
+    <Content Include="Areas\Groups\Views\Group\EditLinks.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\_EditLayoutPage.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\EditDetails.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
+    using System;
     using GT = eLookupGroupType;
 
     public class GroupEditorViewModel
@@ -17,6 +18,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             ChildrensCentre, // Group or Collaboration
             Trust, // School trust
             AcademyTrust // MATs and SATs
+        }
+
+        public enum eSaveMode
+        {
+            Details,
+            Links,
+            DetailsAndLinks
         }
 
         private static readonly Dictionary<eGroupTypeMode, string> _entityNames = new Dictionary<eGroupTypeMode, string>
@@ -44,6 +52,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         };
 
         public const string ActionSave = "save";
+        public const string ActionSaveLinks = "savelinks";
         public const string ActionLinkedEstablishmentAdd = "add";
         public const string ActionLinkedEstablishmentRemove = "remove-";
         public const string ActionLinkedEstablishmentEdit = "edit-";
@@ -55,7 +64,19 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public int ActionUrn => int.Parse(Action.Split('-')[1]);
 
-        public eGroupTypeMode GroupTypeMode { get; set; }
+        public eGroupTypeMode GroupTypeMode
+        {
+            get
+            {
+                if (GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)) return eGroupTypeMode.ChildrensCentre;
+                else if (GroupTypeId.OneOfThese(GT.Federation)) return eGroupTypeMode.Federation;
+                else if (GroupTypeId.OneOfThese(GT.Trust)) return eGroupTypeMode.Trust;
+                else if (GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)) return eGroupTypeMode.AcademyTrust;
+                else throw new NotImplementedException();
+            }
+        }
+
+        public eSaveMode SaveMode { get; set; }
 
         public string EntityName => _entityNames.Get(GroupTypeMode);
 
@@ -67,7 +88,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public bool InEditMode => GroupUID.HasValue;
 
-        public bool AllowUserToAddLinkedEstablishments => GroupUID.HasValue || GroupTypeMode == eGroupTypeMode.ChildrensCentre;
+        
 
         public int? GroupUID { get; set; }
         public int? GroupTypeId { get; set; }
@@ -80,7 +101,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public string OpenDateLabel => GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on" : "Open date";
 
-        public GT? GroupType => GroupTypeId.HasValue ? (GT) GroupTypeId.Value : null as GT?;
+        public GT? GroupType => GroupTypeId.HasValue ? (GT)GroupTypeId.Value : null as GT?;
 
         public string Name { get; set; }
         public string GroupId { get; set; }
@@ -108,14 +129,17 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             CCLeadCentreUrn = LinkedEstablishments.Establishments.Where(x => x.CCIsLeadCentre).Select(x => new int?(x.Urn)).SingleOrDefault();
         }
 
-        public void DeriveGroupTypeMode()
-        {
-            if (GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)) GroupTypeMode = eGroupTypeMode.ChildrensCentre;
-            else if (GroupTypeId.OneOfThese(GT.Federation)) GroupTypeMode = eGroupTypeMode.Federation;
-            else if (GroupTypeId.OneOfThese(GT.Trust)) GroupTypeMode = eGroupTypeMode.Trust;
-            else if (GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)) GroupTypeMode = eGroupTypeMode.AcademyTrust;
-        }
+        /// <summary>
+        /// Whether the UI mode requires the Establishment links are saved.
+        /// </summary>
+        public bool SaveEstabLinks => SaveMode == eSaveMode.DetailsAndLinks || SaveMode == eSaveMode.Links;
+        
 
+        /// <summary>
+        /// Whether the UI mode requires the Group detail is saved.
+        /// </summary>
+        public bool SaveGroupDetail => SaveMode == eSaveMode.DetailsAndLinks || SaveMode == eSaveMode.Details;
+        
         public GroupLinkedEstablishmentsViewModel LinkedEstablishments { get; set; } = new GroupLinkedEstablishmentsViewModel();
 
         /// <summary>
@@ -132,18 +156,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         {
 
         }
-
-        public GroupEditorViewModel(eGroupTypeMode mode)
+        
+        public GroupEditorViewModel(eSaveMode saveMode)
         {
-            GroupTypeMode = mode;
-
-            if (GroupTypeMode == eGroupTypeMode.ChildrensCentre) GroupTypeId = (int)GT.ChildrensCentresCollaboration;
-            else if (GroupTypeMode == eGroupTypeMode.Federation) GroupTypeId = (int)GT.Federation;
-            else if (GroupTypeMode == eGroupTypeMode.Trust) GroupTypeId = (int)GT.Trust;
+            SaveMode = SaveMode;
         }
-
-
-
 
     }
 }

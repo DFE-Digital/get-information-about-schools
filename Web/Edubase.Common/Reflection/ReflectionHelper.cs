@@ -84,6 +84,11 @@ namespace Edubase.Common.Reflection
                 var propertyName = p.Name;
                 var displayName = p.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
 
+                if((p.GetCustomAttribute<IgnoreChangesAttribute>() ?? p2.GetCustomAttribute<IgnoreChangesAttribute>()) != null)
+                {
+                    continue;
+                }
+
                 if (types.Any(x => x == p.PropertyType))
                 {
                     retVal.AddRange(DetectChanges(p.GetValue(newModel), p2.GetValue(oldModel), propertyName, types));

@@ -1,0 +1,37 @@
+﻿@using Edubase.Services.Enums
+@using Edubase.Common;
+@using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
+@model VM
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Dfe/Layouts/template.cshtml";
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+@Html.ActionLink("Back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+
+<h1 class="heading-large" style="margin-top:8px; margin-bottom:16px;">@Model.Name</h1>
+
+<div class="grid-row">
+    <div class="column-full">
+        <div>
+            <div class="tab-wrap">
+                <ul class="horizontal-tabs">
+                    <li>
+                        <a href="@Url.Action("EditDetails", new { id = Model.GroupUID, area = "Groups" })" 
+                           class="horizontal-tab @Html.Conditional(action == "EditDetails", "selected-tab")">Details</a>
+                    </li>
+                    <li><a href="@Url.Action("EditLinks", new { id = Model.GroupUID, area = "Groups" })" 
+                           class="horizontal-tab @Html.Conditional(action == "EditLinks", "selected-tab")">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content-wrapper horizontal-tabs-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+

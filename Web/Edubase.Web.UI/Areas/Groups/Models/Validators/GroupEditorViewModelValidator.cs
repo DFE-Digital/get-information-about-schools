@@ -1,26 +1,19 @@
-﻿using Edubase.Services.Groups;
-using FluentValidation;
-using FluentValidation.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using FluentValidation.Results;
-using System.Web.Mvc;
-using Edubase.Web.UI.Validation;
+﻿using Edubase.Services.Enums;
+using Edubase.Services.Groups;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
-using MoreLinq;
-using Edubase.Services.Enums;
+using Edubase.Web.UI.Validation;
+using FluentValidation;
+using System.Linq;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 {
     using Common;
     using Services.Establishments;
     using Services.Security;
-    using VM = GroupEditorViewModel;
-    using GT = eLookupGroupType;
-    using ET = eLookupEstablishmentType;
+    using static GroupEditorViewModel;
     using EG = eLookupEstablishmentTypeGroup;
+    using GT = eLookupGroupType;
+    using VM = GroupEditorViewModel;
 
     public class GroupEditorViewModelValidator : EdubaseAbstractValidator<VM>
     {
@@ -38,7 +31,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             // Searching for an establishment to link....
-            When(x => x.Action == VM.ActionLinkedEstablishmentSearch, () =>
+            When(x => x.Action == ActionLinkedEstablishmentSearch, () =>
             {
                 RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                     .Cascade(CascadeMode.StopOnFirstFailure)
@@ -67,7 +60,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             });
 
             // Having found an establishment to link, validate the joined date if supplied...
-            When(x => x.Action == VM.ActionLinkedEstablishmentAdd, () =>
+            When(x => x.Action == ActionLinkedEstablishmentAdd, () =>
             {
                 RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate).Must(x => x.IsEmpty() || x.IsValid())
                     .WithMessage("This is not a valid date")
@@ -75,7 +68,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             });
 
             // Having edited a joined date, validate the date...
-            When(x => x.Action == VM.ActionLinkedEstablishmentSave, () =>
+            When(x => x.Action == ActionLinkedEstablishmentSave, () =>
             {
                 RuleFor(x => x.LinkedEstablishments.Establishments.Single(e => e.EditMode).JoinedDateEditable).Must(x => x.IsEmpty() || x.IsValid())
                     .WithMessage("This is not a valid date")
@@ -83,45 +76,52 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             });
 
             // On saving the group record....
-            When(x => x.Action == VM.ActionSave, () =>
+            When(x => x.Action == ActionSave, () =>
             {
-                When(m => m.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre, () =>
+                When(m => m.GroupTypeMode == eGroupTypeMode.ChildrensCentre, () =>
                 {
                     RuleFor(x => x.LocalAuthorityId).NotNull()
                         .WithMessage("This field is mandatory")
-                        .WithSummaryMessage("Please select a local authority for the group");
+                        .WithSummaryMessage("Please select a local authority for the group")
+                        .When(x => x.SaveGroupDetail);
 
                     RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                         .Must((model, x) => model.LinkedEstablishments.Establishments.Count >= 2)
-                        .WithMessage("This group requires two or more centres, please add at least two centres");
+                        .WithMessage("This group requires two or more centres, please add at least two centres")
+                        .When(x => x.SaveEstabLinks);
 
                     RuleFor(x => x)
                         .Must(x => x.CCLeadCentreUrn.HasValue)
                         .WithMessage("Please select one children's centre to be a group lead")
-                        .When(x => x.LinkedEstablishments.Establishments.Count > 0);
+                        .When(x => x.LinkedEstablishments.Establishments.Count > 0 && x.SaveEstabLinks);
                 });
 
                 RuleFor(x => x.GroupTypeId).NotNull().WithMessage("Group Type must be supplied");
 
-                RuleFor(x => x.GroupStatusId).NotNull().WithMessage("This is a mandatory field").WithSummaryMessage("Status must be set");
+                RuleFor(x => x.GroupStatusId)
+                    .NotNull().WithMessage("This is a mandatory field")
+                    .WithSummaryMessage("Status must be set")
+                    .When(x => x.SaveGroupDetail);
 
                 RuleFor(x => x.OpenDate)
                     .Must(x => x.IsEmpty() || x.IsValid())
                     .WithMessage("Open date is invalid")
                     .Must(x => x.IsNotEmpty() && x.IsValid())
                     .WithMessage("{0} is a mandatory field", m => m.OpenDateLabel)
-                    .When(x => !x.GroupUID.HasValue, ApplyConditionTo.CurrentValidator);
+                    .When(x => !x.GroupUID.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
 
                 RuleFor(x => x.Name)
                     .NotEmpty()
-                    .WithMessage("This field is mandatory").WithSummaryMessage("Please enter a name for the group")
+                    .WithMessage("This field is mandatory")
+                    .WithSummaryMessage("Please enter a name for the group")
+                    .When(x => x.SaveGroupDetail)
                     .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, model.LocalAuthorityId.Value, model.GroupUID)))
                     .WithMessage("Group name already exists at this authority, please select another name")
-                    .When(x => x.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue, ApplyConditionTo.CurrentValidator);
+                    .When(x => x.GroupTypeMode == eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
 
                 RuleFor(x => x.Name).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, existingGroupUId: model.GroupUID)))
                     .WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
-                    .When(x => x.GroupTypeMode != VM.eGroupTypeMode.ChildrensCentre && x.GroupTypeMode != VM.eGroupTypeMode.AcademyTrust, ApplyConditionTo.CurrentValidator);
+                    .When(x => x.GroupTypeMode != eGroupTypeMode.ChildrensCentre && x.GroupTypeMode != eGroupTypeMode.AcademyTrust && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
             });
         }
 
