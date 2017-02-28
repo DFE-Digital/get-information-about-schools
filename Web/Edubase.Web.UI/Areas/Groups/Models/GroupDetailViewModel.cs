@@ -25,7 +25,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string GroupStatusName { get; set; }
         public string LocalAuthorityName { get; set; }
         public string OpenDateLabel => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on" : "Open date";
-        public string EstablishmentsPluralName => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) ? "Academies" : "Providers";
+        public string EstablishmentsPluralName => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Academies" :
+            (Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup) ? "Children's centres" : "Schools");
+
         public List<EstablishmentGroupViewModel> Establishments { get; private set; } = new List<EstablishmentGroupViewModel>();
         public IEnumerable<Governor> Governors { get; internal set; }
         public IEnumerable<Governor> HistoricalGovernors { get; internal set; }
