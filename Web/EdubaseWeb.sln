@@ -32,9 +32,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.CodeGen", "Edubase.CodeGen\Edubase.CodeGen.csproj", "{CB23D1A9-92D2-46A0-B5C1-B2EE9F6C1614}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug (QA)|Any CPU = Debug (QA)|Any CPU
 		Debug|Any CPU = Debug|Any CPU

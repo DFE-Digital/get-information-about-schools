@@ -26,6 +26,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using UI.Models;
     using GT = Services.Enums.eLookupGroupType;
     using static Models.CreateEdit.GroupEditorViewModel;
+    using Services.Exceptions;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -110,6 +111,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             
             await PopulateLocalAuthorityFields(viewModel);
 
+            if (!_securityService.GetCreateGroupPermission(User).CanCreate(viewModel.GroupTypeId, viewModel.LocalAuthorityId))
+                throw new PermissionDeniedException("Current principal does not have permission to create a group of this type.");
+            
             return View("Create", viewModel);
         }
 
