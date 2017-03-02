@@ -347,6 +347,7 @@
     <Compile Include="MessageLoggingService.cs" />
     <Compile Include="Lookup\LookupService.cs" />
     <Compile Include="LogMessageReadService.cs" />
+    <Compile Include="Nomenclature\NomenclatureService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\StubClaimsIdConverter.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\IClaimsIdConverter.cs" />

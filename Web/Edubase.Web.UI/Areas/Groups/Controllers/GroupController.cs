@@ -25,8 +25,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using StackExchange.Profiling;
     using UI.Models;
     using GT = Services.Enums.eLookupGroupType;
-    using static Models.CreateEdit.GroupEditorViewModel;
     using Services.Exceptions;
+    using static Models.CreateEdit.GroupEditorViewModelBase;
+    using static Models.CreateEdit.GroupEditorViewModel;
+    using Services.Enums;
+    using Governors.Models;
+    using Services.Nomenclature;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -39,6 +43,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly IGroupsWriteService _groupWriteService;
         private readonly ICompaniesHouseService _companiesHouseService;
         private readonly IFileDownloadFactoryService _downloadService;
+        private readonly NomenclatureService _nomenclatureService;
 
         public GroupController(
             ICachedLookupService cachedLookupService, 
@@ -48,7 +53,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             IGovernorsReadService governorsReadService,
             IGroupsWriteService groupWriteService,
             ICompaniesHouseService companiesHouseService,
-            IFileDownloadFactoryService downloadService)
+            IFileDownloadFactoryService downloadService,
+            NomenclatureService nomenclatureService)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
@@ -58,6 +64,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _groupWriteService = groupWriteService;
             _companiesHouseService = companiesHouseService;
             _downloadService = downloadService;
+            _nomenclatureService = nomenclatureService;
         }
 
 
@@ -165,9 +172,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.GroupStatusId = domainModel.StatusId;
             viewModel.GroupTypeId = domainModel.GroupTypeId;
             viewModel.GroupManagerEmailAddress = domainModel.ManagerEmailAddress;
-            viewModel.Name = domainModel.Name;
+            viewModel.GroupName = domainModel.Name;
             viewModel.CompaniesHouseNumber = domainModel.CompaniesHouseNumber;
-            viewModel.GroupUID = domainModel.GroupUID;
+            viewModel.GroupUId = domainModel.GroupUID;
             viewModel.GroupId = domainModel.GroupId;
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id);
@@ -179,6 +186,56 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
 
             return View("EditDetails", viewModel);
+        }
+
+        [HttpGet]
+        [Route("Edit/{id:int}/Governance")]
+        public async Task<ActionResult> EditGovernance(int id)
+        {
+            var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
+            var viewModel = new GroupEditGovernanceViewModel(domainModel.GroupUID.Value, domainModel.GroupTypeId.Value, domainModel.Name);
+            viewModel.GovernorRoles = (await _lookup.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
+
+            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
+                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User), true);
+
+            return View("EditGovernance", viewModel);
+        }
+
+        [HttpGet]
+        [Route("Edit/{id:int}/Governance/AddPerson")]
+        public async Task<ActionResult> EditGovernanceAddPerson(int id, eLookupGovernorRole? role)
+        {
+            if (role == null) throw new EdubaseException("Role was not supplied");
+
+            var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
+            var viewModel = new CreateEditGovernorViewModel(domainModel);
+            viewModel.GovernorRoleName = _nomenclatureService.GetGovernorRoleName(role.Value);
+            viewModel.GovernorRole = role.Value;
+            await PopulateSelectLists(viewModel);
+            viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(role.Value);
+
+            return View("EditGovernanceAddGovernor", viewModel);
+        }
+
+        [HttpPost]
+        [Route("Edit/{id:int}/Governance/AddPerson")]
+        public async Task<ActionResult> EditGovernanceAddPerson(CreateEditGovernorViewModel viewModel)
+        {
+            await PopulateSelectLists(viewModel);
+            viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(viewModel.GovernorRole);
+
+
+
+            return View("EditGovernanceAddGovernor", viewModel);
+        }
+
+        private async Task PopulateSelectLists(CreateEditGovernorViewModel viewModel)
+        {
+            viewModel.AppointingBodies = (await _lookup.GovernorAppointingBodiesGetAllAsync()).ToSelectList(null);
+            viewModel.Nationalities = (await _lookup.NationalitiesGetAllAsync()).ToSelectList(null);
+            viewModel.Titles = viewModel.GetTitles(viewModel.Title);
+            viewModel.PreviousTitles = viewModel.GetTitles(viewModel.PreviousTitle);
         }
 
         [HttpPost]
@@ -209,8 +266,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var viewModel = new GroupEditorViewModel
             {
                 SaveMode = eSaveMode.Links,
-                Name = domainModel.Name,
-                GroupUID = domainModel.GroupUID,
+                GroupName = domainModel.Name,
+                GroupUId = domainModel.GroupUID,
                 GroupTypeId = domainModel.GroupTypeId
             };
             
@@ -330,7 +387,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 suppressClearModelState = true;
                 await SaveGroup(viewModel);
-                return RedirectToAction(nameof(Details), new { id = viewModel.GroupUID.Value });
+                return RedirectToAction(nameof(Details), new { id = viewModel.GroupUId.Value });
             }
             else throw new InvalidParameterException("The action parameter is invalid");
             
@@ -349,10 +406,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
                 GroupId = viewModel.GroupId,
                 GroupTypeId = viewModel.GroupTypeId,
-                GroupUID = viewModel.GroupUID,
+                GroupUID = viewModel.GroupUId,
                 LocalAuthorityId = viewModel.LocalAuthorityId,
                 ManagerEmailAddress = viewModel.GroupManagerEmailAddress,
-                Name = viewModel.Name,
+                Name = viewModel.GroupName,
                 OpenDate = viewModel.OpenDate.ToDateTime(),
                 StatusId = viewModel.GroupStatusId,
                 ClosedDate = viewModel.ClosedDate.ToDateTime()
@@ -369,10 +426,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             SaveGroupDto dto = null;
             if (viewModel.SaveMode == eSaveMode.Details) dto = new SaveGroupDto(createDomainModel());
             else if (viewModel.SaveMode == eSaveMode.DetailsAndLinks) dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
-            else if (viewModel.SaveMode == eSaveMode.Links) dto = new SaveGroupDto(viewModel.GroupUID.Value, createLinksDomainModel());
+            else if (viewModel.SaveMode == eSaveMode.Links) dto = new SaveGroupDto(viewModel.GroupUId.Value, createLinksDomainModel());
             else throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
             
-            viewModel.GroupUID = await _groupWriteService.SaveAsync(dto, User);
+            viewModel.GroupUId = await _groupWriteService.SaveAsync(dto, User);
         }
 
         private async Task AddLinkedEstablishment(GroupEditorViewModel viewModel)

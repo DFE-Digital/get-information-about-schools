@@ -17,8 +17,13 @@ namespace Edubase.Web.UI.Models
         public List<GridViewModel> Grids { get; set; } = new List<GridViewModel>();
 
         public GovernorsDetailsDto DomainModel { get; set; }
-
+        
         public GovernorsGridViewModel(GovernorsDetailsDto dto)
+            : this(dto, false)
+        {
+        }
+
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode)
         {
             CreateGrids(dto, dto.CurrentGovernors, false);
             CreateGrids(dto, dto.HistoricGovernors, true);

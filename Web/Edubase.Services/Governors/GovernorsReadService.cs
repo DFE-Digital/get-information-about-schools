@@ -131,21 +131,42 @@ namespace Edubase.Services.Governors
             
             var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(retVal.HasFullAccess);
             retVal.ApplicableRoles.ForEach(x => retVal.RoleDisplayPolicies.Add(x, templateDisplayPolicy.Clone()));
-            
-            // Override policies at the role level
-            retVal.RoleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Governor, GR.Trustee, GR.LocalGovernor, GR.Member)).ForEach(x => x.Value.EmailAddress = false);
-            retVal.RoleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)).ForEach(x =>
-              {
-                  x.Value.PostCode = false;
-                  x.Value.DOB = false;
-                  x.Value.PreviousFullName = false;
-                  x.Value.Nationality = false;
-              });
+            ProcessDisplayPolicyOverrides(retVal.RoleDisplayPolicies);
             
             retVal.CurrentGovernors = await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, false);
             retVal.HistoricGovernors = await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, true);
 
             return retVal;
+        }
+
+        /// <summary>
+        /// Returns the _Editor_ Display Policy for a given Governor role.
+        /// </summary>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        public GovernorDisplayPolicy GetEditorDisplayPolicy(GR role)
+        {
+            var retVal = new GovernorDisplayPolicy().SetFullAccess(true);
+            ProcessDisplayPolicyOverrides(new Dictionary<GR, GovernorDisplayPolicy> { [role] = retVal });
+
+            retVal.AppointmentEndDate = !(role.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)); // Story 7741: Goverance fields by role.xlsx: ** This is not editable, the date is populated on replacement with the day before the date of appointment of the replacement AO/CFO
+
+            return retVal;
+        }
+
+        private void ProcessDisplayPolicyOverrides(Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies)
+        {
+            // Override policies at the role level
+            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Governor, GR.Trustee, GR.LocalGovernor, GR.Member))
+                .ForEach(x => x.Value.EmailAddress = false);
+
+            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)).ForEach(x =>
+            {
+                x.Value.PostCode = false;
+                x.Value.DOB = false;
+                x.Value.PreviousFullName = false;
+                x.Value.Nationality = false;
+            });
         }
 
         private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<eLookupGovernorRole, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)

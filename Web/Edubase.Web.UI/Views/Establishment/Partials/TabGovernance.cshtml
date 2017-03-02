@@ -3,7 +3,9 @@
 <div id="school-governance" class="tab-content">
     @if (Model.GovernorsDetails.DomainModel.HasGovernors)
     {
-        Html.RenderPartial("_Governors", Model.GovernorsDetails);
+        <div class="grid-row">
+            @{ Html.RenderPartial("_Governors", Model.GovernorsDetails); }
+        </div>
     }
     else
     {

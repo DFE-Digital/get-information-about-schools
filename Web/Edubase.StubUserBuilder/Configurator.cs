@@ -38,6 +38,14 @@ namespace Edubase.StubUserBuilder
                             {
                                 Urns = new[] { 100053 }
                             }
+                        },
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.CreateGroup,
+                            ValueObject = new CreateGroupPermissions
+                            {
+                                Types = new eLookupGroupType [] { eLookupGroupType.Federation, eLookupGroupType.Trust }
+                            }
                         }
                     }
                 }

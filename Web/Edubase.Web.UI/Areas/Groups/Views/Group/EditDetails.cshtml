@@ -10,10 +10,9 @@
     Layout = "_EditLayoutPage.cshtml";
 }
 
-
 @using (Html.BeginForm("EditGroup", "Group", new { area = "Groups" }, FormMethod.Post))
 {
-    @Html.HiddenFor(x => x.GroupUID)
+    @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.GroupTypeMode)
     @Html.HiddenFor(x => x.SaveMode)
 
@@ -23,17 +22,17 @@
             <div class="column-half">
                 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.Name)">
+                <div class="form-group @Html.ValidationCssClassFor(x => x.GroupName)">
                     <label for="name">@Model.FieldNamePrefix name</label>
-                    @Html.ValidationMessageFor(x => x.Name)
+                    @Html.ValidationMessageFor(x => x.GroupName)
                     @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                     {
-                        <input value="@Model.Name" disabled="disabled" class="form-control" />
-                        @Html.HiddenFor(x => x.Name)
+                        <input value="@Model.GroupName" disabled="disabled" class="form-control" />
+                        @Html.HiddenFor(x => x.GroupName)
                     }
                     else
                     {
-                        @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                        @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control" })
                     }
                 </div>
 
@@ -193,11 +192,11 @@
                     </div>
                 }
 
-                @if (Model.GroupUID.HasValue)
+                @if (Model.GroupUId.HasValue)
                 {
                     <div class="form-group">
                         <label>UID</label>
-                        <input value="@Model.GroupUID" disabled="disabled" class="form-control" />
+                        <input value="@Model.GroupUId" disabled="disabled" class="form-control" />
                     </div>
                 }
 
@@ -219,7 +218,7 @@
             <br />
             <br />
 
-            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUID }, new { @class = "button button-grey cancel mobile-full-width" })
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
             <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
             
         </div>

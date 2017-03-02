@@ -110,6 +110,8 @@
     <Compile Include="Spatial\OSGB36Converter.cs" />
     <Compile Include="Spatial\RefEll.cs" />
     <Compile Include="StringUtil.cs" />
+    <Compile Include="Text\eTextCase.cs" />
+    <Compile Include="Text\TextCaseLangExtensions.cs" />
     <Compile Include="UriHelper.cs" />
   </ItemGroup>
   <ItemGroup>

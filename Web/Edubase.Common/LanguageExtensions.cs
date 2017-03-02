@@ -41,11 +41,7 @@ namespace Edubase.Common
             return data;
         }
 
-        public static string ToTitleCase(this string text)
-        {
-            if (text.Clean() == null) return null;
-            return CultureInfo.CurrentUICulture.TextInfo.ToTitleCase(text);
-        }
+        
 
         public static int? ToInteger(this string text)
         {
@@ -55,6 +51,13 @@ namespace Edubase.Common
             else return null;
         }
 
+        /// <summary>
+        /// Converts a camel case property name into a text string with spaces;
+        /// APropertyName => A property name
+        /// </summary>
+        /// <param name="the_string"></param>
+        /// <param name="lowerCaseAllBarFirstChar"></param>
+        /// <returns></returns>
         public static string ToProperCase(this string the_string, bool lowerCaseAllBarFirstChar = false)
         {
             // If there are 0 or 1 characters, just return the string.

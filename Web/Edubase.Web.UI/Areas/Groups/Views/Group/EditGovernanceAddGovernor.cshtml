@@ -1,0 +1,181 @@
+﻿@using Edubase.Services.Enums
+@using Edubase.Common;
+@using VM = Edubase.Web.UI.Areas.Governors.Models.CreateEditGovernorViewModel;
+@using L = Edubase.Services.Enums.eLookupGroupType;
+@using System.Linq.Expressions
+
+@model VM
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = Model.PageTitle;
+    Layout = "_EditLayoutPage.cshtml";
+}
+<div class="grid-row">
+    <div class="column-half">
+        <h1 class="bold-medium">Governance</h1>
+        
+        @using (Html.BeginForm("EditGovernanceAddPerson", "Group", new { area = "Groups" }, FormMethod.Post))
+        {
+            @Html.HiddenFor(x => x.GroupUId)
+            @Html.HiddenFor(x => x.GroupTypeId)
+            @Html.HiddenFor(x => x.GroupName)
+            @Html.HiddenFor(x => x.GovernorRole)
+            @Html.HiddenFor(x => x.GovernorRoleName)
+            @Html.HiddenFor(x => x.GID)
+
+            <p>@Model.GovernorRoleName details</p>
+
+            @Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.Title)">
+                @Html.LabelFor(x => x.Title)
+                @Html.ValidationMessageFor(x => x.Title)
+                @Html.DropDownListFor(x => x.Title, Model.Titles, "", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.FirstName)">
+                @Html.LabelFor(x => x.FirstName)
+                @Html.ValidationMessageFor(x => x.FirstName)
+                @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
+                @Html.LabelFor(x => x.MiddleName)
+                @Html.ValidationMessageFor(x => x.MiddleName)
+                @Html.TextBoxFor(x => x.MiddleName, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.LastName)">
+                @Html.LabelFor(x => x.LastName)
+                @Html.ValidationMessageFor(x => x.LastName)
+                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.GID)
+                <input class="form-control" value="@Model.GID" readonly="readonly" disabled="disabled" />
+            </div>
+
+            if (Model.DisplayPolicy.AppointingBodyId)
+            {
+                <div class="form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
+                    @Html.LabelFor(x => x.AppointingBodyId)
+                    @Html.ValidationMessageFor(x => x.AppointingBodyId)
+                    @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "", new { @class = "form-control" })
+                </div>
+            }
+
+            if (Model.DisplayPolicy.AppointmentStartDate)
+            {
+                @RenderDateSelector(x => x.AppointmentStartDate, x => x.AppointmentStartDate.Day, x => x.AppointmentStartDate.Month, x => x.AppointmentStartDate.Year, "Date of appointment")
+            }
+
+            if (Model.DisplayPolicy.AppointmentEndDate)
+            {
+                @RenderDateSelector(x => x.AppointmentEndDate, x => x.AppointmentEndDate.Day, x => x.AppointmentEndDate.Month, x => x.AppointmentEndDate.Year, "Date term ends")
+            }
+
+            if (Model.DisplayPolicy.EmailAddress)
+            {
+                <div class="form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
+                    @Html.LabelFor(x => x.EmailAddress)
+                    @Html.ValidationMessageFor(x => x.EmailAddress)
+                    @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control" })
+                </div>
+            }
+
+            if (Model.DisplayPolicy.PostCode)
+            {
+                <div class="form-group @Html.ValidationCssClassFor(x => x.PostCode)">
+                    @Html.LabelFor(x => x.PostCode)
+                    @Html.ValidationMessageFor(x => x.PostCode)
+                    @Html.TextBoxFor(x => x.PostCode, new { @class = "form-control" })
+                </div>
+            }
+
+            if (Model.DisplayPolicy.DOB)
+            {
+                @RenderDateSelector(x => x.DOB, x => x.DOB.Day, x => x.DOB.Month, x => x.DOB.Year, "Date of birth")
+            }
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousTitle)">
+                @Html.LabelFor(x => x.PreviousTitle)
+                @Html.ValidationMessageFor(x => x.PreviousTitle)
+                @Html.DropDownListFor(x => x.PreviousTitle, Model.PreviousTitles, "", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">
+                @Html.LabelFor(x => x.PreviousFirstName)
+                @Html.ValidationMessageFor(x => x.PreviousFirstName)
+                @Html.TextBoxFor(x => x.PreviousFirstName, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousMiddleName)">
+                @Html.LabelFor(x => x.PreviousMiddleName)
+                @Html.ValidationMessageFor(x => x.PreviousMiddleName)
+                @Html.TextBoxFor(x => x.PreviousMiddleName, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousLastName)">
+                @Html.LabelFor(x => x.PreviousLastName)
+                @Html.ValidationMessageFor(x => x.PreviousLastName)
+                @Html.TextBoxFor(x => x.PreviousLastName, new { @class = "form-control" })
+            </div>
+
+            if (Model.DisplayPolicy.Nationality)
+            {
+                <div class="form-group @Html.ValidationCssClassFor(x => x.NationalityId)">
+                    @Html.LabelFor(x => x.NationalityId)
+                    @Html.ValidationMessageFor(x => x.NationalityId)
+                    @Html.DropDownListFor(x => x.NationalityId, Model.Nationalities, "", new { @class = "form-control" })
+                </div>
+            }
+
+            if (Model.DisplayPolicy.TelephoneNumber)
+            {
+                <div class="form-group @Html.ValidationCssClassFor(x => x.TelephoneNumber)">
+                    @Html.LabelFor(x => x.TelephoneNumber)
+                    @Html.ValidationMessageFor(x => x.TelephoneNumber)
+                    @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = "form-control" })
+                </div>
+            }
+
+            <br />
+            <br />
+
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+            <button type="submit" name="action" class="button mobile-full-width" value="">Add</button>    
+        }
+
+        
+    </div>
+</div>
+
+
+
+@helper RenderDateSelector(Expression<Func<VM, DateTimeViewModel>> vmSelector,
+    Expression<Func<VM, int?>> daySelector, Expression<Func<VM, int?>> monthSelector,
+    Expression<Func<VM, int?>> yearSelector, string label)
+{
+var id = label.Replace(" ", "").ToLower();
+    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(vmSelector)">
+        <fieldset>
+            <legend>@label</legend>
+            <div class="form-hint">For example, 20 03 2003</div>
+            @Html.ValidationMessageFor(vmSelector)
+            <span class="inline-form-control">
+                <label for="@id-day">Day</label>
+                @Html.EduDayDropDownFor(daySelector, new { id = $"{id}-day", @class = "form-control", aria_describedby = $"help-{id}-day" })
+            </span>
+            <span class="inline-form-control">
+                <label for="opendate-month">Month</label>
+                @Html.EduMonthDropDownFor(monthSelector, new { id = $"{id}-month", @class = "form-control", aria_describedby = $"help-{id}-month" })
+            </span>
+            <span class="inline-form-contol">
+                <label for="opendate-year">Year</label>
+                @Html.EduYearDropDownFor(yearSelector, new { id = $"{id}-year", @class = "form-control", aria_describedby = $"help-{id}-year" })
+            </span>
+        </fieldset>
+    </div>
+}

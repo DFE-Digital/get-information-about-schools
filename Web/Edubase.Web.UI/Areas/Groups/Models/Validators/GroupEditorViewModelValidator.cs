@@ -11,6 +11,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
     using Services.Establishments;
     using Services.Security;
     using static GroupEditorViewModel;
+    using static GroupEditorViewModelBase;
     using EG = eLookupEstablishmentTypeGroup;
     using GT = eLookupGroupType;
     using VM = GroupEditorViewModel;
@@ -108,18 +109,18 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("Open date is invalid")
                     .Must(x => x.IsNotEmpty() && x.IsValid())
                     .WithMessage("{0} is a mandatory field", m => m.OpenDateLabel)
-                    .When(x => !x.GroupUID.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
+                    .When(x => !x.GroupUId.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
 
-                RuleFor(x => x.Name)
+                RuleFor(x => x.GroupName)
                     .NotEmpty()
                     .WithMessage("This field is mandatory")
                     .WithSummaryMessage("Please enter a name for the group")
                     .When(x => x.SaveGroupDetail)
-                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, model.LocalAuthorityId.Value, model.GroupUID)))
+                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, model.LocalAuthorityId.Value, model.GroupUId)))
                     .WithMessage("Group name already exists at this authority, please select another name")
                     .When(x => x.GroupTypeMode == eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
 
-                RuleFor(x => x.Name).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, existingGroupUId: model.GroupUID)))
+                RuleFor(x => x.GroupName).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, existingGroupUId: model.GroupUId)))
                     .WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
                     .When(x => x.GroupTypeMode != eGroupTypeMode.ChildrensCentre && x.GroupTypeMode != eGroupTypeMode.AcademyTrust && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
             });

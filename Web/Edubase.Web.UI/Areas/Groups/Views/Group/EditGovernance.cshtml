@@ -1,0 +1,38 @@
+﻿@using Edubase.Services.Enums
+@using Edubase.Common;
+@using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditGovernanceViewModel;
+@using L = Edubase.Services.Enums.eLookupGroupType;
+@model VM
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = Model.PageTitle;
+    Layout = "_EditLayoutPage.cshtml";
+}
+<div class="grid-row">
+    <div class="column-half">
+        <h1 class="bold-medium">Governance</h1>
+        <br />
+        <h2 class="bold-small">Add person</h2>
+        <p>Select role</p>
+
+        @using (Html.BeginForm("EditGovernanceAddPerson", "Group", new { id = Model.GroupUId }, FormMethod.Get))
+        {
+            <div class="form-group">
+                @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = x.Id.ToString() }),
+                                new { id = "roleid", @class = "form-control" })
+                <br />
+                <br />
+                <input type="submit" value="Add person" class="button" />
+                <br />
+                <br />
+            </div>
+        }
+
+        
+    </div>
+</div>
+
+<div class="grid-row">
+    @{ Html.RenderPartial("_Governors", Model.GovernorsDetails); }
+</div>

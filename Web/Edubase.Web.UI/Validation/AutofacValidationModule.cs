@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Edubase.Web.UI.Areas.Governors.Models;
+using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Areas.Groups.Models.Validators;
@@ -20,9 +22,9 @@ namespace Edubase.Web.UI.Validation
                     .Keyed<IValidator>(typeof(IValidator<EditEstablishmentModel>))
                     .As<IValidator>();
 
-            //builder.RegisterType<GroupEditorViewModelValidator>()
-            //        .Keyed<IValidator>(typeof(IValidator<GroupEditorViewModel>))
-            //        .As<IValidator>();
+            builder.RegisterType<CreateEditGovernorViewModelValidator>()
+                    .Keyed<IValidator>(typeof(IValidator<CreateEditGovernorViewModel>))
+                    .As<IValidator>();
         }
     }
 }
