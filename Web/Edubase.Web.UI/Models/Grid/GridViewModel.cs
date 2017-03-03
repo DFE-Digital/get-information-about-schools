@@ -11,6 +11,11 @@ namespace Edubase.Web.UI.Models.Grid
         public List<GridCellViewModel> HeaderCells { get; set; } = new List<GridCellViewModel>();
         public List<GridRowViewModel> Rows { get; set; } = new List<GridRowViewModel>();
 
+        /// <summary>
+        /// The ID of the Group or Establishment
+        /// </summary>
+        public int Id { get; set; }
+
         public GridViewModel()
         {
 
@@ -33,9 +38,9 @@ namespace Edubase.Web.UI.Models.Grid
             return this;
         }
 
-        public GridRowViewModel AddRow()
+        public GridRowViewModel AddRow(string keyOrId = null)
         {
-            var row = new GridRowViewModel(this);
+            var row = new GridRowViewModel(this) { KeyOrId = keyOrId };
             Rows.Add(row);
             return row;
         }

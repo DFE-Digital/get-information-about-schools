@@ -122,6 +122,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<EstablishmentDownloadService>().As<IEstablishmentDownloadService>();
             builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
             builder.RegisterType<EstablishmentWriteService>().As<IEstablishmentWriteService>();
+            builder.RegisterType<GovernorsWriteService>().As<IGovernorsWriteService>();
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();
             builder.RegisterType<LookupService>().As<ILookupService>();

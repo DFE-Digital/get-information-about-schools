@@ -15,5 +15,6 @@ namespace Edubase.Services.Governors
         Task<AzureSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload);
         Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = null, int? groupUId = null, IPrincipal principal = null);
         GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role);
+        Task<GovernorModel> GetGovernorAsync(int gid);
     }
 }

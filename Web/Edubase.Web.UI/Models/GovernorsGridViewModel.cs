@@ -17,17 +17,23 @@ namespace Edubase.Web.UI.Models
         public List<GridViewModel> Grids { get; set; } = new List<GridViewModel>();
 
         public GovernorsDetailsDto DomainModel { get; set; }
-        
+
+        public bool EditMode { get; private set; }
+
+        public int? Id { get; set; }
+
         public GovernorsGridViewModel(GovernorsDetailsDto dto)
-            : this(dto, false)
+            : this(dto, false, null)
         {
         }
 
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode)
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? id)
         {
             CreateGrids(dto, dto.CurrentGovernors, false);
             CreateGrids(dto, dto.HistoricGovernors, true);
             DomainModel = dto;
+            EditMode = editMode;
+            Id = id;
         }
 
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric)
@@ -45,7 +51,7 @@ namespace Edubase.Web.UI.Models
                 var list = governors.Where(x => x.RoleId == (int)role);
                 foreach (var governor in list)
                 {
-                    grid.AddRow().AddCell(governor.GetFullName(), displayPolicy.FullName)
+                    grid.AddRow(governor.Id.ToString()).AddCell(governor.GetFullName(), displayPolicy.FullName)
                         .AddCell(governor.Id, displayPolicy.Id)
                         .AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId)
                         .AddCell(governor.AppointmentStartDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)

@@ -11,6 +11,11 @@ namespace Edubase.Web.UI.Models.Grid
 
         public GridViewModel Parent { get; private set; }
 
+        /// <summary>
+        /// Record key / ID
+        /// </summary>
+        public string KeyOrId { get; set; }
+
         public GridRowViewModel AddCell(object content)
         {
             var cell = new GridCellViewModel(content?.ToString());

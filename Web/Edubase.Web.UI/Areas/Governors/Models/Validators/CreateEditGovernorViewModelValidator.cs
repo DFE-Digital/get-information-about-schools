@@ -27,10 +27,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
             RuleFor(x => x.AppointmentEndDate)
                 .Must(x => x.IsValid())
                 .WithMessage("This date is invalid")
-                .WithSummaryMessage("Date term ends")
+                .WithSummaryMessage(x => x.GovernorRole == GR.Member ? "Date stepped down is invalid" : "Date term ends is invalid")
                 .When(x => x.AppointmentEndDate.IsNotEmpty(), ApplyConditionTo.CurrentValidator)
                 .Must(x => x.IsNotEmpty())
-                .WithSummaryMessage("Date of appointment is required")
+                .WithSummaryMessage(x => x.GovernorRole == GR.Member ? "Date stepped down is required" : "Date term ends is required")
                 .WithMessage("Required")
                 .When(x => x.GovernorRole.OneOfThese(
                     GR.ChairOfGovernors, 

@@ -15,6 +15,7 @@
                 {
                     foreach (var row in grid.Rows)
                     {
+                        <div style="float:none; clear:both; margin-top:10px;">&nbsp;</div>
                         <h2 class="bold-xsmall">@row.Cells[0].Text</h2>
                         <dl>
                             @foreach (var cell in row.Cells.Skip(1))
@@ -23,6 +24,14 @@
                                 <dd>@(cell.Text ?? "Not recorded")</dd>
                             }
                         </dl>
+
+                        if (Model.EditMode)
+                        {
+                            <div style="float:none; clear:both;">
+                                @Html.ActionLink("Edit", "AddEditGovernor",  new { id = Model.Id, gid = row.KeyOrId }, new { @class = "button button-grey cancel mobile-full-width" })
+                                @Html.ActionLink("Remove", "RemoveGovernor", new { id = Model.Id, gid = row.KeyOrId }, new { @class = "button button-grey cancel mobile-full-width" })
+                            </div>
+                        }
                     }
                 }
                 else

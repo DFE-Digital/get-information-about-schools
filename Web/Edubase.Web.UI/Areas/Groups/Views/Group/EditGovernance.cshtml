@@ -11,12 +11,18 @@
 }
 <div class="grid-row">
     <div class="column-half">
+
+        @Html.ActionLink("View governance", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+
+        <div style="float:none; clear:both; margin-bottom:20px;"></div>
+
+
         <h1 class="bold-medium">Governance</h1>
         <br />
         <h2 class="bold-small">Add person</h2>
         <p>Select role</p>
 
-        @using (Html.BeginForm("EditGovernanceAddPerson", "Group", new { id = Model.GroupUId }, FormMethod.Get))
+        @using (Html.BeginForm("AddEditGovernor", "Group", new { id = Model.GroupUId }, FormMethod.Get))
         {
             <div class="form-group">
                 @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = x.Id.ToString() }),

@@ -178,6 +178,12 @@
             </div>
             <div id="governance" class="tab-content">
                 
+                @if (Model.CanUserEdit)
+                {
+                    @Html.ActionLink("Edit governance", "EditGovernance", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
+                }
+                <div style="clear:both; float:none;margin-bottom:30px;"></div>
+
                 @if (Model.GovernorsDetails.DomainModel.HasGovernors)
                 {
                     <div class="grid-row">

@@ -50,8 +50,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public IEnumerable<SelectListItem> Nationalities { get; set; }
 
         public int? GID { get; set; }
-
-        public string Title { get; set; }
+        
+        [DisplayName("Title")]
+        public string GovernorTitle { get; set; }
 
         [DisplayName("First name")]
         public string FirstName { get; set; }
@@ -112,7 +113,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         }
 
 
-        public IEnumerable<SelectListItem> GetTitles(string selectedTitle = null) => new[] { "Mr", "Mrs", "Ms", "Miss", "Dr", "Prof", "Rev", "Sir" }.Select(x => new SelectListItem { Text = x, Value = x, Selected = (x == selectedTitle) });
+        public IEnumerable<SelectListItem> GetTitles() => new[] { "Mr", "Mrs", "Ms", "Miss", "Dr", "Prof", "Rev", "Sir" }.Select(x => new SelectListItem { Text = x, Value = x });
 
     }
 }

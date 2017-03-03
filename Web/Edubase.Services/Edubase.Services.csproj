@@ -181,6 +181,8 @@
     <Compile Include="BlobService.cs" />
     <Compile Include="Enums\EnumSets.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
+    <Compile Include="Governors\GovernorsWriteService.cs" />
+    <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorModelBase.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\IServiceBusEndPoint.cs" />

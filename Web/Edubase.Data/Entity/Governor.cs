@@ -29,6 +29,7 @@ namespace Edubase.Data.Entity
         public DateTime? DOB { get; set; }
         public string Nationality { get; set; }
         public string PostCode { get; set; }
+        public string TelephoneNumber { get; set; }
 
         public int? GroupUID { get; set; }
         [ForeignKey("GroupUID")]

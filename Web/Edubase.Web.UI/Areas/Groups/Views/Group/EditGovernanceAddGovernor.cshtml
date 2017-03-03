@@ -9,10 +9,17 @@
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
     ViewBag.Title = Model.PageTitle;
+    ViewBag.SelectedTab = "EditGovernance";
     Layout = "_EditLayoutPage.cshtml";
 }
 <div class="grid-row">
     <div class="column-half">
+        
+        @Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+        <button type="submit" name="action" class="button mobile-full-width" value="">Save</button>
+
+        <div style="float:none; clear:both; margin-bottom:10px;"></div>
+
         <h1 class="bold-medium">Governance</h1>
         
         @using (Html.BeginForm("EditGovernanceAddPerson", "Group", new { area = "Groups" }, FormMethod.Post))
@@ -25,13 +32,11 @@
             @Html.HiddenFor(x => x.GID)
 
             <p>@Model.GovernorRoleName details</p>
-
-            @Html.Partial("_ValidationSummary", ViewData.ModelState)
-
-            <div class="form-group @Html.ValidationCssClassFor(x => x.Title)">
-                @Html.LabelFor(x => x.Title)
-                @Html.ValidationMessageFor(x => x.Title)
-                @Html.DropDownListFor(x => x.Title, Model.Titles, "", new { @class = "form-control" })
+            
+            <div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitle)">
+                @Html.LabelFor(x => x.GovernorTitle)
+                @Html.ValidationMessageFor(x => x.GovernorTitle)
+                @Html.DropDownListFor(x => x.GovernorTitle, Model.Titles, "", new { @class = "form-control" })
             </div>
 
             <div class="form-group @Html.ValidationCssClassFor(x => x.FirstName)">
@@ -73,7 +78,7 @@
 
             if (Model.DisplayPolicy.AppointmentEndDate)
             {
-                @RenderDateSelector(x => x.AppointmentEndDate, x => x.AppointmentEndDate.Day, x => x.AppointmentEndDate.Month, x => x.AppointmentEndDate.Year, "Date term ends")
+                @RenderDateSelector(x => x.AppointmentEndDate, x => x.AppointmentEndDate.Day, x => x.AppointmentEndDate.Month, x => x.AppointmentEndDate.Year, (Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends"))
             }
 
             if (Model.DisplayPolicy.EmailAddress)
@@ -145,7 +150,7 @@
             <br />
 
             @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
-            <button type="submit" name="action" class="button mobile-full-width" value="">Add</button>    
+            <button type="submit" name="action" class="button mobile-full-width" value="">Save</button>
         }
 
         

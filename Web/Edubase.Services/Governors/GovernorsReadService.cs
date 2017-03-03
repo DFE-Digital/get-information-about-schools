@@ -169,6 +169,14 @@ namespace Edubase.Services.Governors
             });
         }
 
+        public async Task<GovernorModel> GetGovernorAsync(int gid)
+        {
+            var displayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
+            var db = _dbContextFactory.Obtain();
+            var governorDataModel = await db.Governors.SingleOrThrowAsync(x => x.Id == gid);
+            return Map(governorDataModel, displayPolicy);
+        }
+
         private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<eLookupGovernorRole, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)
         {
             var db = _dbContextFactory.Obtain();
@@ -183,37 +191,43 @@ namespace Edubase.Services.Governors
             else query = query.Where(x => x.AppointmentEndDate > today || x.AppointmentEndDate == null);
 
             var dataModels = await query.ToListAsync();
-            return dataModels.Select(x =>
+            return dataModels.Select(governorDataModel =>
             {
-                var p = roleDisplayPolicies.Get((GR)x.RoleId.Value);
-                Guard.IsNotNull(p, () => new Exception("The display policy is null!"));
-                return new GovernorModel
-                {
-                    AppointingBodyId = Get(() => x.AppointingBodyId, p.AppointingBodyId),
-                    AppointingBodyName = Get(() => _cachedLookupService.GovernorAppointingBodiesGetAll().FirstOrDefault(l => l.Id == x.AppointingBodyId)?.Name, p.AppointingBodyId),
-                    AppointmentEndDate = Get(() => x.AppointmentEndDate, p.AppointmentEndDate),
-                    AppointmentStartDate = Get(() => x.AppointmentStartDate, p.AppointmentStartDate),
-                    DOB = Get(() => x.DOB, p.DOB),
-                    RoleId = x.RoleId,
-                    EmailAddress = Get(() => x.EmailAddress, p.EmailAddress),
-                    CreatedUtc = x.CreatedUtc,
-                    EstablishmentUrn = x.EstablishmentUrn,
-                    GroupUID = x.GroupUID,
-                    Id = Get(() => x.Id, p.Id),
-                    IsDeleted = x.IsDeleted,
-                    LastUpdatedUtc = x.LastUpdatedUtc,
-                    Nationality = Get(() => x.Nationality, p.Nationality),
-                    Person_FirstName = Get(() => x.Person.FirstName, p.FullName),
-                    Person_LastName = Get(() => x.Person.LastName, p.FullName),
-                    Person_MiddleName = Get(() => x.Person.MiddleName, p.FullName),
-                    Person_Title = Get(() => x.Person.Title, p.FullName),
-                    PostCode = Get(() => x.PostCode, p.PostCode),
-                    PreviousPerson_FirstName = Get(() => x.PreviousPerson.FirstName, p.PreviousFullName),
-                    PreviousPerson_LastName = Get(() => x.PreviousPerson.LastName, p.PreviousFullName),
-                    PreviousPerson_MiddleName = Get(() => x.PreviousPerson.MiddleName, p.PreviousFullName),
-                    PreviousPerson_Title = Get(() => x.PreviousPerson.Title, p.PreviousFullName)
-                };
+                var policy = roleDisplayPolicies.Get((GR)governorDataModel.RoleId.Value);
+                Guard.IsNotNull(policy, () => new Exception("The display policy is null!"));
+                return Map(governorDataModel, policy);
             });
+        }
+
+        private GovernorModel Map(Governor governor, GovernorDisplayPolicy policy)
+        {
+            return new GovernorModel
+            {
+                AppointingBodyId = Get(() => governor.AppointingBodyId, policy.AppointingBodyId),
+                AppointingBodyName = Get(() => _cachedLookupService.GovernorAppointingBodiesGetAll().FirstOrDefault(l => l.Id == governor.AppointingBodyId)?.Name, policy.AppointingBodyId),
+                AppointmentEndDate = Get(() => governor.AppointmentEndDate, policy.AppointmentEndDate),
+                AppointmentStartDate = Get(() => governor.AppointmentStartDate, policy.AppointmentStartDate),
+                DOB = Get(() => governor.DOB, policy.DOB),
+                RoleId = governor.RoleId,
+                EmailAddress = Get(() => governor.EmailAddress, policy.EmailAddress),
+                CreatedUtc = governor.CreatedUtc,
+                EstablishmentUrn = governor.EstablishmentUrn,
+                GroupUID = governor.GroupUID,
+                Id = Get(() => governor.Id, policy.Id),
+                IsDeleted = governor.IsDeleted,
+                LastUpdatedUtc = governor.LastUpdatedUtc,
+                Nationality = Get(() => governor.Nationality, policy.Nationality),
+                Person_FirstName = Get(() => governor.Person.FirstName, policy.FullName),
+                Person_LastName = Get(() => governor.Person.LastName, policy.FullName),
+                Person_MiddleName = Get(() => governor.Person.MiddleName, policy.FullName),
+                Person_Title = Get(() => governor.Person.Title, policy.FullName),
+                PostCode = Get(() => governor.PostCode, policy.PostCode),
+                PreviousPerson_FirstName = Get(() => governor.PreviousPerson.FirstName, policy.PreviousFullName),
+                PreviousPerson_LastName = Get(() => governor.PreviousPerson.LastName, policy.PreviousFullName),
+                PreviousPerson_MiddleName = Get(() => governor.PreviousPerson.MiddleName, policy.PreviousFullName),
+                PreviousPerson_Title = Get(() => governor.PreviousPerson.Title, policy.PreviousFullName),
+                TelephoneNumber = Get(() => governor.TelephoneNumber, policy.TelephoneNumber)
+            };
         }
 
         private T Get<T>(Func<T> func, bool flag)
