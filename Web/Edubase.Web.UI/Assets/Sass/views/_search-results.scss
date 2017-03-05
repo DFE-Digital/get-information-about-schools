@@ -166,6 +166,7 @@ div.approval-data
 
 table.approval-items {
     display: table;
+    font-size: 14px;
     
     th {
         font-weight:bold;
@@ -175,7 +176,8 @@ table.approval-items {
     td, th {
         font-size: 13px;
         padding:5px 3px 5px 3px;
-        border:2px solid #eee;
+        border-bottom:2px solid #eee;
+        width: 12.5%;
      }
 
     
@@ -187,12 +189,44 @@ table.approval-items {
     }
 
     @include media(mobile) {
-        display: none;
+        border-bottom: 1px solid #eee;
+        thead {
+            display: none;
+        }
+        tr {
+            border-top: 3px solid #eee;            
+        }
+        td  {
+            clear: left;
+            display: block;
+            float: left;
+            width: 100%;
+            font-size: 14px;
+            padding: 0.5em 0;
+            border-bottom: 1px solid #eee;
+            &:before {
+                content: attr(aria-label);
+                float: left;
+                font-weight: bold;
+                padding-right: 0.5em
+            }
+            &:last-child {
+                border:0;
+            }
+        }
     }
 }
 
 ul.approval-items{
     display:none;
+
+    dl {
+        border-bottom-width: 2px;
+        font-size: 14px;
+    }
+    dt {
+        font-weight: bold;
+    }
     @include media(mobile){
         display:block;
     }
