@@ -40,7 +40,7 @@
                     @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
                 }
 
-                <div style="float:none; clear:both;"></div>
+                <div style="float:none; clear:both;"></div><!-- Sorry Jon. -->
 
                 <table class="borderless no-padding">
                     @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
@@ -169,7 +169,7 @@
                     </ul>
                 </div>
 
-                @if (Model.CanUserEdit)
+                @if (Model.CanUserEdit && Model.Establishments.Count > 0)
                 {
                     @Html.ActionLink("Edit " + Model.EstablishmentsPluralName.ToLower(), "EditLinks", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
                 }
