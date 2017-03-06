@@ -41,6 +41,7 @@ namespace Edubase.Web.UI.Models
             foreach (var role in dto.ApplicableRoles)
             {
                 var grid = new GridViewModel(GetRoleName(role) + (isHistoric ? $" (in past 12 months)" : string.Empty));
+                grid.Tag = isHistoric ? "historic" : "current";
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
                 Guard.IsNotNull(displayPolicy, () => new Exception($"The display policy should not be null for the role '{role}'"));
                 bool includeEndDate = ((isHistoric && role == GR.Member || role != GR.Member) 

@@ -16,6 +16,11 @@ namespace Edubase.Web.UI.Models.Grid
         /// </summary>
         public int Id { get; set; }
 
+        /// <summary>
+        /// A useful tag. And why not.
+        /// </summary>
+        public string Tag { get; set; }
+
         public GridViewModel()
         {
 
