@@ -382,6 +382,8 @@
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
+    <Content Include="Assets\Scripts\libs\vue\vue.js" />
+    <Content Include="Assets\Scripts\libs\vue\vue.min.js" />
     <Content Include="Assets\Scripts\Views\bulk-academies.js" />
     <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
@@ -761,6 +763,7 @@
     <Content Include="Assets\Sass\views\_school-details.scss" />
     <Content Include="Assets\Sass\views\_school-search.scss" />
     <Content Include="Assets\Sass\views\_search-results.scss" />
+    <Content Include="Assets\Sass\views\_mergers.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -837,6 +840,8 @@
     <Content Include="Views\Establishment\EditIEBT.cshtml" />
     <Content Include="Views\Tools\BulkAcademies.cshtml" />
     <Content Include="Views\Establishment\EditLocation.cshtml" />
+    <Content Include="Views\Prototype\mergeSchools.cshtml" />
+    <Content Include="Views\Tools\MergersTool.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

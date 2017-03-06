@@ -43,5 +43,10 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
+
+        public ActionResult MergersTool()
+        {
+            return View();
+        }
     }
 }

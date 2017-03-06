@@ -1,0 +1,577 @@
+﻿@{
+    ViewBag.Title = "Edubase: Amalgamations and mergers tool";
+    ViewBag.bodyClasses = "amalgamate";
+}
+
+<div id="mergers-app">
+    <div class="grid-row">
+        <div class="column-full">
+            <h1 class="heading-large" id="page-heading">
+                <span v-show="mergerType ===''">Amalgamations and mergers tool</span>
+                <span v-show="mergerType== 'merger' && !validLinkDate">Merger</span>
+                <span  v-show="validLinkDate">Merger complete</span>
+            </h1>
+        </div>
+        <div v-bind:class="['error-summary' , showGlobalError ? '' :' hidden']">
+            <h2 v-bind:class="['heading-medium error-summary-heading', (leadEstablishmentError || linkedEstablishmentError) ? '' : 'hidden']">
+                Invalid <abbr title="Unique reference number">URN</abbr>
+            </h2>
+            <h2 class="heading-medium error-summary-heading missing-date hidden">
+                Information missing
+            </h2>
+            <h2 class="heading-medium error-summary-heading no-academies hidden">
+                No academies have been specified
+            </h2>
+            <p class="invalid-urn error-sub-heading hidden">Lead school not recognised</p>
+            <p class="missing-date error-sub-heading hidden">Please specify an opening date</p>
+            <ul class="error-summary-list">
+                <li v-bind:class="['error-message', (leadEstablishmentError || linkedEstablishmentError) ? '' : 'hidden']"><a href="#establishment-urn">URN is invalid</a></li>
+                <li v-bind:class="['error-message', mergedDateError ? '' : 'hidden']"><a href="#academy-open-date">Merger date not specified</a></li>
+                @*<li class="error-message no-academies hidden"><a href="#academy-type">Please add an establishment to link</a></li>*@
+            </ul>
+        </div>
+        <form>
+            <div v-show="mergerType ===''">
+                <div class="column-two-thirds">
+                    <p>
+                        You can use this to amalgamate or merge establishments. This
+                        process automatically creates/closes records and creates predecessor/
+                        successor links.
+                    </p>
+
+                    <fieldset class="merger-almalgamation">
+                        <legend>Select the process you are interested in.</legend>
+
+                        <p id="almagamation-desc">
+                            Amalgamation - a proposal for two or more schools to close and a new
+                            school to be established.
+                        </p>
+                        <p id="merger-desc">
+                            Merger - a proposal for one or more schools to close and the remaining
+                            school to be altered.
+                        </p>
+                        <div v-bind:class="['form-group', mergerTypeError ? 'error' : '']">
+                            <span v-bind:class="['error-message', mergerTypeError ? '' : 'hidden' ]">Please select almalgamation or merger.</span>
+                            <label class="block-label selection-button-radio" for="radio-amalgamation">
+                                <input id="radio-amalgamation" type="radio" name="radio-group" value="amalagamation" aria-describedby="almagamation-desc" v-model="mergerType">
+                                Amalagamation
+                            </label>
+                            <label class="block-label selection-button-radio" for="radio-merger">
+                                <input id="radio-merger" type="radio" name="radio-group" value="merger" aria-describedby="merger-desc" v-model="mergerType">
+                                Merger
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="column-full">
+                    <div class="submit-cancel-panel">
+                        <button type="submit" name="action" value="" class="button" id="go-create" v-on:click.prevent="checkMergeType">Continue</button>
+                        <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+            <div v-show="mergerType !=='' && !validSelection">
+                <div class="column-two-thirds" id="merger-details">
+                    <p>You can propose closing one or more schools and altering the remaining school.</p>
+
+                    <h2 class="heading-small">Select the lead establishment</h2>
+                    <div v-bind:class="['form-group', leadEstablishmentError ? 'error' : '' ]">
+                        <span class="form-hint">
+                            The lead establishment will remain open
+                        </span>
+                        <span v-bind:class="['error-message', leadEstablishmentError ? '' : 'hidden' ]">Please check the URN</span>
+                        <label class="form-label" for="lead-establishment">
+                            Enter the lead establishment <abbr title="Unique Reference Number">URN</abbr>
+
+                        </label>
+                        <input class="form-control" id="lead-establishment" type="text" v-on:change="setLeadEstablishment($event.target.value)" />
+                    </div>
+
+                    <div v-bind:class="['form-group', linkedEstablishmentError ? 'error' : '' ]">
+                        <fieldset>
+                            <legend>Select additional establishments to be merged</legend>
+                            <p class="form-hint">
+                                Up to 3 additional establishments can be merged (minimum of 1 establishment).
+                            </p>
+                            <dl class="field-group">
+                                <dt>
+                                    <label class="form-label">Enter the establishment URN(s)</label>
+                                    <span v-bind:class="['error-message', linkedEstablishmentError ? '' : 'hidden' ]">Please check the URN</span>
+                                </dt>
+                                <dd>
+                                    <ol class="linked-establishments">
+                                        <li><input class="form-control" id="establishment-0" type="text" v-on:change="addEstablishment($event.target.value, 0)" /></li>
+                                        <li><input class="form-control" id="establishment-1" type="text" v-on:change="addEstablishment($event.target.value, 1)" /></li>
+                                        <li><input class="form-control" id="establishment-2" type="text" v-on:change="addEstablishment($event.target.value, 2)" /></li>
+                                    </ol>
+                                </dd>
+                            </dl>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="column-full">
+                    <div class="submit-cancel-panel">
+                        <button type="submit" name="action" value="" class="button" v-on:click.prevent="establishmentSelectionValid">Continue</button>
+                        <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div v-show="validSelection && !validLinkDate">
+                <div class="column-two-thirds" id="merger-summary">
+                    <h1 class="heading-large">Merger</h1>
+                    <p>You can propose closing one or more schools and altering the remaining school.</p>
+                    <h2 class="heading-small">Establishments to be merged</h2>
+                    <p>Lead establishment (remains open)</p>
+                    <p><span>{{ leadEstablishmentUrn }}</span> {{ leadEstablishmentName}}
+                    </p>
+
+                    <dl>
+                        <dt>Establishments to be merged</dt>
+                        <dd v-for="school in linkedEstablishments">
+                            <strong>{{school.name}}</strong>
+                        </dd>
+                    </dl>
+
+                    <div v-bind:class="['form-group range-group', mergedDateError ? 'error' : '' ]">
+                        <fieldset>
+                            <span v-bind:class="['error-message', mergedDateError ? '' : 'hidden']">Please select establishment open date</span>
+                            <legend>Merge date</legend>
+                            <div class="form-hint">For example, 20 03 2003</div>
+
+                            <span class="inline-form-control">
+                                <label for="mergedate-day">Day</label>
+                                <input class="form-control date-text-day" id="mergedate-day" name="OpenDate.Day" type="text" v-model="mergedDateDay">
+
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="mergedate-month">Month</label>
+                                <input class="form-control date-text-month" id="mergedate-month" name="OpenDate.Month" type="text" v-model="mergedDateMonth">
+
+                            </span>
+                            <span class="inline-form-contol">
+                                <label for="mergedate-year">Year</label>
+                                <input class="form-control date-text-year" id="mergedate-year" name="OpenDate.Year" type="text" v-model="mergedDateYear">
+                            </span>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="column-full">
+                    <div class="submit-cancel-panel">
+                        <button type="submit" name="action" value="" class="button" v-on:click.prevent="checkMergeDate">Process merger</button>
+                        <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+            <div v-show="validLinkDate">
+                <div class="column-two-thirds">
+                    <dl class="summary-list">
+                        <dt><strong class="bold-small">Closing establishment details</strong></dt>
+                        <dd>
+                            <ol class="linked-establishments">
+                                <li v-for="school in linkedEstablishments"><span>{{school.id}} - {{school.name}}</span></li>
+                            </ol>
+                        </dd>
+                    </dl>
+                    
+                    <h3 class="heading-medium">Merged establishment details</h3>
+                    <a href="/Establishment/Details/v-bind:leadEstablishmentUrn">{{leadEstablishmentUrn}} - {{leadEstablishmentName}}</a>
+                    <ul>
+                        <li>Establishment type: Free schools</li>
+                        <li>Amalgamation date: {{displayDate}}</li>
+                    </ul> 
+                    
+                    <p>
+                        Please update the merged record to reflect any changes (for
+                        example, establishment name or age range).
+                    </p>                    
+                </div>                
+            </div>
+        </form>
+    </div>
+    </div>
+
+@section ViewScripts{
+    @if (System.Configuration.ConfigurationManager.AppSettings["Environment"] == "localdev")
+    {
+        <script src="/Assets/Scripts/libs/vue/vue.js"></script>
+    }
+    else
+    {
+        <script src="/Assets/Scripts/libs/vue/vue.min.js"></script>
+    }
+    
+
+    <script>
+    var schools = [
+        {
+            "id": "117467",
+            "name": "St Andrew's Church of England Voluntary Aided Primary School, Hitchin"
+        },
+        {
+            "id": "137288",
+            "name": "Hitchin Girls' School"
+        },
+        {
+            "id": "139154",
+            "name": "Hitchin Boys' School"
+        },
+        {
+            "id": "140611",
+            "name": "Wilshere-Dacre Junior Academy"
+        },
+        {
+            "id": "117314",
+            "name": "William Ransom Primary School"
+        },
+        {
+            "id": "117113",
+            "name": "Highbury Infant School and Nursery"
+        },
+        {
+            "id": "117115",
+            "name": "Highover Junior Mixed and Infant School"
+        },
+        {
+            "id": "117114",
+            "name": "Strathmore Infant and Nursery School"
+        },
+        {
+            "id": "117337",
+            "name": "Samuel Lucas Junior Mixed and Infant School"
+        },
+        {
+            "id": "138322",
+            "name": "Our Lady Catholic Primary School"
+        },
+        {
+            "id": "117329",
+            "name": "Mary Exton Primary School"
+        },
+        {
+            "id": "117253",
+            "name": "Whitehill Junior School"
+        },
+        {
+            "id": "117499",
+            "name": "The Priory School"
+        },
+        {
+            "id": "117224",
+            "name": "Purwell Primary School"
+        },
+        {
+            "id": "133323",
+            "name": "Oughton Primary and Nursery School"
+        },
+        {
+            "id": "117630",
+            "name": "Kingshott School"
+        },
+        {
+            "id": "117401",
+            "name": "Ickleford Primary School"
+        },
+        {
+            "id": "117537",
+            "name": "The Highfield School"
+        },
+        {
+            "id": "138354",
+            "name": "St Thomas More Roman Catholic Primary School"
+        },
+        {
+            "id": "117440",
+            "name": "St Ippolyts Church of England Aided Primary School"
+        },
+        {
+            "id": "117504",
+            "name": "Fearnhill School"
+        },
+        {
+            "id": "117177",
+            "name": "Wymondley Junior Mixed and Infant School"
+        },
+        {
+            "id": "117613",
+            "name": "St Francis College"
+        },
+        {
+            "id": "117612",
+            "name": "St Christopher School"
+        },
+        {
+            "id": "117186",
+            "name": "Icknield Infant and Nursery School"
+        },
+        {
+            "id": "117330",
+            "name": "Lordship Farm Primary School"
+        },
+        {
+            "id": "139902",
+            "name": "The Da Vinci Studio School of Creative Enterprise"
+        },
+        {
+            "id": "117121",
+            "name": "Wilbury Junior School"
+        },
+        {
+            "id": "130721",
+            "name": "North Hertfordshire College"
+        },
+        {
+            "id": "117259",
+            "name": "Pixmore Junior School"
+        },
+        {
+            "id": "117395",
+            "name": "Graveley Primary School"
+        },
+        {
+            "id": "117123",
+            "name": "Hillshott Infant School and Nursery"
+        },
+        {
+            "id": "142413",
+            "name": "Garden City Montessori School"
+        },
+        {
+            "id": "138389",
+            "name": "Garden City Academy"
+        },
+        {
+            "id": "117128",
+            "name": "Pirton School"
+        },
+        {
+            "id": "117614",
+            "name": "Princess Helena College"
+        },
+        {
+            "id": "117345",
+            "name": "Stonehill School"
+        },
+        {
+            "id": "137997",
+            "name": "Woolgrove School, Special Needs Academy"
+        },
+        {
+            "id": "135021",
+            "name": "Fairfield Park Lower School"
+        },
+        {
+            "id": "117403",
+            "name": "Preston Primary School"
+        },
+        {
+            "id": "137895",
+            "name": "The John Henry Newman Catholic School"
+        },
+        {
+            "id": "117223",
+            "name": "Northfields Infants and Nursery School"
+        },
+        {
+            "id": "117445",
+            "name": "Offley Endowed Primary School"
+        },
+        {
+            "id": "117122",
+            "name": "Grange Junior School"
+        },
+        {
+            "id": "117385",
+            "name": "St Mary's Junior Mixed School"
+        },
+        {
+            "id": "117384",
+            "name": "St Mary's Infants' School"
+        },
+        {
+            "id": "140037",
+            "name": "The Thomas Alleyne School"
+        },
+        {
+            "id": "117322",
+            "name": "Woolenwick Junior School"
+        },
+        {
+            "id": "117323",
+            "name": "Woolenwick Infant and Nursery School"
+        },
+        {
+            "id": "117442",
+            "name": "Norton St Nicholas CofE (VA) Primary School"
+        }
+    ];
+
+        var overlay = $('<div id="demo-establishment-list" class="hidden"><ul></ul></div>'),
+            schoolsContent = [];
+
+
+        $(schools).each(function(n, school) {
+            console.log(school);
+            schoolsContent.push('<li>' + school.id +": " + school.name + '</li>');
+        });
+
+        overlay.find('ul').html(schoolsContent.join(''));
+
+        $('body').append(overlay);
+
+        
+
+    var mergersApp = new Vue({
+        el: '#mergers-app',
+        data: {
+            mergerType: '',
+            leadEstablishmentUrn: '',
+            leadEstablishmentName: '',
+            linkedEstablishments: [],
+            establishmentsSelected: false,
+            mergerTypeError: false,
+            leadEstablishmentError: false,
+            linkedEstablishmentError: false,
+            validSelection: false,
+            validLinkDate: false,
+            mergedDateDay: '',
+            mergedDateMonth: '',
+            mergedDateYear: '',
+            mergedDateError: false,
+            schools: schools
+        },
+        computed: {
+            showGlobalError: function () {                
+                return this.leadEstablishmentError || this.linkedEstablishmentError || this.mergedDateError;
+            },
+            displayDate: function() {
+                return this.mergedDateDay + '/' + this.mergedDateMonth + '/' + this.mergedDateYear;
+            }
+        },
+        methods: {
+            checkMergeType: function() {
+                if (this.mergerType === '') {
+                    this.mergerTypeError = true;
+                } else {
+                    this.mergerTypeError = false;
+                }
+            },
+            setLeadEstablishment: function(urn) {
+                var school = this.schools.filter(function(school, i) {                    
+                    if (urn === school.id) {
+                        return school;
+                    }
+                });
+
+                if (school.length) {
+                    this.leadEstablishmentUrn = school[0].id;
+                    this.leadEstablishmentName = school[0].name;
+                    this.leadEstablishmentError = false;
+                } else {
+                    this.leadEstablishmentError = true;
+                }
+                
+            },
+            addEstablishment: function(urn, pos) {
+                var estabDetails = this.schools.filter(function(school, i) {                    
+                    if (urn === school.id) {
+                        return school;
+                    }
+                });
+
+                if (estabDetails.length) {
+                    this.linkedEstablishments.splice(pos, 0, estabDetails[0]);
+                    this.linkedEstablishmentError = false;
+                } else {
+                    this.linkedEstablishmentError = true;
+                }
+                
+            },
+            checkMergeDate: function() {
+                var day = parseInt(this.mergedDateDay, 10),
+                    month = parseInt(this.mergedDateMonth, 10),
+                    year = parseInt(this.mergedDateYear, 10),
+                    months31 = [0,2,4,6,7,9,11],
+                    currentYear = new Date().getFullYear();
+
+                if (!day || !month || !year || isNaN(day) || isNaN(month) || isNaN(year) ) {
+                    this.mergedDateError = true;
+                    console.log("1");
+                    return;
+                }
+
+                var isLeap = new Date(year, 1, 29).getMonth() === 1; // will return march for non leap years
+
+                if (isLeap && month === 1) {
+                    if (day > 29) {
+                        this.mergedDateError = true;
+                        console.log("2");
+                        return;
+                    }
+                } else if (month === 1) {
+                    if (day > 28) {
+                        this.mergedDateError = true;
+                        console.log('3');
+                        return;
+                    }
+                }
+
+                if (months31.indexOf(month - 1)) {
+                    if (day < 1 || day > 31) {
+                        console.log('4');
+                        this.mergedDateError = true;
+                        return;
+                    }
+                } else {
+                    if (day < 1 || day > 30) {
+                        console.log('5');
+                        this.mergedDateError = true;
+                        return;
+                    }
+                }
+
+                if (month < 1 || month > 12) {
+                    console.loglog('6');
+                    this.mergedDateError = true;
+                    return;
+                }
+
+                if (year < 2010 || year > currentYear + 5) {
+                    console.log('7');
+                    this.mergedDateError = true;
+                    return;
+                }
+                this.mergedDateError = false;
+                this.validLinkDate = true;
+            },
+            establishmentSelectionValid: function () {
+                this.validSelection = (this.leadEstablishmentUrn !== '' & !this.leadEstablishmentError && this.linkedEstablishments.length > 0);
+                if (!this.validSelection) {
+                    if (!this.leadEstablishmentName) {
+                        this.leadEstablishmentError = true;
+
+                    } else if (this.linkedEstablishments.length < 1) {
+                        this.linkedEstablishmentError = true;
+                    }
+                }
+            },
+            restart: function() {
+                window.location = '/Tools/MergersTool';
+            }
+        }
+        
+    });
+
+
+    $('#page-heading').on('click', function () {
+        console.log("heading click");
+        overlay.toggleClass('hidden');
+    });
+        var $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']");
+        new GOVUK.SelectionButtons($blockLabels);
+    </script>
+}
+
+
+
