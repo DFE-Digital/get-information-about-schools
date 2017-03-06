@@ -172,7 +172,7 @@
             <tr>
                 <th scope="row">Group/Collaboration name:</th>
                 <td>
-                    @(Model.Group?.Name ?? "Not recorded")
+                    @(Model.Groups.FirstOrDefault()?.Name ?? "Not recorded")
                 </td>
             </tr>
         }
