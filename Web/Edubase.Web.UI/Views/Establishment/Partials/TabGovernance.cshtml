@@ -1,12 +1,10 @@
 ﻿@model EstablishmentDetailViewModel
 
 <div id="school-governance" class="tab-content">
-    @if (Model.GovernorsDetails.DomainModel.HasGovernors)
-    {
-        Html.RenderPartial("_Governors", Model.GovernorsDetails);
-    }
-    else
-    {
-        <p>There is no governance information for this establishment</p>
+         @if (Model.UserCanEdit)
+         {
+             <a href="#" class="button button-grey mobile-full-width">Edit governance information</a>
+         }
+               @if (Model.GovernorsDetails.DomainModel.HasGovernors) { Html.RenderPartial("_Governors", Model.GovernorsDetails); } else { <p>There is no governance information for this establishment</p>
     }
 </div>
