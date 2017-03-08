@@ -102,6 +102,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public GovernorDisplayPolicy DisplayPolicy { get; internal set; }
 
+        public ReplaceGovernorViewModel ReplaceGovernorViewModel { get; set; } = new ReplaceGovernorViewModel();
+
         public CreateEditGovernorViewModel(GroupModel domainModel)
         {
             _groupEditorViewModel = new GroupEditorViewModelBase(domainModel);

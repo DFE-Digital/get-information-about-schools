@@ -5,18 +5,15 @@ using System.Web;
 
 namespace Edubase.Web.UI.Models.Grid
 {
-    public class GridRowViewModel
+    public class GridRowViewModel<T>
     {
         public List<GridCellViewModel> Cells { get; set; } = new List<GridCellViewModel>();
 
-        public GridViewModel Parent { get; private set; }
+        public GridViewModel<T> Parent { get; private set; }
+        
+        public T Model { get; set; }
 
-        /// <summary>
-        /// Record key / ID
-        /// </summary>
-        public string KeyOrId { get; set; }
-
-        public GridRowViewModel AddCell(object content)
+        public GridRowViewModel<T> AddCell(object content)
         {
             var cell = new GridCellViewModel(content?.ToString());
             Cells.Add(cell);
@@ -25,13 +22,13 @@ namespace Edubase.Web.UI.Models.Grid
             return this;
         }
 
-        public GridRowViewModel AddCell(object content, bool condition)
+        public GridRowViewModel<T> AddCell(object content, bool condition)
         {
             if (condition) AddCell(content);
             return this;
         }
 
-        public GridRowViewModel(GridViewModel parent)
+        public GridRowViewModel(GridViewModel<T> parent)
         {
             Parent = parent;
         }

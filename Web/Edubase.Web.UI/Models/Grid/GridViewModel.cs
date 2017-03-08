@@ -5,11 +5,11 @@ using System.Web;
 
 namespace Edubase.Web.UI.Models.Grid
 {
-    public class GridViewModel
+    public class GridViewModel<T>
     {
         public string Title { get; set; }
         public List<GridCellViewModel> HeaderCells { get; set; } = new List<GridCellViewModel>();
-        public List<GridRowViewModel> Rows { get; set; } = new List<GridRowViewModel>();
+        public List<GridRowViewModel<T>> Rows { get; set; } = new List<GridRowViewModel<T>>();
 
         /// <summary>
         /// The ID of the Group or Establishment
@@ -31,21 +31,21 @@ namespace Edubase.Web.UI.Models.Grid
             Title = title;
         }
 
-        public GridViewModel AddHeaderCell(string text)
+        public GridViewModel<T> AddHeaderCell(string text)
         {
             HeaderCells.Add(new GridCellViewModel(text));
             return this;
         }
 
-        public GridViewModel AddHeaderCell(string text, bool condition)
+        public GridViewModel<T> AddHeaderCell(string text, bool condition)
         {
             if(condition) HeaderCells.Add(new GridCellViewModel(text));
             return this;
         }
 
-        public GridRowViewModel AddRow(string keyOrId = null)
+        public GridRowViewModel<T> AddRow(T domainModel)
         {
-            var row = new GridRowViewModel(this) { KeyOrId = keyOrId };
+            var row = new GridRowViewModel<T>(this) { Model = domainModel };
             Rows.Add(row);
             return row;
         }

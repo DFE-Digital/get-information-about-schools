@@ -1,6 +1,4 @@
-﻿@using Edubase.Services.Governors.Models;
-@using Edubase.Services.Governors.DisplayPolicies;
-@using Edubase.Services.Enums;
+﻿@using Edubase.Services.Enums;
 @model GovernorsGridViewModel
 
 <div class="column-two-thirds">
@@ -9,13 +7,13 @@
         // Render lists
         foreach (var grid in Model.Grids)
         {
+            <div style="float:none; clear:both;"></div>
             <div class="governor-list">
-                <h2 class="bold-xsmall">@grid.Title</h2>
+                <h2 class="bold-small">@grid.Title</h2>
                 @if (grid.Rows.Any())
                 {
                     foreach (var row in grid.Rows)
                     {
-                        <div style="float:none; clear:both; margin-top:10px;">&nbsp;</div>
                         <h2 class="bold-xsmall">@row.Cells[0].Text</h2>
                         <dl>
                             @foreach (var cell in row.Cells.Skip(1))
@@ -25,11 +23,15 @@
                             }
                         </dl>
 
-                        if (Model.EditMode && grid.Tag == "historic")
+                        if (Model.EditMode && grid.Tag == "current")
                         {
-                            <div style="float:none; clear:both;">
-                                @Html.ActionLink("Edit", "AddEditGovernor",  new { id = Model.Id, gid = row.KeyOrId }, new { @class = "button button-grey cancel mobile-full-width" })
-                                @Html.ActionLink("Remove", "RemoveGovernor", new { id = Model.Id, gid = row.KeyOrId }, new { @class = "button button-grey cancel mobile-full-width" })
+                            <div style="margin-bottom:20px;">
+                                @Html.ActionLink("Edit", "AddEditGovernor",  new { id = Model.Id, gid = row.Model.Id }, new { @class = "button button-grey cancel" })
+                                @Html.ActionLink("Remove", "RemoveGovernor", new { id = Model.Id, gid = row.Model.Id }, new { @class = "button button-grey cancel" })
+                                @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
+                                {
+                                    @Html.ActionLink("Replace", "AddEditGovernor", new { id = Model.Id, gid = row.Model.Id, replace = true }, new { @class = "button button-grey cancel" })
+                                }
                             </div>
                         }
                     }
@@ -38,7 +40,6 @@
                 {
                     <p class="none">Not recorded</p>
                 }
-                <hr />
             </div>
         }
     }
@@ -62,7 +63,7 @@
                         </thead>
                         <tbody>
                             @foreach (var row in grid.Rows)
-                    {
+                            {
                                 <tr>
                                     @foreach (var cell in row.Cells)
                                     {
@@ -87,7 +88,7 @@
         foreach (var grid in Model.Grids)
         {
             <div class="governor-list mobile-view">
-                <h2 class="bold-xsmall">@grid.Title</h2>
+                <h2 class="bold-small">@grid.Title</h2>
                 @if (grid.Rows.Any())
                 {
                     <table>

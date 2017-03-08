@@ -35,7 +35,7 @@
                         maxHeight = tabHeight;
                     }
                 });
-                return maxHeight;
+                return maxHeight-1;
             }
 
             if ($(window).width() > 641) {

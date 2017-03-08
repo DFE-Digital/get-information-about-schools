@@ -10,6 +10,7 @@ using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
+using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
@@ -39,6 +40,7 @@ namespace Edubase.Web.UI.Controllers
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IFileDownloadFactoryService _downloadService;
+        private readonly NomenclatureService _nomenclatureService;
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService, IMapper mapper, 
@@ -46,7 +48,8 @@ namespace Edubase.Web.UI.Controllers
             IEstablishmentWriteService establishmentWriteService,
             ICachedLookupService cachedLookupService,
             IGovernorsReadService governorsReadService,
-            IFileDownloadFactoryService downloadService)
+            IFileDownloadFactoryService downloadService,
+            NomenclatureService nomenclatureService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
@@ -56,6 +59,7 @@ namespace Edubase.Web.UI.Controllers
             _cachedLookupService = cachedLookupService;
             _governorsReadService = governorsReadService;
             _downloadService = downloadService;
+            _nomenclatureService = nomenclatureService;
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
@@ -249,7 +253,7 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id);
             
             using (MiniProfiler.Current.Step("Retrieving Governors Details"))
-                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(urn: id, principal: User));
+                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(urn: id, principal: User), _nomenclatureService);
 
             using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
                 viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment);

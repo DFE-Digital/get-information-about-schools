@@ -98,7 +98,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUID.Value);
 
             using (MiniProfiler.Current.Step("Retrieving Governors Details"))
-                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User));
+                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User), _nomenclatureService);
 
             return View(viewModel);
         }
@@ -201,14 +201,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.GovernorRoles = (await _lookup.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
 
             using (MiniProfiler.Current.Step("Retrieving Governors Details"))
-                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User), true, id);
+                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User), true, id, _nomenclatureService);
 
             return View("EditGovernance", viewModel);
         }
 
         [HttpGet]
         [Route("Edit/{id:int}/Governance/AddEdit")]
-        public async Task<ActionResult> AddEditGovernor(int id, eLookupGovernorRole? role, int? gid)
+        public async Task<ActionResult> AddEditGovernor(int id, eLookupGovernorRole? role, int? gid, bool? replace)
         {
             if (role == null && gid == null) throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
 
@@ -219,32 +219,44 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var model = await _governorsReadService.GetGovernorAsync(gid.Value);
                 role = (eLookupGovernorRole)model.RoleId.Value;
-                viewModel.AppointingBodyId = model.AppointingBodyId;
-                viewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
-                viewModel.AppointmentStartDate = new DateTimeViewModel(model.AppointmentStartDate);
-                viewModel.DOB = new DateTimeViewModel(model.DOB);
-                viewModel.EmailAddress = model.EmailAddress;
 
-                viewModel.GovernorTitle = model.Person_Title;
-                viewModel.FirstName = model.Person_FirstName;
-                viewModel.MiddleName = model.Person_MiddleName;
-                viewModel.LastName = model.Person_LastName;
+                if (replace.GetValueOrDefault())
+                {
+                    viewModel.ReplaceGovernorViewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
+                    viewModel.ReplaceGovernorViewModel.GID = gid;
+                    viewModel.ReplaceGovernorViewModel.Name = model.GetFullName();
+                }
+                else
+                {
+                    viewModel.AppointingBodyId = model.AppointingBodyId;
+                    viewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
+                    viewModel.AppointmentStartDate = new DateTimeViewModel(model.AppointmentStartDate);
+                    viewModel.DOB = new DateTimeViewModel(model.DOB);
+                    viewModel.EmailAddress = model.EmailAddress;
 
-                viewModel.PreviousTitle = model.PreviousPerson_Title;
-                viewModel.PreviousFirstName = model.PreviousPerson_FirstName;
-                viewModel.PreviousMiddleName = model.PreviousPerson_MiddleName;
-                viewModel.PreviousLastName = model.PreviousPerson_LastName;
+                    viewModel.GovernorTitle = model.Person_Title;
+                    viewModel.FirstName = model.Person_FirstName;
+                    viewModel.MiddleName = model.Person_MiddleName;
+                    viewModel.LastName = model.Person_LastName;
 
-                viewModel.GID = model.Id;
-                viewModel.NationalityId = !string.IsNullOrWhiteSpace(model.Nationality) ? (await _lookup.NationalitiesGetAllAsync()).SingleOrDefault(x => x.Name == model.Nationality)?.Id : null as int?;
-                viewModel.TelephoneNumber = model.TelephoneNumber;
-                viewModel.PostCode = model.PostCode; 
+                    viewModel.PreviousTitle = model.PreviousPerson_Title;
+                    viewModel.PreviousFirstName = model.PreviousPerson_FirstName;
+                    viewModel.PreviousMiddleName = model.PreviousPerson_MiddleName;
+                    viewModel.PreviousLastName = model.PreviousPerson_LastName;
+
+                    viewModel.GID = model.Id;
+                    viewModel.NationalityId = !string.IsNullOrWhiteSpace(model.Nationality) ? (await _lookup.NationalitiesGetAllAsync()).SingleOrDefault(x => x.Name == model.Nationality)?.Id : null as int?;
+                    viewModel.TelephoneNumber = model.TelephoneNumber;
+                    viewModel.PostCode = model.PostCode;
+                }
             }
 
             viewModel.GovernorRoleName = _nomenclatureService.GetGovernorRoleName(role.Value);
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
             viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(role.Value);
+
+            ModelState.Clear();
 
             return View("EditGovernanceAddGovernor", viewModel);
         }
@@ -258,6 +270,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             
             if (ModelState.IsValid)
             {
+                if (viewModel.ReplaceGovernorViewModel.GID.HasValue)
+                {
+                    var governorBeingReplaced = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value);
+                    governorBeingReplaced.AppointmentEndDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime();
+                    await _governorsWriteService.SaveAsync(governorBeingReplaced, User);
+                }
+                
                 viewModel.GID = await _governorsWriteService.SaveAsync(new GovernorModel
                 {
                     AppointingBodyId = viewModel.AppointingBodyId,
@@ -282,6 +301,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }, User);
 
                 ModelState.Clear();
+
+                return RedirectToAction("EditGovernance", new { id = viewModel.GroupUId });
             }
             
             return View("EditGovernanceAddGovernor", viewModel);

@@ -1,5 +1,6 @@
 ﻿@using Edubase.Services.Enums
 @using Edubase.Common;
+@using Edubase.Common.Text;
 @using VM = Edubase.Web.UI.Areas.Governors.Models.CreateEditGovernorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @using System.Linq.Expressions
@@ -15,15 +16,12 @@
 <div class="grid-row">
     <div class="column-half">
         
-        @Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
-        <button type="submit" name="action" class="button mobile-full-width" value="">Save</button>
-
-        <div style="float:none; clear:both; margin-bottom:10px;"></div>
-
-        <h1 class="bold-medium">Governance</h1>
-        
         @using (Html.BeginForm("EditGovernanceAddPerson", "Group", new { area = "Groups" }, FormMethod.Post))
         {
+            @Buttons()
+            <br /><br />
+            <h1 class="bold-medium">Governance</h1>
+
             @Html.HiddenFor(x => x.GroupUId)
             @Html.HiddenFor(x => x.GroupTypeId)
             @Html.HiddenFor(x => x.GroupName)
@@ -31,7 +29,19 @@
             @Html.HiddenFor(x => x.GovernorRoleName)
             @Html.HiddenFor(x => x.GID)
 
-            <p>@Model.GovernorRoleName details</p>
+            @Html.HiddenFor(x => x.ReplaceGovernorViewModel.GID)
+            @Html.HiddenFor(x => x.ReplaceGovernorViewModel.Name)
+            
+            if (Model.ReplaceGovernorViewModel.GID.HasValue)
+            {
+                <p class="bold-small">Replace @Model.GovernorRoleName.ToLower()</p>
+                <p class="bold-xsmall">@Model.ReplaceGovernorViewModel.Name</p>
+                <div style="border-left:4px solid #bbb; padding-left:10px;">
+                    @RenderDateSelector(x => x.ReplaceGovernorViewModel.AppointmentEndDate, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Day, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Month, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Year, "Date term ends")
+                </div>
+            }
+            <br />
+            <p  class="bold-small">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</p>
             
             <div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitle)">
                 @Html.LabelFor(x => x.GovernorTitle)
@@ -148,15 +158,32 @@
 
             <br />
             <br />
-
-            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
-            <button type="submit" name="action" class="button mobile-full-width" value="">Save</button>
+            @Buttons()
+            
         }
 
         
     </div>
 </div>
 
+@helper Buttons()
+{
+    <button type="submit" name="action" class="button" value="">
+        @if (Model.ReplaceGovernorViewModel.GID.HasValue)
+        {
+            <text>Replace</text>
+        }
+        else if (Model.GID.HasValue)
+        {
+            <text>Save</text>
+        }
+        else
+        {
+            <text>Add</text>
+        }
+    </button>
+    @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey" })
+}
 
 
 @helper RenderDateSelector(Expression<Func<VM, DateTimeViewModel>> vmSelector,
@@ -166,7 +193,7 @@
 var id = label.Replace(" ", "").ToLower();
     <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(vmSelector)">
         <fieldset>
-            <legend>@label</legend>
+            <legend class="bold-xsmall" style="font-weight:bold;">@label</legend>
             <div class="form-hint">For example, 20 03 2003</div>
             @Html.ValidationMessageFor(vmSelector)
             <span class="inline-form-control">
