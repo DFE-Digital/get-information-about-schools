@@ -81,7 +81,7 @@
             });
             
             // only process the hash if it's for a valid
-            if (window.location.hash && intialTabSelection > -1 && $tabs.filter(opts.selectedTabClass).length === 0) {
+            if (window.location.hash && intialTabSelection > -1) {
                 $tabs.eq(intialTabSelection).click();
             } else {
                 $tabs.slice(0, 1).addClass(opts.selectedTabClass);
