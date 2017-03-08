@@ -17,7 +17,7 @@
     <div class="grid-row">
         <div class="column-full">
 
-            <div>
+            <div class="horizontal-tabs-wrapper">
                 <div class="tab-wrap">
                     <ul class="horizontal-tabs">
                         <li><a href="@Url.Action("EditDetails", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "EditDetails", "selected-tab")">Details</a></li>

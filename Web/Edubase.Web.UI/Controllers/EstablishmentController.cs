@@ -245,8 +245,8 @@ namespace Edubase.Web.UI.Controllers
                     viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
             }
 
-            using (MiniProfiler.Current.Step("Retrieving Group record"))
-                viewModel.Group = await _groupReadService.GetByEstablishmentUrnAsync(id);
+            using (MiniProfiler.Current.Step("Retrieving parent group records"))
+                viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id);
             
             using (MiniProfiler.Current.Step("Retrieving Governors Details"))
                 viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(urn: id, principal: User));
@@ -259,10 +259,10 @@ namespace Edubase.Web.UI.Controllers
 
 
             viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
-                .CanEdit(viewModel.Establishment.Urn.Value, 
+                .CanEdit(viewModel.Establishment.Urn.Value,
                     viewModel.Establishment.TypeId,
-                    viewModel.Group != null ? new [] { viewModel.Group.GroupUID.Value } : null as int[], 
-                    viewModel.Establishment.LocalAuthorityId, 
+                    viewModel.Groups.Select(x => x.GroupUID.Value).ToArray(),
+                    viewModel.Establishment.LocalAuthorityId,
                     viewModel.Establishment.EstablishmentTypeGroupId);
 
             return View(viewModel);

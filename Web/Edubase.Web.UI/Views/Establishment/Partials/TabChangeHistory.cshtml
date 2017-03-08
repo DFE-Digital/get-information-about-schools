@@ -31,43 +31,18 @@
                 @foreach (var item in Model.ChangeHistory)
                 {
                     <tr>
-                        <td>@item.Name</td>
-                        <td>@item.OldValue</td>
-                        <td>@item.NewValue</td>
-                        <td>@item.EffectiveDateUtc</td>
-                        <td>@item.RequestedDateUtc</td>
-                        <td>@item.OriginatorUserName</td>
-                        <td>@(item.ApproverUserName ?? "--")</td>
-                        <td>--</td><!-- Reason field will be implemented by Texuna -->
+                        <td aria-label="Updated field">@item.Name</td>
+                        <td aria-label="Old value">@item.OldValue</td>
+                        <td aria-label="New value">@item.NewValue</td>
+                        <td aria-label="Date changed">@item.EffectiveDateUtc</td>
+                        <td aria-label="Date requested">@item.RequestedDateUtc</td>
+                        <td aria-label="Suggested from">@item.OriginatorUserName</td>
+                        <td aria-label="Approved by">@(item.ApproverUserName ?? "--")</td>
+                        <td aria-label="Reason">--</td><!-- Reason field will be implemented by Texuna -->
                     </tr>
                 }
             </tbody>
         </table>
-
-                    <ul class="school-results-listing approval-items">
-                        @foreach (var item in Model.ChangeHistory)
-                        {
-                            <li>
-                                <dl>
-                                    <dt>Updated field:</dt>
-                                    <dd>@item.Name</dd>
-                                    <dt>Old value:</dt>
-                                    <dd>@item.OldValue</dd>
-                                    <dt>New value:</dt>
-                                    <dd>@item.NewValue</dd>
-                                    <dt>Date changed:</dt>
-                                    <dd>@item.EffectiveDateUtc</dd>
-                                    <dt>Date requested:</dt>
-                                    <dd>@item.RequestedDateUtc</dd>
-                                    <dt>Suggested from:</dt>
-                                    <dd>@item.OriginatorUserName</dd>
-                                    <dt>Approved by:</dt>
-                                    <dd>@(item.ApproverUserName ?? "--")</dd>
-                                    <dt>Reason:</dt>
-                                    <dd>--</dd> <!-- Reason field will be implemented by Texuna -->
-                                </dl>
-                            </li>
-                        }
-                    </ul>
+        
     }
 </div>

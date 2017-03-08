@@ -29,6 +29,7 @@ namespace Edubase.Services.Groups
     using Domain;
     using Common.Reflection;
     using Lookup;
+    using MoreLinq;
 
     public class GroupReadService : IGroupReadService
     {
