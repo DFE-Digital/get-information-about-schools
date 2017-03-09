@@ -17,5 +17,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             GroupUId = groupUId;
             GroupTypeId = groupTypeId;
         }
+
+        public GroupEditGovernanceViewModel()
+        {
+
+        }
     }
 }

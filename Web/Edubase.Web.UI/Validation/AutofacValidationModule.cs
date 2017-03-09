@@ -25,6 +25,10 @@ namespace Edubase.Web.UI.Validation
             builder.RegisterType<CreateEditGovernorViewModelValidator>()
                     .Keyed<IValidator>(typeof(IValidator<CreateEditGovernorViewModel>))
                     .As<IValidator>();
+
+            builder.RegisterType<GovernorsGridViewModelValidator>()
+                    .Keyed<IValidator>(typeof(IValidator<GovernorsGridViewModel>))
+                    .As<IValidator>();
         }
     }
 }

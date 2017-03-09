@@ -23,7 +23,16 @@ namespace Edubase.Web.UI.Models
 
         public bool EditMode { get; private set; }
 
+        public string Action { get; set; }
+
         public int? Id { get; set; }
+
+        /// <summary>
+        /// GID of the governor that's being removed.
+        /// </summary>
+        public int? RemovalGid { get; set; }
+
+        public DateTimeViewModel RemovalAppointmentEndDate { get; set; } = new DateTimeViewModel();
 
         public GovernorsGridViewModel(GovernorsDetailsDto dto, NomenclatureService nomenclatureService)
             : this(dto, false, null, nomenclatureService)
@@ -38,6 +47,11 @@ namespace Edubase.Web.UI.Models
             DomainModel = dto;
             EditMode = editMode;
             Id = id;
+        }
+
+        public GovernorsGridViewModel()
+        {
+
         }
 
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric)

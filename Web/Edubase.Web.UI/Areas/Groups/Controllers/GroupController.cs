@@ -194,7 +194,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         [HttpGet]
         [Route("Edit/{id:int}/Governance")]
-        public async Task<ActionResult> EditGovernance(int id)
+        public async Task<ActionResult> EditGovernance(int id, int? removalGid)
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
             var viewModel = new GroupEditGovernanceViewModel(domainModel.GroupUID.Value, domainModel.GroupTypeId.Value, domainModel.Name);
@@ -203,7 +203,32 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             using (MiniProfiler.Current.Step("Retrieving Governors Details"))
                 viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User), true, id, _nomenclatureService);
 
+            viewModel.GovernorsDetails.RemovalGid = removalGid;
+
             return View("EditGovernance", viewModel);
+        }
+
+        [HttpPost]
+        [Route("Edit/{id:int}/Governance")]
+        public async Task<ActionResult> EditGovernance(GovernorsGridViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.Action == "Save") // retire selected governor with the chosen appt. end date
+                {
+                    var domainModel = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value);
+                    domainModel.AppointmentEndDate = viewModel.RemovalAppointmentEndDate.ToDateTime().Value;
+                    await _governorsWriteService.SaveAsync(domainModel, User);
+                }
+                else if (viewModel.Action == "Remove") // mark the governor record as deleted
+                {
+                    await _governorsWriteService.DeleteAsync(viewModel.RemovalGid.Value, User);
+                }
+                else throw new InvalidParameterException($"The parameter for action is invalid: '{viewModel.Action}'");
+
+                return RedirectToAction(nameof(EditGovernance), new { id = viewModel.Id });
+            }
+            else return await EditGovernance(viewModel.Id.Value, viewModel.RemovalGid);
         }
 
         [HttpGet]

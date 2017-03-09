@@ -1,4 +1,5 @@
 ﻿@using Edubase.Services.Enums;
+@using System.Linq.Expressions;
 @model GovernorsGridViewModel
 
 <div class="column-two-thirds">
@@ -7,14 +8,13 @@
         // Render lists
         foreach (var grid in Model.Grids)
         {
-            <div style="float:none; clear:both;"></div>
             <div class="governor-list">
                 <h2 class="bold-small">@grid.Title</h2>
                 @if (grid.Rows.Any())
                 {
                     foreach (var row in grid.Rows)
                     {
-                        <h2 class="bold-xsmall">@row.Cells[0].Text</h2>
+                        <h2 class="bold-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
                         <dl>
                             @foreach (var cell in row.Cells.Skip(1))
                             {
@@ -25,14 +25,62 @@
 
                         if (Model.EditMode && grid.Tag == "current")
                         {
-                            <div style="margin-bottom:20px;">
-                                @Html.ActionLink("Edit", "AddEditGovernor",  new { id = Model.Id, gid = row.Model.Id }, new { @class = "button button-grey cancel" })
-                                @Html.ActionLink("Remove", "RemoveGovernor", new { id = Model.Id, gid = row.Model.Id }, new { @class = "button button-grey cancel" })
-                                @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
-                                {
-                                    @Html.ActionLink("Replace", "AddEditGovernor", new { id = Model.Id, gid = row.Model.Id, replace = true }, new { @class = "button button-grey cancel" })
-                                }
-                            </div>
+                            if (Model.RemovalGid != row.Model.Id)
+                            {
+                                <div style="margin-bottom:20px;">
+                                    @Html.ActionLink("Edit", "AddEditGovernor", new { id = Model.Id, gid = row.Model.Id }, new { @class = "button button-grey" })
+                                    @Html.ActionLink("Remove", "EditGovernance", "Group", null, null, "gid-" + row.Model.Id, new { id = Model.Id, removalGid = row.Model.Id }, new { @class = "button button-grey" })
+                                    @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
+                                    {
+                                        @Html.ActionLink("Replace", "AddEditGovernor", new { id = Model.Id, gid = row.Model.Id, replace = true }, new { @class = "button button-grey" })
+                                    }
+                                </div>
+                            }
+                            else // We're in 'removal mode' for this governor.
+                            {
+                                <div style="margin-bottom:20px;">
+
+                                    @using (Html.BeginForm(FormMethod.Post))
+                                    {
+                                        @Html.HiddenFor(x => x.RemovalGid)
+
+                                        <div class="form-group">
+                                            <fieldset class="inline">
+                                                <legend class="visually-hidden">Do you wish to retire or remove this person?</legend>
+                                                <label class="block-label selection-button-radio" for="removal-mode-1">
+                                                    <input type="radio" name="removal-mode" id="removal-mode-1" value="1" checked="checked" onchange="$('.retire-governor,.remove-governor').toggle();" />
+                                                    This person has completed their term
+                                                </label>
+                                                <label class="block-label selection-button-radio" for="removal-mode-2">
+                                                    <input type="radio" name="removal-mode" id="removal-mode-2" value="2" onchange="$('.retire-governor,.remove-governor').toggle();" />
+                                                    Remove person
+                                                </label>
+                                            </fieldset>
+                                        </div>
+
+                                        <div style="border-left:4px solid #bbb; padding-left:20px;" class="retire-governor">
+                                            <br />
+                                            <p class="font-xsmall">Provide a data term ends to retire this person</p>
+                                            @RenderDateSelector(x => x.RemovalAppointmentEndDate, x => x.RemovalAppointmentEndDate.Day, x => x.RemovalAppointmentEndDate.Month, x => x.RemovalAppointmentEndDate.Year, "Date term ends")
+
+                                            <input type="submit" name="action" value="Save" class="button" />
+
+                                            @Html.ActionLink("Cancel", "EditGovernance", new { id = Model.Id }, new { @class = "button button-grey" })
+                                        </div>
+
+                                        <div style="border-left:4px solid #bbb; padding-left:20px;display:none;" class="remove-governor">
+                                            <br />
+                                            <p class="font-xsmall">Confirm you wish to remove this person</p>
+                                            <input type="submit" name="action" value="Remove" class="button" />
+
+                                            @Html.ActionLink("Cancel", "EditGovernance", new { id = Model.Id }, new { @class = "button button-grey" })
+                                        </div>
+                                    }
+
+                                    
+
+                                </div>
+                            }
                         }
                     }
                 }
@@ -118,3 +166,30 @@
 
 </div>
 
+
+
+@helper RenderDateSelector(Expression<Func<GovernorsGridViewModel, DateTimeViewModel>> vmSelector,
+    Expression<Func<GovernorsGridViewModel, int?>> daySelector, Expression<Func<GovernorsGridViewModel, int?>> monthSelector,
+    Expression<Func<GovernorsGridViewModel, int?>> yearSelector, string label)
+{
+var id = label.Replace(" ", "").ToLower();
+    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(vmSelector)">
+        <fieldset>
+            <legend class="bold-xsmall" style="font-weight:bold;">@label</legend>
+            <div class="form-hint">For example, 20 03 2003</div>
+            @Html.ValidationMessageFor(vmSelector)
+            <span class="inline-form-control">
+                <label for="@id-day">Day</label>
+                @Html.EduDayDropDownFor(daySelector, new { id = $"{id}-day", @class = "form-control", aria_describedby = $"help-{id}-day" })
+            </span>
+            <span class="inline-form-control">
+                <label for="opendate-month">Month</label>
+                @Html.EduMonthDropDownFor(monthSelector, new { id = $"{id}-month", @class = "form-control", aria_describedby = $"help-{id}-month" })
+            </span>
+            <span class="inline-form-contol">
+                <label for="opendate-year">Year</label>
+                @Html.EduYearDropDownFor(yearSelector, new { id = $"{id}-year", @class = "form-control", aria_describedby = $"help-{id}-year" })
+            </span>
+        </fieldset>
+    </div>
+}

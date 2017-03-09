@@ -61,5 +61,13 @@ namespace Edubase.Services.Governors
             model.Id = dataModel.Id;
             return dataModel.Id;
         }
+
+        public async Task DeleteAsync(int id, IPrincipal principal)
+        {
+            var dc = _dbContextFactory.Obtain();
+            var dataModel = dc.Governors.SingleOrThrow(x => x.Id == id);
+            dc.Governors.Remove(dataModel);
+            await dc.SaveChangesAsync();
+        }
     }
 }
