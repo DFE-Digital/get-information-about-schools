@@ -1,27 +1,31 @@
 ﻿@model EstablishmentDetailViewModel
 
 <div id="school-links" class="tab-content">
+    @if (Model.UserCanEdit)
+    {
+        <a href="#" class="button button-grey mobile-full-width">Edit establishment links</a>
+    }
     @if (Model.LinkedEstablishments.Any())
     {
         <table class="estab-links mi">
             <thead>
-                <tr>
-                    <th><abbr title="Unique Reference Number">URN</abbr></th>
-                    <th>Establishment name</th>
-                    <th>Type of link</th>
-                    <th>Date linked</th>
-                </tr>
+            <tr>
+                <th><abbr title="Unique Reference Number">URN</abbr></th>
+                <th>Establishment name</th>
+                <th>Type of link</th>
+                <th>Date linked</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var l in Model.LinkedEstablishments)
-                {
-                    <tr>
-                        <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
-                        <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
-                        <td>@l.Type</td>
-                        <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
-                    </tr>
-                }
+            @foreach (var l in Model.LinkedEstablishments)
+            {
+                <tr>
+                    <td>@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
+                    <td>@Html.ActionLink(l.Name, "Details", new {id = l.Urn})</td>
+                    <td>@l.Type</td>
+                    <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                </tr>
+            }
             </tbody>
         </table>
 
@@ -30,25 +34,25 @@
             {
                 <table class="estab-links">
                     <tbody>
-                        <tr>
-                            <th><abbr title="Unique Reference Number">URN</abbr></th>
-                            <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
-                        </tr>
-                        <tr>
-                            <th>Establishment name</th>
-                            <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
-                        </tr>
-                        <tr>
-                            <th>Type of link</th>
-                            <td>@l.Type</td>
-                        </tr>
-                        <tr>
-                            <th>Date linked</th>
-                            <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
-                        </tr>
+                    <tr>
+                        <th><abbr title="Unique Reference Number">URN</abbr></th>
+                        <td>@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
+                    </tr>
+                    <tr>
+                        <th>Establishment name</th>
+                        <td>@Html.ActionLink(l.Name, "Details", new {id = l.Urn})</td>
+                    </tr>
+                    <tr>
+                        <th>Type of link</th>
+                        <td>@l.Type</td>
+                    </tr>
+                    <tr>
+                        <th>Date linked</th>
+                        <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                    </tr>
                     </tbody>
                 </table>
-                <br />
+                <br/>
             }
         </div>
 

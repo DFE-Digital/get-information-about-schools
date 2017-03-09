@@ -294,15 +294,19 @@
 
     .borderless {
         width: 100%;
+        clear: left;
 
         th, td {
             border: none;
             font-size: 14px;
         }
 
+        th { 
+            padding-left: 0;
+        }
+
         @media(min-width: 640px) {
             width: 60%;
-            float: left;            
         }
     }
 
@@ -314,13 +318,12 @@
 
     .map-container {
         width: 40%;
-        float: left;
+        float: right;
 
         .map-toggle {
             display: none;
             float: left;
-            margin: 8px;
-            padding-right: 4px;
+            margin: 8px 0 8px 0;
             font-size: 16px;
         }
 
@@ -438,3 +441,4 @@ table.mvo { // mobile-visible-only
     color: #fff;
     padding: 0.1em 0.5em 0;
 }
+

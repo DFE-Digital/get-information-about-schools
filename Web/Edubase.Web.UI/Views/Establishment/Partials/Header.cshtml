@@ -2,8 +2,6 @@
 @using Edubase.Web.UI.Areas.Establishments.Models.Search;
 @model EstablishmentDetailViewModel
 
-<table class="borderless">
-    <caption class="visually-hidden">@Model.Establishment.Name information</caption>
     <tr>
         <th scope="row">Address:</th>
         <td>@Model.Establishment.GetAddress()</td>
@@ -215,4 +213,3 @@
         <tr><th scope="row">Proprietor's name:</th><td>@Model.Establishment.ProprietorName</td></tr>
     }
 
-</table>

@@ -1,436 +1,451 @@
 ﻿@model EstablishmentDetailViewModel
 
 <div id="school-dashboard" class="tab-content">
+    @if (Model.UserCanEdit)
+    {
+        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
+    }
     
+    <div class="map-container">       
+        <div id="map" class="school-detail-map"
+             data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
+             data-school-name="@Model.Establishment.Name"
+             data-school-address="@Model.Establishment.GetAddress()"></div>
+        <a href="#map" id="map-toggle" class=" map-toggle">Show map</a>
+    </div>
+<table class="borderless">
+<caption class="visually-hidden">@Model.Establishment.Name details</caption>
+@{Html.RenderPartial(@"Partials\Header");}
+@if (Model.DisplayPolicy.ReligiousCharacterId)
+{
+    <tr>
+        <th scope="row">Religious character:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.ReligiousCharacterId)
+        </td>
+    </tr>
+}
 
-    <table class="borderless">
-        <caption class="visually-hidden">@Model.Establishment.Name details</caption>
+@if (Model.DisplayPolicy.DioceseId)
+{
+    <tr>
+        <th scope="row">Diocese:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.DioceseId)
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.ReligiousCharacterId)
-        {
-            <tr>
-                <th scope="row">Religious character:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.ReligiousCharacterId)
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.ReligiousEthosId)
+{
+    <tr>
+        <th scope="row">Religious ehtos:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.ReligiousEthosId)
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.DioceseId)
-        {
-            <tr>
-                <th scope="row">Diocese:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.DioceseId)
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.ProvisionBoardingId)
+{
+    <tr>
+        <th scope="row">Boarders:</th>
+        <td>@Html.NameFor(x => x.Establishment.ProvisionBoardingId)</td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.ReligiousEthosId)
-        {
-            <tr>
-                <th scope="row">Religious ehtos:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.ReligiousEthosId)
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.ProvisionNurseryId)
+{
+    <tr>
+        <th scope="row">Nursery provision:</th>
+        <td>@Html.NameFor(x => x.Establishment.ProvisionNurseryId)</td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.ProvisionBoardingId)
-        {
-            <tr>
-                <th scope="row">Boarders:</th>
-                <td>@Html.NameFor(x => x.Establishment.ProvisionBoardingId)</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
+{
+    <tr>
+        <th scope="row">Official sixth form:</th>
+        <td>@Html.NameFor(x => x.Establishment.ProvisionOfficialSixthFormId)</td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.ProvisionNurseryId)
-        {
-            <tr>
-                <th scope="row">Nursery provision:</th>
-                <td>@Html.NameFor(x => x.Establishment.ProvisionNurseryId)</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.Capacity)
+{
+    <tr>
+        <th scope="row">School capacity:</th>
+        <td>@Model.Establishment.Capacity</td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
-        {
-            <tr>
-                <th scope="row">Official sixth form:</th>
-                <td>@Html.NameFor(x => x.Establishment.ProvisionOfficialSixthFormId)</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.Section41ApprovedId)
+{
+    <tr>
+        <th scope="row">Section 41 approved:</th>
+        <td>@Html.NameFor(x => x.Establishment.Section41ApprovedId)</td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.Capacity)
-        {
-            <tr>
-                <th scope="row">School capacity:</th>
-                <td>@Model.Establishment.Capacity</td>
-            </tr>
-        }
+<tr>
+    <th scope="row">Open date / Reason:</th>
+    <td>
+        @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
+        @Html.NameFor(x => x.Establishment.ReasonEstablishmentOpenedId)
+    </td>
+</tr>
 
-        @if (Model.DisplayPolicy.Section41ApprovedId)
-        {
-            <tr>
-                <th scope="row">Section 41 approved:</th>
-                <td>@Html.NameFor(x => x.Establishment.Section41ApprovedId)</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CloseDate)
+{
+    <tr>
+        <th scope="row">Close date / Reason:</th>
+        <td>
+            @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
+            @Html.NameFor(x => x.Establishment.ReasonEstablishmentClosedId)
+        </td>
+    </tr>
+}
 
-        <tr>
-            <th scope="row">Open date / Reason:</th>
-            <td>
-                @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
-                @Html.NameFor(x => x.Establishment.ReasonEstablishmentOpenedId)
-            </td>
-        </tr>
+@if (Model.DisplayPolicy.CCOperationalHoursId)
+{
+    <tr>
+        <th scope="row">Operational hours:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.CCOperationalHoursId)
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CloseDate)
-        {
-            <tr>
-                <th scope="row">Close date / Reason:</th>
-                <td>
-                    @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
-                    @Html.NameFor(x => x.Establishment.ReasonEstablishmentClosedId)
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CCUnder5YearsOfAgeCount)
+{
+    <tr>
+        <th scope="row">Number of under 5s:</th>
+        <td>
+            @Model.Establishment.CCUnder5YearsOfAgeCount
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CCOperationalHoursId)
-        {
-            <tr>
-                <th scope="row">Operational hours:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.CCOperationalHoursId)
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CCGovernanceId)
+{
+    <tr>
+        <th scope="row">Governance:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.CCGovernanceId)
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CCUnder5YearsOfAgeCount)
-        {
-            <tr>
-                <th scope="row">Number of under 5s:</th>
-                <td>
-                    @Model.Establishment.CCUnder5YearsOfAgeCount
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CCGovernanceDetail)
+{
+    <tr>
+        <th scope="row">Governance detail:</th>
+        <td>
+            @(Model.Establishment.CCGovernanceDetail ?? "Not recorded")
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CCGovernanceId)
-        {
-            <tr>
-                <th scope="row">Governance:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.CCGovernanceId)
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CCLAContactDetail)
+{
+    <tr>
+        <th scope="row">Local authority contact name:</th>
+        <td>
+            @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded" )
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Local authority contact email:</th>
+        <td>
+            @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded" )
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Local authority contact telephone number:</th>
+        <td>
+            @(Model.Establishment?.CCLAContactDetail?.TelephoneNumber ?? "Not recorded")
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CCGovernanceDetail)
-        {
-            <tr>
-                <th scope="row">Governance detail:</th>
-                <td>
-                    @(Model.Establishment.CCGovernanceDetail ?? "Not recorded")
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CCDeliveryModelId)
+{
+    <tr>
+        <th scope="row">Delivery model:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.CCDeliveryModelId)
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CCLAContactDetail)
-        {
-            <tr>
-                <th scope="row">Local authority contact name:</th>
-                <td>
-                    @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded" )
-                </td>
-            </tr>
-                        <tr>
-                            <th scope="row">Local authority contact email:</th>
-                            <td>
-                                @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded" )
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Local authority contact telephone number:</th>
-                            <td>
-                                @(Model.Establishment?.CCLAContactDetail?.TelephoneNumber ?? "Not recorded")
-                            </td>
-                        </tr>
-        }
+@if (Model.DisplayPolicy.GroupCollaborationName)
+{
+    <tr>
+        <th scope="row">Group/Collaboration name:</th>
+        <td>
+            @(Model.Groups.FirstOrDefault()?.Name ?? "Not recorded")
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CCDeliveryModelId)
-        {
-            <tr>
-                <th scope="row">Delivery model:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.CCDeliveryModelId)
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CCGroupLeadId)
+{
+    <tr>
+        <th scope="row">Group lead centre:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.CCGroupLeadId)
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.GroupCollaborationName)
-        {
-            <tr>
-                <th scope="row">Group/Collaboration name:</th>
-                <td>
-                    @(Model.Groups.FirstOrDefault()?.Name ?? "Not recorded")
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CCPhaseTypeId)
+{
+    <tr>
+        <th scope="row">Phase:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.CCPhaseTypeId)
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CCGroupLeadId)
-        {
-            <tr>
-                <th scope="row">Group lead centre:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.CCGroupLeadId)
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CCDisadvantagedAreaId)
+{
+    <tr>
+        <th scope="row">Disadvantaged area:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.CCDisadvantagedAreaId)
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CCPhaseTypeId)
-        {
-            <tr>
-                <th scope="row">Phase:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.CCPhaseTypeId)
-                </td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.CCDirectProvisionOfEarlyYearsId)
+{
+    <tr>
+        <th scope="row">Direct provision of early years:</th>
+        <td>
+            @Html.NameFor(x => x.Establishment.CCDirectProvisionOfEarlyYearsId)
+        </td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.CCDisadvantagedAreaId)
-        {
-            <tr>
-                <th scope="row">Disadvantaged area:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.CCDisadvantagedAreaId)
-                </td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.CCDirectProvisionOfEarlyYearsId)
-        {
-            <tr>
-                <th scope="row">Direct provision of early years:</th>
-                <td>
-                    @Html.NameFor(x => x.Establishment.CCDirectProvisionOfEarlyYearsId)
-                </td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.ProvisionSpecialClassesId)
-        {
-            <tr>
-                <th scope="row">Special classes:</th>
-                <td>@Html.NameFor(x => x.Establishment.ProvisionSpecialClassesId)</td>
-            </tr>
-        }
-
-
-        @if (Model.DisplayPolicy.SENStat)
-        {
-            <tr>
-                <th scope="row">Number of Special Pupils Under a SEN Statement/EHCP:</th>
-                <td>@Model.Establishment.SENStat</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.SENNoStat)
-        {
-            <tr>
-                <th scope="row">Number of Special Pupils Not Under a SEN Statement/EHCP:</th>
-                <td>@Model.Establishment.SENNoStat</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.ProvisionSpecialClassesId)
+{
+    <tr>
+        <th scope="row">Special classes:</th>
+        <td>@Html.NameFor(x => x.Establishment.ProvisionSpecialClassesId)</td>
+    </tr>
+}
 
 
-        @if (Model.DisplayPolicy.Contact_EmailAddress)
-        {
-            <tr>
-                <th scope="row">@Model.DisplayPolicy.MainEmailAddressLabel:</th>
-                <td>@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.SENStat)
+{
+    <tr>
+        <th scope="row">Number of Special Pupils Under a SEN Statement/EHCP:</th>
+        <td>@Model.Establishment.SENStat</td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
-        {
-            <tr>
-                <th scope="row">Alternative email:</th>
-                <td>@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.LastChangedDate)
-        {
-            <tr>
-                <th scope="row">Last Change:</th>
-                <td>@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.TypeOfSENProvisionList)
-        {
-            <tr>
-                <th scope="row">Type of SEN provision:</th>
-                <td>
-                    @if (Model.Establishment.SEN1Id.HasValue)
-                    {
-                        <text>@Html.NameFor(x => x.Establishment.SEN1Id)<br /></text>
-                    }
-                    @if (Model.Establishment.SEN2Id.HasValue)
-                    {
-                        <text>@Html.NameFor(x => x.Establishment.SEN2Id)<br /></text>
-                    }
-                    @if (Model.Establishment.SEN3Id.HasValue)
-                    {
-                        <text>@Html.NameFor(x => x.Establishment.SEN3Id)<br /></text>
-                    }
-                    @if (Model.Establishment.SEN4Id.HasValue)
-                    {
-                        <text>@Html.NameFor(x => x.Establishment.SEN4Id)<br /></text>
-                    }
-                </td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.TeenageMothersProvisionId)
-        {
-            <tr>
-                <th scope="row">Teenage mothers:</th>
-                <td>@Html.NameFor(x => x.Establishment.TeenageMothersProvisionId)</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.TeenageMothersCapacity)
-        {
-            <tr>
-                <th scope="row">Teenage mothers places:</th>
-                <td>@Model.Establishment.TeenageMothersCapacity</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.ChildcareFacilitiesId)
-        {
-            <tr>
-                <th scope="row">Childcare facilities:</th>
-                <td>@Html.NameFor(x => x.Establishment.ChildcareFacilitiesId)</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.PRUSENId)
-        {
-            <tr>
-                <th scope="row">SEN facilities:</th>
-                <td>@Html.NameFor(x => x.Establishment.PRUSENId)</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.PRUEBDId)
-        {
-            <tr>
-                <th scope="row">Pupils with EBD:</th>
-                <td>@Html.NameFor(x => x.Establishment.PRUEBDId)</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.PlacesPRU)
-        {
-            <tr>
-                <th scope="row">Number of places:</th>
-                <td>@Model.Establishment.PlacesPRU</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.PruFulltimeProvisionId)
-        {
-            <tr>
-                <th scope="row">Full time provision :</th>
-                <td>@Html.NameFor(x => x.Establishment.PruFulltimeProvisionId)</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.SENNoStat)
+{
+    <tr>
+        <th scope="row">Number of Special Pupils Not Under a SEN Statement/EHCP:</th>
+        <td>@Model.Establishment.SENNoStat</td>
+    </tr>
+}
 
 
-        @if (Model.DisplayPolicy.PruEducatedByOthersId)
-        {
-            <tr>
-                <th scope="row">Pupils educated by other providers:</th>
-                <td>@Model.Establishment.PruEducatedByOthersId</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.Contact_EmailAddress)
+{
+    <tr>
+        <th scope="row">@Model.DisplayPolicy.MainEmailAddressLabel:</th>
+        <td>@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.ContactAlt_EmailAddress)
+{
+    <tr>
+        <th scope="row">Alternative email:</th>
+        <td>@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.LastChangedDate)
+{
+    <tr>
+        <th scope="row">Last Change:</th>
+        <td>@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.TypeOfSENProvisionList)
+{
+    <tr>
+        <th scope="row">Type of SEN provision:</th>
+        <td>
+            @if (Model.Establishment.SEN1Id.HasValue)
+            {
+                <text>@Html.NameFor(x => x.Establishment.SEN1Id)<br /></text>
+            }
+            @if (Model.Establishment.SEN2Id.HasValue)
+            {
+                <text>@Html.NameFor(x => x.Establishment.SEN2Id)<br /></text>
+            }
+            @if (Model.Establishment.SEN3Id.HasValue)
+            {
+                <text>@Html.NameFor(x => x.Establishment.SEN3Id)<br /></text>
+            }
+            @if (Model.Establishment.SEN4Id.HasValue)
+            {
+                <text>@Html.NameFor(x => x.Establishment.SEN4Id)<br /></text>
+            }
+        </td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.TeenageMothersProvisionId)
+{
+    <tr>
+        <th scope="row">Teenage mothers:</th>
+        <td>@Html.NameFor(x => x.Establishment.TeenageMothersProvisionId)</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.TeenageMothersCapacity)
+{
+    <tr>
+        <th scope="row">Teenage mothers places:</th>
+        <td>@Model.Establishment.TeenageMothersCapacity</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.ChildcareFacilitiesId)
+{
+    <tr>
+        <th scope="row">Childcare facilities:</th>
+        <td>@Html.NameFor(x => x.Establishment.ChildcareFacilitiesId)</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.PRUSENId)
+{
+    <tr>
+        <th scope="row">SEN facilities:</th>
+        <td>@Html.NameFor(x => x.Establishment.PRUSENId)</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.PRUEBDId)
+{
+    <tr>
+        <th scope="row">Pupils with EBD:</th>
+        <td>@Html.NameFor(x => x.Establishment.PRUEBDId)</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.PlacesPRU)
+{
+    <tr>
+        <th scope="row">Number of places:</th>
+        <td>@Model.Establishment.PlacesPRU</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.PruFulltimeProvisionId)
+{
+    <tr>
+        <th scope="row">Full time provision :</th>
+        <td>@Html.NameFor(x => x.Establishment.PruFulltimeProvisionId)</td>
+    </tr>
+}
 
 
-        @if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
-        {
-            <tr>
-                <th scope="row">Type of resourced provision:</th>
-                <td>@Html.NameFor(x => x.Establishment.TypeOfResourcedProvisionId)</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
-        {
-            <tr>
-                <th scope="row">Resourced provision number on roll:</th>
-                <td>@Model.Establishment.ResourcedProvisionOnRoll</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
-        {
-            <tr>
-                <th scope="row">Resourced provision capacity:</th>
-                <td>@Model.Establishment.ResourcedProvisionCapacity</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.SenUnitOnRoll)
-        {
-            <tr>
-                <th scope="row">SEN Unit number on roll:</th>
-                <td>@Model.Establishment.SenUnitOnRoll</td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.SenUnitCapacity)
-        {
-            <tr>
-                <th scope="row">SEN Unit capacity:</th>
-                <td>@Model.Establishment.SenUnitCapacity</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.PruEducatedByOthersId)
+{
+    <tr>
+        <th scope="row">Pupils educated by other providers:</th>
+        <td>@Model.Establishment.PruEducatedByOthersId</td>
+    </tr>
+}
 
 
-        @if (Model.DisplayPolicy.BSOInspectorateId)
-        {
-            <tr>
-                <th scope="row">Inspectorate name:</th>
-                <td>@Html.NameFor(x => x.Establishment.BSOInspectorateId)</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
+{
+    <tr>
+        <th scope="row">Type of resourced provision:</th>
+        <td>@Html.NameFor(x => x.Establishment.TypeOfResourcedProvisionId)</td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
-        {
-            <tr>
-                <th scope="row">Inspectorate report:</th>
-                <td>@Model.Establishment.BSOInspectorateReportUrl</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
+{
+    <tr>
+        <th scope="row">Resourced provision number on roll:</th>
+        <td>@Model.Establishment.ResourcedProvisionOnRoll</td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
-        {
-            <tr>
-                <th scope="row">Date of Last Inspection Visit:</th>
-                <td>@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("dd/MM/yyyy"))</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.ResourcedProvisionCapacity)
+{
+    <tr>
+        <th scope="row">Resourced provision capacity:</th>
+        <td>@Model.Establishment.ResourcedProvisionCapacity</td>
+    </tr>
+}
 
-        @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
-        {
-            <tr>
-                <th scope="row">Date of Next Inspection Visit:</th>
-                <td>@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("dd/MM/yyyy"))</td>
-            </tr>
-        }
+@if (Model.DisplayPolicy.SenUnitOnRoll)
+{
+    <tr>
+        <th scope="row">SEN Unit number on roll:</th>
+        <td>@Model.Establishment.SenUnitOnRoll</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.SenUnitCapacity)
+{
+    <tr>
+        <th scope="row">SEN Unit capacity:</th>
+        <td>@Model.Establishment.SenUnitCapacity</td>
+    </tr>
+}
 
 
-    </table>
+@if (Model.DisplayPolicy.BSOInspectorateId)
+{
+    <tr>
+        <th scope="row">Inspectorate name:</th>
+        <td>@Html.NameFor(x => x.Establishment.BSOInspectorateId)</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.BSOInspectorateReportUrl)
+{
+    <tr>
+        <th scope="row">Inspectorate report:</th>
+        <td>@Model.Establishment.BSOInspectorateReportUrl</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
+{
+    <tr>
+        <th scope="row">Date of Last Inspection Visit:</th>
+        <td>@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("dd/MM/yyyy"))</td>
+    </tr>
+}
+
+@if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
+{
+    <tr>
+        <th scope="row">Date of Next Inspection Visit:</th>
+        <td>@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("dd/MM/yyyy"))</td>
+    </tr>
+}
+
+
+</table>
+    
+    @if (Model.UserCanEdit)
+    {
+        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
+    }
 </div>
