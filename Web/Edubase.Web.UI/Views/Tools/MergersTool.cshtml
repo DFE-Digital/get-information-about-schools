@@ -178,7 +178,7 @@
                         </dl>
 
                         <h3 class="heading-medium">Merged establishment details</h3>
-                        <a href="/Establishment/Details/v-bind:leadEstablishmentUrn">{{leadEstablishmentUrn}} - {{leadEstablishmentName}}</a>
+                        <a v-bind:href="schoolDetailUrl">{{leadEstablishmentUrn}} - {{leadEstablishmentName}}</a>
                         <ul>
                             <li>Establishment type: Free schools</li>
                             <li>Amalgamation date: {{displayDate}}</li>
@@ -1143,6 +1143,9 @@
             },
             amalgamationDate: function() {
                 return this.amalgamationDateDay + '/' + this.amalgamationDateMonth + '/' + this.amalgamationDateYear;
+            },
+            schoolDetailUrl: function(urn) {
+                return "/Establishment/Details/" + this.leadEstablishmentUrn;
             }
 
         },
