@@ -12,34 +12,8 @@ using Edubase.Services.Governors.DisplayPolicies;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
-    public class CreateEditGovernorViewModel : IGroupPageViewModel
+    public class CreateEditGovernorViewModel
     {
-
-        #region IGroupPageViewModel wiring
-
-        private GroupEditorViewModelBase _groupEditorViewModel;
-        public string PageTitle => _groupEditorViewModel.PageTitle;
-        public string ListOfEstablishmentsPluralName => _groupEditorViewModel.ListOfEstablishmentsPluralName;
-
-        public string GroupName
-        {
-            get { return _groupEditorViewModel.GroupName; }
-            set { _groupEditorViewModel.GroupName = value; }
-        }
-
-        public int? GroupTypeId
-        {
-            get { return _groupEditorViewModel.GroupTypeId; }
-            set { _groupEditorViewModel.GroupTypeId = value; }
-        }
-        public int? GroupUId
-        {
-            get { return _groupEditorViewModel.GroupUId; }
-            set { _groupEditorViewModel.GroupUId = value; }
-        }
-
-        #endregion
-
         private static readonly IEnumerable<SelectListItem> _titles = new[] { "Mr", "Mrs", "Ms", "Miss", "Dr", "Prof", "Rev", "Sir" }.Select(x => new SelectListItem { Text = x, Value = x });
 
         public eLookupGovernorRole GovernorRole { get; set; }
@@ -50,7 +24,12 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public IEnumerable<SelectListItem> Nationalities { get; set; }
 
         public int? GID { get; set; }
-        
+
+        public int? EstablishmentUrn { get; set; }
+        public int? GroupUId { get; set; }
+        public string ParentControllerName => EstablishmentUrn.HasValue ? "Establishment" : "Group";
+        public string ParentAreaName => EstablishmentUrn.HasValue ? "" : "Groups";
+
         [DisplayName("Title")]
         public string GovernorTitle { get; set; }
 
@@ -104,16 +83,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public ReplaceGovernorViewModel ReplaceGovernorViewModel { get; set; } = new ReplaceGovernorViewModel();
 
-        public CreateEditGovernorViewModel(GroupModel domainModel)
-        {
-            _groupEditorViewModel = new GroupEditorViewModelBase(domainModel);
-        }
-
         public CreateEditGovernorViewModel()
         {
-            _groupEditorViewModel = new GroupEditorViewModelBase();
         }
-
+        
 
         public IEnumerable<SelectListItem> GetTitles() => new[] { "Mr", "Mrs", "Ms", "Miss", "Dr", "Prof", "Rev", "Sir" }.Select(x => new SelectListItem { Text = x, Value = x });
 

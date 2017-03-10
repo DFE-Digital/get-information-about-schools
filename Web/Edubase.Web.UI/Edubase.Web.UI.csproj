@@ -271,6 +271,7 @@
     <Compile Include="App_Start\ODataConfig.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
+    <Compile Include="Areas\Governors\Controllers\GovernorController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
     <Compile Include="Areas\Governors\Models\CreateEditGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
@@ -320,7 +321,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
-    <Compile Include="Models\GovernorsGridViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
     <Compile Include="Models\Grid\GridViewModel.cs" />
@@ -385,7 +386,9 @@
     <Content Include="Areas\Groups\Views\Group\_EditLayoutPage.cshtml" />
     <Content Include="Areas\Groups\Views\Group\EditDetails.cshtml" />
     <Content Include="Areas\Groups\Views\Group\EditGovernance.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\EditGovernanceAddGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\ViewEdit.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\AddEditGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\AddEdit.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -819,6 +822,7 @@
     <Content Include="Views\Admin\LogDetail.cshtml" />
     <Content Include="Views\Shared\Secure.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\Establishment\AddEditGovernor.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
@@ -843,7 +847,6 @@
     <Content Include="Views\Shared\_GenericPagination.cshtml" />
     <Content Include="Views\Tools\Index.cshtml" />
     <Content Include="Views\Shared\DomainError.cshtml" />
-    <Content Include="Views\Shared\_Governors.cshtml" />
     <Content Include="Views\Establishment\_EditLayoutPage.cshtml" />
     <Content Include="Views\Establishment\Partials\_ConfirmChanges.cshtml" />
     <Content Include="Views\Establishment\EditIEBT.cshtml" />
@@ -851,13 +854,13 @@
     <Content Include="Views\Establishment\EditLocation.cshtml" />
     <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
+    <Content Include="Views\Establishment\EditGovernance.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
-    <Folder Include="Views\Shared\Governors\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

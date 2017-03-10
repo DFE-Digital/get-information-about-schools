@@ -1,0 +1,17 @@
+﻿@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@model ViewModel
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.SelectedTab = "EditGovernance";
+    Layout = "_EditLayoutPage.cshtml";
+
+    if (Request.HttpMethod == "GET")
+    {
+        Html.RenderAction("AddEdit", "Governor", new { area = "Governors", establishmentUrn = Model.Urn });
+    }
+    else if (Request.HttpMethod == "POST")
+    {
+        Html.RenderAction("AddEditPost", "Governor", new { area = "Governors" });
+    }
+}

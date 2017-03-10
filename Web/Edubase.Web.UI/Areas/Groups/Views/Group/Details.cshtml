@@ -184,16 +184,7 @@
                 }
                 <div style="clear:both; float:none;margin-bottom:30px;"></div>
 
-                @if (Model.GovernorsDetails.DomainModel.HasGovernors)
-                {
-                    <div class="grid-row">
-                        @{ Html.RenderPartial("_Governors", Model.GovernorsDetails); }
-                    </div>
-                }
-                else
-                {
-                    <p>There is no governance information for this establishment</p>
-                }
+                @{Html.RenderAction("ViewOrEdit", "Governor", new { groupUId = Model.Group.GroupUID, area = "Governors" });}
 
             </div>
 

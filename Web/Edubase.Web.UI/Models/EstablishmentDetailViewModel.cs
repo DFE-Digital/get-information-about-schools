@@ -58,7 +58,7 @@ namespace Edubase.Web.UI.Models
 
         public bool UserCanEdit { get; set; }
 
-        public GovernorsGridViewModel GovernorsDetails { get; set; }
+        //public GovernorsGridViewModel GovernorsDetails { get; set; }
         
         public bool IsClosed => Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
 

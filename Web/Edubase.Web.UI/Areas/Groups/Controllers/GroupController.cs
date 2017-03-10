@@ -45,8 +45,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly ICompaniesHouseService _companiesHouseService;
         private readonly IFileDownloadFactoryService _downloadService;
         private readonly NomenclatureService _nomenclatureService;
-        private readonly IGovernorsWriteService _governorsWriteService;
-
+        
         public GroupController(
             ICachedLookupService cachedLookupService, 
             ISecurityService securityService,
@@ -56,8 +55,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             IGroupsWriteService groupWriteService,
             ICompaniesHouseService companiesHouseService,
             IFileDownloadFactoryService downloadService,
-            NomenclatureService nomenclatureService,
-            IGovernorsWriteService governorsWriteService)
+            NomenclatureService nomenclatureService)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
@@ -68,7 +66,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _companiesHouseService = companiesHouseService;
             _downloadService = downloadService;
             _nomenclatureService = nomenclatureService;
-            _governorsWriteService = governorsWriteService;
         }
 
 
@@ -96,10 +93,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
 
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUID.Value);
-
-            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
-                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User), _nomenclatureService);
-
+            
             return View(viewModel);
         }
 
@@ -197,149 +191,28 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public async Task<ActionResult> EditGovernance(int id, int? removalGid)
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
-            var viewModel = new GroupEditGovernanceViewModel(domainModel.GroupUID.Value, domainModel.GroupTypeId.Value, domainModel.Name);
-            viewModel.GovernorRoles = (await _lookup.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
-
-            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
-                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(groupUId: id, principal: User), true, id, _nomenclatureService);
-
-            viewModel.GovernorsDetails.RemovalGid = removalGid;
-
+            var viewModel = new GroupEditGovernanceViewModel(domainModel.GroupUID.Value, domainModel.GroupTypeId.Value, domainModel.Name) { RemovalGID = removalGid };
             return View("EditGovernance", viewModel);
         }
 
-        [HttpPost]
-        [Route("Edit/{id:int}/Governance")]
-        public async Task<ActionResult> EditGovernance(GovernorsGridViewModel viewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                if (viewModel.Action == "Save") // retire selected governor with the chosen appt. end date
-                {
-                    var domainModel = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value);
-                    domainModel.AppointmentEndDate = viewModel.RemovalAppointmentEndDate.ToDateTime().Value;
-                    await _governorsWriteService.SaveAsync(domainModel, User);
-                }
-                else if (viewModel.Action == "Remove") // mark the governor record as deleted
-                {
-                    await _governorsWriteService.DeleteAsync(viewModel.RemovalGid.Value, User);
-                }
-                else throw new InvalidParameterException($"The parameter for action is invalid: '{viewModel.Action}'");
-
-                return RedirectToAction(nameof(EditGovernance), new { id = viewModel.Id });
-            }
-            else return await EditGovernance(viewModel.Id.Value, viewModel.RemovalGid);
-        }
-
-        [HttpGet]
+        
+        
         [Route("Edit/{id:int}/Governance/AddEdit")]
         public async Task<ActionResult> AddEditGovernor(int id, eLookupGovernorRole? role, int? gid, bool? replace)
         {
-            if (role == null && gid == null) throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
-
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
-            var viewModel = new CreateEditGovernorViewModel(domainModel);
-
-            if (gid.HasValue)
+            var viewModel = new GroupEditGovernanceViewModel(domainModel.GroupUID.Value, domainModel.GroupTypeId.Value, domainModel.Name)
             {
-                var model = await _governorsReadService.GetGovernorAsync(gid.Value);
-                role = (eLookupGovernorRole)model.RoleId.Value;
-
-                if (replace.GetValueOrDefault())
-                {
-                    viewModel.ReplaceGovernorViewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
-                    viewModel.ReplaceGovernorViewModel.GID = gid;
-                    viewModel.ReplaceGovernorViewModel.Name = model.GetFullName();
-                }
-                else
-                {
-                    viewModel.AppointingBodyId = model.AppointingBodyId;
-                    viewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
-                    viewModel.AppointmentStartDate = new DateTimeViewModel(model.AppointmentStartDate);
-                    viewModel.DOB = new DateTimeViewModel(model.DOB);
-                    viewModel.EmailAddress = model.EmailAddress;
-
-                    viewModel.GovernorTitle = model.Person_Title;
-                    viewModel.FirstName = model.Person_FirstName;
-                    viewModel.MiddleName = model.Person_MiddleName;
-                    viewModel.LastName = model.Person_LastName;
-
-                    viewModel.PreviousTitle = model.PreviousPerson_Title;
-                    viewModel.PreviousFirstName = model.PreviousPerson_FirstName;
-                    viewModel.PreviousMiddleName = model.PreviousPerson_MiddleName;
-                    viewModel.PreviousLastName = model.PreviousPerson_LastName;
-
-                    viewModel.GID = model.Id;
-                    viewModel.NationalityId = !string.IsNullOrWhiteSpace(model.Nationality) ? (await _lookup.NationalitiesGetAllAsync()).SingleOrDefault(x => x.Name == model.Nationality)?.Id : null as int?;
-                    viewModel.TelephoneNumber = model.TelephoneNumber;
-                    viewModel.PostCode = model.PostCode;
-                }
-            }
-
-            viewModel.GovernorRoleName = _nomenclatureService.GetGovernorRoleName(role.Value);
-            viewModel.GovernorRole = role.Value;
-            await PopulateSelectLists(viewModel);
-            viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(role.Value);
-
-            ModelState.Clear();
-
-            return View("EditGovernanceAddGovernor", viewModel);
+                GID = gid,
+                GovernorRole = role,
+                ReplaceMode = replace.GetValueOrDefault()
+            };
+            return View("AddEditGovernor", viewModel);
         }
 
-        [HttpPost]
-        [Route("Edit/{id:int}/Governance/AddEdit")]
-        public async Task<ActionResult> AddEditGovernor(CreateEditGovernorViewModel viewModel)
-        {
-            await PopulateSelectLists(viewModel);
-            viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(viewModel.GovernorRole);
-            
-            if (ModelState.IsValid)
-            {
-                if (viewModel.ReplaceGovernorViewModel.GID.HasValue)
-                {
-                    var governorBeingReplaced = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value);
-                    governorBeingReplaced.AppointmentEndDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime();
-                    await _governorsWriteService.SaveAsync(governorBeingReplaced, User);
-                }
-                
-                viewModel.GID = await _governorsWriteService.SaveAsync(new GovernorModel
-                {
-                    AppointingBodyId = viewModel.AppointingBodyId,
-                    AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
-                    AppointmentStartDate = viewModel.AppointmentStartDate.ToDateTime(),
-                    DOB = viewModel.DOB.ToDateTime(),
-                    EmailAddress = viewModel.EmailAddress,
-                    GroupUID = viewModel.GroupUId,
-                    Nationality = viewModel.NationalityId.HasValue ? viewModel.Nationalities.FirstOrDefault(x => x.Value == viewModel.NationalityId.ToString())?.Text : null as string,
-                    Id = viewModel.GID,
-                    Person_FirstName = viewModel.FirstName,
-                    Person_MiddleName = viewModel.MiddleName,
-                    Person_LastName = viewModel.LastName,
-                    Person_Title = viewModel.GovernorTitle,
-                    PreviousPerson_FirstName = viewModel.PreviousFirstName,
-                    PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
-                    PreviousPerson_LastName = viewModel.PreviousLastName,
-                    PreviousPerson_Title = viewModel.PreviousTitle,
-                    PostCode = viewModel.PostCode,
-                    RoleId = (int)viewModel.GovernorRole,
-                    TelephoneNumber = viewModel.TelephoneNumber
-                }, User);
+        
 
-                ModelState.Clear();
 
-                return RedirectToAction("EditGovernance", new { id = viewModel.GroupUId });
-            }
-            
-            return View("EditGovernanceAddGovernor", viewModel);
-        }
-
-        private async Task PopulateSelectLists(CreateEditGovernorViewModel viewModel)
-        {
-            viewModel.AppointingBodies = (await _lookup.GovernorAppointingBodiesGetAllAsync()).ToSelectList(viewModel.AppointingBodyId);
-            viewModel.Nationalities = (await _lookup.NationalitiesGetAllAsync()).ToSelectList(viewModel.NationalityId);
-            viewModel.Titles = viewModel.GetTitles();
-            viewModel.PreviousTitles = viewModel.GetTitles();
-        }
 
         [HttpPost]
         [Route("Edit/{id:int}/Details")]

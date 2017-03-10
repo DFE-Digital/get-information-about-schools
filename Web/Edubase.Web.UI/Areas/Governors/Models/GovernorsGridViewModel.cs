@@ -7,10 +7,11 @@ using System.Web;
 using Edubase.Common;
 using Edubase.Services.Enums;
 
-namespace Edubase.Web.UI.Models
+namespace Edubase.Web.UI.Areas.Governors.Models
 {
     using Services.Governors.DisplayPolicies;
     using Services.Nomenclature;
+    using UI.Models;
     using GR = eLookupGovernorRole;
 
     public class GovernorsGridViewModel
@@ -18,14 +19,24 @@ namespace Edubase.Web.UI.Models
         private readonly NomenclatureService _nomenclatureService;
 
         public List<GridViewModel<GovernorModel>> Grids { get; set; } = new List<GridViewModel<GovernorModel>>();
-
+        public List<LookupItemViewModel> GovernorRoles { get; internal set; }
         public GovernorsDetailsDto DomainModel { get; set; }
 
         public bool EditMode { get; private set; }
 
         public string Action { get; set; }
 
-        public int? Id { get; set; }
+        public string ParentControllerName => EstablishmentUrn.HasValue ? "Establishment" : "Group";
+
+        public string ParentAreaName => EstablishmentUrn.HasValue ? "" : "Groups";
+
+        public int? Id => EstablishmentUrn ?? GroupUId;
+
+        public int? EstablishmentUrn { get; set; }
+
+        public int? GroupUId { get; set; }
+
+        public string ParentEntityName => GroupUId.HasValue ? "group" : "establishment";
 
         /// <summary>
         /// GID of the governor that's being removed.
@@ -33,20 +44,16 @@ namespace Edubase.Web.UI.Models
         public int? RemovalGid { get; set; }
 
         public DateTimeViewModel RemovalAppointmentEndDate { get; set; } = new DateTimeViewModel();
-
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, NomenclatureService nomenclatureService)
-            : this(dto, false, null, nomenclatureService)
-        {
-        }
-
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? id, NomenclatureService nomenclatureService)
+        
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groudUId, int? establishmentUrn, NomenclatureService nomenclatureService)
         {
             _nomenclatureService = nomenclatureService;
             CreateGrids(dto, dto.CurrentGovernors, false);
             CreateGrids(dto, dto.HistoricGovernors, true);
             DomainModel = dto;
             EditMode = editMode;
-            Id = id;
+            GroupUId = groudUId;
+            EstablishmentUrn = establishmentUrn;
         }
 
         public GovernorsGridViewModel()

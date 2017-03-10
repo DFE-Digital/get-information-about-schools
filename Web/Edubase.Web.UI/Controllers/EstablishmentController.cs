@@ -3,6 +3,7 @@ using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services;
 using Edubase.Services.Core;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
@@ -86,6 +87,24 @@ namespace Edubase.Web.UI.Controllers
             var viewModel = await CreateEditViewModel(id);
             if (!viewModel.TabDisplayPolicy.IEBT) throw new PermissionDeniedException();
             return View("EditIEBT", viewModel);
+        }
+
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Governance")]
+        public async Task<ActionResult> EditGovernance(int? id)
+        {
+            if (!id.HasValue) return HttpNotFound();
+            var viewModel = await CreateEditViewModel(id);
+            if (!viewModel.TabDisplayPolicy.Governance) throw new PermissionDeniedException();
+            return View("EditGovernance", viewModel);
+        }
+
+        [Route("Edit/{id:int}/Governance/AddEdit")]
+        public async Task<ActionResult> AddEditGovernor(int? id, eLookupGovernorRole? role, int? gid, bool? replace)
+        {
+            if (!id.HasValue) return HttpNotFound();
+            var viewModel = await CreateEditViewModel(id);
+            if (!viewModel.TabDisplayPolicy.Governance) throw new PermissionDeniedException();
+            return View("AddEditGovernor", viewModel);
         }
 
         private async Task<ViewModel> CreateEditViewModel(int? id)
@@ -252,9 +271,6 @@ namespace Edubase.Web.UI.Controllers
             using (MiniProfiler.Current.Step("Retrieving parent group records"))
                 viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id);
             
-            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
-                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(urn: id, principal: User), _nomenclatureService);
-
             using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
                 viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment);
 

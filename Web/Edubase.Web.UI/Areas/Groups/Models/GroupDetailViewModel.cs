@@ -34,7 +34,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         public string CompaniesHouseUrl => ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"].Append(Group.CompaniesHouseNumber);
 
-        public GovernorsGridViewModel GovernorsDetails { get; internal set; }
         public IEnumerable<GroupChangeDto> ChangeHistory { get; set; }
     }
 }

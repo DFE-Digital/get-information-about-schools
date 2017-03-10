@@ -1,4 +1,5 @@
-﻿using Edubase.Web.UI.Models;
+﻿using Edubase.Services.Enums;
+using Edubase.Web.UI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
     public class GroupEditGovernanceViewModel : GroupEditorViewModelBase
     {
-        public GovernorsGridViewModel GovernorsDetails { get; set; }
-        public List<LookupItemViewModel> GovernorRoles { get; internal set; }
+        public int? RemovalGID { get; set; }
+
+        public eLookupGovernorRole? GovernorRole { get; set; }
+        public int? GID { get; set; }
+        public bool ReplaceMode { get; set; }
 
         public GroupEditGovernanceViewModel(int groupUId, int groupTypeId, string name)
         {

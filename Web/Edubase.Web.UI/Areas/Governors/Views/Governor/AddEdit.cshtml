@@ -9,25 +9,25 @@
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
-    ViewBag.Title = Model.PageTitle;
+    //ViewBag.Title = Model.PageTitle;
     ViewBag.SelectedTab = "EditGovernance";
-    Layout = "_EditLayoutPage.cshtml";
+    Layout = null;
 }
+
 <div class="grid-row">
     <div class="column-half">
         
-        @using (Html.BeginForm("EditGovernanceAddPerson", "Group", new { area = "Groups" }, FormMethod.Post))
+        @using (Html.BeginForm())
         {
             @Buttons()
             <br /><br />
             <h1 class="bold-medium">Governance</h1>
-
-            @Html.HiddenFor(x => x.GroupUId)
-            @Html.HiddenFor(x => x.GroupTypeId)
-            @Html.HiddenFor(x => x.GroupName)
+            
             @Html.HiddenFor(x => x.GovernorRole)
             @Html.HiddenFor(x => x.GovernorRoleName)
             @Html.HiddenFor(x => x.GID)
+            @Html.HiddenFor(x => x.EstablishmentUrn)
+            @Html.HiddenFor(x => x.GroupUId)
 
             @Html.HiddenFor(x => x.ReplaceGovernorViewModel.GID)
             @Html.HiddenFor(x => x.ReplaceGovernorViewModel.Name)
@@ -182,7 +182,7 @@
             <text>Add</text>
         }
     </button>
-    @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey" })
+    @Html.ActionLink("Cancel", "Details", Model.ParentControllerName, new { area = Model.ParentAreaName }, new { @class = "button button-grey" })
 }
 
 
