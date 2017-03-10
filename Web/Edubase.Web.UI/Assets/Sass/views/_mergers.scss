@@ -38,7 +38,15 @@
     .summary-list li:before {
         content: counter(estab-counter)".";
     }
+
+    .summary-panel {
+        border-bottom: 1px $grey-2 solid;
+        margin-bottom: 40px;
+        padding-bottom: 12px;
+    }
 }
+
+
 
 .date-text-day, 
 .date-text-month {
