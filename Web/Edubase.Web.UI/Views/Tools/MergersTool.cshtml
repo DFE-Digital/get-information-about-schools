@@ -7,202 +7,613 @@
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-large" id="page-heading">
-                <span v-show="mergerType ===''">Amalgamations and mergers tool</span>
-                <span v-show="mergerType== 'merger' && !validLinkDate">Merger</span>
-                <span  v-show="validLinkDate">Merger complete</span>
+                <span v-show="!mergerTypeConfirmed">Amalgamations and mergers tool</span>
+                <span v-show="mergerType == 'merger' && !validLinkDate && mergerTypeConfirmed">Merger</span>
+                <span v-show="mergerType == 'amalgamation' && !completeAmalgamation && mergerTypeConfirmed">Amalgamation</span>
+                <span  v-show="validLinkDate && mergerType== 'merger'">Merger complete</span>
+                <span  v-show="completeAmalgamation">Amalgamation complete</span>
             </h1>
         </div>
         <div v-bind:class="['error-summary' , showGlobalError ? '' :' hidden']">
-            <h2 v-bind:class="['heading-medium error-summary-heading', (leadEstablishmentError || linkedEstablishmentError) ? '' : 'hidden']">
+            <h2 v-bind:class="['heading-medium error-summary-heading', (leadEstablishmentError || linkedEstablishmentError || amalgamationUrnError) ? '' : 'hidden']">
                 Invalid <abbr title="Unique reference number">URN</abbr>
             </h2>
-            <h2 class="heading-medium error-summary-heading missing-date hidden">
-                Information missing
-            </h2>
-            <h2 class="heading-medium error-summary-heading no-academies hidden">
-                No academies have been specified
-            </h2>
-            <p class="invalid-urn error-sub-heading hidden">Lead school not recognised</p>
-            <p class="missing-date error-sub-heading hidden">Please specify an opening date</p>
+           
             <ul class="error-summary-list">
-                <li v-bind:class="['error-message', (leadEstablishmentError || linkedEstablishmentError) ? '' : 'hidden']"><a href="#establishment-urn">URN is invalid</a></li>
-                <li v-bind:class="['error-message', mergedDateError ? '' : 'hidden']"><a href="#academy-open-date">Merger date not specified</a></li>
-                @*<li class="error-message no-academies hidden"><a href="#academy-type">Please add an establishment to link</a></li>*@
+                <li v-bind:class="['error-message', (mergerTypeError) ? '' : 'hidden']"><a href="#radio-amalgamation">Please select almalgamation or merger.</a></li>
+                <li v-bind:class="['error-message', (leadEstablishmentError) ? '' : 'hidden']"><a href="#lead-establishment">The lead establishment URN is invalid</a></li>
+                <li v-bind:class="['error-message', (linkedEstablishmentError) ? '' : 'hidden']"><a href="#linked-establishments">URN is invalid</a></li>
+                <li v-bind:class="['error-message', (amalgamateUrnError) ? '' : 'hidden']"><a href="#linked-establishments">You have entered an invalid URN. Please correct the invalid URN to continue</a></li>
+                <li v-bind:class="['error-message', mergedDateError ? '' : 'hidden']"><a href="#merger-date">Merger date not specified</a></li>
+                <li v-bind:class="['error-message', amalgamationLengthError && !amalgamateUrnError ? '' : 'hidden']"><a href="#amalg-linked">Select between two and four schools. Please add another URN to continue</a></li>
+                <li v-bind:class="['error-message', amalgamationNameError ? '' : 'hidden']"><a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a></li>
+                @*<li v-bind:class="['error-message', amalgamationUrnError ? '' : 'hidden']"><a href="#academy-open-date">You have entered an invalid URN. Please correct the invalid URN to continue</a></li>*@
+                <li v-bind:class="['error-message', phaseError ? '' : 'hidden']"><a href="#new-establishment-phase">You haven't selected an establishment phase. Please select one to continue</a></li>
+                <li v-bind:class="['error-message', establishmentTypeError ? '' : 'hidden']"><a href="#new-establishment-type">You haven't selected an establishment type. Please select one to continue</a></li>
+                <li v-bind:class="['error-message', amalgamationLaError ? '' : 'hidden']"><a href="#LocalAuthorityId">You haven't selected a local authority. Please select one to continue</a></li>
+                <li v-bind:class="['error-message', amalgamationDateError ? '' : 'hidden']"><a href="#amalgamationdate-day">You have entered an invalid date. Please correct the date to continue</a></li>
             </ul>
         </div>
         <form>
-            <div v-show="mergerType ===''">
-                <div class="column-two-thirds">
-                    <p>
-                        You can use this to amalgamate or merge establishments. This
-                        process automatically creates/closes records and creates predecessor/
-                        successor links.
-                    </p>
-
-                    <fieldset class="merger-almalgamation">
-                        <legend>Select the process you are interested in.</legend>
-
-                        <p id="almagamation-desc">
-                            Amalgamation - a proposal for two or more schools to close and a new
-                            school to be established.
-                        </p>
-                        <p id="merger-desc">
-                            Merger - a proposal for one or more schools to close and the remaining
-                            school to be altered.
-                        </p>
-                        <div v-bind:class="['form-group', mergerTypeError ? 'error' : '']">
-                            <span v-bind:class="['error-message', mergerTypeError ? '' : 'hidden' ]">Please select almalgamation or merger.</span>
-                            <label class="block-label selection-button-radio" for="radio-amalgamation">
-                                <input id="radio-amalgamation" type="radio" name="radio-group" value="amalagamation" aria-describedby="almagamation-desc" v-model="mergerType">
-                                Amalagamation
-                            </label>
-                            <label class="block-label selection-button-radio" for="radio-merger">
-                                <input id="radio-merger" type="radio" name="radio-group" value="merger" aria-describedby="merger-desc" v-model="mergerType">
-                                Merger
-                            </label>
-                        </div>
-                    </fieldset>
+        <div v-show="!mergerTypeConfirmed">
+            <div class="column-full top-button-panel">
+                <div class="submit-cancel-panel">
+                    <button type="submit" name="action" value="" class="button" id="go-create" v-on:click.prevent="checkMergeType">Continue</button>
+                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                 </div>
-                <div class="column-full">
-                    <div class="submit-cancel-panel">
-                        <button type="submit" name="action" value="" class="button" id="go-create" v-on:click.prevent="checkMergeType">Continue</button>
-                        <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
-                    </div>
-                </div>
-
             </div>
-            <div v-show="mergerType !=='' && !validSelection">
-                <div class="column-two-thirds" id="merger-details">
-                    <p>You can propose closing one or more schools and altering the remaining school.</p>
+            <div class="column-two-thirds">
+                <p>
+                    You can use this to amalgamate or merge establishments. This
+                    process automatically creates/closes records and creates predecessor/successor links.
+                </p>
 
-                    <h2 class="heading-small">Select the lead establishment</h2>
-                    <div v-bind:class="['form-group', leadEstablishmentError ? 'error' : '' ]">
-                        <span class="form-hint">
-                            The lead establishment will remain open
-                        </span>
-                        <span v-bind:class="['error-message', leadEstablishmentError ? '' : 'hidden' ]">Please check the URN</span>
-                        <label class="form-label" for="lead-establishment">
-                            Enter the lead establishment <abbr title="Unique Reference Number">URN</abbr>
+                <fieldset class="merger-almalgamation">
+                    <legend>Select the process you are interested in.</legend>
 
+                    <p id="almagamation-desc">
+                        Amalgamation - a proposal for two or more schools to close and a new
+                        school to be established.
+                    </p>
+                    <p id="merger-desc">
+                        Merger - a proposal for one or more schools to close and the remaining
+                        school to be altered.
+                    </p>
+                    <div v-bind:class="['form-group', mergerTypeError ? 'error' : '']">
+                        <span v-bind:class="['error-message', mergerTypeError ? '' : 'hidden' ]">Please select almalgamation or merger.</span>
+                        <label class="block-label selection-button-radio" for="radio-amalgamation">
+                            <input id="radio-amalgamation" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
+                            Amalagamation
                         </label>
-                        <input class="form-control" id="lead-establishment" type="text" v-on:change="setLeadEstablishment($event.target.value)" />
+                        <label class="block-label selection-button-radio" for="radio-merger">
+                            <input id="radio-merger" type="radio" name="radio-group" value="merger" aria-describedby="merger-desc" v-model="mergerType">
+                            Merger
+                        </label>
                     </div>
+                </fieldset>
+            </div>
+            <div class="column-full">
+                <div class="submit-cancel-panel">
+                    <button type="submit" name="action" value="" class="button" v-on:click.prevent="checkMergeType">Continue</button>
+                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                </div>
+            </div>
 
-                    <div v-bind:class="['form-group', linkedEstablishmentError ? 'error' : '' ]">
-                        <fieldset>
-                            <legend>Select additional establishments to be merged</legend>
-                            <p class="form-hint">
-                                Up to 3 additional establishments can be merged (minimum of 1 establishment).
-                            </p>
-                            <dl class="field-group">
-                                <dt>
-                                    <label class="form-label">Enter the establishment URN(s)</label>
-                                    <span v-bind:class="['error-message', linkedEstablishmentError ? '' : 'hidden' ]">Please check the URN</span>
-                                </dt>
-                                <dd>
-                                    <ol class="linked-establishments">
-                                        <li><input class="form-control" id="establishment-0" type="text" v-on:change="addEstablishment($event.target.value, 0)" /></li>
-                                        <li><input class="form-control" id="establishment-1" type="text" v-on:change="addEstablishment($event.target.value, 1)" /></li>
-                                        <li><input class="form-control" id="establishment-2" type="text" v-on:change="addEstablishment($event.target.value, 2)" /></li>
-                                    </ol>
-                                </dd>
-                            </dl>
-                        </fieldset>
+        </div>
+            <div v-show="mergerType ==='merger' && mergerTypeConfirmed">
+                <div v-show="mergerType ==='merger' && !validSelection">
+                    <div class="column-two-thirds" id="merger-details">
+                        <p>You can propose closing one or more schools and altering the remaining school.</p>
+
+                        <h2 class="heading-small">Select the lead establishment</h2>
+                        <div v-bind:class="['form-group', leadEstablishmentError ? 'error' : '' ]">
+                            <span class="form-hint">
+                                The lead establishment will remain open
+                            </span>
+                            <span v-bind:class="['error-message', leadEstablishmentError ? '' : 'hidden' ]">Please check the URN</span>
+                            <label class="form-label" for="lead-establishment">
+                                Enter the lead establishment <abbr title="Unique Reference Number">URN</abbr>
+
+                            </label>
+                            <input class="form-control" id="lead-establishment" type="text" v-on:change="setLeadEstablishment($event.target.value)" />
+                        </div>
+
+                        <div v-bind:class="['form-group', linkedEstablishmentError ? 'error' : '' ]">
+                            <fieldset>
+                                <legend>Select additional establishments to be merged</legend>
+                                <p class="form-hint">
+                                    Up to 3 additional establishments can be merged (minimum of 1 establishment).
+                                </p>
+                                <dl class="field-group">
+                                    <dt>
+                                        <label class="form-label">Enter the establishment URN(s)</label>
+                                        <span v-bind:class="['error-message', linkedEstablishmentError ? '' : 'hidden' ]">Please check the URN</span>
+                                    </dt>
+                                    <dd>
+                                        <ol class="linked-establishments" id="linked-establishments">
+                                            <li><input class="form-control" id="establishment-0" type="text" v-on:change="addEstablishment($event.target.value, 0)" /></li>
+                                            <li><input class="form-control" id="establishment-1" type="text" v-on:change="addEstablishment($event.target.value, 1)" /></li>
+                                            <li><input class="form-control" id="establishment-2" type="text" v-on:change="addEstablishment($event.target.value, 2)" /></li>
+                                        </ol>
+                                    </dd>
+                                </dl>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="column-full">
+                        <div class="submit-cancel-panel">
+                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="establishmentSelectionValid">Continue</button>
+                            <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                        </div>
                     </div>
                 </div>
-                <div class="column-full">
-                    <div class="submit-cancel-panel">
-                        <button type="submit" name="action" value="" class="button" v-on:click.prevent="establishmentSelectionValid">Continue</button>
-                        <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                <div v-show="validSelection && !validLinkDate">
+                    <div class="column-two-thirds" id="merger-summary">
+                        <p>You can propose closing one or more schools and altering the remaining school.</p>
+                        <h2 class="heading-small">Establishments to be merged</h2>
+                        <p>Lead establishment (remains open)</p>
+                        <p>
+                            <span>{{ leadEstablishmentUrn }}</span> {{ leadEstablishmentName}}
+                        </p>
+
+                        <dl>
+                            <dt>Establishments to be merged</dt>
+                            <dd v-for="school in linkedEstablishments">
+                                <strong>{{school.name}}</strong>
+                            </dd>
+                        </dl>
+
+                        <div v-bind:class="['form-group range-group', mergedDateError ? 'error' : '' ]">
+                            <fieldset id="merger-date">
+                                <span v-bind:class="['error-message', mergedDateError ? '' : 'hidden']">Please select establishment open date</span>
+                                <legend>Merge date</legend>
+                                <div class="form-hint">For example, 20 03 2003</div>
+
+                                <span class="inline-form-control">
+                                    <label for="mergedate-day">Day</label>
+                                    <input class="form-control date-text-day" id="mergedate-day" name="OpenDate.Day" type="text" v-model="mergedDateDay">
+
+                                </span>
+                                <span class="inline-form-control">
+                                    <label for="mergedate-month">Month</label>
+                                    <input class="form-control date-text-month" id="mergedate-month" name="OpenDate.Month" type="text" v-model="mergedDateMonth">
+
+                                </span>
+                                <span class="inline-form-contol">
+                                    <label for="mergedate-year">Year</label>
+                                    <input class="form-control date-text-year" id="mergedate-year" name="OpenDate.Year" type="text" v-model="mergedDateYear">
+                                </span>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="column-full">
+                        <div class="submit-cancel-panel">
+                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="processMerger">Process merger</button>
+                            <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div v-show="validLinkDate">
+                    <div class="column-two-thirds">
+                        <dl class="summary-list">
+                            <dt><strong class="bold-small">Closing establishment details</strong></dt>
+                            <dd>
+                                <ol class="linked-establishments">
+                                    <li v-for="school in linkedEstablishments"><span>{{school.id}} - {{school.name}}</span></li>
+                                </ol>
+                            </dd>
+                        </dl>
+
+                        <h3 class="heading-medium">Merged establishment details</h3>
+                        <a v-bind:href="schoolDetailUrl">{{leadEstablishmentUrn}} - {{leadEstablishmentName}}</a>
+                        <ul>
+                            <li>Establishment type: Free schools</li>
+                            <li>Amalgamation date: {{displayDate}}</li>
+                        </ul>
+
+                        <p>
+                            Please update the merged record to reflect any changes (for
+                            example, establishment name or age range).
+                        </p>
                     </div>
                 </div>
             </div>
-            <div v-show="validSelection && !validLinkDate">
-                <div class="column-two-thirds" id="merger-summary">
-                    <h1 class="heading-large">Merger</h1>
-                    <p>You can propose closing one or more schools and altering the remaining school.</p>
-                    <h2 class="heading-small">Establishments to be merged</h2>
-                    <p>Lead establishment (remains open)</p>
-                    <p><span>{{ leadEstablishmentUrn }}</span> {{ leadEstablishmentName}}
-                    </p>
-
-                    <dl>
-                        <dt>Establishments to be merged</dt>
-                        <dd v-for="school in linkedEstablishments">
-                            <strong>{{school.name}}</strong>
-                        </dd>
-                    </dl>
-
-                    <div v-bind:class="['form-group range-group', mergedDateError ? 'error' : '' ]">
-                        <fieldset>
-                            <span v-bind:class="['error-message', mergedDateError ? '' : 'hidden']">Please select establishment open date</span>
-                            <legend>Merge date</legend>
-                            <div class="form-hint">For example, 20 03 2003</div>
-
-                            <span class="inline-form-control">
-                                <label for="mergedate-day">Day</label>
-                                <input class="form-control date-text-day" id="mergedate-day" name="OpenDate.Day" type="text" v-model="mergedDateDay">
-
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="mergedate-month">Month</label>
-                                <input class="form-control date-text-month" id="mergedate-month" name="OpenDate.Month" type="text" v-model="mergedDateMonth">
-
-                            </span>
-                            <span class="inline-form-contol">
-                                <label for="mergedate-year">Year</label>
-                                <input class="form-control date-text-year" id="mergedate-year" name="OpenDate.Year" type="text" v-model="mergedDateYear">
-                            </span>
-                        </fieldset>
-                    </div>
+            
+        <div v-show="mergerType ==='amalgamation' && mergerTypeConfirmed">
+        <div v-show="!amalgamationEstablishmentsConfirmed">
+            <div class="column-full top-button-panel">
+                <div class="submit-cancel-panel">
+                    <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateAmalgamationUrns">Continue</button>
+                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                 </div>
-                <div class="column-full">
-                    <div class="submit-cancel-panel">
-                        <button type="submit" name="action" value="" class="button" v-on:click.prevent="checkMergeDate">Process merger</button>
-                        <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
-                    </div>
-                </div>
+            </div>
+            <div class="column-two-thirds">
+                <p>You can propose closing two or more schools and establishing a new school</p>
+
+                <label class="form-label">Select establishements to be amalgamated</label>
+                <span class="form-hint">
+                    Up to 4 establishments can be amalgamated (minimum of 2 establishments)
+                </span>
+
+
+                <dl v-bind:class="['field-group form-group', amalgamateUrnError || amalgamationLengthError ? 'error' : '' ]">
+                    <dt>
+                        <label class="form-label">Enter the establishment URN(s)</label>
+                        <span v-bind:class="['error-message', amalgamateUrnError ? '' : 'hidden' ]">Please check the URN</span>
+                        <span v-bind:class="['error-message', amalgamationLengthError && !amalgamateUrnError  ? '' : 'hidden' ]">Select between 2 and 4 schools.</span>
+                    </dt>
+                    <dd>
+                        <ol class="linked-establishments" id="amalg-linked">
+                            <li><input class="form-control" id="amalgamate-establishment-0" type="text" v-on:change="amalgamateEstablishment($event.target.value, 0)"/></li>
+                            <li><input class="form-control" id="amalgamate-establishment-1" type="text" v-on:change="amalgamateEstablishment($event.target.value, 0)"/></li>
+                            <li><input class="form-control" id="amalgamate-establishment-2" type="text" v-on:change="amalgamateEstablishment($event.target.value, 2)"/></li>
+                            <li><input class="form-control" id="amalgamate-establishment-3" type="text" v-on:change="amalgamateEstablishment($event.target.value, 2)"/></li>
+                        </ol>
+                    </dd>
+                </dl>
 
             </div>
-            <div v-show="validLinkDate">
-                <div class="column-two-thirds">
-                    <dl class="summary-list">
-                        <dt><strong class="bold-small">Closing establishment details</strong></dt>
-                        <dd>
-                            <ol class="linked-establishments">
-                                <li v-for="school in linkedEstablishments"><span>{{school.id}} - {{school.name}}</span></li>
-                            </ol>
-                        </dd>
-                    </dl>
-                    
-                    <h3 class="heading-medium">Merged establishment details</h3>
-                    <a href="/Establishment/Details/v-bind:leadEstablishmentUrn">{{leadEstablishmentUrn}} - {{leadEstablishmentName}}</a>
-                    <ul>
-                        <li>Establishment type: Free schools</li>
-                        <li>Amalgamation date: {{displayDate}}</li>
-                    </ul> 
-                    
-                    <p>
-                        Please update the merged record to reflect any changes (for
-                        example, establishment name or age range).
-                    </p>                    
-                </div>                
+            <div class="column-full">
+                <div class="submit-cancel-panel">
+                    <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateAmalgamationUrns">Continue</button>
+                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div v-show="amalgamationEstablishmentsConfirmed && !amalgamationDetailsConfirmed && !completeAmalgamation">
+            <div class="column-full top-button-panel">
+                <div class="submit-cancel-panel">
+                    <button type="submit" name="action" value="" class="button" v-on:click.prevent="processAmalgamation">Process amalgamation</button>
+                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                </div>
+            </div>
+        <div class="column-two-thirds">
+        <dl class="summary-list">
+            <dt><strong class="heading-small">Closing establishment details</strong></dt>
+            <dd>
+                <ol class="linked-establishments">
+                    <li v-for="school in amalgamatedEstablishments"><span>{{school.id}} - {{school.name}}</span></li>
+                </ol>
+            </dd>
+        </dl>
+        <fieldset>
+        <legend class="heading-small">New School details</legend>
+        <div v-bind:class="['form-group', amalgamationNameError ? 'error' : '' ]">
+            <label class="form-label">Establishment name</label>
+            <span v-bind:class="['error-message', amalgamationNameError ? '' : 'hidden' ]">Please enter a new school name</span>
+            <input type="text" id="new-establishment-name" class="form-control" v-model="newEstablishmentName"/>
+        </div>
+        <div v-bind:class="['form-group', phaseError ? 'error' : '' ]">
+            <label class="form-label">Establishment phase</label>
+            <span v-bind:class="['error-message', phaseError ? '' : 'hidden' ]">Please select an establishment phase</span>
+            <select id="new-establishment-phase" class="form-control" v-on:change="setEstablishmentPhase($event.target.value)">
+                <option value="" selected="selected"></option>
+                <option value="5">Not applicable</option>
+                <option value="1">16 Plus</option>
+                <option value="2">All Through</option>
+                <option value="3">Middle Deemed Primary</option>
+                <option value="4">Middle Deemed Secondary</option>
+                <option value="6">Nursery</option>
+                <option value="7">Primary</option>
+                <option value="8">Secondary</option>
+                <option value="9">Unknown</option>
+            </select>
+        </div>
+        <div v-bind:class="['form-group', establishmentTypeError ? 'error' : '' ]">
+            <label class="form-label">Establishment type</label>
+            <span v-bind:class="['error-message', establishmentTypeError ? '' : 'hidden' ]">
+                                Please select the establishment type.
+                            </span>
+            <select id="new-establishment-type" class="form-control" v-on:change="setEstablishmentType($event.target.value)">
+                <option value="" selected="selected"></option>
+                <option value="1">Academy 16-19 Converter</option>
+                <option value="2">Academy 16-19 Sponsor Led</option>
+                <option value="3">Academy Alternative Provision Converter</option>
+                <option value="4">Academy Alternative Provision Sponsor Led</option>
+                <option value="5">Academy Converter</option>
+                <option value="6">Academy Special Converter</option>
+                <option value="7">Academy Special Sponsor Led</option>
+                <option value="8">Academy Sponsor Led</option>
+                <option value="9">British Schools Overseas</option>
+                <option value="10">Children's Centre</option>
+                <option value="11">Children's Centre Linked Site</option>
+                <option value="12">City Technology College</option>
+                <option value="13">Community School</option>
+                <option value="14">Community Special School</option>
+                <option value="17">Foundation School</option>
+                <option value="18">Foundation Special School</option>
+                <option value="19">Free Schools</option>
+                <option value="20">Free Schools - 16-19</option>
+                <option value="21">Free Schools - Alternative Provision</option>
+                <option value="22">Free Schools Special</option>
+                <option value="23">Further Education</option>
+                <option value="24">Higher Education Institutions</option>
+                <option value="26">Institution funded by other Government Department</option>
+                <option value="27">LA Nursery School</option>
+                <option value="29">Miscellaneous</option>
+                <option value="30">Non-Maintained Special School</option>
+                <option value="31">Offshore Schools</option>
+                <option value="32">Other Independent School</option>
+                <option value="33">Other Independent Special School</option>
+                <option value="35">Pupil Referral Unit</option>
+                <option value="36">Secure Units</option>
+                <option value="37">Service Childrens Education</option>
+                <option value="38">Sixth Form Centres</option>
+                <option value="39">Special Post 16 Institution</option>
+                <option value="40">Studio Schools</option>
+                <option value="41">University Technical College</option>
+                <option value="42">Voluntary Aided School</option>
+                <option value="43">Voluntary Controlled School</option>
+                <option value="44">Welsh Establishment</option>
+            </select>
+        </div>
+
+        <div v-bind:class="['form-group', amalgamationLaError ? 'error' : '' ]">
+        <label for="LocalAuthorityId" class="form-label">Local authority</label>
+        <span v-bind:class="['error-message', amalgamationLaError ? '' : 'hidden' ]">
+                                Please select a local authority.
+                            </span>
+        <select class="form-control" id="LocalAuthorityId" name="LocalAuthorityId" v-on:change="setLocalAuthority($event.target.value)">
+        <option value="" selected="selected"></option>
+        <option value="0">Does not apply</option>
+        <option value="201">City of London</option>
+        <option value="202">Camden</option>
+        <option value="203">Greenwich</option>
+        <option value="204">Hackney</option>
+        <option value="205">Hammersmith and Fulham</option>
+        <option value="206">Islington</option>
+        <option value="207">Kensington and Chelsea</option>
+        <option value="208">Lambeth</option>
+        <option value="209">Lewisham</option>
+        <option value="210">Southwark</option>
+        <option value="211">Tower Hamlets</option>
+        <option value="212">Wandsworth</option>
+        <option value="213">Westminster</option>
+        <option value="301">Barking and Dagenham</option>
+        <option value="302">Barnet</option>
+        <option value="303">Bexley</option>
+        <option value="304">Brent</option>
+        <option value="305">Bromley</option>
+        <option value="306">Croydon</option>
+        <option value="307">Ealing</option>
+        <option value="308">Enfield</option>
+        <option value="309">Haringey</option>
+        <option value="310">Harrow</option>
+        <option value="311">Havering</option>
+        <option value="312">Hillingdon</option>
+        <option value="313">Hounslow</option>
+        <option value="314">Kingston upon Thames</option>
+        <option value="315">Merton</option>
+        <option value="316">Newham</option>
+        <option value="317">Redbridge</option>
+        <option value="318">Richmond upon Thames</option>
+        <option value="319">Sutton</option>
+        <option value="320">Waltham Forest</option>
+        <option value="330">Birmingham</option>
+        <option value="331">Coventry</option>
+        <option value="332">Dudley</option>
+        <option value="333">Sandwell</option>
+        <option value="334">Solihull</option>
+        <option value="335">Walsall</option>
+        <option value="336">Wolverhampton</option>
+        <option value="340">Knowsley</option>
+        <option value="341">Liverpool</option>
+        <option value="342">St. Helens</option>
+        <option value="343">Sefton</option>
+        <option value="344">Wirral</option>
+        <option value="350">Bolton</option>
+        <option value="351">Bury</option>
+        <option value="352">Manchester</option>
+        <option value="353">Oldham</option>
+        <option value="354">Rochdale</option>
+        <option value="355">Salford</option>
+        <option value="356">Stockport</option>
+        <option value="357">Tameside</option>
+        <option value="358">Trafford</option>
+        <option value="359">Wigan</option>
+        <option value="370">Barnsley</option>
+        <option value="371">Doncaster</option>
+        <option value="372">Rotherham</option>
+        <option value="373">Sheffield</option>
+        <option value="380">Bradford</option>
+        <option value="381">Calderdale</option>
+        <option value="382">Kirklees</option>
+        <option value="383">Leeds</option>
+        <option value="384">Wakefield</option>
+        <option value="390">Gateshead</option>
+        <option value="391">Newcastle upon Tyne</option>
+        <option value="392">North Tyneside</option>
+        <option value="393">South Tyneside</option>
+        <option value="394">Sunderland</option>
+        <option value="420">Isles Of Scilly</option>
+        <option value="660">Isle of Anglesey</option>
+        <option value="661">Gwynedd</option>
+        <option value="662">Conwy</option>
+        <option value="663">Denbighshire</option>
+        <option value="664">Flintshire</option>
+        <option value="665">Wrexham</option>
+        <option value="666">Powys</option>
+        <option value="667">Ceredigion</option>
+        <option value="668">Pembrokeshire</option>
+        <option value="669">Carmarthenshire</option>
+        <option value="670">Swansea</option>
+        <option value="671">Neath Port Talbot</option>
+        <option value="672">Bridgend</option>
+        <option value="673">The Vale of Glamorgan</option>
+        <option value="674">Rhondda, Cynon, Taff</option>
+        <option value="675">Merthyr Tydfil</option>
+        <option value="676">Caerphilly</option>
+        <option value="677">Blaenau Gwent</option>
+        <option value="678">Torfaen</option>
+        <option value="679">Monmouthshire</option>
+        <option value="680">Newport</option>
+        <option value="681">Cardiff</option>
+        <option value="701">Scotland Offshore Establishments</option>
+        <option value="702">BFPO Overseas Establishments</option>
+        <option value="703">British Overseas Establishments</option>
+        <option value="704">Fieldwork Overseas Establishments</option>
+        <option value="705">Isle of Man Offshore Establishments</option>
+        <option value="706">Guernsey Offshore Establishments</option>
+        <option value="707">Jersey Offshore Establishments</option>
+        <option value="708">Gibraltar Overseas Establishments</option>
+        <option value="800">Bath and North East Somerset</option>
+        <option value="801">Bristol City of</option>
+        <option value="802">North Somerset</option>
+        <option value="803">South Gloucestershire</option>
+        <option value="805">Hartlepool</option>
+        <option value="806">Middlesbrough</option>
+        <option value="807">Redcar and Cleveland</option>
+        <option value="808">Stockton-on-Tees</option>
+        <option value="810">Kingston upon Hull City of</option>
+        <option value="811">East Riding of Yorkshire</option>
+        <option value="812">North East Lincolnshire</option>
+        <option value="813">North Lincolnshire</option>
+        <option value="815">North Yorkshire</option>
+        <option value="816">York</option>
+        <option value="820">Pre LGR (2009) Bedfordshire</option>
+        <option value="821">Luton</option>
+        <option value="822">Bedford</option>
+        <option value="823">Central Bedfordshire</option>
+        <option value="825">Buckinghamshire</option>
+        <option value="826">Milton Keynes</option>
+        <option value="830">Derbyshire</option>
+        <option value="831">Derby</option>
+        <option value="835">Dorset</option>
+        <option value="836">Poole</option>
+        <option value="837">Bournemouth</option>
+        <option value="840">Durham</option>
+        <option value="841">Darlington</option>
+        <option value="845">East Sussex</option>
+        <option value="846">Brighton and Hove</option>
+        <option value="850">Hampshire</option>
+        <option value="851">Portsmouth</option>
+        <option value="852">Southampton</option>
+        <option value="855">Leicestershire</option>
+        <option value="856">Leicester</option>
+        <option value="857">Rutland</option>
+        <option value="860">Staffordshire</option>
+        <option value="861">Stoke-on-Trent</option>
+        <option value="865">Wiltshire</option>
+        <option value="866">Swindon</option>
+        <option value="867">Bracknell Forest</option>
+        <option value="868">Windsor and Maidenhead</option>
+        <option value="869">West Berkshire</option>
+        <option value="870">Reading</option>
+        <option value="871">Slough</option>
+        <option value="872">Wokingham</option>
+        <option value="873">Cambridgeshire</option>
+        <option value="874">Peterborough</option>
+        <option value="875">Pre LGR (2009) Cheshire</option>
+        <option value="876">Halton</option>
+        <option value="877">Warrington</option>
+        <option value="878">Devon</option>
+        <option value="879">Plymouth</option>
+        <option value="880">Torbay</option>
+        <option value="881">Essex</option>
+        <option value="882">Southend-on-Sea</option>
+        <option value="883">Thurrock</option>
+        <option value="884">Herefordshire</option>
+        <option value="885">Worcestershire</option>
+        <option value="886">Kent</option>
+        <option value="887">Medway</option>
+        <option value="888">Lancashire</option>
+        <option value="889">Blackburn with Darwen</option>
+        <option value="890">Blackpool</option>
+        <option value="891">Nottinghamshire</option>
+        <option value="892">Nottingham</option>
+        <option value="893">Shropshire</option>
+        <option value="894">Telford and Wrekin</option>
+        <option value="895">Cheshire East</option>
+        <option value="896">Cheshire West and Chester</option>
+        <option value="901">Pre LGR (1996) Avon</option>
+        <option value="902">Pre LGR (1997) Bedfordshire</option>
+        <option value="903">Pre LGR (1998) Berkshire</option>
+        <option value="904">Pre LGR (1997) Buckinghamshire</option>
+        <option value="905">Pre LGR (1998) Cambridgeshire</option>
+        <option value="906">Pre LGR (1998) Cheshire</option>
+        <option value="907">Pre LGR (1996) Cleveland</option>
+        <option value="908">Cornwall</option>
+        <option value="909">Cumbria</option>
+        <option value="910">Pre LGR (1997) Derbyshire</option>
+        <option value="911">Pre LGR (1998) Devon</option>
+        <option value="912">Pre LGR (1997) Dorset</option>
+        <option value="913">Pre LGR (1997) Durham</option>
+        <option value="914">Pre LGR (1997) East Sussex</option>
+        <option value="915">Pre LGR (1998) Essex</option>
+        <option value="916">Gloucestershire</option>
+        <option value="917">Pre LGR (1997) Hampshire</option>
+        <option value="918">Pre LGR (1998) Hereford &amp; Worcester</option>
+        <option value="919">Hertfordshire</option>
+        <option value="920">Pre LGR (1996) Humberside</option>
+        <option value="921">Isle of Wight</option>
+        <option value="922">Pre LGR (1998) Kent</option>
+        <option value="923">Pre LGR (1998) Lancashire</option>
+        <option value="924">Pre LGR (1997) Leicestershire</option>
+        <option value="925">Lincolnshire</option>
+        <option value="926">Norfolk</option>
+        <option value="927">Pre LGR (1996) North Yorkshire</option>
+        <option value="928">Northamptonshire</option>
+        <option value="929">Northumberland</option>
+        <option value="930">Pre LGR (1998) Nottinghamshire</option>
+        <option value="931">Oxfordshire</option>
+        <option value="932">Pre LGR (1998) Shropshire</option>
+        <option value="933">Somerset</option>
+        <option value="934">Pre LGR (1997) Staffordshire</option>
+        <option value="935">Suffolk</option>
+        <option value="936">Surrey</option>
+        <option value="937">Warwickshire</option>
+        <option value="938">West Sussex</option>
+        <option value="939">Pre LGR (1997) Wiltshire</option>
+        <option value="999">Unknown</option>
+        </select>
+        </div>
+
+        <div v-bind:class="['form-group range-group', amalgamationDateError ? 'error' : '' ]">
+            <fieldset>
+                <span v-bind:class="['error-message', amalgamationDateError ? '' : 'hidden']">Please enter the date of the amalgamation.</span>
+                <legend>Amalgamation date</legend>
+                <div class="form-hint">For example, 20 03 2003</div>
+
+                <span class="inline-form-control">
+                                    <label for="amalgamationdate-day">Day</label>
+                                    <input class="form-control date-text-day" id="amalgamationdate-day" name="OpenDate.Day" type="text" v-model="amalgamationDateDay">
+
+                                </span>
+                <span class="inline-form-control">
+                                    <label for="amalgamationdate-month">Month</label>
+                                    <input class="form-control date-text-month" id="amalgamationdate-month" name="OpenDate.Month" type="text" v-model="amalgamationDateMonth">
+
+                                </span>
+                <span class="inline-form-contol">
+                                    <label for="amalgamationdate-year">Year</label>
+                                    <input class="form-control date-text-year" id="amalgamationdate-year" name="OpenDate.Year" type="text" v-model="amalgamationDateYear">
+                                </span>
+            </fieldset>
+        </div>
+        </fieldset>
+        </div>
+        <div class="column-full">
+            <div class="submit-cancel-panel">
+                <button type="submit" name="action" value="" class="button" v-on:click.prevent="processAmalgamation">Process amalgamation</button>
+                <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+            </div>
+        </div>
+        </div>
+
+        <div class="column-two-thirds almalgamation-summary" v-show="completeAmalgamation">
+            <div class="summary-panel">
+                <dl class="summary-list">
+                    <dt><strong class="heading-small">Closing establishment details</strong></dt>
+                    <dd>
+                        <ol class="linked-establishments">
+                            <li v-for="school in amalgamatedEstablishments"><span>{{school.id}} - {{school.name}}</span></li>
+                        </ol>
+                    </dd>
+                </dl>
+            </div>
+            
+            <div class="summary-panel">
+                <h3 class="heading-small">New establishment details</h3>
+                <dl>
+                    <dt><a href="#">123456 - {{ newEstablishmentName }}</a></dt>
+                    <dd>Establishment type: {{ selectedEstablishmentType }}</dd>
+                    <dd>Amalgamation date: {{ amalgamationDate }}</dd>
+                </dl>
+
+            </div>
+            
+
+            <p>Please complete the new establishment record.</p>
+        </div>
+
             </div>
         </form>
     </div>
     </div>
 
 @section ViewScripts{
-    @if (System.Configuration.ConfigurationManager.AppSettings["Environment"] == "localdev")
-    {
-        <script src="/Assets/Scripts/libs/vue/vue.js"></script>
-    }
-    else
-    {
-        <script src="/Assets/Scripts/libs/vue/vue.min.js"></script>
-    }
     
-
     <script>
     var schools = [
         {
@@ -407,12 +818,278 @@
         }
     ];
 
+    var phases = [
+        { value: "5", label: "Not applicable" },
+        { value: "1", label: "16 Plus" },
+        { value: "2", label: "All Through" },
+        { value: "3", label: "Middle Deemed Primary" },
+        { value: "4", label: "Middle Deemed Secondary" },
+        { value: "6", label: "Nursery" },
+        { value: "7", label: "Primary" },
+        { value: "8", label: "Secondary" },
+        { value: "9", label: "Unknown" }
+    ];
+
+    var establishmentTypes = [
+        { value: "1", label: "Academy 16-19 Converter" },
+        { value: "2", label: "Academy 16-19 Sponsor Led" },
+        { value: "3", label: "Academy Alternative Provision Converter" },
+        { value: "4", label: "Academy Alternative Provision Sponsor Led" },
+        { value: "5", label: "Academy Converter" },
+        { value: "6", label: "Academy Special Converter" },
+        { value: "7", label: "Academy Special Sponsor Led" },
+        { value: "8", label: "Academy Sponsor Led" },
+        { value: "9", label: "British Schools Overseas" },
+        { value: "10", label: "Children's Centre" },
+        { value: "11", label: "Children's Centre Linked Site" },
+        { value: "12", label: "City Technology College" },
+        { value: "13", label: "Community School" },
+        { value: "14", label: "Community Special School" },
+        { value: "17", label: "Foundation School" },
+        { value: "18", label: "Foundation Special School" },
+        { value: "19", label: "Free Schools" },
+        { value: "20", label: "Free Schools - 16-19" },
+        { value: "21", label: "Free Schools - Alternative Provision" },
+        { value: "22", label: "Free Schools Special" },
+        { value: "23", label: "Further Education" },
+        { value: "24", label: "Higher Education Institutions" },
+        { value: "26", label: "Institution funded by other Government Department" },
+        { value: "27", label: "LA Nursery School" },
+        { value: "29", label: "Miscellaneous" },
+        { value: "30", label: "Non-Maintained Special School" },
+        { value: "31", label: "Offshore Schools" },
+        { value: "32", label: "Other Independent School" },
+        { value: "33", label: "Other Independent Special School" },
+        { value: "35", label: "Pupil Referral Unit" },
+        { value: "36", label: "Secure Units" },
+        { value: "37", label: "Service Childrens Education" },
+        { value: "38", label: "Sixth Form Centres" },
+        { value: "39", label: "Special Post 16 Institution" },
+        { value: "40", label: "Studio Schools" },
+        { value: "41", label: "University Technical College" },
+        { value: "42", label: "Voluntary Aided School" },
+        { value: "43", label: "Voluntary Controlled School" },
+        { value: "44", label: "Welsh Establishment" }
+    ];
+
+    var localAuthorities = [
+        { value: "0", label: "Does not apply" },
+        { value: "201", label: "City of London" },
+        { value: "202", label: "Camden" },
+        { value: "203", label: "Greenwich" },
+        { value: "204", label: "Hackney" },
+        { value: "205", label: "Hammersmith and Fulham" },
+        { value: "206", label: "Islington" },
+        { value: "207", label: "Kensington and Chelsea" },
+        { value: "208", label: "Lambeth" },
+        { value: "209", label: "Lewisham" },
+        { value: "210", label: "Southwark" },
+        { value: "211", label: "Tower Hamlets" },
+        { value: "212", label: "Wandsworth" },
+        { value: "213", label: "Westminster" },
+        { value: "301", label: "Barking and Dagenham" },
+        { value: "302", label: "Barnet" },
+        { value: "303", label: "Bexley" },
+        { value: "304", label: "Brent" },
+        { value: "305", label: "Bromley" },
+        { value: "306", label: "Croydon" },
+        { value: "307", label: "Ealing" },
+        { value: "308", label: "Enfield" },
+        { value: "309", label: "Haringey" },
+        { value: "310", label: "Harrow" },
+        { value: "311", label: "Havering" },
+        { value: "312", label: "Hillingdon" },
+        { value: "313", label: "Hounslow" },
+        { value: "314", label: "Kingston upon Thames" },
+        { value: "315", label: "Merton" },
+        { value: "316", label: "Newham" },
+        { value: "317", label: "Redbridge" },
+        { value: "318", label: "Richmond upon Thames" },
+        { value: "319", label: "Sutton" },
+        { value: "320", label: "Waltham Forest" },
+        { value: "330", label: "Birmingham" },
+        { value: "331", label: "Coventry" },
+        { value: "332", label: "Dudley" },
+        { value: "333", label: "Sandwell" },
+        { value: "334", label: "Solihull" },
+        { value: "335", label: "Walsall" },
+        { value: "336", label: "Wolverhampton" },
+        { value: "340", label: "Knowsley" },
+        { value: "341", label: "Liverpool" },
+        { value: "342", label: "St. Helens" },
+        { value: "343", label: "Sefton" },
+        { value: "344", label: "Wirral" },
+        { value: "350", label: "Bolton" },
+        { value: "351", label: "Bury" },
+        { value: "352", label: "Manchester" },
+        { value: "353", label: "Oldham" },
+        { value: "354", label: "Rochdale" },
+        { value: "355", label: "Salford" },
+        { value: "356", label: "Stockport" },
+        { value: "357", label: "Tameside" },
+        { value: "358", label: "Trafford" },
+        { value: "359", label: "Wigan" },
+        { value: "370", label: "Barnsley" },
+        { value: "371", label: "Doncaster" },
+        { value: "372", label: "Rotherham" },
+        { value: "373", label: "Sheffield" },
+        { value: "380", label: "Bradford" },
+        { value: "381", label: "Calderdale" },
+        { value: "382", label: "Kirklees" },
+        { value: "383", label: "Leeds" },
+        { value: "384", label: "Wakefield" },
+        { value: "390", label: "Gateshead" },
+        { value: "391", label: "Newcastle upon Tyne" },
+        { value: "392", label: "North Tyneside" },
+        { value: "393", label: "South Tyneside" },
+        { value: "394", label: "Sunderland" },
+        { value: "420", label: "Isles Of Scilly" },
+        { value: "660", label: "Isle of Anglesey" },
+        { value: "661", label: "Gwynedd" },
+        { value: "662", label: "Conwy" },
+        { value: "663", label: "Denbighshire" },
+        { value: "664", label: "Flintshire" },
+        { value: "665", label: "Wrexham" },
+        { value: "666", label: "Powys" },
+        { value: "667", label: "Ceredigion" },
+        { value: "668", label: "Pembrokeshire" },
+        { value: "669", label: "Carmarthenshire" },
+        { value: "670", label: "Swansea" },
+        { value: "671", label: "Neath Port Talbot" },
+        { value: "672", label: "Bridgend" },
+        { value: "673", label: "The Vale of Glamorgan" },
+        { value: "674", label: "Rhondda, Cynon, Taff" },
+        { value: "675", label: "Merthyr Tydfil" },
+        { value: "676", label: "Caerphilly" },
+        { value: "677", label: "Blaenau Gwent" },
+        { value: "678", label: "Torfaen" },
+        { value: "679", label: "Monmouthshire" },
+        { value: "680", label: "Newport" },
+        { value: "681", label: "Cardiff" },
+        { value: "701", label: "Scotland Offshore Establishments" },
+        { value: "702", label: "BFPO Overseas Establishments" },
+        { value: "703", label: "British Overseas Establishments" },
+        { value: "704", label: "Fieldwork Overseas Establishments" },
+        { value: "705", label: "Isle of Man Offshore Establishments" },
+        { value: "706", label: "Guernsey Offshore Establishments" },
+        { value: "707", label: "Jersey Offshore Establishments" },
+        { value: "708", label: "Gibraltar Overseas Establishments" },
+        { value: "800", label: "Bath and North East Somerset" },
+        { value: "801", label: "Bristol City of" },
+        { value: "802", label: "North Somerset" },
+        { value: "803", label: "South Gloucestershire" },
+        { value: "805", label: "Hartlepool" },
+        { value: "806", label: "Middlesbrough" },
+        { value: "807", label: "Redcar and Cleveland" },
+        { value: "808", label: "Stockton-on-Tees" },
+        { value: "810", label: "Kingston upon Hull City of" },
+        { value: "811", label: "East Riding of Yorkshire" },
+        { value: "812", label: "North East Lincolnshire" },
+        { value: "813", label: "North Lincolnshire" },
+        { value: "815", label: "North Yorkshire" },
+        { value: "816", label: "York" },
+        { value: "820", label: "Pre LGR (2009) Bedfordshire" },
+        { value: "821", label: "Luton" },
+        { value: "822", label: "Bedford" },
+        { value: "823", label: "Central Bedfordshire" },
+        { value: "825", label: "Buckinghamshire" },
+        { value: "826", label: "Milton Keynes" },
+        { value: "830", label: "Derbyshire" },
+        { value: "831", label: "Derby" },
+        { value: "835", label: "Dorset" },
+        { value: "836", label: "Poole" },
+        { value: "837", label: "Bournemouth" },
+        { value: "840", label: "Durham" },
+        { value: "841", label: "Darlington" },
+        { value: "845", label: "East Sussex" },
+        { value: "846", label: "Brighton and Hove" },
+        { value: "850", label: "Hampshire" },
+        { value: "851", label: "Portsmouth" },
+        { value: "852", label: "Southampton" },
+        { value: "855", label: "Leicestershire" },
+        { value: "856", label: "Leicester" },
+        { value: "857", label: "Rutland" },
+        { value: "860", label: "Staffordshire" },
+        { value: "861", label: "Stoke-on-Trent" },
+        { value: "865", label: "Wiltshire" },
+        { value: "866", label: "Swindon" },
+        { value: "867", label: "Bracknell Forest" },
+        { value: "868", label: "Windsor and Maidenhead" },
+        { value: "869", label: "West Berkshire" },
+        { value: "870", label: "Reading" },
+        { value: "871", label: "Slough" },
+        { value: "872", label: "Wokingham" },
+        { value: "873", label: "Cambridgeshire" },
+        { value: "874", label: "Peterborough" },
+        { value: "875", label: "Pre LGR (2009) Cheshire" },
+        { value: "876", label: "Halton" },
+        { value: "877", label: "Warrington" },
+        { value: "878", label: "Devon" },
+        { value: "879", label: "Plymouth" },
+        { value: "880", label: "Torbay" },
+        { value: "881", label: "Essex" },
+        { value: "882", label: "Southend-on-Sea" },
+        { value: "883", label: "Thurrock" },
+        { value: "884", label: "Herefordshire" },
+        { value: "885", label: "Worcestershire" },
+        { value: "886", label: "Kent" },
+        { value: "887", label: "Medway" },
+        { value: "888", label: "Lancashire" },
+        { value: "889", label: "Blackburn with Darwen" },
+        { value: "890", label: "Blackpool" },
+        { value: "891", label: "Nottinghamshire" },
+        { value: "892", label: "Nottingham" },
+        { value: "893", label: "Shropshire" },
+        { value: "894", label: "Telford and Wrekin" },
+        { value: "895", label: "Cheshire East" },
+        { value: "896", label: "Cheshire West and Chester" },
+        { value: "901", label: "Pre LGR (1996) Avon" },
+        { value: "902", label: "Pre LGR (1997) Bedfordshire" },
+        { value: "903", label: "Pre LGR (1998) Berkshire" },
+        { value: "904", label: "Pre LGR (1997) Buckinghamshire" },
+        { value: "905", label: "Pre LGR (1998) Cambridgeshire" },
+        { value: "906", label: "Pre LGR (1998) Cheshire" },
+        { value: "907", label: "Pre LGR (1996) Cleveland" },
+        { value: "908", label: "Cornwall" },
+        { value: "909", label: "Cumbria" },
+        { value: "910", label: "Pre LGR (1997) Derbyshire" },
+        { value: "911", label: "Pre LGR (1998) Devon" },
+        { value: "912", label: "Pre LGR (1997) Dorset" },
+        { value: "913", label: "Pre LGR (1997) Durham" },
+        { value: "914", label: "Pre LGR (1997) East Sussex" },
+        { value: "915", label: "Pre LGR (1998) Essex" },
+        { value: "916", label: "Gloucestershire" },
+        { value: "917", label: "Pre LGR (1997) Hampshire" },
+        { value: "918", label: "Pre LGR (1998) Hereford & Worcester" },
+        { value: "919", label: "Hertfordshire" },
+        { value: "920", label: "Pre LGR (1996) Humberside" },
+        { value: "921", label: "Isle of Wight" },
+        { value: "922", label: "Pre LGR (1998) Kent" },
+        { value: "923", label: "Pre LGR (1998) Lancashire" },
+        { value: "924", label: "Pre LGR (1997) Leicestershire" },
+        { value: "925", label: "Lincolnshire" },
+        { value: "926", label: "Norfolk" },
+        { value: "927", label: "Pre LGR (1996) North Yorkshire" },
+        { value: "928", label: "Northamptonshire" },
+        { value: "929", label: "Northumberland" },
+        { value: "930", label: "Pre LGR (1998) Nottinghamshire" },
+        { value: "931", label: "Oxfordshire" },
+        { value: "932", label: "Pre LGR (1998) Shropshire" },
+        { value: "933", label: "Somerset" },
+        { value: "934", label: "Pre LGR (1997) Staffordshire" },
+        { value: "935", label: "Suffolk" },
+        { value: "936", label: "Surrey" },
+        { value: "937", label: "Warwickshire" },
+        { value: "938", label: "West Sussex" },
+        { value: "939", label: "Pre LGR (1997) Wiltshire" },
+        { value: "999", label: "Unknown" }
+    ];
+
         var overlay = $('<div id="demo-establishment-list" class="hidden"><ul></ul></div>'),
             schoolsContent = [];
 
 
         $(schools).each(function(n, school) {
-            console.log(school);
             schoolsContent.push('<li>' + school.id +": " + school.name + '</li>');
         });
 
@@ -420,34 +1097,78 @@
 
         $('body').append(overlay);
 
-        
 
     var mergersApp = new Vue({
         el: '#mergers-app',
         data: {
             mergerType: '',
+            validSelection: false,
+            mergerTypeConfirmed: false,
             leadEstablishmentUrn: '',
             leadEstablishmentName: '',
             linkedEstablishments: [],
+            amalgamatedEstablishments: [],
             establishmentsSelected: false,
             mergerTypeError: false,
             leadEstablishmentError: false,
             linkedEstablishmentError: false,
-            validSelection: false,
+            amalgamateUrnError: false,                        
             validLinkDate: false,
             mergedDateDay: '',
             mergedDateMonth: '',
             mergedDateYear: '',
             mergedDateError: false,
-            schools: schools
+            amalgamationDateDay: '',
+            amalgamationDateMonth: '',
+            amalgamationDateYear: '',
+            amalgamationDateError: false,
+            selectedLa: '',
+            selectedLaName: '',
+            selectedEstablishmentTypeId: '',
+            selectedEstablishmentType: '',
+            selectedEstablishmentPhase: '',
+            newEstablishmentName: '',
+            amalgamationLengthError: false,
+            amalgamationUrnError: false,
+            amalgamationEstablishmentsConfirmed: false,
+            amalgamationDetailsConfirmed: false,
+            amalgamationNameError: false,
+            phaseError: false,
+            establishmentTypeError: false,
+            amalgamationLaError: false,
+            completeAmalgamation: false,
+
+            // data
+            schools: schools,
+            phases: phases,
+            establishmentTypes: establishmentTypes,
+            localAuthorities: localAuthorities
         },
         computed: {
             showGlobalError: function () {                
-                return this.leadEstablishmentError || this.linkedEstablishmentError || this.mergedDateError;
+                return (this.mergerTypeError ||
+                        this.amalgamateUrnError ||
+                        this.leadEstablishmentError ||
+                        this.linkedEstablishmentError || 
+                        this.mergedDateError || 
+                        this.amalgamationLengthError ||
+                        this.amalgamationUrnError || 
+                        this.amalgamationNameError ||
+                        this.phaseError ||
+                        this.establishmentTypeError ||
+                        this.amalgamationLaError || 
+                        this.amalgamationDateError);
             },
             displayDate: function() {
                 return this.mergedDateDay + '/' + this.mergedDateMonth + '/' + this.mergedDateYear;
+            },
+            amalgamationDate: function() {
+                return this.amalgamationDateDay + '/' + this.amalgamationDateMonth + '/' + this.amalgamationDateYear;
+            },
+            schoolDetailUrl: function(urn) {
+                return "/Establishment/Details/" + this.leadEstablishmentUrn;
             }
+
         },
         methods: {
             checkMergeType: function() {
@@ -455,6 +1176,7 @@
                     this.mergerTypeError = true;
                 } else {
                     this.mergerTypeError = false;
+                    this.mergerTypeConfirmed = true;
                 }
             },
             setLeadEstablishment: function(urn) {
@@ -485,65 +1207,145 @@
                     this.linkedEstablishmentError = false;
                 } else {
                     this.linkedEstablishmentError = true;
+                }                
+            },
+            amalgamateEstablishment: function(urn, pos) {
+                var estabDetails = this.schools.filter(function(school, i) {                    
+                    if (urn === school.id) {
+                        return school;
+                    }
+                });
+
+                if (estabDetails.length) {
+                    this.amalgamatedEstablishments.splice(pos, 0, estabDetails[0]);
+                    this.amalgamateUrnError = false;
+                } else {
+                    this.amalgamateUrnError = true;
+                }     
+            },
+            setLocalAuthority: function (val) {
+                var filtered = this.localAuthorities.filter(function (la) {                    
+                    if (val === la.value) {
+                        return la;
+                    }
+                });
+
+                if (filtered.length) {
+                    this.selectedLaName = filtered[0].label;
                 }
                 
             },
+            setEstablishmentType: function (val) {
+                var filtered = this.establishmentTypes.filter(function(establishment) {
+                    if (val === establishment.value) {
+                        return establishment;
+                    }
+                });
+
+                if (filtered.length) {
+                    this.selectedEstablishmentType = filtered[0].label;
+                }
+            },
+            setEstablishmentPhase: function (val) {
+                var filtered = this.phases.filter(function(phase) {
+                    if (val === phase.value) {
+                        return phase;
+                    }
+                });
+
+                if (filtered.length) {
+                    this.selectedEstablishmentPhase = filtered[0].label;
+                }
+            },
+            validateAmalgamationUrns: function() {
+                if (this.amalgamatedEstablishments.length < 2) {
+                    this.amalgamationLengthError = true;
+                } else {
+                    this.amalgamationLengthError = false;
+                    this.amalgamationEstablishmentsConfirmed = true;
+                }
+
+            },
+            processAmalgamation: function () {
+
+                this.amalgamationNameError = (this.newEstablishmentName.length < 1);
+
+                this.establishmentTypeError = (this.selectedEstablishmentType === '');
+
+                this.amalgamationLaError = (this.selectedLaName === '');
+
+                this.phaseError = (this.selectedEstablishmentPhase === '');
+
+                this.amalgamationDateError = this.checkMergeDate();
+
+                if (!this.amalgamationNameError &&
+                    !this.establishmentTypeError &&
+                    !this.amalgamationLaError &&
+                    !this.phaseError &&
+                    !this.amalgamationDateError) {
+
+                    this.completeAmalgamation = true;
+                    
+                }
+
+            },
+            processMerger: function() {
+                this.mergedDateError = this.checkMergeDate();
+
+                if (!this.mergedDateError) {
+                    this.validLinkDate = true;
+                }
+            },
             checkMergeDate: function() {
-                var day = parseInt(this.mergedDateDay, 10),
-                    month = parseInt(this.mergedDateMonth, 10),
-                    year = parseInt(this.mergedDateYear, 10),
+                var day = this.mergerType === 'merger' ? parseInt(this.mergedDateDay, 10) : parseInt(this.amalgamationDateDay, 10),
+                    month = this.mergerType === 'merger' ? parseInt(this.mergedDateMonth, 10) : parseInt(this.amalgamationDateMonth, 10),
+                    year = this.mergerType === 'merger' ? parseInt(this.mergedDateYear, 10) : parseInt(this.amalgamationDateYear, 10),
+                    dateError = false,
                     months31 = [0,2,4,6,7,9,11],
                     currentYear = new Date().getFullYear();
 
                 if (!day || !month || !year || isNaN(day) || isNaN(month) || isNaN(year) ) {
-                    this.mergedDateError = true;
-                    console.log("1");
-                    return;
+                    dateError = true;
                 }
 
                 var isLeap = new Date(year, 1, 29).getMonth() === 1; // will return march for non leap years
 
                 if (isLeap && month === 1) {
                     if (day > 29) {
-                        this.mergedDateError = true;
-                        console.log("2");
-                        return;
+                        dateError = true;
                     }
                 } else if (month === 1) {
                     if (day > 28) {
-                        this.mergedDateError = true;
-                        console.log('3');
-                        return;
+                        dateError = true;
                     }
                 }
 
                 if (months31.indexOf(month - 1)) {
                     if (day < 1 || day > 31) {
-                        console.log('4');
-                        this.mergedDateError = true;
-                        return;
+                        dateError = true;
                     }
                 } else {
                     if (day < 1 || day > 30) {
-                        console.log('5');
-                        this.mergedDateError = true;
-                        return;
+                        dateError = true;
                     }
                 }
 
                 if (month < 1 || month > 12) {
-                    console.loglog('6');
-                    this.mergedDateError = true;
-                    return;
+                    dateError = true;
                 }
 
                 if (year < 2010 || year > currentYear + 5) {
-                    console.log('7');
-                    this.mergedDateError = true;
-                    return;
+                    dateError = true;
                 }
-                this.mergedDateError = false;
-                this.validLinkDate = true;
+
+                return dateError;
+
+                //if (this.mergerType === 'merger') {
+                //    this.mergedDateError = dateError;
+                //    this.validLinkDate = true;
+                //} else {
+                //     this.amalgamateDateError = dateError;
+                //}
             },
             establishmentSelectionValid: function () {
                 this.validSelection = (this.leadEstablishmentUrn !== '' & !this.leadEstablishmentError && this.linkedEstablishments.length > 0);
@@ -565,7 +1367,6 @@
 
 
     $('#page-heading').on('click', function () {
-        console.log("heading click");
         overlay.toggleClass('hidden');
     });
         var $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']");

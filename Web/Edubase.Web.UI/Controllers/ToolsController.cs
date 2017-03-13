@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using Filters;
     using GT = Services.Enums.eLookupGroupType;
 
     [RoutePrefix("Tools"), Route("{action=index}")]
@@ -38,12 +39,12 @@ namespace Edubase.Web.UI.Controllers
             
             return View(viewModel);
         }
-
+        [HttpGet, EdubaseAuthorize]
         public ActionResult BulkAcademies()
         {
             return View();
         }
-
+        [HttpGet, EdubaseAuthorize]
         public ActionResult MergersTool()
         {
             return View();
