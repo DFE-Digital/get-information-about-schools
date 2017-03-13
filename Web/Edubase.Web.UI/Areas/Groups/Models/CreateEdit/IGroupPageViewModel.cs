@@ -7,10 +7,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
     public interface IGroupPageViewModel
     {
-        string PageTitle { get; }
-        int? GroupUId { get; }
-        string ListOfEstablishmentsPluralName { get; }
-        string GroupName { get; }
-        int? GroupTypeId { get; }
+        int? GroupUId { get; set; }
+        string ListOfEstablishmentsPluralName { get; set; }
+        string GroupName { get; set; }
+        int? GroupTypeId { get; set; }
+        string Layout { get; set; }
+        string SelectedTabName { get; set; }
     }
 }

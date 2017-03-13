@@ -2,7 +2,7 @@
 @using System.Linq.Expressions;
 @model GovernorsGridViewModel
 @{ 
-    Layout = null;
+    Layout = Model.Layout;
 }
 
 @if (Model.EditMode)
@@ -15,9 +15,9 @@
             <h1 class="bold-medium">Governance</h1>
             <br />
             <h2 class="bold-small">Add person</h2>
-            <p>Select role @ViewContext.RouteData.GetRequiredString("controller")</p>
+            <p>Select role</p>
 
-            @using (Html.BeginForm("AddEditGovernor", Model.ParentControllerName, new { area = Model.ParentAreaName }, FormMethod.Get))
+            @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
             {
                 <div class="form-group">
                     @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = x.Id.ToString() }),
@@ -75,11 +75,13 @@ else
                                 if (Model.RemovalGid != row.Model.Id)
                                 {
                                     <div style="margin-bottom:20px;">
-                                        @Html.ActionLink("Edit", "AddEditGovernor", Model.ParentControllerName, new { area = Model.ParentAreaName, id = Model.Id, gid = row.Model.Id }, new { @class = "button button-grey" })
-                                        @Html.ActionLink("Remove", "EditGovernance", Model.ParentControllerName, null, null, "gid-" + row.Model.Id, new { id = Model.Id, removalGid = row.Model.Id, area = Model.ParentAreaName }, new { @class = "button button-grey" })
+
+                                        @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "button button-grey" })
+                                        @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", null, null, "gid-" + row.Model.Id, new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id }, new { @class = "button button-grey" })
+
                                         @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
                                         {
-                                            @Html.ActionLink("Replace", "AddEditGovernor", new { id = Model.Id, gid = row.Model.Id, replace = true }, new { @class = "button button-grey" })
+                                            @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "button button-grey" })
                                         }
                                     </div>
                                 }
@@ -87,9 +89,11 @@ else
                                 {
                                     <div style="margin-bottom:20px;">
 
-                                        @using (Html.BeginForm(FormMethod.Post))
+                                        @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post))
                                         {
                                             @Html.HiddenFor(x => x.RemovalGid)
+                                            @Html.HiddenFor(x => x.EstablishmentUrn)
+                                            @Html.HiddenFor(x => x.GroupUId)
 
                                             <div class="form-group">
                                                 <fieldset class="inline">
@@ -112,7 +116,8 @@ else
 
                                                 <input type="submit" name="action" value="Save" class="button" />
 
-                                                @Html.ActionLink("Cancel", "EditGovernance", new { id = Model.Id }, new { @class = "button button-grey" })
+                                                @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
+
                                             </div>
 
                                             <div style="border-left:4px solid #bbb; padding-left:20px;display:none;" class="remove-governor">
@@ -120,7 +125,7 @@ else
                                                 <p class="font-xsmall">Confirm you wish to remove this person</p>
                                                 <input type="submit" name="action" value="Remove" class="button" />
 
-                                                @Html.ActionLink("Cancel", "EditGovernance", new { id = Model.Id }, new { @class = "button button-grey" })
+                                                @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
                                             </div>
                                         }
 

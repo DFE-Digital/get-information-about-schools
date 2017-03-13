@@ -9,13 +9,14 @@ using System.Web.Mvc;
 using System.ComponentModel;
 using Edubase.Web.UI.Models;
 using Edubase.Services.Governors.DisplayPolicies;
+using Edubase.Services.Nomenclature;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
-    public class CreateEditGovernorViewModel
+    public class CreateEditGovernorViewModel : IGroupPageViewModel
     {
         private static readonly IEnumerable<SelectListItem> _titles = new[] { "Mr", "Mrs", "Ms", "Miss", "Dr", "Prof", "Rev", "Sir" }.Select(x => new SelectListItem { Text = x, Value = x });
-
+        
         public eLookupGovernorRole GovernorRole { get; set; }
         public string GovernorRoleName { get; set; }
         public IEnumerable<SelectListItem> Titles { get; set; }
@@ -83,8 +84,20 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public ReplaceGovernorViewModel ReplaceGovernorViewModel { get; set; } = new ReplaceGovernorViewModel();
 
+
+        public string Layout { get; set; }
+        
+        public string ListOfEstablishmentsPluralName { get; set; }
+
+        public string GroupName { get; set; }
+
+        public int? GroupTypeId { get; set; }
+
+        public string SelectedTabName { get; set; }
+
         public CreateEditGovernorViewModel()
         {
+
         }
         
 

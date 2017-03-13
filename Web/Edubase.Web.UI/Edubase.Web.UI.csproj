@@ -322,6 +322,7 @@
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
+    <Compile Include="Helpers\WebHelpers.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
     <Compile Include="Models\Grid\GridViewModel.cs" />
@@ -385,7 +386,6 @@
     <Content Include="Areas\Groups\Views\Group\EditLinks.cshtml" />
     <Content Include="Areas\Groups\Views\Group\_EditLayoutPage.cshtml" />
     <Content Include="Areas\Groups\Views\Group\EditDetails.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\EditGovernance.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ViewEdit.cshtml" />
     <Content Include="Areas\Groups\Views\Group\AddEditGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\AddEdit.cshtml" />

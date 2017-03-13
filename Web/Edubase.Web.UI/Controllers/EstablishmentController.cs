@@ -89,14 +89,14 @@ namespace Edubase.Web.UI.Controllers
             return View("EditIEBT", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Governance")]
-        public async Task<ActionResult> EditGovernance(int? id)
-        {
-            if (!id.HasValue) return HttpNotFound();
-            var viewModel = await CreateEditViewModel(id);
-            if (!viewModel.TabDisplayPolicy.Governance) throw new PermissionDeniedException();
-            return View("EditGovernance", viewModel);
-        }
+        //[HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Governance")]
+        //public async Task<ActionResult> EditGovernance(int? id)
+        //{
+        //    if (!id.HasValue) return HttpNotFound();
+        //    var viewModel = await CreateEditViewModel(id);
+        //    if (!viewModel.TabDisplayPolicy.Governance) throw new PermissionDeniedException();
+        //    return View("EditGovernance", viewModel);
+        //}
 
         [Route("Edit/{id:int}/Governance/AddEdit")]
         public async Task<ActionResult> AddEditGovernor(int? id, eLookupGovernorRole? role, int? gid, bool? replace)

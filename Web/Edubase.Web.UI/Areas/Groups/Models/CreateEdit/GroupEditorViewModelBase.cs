@@ -19,15 +19,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             Trust, // School trust
             AcademyTrust // MATs and SATs
         }
-
-        private static readonly Dictionary<eGroupTypeMode, string> _pluralEstablishmentNames = new Dictionary<eGroupTypeMode, string>
-        {
-            [eGroupTypeMode.ChildrensCentre] = "children's centres",
-            [eGroupTypeMode.Trust] = "schools",
-            [eGroupTypeMode.Federation] = "schools",
-            [eGroupTypeMode.AcademyTrust] = "academies"
-        };
-
+        
         private static readonly Dictionary<eGroupTypeMode, string> _entityNames = new Dictionary<eGroupTypeMode, string>
         {
             [eGroupTypeMode.ChildrensCentre] = "children's centre group or collaboration",
@@ -48,13 +40,16 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             }
         }
 
-        public string ListOfEstablishmentsPluralName => _pluralEstablishmentNames[GroupTypeMode];
+        public string ListOfEstablishmentsPluralName { get; set; }
         public string PageTitle => string.Concat(GroupUId.HasValue ? "Edit " : "Create ", EntityName);
         public string EntityName => _entityNames.Get(GroupTypeMode);
+
+        public string Layout { get; set; }
 
         public int? GroupUId { get; set; }
         public string GroupName { get; set; }
         public int? GroupTypeId { get; set; }
+        public string SelectedTabName { get; set; }
 
         public GroupEditorViewModelBase()
         {

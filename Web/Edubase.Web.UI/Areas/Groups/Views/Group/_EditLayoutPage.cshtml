@@ -5,9 +5,8 @@
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
-    ViewBag.Title = Model.PageTitle;
+    //ViewBag.Title = Model.PageTitle;
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
-    var action = ViewBag.SelectedTab as string ?? ViewContext.RouteData.Values["action"]?.ToString();
 }
 
 @Html.ActionLink("Back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
@@ -22,15 +21,15 @@
             <div class="tab-wrap">
                 <ul class="horizontal-tabs">
                     <li>
-                        <a href="@Url.Action("EditDetails", new { id = Model.GroupUId, area = "Groups" })" 
-                           class="horizontal-tab @Html.Conditional(action == "EditDetails", "selected-tab")">Details</a>
+                        <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" 
+                           class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "details", "selected-tab")">Details</a>
                     </li>
-                    <li><a href="@Url.Action("EditLinks", new { id = Model.GroupUId, area = "Groups" })" 
-                           class="horizontal-tab @Html.Conditional(action == "EditLinks", "selected-tab")">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                    <li><a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" 
+                           class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "links", "selected-tab")">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
                     </li>
                     <li>
-                        <a href="@Url.Action("EditGovernance", new { id = Model.GroupUId, area = "Groups" })"
-                           class="horizontal-tab @Html.Conditional(action == "EditGovernance", "selected-tab")">Governance</a>
+                        <a href="@Url.Action("Edit", "Governor", new { groupUId = Model.GroupUId, area = "Governors" })"
+                           class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "governance", "selected-tab")">Governance</a>
                     </li>
                 </ul>
             </div>

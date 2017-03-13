@@ -14,7 +14,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     using UI.Models;
     using GR = eLookupGovernorRole;
 
-    public class GovernorsGridViewModel
+    public class GovernorsGridViewModel : Groups.Models.CreateEdit.IGroupPageViewModel
     {
         private readonly NomenclatureService _nomenclatureService;
 
@@ -30,6 +30,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public string ParentAreaName => EstablishmentUrn.HasValue ? "" : "Groups";
 
+        public string Layout { get; set; }
+
         public int? Id => EstablishmentUrn ?? GroupUId;
 
         public int? EstablishmentUrn { get; set; }
@@ -44,7 +46,15 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public int? RemovalGid { get; set; }
 
         public DateTimeViewModel RemovalAppointmentEndDate { get; set; } = new DateTimeViewModel();
-        
+
+        public string ListOfEstablishmentsPluralName { get; set; }
+
+        public string GroupName { get; set; }
+
+        public int? GroupTypeId { get; set; }
+
+        public string SelectedTabName { get; set; }
+
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groudUId, int? establishmentUrn, NomenclatureService nomenclatureService)
         {
             _nomenclatureService = nomenclatureService;
@@ -53,7 +63,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             DomainModel = dto;
             EditMode = editMode;
             GroupUId = groudUId;
-            EstablishmentUrn = establishmentUrn;
+            EstablishmentUrn = establishmentUrn;            
         }
 
         public GovernorsGridViewModel()
