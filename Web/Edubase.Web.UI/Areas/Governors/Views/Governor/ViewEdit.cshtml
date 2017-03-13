@@ -10,7 +10,15 @@
     <div class="grid-row">
         <div class="column-half">
 
-            @Html.ActionLink("View governance", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel" })
+            @if (Model.GroupUId.HasValue)
+            {
+                @Html.ActionLink("View governance", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel" })
+            }
+            else
+            {
+                @Html.ActionLink("View governance", "Details", "Establishment", null, null, "governance", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" })
+            }
+
 
             <h1 class="bold-medium">Governance</h1>
             <br />

@@ -12,7 +12,7 @@ namespace Edubase.Web.UI.Models
     using System.ComponentModel;
     using ET = Services.Enums.eLookupEstablishmentType;
 
-    public class EditEstablishmentModel
+    public class EditEstablishmentModel : IEstablishmentPageViewModel
     {
         private static readonly IDictionary<byte?, string> _ofstedRatingsLookup =
             new Dictionary<byte?, string>
@@ -194,7 +194,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> PRUSENOptions { get; internal set; }
         public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }
 
-        public TabDisplayPolicy TabDisplayPolicy { get; internal set; }
+        public TabDisplayPolicy TabDisplayPolicy { get; set; }
 
         public Guid? AddressToRemoveId { get; set; }
 
@@ -311,6 +311,10 @@ namespace Edubase.Web.UI.Models
         public int? AccommodationChangedId { get; set; }
         public IEnumerable<SelectListItem> PruFulltimeProvisionOptions { get; internal set; }
         public IEnumerable<SelectListItem> PruEducatedByOthersOptions { get; internal set; }
+
+        public string SelectedTab { get; set; }
+
+        public string Layout { get; set; }
 
 
         #endregion

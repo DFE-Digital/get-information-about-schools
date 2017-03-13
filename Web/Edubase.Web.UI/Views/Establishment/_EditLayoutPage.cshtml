@@ -1,6 +1,6 @@
 ﻿@using Edubase.Web.UI.Models
 @using System.Linq
-@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@using ViewModel = Edubase.Web.UI.Models.Establishments.IEstablishmentPageViewModel
 @model ViewModel
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
@@ -18,21 +18,21 @@
         <div class="horizontal-tabs-wrapper">
             <div class="tab-wrap">
                 <ul class="horizontal-tabs">
-                    <li><a href="@Url.Action("EditDetails", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "EditDetails", "selected-tab")">Details</a></li>
+                    <li><a href="@Url.Action("EditDetails", "Establishment", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "details", "selected-tab")">Details</a></li>
                         
                     @if (Model.TabDisplayPolicy.Location)
                     {
-                        <li><a href="@Url.Action("EditLocation", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "EditLocation", "selected-tab")">Location</a></li>
+                        <li><a href="@Url.Action("EditLocation", "Establishment", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "location", "selected-tab")">Location</a></li>
                     }
 
                     @if (Model.TabDisplayPolicy.IEBT)
                     {
-                        <li><a href="@Url.Action("EditIEBT", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "EditIEBT", "selected-tab")">IEBT</a></li>
+                        <li><a href="@Url.Action("EditIEBT", "Establishment", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "iebt", "selected-tab")">IEBT</a></li>
                     }
 
                     @if (Model.TabDisplayPolicy.Governance)
                     {
-                        <li><a href="@Url.Action("EditGovernance", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "EditGovernance", "selected-tab")">Governance</a></li>
+                        <li><a href="@Url.Action("Edit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "governance", "selected-tab")">Governance</a></li>
                     }
                 </ul>
             </div>

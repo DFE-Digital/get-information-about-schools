@@ -111,7 +111,7 @@ namespace Edubase.Services.Governors
                         retVal.ApplicableRoles.AddRange(new[] { GR.ChairOfGovernors, GR.Governor });
                     else if (EnumSets.AcademiesAndFreeSchools.Any(x => x == domainModel.TypeId))
                     {
-                        var groupModel = await _groupReadService.GetByEstablishmentUrnAsync(urn.Value);
+                        var groupModel = await _groupReadService.GetByEstablishmentUrnAsync(urn.Value); // TODO: GET ALL!!!!
                         if (groupModel != null && groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                             retVal.ApplicableRoles.AddRange(new[] { GR.ChairOfLocalGoverningBody, GR.LocalGovernor });
                         else retVal.ApplicableRoles.AddRange(commonGovernorRoleSet);

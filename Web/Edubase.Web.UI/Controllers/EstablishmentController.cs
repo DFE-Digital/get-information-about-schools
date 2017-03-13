@@ -68,6 +68,7 @@ namespace Edubase.Web.UI.Controllers
         {
             if (!id.HasValue) return HttpNotFound();
             ViewModel viewModel = await CreateEditViewModel(id);
+            viewModel.SelectedTab = "details";
             return View(viewModel);
         }
 
@@ -77,6 +78,7 @@ namespace Edubase.Web.UI.Controllers
             if (!id.HasValue) return HttpNotFound();
             var viewModel = await CreateEditViewModel(id);
             if (!viewModel.TabDisplayPolicy.Location) throw new PermissionDeniedException();
+            viewModel.SelectedTab = "location";
             return View(viewModel);
         }
 
@@ -86,27 +88,10 @@ namespace Edubase.Web.UI.Controllers
             if (!id.HasValue) return HttpNotFound();
             var viewModel = await CreateEditViewModel(id);
             if (!viewModel.TabDisplayPolicy.IEBT) throw new PermissionDeniedException();
+            viewModel.SelectedTab = "iebt";
             return View("EditIEBT", viewModel);
         }
-
-        //[HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Governance")]
-        //public async Task<ActionResult> EditGovernance(int? id)
-        //{
-        //    if (!id.HasValue) return HttpNotFound();
-        //    var viewModel = await CreateEditViewModel(id);
-        //    if (!viewModel.TabDisplayPolicy.Governance) throw new PermissionDeniedException();
-        //    return View("EditGovernance", viewModel);
-        //}
-
-        [Route("Edit/{id:int}/Governance/AddEdit")]
-        public async Task<ActionResult> AddEditGovernor(int? id, eLookupGovernorRole? role, int? gid, bool? replace)
-        {
-            if (!id.HasValue) return HttpNotFound();
-            var viewModel = await CreateEditViewModel(id);
-            if (!viewModel.TabDisplayPolicy.Governance) throw new PermissionDeniedException();
-            return View("AddEditGovernor", viewModel);
-        }
-
+        
         private async Task<ViewModel> CreateEditViewModel(int? id)
         {
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();

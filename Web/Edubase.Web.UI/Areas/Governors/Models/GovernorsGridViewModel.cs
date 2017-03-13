@@ -9,12 +9,13 @@ using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
+    using UI.Models.Establishments;
     using Services.Governors.DisplayPolicies;
     using Services.Nomenclature;
     using UI.Models;
     using GR = eLookupGovernorRole;
 
-    public class GovernorsGridViewModel : Groups.Models.CreateEdit.IGroupPageViewModel
+    public class GovernorsGridViewModel : Groups.Models.CreateEdit.IGroupPageViewModel, IEstablishmentPageViewModel
     {
         private readonly NomenclatureService _nomenclatureService;
 
@@ -54,6 +55,14 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public int? GroupTypeId { get; set; }
 
         public string SelectedTabName { get; set; }
+
+        string IEstablishmentPageViewModel.SelectedTab { get; set; }
+
+        int? IEstablishmentPageViewModel.Urn { get; set; }
+
+        string IEstablishmentPageViewModel.Name { get; set; }
+
+        TabDisplayPolicy IEstablishmentPageViewModel.TabDisplayPolicy { get; set; }
 
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groudUId, int? establishmentUrn, NomenclatureService nomenclatureService)
         {

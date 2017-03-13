@@ -10,6 +10,7 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.Urn)
     @Html.HiddenFor(x => x.Name)
+    @Html.HiddenFor(x => x.SelectedTab)
 
     <div class="" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)

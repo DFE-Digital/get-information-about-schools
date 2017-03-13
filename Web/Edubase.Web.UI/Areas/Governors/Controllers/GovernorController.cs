@@ -1,5 +1,6 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Enums;
+using Edubase.Services.Establishments;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Governors.Models;
@@ -10,6 +11,7 @@ using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models.Establishments;
 using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
@@ -44,19 +46,22 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly NomenclatureService _nomenclatureService;
         private readonly IGovernorsWriteService _governorsWriteService;
         private readonly IGroupReadService _groupReadService;
+        private readonly IEstablishmentReadService _establishmentReadService;
 
         public GovernorController(
             IGovernorsReadService governorsReadService,
             NomenclatureService nomenclatureService,
             ICachedLookupService cachedLookupService,
             IGovernorsWriteService governorsWriteService,
-            IGroupReadService groupReadService)
+            IGroupReadService groupReadService,
+            IEstablishmentReadService establishmentReadService)
         {
             _governorsReadService = governorsReadService;
             _nomenclatureService = nomenclatureService;
             _cachedLookupService = cachedLookupService;
             _governorsWriteService = governorsWriteService;
             _groupReadService = groupReadService;
+            _establishmentReadService = establishmentReadService;
         }
 
         /// <summary>
@@ -76,14 +81,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
                 var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService);
 
-                using (MiniProfiler.Current.Step("Retrieving Group detail"))
-                {
-                    var groupDomainModel = (await _groupReadService.GetAsync(groupUId.Value, User)).GetResult();
-                    viewModel.GroupName = groupDomainModel.Name;
-                    viewModel.GroupTypeId = groupDomainModel.GroupTypeId.Value;
-                }
-
-                viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
+                var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
+                viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
 
                 await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId);
 
@@ -112,6 +111,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                 return RedirectToRoute(viewModel.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { viewModel.EstablishmentUrn, viewModel.GroupUId });
             }
+
+            await PopulateLayoutProperties(viewModel, viewModel.EstablishmentUrn, viewModel.GroupUId);
 
             return await Edit(viewModel.GroupUId, viewModel.EstablishmentUrn, viewModel.RemovalGid);
         }
@@ -249,13 +250,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 }, User);
 
                 ModelState.Clear();
+                
 
                 return RedirectToRoute(viewModel.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", 
                     new { establishmentUrn = viewModel.EstablishmentUrn, groupUId = viewModel.GroupUId });
             }
 
-            viewModel.Layout = viewModel.EstablishmentUrn.HasValue ? ESTAB_LAYOUT : GROUPS_LAYOUT;
-
+            await PopulateLayoutProperties(viewModel, viewModel.EstablishmentUrn, viewModel.GroupUId);
+            
             return View(viewModel);
         }
 
@@ -276,7 +278,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (establishmentUrn.HasValue)
             {
-                // khd todo
+                var domainModel = (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
+
+                var vm = (IEstablishmentPageViewModel)viewModel;
+                vm.Layout = ESTAB_LAYOUT;
+                vm.Name = domainModel.Name;
+                vm.SelectedTab = "governance";
+                vm.Urn = domainModel.Urn;
+                vm.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
             }
             else if (groupUId.HasValue)
             {

@@ -1,9 +1,0 @@
-﻿@using System.Linq
-@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
-@using System.Linq.Expressions
-@model ViewModel
-@{
-    Layout = "_EditLayoutPage.cshtml";
-    Html.RenderAction("ViewOrEdit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors", editMode = true });
-}
-

@@ -323,6 +323,7 @@
     <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
     <Compile Include="Helpers\WebHelpers.cs" />
+    <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
     <Compile Include="Models\Grid\GridViewModel.cs" />
@@ -387,7 +388,6 @@
     <Content Include="Areas\Groups\Views\Group\_EditLayoutPage.cshtml" />
     <Content Include="Areas\Groups\Views\Group\EditDetails.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ViewEdit.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\AddEditGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\AddEditOrReplace.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
@@ -854,7 +854,6 @@
     <Content Include="Views\Establishment\EditLocation.cshtml" />
     <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
-    <Content Include="Views\Establishment\EditGovernance.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

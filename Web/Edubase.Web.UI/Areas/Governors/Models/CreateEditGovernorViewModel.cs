@@ -10,10 +10,11 @@ using System.ComponentModel;
 using Edubase.Web.UI.Models;
 using Edubase.Services.Governors.DisplayPolicies;
 using Edubase.Services.Nomenclature;
+using Edubase.Web.UI.Models.Establishments;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
-    public class CreateEditGovernorViewModel : IGroupPageViewModel
+    public class CreateEditGovernorViewModel : IGroupPageViewModel, IEstablishmentPageViewModel
     {
         private static readonly IEnumerable<SelectListItem> _titles = new[] { "Mr", "Mrs", "Ms", "Miss", "Dr", "Prof", "Rev", "Sir" }.Select(x => new SelectListItem { Text = x, Value = x });
         
@@ -110,6 +111,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             }
         }
 
+        string IEstablishmentPageViewModel.SelectedTab { get; set; }
+
+        int? IEstablishmentPageViewModel.Urn { get; set; }
+
+        string IEstablishmentPageViewModel.Name { get; set; }
+
+        TabDisplayPolicy IEstablishmentPageViewModel.TabDisplayPolicy { get; set; }
 
         public IEnumerable<SelectListItem> GetTitles() => new[] { "Mr", "Mrs", "Ms", "Miss", "Dr", "Prof", "Rev", "Sir" }.Select(x => new SelectListItem { Text = x, Value = x });
 
