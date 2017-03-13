@@ -75,7 +75,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
                 var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService);
-                
+
                 using (MiniProfiler.Current.Step("Retrieving Group detail"))
                 {
                     var groupDomainModel = (await _groupReadService.GetAsync(groupUId.Value, User)).GetResult();
@@ -131,7 +131,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 }
             }).Result;
         }
-        
+
         /// <summary>
         /// GET
         /// </summary>
@@ -141,9 +141,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// <param name="replace"></param>
         /// <returns></returns>
         [Route(GROUP_ADD_GOVERNOR, Name = "GroupAddGovernor"), Route(ESTAB_ADD_GOVERNOR, Name = "EstabAddGovernor"),
-         Route(GROUP_EDIT_GOVERNOR, Name = "GroupEditGovernor"), Route(ESTAB_EDIT_GOVERNOR, Name = "EstabEditGovernor"),
-         Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"), Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"),
-         HttpGet]
+             Route(GROUP_EDIT_GOVERNOR, Name = "GroupEditGovernor"), Route(ESTAB_EDIT_GOVERNOR, Name = "EstabEditGovernor"),
+             Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"), Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"),
+             HttpGet]
         public async Task<ActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn, eLookupGovernorRole? role, int? gid)
         {
             var replaceMode = (ControllerContext.RouteData.Route as System.Web.Routing.Route).Url.IndexOf("/Replace/", StringComparison.OrdinalIgnoreCase) > -1;
@@ -154,7 +154,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 GroupUId = groupUId,
                 EstablishmentUrn = establishmentUrn
             };
-            
+
             if (gid.HasValue)
             {
                 var model = await _governorsReadService.GetGovernorAsync(gid.Value);
@@ -207,61 +207,56 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
 
-        [Route("AddEdit"), HttpPost, ActionName("AddEditPost")]
-        public ActionResult AddEdit(CreateEditGovernorViewModel viewModel)
+        [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR), 
+            Route(GROUP_EDIT_GOVERNOR), Route(ESTAB_EDIT_GOVERNOR),
+            Route(GROUP_REPLACE_GOVERNOR), Route(ESTAB_REPLACE_GOVERNOR), HttpPost]
+        public async Task<ActionResult> AddEditOrReplace(CreateEditGovernorViewModel viewModel)
         {
-            // KHD Hack: Async child actions are not supported; but we have an async stack, so we have to wrap the async calls in an sync wrapper.  Hopefully won't deadlock.
-            // Need to use ASP.NET Core really now; that supports ViewComponents which are apparently the solutions.
-            var result = Task.Run(async () =>
+            await PopulateSelectLists(viewModel);
+            viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(viewModel.GovernorRole);
+
+            if (ModelState.IsValid)
             {
-                await PopulateSelectLists(viewModel);
-                viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(viewModel.GovernorRole);
-
-                if (ModelState.IsValid)
+                if (viewModel.ReplaceGovernorViewModel.GID.HasValue)
                 {
-                    if (viewModel.ReplaceGovernorViewModel.GID.HasValue)
-                    {
-                        var governorBeingReplaced = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value);
-                        governorBeingReplaced.AppointmentEndDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime();
-                        await _governorsWriteService.SaveAsync(governorBeingReplaced, User);
-                    }
-
-                    viewModel.GID = await _governorsWriteService.SaveAsync(new GovernorModel
-                    {
-                        AppointingBodyId = viewModel.AppointingBodyId,
-                        AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
-                        AppointmentStartDate = viewModel.AppointmentStartDate.ToDateTime(),
-                        DOB = viewModel.DOB.ToDateTime(),
-                        EmailAddress = viewModel.EmailAddress,
-                        GroupUID = viewModel.GroupUId,
-                        EstablishmentUrn = viewModel.EstablishmentUrn,
-                        Nationality = viewModel.NationalityId.HasValue ? viewModel.Nationalities.FirstOrDefault(x => x.Value == viewModel.NationalityId.ToString())?.Text : null as string,
-                        Id = viewModel.GID,
-                        Person_FirstName = viewModel.FirstName,
-                        Person_MiddleName = viewModel.MiddleName,
-                        Person_LastName = viewModel.LastName,
-                        Person_Title = viewModel.GovernorTitle,
-                        PreviousPerson_FirstName = viewModel.PreviousFirstName,
-                        PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
-                        PreviousPerson_LastName = viewModel.PreviousLastName,
-                        PreviousPerson_Title = viewModel.PreviousTitle,
-                        PostCode = viewModel.PostCode,
-                        RoleId = (int)viewModel.GovernorRole,
-                        TelephoneNumber = viewModel.TelephoneNumber
-                    }, User);
-
-                    ModelState.Clear();
-
-                    return (ActionResult)RedirectToAction("EditGovernance", new { id = 1 /*viewModel.GroupUId */ });
+                    var governorBeingReplaced = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value);
+                    governorBeingReplaced.AppointmentEndDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime();
+                    await _governorsWriteService.SaveAsync(governorBeingReplaced, User);
                 }
 
-                return View("AddEdit", viewModel);
+                viewModel.GID = await _governorsWriteService.SaveAsync(new GovernorModel
+                {
+                    AppointingBodyId = viewModel.AppointingBodyId,
+                    AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
+                    AppointmentStartDate = viewModel.AppointmentStartDate.ToDateTime(),
+                    DOB = viewModel.DOB.ToDateTime(),
+                    EmailAddress = viewModel.EmailAddress,
+                    GroupUID = viewModel.GroupUId,
+                    EstablishmentUrn = viewModel.EstablishmentUrn,
+                    Nationality = viewModel.NationalityId.HasValue ? viewModel.Nationalities.FirstOrDefault(x => x.Value == viewModel.NationalityId.ToString())?.Text : null as string,
+                    Id = viewModel.GID,
+                    Person_FirstName = viewModel.FirstName,
+                    Person_MiddleName = viewModel.MiddleName,
+                    Person_LastName = viewModel.LastName,
+                    Person_Title = viewModel.GovernorTitle,
+                    PreviousPerson_FirstName = viewModel.PreviousFirstName,
+                    PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
+                    PreviousPerson_LastName = viewModel.PreviousLastName,
+                    PreviousPerson_Title = viewModel.PreviousTitle,
+                    PostCode = viewModel.PostCode,
+                    RoleId = (int)viewModel.GovernorRole,
+                    TelephoneNumber = viewModel.TelephoneNumber
+                }, User);
 
-            }).Result;
+                ModelState.Clear();
 
-            return result;
+                return RedirectToRoute(viewModel.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", 
+                    new { establishmentUrn = viewModel.EstablishmentUrn, groupUId = viewModel.GroupUId });
+            }
 
+            viewModel.Layout = viewModel.EstablishmentUrn.HasValue ? ESTAB_LAYOUT : GROUPS_LAYOUT;
 
+            return View(viewModel);
         }
 
         private async Task PopulateSelectLists(CreateEditGovernorViewModel viewModel)

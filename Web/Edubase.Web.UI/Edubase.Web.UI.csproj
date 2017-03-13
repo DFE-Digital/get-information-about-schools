@@ -388,7 +388,7 @@
     <Content Include="Areas\Groups\Views\Group\EditDetails.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ViewEdit.cshtml" />
     <Content Include="Areas\Groups\Views\Group\AddEditGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\AddEdit.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\AddEditOrReplace.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />

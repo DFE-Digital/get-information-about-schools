@@ -99,7 +99,17 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
 
         }
-        
+
+        public string FormPostRouteName
+        {
+            get
+            {
+                var part1 = EstablishmentUrn.HasValue ? "Estab" : "Group";
+                var part2 = ReplaceGovernorViewModel.GID.HasValue ? "Replace" : (GID.HasValue ? "Edit" : "Add");
+                return string.Concat(part1, part2, "Governor");
+            }
+        }
+
 
         public IEnumerable<SelectListItem> GetTitles() => new[] { "Mr", "Mrs", "Ms", "Miss", "Dr", "Prof", "Rev", "Sir" }.Select(x => new SelectListItem { Text = x, Value = x });
 

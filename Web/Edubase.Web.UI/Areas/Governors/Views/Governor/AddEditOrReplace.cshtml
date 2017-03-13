@@ -17,7 +17,7 @@
 <div class="grid-row">
     <div class="column-half">
         
-        @using (Html.BeginForm())
+        @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post))
         {
             @Buttons()
             <br /><br />
@@ -28,6 +28,10 @@
             @Html.HiddenFor(x => x.GID)
             @Html.HiddenFor(x => x.EstablishmentUrn)
             @Html.HiddenFor(x => x.GroupUId)
+            @Html.HiddenFor(x => x.SelectedTabName)
+            @Html.HiddenFor(x => x.GroupName)
+            @Html.HiddenFor(x => x.GroupTypeId)
+            @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
 
             @Html.HiddenFor(x => x.ReplaceGovernorViewModel.GID)
             @Html.HiddenFor(x => x.ReplaceGovernorViewModel.Name)
@@ -190,7 +194,7 @@
     Expression<Func<VM, int?>> daySelector, Expression<Func<VM, int?>> monthSelector,
     Expression<Func<VM, int?>> yearSelector, string label)
 {
-var id = label.Replace(" ", "").ToLower();
+    var id = label.Replace(" ", "").ToLower();
     <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(vmSelector)">
         <fieldset>
             <legend class="bold-xsmall" style="font-weight:bold;">@label</legend>

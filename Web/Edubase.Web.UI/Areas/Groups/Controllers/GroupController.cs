@@ -175,6 +175,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.GroupUId = domainModel.GroupUID;
             viewModel.GroupId = domainModel.GroupId;
             viewModel.SelectedTabName = "details";
+            viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id);
             await PopulateSelectLists(viewModel);
@@ -186,34 +187,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             return View("EditDetails", viewModel);
         }
-
-        //[HttpGet]
-        //[Route("Edit/{id:int}/Governance")]
-        //public async Task<ActionResult> EditGovernance(int id, int? removalGid)
-        //{
-        //    var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
-        //    var viewModel = new GroupEditGovernanceViewModel(domainModel.GroupUID.Value, domainModel.GroupTypeId.Value, domainModel.Name) { RemovalGID = removalGid };
-        //    return View("EditGovernance", viewModel);
-        //}
-
-        
-        
-        //[Route("Edit/{id:int}/Governance/AddEdit")]
-        //public async Task<ActionResult> AddEditGovernor(int id, eLookupGovernorRole? role, int? gid, bool? replace)
-        //{
-        //    var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
-        //    var viewModel = new GroupEditGovernanceViewModel(domainModel.GroupUID.Value, domainModel.GroupTypeId.Value, domainModel.Name)
-        //    {
-        //        GID = gid,
-        //        GovernorRole = role,
-        //        ReplaceMode = replace.GetValueOrDefault()
-        //    };
-        //    return View("AddEditGovernor", viewModel);
-        //}
-
-        
-
-
 
         [HttpPost]
         [Route("Edit/{id:int}/Details")]
@@ -232,6 +205,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 if (actionResult != null) return actionResult;
             }
 
+            viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
+
             return View("EditDetails", viewModel);
         }
 
@@ -249,7 +224,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             };
             
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id);
-            
+            viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
+            viewModel.SelectedTabName = "links";
+
             viewModel.DeriveCCLeadCentreUrn();
 
             if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
