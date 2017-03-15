@@ -107,7 +107,7 @@
             </thead>
             <tbody v-if="pages.length > 0">
                 <tr v-for="(entry, index) in page">
-                    <td class="cell-checkbox">     
+                    <td class="cell-checkbox" aria-label="Select change">     
                         <input :id="entry.changeId" name="pending-change" :value="entry.changeId" type="checkbox" class="boldened-checkbox">
                         <label class="edubase-label edubase-button-checkbox" :for="entry.changeId">
                             <span class="visuallyhidden">Select this change for approval or rejection</span>
@@ -4941,7 +4941,6 @@
 
                 },
                 confirmRejection: function () {
-                    console.info($('#reason').val().length);
                     this.invalidReason = $('#reason').val().length < 1;
                     
                     var selectedItems = $('#changes-table').find('.boldened-checkbox')
