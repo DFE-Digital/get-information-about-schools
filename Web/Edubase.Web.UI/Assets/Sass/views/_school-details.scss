@@ -78,94 +78,7 @@
         }
     }
 
-
-
-    .pending-updates-message {
-        background-color: $turquoise;
-        font-size: 15px;
-        color: white;
-        padding: 6px 36px 6px 44px;
-        position: relative;
-        margin-bottom: 10px;
-
-        .tick {
-            position: absolute;
-            left: 10px;
-            top: 0;
-            width: 35px;
-            height: 35px;
-            background-image: url('/public/assets/images/icons/tick.PNG');
-            background-repeat: no-repeat;
-            background-size: contain;
-        }
-
-        .exclaim {
-            position: absolute;
-            left: 10px;
-            top: 4px;
-            width: 24px;
-            height: 24px;
-            background-image: url('/public/assets/images/icons/exclaim.PNG');
-            background-repeat: no-repeat;
-            background-size: contain;
-        }
-
-        .cross {
-            position: absolute;
-            background-image: url('/public/assets/images/icons/cross.PNG');
-            top: 0;
-            right: 0;
-            width: 31px;
-            height: 31px;
-            background-repeat: no-repeat;
-            background-size: contain;
-            cursor: pointer;
-            
-            &:active {
-                border: 0;
-                outline: none;
-            }
-            &:focus {
-                background-color: transparent;
-            }
-        }
-
-        a {
-            color: white;
-        }
-    }
-
-    .pending-updates {
-        position: relative;
-        border: 3px solid $turquoise;
-        padding: 6px 6px 6px 36px;
-
-        h3 {
-            font-size: 15px;
-            font-weight: bold;
-            margin-top: 3px;
-            margin-bottom: 4px;
-        }
-
-        .icon {
-            position: absolute;
-            left: 6px;
-            top: 6px;
-            @include pending-update;
-            width: 24px;
-        }
-
-        div.group {
-            margin-bottom: 10px;
-
-            div {
-                font-size: 13px;
-                font-weight: bold;
-                color: $turquoise;
-            }
-        }
-    }
-
+    
     .school-details-list li strong {
         font-weight: bold;
     }
@@ -442,3 +355,93 @@ table.mvo { // mobile-visible-only
     padding: 0.1em 0.5em 0;
 }
 
+.pending-updates-message {
+    background-color: $turquoise;
+    font-size: 15px;
+    color: white;
+    padding: 6px 36px 6px 44px;
+    position: relative;
+    margin-bottom: 10px;
+
+    .tick {
+        position: absolute;
+        left: 10px;
+        top: 0;
+        width: 35px;
+        height: 35px;
+        background-image: url('/public/assets/images/icons/tick.PNG');
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    .exclaim {
+        position: absolute;
+        left: 10px;
+        top: 4px;
+        width: 24px;
+        height: 24px;
+        background-image: url('/public/assets/images/icons/exclaim.PNG');
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    .cross {
+        position: absolute;
+        background-image: url('/public/assets/images/icons/cross.PNG');
+        top: 0;
+        right: 0;
+        width: 31px;
+        height: 31px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        cursor: pointer;
+
+        &:active {
+            border: 0;
+            outline: none;
+        }
+
+        &:focus {
+            background-color: transparent;
+        }
+    }
+
+    a {
+        color: white;
+    }
+
+    p {
+        margin-bottom: 0.5em;
+    }
+}
+
+.pending-updates {
+    position: relative;
+    border: 3px solid $turquoise;
+    padding: 6px 6px 6px 36px;
+
+    h3 {
+        font-size: 15px;
+        font-weight: bold;
+        margin-top: 3px;
+        margin-bottom: 4px;
+    }
+
+    .icon {
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        @include pending-update;
+        width: 24px;
+    }
+
+    div.group {
+        margin-bottom: 10px;
+
+        div {
+            font-size: 13px;
+            font-weight: bold;
+            color: $turquoise;
+        }
+    }
+}

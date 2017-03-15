@@ -153,6 +153,10 @@
     a, .go-nowhere {
         display: block;
         min-width: 28px;
+
+        &:focus {
+            outline: none;
+        }
     }
 
 }
