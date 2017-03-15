@@ -227,10 +227,11 @@
                     </dt>
                     <dd>
                         <ol class="linked-establishments" id="amalg-linked">
-                            <li><input class="form-control" id="amalgamate-establishment-0" type="text" v-on:change="amalgamateEstablishment($event.target.value, 0)"/></li>
-                            <li><input class="form-control" id="amalgamate-establishment-1" type="text" v-on:change="amalgamateEstablishment($event.target.value, 0)"/></li>
-                            <li><input class="form-control" id="amalgamate-establishment-2" type="text" v-on:change="amalgamateEstablishment($event.target.value, 2)"/></li>
-                            <li><input class="form-control" id="amalgamate-establishment-3" type="text" v-on:change="amalgamateEstablishment($event.target.value, 2)"/></li>
+                            <li><input class="form-control establishment-id" id="amalgamate-establishment-0" type="text" /></li>
+                            <li><input class="form-control establishment-id" id="amalgamate-establishment-1" type="text" /></li>
+                            <li><input class="form-control establishment-id" id="amalgamate-establishment-2" type="text" /></li>
+                            <li><input class="form-control establishment-id" id="amalgamate-establishment-3" type="text" /></li>
+                           
                         </ol>
                     </dd>
                 </dl>
@@ -334,8 +335,8 @@
         <div v-bind:class="['form-group', amalgamationLaError ? 'error' : '' ]">
         <label for="LocalAuthorityId" class="form-label">Local authority</label>
         <span v-bind:class="['error-message', amalgamationLaError ? '' : 'hidden' ]">
-                                Please select a local authority.
-                            </span>
+            Please select a local authority.
+        </span>
         <select class="form-control" id="LocalAuthorityId" name="LocalAuthorityId" v-on:change="setLocalAuthority($event.target.value)">
         <option value="" selected="selected"></option>
         <option value="0">Does not apply</option>
@@ -558,19 +559,19 @@
                 <div class="form-hint">For example, 20 03 2003</div>
 
                 <span class="inline-form-control">
-                                    <label for="amalgamationdate-day">Day</label>
-                                    <input class="form-control date-text-day" id="amalgamationdate-day" name="OpenDate.Day" type="text" v-model="amalgamationDateDay">
+                    <label for="amalgamationdate-day">Day</label>
+                    <input class="form-control date-text-day" id="amalgamationdate-day" name="OpenDate.Day" type="text" v-model="amalgamationDateDay">
 
-                                </span>
+                </span>
                 <span class="inline-form-control">
-                                    <label for="amalgamationdate-month">Month</label>
-                                    <input class="form-control date-text-month" id="amalgamationdate-month" name="OpenDate.Month" type="text" v-model="amalgamationDateMonth">
+                    <label for="amalgamationdate-month">Month</label>
+                    <input class="form-control date-text-month" id="amalgamationdate-month" name="OpenDate.Month" type="text" v-model="amalgamationDateMonth">
 
-                                </span>
+                </span>
                 <span class="inline-form-contol">
-                                    <label for="amalgamationdate-year">Year</label>
-                                    <input class="form-control date-text-year" id="amalgamationdate-year" name="OpenDate.Year" type="text" v-model="amalgamationDateYear">
-                                </span>
+                    <label for="amalgamationdate-year">Year</label>
+                    <input class="form-control date-text-year" id="amalgamationdate-year" name="OpenDate.Year" type="text" v-model="amalgamationDateYear">
+                </span>
             </fieldset>
         </div>
         </fieldset>
@@ -1220,31 +1221,7 @@
                 } else {
                     this.linkedEstablishmentError = true;
                 }                
-            },
-            amalgamateEstablishment: function (urn, pos) {
-                var addedUrns = this.amalgamatedEstablishments.map(function (estab) {
-                    return estab.id;
-                });
-
-                this.duplicateUrnsError = (addedUrns.indexOf(urn) > -1);
-
-                if (this.duplicateUrnsError) {
-                    return;
-                }
-
-                var estabDetails = this.schools.filter(function(school, i) {                    
-                    if (urn === school.id) {
-                        return school;
-                    }
-                });
-
-                if (estabDetails.length) {
-                    this.amalgamatedEstablishments.splice(pos, 0, estabDetails[0]);
-                    this.amalgamateUrnError = false;
-                } else {
-                    this.amalgamateUrnError = true;
-                }     
-            },
+            },            
             setLocalAuthority: function (val) {
                 var filtered = this.localAuthorities.filter(function (la) {                    
                     if (val === la.value) {
@@ -1279,12 +1256,45 @@
                     this.selectedEstablishmentPhase = filtered[0].label;
                 }
             },
-            validateAmalgamationUrns: function() {
-                if (this.amalgamatedEstablishments.length < 2) {
-                    this.amalgamationLengthError = true;
-                } else {
-                    this.amalgamationLengthError = false;
-                    if (!this.duplicateUrnsError) {
+            validateAmalgamationUrns: function () {
+                var self = this,
+                    $fields = $('.establishment-id');
+
+                self.amalgamatedEstablishments = [];
+                $fields.each(function (n, estab) {
+                    
+                    var urn = $.trim($(this).val());
+                    if (urn !== '') {
+                        var addedUrns = self.amalgamatedEstablishments.map(function (estab) {
+                            return estab.id;
+                        });
+
+                        self.duplicateUrnsError = (addedUrns.indexOf(urn) > -1);
+
+                        if (self.duplicateUrnsError) {
+                            return false;
+                        }
+
+                        var estabDetails = self.schools.filter(function (school, i) {
+                            if (urn === school.id) {
+                                return school;
+                            }
+                        });
+
+                        if (estabDetails.length) {
+                            self.amalgamatedEstablishments.splice(n, 0, estabDetails[0]);
+                            self.amalgamateUrnError = false;
+                        } else {
+                            self.amalgamateUrnError = true;
+                        }
+                    }                    
+                });
+
+                if (!this.duplicateUrnsError) {
+                    if (this.amalgamatedEstablishments.length < 2) {
+                        this.amalgamationLengthError = true;
+                    } else {
+                        this.amalgamationLengthError = false;
                         this.amalgamationEstablishmentsConfirmed = true;
                     }                     
                 }
