@@ -213,3 +213,18 @@ input:checked + .edubase-button-checkbox:after {
 input:focus + .edubase-button-checkbox {
     outline: 3px solid $focus-colour;
 }
+
+
+.expanding-panel {
+    clear: both;
+    position: relative;
+    top: 12px;
+
+    .error & {
+        top: 0;
+    }
+}
+
+.create-establishment dl {
+    font-size: 16px;
+}

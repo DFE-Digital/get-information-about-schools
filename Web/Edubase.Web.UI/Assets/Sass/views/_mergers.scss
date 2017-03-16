@@ -44,16 +44,7 @@
         margin-bottom: 40px;
         padding-bottom: 12px;
     }
-
-    .top-button-panel {
-        display: none;
-        @include media(mobile) {
-            display: block;
-        }
-        .submit-cancel-panel {
-            padding-top: 20px;
-        }
-    }
+       
 
     .merger-list {
         margin: 20px 0;
@@ -62,6 +53,15 @@
 
 }
 
+.top-button-panel {
+    display: none;
+    @include media(mobile) {
+    display: block;
+    }
+    .submit-cancel-panel {
+        padding-top: 20px;
+    }
+}
 
 
 .date-text-day, 
