@@ -744,6 +744,7 @@
 
         private string CleanKey(string key)
         {
+            key = _config.ProcessKey(key);
             if (string.IsNullOrWhiteSpace(key)) throw new Exception("The key was invalid");
             return key.ToLower();
         }
@@ -829,6 +830,8 @@
             var key = $"{callerTypeName}.{callerFuncName}({paramsCacheKey})".ToLower();
             var retVal = await GetAsync<T>(key);
 
+            relationshipKey = _config.ProcessKey(relationshipKey);
+
             if (retVal == null)
             {
                 retVal = await asyncFactory();
@@ -836,7 +839,7 @@
                 {
                     await SetAsync(key, retVal);
 
-                    if (relationshipKey != null && _config.IsCentralCacheEnabled)
+                    if (relationshipKey.Clean() != null && _config.IsCentralCacheEnabled)
                         await _cacheDatabase.StringAppendAsync(relationshipKey.ToLower(), string.Concat(key, ";"));
                 }
             }
@@ -861,13 +864,15 @@
             var key = $"{callerTypeName}.{callerFuncName}({paramsCacheKey})".ToLower();
             var retVal = await GetAsync<T>(key);
 
+            relationshipKey = _config.ProcessKey(relationshipKey);
+
             if (retVal == null)
             {
                 retVal = factory();
                 if (retVal != null)
                 {
                     await SetAsync(key, retVal);
-                    if (relationshipKey != null && _config.IsCentralCacheEnabled)
+                    if (relationshipKey.Clean() != null && _config.IsCentralCacheEnabled)
                         await _cacheDatabase.StringAppendAsync(relationshipKey.ToLower(), string.Concat(key, ";"));
                 }
             }
@@ -888,6 +893,7 @@
         {
             var key = $"{callerTypeName}.{callerFuncName}({paramsCacheKey})".ToLower();
             var retVal = Get<T>(key);
+            relationshipKey = _config.ProcessKey(relationshipKey);
 
             if (retVal == null)
             {
@@ -895,7 +901,7 @@
                 if (retVal != null)
                 {
                     Set(key, retVal);
-                    if (relationshipKey != null && _config.IsCentralCacheEnabled)
+                    if (relationshipKey.Clean() != null && _config.IsCentralCacheEnabled)
                         _cacheDatabase.StringAppend(relationshipKey.ToLower(), string.Concat(key, ";"));
                 }
             }
@@ -911,8 +917,8 @@
         public async Task ClearRelatedCacheKeysAsync(string relationshipKey)
         {
             if (!_config.IsCentralCacheEnabled) return;
-
-            var data = (string) await _cacheDatabase.StringGetAsync(relationshipKey);
+            
+            var data = (string) await _cacheDatabase.StringGetAsync(_config.ProcessKey(relationshipKey));
             if (data != null)
             {
                 var cacheKeys = data.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Where(x => x.Clean() != null).ToArray();
