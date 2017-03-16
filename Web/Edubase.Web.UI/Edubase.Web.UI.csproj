@@ -778,6 +778,9 @@
     <Content Include="Assets\Sass\views\_school-search.scss" />
     <Content Include="Assets\Sass\views\_search-results.scss" />
     <Content Include="Assets\Sass\views\_mergers.scss" />
+    <Content Include="Assets\Scripts\JSON\establishmentphases.json" />
+    <Content Include="Assets\Scripts\JSON\establishmenttypes.json" />
+    <Content Include="Assets\Scripts\JSON\localauthorities.json" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -857,6 +860,7 @@
     <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
     <Content Include="Views\Tools\ChangeApprovals.cshtml" />
+    <Content Include="Views\Tools\CreateEstablishment.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
