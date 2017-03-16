@@ -49,5 +49,11 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
+
+        [HttpGet, EdubaseAuthorize]
+        public ActionResult changeApprovals()
+        {
+            return View();
+        }
     }
 }

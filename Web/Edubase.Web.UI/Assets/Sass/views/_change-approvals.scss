@@ -1,0 +1,215 @@
+﻿
+
+.changes-list-wrapper {
+    border-top: 4px $grey-2 solid;
+    padding-top: 12px;
+}
+
+.approval-changes {
+    table-layout: fixed;
+    display: table;
+    th, td {
+        word-wrap:break-word;
+        text-align: left;
+        max-width: 11.1%;
+        overflow: hidden;
+        padding-top: 12px;
+    }
+
+    th {
+        font-weight: bold;
+    }
+
+   
+
+    .cell-checkbox {
+        height: 40px;
+        position: relative;
+        
+        @include media(desktop) {
+            width: 40px;
+        }
+    }
+
+    .cell-urn {
+         @include media(desktop) {
+            width: 40px;
+        }
+    }
+
+    .cell-estab {
+        @include media(desktop) {
+            width:80px;
+        }
+    }
+
+    .cell-updatedfield {
+        @include media(desktop) {
+            width:80px;
+        }
+    }
+
+    .cell-oldvalue {
+       @include media(desktop) {
+            width:80px;
+        }
+
+    }
+    .cell-newvalue {
+        @include media(desktop) {
+            width:80px;
+        }
+
+    }
+
+    .cell-edate {
+        @include media(desktop) {
+            width: 55px;
+        }
+    }
+
+    .cell-rdate {
+       @include media(desktop) {
+            width: 55px;
+        }
+    }
+
+    .cell-suggested {
+        @include media(desktop) {
+            width: 60px;
+        }
+    }
+
+}
+
+@media(max-width: 940px ) {
+    .approval-changes {
+        thead {
+            display: none;
+        }
+
+        tr {
+            border-top: 3px solid #eee;
+        }
+
+        td {
+            clear: left;
+            display: block;
+            float: left;
+            width: 100% !important;
+            border-bottom: $grey-3 1px solid;
+            max-width: 100%;
+
+            &:before {
+                content: attr(aria-label);
+                float: left;
+                font-weight: bold;
+                padding-right: 0.5em;
+            }
+
+            &:last-child {
+                border: 0;
+            }
+        }
+    }
+}
+ 
+.wait-spinner {
+    background: #fff url('/public/assets/images/icons/icon-loading.gif') no-repeat 50%;
+    width: 100%;
+    min-height: 200px;
+}
+
+.data-refreshing {
+    @include opacity(0.5);
+}
+
+.edubase-textarea {
+    width: 100%;
+    min-height: 5em;
+}
+
+.change-approvals {
+
+
+    .pending-updates-message {
+        padding-left: 50px;
+    }
+
+    .tick {
+        left: 10px;
+        top: 6px;
+    }
+
+    .cross {
+        position: absolute;
+        background-image: url('/public/assets/images/icons/icon-white-cross-transparent.png');
+        background-size: 100%;
+        top: 12px;
+        right: 12px;
+        width: 18px;
+        height: 18px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        cursor: pointer
+    }
+
+}
+
+// styles lifted from _block-labels 
+// - but these work just fine without the JS overhead
+// + gov uk checkbox/ radio js doesn't work with vue.js loaded 
+.edubase-button-checkbox {
+    position: relative;
+    display: block;
+    float: left;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+
+    &::before {
+      content: "";
+      border: 2px solid;
+      background: transparent;
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &::after {
+      content: "";
+      border: solid;
+      border-width: 0 0 5px 5px;
+      background: transparent;
+      width: 17px;
+      height: 7px;
+      position: absolute;
+      top: 10px;
+      left: 8px;
+      -moz-transform: rotate(-45deg); // Firefox 15 compatibility
+      -o-transform: rotate(-45deg); // Opera 12.0 compatibility
+      -webkit-transform: rotate(-45deg); // Safari 8 compatibility
+      -ms-transform: rotate(-45deg); // IE9 compatibility
+      transform: rotate(-45deg);
+      @include opacity(0);
+    }
+
+    
+}
+
+.boldened-checkbox {   
+    @include opacity(0);
+    position: absolute;
+    left: 0;
+    top: 0;
+   
+}
+input:checked + .edubase-button-checkbox:after {
+    @include opacity(1);
+}
+
+input:focus + .edubase-button-checkbox {
+    outline: 3px solid $focus-colour;
+}

@@ -27,7 +27,7 @@
                 <li v-bind:class="['error-message', mergedDateError ? '' : 'hidden']"><a href="#merger-date">Merger date not specified</a></li>
                 <li v-bind:class="['error-message', amalgamationLengthError && !amalgamateUrnError ? '' : 'hidden']"><a href="#amalg-linked">Select between two and four schools. Please add another URN to continue</a></li>
                 <li v-bind:class="['error-message', amalgamationNameError ? '' : 'hidden']"><a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a></li>
-                @*<li v-bind:class="['error-message', amalgamationUrnError ? '' : 'hidden']"><a href="#academy-open-date">You have entered an invalid URN. Please correct the invalid URN to continue</a></li>*@
+                <li v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden']"><a href="#">You have entered an duplicate URN. Please correct the invalid URN to continue</a></li>
                 <li v-bind:class="['error-message', phaseError ? '' : 'hidden']"><a href="#new-establishment-phase">You haven't selected an establishment phase. Please select one to continue</a></li>
                 <li v-bind:class="['error-message', establishmentTypeError ? '' : 'hidden']"><a href="#new-establishment-type">You haven't selected an establishment type. Please select one to continue</a></li>
                 <li v-bind:class="['error-message', amalgamationLaError ? '' : 'hidden']"><a href="#LocalAuthorityId">You haven't selected a local authority. Please select one to continue</a></li>
@@ -98,7 +98,7 @@
                             <input class="form-control" id="lead-establishment" type="text" v-on:change="setLeadEstablishment($event.target.value)" />
                         </div>
 
-                        <div v-bind:class="['form-group', linkedEstablishmentError ? 'error' : '' ]">
+                        <div v-bind:class="['form-group', linkedEstablishmentError || duplicateUrnsError ? 'error' : '' ]">
                             <fieldset>
                                 <legend>Select additional establishments to be merged</legend>
                                 <p class="form-hint">
@@ -107,7 +107,8 @@
                                 <dl class="field-group">
                                     <dt>
                                         <label class="form-label">Enter the establishment URN(s)</label>
-                                        <span v-bind:class="['error-message', linkedEstablishmentError ? '' : 'hidden' ]">Please check the URN</span>
+                                        <span v-bind:class="['error-message', linkedEstablishmentError ? '' : 'hidden' ]">Please check the URN.</span>
+                                        <span v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden' ]">Duplicate URN. Please correct the URN.</span>
                                     </dt>
                                     <dd>
                                         <ol class="linked-establishments" id="linked-establishments">
@@ -136,7 +137,7 @@
                             <span>{{ leadEstablishmentUrn }}</span> {{ leadEstablishmentName}}
                         </p>
 
-                        <dl>
+                        <dl class="merger-list">
                             <dt>Establishments to be merged</dt>
                             <dd v-for="school in linkedEstablishments">
                                 <strong>{{school.name}}</strong>
@@ -217,18 +218,20 @@
                 </span>
 
 
-                <dl v-bind:class="['field-group form-group', amalgamateUrnError || amalgamationLengthError ? 'error' : '' ]">
+                <dl v-bind:class="['field-group form-group', amalgamateUrnError || amalgamationLengthError || duplicateUrnsError ? 'error' : '' ]">
                     <dt>
                         <label class="form-label">Enter the establishment URN(s)</label>
                         <span v-bind:class="['error-message', amalgamateUrnError ? '' : 'hidden' ]">Please check the URN</span>
                         <span v-bind:class="['error-message', amalgamationLengthError && !amalgamateUrnError  ? '' : 'hidden' ]">Select between 2 and 4 schools.</span>
+                        <span v-bind:class="['error-message', duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError ? '' : 'hidden' ]">Duplicate URN. Please correct the URN.</span>
                     </dt>
                     <dd>
                         <ol class="linked-establishments" id="amalg-linked">
-                            <li><input class="form-control" id="amalgamate-establishment-0" type="text" v-on:change="amalgamateEstablishment($event.target.value, 0)"/></li>
-                            <li><input class="form-control" id="amalgamate-establishment-1" type="text" v-on:change="amalgamateEstablishment($event.target.value, 0)"/></li>
-                            <li><input class="form-control" id="amalgamate-establishment-2" type="text" v-on:change="amalgamateEstablishment($event.target.value, 2)"/></li>
-                            <li><input class="form-control" id="amalgamate-establishment-3" type="text" v-on:change="amalgamateEstablishment($event.target.value, 2)"/></li>
+                            <li><input class="form-control establishment-id" id="amalgamate-establishment-0" type="text" /></li>
+                            <li><input class="form-control establishment-id" id="amalgamate-establishment-1" type="text" /></li>
+                            <li><input class="form-control establishment-id" id="amalgamate-establishment-2" type="text" /></li>
+                            <li><input class="form-control establishment-id" id="amalgamate-establishment-3" type="text" /></li>
+                           
                         </ol>
                     </dd>
                 </dl>
@@ -332,8 +335,8 @@
         <div v-bind:class="['form-group', amalgamationLaError ? 'error' : '' ]">
         <label for="LocalAuthorityId" class="form-label">Local authority</label>
         <span v-bind:class="['error-message', amalgamationLaError ? '' : 'hidden' ]">
-                                Please select a local authority.
-                            </span>
+            Please select a local authority.
+        </span>
         <select class="form-control" id="LocalAuthorityId" name="LocalAuthorityId" v-on:change="setLocalAuthority($event.target.value)">
         <option value="" selected="selected"></option>
         <option value="0">Does not apply</option>
@@ -556,19 +559,19 @@
                 <div class="form-hint">For example, 20 03 2003</div>
 
                 <span class="inline-form-control">
-                                    <label for="amalgamationdate-day">Day</label>
-                                    <input class="form-control date-text-day" id="amalgamationdate-day" name="OpenDate.Day" type="text" v-model="amalgamationDateDay">
+                    <label for="amalgamationdate-day">Day</label>
+                    <input class="form-control date-text-day" id="amalgamationdate-day" name="OpenDate.Day" type="text" v-model="amalgamationDateDay">
 
-                                </span>
+                </span>
                 <span class="inline-form-control">
-                                    <label for="amalgamationdate-month">Month</label>
-                                    <input class="form-control date-text-month" id="amalgamationdate-month" name="OpenDate.Month" type="text" v-model="amalgamationDateMonth">
+                    <label for="amalgamationdate-month">Month</label>
+                    <input class="form-control date-text-month" id="amalgamationdate-month" name="OpenDate.Month" type="text" v-model="amalgamationDateMonth">
 
-                                </span>
+                </span>
                 <span class="inline-form-contol">
-                                    <label for="amalgamationdate-year">Year</label>
-                                    <input class="form-control date-text-year" id="amalgamationdate-year" name="OpenDate.Year" type="text" v-model="amalgamationDateYear">
-                                </span>
+                    <label for="amalgamationdate-year">Year</label>
+                    <input class="form-control date-text-year" id="amalgamationdate-year" name="OpenDate.Year" type="text" v-model="amalgamationDateYear">
+                </span>
             </fieldset>
         </div>
         </fieldset>
@@ -1137,6 +1140,7 @@
             establishmentTypeError: false,
             amalgamationLaError: false,
             completeAmalgamation: false,
+            duplicateUrnsError: false,
 
             // data
             schools: schools,
@@ -1157,7 +1161,8 @@
                         this.phaseError ||
                         this.establishmentTypeError ||
                         this.amalgamationLaError || 
-                        this.amalgamationDateError);
+                        this.amalgamationDateError ||
+                        this.duplicateUrnsError);
             },
             displayDate: function() {
                 return this.mergedDateDay + '/' + this.mergedDateMonth + '/' + this.mergedDateYear;
@@ -1165,7 +1170,7 @@
             amalgamationDate: function() {
                 return this.amalgamationDateDay + '/' + this.amalgamationDateMonth + '/' + this.amalgamationDateYear;
             },
-            schoolDetailUrl: function(urn) {
+            schoolDetailUrl: function() {
                 return "/Establishment/Details/" + this.leadEstablishmentUrn;
             }
 
@@ -1195,7 +1200,15 @@
                 }
                 
             },
-            addEstablishment: function(urn, pos) {
+            addEstablishment: function (urn, pos) {
+                var addedUrns = this.linkedEstablishments.map(function (estab) {
+                    return estab.id;
+                });
+                addedUrns.push(this.leadEstablishmentUrn);
+
+                this.duplicateUrnsError = (addedUrns.indexOf(urn) > -1);
+                    
+                   
                 var estabDetails = this.schools.filter(function(school, i) {                    
                     if (urn === school.id) {
                         return school;
@@ -1208,21 +1221,7 @@
                 } else {
                     this.linkedEstablishmentError = true;
                 }                
-            },
-            amalgamateEstablishment: function(urn, pos) {
-                var estabDetails = this.schools.filter(function(school, i) {                    
-                    if (urn === school.id) {
-                        return school;
-                    }
-                });
-
-                if (estabDetails.length) {
-                    this.amalgamatedEstablishments.splice(pos, 0, estabDetails[0]);
-                    this.amalgamateUrnError = false;
-                } else {
-                    this.amalgamateUrnError = true;
-                }     
-            },
+            },            
             setLocalAuthority: function (val) {
                 var filtered = this.localAuthorities.filter(function (la) {                    
                     if (val === la.value) {
@@ -1257,14 +1256,48 @@
                     this.selectedEstablishmentPhase = filtered[0].label;
                 }
             },
-            validateAmalgamationUrns: function() {
-                if (this.amalgamatedEstablishments.length < 2) {
-                    this.amalgamationLengthError = true;
-                } else {
-                    this.amalgamationLengthError = false;
-                    this.amalgamationEstablishmentsConfirmed = true;
-                }
+            validateAmalgamationUrns: function () {
+                var self = this,
+                    $fields = $('.establishment-id');
 
+                self.amalgamatedEstablishments = [];
+                $fields.each(function (n, estab) {
+                    
+                    var urn = $.trim($(this).val());
+                    if (urn !== '') {
+                        var addedUrns = self.amalgamatedEstablishments.map(function (estab) {
+                            return estab.id;
+                        });
+
+                        self.duplicateUrnsError = (addedUrns.indexOf(urn) > -1);
+
+                        if (self.duplicateUrnsError) {
+                            return false;
+                        }
+
+                        var estabDetails = self.schools.filter(function (school, i) {
+                            if (urn === school.id) {
+                                return school;
+                            }
+                        });
+
+                        if (estabDetails.length) {
+                            self.amalgamatedEstablishments.splice(n, 0, estabDetails[0]);
+                            self.amalgamateUrnError = false;
+                        } else {
+                            self.amalgamateUrnError = true;
+                        }
+                    }                    
+                });
+
+                if (!this.duplicateUrnsError) {
+                    if (this.amalgamatedEstablishments.length < 2) {
+                        this.amalgamationLengthError = true;
+                    } else {
+                        this.amalgamationLengthError = false;
+                        this.amalgamationEstablishmentsConfirmed = true;
+                    }                     
+                }
             },
             processAmalgamation: function () {
 
@@ -1282,7 +1315,8 @@
                     !this.establishmentTypeError &&
                     !this.amalgamationLaError &&
                     !this.phaseError &&
-                    !this.amalgamationDateError) {
+                    !this.amalgamationDateError &&
+                    !this.duplicateUrnsError) {
 
                     this.completeAmalgamation = true;
                     
@@ -1334,18 +1368,8 @@
                     dateError = true;
                 }
 
-                if (year < 2010 || year > currentYear + 5) {
-                    dateError = true;
-                }
-
                 return dateError;
-
-                //if (this.mergerType === 'merger') {
-                //    this.mergedDateError = dateError;
-                //    this.validLinkDate = true;
-                //} else {
-                //     this.amalgamateDateError = dateError;
-                //}
+                
             },
             establishmentSelectionValid: function () {
                 this.validSelection = (this.leadEstablishmentUrn !== '' & !this.leadEstablishmentError && this.linkedEstablishments.length > 0);
