@@ -827,7 +827,6 @@
     <Content Include="Views\Admin\LogDetail.cshtml" />
     <Content Include="Views\Shared\Secure.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
-    <Content Include="Views\Establishment\AddEditGovernor.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />

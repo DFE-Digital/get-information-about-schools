@@ -166,6 +166,13 @@ namespace Edubase.Services.Governors
                 x.Value.DOB = false;
                 x.Value.PreviousFullName = false;
                 x.Value.Nationality = false;
+                x.Value.TelephoneNumber = false;
+                x.Value.AppointingBodyId = false;
+            });
+
+            roleDisplayPolicies.ForEach(kvp =>
+            {
+                kvp.Value.TelephoneNumber = kvp.Key.OneOfThese(GR.ChairOfGovernors, GR.ChairOfLocalGoverningBody);
             });
         }
 
@@ -177,7 +184,7 @@ namespace Edubase.Services.Governors
             return Map(governorDataModel, displayPolicy);
         }
 
-        private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<eLookupGovernorRole, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)
+        private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)
         {
             var db = _dbContextFactory.Obtain();
             var query = db.Governors.Where(x => (urn != null && x.EstablishmentUrn == urn || groupUId != null && x.GroupUID == groupUId) && x.RoleId != null && roles.Contains(x.RoleId.Value) && x.IsDeleted == false);

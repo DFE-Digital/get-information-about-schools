@@ -9,7 +9,6 @@
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
-    //ViewBag.Title = Model.PageTitle;
     ViewBag.SelectedTab = "EditGovernance";
     Layout = Model.Layout;
 }
@@ -118,29 +117,32 @@
                 @RenderDateSelector(x => x.DOB, x => x.DOB.Day, x => x.DOB.Month, x => x.DOB.Year, "Date of birth")
             }
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousTitle)">
-                @Html.LabelFor(x => x.PreviousTitle)
-                @Html.ValidationMessageFor(x => x.PreviousTitle)
-                @Html.DropDownListFor(x => x.PreviousTitle, Model.PreviousTitles, "", new { @class = "form-control" })
-            </div>
+            if (Model.DisplayPolicy.PreviousFullName)
+            {
+                <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousTitle)">
+                    @Html.LabelFor(x => x.PreviousTitle)
+                    @Html.ValidationMessageFor(x => x.PreviousTitle)
+                    @Html.DropDownListFor(x => x.PreviousTitle, Model.PreviousTitles, "", new { @class = "form-control" })
+                </div>
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">
-                @Html.LabelFor(x => x.PreviousFirstName)
-                @Html.ValidationMessageFor(x => x.PreviousFirstName)
-                @Html.TextBoxFor(x => x.PreviousFirstName, new { @class = "form-control" })
-            </div>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">
+                    @Html.LabelFor(x => x.PreviousFirstName)
+                    @Html.ValidationMessageFor(x => x.PreviousFirstName)
+                    @Html.TextBoxFor(x => x.PreviousFirstName, new { @class = "form-control" })
+                </div>
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousMiddleName)">
-                @Html.LabelFor(x => x.PreviousMiddleName)
-                @Html.ValidationMessageFor(x => x.PreviousMiddleName)
-                @Html.TextBoxFor(x => x.PreviousMiddleName, new { @class = "form-control" })
-            </div>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousMiddleName)">
+                    @Html.LabelFor(x => x.PreviousMiddleName)
+                    @Html.ValidationMessageFor(x => x.PreviousMiddleName)
+                    @Html.TextBoxFor(x => x.PreviousMiddleName, new { @class = "form-control" })
+                </div>
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousLastName)">
-                @Html.LabelFor(x => x.PreviousLastName)
-                @Html.ValidationMessageFor(x => x.PreviousLastName)
-                @Html.TextBoxFor(x => x.PreviousLastName, new { @class = "form-control" })
-            </div>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousLastName)">
+                    @Html.LabelFor(x => x.PreviousLastName)
+                    @Html.ValidationMessageFor(x => x.PreviousLastName)
+                    @Html.TextBoxFor(x => x.PreviousLastName, new { @class = "form-control" })
+                </div>
+            }
 
             if (Model.DisplayPolicy.Nationality)
             {

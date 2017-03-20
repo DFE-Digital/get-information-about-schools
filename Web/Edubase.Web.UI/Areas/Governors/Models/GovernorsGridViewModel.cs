@@ -105,7 +105,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
                         .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
                         .AddCell(governor.Nationality, displayPolicy.Nationality)
-                        .AddCell(governor.EmailAddress, displayPolicy.EmailAddress);
+                        .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
+                        .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
                 }
 
                 Grids.Add(grid);
@@ -123,7 +124,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 .AddHeaderCell("Date of birth", displayPolicy.DOB)
                 .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
                 .AddHeaderCell("Nationality", displayPolicy.Nationality)
-                .AddHeaderCell("Email address", displayPolicy.EmailAddress);
+                .AddHeaderCell("Email address", displayPolicy.EmailAddress)
+                .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber);
         }
         
         
