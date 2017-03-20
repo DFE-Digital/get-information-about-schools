@@ -213,7 +213,7 @@ namespace Edubase.Services.Governors
             {
                 AppointingBodyId = Get(() => governor.AppointingBodyId, policy.AppointingBodyId),
                 AppointingBodyName = Get(() => _cachedLookupService.GovernorAppointingBodiesGetAll().FirstOrDefault(l => l.Id == governor.AppointingBodyId)?.Name, policy.AppointingBodyId),
-                AppointmentEndDate = Get(() => governor.AppointmentEndDate, policy.AppointmentEndDate),
+                AppointmentEndDate = Get(() => governor.AppointmentEndDate, true),
                 AppointmentStartDate = Get(() => governor.AppointmentStartDate, policy.AppointmentStartDate),
                 DOB = Get(() => governor.DOB, policy.DOB),
                 RoleId = governor.RoleId,

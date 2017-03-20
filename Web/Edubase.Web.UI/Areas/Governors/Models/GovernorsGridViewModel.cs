@@ -89,7 +89,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
                 Guard.IsNotNull(displayPolicy, () => new Exception($"The display policy should not be null for the role '{role}'"));
                 bool includeEndDate = ((isHistoric && role == GR.Member || role != GR.Member) 
-                    && displayPolicy.AppointmentEndDate);
+                    && displayPolicy.AppointmentEndDate) || (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
 
                 SetupHeader(role, grid, displayPolicy, includeEndDate);
                 
