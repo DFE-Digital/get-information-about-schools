@@ -168,6 +168,7 @@ namespace Edubase.Services.Governors
                 x.Value.Nationality = false;
                 x.Value.TelephoneNumber = false;
                 x.Value.AppointingBodyId = false;
+                x.Value.AppointmentEndDate = false;
             });
 
             roleDisplayPolicies.ForEach(kvp =>
