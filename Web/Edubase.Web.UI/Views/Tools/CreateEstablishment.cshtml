@@ -154,21 +154,21 @@
             establishmentPhasesJson,
             localAuthoritiesJson,
 
-            getEstabs = $.getScript('/public/assets/scripts/JSON/establishmenttypes.json',
+            getEstabs = $.getScript('/public/assets/scripts/JSON/establishmenttypes.js',
                 function(data) {
                     establishmentTypesJson = JSON.parse(data);
                     return establishmentTypesJson;
                 }
             ),
 
-            getPhases = $.getScript('/public/assets/scripts/JSON/establishmentphases.json',
+            getPhases = $.getScript('/public/assets/scripts/JSON/establishmentphases.js',
                 function(data) {
                     establishmentPhasesJson = JSON.parse(data);
                     return establishmentPhasesJson;
                 }
             ),
 
-            getLocalAuthorities = $.getScript('/public/assets/scripts/JSON/localauthorities.json',
+            getLocalAuthorities = $.getScript('/public/assets/scripts/JSON/localauthorities.js',
                 function(data) {
                     localAuthoritiesJson = JSON.parse(data);
                     return localAuthoritiesJson;
