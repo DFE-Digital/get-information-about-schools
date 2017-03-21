@@ -116,35 +116,11 @@
                 </div>
             </div>
         </form>
-        <div class="column-full" v-show="completed">
-            <p>
-                Lorem ipsum dolor sit amet, mel ad rebum iuvaret pericula, augue
-                laudem invenire ei sed. Pro delenit mnesarchum an, qui ei posse aeterno voluptaria.
-            </p>
-            <div class="school-results-listing">
-                <dl>
-                    <dt>Establishment name:</dt>
-                    <dd> {{ establishmentName }}</dd>
-                    <dt>Local authority:</dt>
-                    <dd>{{ localAuthority }}</dd>
-                    <dt>Phase of education:</dt>
-                    <dd>{{ educationPhase }}</dd>
-                    <dt>Establishment type:</dt>
-                    <dd>{{ establishmentType }}</dd>
-                    <dt>Establishment number:</dt>
-                    <dd v-if="userEstabNumber !=='' ">{{ userEstabNumber }}</dd>
-                    <dd v-else>{{ establishmentNumber }}</dd>
-                </dl>
-
-            </div>
-            
-        </div>
+        
 
     </div>
     
-    <div class="grid-row">
-        
-    </div>
+    
 
 </div>
 @section ViewScripts{
@@ -256,6 +232,7 @@
 
                     if (!this.showGlobalError) {
                         this.completed = true;
+                        window.location = '/Establishment/Details/117141';
                     }
                 }
                 
