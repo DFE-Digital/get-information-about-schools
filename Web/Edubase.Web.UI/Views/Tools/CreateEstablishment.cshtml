@@ -107,7 +107,7 @@
                 </fieldset>
             </div>
             <div class="column-half">
-                <div id="enter-number" v-show="numberType === 'user-gen'" v-bind:class="['form-group', (userEnteredNumberError) ? 'error' : '']">
+                <div id="enter-number" v-show="numberType === 'user-gen'" v-bind:class="['form-group estab-number-wrap', (userEnteredNumberError) ? 'error' : '']">
                     <label for="user-entered-number">Enter the establishment number</label>
                     <span class="error-message" v-show="userEnteredNumberError">Please check the number you've entered.</span>
                     <input class="form-control" id="user-entered-number" type="text" v-model="userEstabNumber">
