@@ -22,7 +22,6 @@
         <div class="column-full">
             
             <div class="column-half">
-                @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
                 <div class="form-group @Html.ValidationCssClassFor(x => x.GroupName)">
                     <label for="name">@Model.FieldNamePrefix name</label>

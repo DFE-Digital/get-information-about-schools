@@ -13,8 +13,7 @@
     @Html.HiddenFor(x => x.SelectedTab)
 
     <div class="" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
-        @Html.Partial("_ValidationSummary", ViewData.ModelState)
-
+        
         <div class="column-half">
 
             <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveLocation">Save</button>

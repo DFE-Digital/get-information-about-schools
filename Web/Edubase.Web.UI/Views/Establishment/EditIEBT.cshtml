@@ -13,8 +13,7 @@
     @Html.HiddenFor(x => x.SelectedTab)
 
     <div class="" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
-        @Html.Partial("_ValidationSummary", ViewData.ModelState)
-
+        
         <h2 class="heading-medium" style="margin-top:0;">Independent Education and Boarding Team</h2>
         <div class="column-half">
 
