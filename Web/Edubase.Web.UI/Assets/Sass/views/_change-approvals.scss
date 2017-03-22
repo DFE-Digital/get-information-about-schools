@@ -1,7 +1,7 @@
 ﻿
 
 .changes-list-wrapper {
-    border-top: 4px $grey-2 solid;
+    border-top: 4px $black solid;
     padding-top: 12px;
 }
 
@@ -28,6 +28,17 @@
         
         @include media(desktop) {
             width: 40px;
+        }
+        @media(max-width: 940px) {
+            &:after {
+                 content: attr(aria-label);
+                 position: relative;
+                 top: 10px;
+                 left: 12px;
+            }
+            &:before {
+                content: "";
+            }
         }
     }
 
@@ -82,14 +93,17 @@
 
 }
 
-@media(max-width: 940px ) {
+@media(max-width: 940px) {
     .approval-changes {
         thead {
             display: none;
         }
 
         tr {
-            border-top: 3px solid #eee;
+            border-top: 1px solid $black;
+             &:first-child {
+                border: none;
+            }
         }
 
         td {
@@ -99,6 +113,8 @@
             width: 100% !important;
             border-bottom: $grey-3 1px solid;
             max-width: 100%;
+            padding: 12px 0;
+
 
             &:before {
                 content: attr(aria-label);

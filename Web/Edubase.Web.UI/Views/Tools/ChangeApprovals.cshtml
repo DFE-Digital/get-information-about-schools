@@ -13,13 +13,13 @@
             <h1 class="heading-large">Items for approval</h1>
             <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRemoved">
                 <div class="tick"></div>
-                <p>Establishment updates approved. The editor has been notified by email.</p>
+                <p>Items approved. The editor has been notified by email.</p>
                 <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false"><span class="visually-hidden">Dismiss notification</span></a>
             </div>
             
             <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRejected">
                 <div class="tick"></div>
-                <p>Establishment updates rejected. The editor has been notified by email.</p>
+                <p>Items rejected. The editor has been notified by email.</p>
                 <a class="cross" href="#" v-on:click="itemsConfirmedRejected = false"><span class="visually-hidden">Dismiss notification</span></a>
             </div>
             <p>
@@ -65,12 +65,12 @@
                             <span class="result-count">{{currentCount}}</span>
                         </p>
                         <ul class="pagination-links">
-                            <li v-if="currentPage > 0"><a href="#" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
+                            <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
                             <li v-for="(page, index) in pages">
                                 <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
                                 <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
                             </li>
-                            <li v-if="currentPage < pages.length -1"><a href="#" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                            <li v-if="currentPage < pages.length -1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
                         </ul>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
             </thead>
             <tbody v-if="pages.length > 0">
                 <tr v-for="(entry, index) in page">
-                    <td class="cell-checkbox" aria-label="Select change">     
+                    <td class="cell-checkbox" aria-label="Select item">     
                         <input :id="entry.changeId" name="pending-change" :value="entry.changeId" type="checkbox" class="boldened-checkbox">
                         <label class="edubase-label edubase-button-checkbox" :for="entry.changeId">
                             <span class="visuallyhidden">Select this change for approval or rejection</span>
@@ -116,7 +116,7 @@
                     <td aria-label="URN">
                         <a v-bind:href="detailUrl(entry.URN)">{{entry.URN}}</a>
                     </td>
-                    <td aria-label="Establishment">{{entry.establishment}}</td>
+                    <td aria-label="Establishment"><a v-bind:href="detailUrl(entry.URN)">{{entry.establishment}}</a></td>
                     <td aria-label="Updated field">{{entry.changeType}}</td>
                     <td aria-label="Old value">{{entry.oldValue}}</td>
                     <td aria-label="New value">{{entry.newValue}}</td>
