@@ -38,7 +38,7 @@
                 return maxHeight-1;
             }
 
-            if ($(window).width() > 641) {
+            if ($(window).width() > 641 && $el.find('.horizontal-tabs').hasClass('trio-tabs')) {
                 $tabs.height(setTabHeight());
             }
             

@@ -162,15 +162,18 @@ nav.tabs {
     .horizontal-tab {
         display: block;
         padding: 1em 0 0.5em;
-        background-color: #fff;
+        min-height: 40px;
+        
 
         @include media(tablet) {
             padding: 0.5em 1.3em 0.25em;
+            min-height: auto;
             
         }
 
         &.selected-tab {
             text-decoration: none;
+            background-color: #fff;
             color: $black;
 
              @include media(tablet) {
