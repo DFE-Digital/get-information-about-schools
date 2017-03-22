@@ -318,3 +318,10 @@ input[disabled=disabled], select[disabled=disabled] {
 .download-step {
     margin-bottom: 3em;
 }
+
+.inline {
+    .heading-small {
+        margin-bottom: 20px;
+        display: block;
+    } 
+}
