@@ -8,8 +8,7 @@
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-large">
-                <span v-show="!completed">Create a school or college</span>
-                <span v-show="completed">School created</span>
+                Create a school or college
             </h1>
             <div class="error-summary" v-show="showGlobalError">
                 <ul>
@@ -41,7 +40,7 @@
             </div>
         </div>
 
-        <form v-show="!completed">
+        <form>
             <div class="column-full top-button-panel">
                 <div class="submit-cancel-panel">
                     <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateForm">Create establishment</button>
