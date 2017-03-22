@@ -326,3 +326,9 @@ input[disabled=disabled], select[disabled=disabled] {
         display: block;
     } 
 }
+
+
+.panel-border-narrow {
+    border-left: 5px $grey-2 solid;
+    padding: 10px 10px 20px;
+}
