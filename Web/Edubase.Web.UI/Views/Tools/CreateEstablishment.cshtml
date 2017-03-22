@@ -89,26 +89,34 @@
                         <option>Please select</option>
                     </select>
                 </div>
-                <h3 class="heading-small">Establishment number</h3>
+            </div>
+            <div class="column-full">
+                <fieldset class="inline">
+                    <legend class="heading-small">Establishment number</legend>
+                    <div v-bind:class="['form-group', (numberTypeSelectedError) ? 'error' : '']">
+                        <span class="error-message" v-show="numberTypeSelectedError">Please select to enter a number or have one generated for you</span>
+                        <label class="block-label selection-button-radio" for="generate-number-radio">
+                            <input id="generate-number-radio" name="estab-number-wang" value="generate" type="radio" v-model="numberType">
+                            Generate number
+                        </label>
 
-                <div v-bind:class="['form-group', (numberTypeSelectedError || userEnteredNumberError) ? 'error' : '']">
-                    <span class="error-message" v-show="numberTypeSelectedError">Please select to enter a number or have one generated for you</span>
-                    <label class="block-label selection-button-radio" for="generate-number-radio">
-                        <input id="generate-number-radio" name="estab-number-wang" value="generate" type="radio" v-model="numberType">
-                        Generate number
-                    </label>
-
-                    <label class="block-label selection-button-radio" for="enter-number-radio">
-                        <input id="enter-number-radio" name="estab-number-wang" value="user-gen" type="radio" v-model="numberType">
-                        Enter number
-                    </label>
-                    <div class="expanding-panel" id="enter-number" v-show="numberType === 'user-gen'">
-                        <span class="error-message" v-show="userEnteredNumberError">Please check the number you've entered.</span>
-                        <input class="form-control" id="user-entered-number" type="text" v-model="userEstabNumber">
+                        <label class="block-label selection-button-radio" for="enter-number-radio">
+                            <input id="enter-number-radio" name="estab-number-wang" value="user-gen" type="radio" v-model="numberType">
+                            Enter number
+                        </label>
                     </div>
-
+                </fieldset>
+            </div>
+            <div class="column-half">
+                <div id="enter-number" v-show="numberType === 'user-gen'" v-bind:class="['form-group', (userEnteredNumberError) ? 'error' : '']">
+                    <label for="user-entered-number">Enter the establishment number</label>
+                    <span class="error-message" v-show="userEnteredNumberError">Please check the number you've entered.</span>
+                    <input class="form-control" id="user-entered-number" type="text" v-model="userEstabNumber">
                 </div>
             </div>
+            
+
+
             <div class="column-full">
                 <div class="submit-cancel-panel">
                     <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateForm">Create establishment</button>
