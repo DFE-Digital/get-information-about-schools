@@ -1,6 +1,7 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Governors.Models;
@@ -27,6 +28,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
     {
         const string GROUP_EDIT_GOVERNANCE = "~/Groups/Group/Edit/{groupUId:int}/Governance";
         const string ESTAB_EDIT_GOVERNANCE = "~/Establishment/Edit/{establishmentUrn:int}/Governance";
+        
+        const string ESTAB_EDIT_GOVERNANCE_MODE = "~/Establishment/Edit/{establishmentUrn:int}/GovernanceMode";
 
         const string GROUP_ADD_GOVERNOR = "~/Groups/Group/Edit/{groupUId:int}/Governance/Add";
         const string ESTAB_ADD_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/Add";
@@ -47,6 +50,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly IGovernorsWriteService _governorsWriteService;
         private readonly IGroupReadService _groupReadService;
         private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly IEstablishmentWriteService _establishmentWriteService;
 
         public GovernorController(
             IGovernorsReadService governorsReadService,
@@ -54,7 +58,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             ICachedLookupService cachedLookupService,
             IGovernorsWriteService governorsWriteService,
             IGroupReadService groupReadService,
-            IEstablishmentReadService establishmentReadService)
+            IEstablishmentReadService establishmentReadService,
+            IEstablishmentWriteService establishmentWriteService)
         {
             _governorsReadService = governorsReadService;
             _nomenclatureService = nomenclatureService;
@@ -62,6 +67,38 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _governorsWriteService = governorsWriteService;
             _groupReadService = groupReadService;
             _establishmentReadService = establishmentReadService;
+            _establishmentWriteService = establishmentWriteService;
+        }
+
+        /// <summary>
+        /// GET
+        /// </summary>
+        /// <param name="establishmentUrn"></param>
+        /// <returns></returns>
+        [Route(ESTAB_EDIT_GOVERNANCE_MODE, Name = "EstabEditGovernanceMode"), HttpGet]
+        public async Task<ActionResult> EditGovernanceMode(int? establishmentUrn)
+        {
+            Guard.IsTrue(establishmentUrn.HasValue, () => new InvalidParameterException($"Parameter '{nameof(establishmentUrn)}' is null."));
+
+            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
+            {
+                var viewModel = new EditGovernanceModeViewModel { Urn = establishmentUrn.Value };
+                await PopulateLayoutProperties(viewModel, establishmentUrn, null, x => viewModel.GovernanceMode = x.GovernanceMode ?? eGovernanceMode.LocalGovernors);
+                return View(viewModel);
+            }
+        }
+
+        /// <summary>
+        /// Saves the governance mode
+        /// </summary>
+        /// <returns></returns>
+        [Route(ESTAB_EDIT_GOVERNANCE_MODE), HttpPost]
+        public async Task<ActionResult> EditGovernanceMode(EditGovernanceModeViewModel viewModel)
+        {
+            var domainModel = (await _establishmentReadService.GetAsync(viewModel.Urn.Value, User)).GetResult();
+            domainModel.GovernanceMode = viewModel.GovernanceMode;
+            await _establishmentWriteService.SaveAsync(domainModel, User);
+            return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = viewModel.Urn });
         }
 
         /// <summary>
@@ -84,7 +121,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
                 viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
 
-                await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId);
+                await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, x => viewModel.GovernanceMode = x.GovernanceMode);
 
                 viewModel.RemovalGid = removalGid;
 
@@ -128,6 +165,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
                     var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService);
+
+                    if (establishmentUrn.HasValue)
+                    {
+                        var estabDomainModel = await _establishmentReadService.GetAsync(establishmentUrn.Value, User);
+                        viewModel.GovernanceMode = estabDomainModel.GetResult().GovernanceMode ?? eGovernanceMode.LocalGovernors;
+                    }
+
                     return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
                 }
             }).Result;
@@ -269,7 +313,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.PreviousTitles = viewModel.GetTitles();
         }
         
-        private async Task PopulateLayoutProperties(object viewModel, int? establishmentUrn, int? groupUId)
+        private async Task PopulateLayoutProperties(object viewModel, int? establishmentUrn, int? groupUId, Action<EstablishmentModel> processEstablishment = null)
         {
             if (establishmentUrn.HasValue && groupUId.HasValue)
                 throw new InvalidParameterException("Both urn and uid cannot be populated");
@@ -286,6 +330,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 vm.SelectedTab = "governance";
                 vm.Urn = domainModel.Urn;
                 vm.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
+                processEstablishment?.Invoke(domainModel);
             }
             else if (groupUId.HasValue)
             {

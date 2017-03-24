@@ -274,6 +274,7 @@
     <Compile Include="Areas\Governors\Controllers\GovernorController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
     <Compile Include="Areas\Governors\Models\CreateEditGovernorViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\EditGovernanceModeViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
@@ -391,6 +392,7 @@
     <Content Include="Areas\Governors\Views\Governor\AddEditOrReplace.cshtml" />
     <Content Include="Assets\Sass\views\_change-approvals.scss" />
     <Content Include="Assets\Sass\views\_academy-openings.scss" />
+    <Content Include="Areas\Governors\Views\Governor\EditGovernanceMode.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />

@@ -27,10 +27,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public string Action { get; set; }
 
-        public string ParentControllerName => EstablishmentUrn.HasValue ? "Establishment" : "Group";
-
-        public string ParentAreaName => EstablishmentUrn.HasValue ? "" : "Groups";
-
         public string Layout { get; set; }
 
         public int? Id => EstablishmentUrn ?? GroupUId;
@@ -63,6 +59,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         string IEstablishmentPageViewModel.Name { get; set; }
 
         TabDisplayPolicy IEstablishmentPageViewModel.TabDisplayPolicy { get; set; }
+
+        public eGovernanceMode? GovernanceMode { get; set; }
 
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groudUId, int? establishmentUrn, NomenclatureService nomenclatureService)
         {
