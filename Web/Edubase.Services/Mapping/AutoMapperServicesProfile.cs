@@ -42,6 +42,7 @@ namespace Edubase.Services.Mapping
                 })
                 .ReverseMap() // in
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.Name))
+                .ForMember(x => x.GovernanceMode, opt => opt.MapFrom(x => (byte?)x.GovernanceMode))
                 .ForMember(x => x.LAESTAB, opt => opt.Ignore())
                 .ForMember(x => x.Address, opt => opt.MapFrom(x => new Address
                 {

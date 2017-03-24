@@ -9,7 +9,6 @@
 {
     <div class="grid-row">
         <div class="column-half">
-
             @if (Model.GroupUId.HasValue)
             {
                 @Html.ActionLink("View governance", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel" })
@@ -19,11 +18,8 @@
                 @Html.ActionLink("View governance", "Details", "Establishment", null, null, "governance", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" })
             }
 
-
             <h1 class="bold-medium">Governance</h1>
-
-            
-
+            @DisplayGovernanceMode()
             <br />
             <br />
             <h2 class="bold-small">Add person</h2>
@@ -42,6 +38,19 @@
                 </div>
             }
 
+        </div>
+    </div>
+}
+else
+{
+    <div class="grid-row">
+        <div class="column-half">
+
+            <h1 class="bold-medium">Governance</h1>
+            @DisplayGovernanceMode()
+            <br />
+            <br />
+            
         </div>
     </div>
 }
@@ -255,9 +264,9 @@ var id = label.Replace(" ", "").ToLower();
 
 @helper DisplayGovernanceMode()
 { 
-    if (Model.EstablishmentUrn.HasValue && Model.GovernanceMode.HasValue)
+    if (Model.EstablishmentUrn.HasValue)
     {
-        if (Model.GovernanceMode == eGovernanceMode.LocalGovernors)
+        if (!Model.GovernanceMode.HasValue || Model.GovernanceMode == eGovernanceMode.LocalGovernors)
         {
             <p>This establishment has local governors, not shared governors.</p>
         }
@@ -277,6 +286,6 @@ var id = label.Replace(" ", "").ToLower();
 
     if (Model.EditMode)
     {
-        @Html.ActionLink("Edit", "", "", null, null, "", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" })
+        @Html.RouteLink("Edit", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-grey" })
     }
 }
