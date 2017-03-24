@@ -439,7 +439,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                         HeadLastName = estabModel.HeadLastName,
                         Name = estabModel.Name,
                         Urn = estabModel.Urn.Value,
-                        TypeName = await _lookup.GetNameAsync(() => estabModel.LocalAuthorityId),
+                        TypeName = await _lookup.GetNameAsync(() => estabModel.TypeId),
                         HeadTitleName = await _lookup.GetNameAsync(() => estabModel.HeadTitleId),
                         JoinedDate = establishmentGroup.JoinedDate,
                         CCIsLeadCentre = establishmentGroup.CCIsLeadCentre
