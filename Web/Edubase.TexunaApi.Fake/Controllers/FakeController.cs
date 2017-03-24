@@ -6,39 +6,63 @@ namespace Edubase.TexunaApi.Fake.Controllers
 {
     public class FakeController : ApiController
     {
-        private static readonly Lazy<Dictionary<string, object>> lazyDictionary = new Lazy<Dictionary<string, object>>();
-        private static Dictionary<string, object> ConfiguredResponses => lazyDictionary.Value;
+        private static readonly Lazy<Dictionary<string, object>> LazyDictionary = new Lazy<Dictionary<string, object>>();
+        private static Dictionary<string, object> ConfiguredResponses => LazyDictionary.Value;
 
         [HttpGet]
         public IHttpActionResult Get(string uri)
         {
-            if (ConfiguredResponses.ContainsKey(uri))
+            var key = $"get-{uri}";
+            if (ConfiguredResponses.ContainsKey(key))
             {
-                return this.Ok(ConfiguredResponses[uri]);
+                return this.Ok(ConfiguredResponses[key]);
             }
 
             return this.NotFound();
         }
 
-        [HttpPut, Route("Configure")]
-        public IHttpActionResult SetResponse(string uri, [FromBody]object response)
+        [HttpPost]
+        public IHttpActionResult Post(string uri, object body)
         {
-            if (ConfiguredResponses.ContainsKey(uri))
+            var key = $"post-{uri}";
+            if (ConfiguredResponses.ContainsKey(key))
+            {
+                return this.Ok(ConfiguredResponses[key]);
+            }
+
+            return this.NotFound();
+        }
+
+
+        [HttpPut, Route("configure/{method}")]
+        public IHttpActionResult SetResponse(string uri, string method, [FromBody]object response)
+        {
+            var key = $"{method}-{uri}";
+            if (ConfiguredResponses.ContainsKey(key))
             {
                 return this.Conflict();
             }
 
-            ConfiguredResponses.Add(uri, response);
+            ConfiguredResponses.Add(key, response);
             return this.Ok();
         }
 
-        [HttpDelete, Route("Configure")]
-        public IHttpActionResult DeleteResponse(string uri)
+        [HttpDelete, Route("configure/{method}")]
+        public IHttpActionResult DeleteResponse(string uri, string method)
         {
-            if (ConfiguredResponses.ContainsKey(uri))
+            var key = $"{method}-{uri}";
+            if (ConfiguredResponses.ContainsKey(key))
             {
-                ConfiguredResponses.Remove(uri);
+                ConfiguredResponses.Remove(key);
             }
+
+            return this.Ok();
+        }
+
+        [HttpDelete, Route("configure")]
+        public IHttpActionResult DeleteAllResponses()
+        {
+            ConfiguredResponses.Clear();
 
             return this.Ok();
         }
