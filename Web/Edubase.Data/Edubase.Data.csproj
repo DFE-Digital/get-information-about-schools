@@ -223,6 +223,10 @@
     <Compile Include="Migrations\201703031003017_AddGovernorTelephoneNumber.Designer.cs">
       <DependentUpon>201703031003017_AddGovernorTelephoneNumber.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703241120045_8464GovernanceFlagColumn.cs" />
+    <Compile Include="Migrations\201703241120045_8464GovernanceFlagColumn.Designer.cs">
+      <DependentUpon>201703241120045_8464GovernanceFlagColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ODataFilterList.cs" />
@@ -282,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703031003017_AddGovernorTelephoneNumber.resx">
       <DependentUpon>201703031003017_AddGovernorTelephoneNumber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703241120045_8464GovernanceFlagColumn.resx">
+      <DependentUpon>201703241120045_8464GovernanceFlagColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

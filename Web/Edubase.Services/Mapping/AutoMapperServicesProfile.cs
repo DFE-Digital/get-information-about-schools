@@ -5,6 +5,7 @@ using Edubase.Data;
 using Edubase.Data.Entity;
 using Edubase.Data.Entity.ComplexTypes;
 using Edubase.Services.Domain;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
 using Newtonsoft.Json;
@@ -33,6 +34,7 @@ namespace Edubase.Services.Mapping
             CreateMap<Establishment, EstablishmentModel>() // out
                 .ForMember(x => x.Location, opt => opt.Ignore())
                 .ForMember(x => x.AdditionalAddressesCount, opt => opt.Ignore())
+                .ForMember(x => x.GovernanceMode, opt => opt.MapFrom(x => (eGovernanceMode?)x.GovernanceMode))
                 .AfterMap((s, d) =>
                 {
                     d.Location = s.Location.ToLatLon();

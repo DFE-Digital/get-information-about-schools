@@ -87,6 +87,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId);
 
                 viewModel.RemovalGid = removalGid;
+                
+                if (establishmentUrn.HasValue)
+                {
+                    var estabDomainModel = await _establishmentReadService.GetAsync(establishmentUrn.Value, User);
+                    viewModel.GovernanceMode = estabDomainModel.GetResult().GovernanceMode ?? eGovernanceMode.LocalGovernors;
+                }
 
                 return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
             }

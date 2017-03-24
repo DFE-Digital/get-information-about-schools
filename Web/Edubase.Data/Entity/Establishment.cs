@@ -382,7 +382,7 @@ namespace Edubase.Data.Entity
         #endregion
 
 
-
+        public byte? GovernanceMode { get; set; }
 
 
         public Establishment()

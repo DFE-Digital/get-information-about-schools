@@ -21,6 +21,10 @@
 
 
             <h1 class="bold-medium">Governance</h1>
+
+            
+
+            <br />
             <br />
             <h2 class="bold-small">Add person</h2>
             <p>Select role</p>
@@ -247,4 +251,32 @@ var id = label.Replace(" ", "").ToLower();
             </span>
         </fieldset>
     </div>
+}
+
+@helper DisplayGovernanceMode()
+{ 
+    if (Model.EstablishmentUrn.HasValue && Model.GovernanceMode.HasValue)
+    {
+        if (Model.GovernanceMode == eGovernanceMode.LocalGovernors)
+        {
+            <p>This establishment has local governors, not shared governors.</p>
+        }
+        else if (Model.GovernanceMode == eGovernanceMode.LocalAndSharedGovernors)
+        {
+            <p>This establishment has local governors and also shares governors with other academies in the trust.</p>
+        }
+        else if (Model.GovernanceMode == eGovernanceMode.NoLocalGovernors)
+        {
+            <p>This establishment is part of a multi academy trust and does not have local governors.</p>
+        }
+        else if (Model.GovernanceMode == eGovernanceMode.SharesLocalGovernors)
+        {
+            <p>This establishment shares local governors with other academies in the trust.</p>
+        }
+    }
+
+    if (Model.EditMode)
+    {
+        @Html.ActionLink("Edit", "", "", null, null, "", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" })
+    }
 }
