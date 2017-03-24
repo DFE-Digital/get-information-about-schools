@@ -1,0 +1,156 @@
+﻿
+.manage-academy-openings {
+
+    .desktop-inline {
+        width: 50%;
+        float: left;
+    }
+
+    .inline-submit {
+        font-size: 16px;
+        margin-left: 20px;
+    }
+
+
+    .month-selector {
+        width: 100%;
+
+        @include media(tablet) {
+            width: 220px;
+        }
+    }
+
+    .pagination {
+        border-bottom: 2px solid $black;
+        margin-bottom: 20px;
+    }
+
+    .academy-openings {
+        table-layout: fixed;
+        display: table;
+
+        thead {
+            tr {
+                border-bottom: 4px solid $black;
+            }
+
+            th {
+                font-weight: bold;
+                text-align: left;
+            }
+        }
+
+        .cell-openingdate {
+            width: 12%;
+        }
+
+        .cell-urn {
+            width: 8%;
+        }
+
+        .cell-estabname {
+            width: 18%;
+        }
+
+        .cell-estabtype {
+            width: 15%;
+        }
+
+        .cell-predecessor-urn {
+            width: 12%;
+        }
+
+        .cell-predecessor-name {
+            width: 18%;
+        }
+
+        .cell-edit {
+            width: 8%;
+            text-align: right;
+        }
+
+
+        tbody td {
+            padding: 8px 4px;
+        }
+    }
+
+    @media(max-width: 800px) {
+        .academy-openings {
+
+            thead {
+                display: none;
+            }
+
+
+            tbody td {
+                clear: left;
+                display: block;
+                float: left;
+                width: 100% !important;
+                max-width: 100%;
+                border: 0;
+                font-size: 16px;
+                padding: 4px;
+
+                &:before {
+                    content: attr(aria-label);
+                    float: left;
+                    padding-right: 0.5em;
+                }
+            }
+
+            .cell-edit {
+                text-align: left;
+                padding-bottom: 12px;
+
+                a {
+                    display: block;
+                    text-decoration: none;
+                    text-align: center;
+                    padding: 8px 38px;
+                    font-size: 16px;
+                    float: left;
+                    @include button-variant($grey-1, $btn-secondary-bg, $btn-default-border);
+                }
+            }
+
+            .cell-openingdate {
+                font-weight: bold;
+
+                &:before {
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+
+    @media(max-width: 480px) {
+       .academy-openings .cell-edit a {
+            float: none;
+            padding: 8px 0;
+        }
+    }
+}
+
+.openings-single-result {
+    dl {
+        overflow: hidden;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+
+        @media (min-width: 640px) {
+            font-size: 16px;
+        }
+    }
+
+    dt, dd {
+        float: left;
+    }
+
+    dt {
+        clear: left;
+        padding-right: 0.5em;
+    }
+}

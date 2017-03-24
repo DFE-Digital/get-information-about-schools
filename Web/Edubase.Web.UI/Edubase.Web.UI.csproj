@@ -390,6 +390,7 @@
     <Content Include="Areas\Governors\Views\Governor\ViewEdit.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\AddEditOrReplace.cshtml" />
     <Content Include="Assets\Sass\views\_change-approvals.scss" />
+    <Content Include="Assets\Sass\views\_academy-openings.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -781,6 +782,7 @@
     <Content Include="Assets\Scripts\JSON\establishmentphases.js" />
     <Content Include="Assets\Scripts\JSON\establishmenttypes.js" />
     <Content Include="Assets\Scripts\JSON\localauthorities.js" />
+    <Content Include="Assets\Scripts\JSON\academyOpenings.stub.js" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -860,6 +862,8 @@
     <Content Include="Views\Tools\MergersTool.cshtml" />
     <Content Include="Views\Tools\ChangeApprovals.cshtml" />
     <Content Include="Views\Tools\CreateEstablishment.cshtml" />
+    <Content Include="Views\Tools\SearchChangeHistory.cshtml" />
+    <Content Include="Views\Tools\ManageAcademyOpenings.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

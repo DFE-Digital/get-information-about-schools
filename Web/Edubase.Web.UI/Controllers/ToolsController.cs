@@ -61,5 +61,11 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
+
+        [HttpGet, EdubaseAuthorize]
+        public ActionResult ManageAcademyOpenings()
+        {
+            return View();
+        }
     }
 }
