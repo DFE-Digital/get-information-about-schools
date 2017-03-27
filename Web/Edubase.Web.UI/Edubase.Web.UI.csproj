@@ -398,6 +398,8 @@
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
+    <Content Include="Assets\Scripts\JSON\addressResult.js" />
+    <Content Include="Assets\Scripts\JSON\postcodeResults.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.min.js" />
     <Content Include="Assets\Scripts\Views\bulk-academies.js" />
@@ -866,6 +868,7 @@
     <Content Include="Views\Tools\CreateEstablishment.cshtml" />
     <Content Include="Views\Tools\SearchChangeHistory.cshtml" />
     <Content Include="Views\Tools\ManageAcademyOpenings.cshtml" />
+    <Content Include="Views\Prototype\AddressLookup.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

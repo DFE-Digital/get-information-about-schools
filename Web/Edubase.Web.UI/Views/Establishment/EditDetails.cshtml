@@ -3,8 +3,10 @@
 @model ViewModel
 @{
     Layout = "_EditLayoutPage.cshtml";
+    ViewBag.postcodeDemo = Request["postcodeDemo"];
 }
 <div class="tab-content">
+    @ViewBag.postcodeDemo
 
     @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.Urn)
@@ -54,11 +56,23 @@
                     <label for="school-county" class="form-label">County</label>
                     @Html.TextBoxFor(x => x.Address_County, new { maxlength = 120, id = "school-county", @class = "form-control" })
                 </div>
-
-                <div class="form-group">
-                    <label for="school-postcode" class="form-label">Post code</label>
-                    @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control" })
-                </div>
+                
+                @if (ViewBag.postcodeDemo == "1")
+                {
+                    <div class="form-group">
+                        <label for="school-postcode" class="form-label">Post code</label>
+                        @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control postcode-field", @disabled="disabled" })
+                        <a href="/../Prototype/AddressLookup" class="replace-address">Replace this address</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label for="school-postcode" class="form-label">Post code</label>
+                        @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control" })
+                    </div>
+                }
+                
 
 
                 @for (var i = 0; i < Model.AdditionalAddresses.Count; i++)
