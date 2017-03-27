@@ -30,6 +30,8 @@ namespace Edubase.Common.Cache
 
         public bool IsPayloadCompressionEnabled { get; set; } = true;
 
+        public string CacheDomain { get; set; }
+
         public CacheConfig()
         {
             ConnectionString = ConfigurationManager.ConnectionStrings["Redis"]?.ConnectionString;
@@ -37,6 +39,16 @@ namespace Edubase.Common.Cache
             IsDistributedCachingEnabled = true;
             IsAuditingEnabled = false; // useful for debugging purposes.
             IsCentralCacheEnabled = true;
+            CacheDomain = ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
+
+            if (CacheDomain.Equals("localdev", StringComparison.OrdinalIgnoreCase))
+                CacheDomain += "_" + Guid.NewGuid().ToString().Substring(0, 5);
+
+            CacheDomain = CacheDomain?.ToLower();
         }
+
+        internal string ProcessKey(string key) => CacheDomain.Clean() != null && key.Clean() != null ? string.Concat(CacheDomain, "_", key) : key;
+
+        
     }
 }

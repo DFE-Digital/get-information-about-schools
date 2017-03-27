@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using System.Data.Entity;
 
 namespace Edubase.Services
 {
@@ -22,6 +23,13 @@ namespace Edubase.Services
         public static TSource SingleOrThrow<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
             var retVal = source.SingleOrDefault(predicate);
+            if (retVal == null) throw new EntityNotFoundException();
+            return retVal;
+        }
+
+        public static async Task<TSource> SingleOrThrowAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            var retVal = await source.SingleOrDefaultAsync(predicate);
             if (retVal == null) throw new EntityNotFoundException();
             return retVal;
         }

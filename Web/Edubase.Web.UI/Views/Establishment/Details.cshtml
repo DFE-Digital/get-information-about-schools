@@ -8,30 +8,10 @@
     ViewBag.HideLogo = true;
 }
 
-
 <h1 class="heading-large">@Model.Establishment.Name</h1>
-
-@if (Model.UserCanEdit)
-{
-    @Html.ActionLink("Edit", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
-}
-
-@Html.ActionLink("Download", "Edit", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button mobile-full-width" })
-
+<p class="urn">URN: @Model.Establishment.Urn</p>
 
 <div class="column-full">
-    <div class="grid-row summary">
-        
-        @{Html.RenderPartial(@"Partials\Header");}
-        <div class="map-container">
-            <a href="#map" id="map-toggle" class="expanding-content-trigger map-toggle">Show map</a>
-            <div id="map" class="school-detail-map"
-                 data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
-                 data-school-name="@Model.Establishment.Name"
-                 data-school-address="@Model.Establishment.GetAddress()"></div>
-        </div>
-    </div>
-
     <div class="grid-row horizontal-tabs-wrapper">
         <div class="tab-wrap">
             <ul class="horizontal-tabs">

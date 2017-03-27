@@ -113,6 +113,12 @@ nav.tabs {
 .tab-wrap {
     border-bottom: 0;
     margin-bottom: 20px;
+    padding-bottom: 1em;
+
+    .js-enabled & {
+        padding-bottom:0;
+    }
+
     @include media(tablet) {
         border-bottom: $grey-2 1px solid;
     }
@@ -138,7 +144,7 @@ nav.tabs {
             float: left;
             border: 0;
             width: auto;
-            margin: 0 0.8em;
+            margin: 0 1.6em 0 0;
             min-width: 160px;
             max-width: 380px;
 
@@ -155,16 +161,17 @@ nav.tabs {
     }
     .horizontal-tab {
         display: block;
-        padding: 1em 0 0.5em;
-        background-color: #fff;
+        padding: 1em 0 0.5em;        
+        min-height: auto;
 
         @include media(tablet) {
             padding: 0.5em 1.3em 0.25em;
-            
+            min-height: 40px;            
         }
 
         &.selected-tab {
             text-decoration: none;
+            background-color: #fff;
             color: $black;
 
              @include media(tablet) {
@@ -206,6 +213,9 @@ nav.tabs {
         h3 {
             clear: both;
             margin: 0 8px 0.2em;
+        }
+        p {
+            clear: both;
         }
         .borderless {
             margin-bottom: 1em;

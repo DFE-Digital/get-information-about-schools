@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Edubase.Common;
+using Edubase.Common.Text;
 using Edubase.Data.Entity.Lookups;
 using Edubase.Services.Domain;
 using Microsoft.SqlServer.Types;

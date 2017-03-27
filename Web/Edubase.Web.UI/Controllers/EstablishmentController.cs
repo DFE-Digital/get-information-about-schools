@@ -3,6 +3,7 @@ using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services;
 using Edubase.Services.Core;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
@@ -10,6 +11,7 @@ using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
+using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
@@ -39,6 +41,7 @@ namespace Edubase.Web.UI.Controllers
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IFileDownloadFactoryService _downloadService;
+        private readonly NomenclatureService _nomenclatureService;
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService, IMapper mapper, 
@@ -46,7 +49,8 @@ namespace Edubase.Web.UI.Controllers
             IEstablishmentWriteService establishmentWriteService,
             ICachedLookupService cachedLookupService,
             IGovernorsReadService governorsReadService,
-            IFileDownloadFactoryService downloadService)
+            IFileDownloadFactoryService downloadService,
+            NomenclatureService nomenclatureService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
@@ -56,13 +60,25 @@ namespace Edubase.Web.UI.Controllers
             _cachedLookupService = cachedLookupService;
             _governorsReadService = governorsReadService;
             _downloadService = downloadService;
+            _nomenclatureService = nomenclatureService;
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> EditDetails(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
             ViewModel viewModel = await CreateEditViewModel(id);
+            viewModel.SelectedTab = "details";
+            return View(viewModel);
+        }
+
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
+        public async Task<ActionResult> EditLocation(int? id)
+        {
+            if (!id.HasValue) return HttpNotFound();
+            var viewModel = await CreateEditViewModel(id);
+            if (!viewModel.TabDisplayPolicy.Location) throw new PermissionDeniedException();
+            viewModel.SelectedTab = "location";
             return View(viewModel);
         }
 
@@ -70,13 +86,12 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditIEBT(int? id)
         {
             if (!id.HasValue) return HttpNotFound();
-            ViewModel viewModel = await CreateEditViewModel(id);
-
+            var viewModel = await CreateEditViewModel(id);
             if (!viewModel.TabDisplayPolicy.IEBT) throw new PermissionDeniedException();
-
+            viewModel.SelectedTab = "iebt";
             return View("EditIEBT", viewModel);
         }
-
+        
         private async Task<ViewModel> CreateEditViewModel(int? id)
         {
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
@@ -92,7 +107,13 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
-        public async Task<ActionResult> Edit(ViewModel model)
+        public async Task<ActionResult> EditDetails(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
+        public async Task<ActionResult> EditLocation(ViewModel model)
         {
             return await SaveEstablishment(model);
         }
@@ -110,7 +131,7 @@ namespace Edubase.Web.UI.Controllers
             model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
             await PopulateSelectLists(model);
 
-            if (model.Action == ViewModel.eAction.Save || model.Action == ViewModel.eAction.SaveIEBT)
+            if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
             {
                 if (ModelState.IsValid)
                 {
@@ -232,12 +253,9 @@ namespace Edubase.Web.UI.Controllers
                     viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
             }
 
-            using (MiniProfiler.Current.Step("Retrieving Group record"))
-                viewModel.Group = await _groupReadService.GetByEstablishmentUrnAsync(id);
+            using (MiniProfiler.Current.Step("Retrieving parent group records"))
+                viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id);
             
-            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
-                viewModel.GovernorsDetails = new GovernorsGridViewModel(await _governorsReadService.GetGovernorListAsync(urn: id, principal: User));
-
             using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
                 viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment);
 
@@ -246,10 +264,10 @@ namespace Edubase.Web.UI.Controllers
 
 
             viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
-                .CanEdit(viewModel.Establishment.Urn.Value, 
+                .CanEdit(viewModel.Establishment.Urn.Value,
                     viewModel.Establishment.TypeId,
-                    viewModel.Group != null ? new [] { viewModel.Group.GroupUID.Value } : null as int[], 
-                    viewModel.Establishment.LocalAuthorityId, 
+                    viewModel.Groups.Select(x => x.GroupUID.Value).ToArray(),
+                    viewModel.Establishment.LocalAuthorityId,
                     viewModel.Establishment.EstablishmentTypeGroupId);
 
             return View(viewModel);

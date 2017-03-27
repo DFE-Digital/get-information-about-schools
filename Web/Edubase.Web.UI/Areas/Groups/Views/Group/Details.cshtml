@@ -11,132 +11,135 @@
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 
-@if (Model.CanUserEdit)
-{
-    @Html.ActionLink("Edit", "Edit", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button mobile-full-width" })
-}
-
-<div class="grid-row summary">
-    <div class="column-full">
-        <table class="borderless no-padding">
-            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
-            {
-                <tr>
-                    <th scope="row">Companies House Number</th>
-                    <td>
-                        @if (Model.Group.CompaniesHouseNumber.IsNullOrEmpty())
-                        {
-                            <text>Not recorded</text>
-                        }
-                        else
-                        {
-                            <a href="@Model.CompaniesHouseUrl">@Model.Group.CompaniesHouseNumber</a>
-                        }
-                    </td>
-                </tr>
-            }
-            <tr>
-                <th scope="row">Type</th>
-                <td>@Model.GroupTypeName</td>
-            </tr>
-            
-            <tr>
-                <th scope="col">@Model.OpenDateLabel</th>
-                <td>@(Model.Group.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
-            </tr>
-
-            @if (Model.IsUserLoggedOn)
-            {
-                <tr>
-                    <th scope="col">Closed date</th>
-                    <td>@(Model.Group.ClosedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
-                </tr>
-
-                <tr>
-                    <th scope="col">Status</th>
-                    <td>@(Model.GroupStatusName ?? "Not recorded")</td>
-                </tr>
-            }
-
-            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
-            {
-                <tr>
-                    <th scope="col">Address</th>
-                    <td>@(Model.Address ?? "Not recorded")</td>
-                </tr>
-            }
-
-            @if (Model.Group.GroupTypeId == (int) eLookupGroupType.ChildrensCentresGroup)
-            {
-                <tr>
-                    <th scope="col">Group manager email</th>
-                    <td>@(Model.Group.ManagerEmailAddress ?? "Not recorded")</td>
-                </tr>
-            }
-
-            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration))
-            {
-                <tr>
-                    <th scope="col">Local authority</th>
-                    <td>@(Model.LocalAuthorityName ?? "Not recorded")</td>
-                </tr>
-            }
-
-            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
-            {
-                <tr>
-                    <th scope="col">Group ID</th>
-                    <td>@(Model.Group.GroupId.Clean() ?? "Not recorded")</td>
-                </tr>
-            }
-
-            <tr>
-                <th scope="col">UID</th>
-                <td>@Model.Group.GroupUID</td>
-            </tr>
-            
-
-        </table>
-        <br />
-    </div>
-</div>
-
-
-
 <div class="grid-row horizontal-tabs-wrapper">
     <div class="column-full">
 
-        
-            <div class="tab-wrap">
-                <ul class="horizontal-tabs">
-                    <li>
-                        <a href="#list" class="horizontal-tab">
-                            @Model.EstablishmentsPluralName
-                        </a>
-                    </li>
+        <div class="tab-wrap">
+            <ul class="horizontal-tabs">
+                <li><a href="#details" class="horizontal-tab">Details</a></li>
+                <li><a href="#list" class="horizontal-tab">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a></li>
                     
-                    @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                {
+                    <li><a href="#governance" class="horizontal-tab">Governance</a></li>
+                }
+
+                @if (Model.IsUserLoggedOn)
+                {
+                    <li><a href="#change-history" class="horizontal-tab">Changes</a></li>
+                }
+
+            </ul>
+        </div>
+        
+        <div class="tab-content-wrapper horizontal-tabs-content">
+            <div id="details" class="tab-content">
+
+                @if (Model.CanUserEdit)
+                {
+                    @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
+                }
+
+                <div style="float:none; clear:both;"></div><!-- Sorry Jon. -->
+
+                <table class="borderless no-padding">
+                    @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                     {
-                        <li>
-                            <a href="#governance" class="horizontal-tab">Governance</a>
-                        </li>
+                        <tr>
+                            <th scope="row">Companies House Number</th>
+                            <td>
+                                @if (Model.Group.CompaniesHouseNumber.IsNullOrEmpty())
+                                {
+                                    <text>Not recorded</text>
+                                }
+                                else
+                                {
+                                    <a href="@Model.CompaniesHouseUrl">@Model.Group.CompaniesHouseNumber</a>
+                                }
+                            </td>
+                        </tr>
                     }
+
+                    <tr>
+                        <th scope="row">Type</th>
+                        <td>@Model.GroupTypeName</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="col">@Model.OpenDateLabel</th>
+                        <td>@(Model.Group.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
+                    </tr>
 
                     @if (Model.IsUserLoggedOn)
                     {
-                        <li><a href="#change-history" class="horizontal-tab">Changes</a></li>
+                        <tr>
+                            <th scope="col">Closed date</th>
+                            <td>@(Model.Group.ClosedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
+                        </tr>
+
+                        <tr>
+                            <th scope="col">Status</th>
+                            <td>@(Model.GroupStatusName ?? "Not recorded")</td>
+                        </tr>
                     }
-                </ul>
-            </div>
-        
-        <div class="tab-content-wrapper horizontal-tabs-content">
-            <div id="list" class="tab-content">
-                @if (Model.Establishments.Any())
+
+                    @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
+                    {
+                        <tr>
+                            <th scope="col">Address</th>
+                            <td>@(Model.Address ?? "Not recorded")</td>
+                        </tr>
+                    }
+
+                    @if (Model.Group.GroupTypeId == (int)eLookupGroupType.ChildrensCentresGroup)
+                    {
+                        <tr>
+                            <th scope="col">Group manager email</th>
+                            <td>@(Model.Group.ManagerEmailAddress ?? "Not recorded")</td>
+                        </tr>
+                    }
+
+                    @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration))
+                    {
+                        <tr>
+                            <th scope="col">Local authority</th>
+                            <td>@(Model.LocalAuthorityName ?? "Not recorded")</td>
+                        </tr>
+                    }
+
+                    @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
+                    {
+                        <tr>
+                            <th scope="col">Group ID</th>
+                            <td>@(Model.Group.GroupId.Clean() ?? "Not recorded")</td>
+                        </tr>
+                    }
+
+                    <tr>
+                        <th scope="col">UID</th>
+                        <td>@Model.Group.GroupUID</td>
+                    </tr>
+
+
+                </table>
+
+
+                @if (Model.CanUserEdit)
                 {
-                    <h2 class="heading-medium tab-heading">
-                        List of @Model.EstablishmentsPluralName.ToLower() (@Model.Group.EstablishmentCount)
-                    </h2>
+                    @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
                 }
+
+            </div>
+            
+            <div id="list" class="tab-content">
+                
+                @if (Model.CanUserEdit)
+                {
+                    @Html.ActionLink("Edit " + Model.EstablishmentsPluralName.ToLower(), "EditLinks", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
+                }
+
+                <div style="float:none; clear:both;"></div>
+
                 <div class="column-full2">
                     <ul class="school-results-listing">
                         @foreach (var result in Model.Establishments)
@@ -166,17 +169,24 @@
                     </ul>
                 </div>
 
+                @if (Model.CanUserEdit && Model.Establishments.Count > 0)
+                {
+                    @Html.ActionLink("Edit " + Model.EstablishmentsPluralName.ToLower(), "EditLinks", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
+                }
+
+
             </div>
             <div id="governance" class="tab-content">
                 
-                @if (Model.GovernorsDetails.DomainModel.HasGovernors)
+                @if (Model.CanUserEdit)
                 {
-                    Html.RenderPartial("_Governors", Model.GovernorsDetails);
+                    @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUID, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
                 }
-                else
-                {
-                    <p>There is no governance information for this establishment</p>
-                }
+
+                <div style="clear:both; float:none;margin-bottom:30px;"></div>
+
+                @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUID, area = "Governors" });}
+
 
             </div>
 
@@ -187,6 +197,42 @@
                     @if (!Model.ChangeHistory.Any())
                     {
                         <p>There are no change records available at the moment</p>
+                        @*<table class="approval-items">
+                            <thead>
+                            <tr>
+                                <th>Updated field</th>
+                                <th>Old value</th>
+                                <th>New value</th>
+                                <th>Date changed</th>
+                                <th>Date requested</th>
+                                <th>Suggested from</th>
+                                <th>Approved by</th>
+                                <th>Reason</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td aria-label="updated field">Name</td>
+                                <td aria-label="Old value">1254 - The Federation of St Stephen's Primary School and St Stephen's Nursery School</td>
+                                <td aria-label="New value">1254 - The Federation of St Stephen's Primary School and St Stephen's Nursery School hello there david</td>
+                                <td aria-label="Date changed">2/24/2017 2:15:39 PM</td>
+                                <td aria-label="Date requested">2/24/2017 2:15:39 PM</td>
+                                <td aria-label="Suggested from">administrator.user</td>
+                                <td aria-label="Approved by">--</td>
+                                <td aria-label="Reason">--</td><!-- Reason field will be implemented by Texuna -->
+                            </tr>
+                            <tr>
+                                <td aria-label="updated field">Status</td>
+                                <td aria-label="Old value">Created in error</td>
+                                <td aria-label="New value">Open</td>
+                                <td aria-label="Date changed">2/24/2017 2:15:26 PM</td>
+                                <td aria-label="Date requested">2/24/2017 2:15:26 PM</td>
+                                <td aria-label="Suggested from">administrator.user</td>
+                                <td aria-label="Approved by">--</td>
+                                <td aria-label="Reason">--</td><!-- Reason field will be implemented by Texuna -->
+                            </tr>
+                            </tbody>
+                        </table>*@                       
                     }
                     else
                     {
@@ -213,44 +259,19 @@
                                 @foreach (var item in Model.ChangeHistory)
                                 {
                                     <tr>
-                                        <td>@item.Name</td>
-                                        <td>@item.OldValue</td>
-                                        <td>@item.NewValue</td>
-                                        <td>@item.EffectiveDateUtc</td>
-                                        <td>@item.RequestedDateUtc</td>
-                                        <td>@item.OriginatorUserName</td>
-                                        <td>@(item.ApproverUserName ?? "--")</td>
-                                        <td>--</td><!-- Reason field will be implemented by Texuna -->
+                                        <td aria-label="updated field">@item.Name</td>
+                                        <td aria-label="Old value">@item.OldValue</td>
+                                        <td aria-label="New value">@item.NewValue</td>
+                                        <td aria-label="Date changed">@item.EffectiveDateUtc</td>
+                                        <td aria-label="Date requested">@item.RequestedDateUtc</td>
+                                        <td aria-label="Suggested from">@item.OriginatorUserName</td>
+                                        <td aria-label="Approved by">@(item.ApproverUserName ?? "--")</td>
+                                        <td aria-label="Reason">--</td><!-- Reason field will be implemented by Texuna -->
                                     </tr>
                                 }
                             </tbody>
                         </table>
-
-                        <ul class="school-results-listing approval-items">
-                            @foreach (var item in Model.ChangeHistory)
-                            {
-                                <li>
-                                    <dl>
-                                        <dt>Updated field:</dt>
-                                        <dd>@item.Name</dd>
-                                        <dt>Old value:</dt>
-                                        <dd>@item.OldValue</dd>
-                                        <dt>New value:</dt>
-                                        <dd>@item.NewValue</dd>
-                                        <dt>Date changed:</dt>
-                                        <dd>@item.EffectiveDateUtc</dd>
-                                        <dt>Date requested:</dt>
-                                        <dd>@item.RequestedDateUtc</dd>
-                                        <dt>Suggested from:</dt>
-                                        <dd>@item.OriginatorUserName</dd>
-                                        <dt>Approved by:</dt>
-                                        <dd>@(item.ApproverUserName ?? "--")</dd>
-                                        <dt>Reason:</dt>
-                                        <dd>--</dd> <!-- Reason field will be implemented by Texuna -->
-                                    </dl>
-                                </li>
-                            }
-                        </ul>
+                        
                     }
                 </div>
             }

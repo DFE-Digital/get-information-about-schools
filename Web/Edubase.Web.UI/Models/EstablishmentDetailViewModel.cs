@@ -21,7 +21,7 @@ namespace Edubase.Web.UI.Models
     {
         private static Dictionary<int, string> _groupType2FieldLabelMappings = new Dictionary<int, string>
         {
-            [(int)eLookupGroupType.SingleacademyTrust] = "Single Academy trust",
+            [(int)eLookupGroupType.SingleacademyTrust] = "Single academy trust",
             [(int)eLookupGroupType.MultiacademyTrust] = "Academy trust",
             [(int)eLookupGroupType.SchoolSponsor] = "Academy sponsor",
             [(int)eLookupGroupType.Trust] = "Trust",
@@ -47,7 +47,7 @@ namespace Edubase.Web.UI.Models
 
         public EstablishmentModel Establishment { get; set; }
 
-        public GroupModel Group { get; set; }
+        public IEnumerable<GroupModel> Groups { get; set; }
 
         public IEnumerable<EstablishmentChangeDto> ChangeHistory { get; set; }
 
@@ -58,10 +58,8 @@ namespace Edubase.Web.UI.Models
 
         public bool UserCanEdit { get; set; }
 
-        public GovernorsGridViewModel GovernorsDetails { get; set; }
-
-        public string GroupFieldLabel => Group != null ? _groupType2FieldLabelMappings.Get(Group.GroupTypeId.GetValueOrDefault()) : string.Empty;
-
+        //public GovernorsGridViewModel GovernorsDetails { get; set; }
+        
         public bool IsClosed => Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
 
         public EstablishmentDetailViewModel()
@@ -71,6 +69,8 @@ namespace Edubase.Web.UI.Models
 
         public string OfstedRatingReportUrl => (Establishment.OfstedRating.HasValue 
             ? new OfstedRatingUrl(Establishment.Urn).ToString() : null as string);
+
+        public string GetGroupFieldLabel(GroupModel model) => _groupType2FieldLabelMappings[model.GroupTypeId.Value];
         
     }
 }

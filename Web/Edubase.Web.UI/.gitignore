@@ -9,7 +9,7 @@ components/
 bower_components/
 node_modules/
 out/
-
+/public/assets/scripts/
 # =====================================
 # CUSTOM MODIFICATIONS
 

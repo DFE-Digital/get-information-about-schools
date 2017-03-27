@@ -1,0 +1,227 @@
+﻿@using Edubase.Services.Enums
+@using Edubase.Common;
+@using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
+@using L = Edubase.Services.Enums.eLookupGroupType;
+@model VM
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = Model.PageTitle;
+    Layout = "_EditLayoutPage.cshtml";
+}
+
+@using (Html.BeginForm("EditGroup", "Group", new { area = "Groups" }, FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.GroupUId)
+    @Html.HiddenFor(x => x.GroupTypeMode)
+    @Html.HiddenFor(x => x.SaveMode)
+    @Html.HiddenFor(x => x.SelectedTabName)
+    @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
+
+    <div class="grid-row">
+        <div class="column-full">
+            
+            <div class="column-half">
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.GroupName)">
+                    <label for="name">@Model.FieldNamePrefix name</label>
+                    @Html.ValidationMessageFor(x => x.GroupName)
+                    @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
+                    {
+                        <input value="@Model.GroupName" disabled="disabled" class="form-control" />
+                        @Html.HiddenFor(x => x.GroupName)
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control" })
+                    }
+                </div>
+
+
+                @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
+                {
+                    <div class="form-group">
+                        <label>Companies house number</label>
+                        <input type="text" value="@Model.CompaniesHouseNumber" class="form-control" disabled="disabled" />
+                        @Html.HiddenFor(x => x.CompaniesHouseNumber)
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label>@Model.FieldNamePrefix type</label>
+                    <input type="text" value="@Model.GroupTypeName" class="form-control" disabled="disabled" />
+                    @Html.HiddenFor(x => x.GroupTypeId)
+                </div>
+
+                @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
+                {
+                    <div class="form-group">
+                        <label for="name">@Model.OpenDateLabel</label>
+                        <input value="@(Model.OpenDate.ToDateTime()?.ToString("dd/MM/yyyy") ?? "Not recorded")" disabled="disabled" class="form-control" />
+                        @Html.HiddenFor(x => x.OpenDate.Day)
+                        @Html.HiddenFor(x => x.OpenDate.Month)
+                        @Html.HiddenFor(x => x.OpenDate.Year)
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
+                        <fieldset>
+                            <legend>@Model.OpenDateLabel</legend>
+
+                            <div class="form-hint">For example, 20 03 2003</div>
+                            @Html.ValidationMessageFor(x => x.OpenDate)
+                            <span class="inline-form-control">
+                                <label for="opendate-day">Day</label>
+                                @Html.EduDayDropDownFor(x => x.OpenDate.Day,
+                                 new
+                                 {
+                                     id = "opendate-day",
+                                     @class = "form-control",
+                                     aria_describedby = "help-opendate-day",
+                                 })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="opendate-month">Month</label>
+                                @Html.EduMonthDropDownFor(x => x.OpenDate.Month,
+                                 new
+                                 {
+                                     id = "opendate-month",
+                                     @class = "form-control",
+                                     aria_describedby = "help-opendate-month",
+                                 })
+
+                            </span>
+                            <span class="inline-form-contol">
+                                <label for="opendate-year">Year</label>
+                                @Html.EduYearDropDownFor(x => x.OpenDate.Year,
+                                 new
+                                 {
+                                     id = "opendate-year",
+                                     @class = "form-control",
+                                     aria_describedby = "help-opendate-year",
+                                 })
+                            </span>
+                        </fieldset>
+                    </div>
+                }
+
+
+                @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
+                {
+                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.ClosedDate)">
+                        <fieldset>
+                            <legend>Closed date</legend>
+
+                            <div class="form-hint">For example, 20 03 2003</div>
+                            @Html.ValidationMessageFor(x => x.ClosedDate)
+                            <span class="inline-form-control">
+                                <label for="opendate-day">Day</label>
+                                @Html.EduDayDropDownFor(x => x.ClosedDate.Day,
+                                 new
+                                 {
+                                     id = "closeddate-day",
+                                     @class = "form-control",
+                                     aria_describedby = "help-closeddate-day",
+                                 })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="opendate-month">Month</label>
+                                @Html.EduMonthDropDownFor(x => x.ClosedDate.Month,
+                                 new
+                                 {
+                                     id = "closeddate-month",
+                                     @class = "form-control",
+                                     aria_describedby = "help-closeddate-month",
+                                 })
+
+                            </span>
+                            <span class="inline-form-contol">
+                                <label for="opendate-year">Year</label>
+                                @Html.EduYearDropDownFor(x => x.ClosedDate.Year,
+                                 new
+                                 {
+                                     id = "closeddate-year",
+                                     @class = "form-control",
+                                     aria_describedby = "help-closeddate-year",
+                                 })
+                            </span>
+                        </fieldset>
+                    </div>
+                }
+
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.GroupStatusId)">
+                    <label for="name">@Model.FieldNamePrefix status</label>
+                    @Html.ValidationMessageFor(x => x.GroupStatusId)
+                    @Html.DropDownListFor(x => x.GroupStatusId, Model.Statuses, "", new { @class = "form-control" })
+                </div>
+
+                @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
+                {
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" value="@Model.Address" class="form-control" disabled="disabled" />
+                        @Html.HiddenFor(x => x.Address)
+                    </div>
+                }
+
+                @if (Model.GroupType == L.ChildrensCentresGroup)
+                {
+                    <div class="form-group">
+                        <label for="name">Group manager email</label>
+                        @Html.TextBoxFor(x => x.GroupManagerEmailAddress, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                        <label for="name">Local authority</label>
+                        @Html.ValidationMessageFor(x => x.LocalAuthorityId)
+                        @if (Model.IsLocalAuthorityEditable)
+                        {
+                            @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
+                        }
+                        else
+                        {
+                            <input value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" />
+                            @Html.HiddenFor(x => x.LocalAuthorityName)
+                            @Html.HiddenFor(x => x.LocalAuthorityId)
+                        }
+                        @Html.HiddenFor(x => x.IsLocalAuthorityEditable)
+                    </div>
+                }
+
+                @if (Model.GroupUId.HasValue)
+                {
+                    <div class="form-group">
+                        <label>UID</label>
+                        <input value="@Model.GroupUId" disabled="disabled" class="form-control" />
+                    </div>
+                }
+
+                @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SchoolSponsor))
+                {
+                    <div class="form-group">
+                        <label for="groupid">Group ID</label>
+                        @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="column-full">
+
+            <br />
+            <br />
+
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+            <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
+            
+        </div>
+    </div>
+}

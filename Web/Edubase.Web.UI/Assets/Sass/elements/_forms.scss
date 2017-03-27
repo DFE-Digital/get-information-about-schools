@@ -319,3 +319,16 @@ input[disabled=disabled], select[disabled=disabled] {
 .download-step {
     margin-bottom: 3em;
 }
+
+.inline {
+    .heading-small {
+        margin-bottom: 20px;
+        display: block;
+    } 
+}
+
+
+.panel-border-narrow {
+    border-left: 5px $grey-2 solid;
+    padding: 10px 10px 20px;
+}

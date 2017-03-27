@@ -38,6 +38,14 @@ namespace Edubase.StubUserBuilder
                             {
                                 Urns = new[] { 100053 }
                             }
+                        },
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.CreateGroup,
+                            ValueObject = new CreateGroupPermissions
+                            {
+                                Types = new eLookupGroupType [] { eLookupGroupType.Federation, eLookupGroupType.Trust }
+                            }
                         }
                     }
                 }
@@ -139,6 +147,25 @@ namespace Edubase.StubUserBuilder
                                 AllUrns = true,
                                 LocalAuthorities = new[] { eLocalAuthority.Kent },
                                 EstablishmentTypes = new [] { ET.ChildrensCentre, ET.ChildrensCentreLinkedSite }
+                            }
+                        },
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.EditGroup,
+                            ValueObject = new EditGroupPermissions
+                            {
+                                AllGroups = true,
+                                LocalAuthorities = new[] { eLocalAuthority.Kent },
+                                Types = new[] { eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration }
+                            }
+                        },
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.CreateGroup,
+                            ValueObject = new CreateGroupPermissions
+                            {
+                                LocalAuthorities = new[] { eLocalAuthority.Kent },
+                                Types = new[] { eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration }
                             }
                         }
                     }
@@ -424,7 +451,7 @@ namespace Edubase.StubUserBuilder
                             ValueObject = new EditGroupPermissions
                             {
                                 AllGroups = true,
-                                Types = new[] { eLookupGroupType.ChildrensCentresGroup }
+                                Types = new[] { eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration }
                             }
                         },
                         new AttributeStatement
@@ -432,7 +459,7 @@ namespace Edubase.StubUserBuilder
                             Type = EduClaimTypes.CreateGroup,
                             ValueObject = new CreateGroupPermissions
                             {
-                                Types = new[] { eLookupGroupType.ChildrensCentresGroup }
+                                Types = new[] { eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration }
                             }
                         }
                     }

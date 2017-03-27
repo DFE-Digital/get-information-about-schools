@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ToolsViewModel
+@{
     ViewBag.Title = "Edubase";
 }
 
@@ -10,20 +11,46 @@
 
 <div class="grid-row">
     
-    @if (User.Identity.IsAuthenticated)
-    {
         <div class="column-half">
 
             <h2 class="heading-medium">Create</h2>
             <ul>
                 <li>@Html.ActionLink("Create new School", "Create", "Establishment")</li>
-                <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)</li>
-                <li>@Html.ActionLink("Create new Children's Centre Group or Collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
-                <li>@Html.ActionLink("Create new Federation", "CreateNewGroup", "Group", new { area = "Groups", type = "Federation" }, null)</li>
-                <li>@Html.ActionLink("Create new School Trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null)</li>
-                <li><a href="Tools/BulkAcademies">Bulk create new academies</a></li>
+                
+                @if (Model.UserCanCreateAcademyTrustGroup)
+                {
+                    <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)</li>
+                }
+
+                @if (Model.UserCanCreateChildrensCentreGroup)
+                {
+                    <li>@Html.ActionLink("Create new Children's Centre Group or Collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
+                }
+
+                @if (Model.UserCanCreateFederationGroup)
+                {
+                    <li>@Html.ActionLink("Create new Federation", "CreateNewGroup", "Group", new { area = "Groups", type = "Federation" }, null)</li>
+                }
+
+                @if (Model.UserCanCreateSchoolTrustGroup)
+                {
+                    <li>@Html.ActionLink("Create new School Trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null)</li>
+                }
+
+                <li>
+                    @Html.ActionLink("Bulk create new academies", "BulkAcademies", "Tools")
+                </li>
+                <li>
+                    @Html.ActionLink("Create a new establishment", "CreateEstablishment", "Tools")
+                </li>
+                <li>
+                    @Html.ActionLink("Merge / amalgamate establishments", "MergersTool", "Tools")
+                </li>
+                <li>
+                    @Html.ActionLink("Manage changes to establishment details", "ChangeApprovals", "Tools")
+                </li>
             </ul>
             
         </div>
-    }
+    
 </div>

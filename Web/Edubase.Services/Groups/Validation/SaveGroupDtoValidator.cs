@@ -57,10 +57,6 @@ namespace Edubase.Services.Groups.Validation
             RuleFor(x => x.Group.GroupTypeId).NotEmpty().WithMessage("The Group Type must not be empty");
             RuleFor(x => x.Group.StatusId).NotEmpty().WithMessage("The Group Status must not be empty");
 
-            // TODO: TBC
-            //RuleFor(x => x.Group.GroupId).NotEmpty().WithMessage("The Group ID must not be empty for MATs, SATs and School Sponsors")
-            //    .When(x => x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SchoolSponsor, GT.SingleacademyTrust));
-
             RuleFor(x => x.Group.ManagerEmailAddress).Empty().When(x => x.Group.GroupTypeId != (int)GT.ChildrensCentresGroup)
                 .WithMessage("'ManagerEmailAddress' should only be supplied when the group type is ChildrensCentresGroup");
 
@@ -68,13 +64,6 @@ namespace Edubase.Services.Groups.Validation
                 .WithMessage("There are duplicate linked establishments defined")
                 .When(x => x.LinkedEstablishments != null && x.LinkedEstablishments.Count >= 2);
                              
-            // When NOT an MAT/SAT group type
-            When(x => !x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust), () =>
-            {
-                RuleFor(x => x.Group.Address)
-                    .Empty().WithMessage("The address field should be empty/null for all group types except MultiAcademyTrust and SingleAcademyTrust");
-            });
-            
             // When an MAT/SAT group type
             When(x => x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust), () =>
             {
@@ -91,7 +80,7 @@ namespace Edubase.Services.Groups.Validation
             // When creating a new group record
             When(x => x.IsNewEntity, () =>
             {
-                RuleFor(x => x.LinkedEstablishments).Must(x=>x == null || x.Count == 0)
+                RuleFor(x => x.LinkedEstablishments).Must(x => x == null || x.Count == 0)
                     .WithMessage("For groups of type 'ChildrensCentresCollaboration' or 'ChildrensCentresGroup' no linked establishments must be defined at the point of creation of the entity.")
                     .When(x => !x.Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup));
 
@@ -110,23 +99,27 @@ namespace Edubase.Services.Groups.Validation
             // A children's centre group
             When(x => x.Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup), () =>
             {
-                RuleFor(x => x.LinkedEstablishments).Must(x => x.Count >= 2)
-                    .WithMessage("Groups of type 'ChildrensCentresCollaboration' or 'ChildrensCentresGroup' require at least 2 centres / linked establishments.");
-
-                RuleFor(x => x.LinkedEstablishments).Must(x => x.Any(e => e.CCIsLeadCentre))
-                    .WithMessage("Groups of type 'ChildrensCentresCollaboration' or 'ChildrensCentresGroup' require at a centre / linked establishment to be flagged as a lead centre with the CCIsLeadCentre property");
+                RuleFor(x => x.LinkedEstablishments)
+                    .NotNull().WithMessage("LinkedEstablishments cannot be empty / null")
+                    .When(x => !x.GetGroupUId().HasValue, ApplyConditionTo.CurrentValidator)
+                    .Must(x => x.Count >= 2).WithMessage("Groups of type 'ChildrensCentresCollaboration' or 'ChildrensCentresGroup' require at least 2 centres / linked establishments.")
+                    .When(x => x.LinkedEstablishments != null, ApplyConditionTo.CurrentValidator)
+                    .Must(x => x.Any(e => e.CCIsLeadCentre)).WithMessage("Groups of type 'ChildrensCentresCollaboration' or 'ChildrensCentresGroup' require at least one linked establishment to be flagged as a lead centre with the CCIsLeadCentre property")
+                    .When(x => x.LinkedEstablishments != null, ApplyConditionTo.CurrentValidator);
 
                 RuleForEach(x => x.LinkedEstablishments)
                     .MustAsync(async (m, e, ct) => (await _establishmentReadService.GetAsync(e.EstablishmentUrn, _principal))
                     .GetResult().EstablishmentTypeGroupId.OneOfThese(eLookupEstablishmentTypeGroup.ChildrensCentres))
-                    .WithMessage("The linked establishments' type groups must be ChildrensCentres");
+                    .WithMessage("The linked establishments' type groups must be ChildrensCentres")
+                    .When(x => x.LinkedEstablishments != null, ApplyConditionTo.CurrentValidator); ;
 
                 RuleFor(x => x.Group.LocalAuthorityId).NotNull()
-                    .WithMessage("LocalAuthorityId must be supplied for group types ChildrensCentresCollaboration and ChildrensCentresGroup");
+                    .WithMessage("LocalAuthorityId must be supplied for group types ChildrensCentresCollaboration and ChildrensCentresGroup")
+                    .When(x => x.Group != null);
             });
 
             // Not a chilren's centre group
-            When(x => !x.Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup), () =>
+            When(x => x.Group != null && !x.Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup), () =>
             {
                 RuleFor(x => x.Group.LocalAuthorityId).Null().WithMessage("LocalAuthorityId can only be supplied for group types ChildrensCentresCollaboration and ChildrensCentresGroup");
             });

@@ -1,8 +1,23 @@
 ﻿@model EstablishmentDetailViewModel
 
 <div id="school-dashboard" class="tab-content">
+    @if (Model.UserCanEdit)
+    {
+        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
+    }
+    
+    <div class="map-container">       
+        <div id="map" class="school-detail-map"
+             data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
+             data-school-name="@Model.Establishment.Name"
+             data-school-address="@Model.Establishment.GetAddress()"></div>
+        <a href="#map" id="map-toggle" class="map-toggle">Show map</a>
+    </div>
+
     <table class="borderless">
         <caption class="visually-hidden">@Model.Establishment.Name details</caption>
+    
+        @{Html.RenderPartial(@"Partials\Header");}
 
         @if (Model.DisplayPolicy.ReligiousCharacterId)
         {
@@ -27,7 +42,7 @@
         @if (Model.DisplayPolicy.ReligiousEthosId)
         {
             <tr>
-                <th scope="row">Religious ehtos:</th>
+                <th scope="row">Religious ethos:</th>
                 <td>
                     @Html.NameFor(x => x.Establishment.ReligiousEthosId)
                 </td>
@@ -141,18 +156,18 @@
                     @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded" )
                 </td>
             </tr>
-                        <tr>
-                            <th scope="row">Local authority contact email:</th>
-                            <td>
-                                @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded" )
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Local authority contact telephone number:</th>
-                            <td>
-                                @(Model.Establishment?.CCLAContactDetail?.TelephoneNumber ?? "Not recorded")
-                            </td>
-                        </tr>
+            <tr>
+                <th scope="row">Local authority contact email:</th>
+                <td>
+                    @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded" )
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Local authority contact telephone number:</th>
+                <td>
+                    @(Model.Establishment?.CCLAContactDetail?.TelephoneNumber ?? "Not recorded")
+                </td>
+            </tr>
         }
 
         @if (Model.DisplayPolicy.CCDeliveryModelId)
@@ -170,7 +185,7 @@
             <tr>
                 <th scope="row">Group/Collaboration name:</th>
                 <td>
-                    @(Model.Group?.Name ?? "Not recorded")
+                    @(Model.Groups.FirstOrDefault()?.Name ?? "Not recorded")
                 </td>
             </tr>
         }
@@ -431,4 +446,9 @@
 
 
     </table>
+    
+    @if (Model.UserCanEdit)
+    {
+        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
+    }
 </div>

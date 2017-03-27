@@ -1,6 +1,6 @@
 ﻿@using Edubase.Web.UI.Models
 @using System.Linq
-@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@using ViewModel = Edubase.Web.UI.Models.Establishments.IEstablishmentPageViewModel
 @model ViewModel
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
@@ -10,31 +10,39 @@
 }
 
 <h1 class="heading-large">@Model.Name</h1>
+<p class="urn">URN: @Model.Urn</p>
 
-@using (Html.BeginForm())
-{
-    @RenderSection("topbuttons", true)
-    
-    <div class="grid-row">
-        <div class="column-full">
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-            <div>
-                <div class="tab-wrap">
-                    <ul class="horizontal-tabs">
-                        <li><a href="@Url.Action("Edit", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "Edit", "selected-tab")">Details</a></li>
-                        @if (Model.TabDisplayPolicy.IEBT)
-                        {
-                            <li><a href="@Url.Action("EditIEBT", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(ViewContext.RouteData.Values["action"]?.ToString() == "EditIEBT", "selected-tab")">IEBT</a></li>
-                        }
-                    </ul>
-                </div>
-                <div class="tab-content-wrapper horizontal-tabs-content">
-                    @RenderBody()
-                </div>
+<div class="grid-row">
+    <div class="column-full">
+
+        <div class="horizontal-tabs-wrapper">
+            <div class="tab-wrap">
+                <ul class="horizontal-tabs">
+                    <li><a href="@Url.Action("EditDetails", "Establishment", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "details", "selected-tab")">Details</a></li>
+                        
+                    @if (Model.TabDisplayPolicy.Location)
+                    {
+                        <li><a href="@Url.Action("EditLocation", "Establishment", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "location", "selected-tab")">Location</a></li>
+                    }
+
+                    @if (Model.TabDisplayPolicy.IEBT)
+                    {
+                        <li><a href="@Url.Action("EditIEBT", "Establishment", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "iebt", "selected-tab")">IEBT</a></li>
+                    }
+
+                    @if (Model.TabDisplayPolicy.Governance)
+                    {
+                        <li><a href="@Url.Action("Edit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "governance", "selected-tab")">Governance</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="tab-content-wrapper horizontal-tabs-content">
+                @RenderBody()
             </div>
         </div>
     </div>
+</div>
 
-    
-
-}
+ 

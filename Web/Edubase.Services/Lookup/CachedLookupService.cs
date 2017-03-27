@@ -270,8 +270,16 @@ namespace Edubase.Services.Lookup
 
         public IEnumerable<LookupDto> GroupStatusesGetAll() => Auto(_lookupService.GroupStatusesGetAll);
 
-        public async Task<string> GetNameAsync(string lookupName, int? id, string domain = null) =>
-            id.HasValue ? await _mappingAsync.Get((domain != null ? string.Concat(domain, ".", lookupName) : lookupName))?.Invoke(id.Value) : null;
+        public async Task<string> GetNameAsync(string lookupName, int? id, string domain = null)
+        {
+            if (id.HasValue)
+            {
+                var key = StringUtil.ConcatNonEmpties(".", domain, lookupName);
+                if (_mappingAsync.ContainsKey(key)) return await _mappingAsync.Get(key)?.Invoke(id.Value);
+                else if (_mappingAsync.ContainsKey(lookupName)) return await _mappingAsync.Get(lookupName)?.Invoke(id.Value);
+            }
+            return null;
+        }
 
         public async Task<string> GetNameAsync(Expression<Func<int?>> expression, string domain = null) 
             => await GetNameAsync(((MemberExpression)expression.Body).Member.Name, expression.Compile()(), domain);

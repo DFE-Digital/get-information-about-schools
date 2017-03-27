@@ -1,12 +1,13 @@
 ﻿@model EstablishmentDetailViewModel
 
 <div id="school-governance" class="tab-content">
-    @if (Model.GovernorsDetails.DomainModel.HasGovernors)
+    
+    @if (Model.UserCanEdit)
     {
-        Html.RenderPartial("_Governors", Model.GovernorsDetails);
+        @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
     }
-    else
-    {
-        <p>There is no governance information for this establishment</p>
-    }
+    <div style="clear:both; float:none;margin-bottom:30px;"></div>
+
+    @{Html.RenderAction("View", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" });}
+
 </div>

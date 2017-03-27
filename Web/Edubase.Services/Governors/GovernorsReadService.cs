@@ -111,7 +111,7 @@ namespace Edubase.Services.Governors
                         retVal.ApplicableRoles.AddRange(new[] { GR.ChairOfGovernors, GR.Governor });
                     else if (EnumSets.AcademiesAndFreeSchools.Any(x => x == domainModel.TypeId))
                     {
-                        var groupModel = await _groupReadService.GetByEstablishmentUrnAsync(urn.Value);
+                        var groupModel = await _groupReadService.GetByEstablishmentUrnAsync(urn.Value); // TODO: GET ALL!!!!
                         if (groupModel != null && groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                             retVal.ApplicableRoles.AddRange(new[] { GR.ChairOfLocalGoverningBody, GR.LocalGovernor });
                         else retVal.ApplicableRoles.AddRange(commonGovernorRoleSet);
@@ -131,16 +131,7 @@ namespace Edubase.Services.Governors
             
             var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(retVal.HasFullAccess);
             retVal.ApplicableRoles.ForEach(x => retVal.RoleDisplayPolicies.Add(x, templateDisplayPolicy.Clone()));
-            
-            // Override policies at the role level
-            retVal.RoleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Governor, GR.Trustee, GR.LocalGovernor, GR.Member)).ForEach(x => x.Value.EmailAddress = false);
-            retVal.RoleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)).ForEach(x =>
-              {
-                  x.Value.PostCode = false;
-                  x.Value.DOB = false;
-                  x.Value.PreviousFullName = false;
-                  x.Value.Nationality = false;
-              });
+            ProcessDisplayPolicyOverrides(retVal.RoleDisplayPolicies);
             
             retVal.CurrentGovernors = await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, false);
             retVal.HistoricGovernors = await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, true);
@@ -148,7 +139,53 @@ namespace Edubase.Services.Governors
             return retVal;
         }
 
-        private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<eLookupGovernorRole, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)
+        /// <summary>
+        /// Returns the _Editor_ Display Policy for a given Governor role.
+        /// </summary>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        public GovernorDisplayPolicy GetEditorDisplayPolicy(GR role)
+        {
+            var retVal = new GovernorDisplayPolicy().SetFullAccess(true);
+            ProcessDisplayPolicyOverrides(new Dictionary<GR, GovernorDisplayPolicy> { [role] = retVal });
+
+            retVal.AppointmentEndDate = !(role.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)); // Story 7741: Goverance fields by role.xlsx: ** This is not editable, the date is populated on replacement with the day before the date of appointment of the replacement AO/CFO
+
+            return retVal;
+        }
+
+        private void ProcessDisplayPolicyOverrides(Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies)
+        {
+            // Override policies at the role level
+            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Governor, GR.Trustee, GR.LocalGovernor, GR.Member))
+                .ForEach(x => x.Value.EmailAddress = false);
+
+            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)).ForEach(x =>
+            {
+                x.Value.PostCode = false;
+                x.Value.DOB = false;
+                x.Value.PreviousFullName = false;
+                x.Value.Nationality = false;
+                x.Value.TelephoneNumber = false;
+                x.Value.AppointingBodyId = false;
+                x.Value.AppointmentEndDate = false;
+            });
+
+            roleDisplayPolicies.ForEach(kvp =>
+            {
+                kvp.Value.TelephoneNumber = kvp.Key.OneOfThese(GR.ChairOfGovernors, GR.ChairOfLocalGoverningBody);
+            });
+        }
+
+        public async Task<GovernorModel> GetGovernorAsync(int gid)
+        {
+            var displayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
+            var db = _dbContextFactory.Obtain();
+            var governorDataModel = await db.Governors.SingleOrThrowAsync(x => x.Id == gid);
+            return Map(governorDataModel, displayPolicy);
+        }
+
+        private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)
         {
             var db = _dbContextFactory.Obtain();
             var query = db.Governors.Where(x => (urn != null && x.EstablishmentUrn == urn || groupUId != null && x.GroupUID == groupUId) && x.RoleId != null && roles.Contains(x.RoleId.Value) && x.IsDeleted == false);
@@ -162,37 +199,43 @@ namespace Edubase.Services.Governors
             else query = query.Where(x => x.AppointmentEndDate > today || x.AppointmentEndDate == null);
 
             var dataModels = await query.ToListAsync();
-            return dataModels.Select(x =>
+            return dataModels.Select(governorDataModel =>
             {
-                var p = roleDisplayPolicies.Get((GR)x.RoleId.Value);
-                Guard.IsNotNull(p, () => new Exception("The display policy is null!"));
-                return new GovernorModel
-                {
-                    AppointingBodyId = Get(() => x.AppointingBodyId, p.AppointingBodyId),
-                    AppointingBodyName = Get(() => _cachedLookupService.GovernorAppointingBodiesGetAll().FirstOrDefault(l => l.Id == x.AppointingBodyId)?.Name, p.AppointingBodyId),
-                    AppointmentEndDate = Get(() => x.AppointmentEndDate, p.AppointmentEndDate),
-                    AppointmentStartDate = Get(() => x.AppointmentStartDate, p.AppointmentStartDate),
-                    DOB = Get(() => x.DOB, p.DOB),
-                    RoleId = x.RoleId,
-                    EmailAddress = Get(() => x.EmailAddress, p.EmailAddress),
-                    CreatedUtc = x.CreatedUtc,
-                    EstablishmentUrn = x.EstablishmentUrn,
-                    GroupUID = x.GroupUID,
-                    Id = Get(() => x.Id, p.Id),
-                    IsDeleted = x.IsDeleted,
-                    LastUpdatedUtc = x.LastUpdatedUtc,
-                    Nationality = Get(() => x.Nationality, p.Nationality),
-                    Person_FirstName = Get(() => x.Person.FirstName, p.FullName),
-                    Person_LastName = Get(() => x.Person.LastName, p.FullName),
-                    Person_MiddleName = Get(() => x.Person.MiddleName, p.FullName),
-                    Person_Title = Get(() => x.Person.Title, p.FullName),
-                    PostCode = Get(() => x.PostCode, p.PostCode),
-                    PreviousPerson_FirstName = Get(() => x.PreviousPerson.FirstName, p.PreviousFullName),
-                    PreviousPerson_LastName = Get(() => x.PreviousPerson.LastName, p.PreviousFullName),
-                    PreviousPerson_MiddleName = Get(() => x.PreviousPerson.MiddleName, p.PreviousFullName),
-                    PreviousPerson_Title = Get(() => x.PreviousPerson.Title, p.PreviousFullName)
-                };
+                var policy = roleDisplayPolicies.Get((GR)governorDataModel.RoleId.Value);
+                Guard.IsNotNull(policy, () => new Exception("The display policy is null!"));
+                return Map(governorDataModel, policy);
             });
+        }
+
+        private GovernorModel Map(Governor governor, GovernorDisplayPolicy policy)
+        {
+            return new GovernorModel
+            {
+                AppointingBodyId = Get(() => governor.AppointingBodyId, policy.AppointingBodyId),
+                AppointingBodyName = Get(() => _cachedLookupService.GovernorAppointingBodiesGetAll().FirstOrDefault(l => l.Id == governor.AppointingBodyId)?.Name, policy.AppointingBodyId),
+                AppointmentEndDate = Get(() => governor.AppointmentEndDate, true),
+                AppointmentStartDate = Get(() => governor.AppointmentStartDate, policy.AppointmentStartDate),
+                DOB = Get(() => governor.DOB, policy.DOB),
+                RoleId = governor.RoleId,
+                EmailAddress = Get(() => governor.EmailAddress, policy.EmailAddress),
+                CreatedUtc = governor.CreatedUtc,
+                EstablishmentUrn = governor.EstablishmentUrn,
+                GroupUID = governor.GroupUID,
+                Id = Get(() => governor.Id, policy.Id),
+                IsDeleted = governor.IsDeleted,
+                LastUpdatedUtc = governor.LastUpdatedUtc,
+                Nationality = Get(() => governor.Nationality, policy.Nationality),
+                Person_FirstName = Get(() => governor.Person.FirstName, policy.FullName),
+                Person_LastName = Get(() => governor.Person.LastName, policy.FullName),
+                Person_MiddleName = Get(() => governor.Person.MiddleName, policy.FullName),
+                Person_Title = Get(() => governor.Person.Title, policy.FullName),
+                PostCode = Get(() => governor.PostCode, policy.PostCode),
+                PreviousPerson_FirstName = Get(() => governor.PreviousPerson.FirstName, policy.PreviousFullName),
+                PreviousPerson_LastName = Get(() => governor.PreviousPerson.LastName, policy.PreviousFullName),
+                PreviousPerson_MiddleName = Get(() => governor.PreviousPerson.MiddleName, policy.PreviousFullName),
+                PreviousPerson_Title = Get(() => governor.PreviousPerson.Title, policy.PreviousFullName),
+                TelephoneNumber = Get(() => governor.TelephoneNumber, policy.TelephoneNumber)
+            };
         }
 
         private T Get<T>(Func<T> func, bool flag)

@@ -82,7 +82,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch
             {
                 if (skip > 100000) throw new Exception($"The skip parameter cannot be greater than 100,000");
                 if (take == 0) throw new Exception($"Argument {nameof(take)} cannot be zero.");
-                var fields = _fieldLists.Get(typeof(T), () => ReflectionHelper.GetProperties(typeof(T), writeableOnly: true));
+                var fields = _fieldLists.Get(typeof(T), () => ReflectionHelper.GetProperties(typeof(T), typeof(AZSIgnoreAttribute), true));
 
                 var result = await GetIndexClient(indexName).Documents.SearchAsync<T>(text, new SearchParameters()
                 {

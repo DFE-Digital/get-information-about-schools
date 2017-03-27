@@ -1,5 +1,6 @@
 ﻿using Edubase.Common.Spatial;
 using Edubase.Services.Domain;
+using Edubase.Services.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +25,8 @@ namespace Edubase.Services.Establishments.Models
         /// any hidden ones.
         /// </summary>
         public int AdditionalAddressesCount { get; set; }
+
+        public eGovernanceMode? GovernanceMode { get; set; }
 
         #region IEBT properties
         public string Notes { get; set; }

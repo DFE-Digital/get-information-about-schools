@@ -28,7 +28,7 @@ DfE.Views.SchoolDetails = (function () {
                     mapInitialised = true;
                 } 
                 $map.css({ display: 'block' });
-                $(this).text('Hide map');
+                $(this).text('Close map');
             }
 
             $(this).toggleClass('trigger-open');

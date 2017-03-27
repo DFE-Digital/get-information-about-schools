@@ -1,0 +1,254 @@
+﻿@{
+    ViewBag.Title = "Edubase: Create a new establishment";
+    ViewBag.bodyClasses = "create-establishment";
+}
+<div id="create-establishment">
+
+
+    <div class="grid-row">
+        <div class="column-full">
+            <h1 class="heading-large">
+                Create a school or college
+            </h1>
+            <div class="error-summary" v-show="showGlobalError">
+                <ul>
+                    <li class="error-message" v-show="establishmentNameError">
+                        You haven't entered a school or college name
+                        <a href="#establishment-name">Please enter an establishment name</a>.
+                    </li>
+                    <li class="error-message" v-show="laError">
+                        You haven't selected a local authority
+                        <a href="#local-authorities">Please select a local authority</a>.
+                    </li>
+                    <li class="error-message" v-show="phaseError">
+                        You haven't selected a phase of education
+                        <a href="#education-phase">Please select a phase</a>.
+                    </li>
+                    <li class="error-message" v-show="establishmentTypeError">
+                        You haven't selected a phase of education
+                        <a href="#establishment-type">Please select an establishment type</a>.
+                    </li>
+                    <li class="error-message" v-show="numberTypeSelectedError">
+                        Please check the establishment number selection.
+                        <a href="#generate-number-radio">Please select an establishment type</a>.
+                    </li>
+                    <li class="error-message" v-show="userEnteredNumberError">
+                        Please check the entered establishment number.
+                        <a href="#generate-number-radio">Please enter a number</a>.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <form>
+            <div class="column-full top-button-panel">
+                <div class="submit-cancel-panel">
+                    <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateForm">Create establishment</button>
+                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width">Cancel</button>
+                </div>
+            </div>
+
+            <div class="column-half">
+                <h2 class="heading-medium">New establishment</h2>
+
+                <div v-bind:class="['form-group', establishmentNameError? 'error' : '']">
+                    <label class="form-label">
+                        Establishment name
+                    </label>
+                    <span class="error-message" v-show="establishmentNameError">Please enter an establishment name</span>
+                    <input type="text" class="form-control" id="establishment-name" v-model="establishmentName" />
+                </div>
+
+                <div v-bind:class="['form-group', laError? 'error' : '']">
+                    <label class="form-label">
+                        Local authority
+                    </label>
+                    <span class="error-message" v-show="laError">Please select a local authority</span>
+                    <select id="local-authorities" class="form-control" v-model="localAuthority">
+                        <option>Please select</option>
+                    </select>
+                </div>
+
+                <div v-bind:class="['form-group', phaseError? 'error' : '']">
+                    <label class="form-label">
+                        Phase of education
+                    </label>
+                    <span class="error-message" v-show="phaseError">Please select a a phase of education</span>
+                    <select id="education-phase" class="form-control" v-model="educationPhase">
+                        <option>Please select</option>
+                    </select>
+                </div>
+
+                <div v-bind:class="['form-group', establishmentTypeError? 'error' : '']">
+                    <label class="form-label">
+                        Establishment type
+                    </label>
+                    <span class="error-message" v-show="establishmentTypeError">Please select an establishment type</span>
+                    <select id="establishment-type" class="form-control" v-model="establishmentType">
+                        <option>Please select</option>
+                    </select>
+                </div>
+            </div>
+            <div class="column-full">
+                <fieldset class="inline">
+                    <legend class="heading-small">Establishment number</legend>
+                    <div v-bind:class="['form-group', (numberTypeSelectedError) ? 'error' : '']">
+                        <span class="error-message" v-show="numberTypeSelectedError">Please select to enter a number or have one generated for you</span>
+                        <label class="block-label selection-button-radio" for="generate-number-radio">
+                            <input id="generate-number-radio" name="estab-number-wang" value="generate" type="radio" v-model="numberType">
+                            Generate number
+                        </label>
+
+                        <label class="block-label selection-button-radio" for="enter-number-radio">
+                            <input id="enter-number-radio" name="estab-number-wang" value="user-gen" type="radio" v-model="numberType">
+                            Enter number
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="column-half">
+                <div id="enter-number" v-show="numberType === 'user-gen'" v-bind:class="['form-group panel-border-narrow estab-number-wrap', (userEnteredNumberError) ? 'error' : '']">
+                    <label for="user-entered-number">Enter the establishment number</label>
+                    <span class="error-message" v-show="userEnteredNumberError">Please check the number you've entered.</span>
+                    <input class="form-control" id="user-entered-number" type="text" v-model="userEstabNumber">
+                </div>
+            </div>
+            
+
+
+            <div class="column-full">
+                <div class="submit-cancel-panel">
+                    <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateForm">Create establishment</button>
+                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width">Cancel</button>
+                </div>
+            </div>
+        </form>
+        
+
+    </div>
+    
+    
+
+</div>
+@section ViewScripts{
+    <script>
+        
+        var establishmentTypesJson,
+            establishmentPhasesJson,
+            localAuthoritiesJson,
+
+            getEstabs = $.getScript('/public/assets/scripts/JSON/establishmenttypes.js',
+                function(data) {
+                    establishmentTypesJson = JSON.parse(data);
+                    return establishmentTypesJson;
+                }
+            ),
+
+            getPhases = $.getScript('/public/assets/scripts/JSON/establishmentphases.js',
+                function(data) {
+                    establishmentPhasesJson = JSON.parse(data);
+                    return establishmentPhasesJson;
+                }
+            ),
+
+            getLocalAuthorities = $.getScript('/public/assets/scripts/JSON/localauthorities.js',
+                function(data) {
+                    localAuthoritiesJson = JSON.parse(data);
+                    return localAuthoritiesJson;
+                }
+            );
+
+        $.when(getEstabs, getPhases, getLocalAuthorities)
+            .done(function () {
+                var i, len, option,
+                    frag = document.createDocumentFragment();
+
+                for (i = 0, len = localAuthoritiesJson.length; i < len; i++) {
+                    option = document.createElement('option');
+                    var la = localAuthoritiesJson[i];
+                    option.value = la.value;
+                    option.innerHTML = la.label;
+                    frag.appendChild(option);
+
+                    document.getElementById('local-authorities').appendChild(frag);
+                }
+                for (i = 0, len = establishmentTypesJson.length; i < len; i++) {
+                    option = document.createElement('option');
+                    var estabType = establishmentTypesJson[i];
+                    option.value = estabType.value;
+                    option.innerHTML = estabType.label;
+                    frag.appendChild(option);
+
+                    document.getElementById('establishment-type').appendChild(frag);
+                }
+                for (i = 0, len = establishmentPhasesJson.length; i < len; i++) {
+                    option = document.createElement('option');
+                    var phase = establishmentPhasesJson[i];
+                    option.value = phase.value;
+                    option.innerHTML = phase.label;
+                    frag.appendChild(option);
+
+                    document.getElementById('education-phase').appendChild(frag);
+                }
+
+            });
+
+
+        var createEstablishmentApp = new Vue({
+            el: '#create-establishment',
+            data: {
+                establishmentNameError: false,
+                laError: false,
+                phaseError: false,
+                establishmentTypeError: false,
+                establishmentNumberError: false,
+                numberTypeSelectedError: false,
+                userEnteredNumberError: false,
+
+                establishmentName: '',
+                localAuthority: '',
+                educationPhase: '',
+                establishmentType: '',
+                numberType: '',
+                establishmentNumber:'123456',
+                userEstabNumber: '',
+                completed: false
+
+            },
+            computed: {
+                showGlobalError: function() {
+                    return (
+                        this.establishmentNameError ||
+                            this.laError ||
+                            this.phaseError ||
+                            this.establishmentTypeError ||
+                            this.establishmentNumberError ||
+                            this.numberTypeSelectedError ||
+                            this.userEnteredNumberError
+                    );
+                }
+            },
+            methods: {
+                validateForm: function() {
+                    this.establishmentNameError = this.establishmentName.trim() === '';
+                    this.laError = this.localAuthority.trim() === '';
+                    this.phaseError = this.educationPhase.trim() === '';
+                    this.establishmentTypeError = this.establishmentType.trim() === '';
+                    this.numberTypeSelectedError = this.numberType === '';
+                    this.userEnteredNumberError = (this.numberType === 'user-gen' && this.userEstabNumber.trim() === '');
+
+                    if (!this.showGlobalError) {
+                        this.completed = true;
+                        window.location = '/Establishment/Details/117141';
+                    }
+                }
+                
+            }
+        });
+
+
+
+        var $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']");
+        new GOVUK.SelectionButtons($blockLabels);
+    </script>
+}

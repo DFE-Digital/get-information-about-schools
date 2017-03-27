@@ -16,7 +16,7 @@ namespace Edubase.Services.Security
             => principal.GetFromClaim<CreateEstablishmentPermissions, NoCreateEstablishmentPermissions>(EduClaimTypes.CreateEstablishment);
 
         public static CreateGroupPermissions GetCreateGroupPermissions(this ClaimsPrincipal principal)
-                    => principal.GetFromClaim<CreateGroupPermissions, NoCreateGroupPermissions>(EduClaimTypes.EditEstablishment);
+                    => principal.GetFromClaim<CreateGroupPermissions, NoCreateGroupPermissions>(EduClaimTypes.CreateGroup);
 
         public static EditGroupPermissions GetEditGroupPermissions(this ClaimsPrincipal principal)
                             => principal.GetFromClaim<EditGroupPermissions, NoEditGroupPermissions>(EduClaimTypes.EditGroup);

@@ -2,8 +2,6 @@
 @using Edubase.Web.UI.Areas.Establishments.Models.Search;
 @model EstablishmentDetailViewModel
 
-<table class="borderless">
-    <caption class="visually-hidden">@Model.Establishment.Name information</caption>
     <tr>
         <th scope="row">Address:</th>
         <td>@Model.Establishment.GetAddress()</td>
@@ -88,14 +86,17 @@
         </tr>
     }
 
-    @if (Model.DisplayPolicy.GroupDetails && Model.Group != null)
+    @if (Model.DisplayPolicy.GroupDetails)
     {
-        <tr>
-            <th scope="row">@(Model.GroupFieldLabel):</th>
-            <td>
-                @Html.ActionLink(Model.Group.Name, "Details", "Group", new { id = Model.Group.GroupUID, area = "Groups" }, null)
-            </td>
-        </tr>
+        foreach (var group in Model.Groups)
+        {
+            <tr>
+                <th scope="row">@(Model.GetGroupFieldLabel(group)):</th>
+                <td>
+                    @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUID, area = "Groups" }, null)
+                </td>
+            </tr>
+        }
     }
 
     @if (Model.DisplayPolicy.GenderId)
@@ -212,4 +213,3 @@
         <tr><th scope="row">Proprietor's name:</th><td>@Model.Establishment.ProprietorName</td></tr>
     }
 
-</table>

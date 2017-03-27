@@ -179,10 +179,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlobService.cs" />
+    <Compile Include="Enums\eGovernanceMode.cs" />
     <Compile Include="Enums\EnumSets.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
+    <Compile Include="Governors\GovernorsWriteService.cs" />
+    <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorModelBase.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
+    <Compile Include="IntegrationEndPoints\AzureSearch\AZSIgnoreAttribute.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\IServiceBusEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\ServiceBusEndPoint.cs" />
     <Compile Include="Core\FileDownloadFactoryService.cs" />
@@ -347,6 +351,7 @@
     <Compile Include="MessageLoggingService.cs" />
     <Compile Include="Lookup\LookupService.cs" />
     <Compile Include="LogMessageReadService.cs" />
+    <Compile Include="Nomenclature\NomenclatureService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\StubClaimsIdConverter.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\IClaimsIdConverter.cs" />

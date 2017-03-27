@@ -2,6 +2,7 @@
 using Edubase.Common;
 using Edubase.Services.Domain;
 using FluentValidation;
+using FluentValidation.Resources;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -12,6 +13,11 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI
 {
+    using FluentValidation.Internal;
+    using FluentValidation.Resources;
+    using FluentValidation.Validators;
+    using MoreLinq;
+
     public static class LangExt
     {
         public static IEnumerable<SelectListItem> ToSelectList(this IEnumerable<LookupDto> items, int? currentId) 
@@ -77,6 +83,7 @@ namespace Edubase.Web.UI
         /// <returns></returns>
         public static IRuleBuilderOptions<T, TProperty> WithSummaryMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string message) => rule.WithState(x => message);
 
+        public static IRuleBuilderOptions<T, TProperty> WithSummaryMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> messageProvider) => rule.WithState(messageProvider);
 
     }
 }

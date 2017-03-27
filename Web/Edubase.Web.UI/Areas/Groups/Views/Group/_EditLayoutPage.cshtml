@@ -1,0 +1,42 @@
+﻿@using Edubase.Services.Enums
+@using Edubase.Common;
+@using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.IGroupPageViewModel;
+@model VM
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    //ViewBag.Title = Model.PageTitle;
+    Layout = "~/Views/Dfe/Layouts/template.cshtml";
+}
+
+@Html.ActionLink("Back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+
+<h1 class="heading-large" style="margin-top:8px; margin-bottom:16px;">@Model.GroupName</h1>
+
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="horizontal-tabs-wrapper">
+            <div class="tab-wrap">
+                <ul class="horizontal-tabs">
+                    <li>
+                        <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" 
+                           class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "details", "selected-tab")">Details</a>
+                    </li>
+                    <li><a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" 
+                           class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "links", "selected-tab")">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Edit", "Governor", new { groupUId = Model.GroupUId, area = "Governors" })"
+                           class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "governance", "selected-tab")">Governance</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content-wrapper horizontal-tabs-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+

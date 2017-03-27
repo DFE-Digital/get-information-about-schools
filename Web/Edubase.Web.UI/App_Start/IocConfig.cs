@@ -30,6 +30,7 @@ using Edubase.Web.UI.Validation;
 using Edubase.Services.IntegrationEndPoints.ServiceBus;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 using Edubase.Services.Core;
+using Edubase.Services.Nomenclature;
 
 namespace Edubase.Web.UI
 {
@@ -121,6 +122,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<EstablishmentDownloadService>().As<IEstablishmentDownloadService>();
             builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
             builder.RegisterType<EstablishmentWriteService>().As<IEstablishmentWriteService>();
+            builder.RegisterType<GovernorsWriteService>().As<IGovernorsWriteService>();
             builder.RegisterType<GroupReadService>().As<IGroupReadService>();
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();
             builder.RegisterType<LookupService>().As<ILookupService>();
@@ -134,7 +136,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<ServiceBusEndPoint>().As<IServiceBusEndPoint>();
             builder.RegisterType<FileDownloadFactoryService>().As<IFileDownloadFactoryService>();
 
-
+            builder.RegisterInstance(new NomenclatureService()).AsSelf();
         }
 
     }

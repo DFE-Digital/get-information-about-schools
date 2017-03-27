@@ -1,0 +1,107 @@
+﻿@using System.Linq
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@using System.Linq.Expressions
+@model ViewModel
+@{
+    Layout = "_EditLayoutPage.cshtml";
+}
+<div class="tab-content">
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Urn)
+    @Html.HiddenFor(x => x.Name)
+    @Html.HiddenFor(x => x.SelectedTab)
+
+    <div class="" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
+        
+        <div class="column-half">
+
+            <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveLocation">Save</button>
+            @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                
+            <div class="form-group first">
+                <label for="RSCRegionId" class="form-label" title="Regional School Comissioner">
+                    <abbr title="Regional Schools Commissioner">RSC</abbr> region
+                </label>
+                @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegionLocalAuthorites, "", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="GovernmentOfficeRegionId" class="form-label">Government office region</label>
+                @Html.DropDownListFor(x => x.GovernmentOfficeRegionId, Model.GovernmentOfficeRegions, "", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="AdministrativeDistrictId" class="form-label">District</label>
+                @Html.DropDownListFor(x => x.AdministrativeDistrictId, Model.AdministrativeDistricts, "", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="AdministrativeWardId" class="form-label">Ward</label>
+                @Html.DropDownListFor(x => x.AdministrativeWardId, Model.AdministrativeWards, "", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="ParliamentaryConstituencyId" class="form-label">Parliamentary constituency</label>
+                @Html.DropDownListFor(x => x.ParliamentaryConstituencyId, Model.ParliamentaryConstituencies, "", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="UrbanRuralId" class="form-label">Urban/rural description</label>
+                @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="GSSLAId" class="form-label"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
+                @Html.DropDownListFor(x => x.GSSLAId, Model.GSSLALookup, "", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="Easting">Easting</label>
+                @Html.TextBoxFor(x => x.Easting, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="Northing">Northing</label>
+                @Html.TextBoxFor(x => x.Northing, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label for="CASWardId" class="form-label">Census ward</label>
+                @Html.DropDownListFor(x => x.CASWardId, Model.CASWards, "", new { @class = "form-control" })
+            </div>
+
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.MSOACode)">
+                <label for="msoa">
+                    Middle Super Output Area (MSOA)
+                </label>
+                @Html.ValidationMessageFor(x => x.MSOACode)
+                @Html.TextBoxFor(x => x.MSOACode, new { @class = "form-control" })
+            </div>
+
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.LSOACode)">
+                <label for="lsoa">
+                    Lower Super Output Area (LSOA)
+                </label>
+                @Html.ValidationMessageFor(x => x.LSOACode)
+                @Html.TextBoxFor(x => x.LSOACode, new { @class = "form-control" })
+            </div>
+
+            <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveLocation">Save</button>
+            @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+            
+
+        </div>
+    </div>
+
+    @if (Model.ChangesSummary != null)
+    {
+        Html.RenderPartial("Partials/_ConfirmChanges");
+        <br />
+        <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
+        <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
+    }
+    
+</div>

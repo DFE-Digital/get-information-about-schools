@@ -46,5 +46,10 @@ namespace Edubase.Services.Governors.Models
 
         public string GetFullName() => StringUtil.ConcatNonEmpties(" ", Person_Title, Person_FirstName, Person_MiddleName, Person_LastName);
         public string GetPreviousFullName() => StringUtil.ConcatNonEmpties(" ", PreviousPerson_Title, PreviousPerson_FirstName, PreviousPerson_MiddleName, PreviousPerson_LastName);
+
+        [IntegrationEndPoints.AzureSearch.AZSIgnore]
+        public string TelephoneNumber { get; set; }
+
+        public bool IsNewEntity => !Id.HasValue;
     }
 }

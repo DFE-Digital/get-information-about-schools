@@ -13,6 +13,14 @@ module.exports = function () {
         ],
         dest: 'app/assets/govuk_frontend_toolkit/'
       }]
+    },
+    jsonStubs: {
+          files: [{
+              expand: true,
+              cwd: 'Assets/Scripts/JSON',
+              src: '*.*',
+              dest: 'public/assets/scripts/JSON/'
+      }]      
     }
   };
 };

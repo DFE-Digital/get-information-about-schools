@@ -22,10 +22,11 @@
                 $tabs = $el.find('.' + opts.tabClass),
                 $tabbedContent = $el.find('.' + opts.tabContentClass),
                 validHashes = $.map($tabs, function(elem) {
-                    return $(elem).attr('href');
+                    return $(elem).attr('href').split('#')[1];
                 }),
                 intialTabSelection = $.inArray(window.location.hash, validHashes);
 
+            
             function setTabHeight() {
                 var maxHeight = 0;
                 $tabs.each(function() {
@@ -34,13 +35,17 @@
                         maxHeight = tabHeight;
                     }
                 });
-                return maxHeight;
+                return maxHeight-1;
             }
 
-            if ($(window).width() > 641) {
+            if ($(window).width() > 641 && $el.find('.horizontal-tabs').hasClass('trio-tabs')) {
                 $tabs.height(setTabHeight());
             }
             
+            if (typeof validHashes === 'undefined' || validHashes.length === 0) {
+                return;
+            }
+
             $tabbedContent.attr('tab-index', 0);
             $tabbedContent.addClass('hidden-tab-content').attr('aria-hidden', true);
 

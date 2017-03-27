@@ -20,13 +20,13 @@ namespace Edubase.Web.UI.Filters
 
             if (filterContext.Exception is EdubaseException) // domain / purposeful exception - not logged
             {
-                //filterContext.Result = new ViewResult
-                //{
-                //    ViewName = "~/Views/Shared/DomainError.cshtml",
-                //    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", (filterContext.Exception as EdubaseException).Message } }
-                //};
+                filterContext.Result = new ViewResult
+                {
+                    ViewName = "~/Views/Shared/DomainError.cshtml",
+                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", (filterContext.Exception as EdubaseException).Message } }
+                };
 
-                //filterContext.ExceptionHandled = true;
+                filterContext.ExceptionHandled = true;
             }
             else // unhandled/unexpected exception; log it and tell the user.
             {

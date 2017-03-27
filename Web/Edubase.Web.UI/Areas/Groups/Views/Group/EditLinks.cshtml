@@ -1,0 +1,219 @@
+﻿@using Edubase.Services.Enums
+@using Edubase.Common;
+@using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
+@using L = Edubase.Services.Enums.eLookupGroupType;
+@model VM
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = Model.PageTitle;
+    Layout = "_EditLayoutPage.cshtml";
+}
+
+
+@using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.GroupUId)
+    @Html.HiddenFor(x => x.SaveMode)
+    @Html.HiddenFor(x => x.GroupTypeId)
+    @Html.HiddenFor(x => x.SelectedTabName)
+    @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
+
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-large">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
+        </div>
+    </div>
+    
+    <div class="grid-row">
+        <div class="column-half">
+            <span class="bold-xsmall">Add establishment</span>
+            <p class="font-xsmall">Enter the establishment <abbr title="Unique Reference Number">URN</abbr></p>
+            <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
+                @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+                @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box" })
+                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button button-find-inline">Find establishment</button>
+            </div>
+            @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
+            {
+                <p class="bold-xsmall">Establishment found</p>
+                <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
+
+                <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate)">
+                    <fieldset>
+                        <legend>Joined date</legend>
+                        <div class="form-hint">For example, 20 03 2003</div>
+                        @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate)
+                        <span class="inline-form-control">
+                            <label for="opendate-day">Day</label>
+                            @Html.EduDayDropDownFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.Day,
+                                new
+                                {
+                                    id = "joineddate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-joineddate-day",
+                                })
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="joineddate-month">Month</label>
+                            @Html.EduMonthDropDownFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.Month,
+                                new
+                                {
+                                    id = "joineddate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-joineddate-month",
+                                })
+
+                        </span>
+                        <span class="inline-form-contol">
+                            <label for="joineddate-year">Year</label>
+                            @Html.EduYearDropDownFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.Year,
+                                new
+                                {
+                                    id = "joineddate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-joineddate-year",
+                                })
+                        </span>
+                    </fieldset>
+                </div>
+
+                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
+                @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+
+            }
+
+            @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Name)
+            @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn)
+
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+
+            
+
+            <ul class="school-results-listing establishment-list">
+                @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
+                {
+                    <li>
+                        <h2>@Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn }, new { @class = "bold-small", target = "_blank" })</h2>
+                        <dl>
+                            <dt>Address:</dt>
+                            <dd>@Model.LinkedEstablishments.Establishments[i].Address</dd>
+                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
+                            <dd>@Model.LinkedEstablishments.Establishments[i].Urn</dd>
+                            <dt>School type:</dt>
+                            <dd>@Model.LinkedEstablishments.Establishments[i].TypeName</dd>
+                            <dt>Headteacher name:</dt>
+                            <dd>@Model.LinkedEstablishments.Establishments[i].HeadFullName</dd>
+
+                            @if (!Model.LinkedEstablishments.Establishments[i].EditMode)
+                            {
+                                <dt>Joined date:</dt>
+                                <dd>@(Model.LinkedEstablishments.Establishments[i].JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                                @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
+                            }
+
+                        </dl>
+
+                        @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
+                        {
+                            <div class="form-radio cc-lead-centre">
+                                <label>
+                                    @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { @class = "" })
+                                    Make this children's centre a lead centre
+                                </label>
+                            </div>
+
+                        }
+
+                        @if (Model.LinkedEstablishments.Establishments[i].EditMode)
+                        {
+                            <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable)">
+                                <fieldset>
+                                    <legend>Joined date</legend>
+                                    <div class="form-hint">For example, 20 03 2003</div>
+                                    @Html.ValidationMessageFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable)
+                                    <span class="inline-form-control">
+                                        <label for="opendate-day">Day</label>
+                                        @Html.EduDayDropDownFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable.Day,
+                                            new
+                                            {
+                                                id = "joineddate-day",
+                                                @class = "form-control",
+                                                aria_describedby = "help-joineddate-day",
+                                            })
+                                    </span>
+                                    <span class="inline-form-control">
+                                        <label for="joineddate-month">Month</label>
+                                        @Html.EduMonthDropDownFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable.Month,
+                                            new
+                                            {
+                                                id = "joineddate-month",
+                                                @class = "form-control",
+                                                aria_describedby = "help-joineddate-month",
+                                            })
+                                    </span>
+                                    <span class="inline-form-contol">
+                                        <label for="joineddate-year">Year</label>
+                                        @Html.EduYearDropDownFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable.Year,
+                                            new
+                                            {
+                                                id = "joineddate-year",
+                                                @class = "form-control",
+                                                aria_describedby = "help-joineddate-year",
+                                            })
+                                    </span>
+                                </fieldset>
+                            </div>
+                        }
+
+                        @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                        {
+                            <div class="form-group">
+                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
+                                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-grey">Edit</button>
+                            </div>
+                        }
+                        else if (Model.LinkedEstablishments.Establishments[i].EditMode)
+                        {
+                            <div class="form-group">
+                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit">Cancel</button>
+                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
+                            </div>
+                        }
+
+
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Name)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Urn)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Address)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].TypeName)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].HeadFullName)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].EditMode)
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="column-half">
+
+            <br />
+            <br />
+            <br />
+
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+            
+            @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+            {
+                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Submit</button>
+            }
+        </div>
+    </div>
+}
+
+

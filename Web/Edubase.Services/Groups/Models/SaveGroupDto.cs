@@ -11,7 +11,11 @@ namespace Edubase.Services.Groups.Models
         public GroupModel Group { get; set; }
         public List<EstablishmentGroupModel> LinkedEstablishments { get; set; }
 
-        public bool IsNewEntity => !Group.GroupUID.HasValue;
+        public bool IsNewEntity => !GetGroupUId().HasValue;
+
+        private int? _groupUId = null;
+
+        public int? GetGroupUId() => _groupUId ?? Group?.GroupUID;
 
         public SaveGroupDto()
         {
@@ -28,5 +32,12 @@ namespace Edubase.Services.Groups.Models
             Group = group;
             LinkedEstablishments = linkedEstablishments;
         }
+
+        public SaveGroupDto(int groupUId, List<EstablishmentGroupModel> linkedEstablishments)
+        {
+            _groupUId = groupUId;
+            LinkedEstablishments = linkedEstablishments;
+        }
+
     }
 }

@@ -1,0 +1,935 @@
+﻿@using System.Linq
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@model ViewModel
+@{
+    Layout = "_EditLayoutPage.cshtml";
+}
+<div class="tab-content">
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Urn)
+    @Html.HiddenFor(x => x.SelectedTab)
+    <div class="column-full" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
+        <div class="grid-row">
+
+            <div class="column-half">
+            
+                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                
+
+                <div class="form-group first">
+                    <label class="form-label" for="school-name">
+                        School / College name
+                    </label>
+                    @Html.TextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label"><abbr title="Unique Reference Number">URN</abbr></label>
+                    @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", placeholder = "auto-generated", @readonly = true, disabled = "disabled" })
+                </div>
+
+                <div class="form-group">
+                    <label for="school-street" class="form-label">Street</label>
+                    @Html.TextBoxFor(x => x.Address_Line1, new { maxlength = 120, id = "school-street", @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="school-locality" class="form-label">Locality</label>
+                    @Html.TextBoxFor(x => x.Address_Locality, new { maxlength = 120, id = "school-locality", @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="school-addressline3" class="form-label">Address line 3</label>
+                    @Html.TextBoxFor(x => x.Address_Line3, new { maxlength = 120, id = "school-addressline3", @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="school-town" class="form-label">City / town</label>
+                    @Html.TextBoxFor(x => x.Address_CityOrTown, new { maxlength = 120, id = "school-town", @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="school-county" class="form-label">County</label>
+                    @Html.TextBoxFor(x => x.Address_County, new { maxlength = 120, id = "school-county", @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="school-postcode" class="form-label">Post code</label>
+                    @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control" })
+                </div>
+
+
+                @for (var i = 0; i < Model.AdditionalAddresses.Count; i++)
+                {
+                    var siteNumber = i + 2;
+                    <div class="grey-bar"></div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.AdditionalAddresses[i].SiteName, $"Site {siteNumber} name")
+                        @Html.TextBoxFor(x => x.AdditionalAddresses[i].SiteName, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.AdditionalAddresses[i].Line1, "Street")
+                        @Html.TextBoxFor(x => x.AdditionalAddresses[i].Line1, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.AdditionalAddresses[i].Locality, "Locality")
+                        @Html.TextBoxFor(x => x.AdditionalAddresses[i].Locality, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.AdditionalAddresses[i].Line3, "Address 3")
+                        @Html.TextBoxFor(x => x.AdditionalAddresses[i].Line3, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.AdditionalAddresses[i].CityOrTown, "Town")
+                        @Html.TextBoxFor(x => x.AdditionalAddresses[i].CityOrTown, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.AdditionalAddresses[i].County, "County")
+                        @Html.TextBoxFor(x => x.AdditionalAddresses[i].County, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.AdditionalAddresses[i].PostCode, "Postcode")
+                        @Html.TextBoxFor(x => x.AdditionalAddresses[i].PostCode, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.AdditionalAddresses[i].TelephoneNumber, "Telephone")
+                        @Html.TextBoxFor(x => x.AdditionalAddresses[i].TelephoneNumber, new { @class = "form-control" })
+                    </div>
+                    if (Model.AllowHidingOfAddress)
+                    {
+                        <div class="form-group">
+                            <label class="block-label selection-button-checkbox">
+                                @Html.CheckBoxFor(x => x.AdditionalAddresses[i].IsRestricted, new { @class = "form-control" })
+                                Hide address from other users
+                            </label>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <button type="submit" name="@nameof(Model.AddressToRemoveId)"
+                                class="link-button font-xsmall"
+                                value="@Model.AdditionalAddresses[i].Id">
+                            Remove this address
+                        </button>
+                    </div>
+                    @Html.HiddenFor(x => x.AdditionalAddresses[i].Id)
+                }
+
+                @if (Model.AdditionalAddressesCount > 0)
+                {
+                    <div class="grey-bar"></div>
+                }
+
+                @if (Model.AdditionalAddressesCount < 4)
+                {
+                    <div class="form-group">
+                        <button type="submit" name="action" class="link-button font-xsmall" value="@ViewModel.eAction.AddAddress">Add another address</button>
+                    </div>
+                }
+
+                @Html.HiddenFor(x => x.AdditionalAddressesCount)
+
+                @if (Model.DisplayPolicy.HeadteacherDetails)
+                {
+                    <div class="form-group">
+                        <label class="form-label">
+                            @(Model.DisplayPolicy.HeadteacherLabel) title
+                        </label>
+                        @Html.DropDownListFor(x => x.HeadTitleId, Model.HeadTitles, "", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="headfirstname">
+                            @(Model.DisplayPolicy.HeadteacherLabel) first name
+                        </label>
+                        @Html.TextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", placeholder = "First name" })
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            @(Model.DisplayPolicy.HeadteacherLabel) last name
+                        </label>
+                        @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.AgeRange)
+                {
+                    <div class="form-group range-group">
+                        <fieldset>
+                            <legend>Age range</legend>
+                            <span class="inline-form-control">
+                                <label for="agerange-from" class="form-label">
+                                    Low
+                                </label>
+                                @Html.TextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control age-field", placeholder = "From", type = "number", min = 1, max = 99 })
+
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="agerange-to" class="form-label">High</label>
+                                @Html.TextBoxFor(x => x.StatutoryHighAge, new { maxlength = 120, id = "agerange-to", @class = "form-control age-field", placeholder = "To", type = "number", min = 1, max = 99 })
+                            </span>
+                        </fieldset>
+                    </div>
+                }
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                    <label for="EducationPhaseId" class="form-label">Phase of education</label>
+                    @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "", new { @class = "form-control" })
+                </div>
+
+                @if (Model.DisplayPolicy.TypeId)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
+                        <label class="form-label" for="TypeId">Establishment type</label>
+                        @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.FurtherEducationTypeId)
+                {
+                    <div class="form-group">
+                        <label class="form-label" for="FurtherEducationTypeId">Further education type</label>
+                        @Html.DropDownListFor(x => x.FurtherEducationTypeId, Model.FurtherEducationTypes, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.GenderId)
+                {
+                    <div class="form-group">
+                        <label class="form-label" for="GenderId">Gender of entry</label>
+                        @Html.DropDownListFor(x => x.GenderId, Model.Genders, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                    <label for="LocalAuthorityId" class="form-label">Local authority</label>
+                    @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
+                </div>
+
+
+                @if (Model.DisplayPolicy.EstablishmentNumber)
+                {
+                    <div class="form-group">
+                        <fieldset class="inline-fields">
+                            <legend>DfE number</legend>
+                            <p class="form-hint">LA code and Establishment number</p>
+                            <label class="form-label visually-hidden" for="lacode"> LA code</label>
+                            <input type="text" id="lacode" class="form-control" size="5" disabled="disabled" value="@Model.LocalAuthorityId" />
+                            <label class="form-label visually-hidden" for="establishmentnumber">Establishment number</label>
+                            @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control" })
+                        </fieldset>
+                    </div>
+                }
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
+                    <label class="form-label" for="ukprn">UK provider reference number (UKPRN)</label>
+                    @Html.ValidationMessageFor(x => x.UKPRN)
+                    @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", type = "text" })
+                </div>
+
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
+                    <label for="status">Establishment status</label>
+                    @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "form-control" })
+                </div>
+
+                @if (Model.DisplayPolicy.AdmissionsPolicyId)
+                {
+                    <div class="form-group">
+                        <label for="admissionspolicyid" class="form-label">Admissions policy</label>
+                        @Html.DropDownListFor(x => x.AdmissionsPolicyId, Model.AdmissionsPolicies, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.Contact_WebsiteAddress)
+                {
+                    <div class="form-group">
+                        <label for="Contact_WebsiteAddress" class="form-label">Website</label>
+                        @Html.TextBoxFor(x => x.Contact_WebsiteAddress, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.Contact_TelephoneNumber)
+                {
+                    <div class="form-group">
+                        <label for="Contact_TelephoneNumber" class="form-label">Telephone</label>
+                        @Html.TextBoxFor(x => x.Contact_TelephoneNumber, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.OfstedRatingDetails)
+                {
+
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.OfstedRating)">
+                        @Html.LabelFor(x => x.OfstedRating, "Ofsted rating")
+                        @Html.TextBoxFor(x => x.OfstedRating, new { @class = "form-control", type = "number", min = "0", max = "5" })
+                    </div>
+
+                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OfstedInspectionDate)">
+                        <fieldset>
+                            <legend>Ofsted last inspection</legend>
+                            <div class="form-hint">For example, 20 03 2003</div>
+
+                            @Html.ValidationMessageFor(x => x.OfstedInspectionDate)
+                            <span class="inline-form-control">
+                                <label for="ofstedinspectiondate-day">Day</label>
+                                @Html.EduDayDropDownFor(x => x.OfstedInspectionDate.Day,
+                                new
+                                {
+                                    id = "ofstedinspectiondate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-ofstedinspectiondate-day",
+                                })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="ofstedinspectiondate-month">Month</label>
+                                @Html.EduMonthDropDownFor(x => x.OfstedInspectionDate.Month,
+                                new
+                                {
+                                    id = "ofstedinspectiondate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-ofstedinspectiondate-month",
+                                })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="ofstedinspectiondate-year">Year</label>
+                                @Html.EduYearDropDownFor(x => x.OfstedInspectionDate.Year,
+                                new
+                                {
+                                    id = "ofstedinspectiondate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-ofstedinspectiondate-year",
+                                })
+                            </span>
+                        </fieldset>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ofsted-report" class="form-label">Ofsted report link</label>
+                        <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.InspectorateId)
+                {
+                    <div class="form-group">
+                        <label for="InspectorateId">Inspectorate</label>
+                        @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ProprietorName)
+                {
+                    <div class="form-group">
+                        <label for="proprietor" class="form-label">Proprietor's name</label>
+                        @Html.TextBoxFor(x => x.ProprietorName, new { maxlength = 120, id = "proprietor", @class = "form-control" })
+                    </div>
+                }
+            </div>
+
+            <h2 class="heading-medium create-edit-section-break">Details</h2>
+            <div class="column-half">
+
+                @if (Model.DisplayPolicy.ReligiousCharacterId)
+                {
+                    <div class="form-group">
+                        <label for="religious-character">Religious character</label>
+                        @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new { @class = "form-control", id = "religious-character" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.DioceseId)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
+                        <label for="diocese">Diocese</label>
+                        @Html.DropDownListFor(x => x.DioceseId, Model.Dioceses, "", new { id = "diocese", @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ReligiousEthosId)
+                {
+                    <div class="form-group">
+                        <label for="religious-ethos">Religious ethos</label>
+                        @Html.DropDownListFor(x => x.ReligiousEthosId, Model.ReligiousEthoses, "", new { @class = "form-control", id = "religious-ethos" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ProvisionBoardingId)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
+                        <label for="boarders">Boarders</label>
+                        @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control", id = "boarders" })
+                    </div>
+
+                }
+
+                @if (Model.DisplayPolicy.ProvisionNurseryId)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
+                        <label for="nursery">Nursery provision</label>
+                        @Html.DropDownListFor(x => x.ProvisionNurseryId, Model.NurseryProvisions, "", new { @class = "form-control", id = "nursery" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
+                        <label for="sixthform">Official sixth form</label>
+                        @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, Model.OfficialSixthFormProvisions, "", new { @class = "form-control", id = "sixthform" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.Capacity)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.Capacity)">
+                        <label for="school-capacity">School capacity</label>
+                        @Html.TextBoxFor(x => x.Capacity, new { id = "school-capacity", @class = "form-control", type = "number" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.Section41ApprovedId)
+                {
+                    <div class="form-group">
+                        <label for="section-41">Section 41 approved</label>
+                        @Html.DropDownListFor(x => x.Section41ApprovedId, Model.Section41ApprovedItems, "", new { @class = "form-control", id = "section-41" })
+                    </div>
+                }
+
+                <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
+                    <fieldset>
+                        <legend>Open date</legend>
+
+                        <div class="form-hint">For example, 20 03 2003</div>
+                        @Html.ValidationMessageFor(x => x.OpenDate)
+                        <span class="inline-form-control">
+                            <label for="opendate-day">Day</label>
+                            @Html.EduDayDropDownFor(x => x.OpenDate.Day,
+                                new
+                                {
+                                    id = "opendate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-opendate-day",
+                                })
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="opendate-month">Month</label>
+                            @Html.EduMonthDropDownFor(x => x.OpenDate.Month,
+                                new
+                                {
+                                    id = "opendate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-opendate-month",
+                                })
+
+                        </span>
+                        <span class="inline-form-contol">
+                            <label for="opendate-year">Year</label>
+                            @Html.EduYearDropDownFor(x => x.OpenDate.Year,
+                                new
+                                {
+                                    id = "opendate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-opendate-year",
+                                })
+                        </span>
+                    </fieldset>
+                </div>
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
+                    <label for="reason-establishment-opened">Reason establishment opened</label>
+                    @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
+                    @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "form-control", id = "reason-establishment-opened" })
+                </div>
+
+
+                <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.CloseDate)">
+                    <fieldset>
+                        <legend>Close date</legend>
+                        <div class="form-hint">For example, 20 03 2003</div>
+
+                        @Html.ValidationMessageFor(x => x.CloseDate)
+                        <span class="inline-form-control">
+                            <label for="Closedate-day">Day</label>
+                            @Html.EduDayDropDownFor(x => x.CloseDate.Day,
+                                new
+                                {
+                                    id = "Closedate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-day",
+                                })
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="Closedate-month">Month</label>
+                            @Html.EduMonthDropDownFor(x => x.CloseDate.Month,
+                                new
+                                {
+                                    id = "Closedate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-month",
+                                })
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="Closedate-year">Year</label>
+                            @Html.EduYearDropDownFor(x => x.CloseDate.Year,
+                                new
+                                {
+                                    id = "Closedate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-year",
+                                })
+                        </span>
+                    </fieldset>
+                </div>
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
+                    <label for="reason-establishment-closed">Reason establishment closed</label>
+                    @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control", id = "reason-establishment-closed" })
+                </div>
+
+                @if (Model.DisplayPolicy.ProvisionSpecialClassesId)
+                {
+                    <div class="form-group">
+                        <label class="form-label" for="special-classes">
+                            Special classes
+                        </label>
+                        @Html.DropDownListFor(x => x.ProvisionSpecialClassesId, Model.SpecialClassesProvisions, "", new { @class = "form-control", id = "special-classes" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.SENStat)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.SENStat)
+                        @Html.TextBoxFor(x => x.SENStat, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.SENNoStat)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.SENNoStat)
+                        @Html.TextBoxFor(x => x.SENNoStat, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.Contact_EmailAddress)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.Contact_EmailAddress, "Email address")
+                        @Html.TextBoxFor(x => x.Contact_EmailAddress, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ContactAlt_EmailAddress, "Alternative email address")
+                        @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new { @class = "form-control" })
+                    </div>
+                }
+
+
+                @if (Model.DisplayPolicy.TypeOfSENProvisionList)
+                {
+                    <div class="form-group grouped-controls">
+                        <label>Type of SEN provision</label>
+                        @Html.DropDownListFor(x => x.SEN1Id, Model.SENProvisions1, "", new { @class = "form-control", id = "sen-provision0" })
+                        @Html.DropDownListFor(x => x.SEN2Id, Model.SENProvisions2, "", new { @class = "form-control", id = "sen-provision1" })
+                        @Html.DropDownListFor(x => x.SEN3Id, Model.SENProvisions3, "", new { @class = "form-control", id = "sen-provision2" })
+                        @Html.DropDownListFor(x => x.SEN4Id, Model.SENProvisions4, "", new { @class = "form-control", id = "sen-provision3" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.TeenageMothersProvisionId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.TeenageMothersProvisionId)
+                        @Html.DropDownListFor(x => x.TeenageMothersProvisionId, Model.TeenageMothersProvisions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.TeenageMothersCapacity)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.TeenageMothersCapacity)
+                        @Html.TextBoxFor(x => x.TeenageMothersCapacity, new { @class = "form-control", type = "number" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ChildcareFacilitiesId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.ChildcareFacilitiesId)
+                        @Html.DropDownListFor(x => x.ChildcareFacilitiesId, Model.ChildcareFacilitiesProvisions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PRUSENId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PRUSENId)
+                        @Html.DropDownListFor(x => x.PRUSENId, Model.PRUSENOptions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PRUEBDId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PRUEBDId)
+                        @Html.DropDownListFor(x => x.PRUEBDId, Model.PRUEBDOptions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PlacesPRU)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PlacesPRU)
+                        @Html.TextBoxFor(x => x.PlacesPRU, new { @class = "form-control", type = "number" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PruFulltimeProvisionId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PruFulltimeProvisionId)
+                        @Html.DropDownListFor(x => x.PruFulltimeProvisionId, Model.PruFulltimeProvisionOptions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.PruEducatedByOthersId)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.PruEducatedByOthersId)
+                        @Html.DropDownListFor(x => x.PruEducatedByOthersId, Model.PruEducatedByOthersOptions, "", new { @class = "form-control" })
+                    </div>
+                }
+
+
+                @if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
+                {
+                    <div class="form-group">
+                        <label for="resourced-provision-type">
+                            Type of resourced provision
+                        </label>
+                        @Html.DropDownListFor(x => x.TypeOfResourcedProvisionId, Model.TypeOfResourcedProvisions, "", new { @class = "form-control", id = "resourced-provision-type" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
+                {
+                    <div class="form-group">
+                        <label for="resourced-provision-headcount">Resourced provision number on roll</label>
+                        @Html.TextBoxFor(x => x.ResourcedProvisionOnRoll, new { @class = "form-control", id = "resourced-provision-headcount", type = "number" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x=>x.ResourcedProvisionCapacity, "Resourced provision capacity")
+                        @Html.TextBoxFor(x => x.ResourcedProvisionCapacity, new { @class = "form-control", type = "number" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.SenUnitOnRoll)
+                {
+                    <div class="form-group">
+                        <label for="sen-unit-number">SEN unit number on roll</label>
+                        @Html.TextBoxFor(x => x.SenUnitOnRoll, new { @class = "form-control", id = "sen-unit-number", type = "number" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.SenUnitCapacity)
+                {
+                    <div class="form-group">
+                        <label for="sen-unit-capacity">SEN unit capacity</label>
+                        @Html.TextBoxFor(x => x.SenUnitCapacity, new { @class = "form-control", id = "sen-unit-capacity", type = "number" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.BSOInspectorateId)
+                {
+                    <div class="form-group">
+                        <label for="bso-inspectorate">BSO: Inspectorate name</label>
+                        @Html.DropDownListFor(x => x.BSOInspectorateId, Model.BSOInspectorates, "", new { @class = "form-control", id = "bso-inspectorate" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(x => x.BSOInspectorateReportUrl, "Inspectorate report")
+                        @Html.TextBoxFor(x => x.BSOInspectorateReportUrl, new { @class = "form-control" })
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
+                {
+                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.BSODateOfLastInspectionVisit)">
+                        <fieldset>
+                            <legend>BSO: Date of last inspection</legend>
+                            <div class="form-hint">For example, 20 03 2003</div>
+
+                            @Html.ValidationMessageFor(x => x.BSODateOfLastInspectionVisit)
+                            <span class="inline-form-control">
+                                <label for="Closedate-day">Day</label>
+                                @Html.EduDayDropDownFor(x => x.BSODateOfLastInspectionVisit.Day,
+                                new
+                                {
+                                    id = "Closedate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-day",
+                                })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="Closedate-month">Month</label>
+                                @Html.EduMonthDropDownFor(x => x.BSODateOfLastInspectionVisit.Month,
+                                new
+                                {
+                                    id = "Closedate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-month",
+                                })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="Closedate-year">Year</label>
+                                @Html.EduYearDropDownFor(x => x.BSODateOfLastInspectionVisit.Year,
+                                new
+                                {
+                                    id = "Closedate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-year",
+                                })
+                            </span>
+                        </fieldset>
+                    </div>
+                }
+
+                @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
+                {
+                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.BSODateOfNextInspectionVisit)">
+                        <fieldset>
+                            <legend>BSO: Next inspection visit</legend>
+                            <div class="form-hint">For example, 20 03 2003</div>
+                            <span class="inline-form-control">
+                                @Html.ValidationMessageFor(x => x.BSODateOfNextInspectionVisit)
+                                <label for="Closedate-day">Day</label>
+                                @Html.EduDayDropDownFor(x => x.BSODateOfNextInspectionVisit.Day,
+                                new
+                                {
+                                    id = "Closedate-day",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-day",
+                                })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="Closedate-month">Month</label>
+                                @Html.EduMonthDropDownFor(x => x.BSODateOfNextInspectionVisit.Month,
+                                new
+                                {
+                                    id = "Closedate-month",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-month",
+                                })
+                            </span>
+                            <span class="inline-form-control">
+                                <label for="Closedate-year">Year</label>
+                                @Html.EduYearDropDownFor(x => x.BSODateOfNextInspectionVisit.Year,
+                                new
+                                {
+                                    id = "Closedate-year",
+                                    @class = "form-control",
+                                    aria_describedby = "help-Closedate-year",
+                                })
+                            </span>
+                        </fieldset>
+                    </div>
+                }
+
+
+                @if (Model.TabDisplayPolicy.Governance)
+                {
+                    <h2 class="heading-medium  create-edit-section-break">Governance</h2>
+                    <p>Placeholder</p>
+                }
+
+
+                @*@if (Model.Urn.HasValue)
+                {
+                    <a id="addlinkedschool"></a>
+                    <h2 class="heading-medium create-edit-section-break">Links</h2>
+                    <div class="link-establishment-form">
+                        <h2 class="bold-xsmall">Link new school</h2>
+                        <p class="font-xsmall">Enter the Establishment <abbr title="Unique Reference Number">URN</abbr></p>
+                        @Html.TextBoxFor(x => x.LinkedSearchUrn, new { maxlength = 120, id = "linkedsearchurn", @class = "form-control " })
+                        &nbsp;&nbsp;
+                        <button type="button" class="button button-next font-xsmall" name="action" value="@ViewModel.eAction.FindEstablishment">Search</button>
+                    </div>
+
+                    if (Model.LinkedUrnToAdd.HasValue)
+                    {
+                        <div class="establishment-link-results">
+
+                            <h3 class="bold-xsmall">Establishment found</h3>
+                            <p class="font-xsmall">@Model.LinkedEstabNameToAdd</p>
+                            @Html.HiddenFor(x => x.LinkedEstabNameToAdd)
+                            @Html.HiddenFor(x => x.LinkedUrnToAdd)
+                            <table class="borderless estab-links add-linked-estab">
+                                <tr>
+                                    <td>Link type</td>
+                                    <td>
+                                        <div class="form-group @Html.ValidationCssClassFor(x => x.LinkTypeToAdd)">
+                                            @Html.ValidationMessageFor(x => x.LinkTypeToAdd)
+                                            @Html.EnumDropDownListFor(x => x.LinkTypeToAdd, new { @class = "form-control" })
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Date linked</td>
+                                    <td>
+                                        <div class="form-group drop-down-date @Html.ValidationCssClassFor(x => x.LinkedDateToAdd)">
+                                            @Html.ValidationMessageFor(x => x.LinkedDateToAdd)
+                                            @Html.DropDownListFor(x => x.LinkedDateToAdd.Day,
+                                            Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                                new
+                                                {
+                                                    id = "LinkedDateToAdd-day",
+                                                    @class = "form-control",
+                                                    aria_describedby = "help-LinkedDateToAdd-day"
+                                                })
+
+                                            @Html.DropDownListFor(x => x.LinkedDateToAdd.Month,
+                                            Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                                new
+                                                {
+                                                    id = "LinkedDateToAdd-month",
+                                                    @class = "form-control",
+                                                    aria_describedby = "help-Closedate-month"
+                                                })
+
+                                            @Html.DropDownListFor(x => x.LinkedDateToAdd.Year,
+                                            Enumerable.Range(1900, 200).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
+                                                new
+                                                {
+                                                    id = "LinkedDateToAdd-year",
+                                                    @class = "form-control",
+                                                    aria_describedby = "help-LinkedDateToAdd-year"
+                                                })
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="linked-establishment-submit-wrapper">
+                                        <button type="button" class="button mobile-full-width" name="action" value="@ViewModel.eAction.AddLinkedSchool">Add</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+
+
+                    if (Model.Links.Count > 0)
+                    {
+                        @Html.HiddenFor(x => x.LinkedItemPositionToRemove)
+                        <table class="estab-links edit-estab-links mi">
+                            <thead>
+                                <tr>
+                                    <th><abbr title="Unique Reference Number">URN</abbr></th>
+                                    <th>Establishment name</th>
+                                    <th>Link type</th>
+                                    <th>Date linked</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Links.Count; i++)
+                                {
+                                    var l = Model.Links[i];
+                                    <tr>
+                                        <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
+                                        <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
+                                        <td>@l.Type</td>
+                                        <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                                        <td>
+                                            <button type="button" name="action" class="link-button font-xsmall"
+                                                    value="RemoveLinkedSchool" onclick="$('#LinkedItemPositionToRemove').val(@i);">
+                                                Remove
+                                            </button>
+                                            @Html.HiddenFor(x => x.Links[i].Id)
+                                            @Html.HiddenFor(x => x.Links[i].Urn)
+                                            @Html.HiddenFor(x => x.Links[i].Name)
+                                            @Html.HiddenFor(x => x.Links[i].Type)
+                                            @Html.HiddenFor(x => x.Links[i].LinkDate)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <div class="mvo">
+                            @for (int i = 0; i < Model.Links.Count; i++)
+                            {
+                                var l = Model.Links[i];
+                                <table class="estab-links">
+                                    <tbody>
+                                        <tr>
+                                            <th><abbr title="Unique Reference Number">URN</abbr></th>
+                                            <td>@Html.ActionLink(l.Urn.ToString(), "Details", "Establishment", new { id = l.Urn }, null)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Establishment name</th>
+                                            <td>@Html.ActionLink(l.Name, "Details", "Establishment", new { id = l.Urn }, null)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Type of link</th>
+                                            <td>@l.Type</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Date linked</th>
+                                            <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <button type="button" name="action" class="link-button font-xsmall"
+                                                        value="RemoveLinkedSchool" onclick="$('#LinkedItemPositionToRemove').val(@i);">
+                                                    Remove
+                                                </button>
+                                            </td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <h2 class="heading-medium create-edit-section-break">Links</h2>
+
+                    <h3>Placeholder</h3>
+                }*@
+
+
+                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                
+                
+
+            </div>
+
+        </div>
+    </div>
+
+    @if (Model.ChangesSummary != null)
+    {
+        Html.RenderPartial("Partials/_ConfirmChanges");
+        <br />
+        <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
+        <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
+    }
+    
+</div>
