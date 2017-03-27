@@ -38,7 +38,7 @@
                     <div class="tab-content">
                         <a href="#" class="button button-grey" v-on:click.prevent="allDone">Cancel</a>
 
-                        <h2 class="heading-medium">Address</h2>
+                        <h2 class="heading-medium lookup=heading">Address</h2>
                         <form>
                             <fieldset class="column-half">
                                 <legend class="heading-small">Address details</legend>
@@ -105,13 +105,13 @@
                                         <label class="form-label" for="estab-postcode" v-show="!isUk">Postcode / Zipcode</label>
                                         <input type="text" id="estab-postcode" class="form-control postcode-field" :disabled="isUk ? 'disabled': null" v-model="postcode" />
                                     </div>
-
+                                    <a href="#" v-show="isUk" v-on:click.prevent="resetSearch">Wrong postcode?</a>
 
                                 </div>
                             </fieldset>
 
                             <div class="button-row">
-                                <input type="submit" class="button" value="Save" v-show="step === 2" v-on:click.prevent="allDone"/>
+                                <input type="submit" class="button" value="Save" v-show="step === 2 || !isUk" v-on:click.prevent="allDone"/>
                                 <a href="#" class="button button-grey" v-on:click.prevent="allDone">Cancel</a>
                             </div>
 
@@ -152,6 +152,19 @@
                 },
                 allDone: function() {
                     window.history.back();
+                },
+                resetSearch: function() {
+                    this.ajaxError = false;
+                    this.postcodeError = false;
+                    this.postcode = '';
+                    this.addressLineOne = '';
+                    this.addressLineTwo = '';
+                    this.addressLineThree = '';
+                    this.town = '';
+                    this.county = '';
+                    this.country = '';
+
+                    this.step = 0;
                 },
                 switchCountry: function() {
                     this.isUk = this.selectedCountry === 'UK';
