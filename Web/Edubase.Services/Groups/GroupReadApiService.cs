@@ -43,7 +43,7 @@ namespace Edubase.Services.Groups
         private readonly ICachedEstablishmentGroupReadRepository _cachedEstablishmentGroupReadRepository;
         private readonly ICachedLookupService _cachedLookupService;
         private readonly ISecurityService _securityService;
-        private readonly HttpClient _httpClient;
+        private readonly HttpClientWrapper _httpClient;
 
         /// <summary>
         /// Allow these roles to see establishments of all statuses
@@ -58,7 +58,7 @@ namespace Edubase.Services.Groups
             ICachedEstablishmentGroupReadRepository cachedEstablishmentGroupReadRepository,
             ICachedLookupService cachedLookupService,
             ISecurityService securityService,
-            HttpClient httpClient)
+            HttpClientWrapper httpClient)
         {
             _dbContext = dc;
             _mapper = mapper;
@@ -80,9 +80,7 @@ namespace Edubase.Services.Groups
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
-            var apiResult = await _httpClient.GetAsync($"{ApiSuggestPath}?q={text}&take={take}");
-            apiResult.EnsureSuccessStatusCode();
-            return await apiResult.Content.ReadAsAsync<List<GroupSuggestionItem>>();
+            return await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}");
         }
 
         public async Task<AzureSearchResult<Doc>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)

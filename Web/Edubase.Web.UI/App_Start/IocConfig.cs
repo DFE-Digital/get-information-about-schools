@@ -150,6 +150,8 @@ namespace Edubase.Web.UI
             builder.RegisterInstance(new NomenclatureService()).AsSelf();
 
             builder.RegisterInstance(new HttpClient {BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"])}).SingleInstance().AsSelf();
+            builder.RegisterType<HttpClientWrapper>().SingleInstance().AsSelf();
+
         }
 
     }

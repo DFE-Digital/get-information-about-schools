@@ -46,7 +46,7 @@ namespace Edubase.Services.Establishments
         private readonly IEstablishmentReadRepository _establishmentRepository;
         private readonly ILAReadRepository _laRepository;
         private readonly ISecurityService _securityService;
-        private readonly HttpClient _httpClient;
+        private readonly HttpClientWrapper _httpClient;
 
         /// <summary>
         /// Allow these roles to see establishments of all statuses
@@ -72,7 +72,7 @@ namespace Edubase.Services.Establishments
             ICachedEstablishmentReadRepository establishmentRepository,
             ICachedLAReadRepository laRepository,
             ISecurityService securityService,
-            HttpClient httpClient)
+            HttpClientWrapper httpClient)
         {
             _dbContext = dbContext;
             _mapper = mapper;
@@ -194,9 +194,7 @@ namespace Edubase.Services.Establishments
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
-            var apiResult = await _httpClient.GetAsync($"{ApiSuggestPath}?q={text}&take={take}");
-            apiResult.EnsureSuccessStatusCode();
-            return await apiResult.Content.ReadAsAsync<List<EstablishmentSuggestionItem>>();
+            return await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}");
         }
 
         public int[] GetPermittedStatusIds(IPrincipal principal)

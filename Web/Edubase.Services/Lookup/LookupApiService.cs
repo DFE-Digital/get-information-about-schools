@@ -14,27 +14,24 @@ namespace Edubase.Services.Lookup
         private const string ApiLocalAuthorityLookupPath = "/lookup/local-authorities";
         private const string ApiGovernorRolesLookupPath = "/lookup/governor-roles";
 
-        private Lazy<ApplicationDbContext> _dc = new Lazy<ApplicationDbContext>(ApplicationDbContext.Create);
-        private ApplicationDbContext DataContext => _dc.Value;
-        private HttpClient _httpClient;
+        private readonly HttpClientWrapper _httpClient;
+        private readonly Lazy<ApplicationDbContext> _dc = new Lazy<ApplicationDbContext>(ApplicationDbContext.Create);
 
-        public LookupApiService(HttpClient httpClient)
+        private ApplicationDbContext DataContext => _dc.Value;
+
+        public LookupApiService(HttpClientWrapper httpClient)
         {
             _httpClient = httpClient;
         }
 
         public async Task<IEnumerable<LookupDto>> LocalAuthorityGetAllAsync()
         {
-            var result = await _httpClient.GetAsync(ApiLocalAuthorityLookupPath);
-            result.EnsureSuccessStatusCode();
-            return await result.Content.ReadAsAsync<List<LookupDto>>();
+            return await _httpClient.GetAsync<List<LookupDto>>(ApiLocalAuthorityLookupPath);
         }
 
         public IEnumerable<LookupDto> LocalAuthorityGetAll()
         {
-            var result = _httpClient.GetAsync(ApiLocalAuthorityLookupPath).Result;
-            result.EnsureSuccessStatusCode();
-            return result.Content.ReadAsAsync<List<LookupDto>>().Result;
+            return _httpClient.Get<List<LookupDto>>(ApiLocalAuthorityLookupPath);
         }
 
         public async Task<IEnumerable<LookupDto>> AdmissionsPoliciesGetAllAsync() => (await DataContext.LookupAdmissionsPolicies.ToArrayAsync()).Select(x => new LookupDto(x));
@@ -70,16 +67,12 @@ namespace Edubase.Services.Lookup
 
         public async Task<IEnumerable<LookupDto>> GovernorRolesGetAllAsync()
         {
-            var result = await _httpClient.GetAsync(ApiGovernorRolesLookupPath);
-            result.EnsureSuccessStatusCode();
-            return await result.Content.ReadAsAsync<List<LookupDto>>();
+            return await _httpClient.GetAsync<List<LookupDto>>(ApiGovernorRolesLookupPath);
         }
 
         public IEnumerable<LookupDto> GovernorRolesGetAll()
         {
-            var result = _httpClient.GetAsync(ApiGovernorRolesLookupPath).Result;
-            result.EnsureSuccessStatusCode();
-            return result.Content.ReadAsAsync<List<LookupDto>>().Result;
+            return _httpClient.Get<List<LookupDto>>(ApiGovernorRolesLookupPath);
         }
 
         public async Task<IEnumerable<LookupDto>> GovernorAppointingBodiesGetAllAsync() => (await DataContext.LookupGovernorAppointingBodies.ToArrayAsync()).Select(x => new LookupDto(x));

@@ -187,6 +187,7 @@
     <Compile Include="Governors\Models\GovernorModelBase.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
     <Compile Include="Groups\GroupReadApiService.cs" />
+    <Compile Include="HttpClientWrapper.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\AZSIgnoreAttribute.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\IServiceBusEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\ServiceBusEndPoint.cs" />
