@@ -6,8 +6,6 @@
     ViewBag.postcodeDemo = Request["postcodeDemo"];
 }
 <div class="tab-content">
-    @ViewBag.postcodeDemo
-
     @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.Urn)
     @Html.HiddenFor(x => x.SelectedTab)
