@@ -1,5 +1,6 @@
 ﻿namespace Edubase.Services
 {
+    using System;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -20,8 +21,7 @@
 
         public T Get<T>(string uri)
         {
-            var result = _httpClient.GetAsync(uri).Result;
-            return ParseHttpResponseMessage<T>(result);
+            throw new NotImplementedException();
         }
 
         public async Task<T> PostAsync<T>(string uri, object data)
@@ -32,8 +32,7 @@
 
         public T Post<T>(string uri, object data)
         {
-            var result = _httpClient.PostAsJsonAsync(uri, data).Result;
-            return ParseHttpResponseMessage<T>(result);
+            throw new NotImplementedException();
         }
 
         public async Task<bool> PostAsync(string uri, object data)
@@ -44,8 +43,7 @@
 
         public bool Post(string uri, object data)
         {
-            var result = _httpClient.PostAsJsonAsync(uri, data).Result;
-            return result.IsSuccessStatusCode;
+            throw new NotImplementedException();
         }
 
         private async Task<T> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message)
@@ -53,16 +51,6 @@
             if (message.IsSuccessStatusCode)
             {
                 return await message.Content.ReadAsAsync<T>();
-            }
-
-            return default(T);
-        }
-
-        private T ParseHttpResponseMessage<T>(HttpResponseMessage message)
-        {
-            if (message.IsSuccessStatusCode)
-            {
-                return message.Content.ReadAsAsync<T>().Result;
             }
 
             return default(T);
