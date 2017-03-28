@@ -181,11 +181,14 @@
     <Compile Include="BlobService.cs" />
     <Compile Include="Enums\eGovernanceMode.cs" />
     <Compile Include="Enums\EnumSets.cs" />
+    <Compile Include="Establishments\EstablishmentReadApiService.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
     <Compile Include="Governors\GovernorsWriteService.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorModelBase.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
+    <Compile Include="Groups\GroupReadApiService.cs" />
+    <Compile Include="HttpClientWrapper.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\AZSIgnoreAttribute.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\IServiceBusEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\ServiceBus\ServiceBusEndPoint.cs" />
@@ -347,6 +350,7 @@
     <Compile Include="IntegrationEndPoints\Smtp\SmtpEndPoint.cs" />
     <Compile Include="Lookup\ICachedLookupService.cs" />
     <Compile Include="Lookup\ILookupService.cs" />
+    <Compile Include="Lookup\LookupApiService.cs" />
     <Compile Include="Mapping\AutoMapperServicesProfile.cs" />
     <Compile Include="MessageLoggingService.cs" />
     <Compile Include="Lookup\LookupService.cs" />

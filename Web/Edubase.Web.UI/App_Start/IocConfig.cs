@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
@@ -9,6 +10,7 @@ using AutoMapper;
 using Edubase.Data.Entity;
 using Edubase.Services.IntegrationEndPoints.AzureSearch;
 using System.Configuration;
+using System.Net.Http;
 using Edubase.Common.Cache;
 using Edubase.Common;
 using Edubase.Data.Repositories.Establishments;
@@ -120,12 +122,21 @@ namespace Edubase.Web.UI
             builder.RegisterType<GroupsWriteService>().As<IGroupsWriteService>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
             builder.RegisterType<EstablishmentDownloadService>().As<IEstablishmentDownloadService>();
+
+#if QA
+            builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
+            builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
+            builder.RegisterType<LookupApiService>().As<ILookupService>();
+#else
             builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
+            builder.RegisterType<GroupReadService>().As<IGroupReadService>();
+            builder.RegisterType<LookupService>().As<ILookupService>();
+#endif
+
             builder.RegisterType<EstablishmentWriteService>().As<IEstablishmentWriteService>();
             builder.RegisterType<GovernorsWriteService>().As<IGovernorsWriteService>();
-            builder.RegisterType<GroupReadService>().As<IGroupReadService>();
+
             builder.RegisterType<LAESTABService>().As<ILAESTABService>();
-            builder.RegisterType<LookupService>().As<ILookupService>();
             builder.RegisterType<SecurityService>().As<ISecurityService>();
             builder.RegisterType<GroupDownloadService>().As<IGroupDownloadService>();
 
@@ -137,6 +148,10 @@ namespace Edubase.Web.UI
             builder.RegisterType<FileDownloadFactoryService>().As<IFileDownloadFactoryService>();
 
             builder.RegisterInstance(new NomenclatureService()).AsSelf();
+
+            builder.RegisterInstance(new HttpClient {BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"])}).SingleInstance().AsSelf();
+            builder.RegisterType<HttpClientWrapper>().SingleInstance().AsSelf();
+
         }
 
     }

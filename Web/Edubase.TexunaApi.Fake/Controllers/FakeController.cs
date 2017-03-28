@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 
 namespace Edubase.TexunaApi.Fake.Controllers
@@ -33,10 +34,28 @@ namespace Edubase.TexunaApi.Fake.Controllers
             return this.NotFound();
         }
 
+        [HttpGet, Route("configure")]
+        public IHttpActionResult GetConfiguredResponses()
+        {
+            return this.Ok(ConfiguredResponses.Select(response =>
+            {
+                var hyphen = response.Key.IndexOf("-");
+                var method = response.Key.Substring(0, hyphen);
+                var url = response.Key.Substring(hyphen + 1);
+                return new {Method = method, Url = url, Response = response.Value};
+            }));
+        }
+
 
         [HttpPut, Route("configure/{method}")]
         public IHttpActionResult SetResponse(string uri, string method, [FromBody]object response)
         {
+            var paramsStart = uri.IndexOf("?");
+            if (paramsStart > -1)
+            {
+                uri = uri.Substring(0, paramsStart);
+            }
+
             var key = $"{method}-{uri}";
             if (ConfiguredResponses.ContainsKey(key))
             {
