@@ -25,6 +25,9 @@
     // width: 25%; - Test : check that text within labels will wrap
   }
 
+  &.multi-line {
+      padding-top: 2px;
+  }
   // Absolutely position inputs within label, to allow text to wrap
   input {
     position: absolute;
