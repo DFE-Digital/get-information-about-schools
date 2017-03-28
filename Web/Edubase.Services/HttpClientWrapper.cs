@@ -11,6 +11,9 @@
         public HttpClientWrapper(HttpClient httpClient)
         {
             _httpClient = httpClient;
+            _httpClient.DefaultRequestHeaders.Add("sa_user_id", "3600026");
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", "cmVzdC1hcGktdXNlcjp6ITdrVSJYOyVmI0s+I2U7");
+            
         }
 
         public async Task<T> GetAsync<T>(string uri)

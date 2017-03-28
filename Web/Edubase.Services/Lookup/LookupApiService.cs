@@ -11,8 +11,8 @@ namespace Edubase.Services.Lookup
 {
     public class LookupApiService : IDisposable, ILookupService
     {
-        private const string ApiLocalAuthorityLookupPath = "/lookup/local-authorities";
-        private const string ApiGovernorRolesLookupPath = "/lookup/governor-roles";
+        private const string ApiLocalAuthorityLookupPath = "lookup/local-authorities";
+        private const string ApiGovernorRolesLookupPath = "lookup/governor-roles";
 
         private readonly HttpClientWrapper _httpClient;
         private readonly Lazy<ApplicationDbContext> _dc = new Lazy<ApplicationDbContext>(ApplicationDbContext.Create);

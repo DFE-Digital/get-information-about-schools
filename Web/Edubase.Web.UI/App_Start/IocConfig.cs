@@ -123,15 +123,18 @@ namespace Edubase.Web.UI
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
             builder.RegisterType<EstablishmentDownloadService>().As<IEstablishmentDownloadService>();
 
-#if QA
-            builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
-            builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
-            builder.RegisterType<LookupApiService>().As<ILookupService>();
-#else
-            builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
-            builder.RegisterType<GroupReadService>().As<IGroupReadService>();
-            builder.RegisterType<LookupService>().As<ILookupService>();
-#endif
+            if (ConfigurationManager.AppSettings["ServiceLayerType"] == "api")
+            {
+                builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
+                builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
+                builder.RegisterType<LookupApiService>().As<ILookupService>();
+            }
+            else
+            {
+                builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
+                builder.RegisterType<GroupReadService>().As<IGroupReadService>();
+                builder.RegisterType<LookupService>().As<ILookupService>();
+            }
 
             builder.RegisterType<EstablishmentWriteService>().As<IEstablishmentWriteService>();
             builder.RegisterType<GovernorsWriteService>().As<IGovernorsWriteService>();

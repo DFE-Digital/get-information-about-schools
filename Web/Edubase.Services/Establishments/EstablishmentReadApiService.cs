@@ -37,7 +37,7 @@ namespace Edubase.Services.Establishments
     /// </summary>
     public class EstablishmentReadApiService : IEstablishmentReadService
     {
-        private const string ApiSuggestPath = "/suggest/establishment";
+        private const string ApiSuggestPath = "suggest/establishment";
 
         private readonly IApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
