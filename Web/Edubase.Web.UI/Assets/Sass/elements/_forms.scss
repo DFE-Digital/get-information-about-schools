@@ -341,6 +341,10 @@ fieldset.column-half {
 .button-row {
     clear: both;
     margin: 20px 0;
+
+    &.lower {
+        margin: 40px 0 20px;
+    }
 }
 
 .postcode-field {

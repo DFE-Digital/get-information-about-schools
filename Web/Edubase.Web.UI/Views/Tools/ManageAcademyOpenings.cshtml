@@ -9,12 +9,14 @@
     <div class="grid-row" v-show="!editRecord">
         <div class="column-full" >
             <h1 class="heading-large">Manage academy openings</h1>
-            <div class="error-summary" v-show="searchError">
+            <div class="error-summary" v-show="searchError" v-cloak>
                 <h2 class="heading-medium error-summary-heading" v-show="searchError">No matching establishment</h2>
-                <p class="error-message" v-show="searchError">
-                    You have entered an invalid URN<br/>
-                    <a href="#academy-search-field">Please correct the URN to continue</a>
-                </p>
+                <ul>
+                    <li class="error-message" v-show="searchError">
+                        You have entered an invalid URN<br />
+                        <a href="#academy-search-field">Please correct the URN to continue</a>
+                    </li>
+                </ul>
             </div>
         </div>
         <div class="column-full">
@@ -26,7 +28,7 @@
                     </ul>
                 </div>
                 
-                <div class="tab-content-wrapper horizontal-tabs-content">
+                <div class="tab-content-wrapper horizontal-tabs-content" v-cloak>
                     <div id="calendar" class="tab-content">
                         <div id="academy-listing-app">
                             <div class="form-group month-selector">
@@ -123,7 +125,7 @@
             </div>
         </div>        
     </div>
-    <div class="grid-row" v-show="editRecord">
+    <div class="grid-row" v-show="editRecord" v-cloak>
         <div class="column-full">
             <h1 class="heading-large">Edit opening detail</h1>
         </div>
@@ -150,7 +152,7 @@
             
             <div v-bind:class="['form-group range-group', openDateError ? 'error' : '' ]">
                 <fieldset id="merger-date">
-                    <span v-bind:class="['error-message', openDateError ? '' : 'hidden']">Please enter the establishment opening date</span>
+                    <span v-bind:class="['error-message']" v-show="openDateError">Please enter the establishment opening date</span>
                     <legend>Opening date</legend>
                     <div class="form-hint">For example, 20 03 2003</div>
 
@@ -181,7 +183,7 @@
                 <input type="text" class="form-control" disabled="disabled" :value="od.predecessorName" />
             </div>
             
-            <div class="button-row">
+            <div class="button-row lower">
                 <input type="submit" class="button" value="Save" v-on:click.prevent="updateRecord" />
                 <a href="#" class="button button-grey" v-on:click="editRecord=false, searchUrn='',presentDetail=false">Cancel</a>
             </div>
@@ -350,7 +352,7 @@
                     el: '#academy-opening-app',
                     data: {
                         openingAcademies: academyOpeningsJson,
-                        selectedDate: '',
+                        selectedDate: '0',
                         initialRecordCount: academyOpeningsJson.length,
                         currentPage: 0,
                         pageSize: 50,
@@ -492,7 +494,9 @@
 
                 });
                 $('.horizontal-tabs-wrapper').tabs();
-
+                $(window).on('tabChange', function() {
+                    academyOpenings.searchError = false;
+                });
 
             });
 

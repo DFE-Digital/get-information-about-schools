@@ -77,7 +77,8 @@
                 $(targetContent).removeClass('hidden-tab-content')
                     .attr('aria-hidden', false)
                     .focus();
-                
+
+                $(window).trigger({ type: 'tabChange', tab: targetContent });
             });
             
             // only process the hash if it's for a valid

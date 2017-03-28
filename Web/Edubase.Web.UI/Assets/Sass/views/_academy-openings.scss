@@ -1,5 +1,9 @@
 ﻿
 .manage-academy-openings {
+    [v-cloak] {
+      display: none;
+    }
+
 
     .desktop-inline {
         width: 50%;
@@ -102,7 +106,7 @@
 
             .cell-edit {
                 text-align: left;
-                padding-bottom: 12px;
+                padding-bottom: 44px;
 
                 a {
                     display: block;
