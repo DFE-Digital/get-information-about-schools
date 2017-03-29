@@ -69,10 +69,13 @@
                 @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(x => x.GID)
-                <input class="form-control" value="@Model.GID" readonly="readonly" disabled="disabled" />
-            </div>
+            if (Model.DisplayPolicy.Id)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(x => x.GID)
+                    <input class="form-control" value="@Model.GID" readonly="readonly" disabled="disabled" />
+                </div>
+            }
 
             if (Model.DisplayPolicy.AppointingBodyId)
             {

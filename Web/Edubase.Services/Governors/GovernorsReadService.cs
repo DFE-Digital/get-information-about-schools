@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 using MoreLinq;
 using Edubase.Services.Exceptions;
@@ -26,7 +25,6 @@ namespace Edubase.Services.Governors
 {
     using DisplayPolicies;
     using Lookup;
-    using System.Linq.Expressions;
     using GR = eLookupGovernorRole;
 
     public class GovernorsReadService : IGovernorsReadService
@@ -122,13 +120,17 @@ namespace Edubase.Services.Governors
             }
             else
             {
+                retVal.ApplicableRoles.AddRange(commonGovernorRoleSet);
                 var model = await _groupReadService.GetAsync(groupUId.Value, principal);
                 if (model.Success)
                 {
                     var domainModel = model.GetResult();
                     retVal.HasFullAccess = _securityService.GetEditGroupPermission(principal).CanEdit(groupUId.Value, domainModel.GroupTypeId, domainModel.LocalAuthorityId);
+                    if (domainModel.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust)
+                    {
+                        retVal.ApplicableRoles.AddRange(new[] {GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor});
+                    }
                 }
-                retVal.ApplicableRoles.AddRange(commonGovernorRoleSet);
             }
             
             var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(retVal.HasFullAccess);
@@ -151,7 +153,16 @@ namespace Edubase.Services.Governors
             var retVal = new GovernorDisplayPolicy().SetFullAccess(true);
             ProcessDisplayPolicyOverrides(new Dictionary<GR, GovernorDisplayPolicy> { [role] = retVal });
 
-            retVal.AppointmentEndDate = !(role.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)); // Story 7741: Goverance fields by role.xlsx: ** This is not editable, the date is populated on replacement with the day before the date of appointment of the replacement AO/CFO
+            if (role.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer))
+            {
+                // Story 7741: Goverance fields by role.xlsx: ** This is not editable, the date is populated on replacement with the day before the date of appointment of the replacement AO/CFO
+                retVal.AppointmentEndDate = false;
+            }
+
+            if (role.OneOfThese(GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor))
+            {
+                retVal.Id = false;
+            }
 
             return retVal;
         }
@@ -159,7 +170,7 @@ namespace Edubase.Services.Governors
         private void ProcessDisplayPolicyOverrides(Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies)
         {
             // Override policies at the role level
-            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Governor, GR.Trustee, GR.LocalGovernor, GR.Member))
+            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Governor, GR.Trustee, GR.LocalGovernor, GR.Member, GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor))
                 .ForEach(x => x.Value.EmailAddress = false);
 
             roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)).ForEach(x =>
@@ -177,6 +188,13 @@ namespace Edubase.Services.Governors
             {
                 kvp.Value.TelephoneNumber = kvp.Key.OneOfThese(GR.ChairOfGovernors, GR.ChairOfLocalGoverningBody);
             });
+
+            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor))
+                .ForEach(x =>
+                {
+                    x.Value.AppointmentStartDate = false;
+                    x.Value.AppointmentEndDate = false;
+                });
         }
 
         public async Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal)

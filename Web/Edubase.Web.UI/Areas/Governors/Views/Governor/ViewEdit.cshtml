@@ -111,79 +111,78 @@ else
                     {
                         foreach (var row in grid.Rows)
                         {
-                            <h2 class="bold-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
-                            <dl>
-                                @foreach (var cell in row.Cells.Skip(1))
+                            <div id="@row.Model.Id" class="@Html.DuplicateCssClassFor(row.Model.Id)">
+                                <h2 class="bold-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
+                                <dl>
+                                    @foreach (var cell in row.Cells.Skip(1))
+                                    {
+                                        <dt>@cell.Parent.Text:</dt>
+                                        <dd>@(cell.Text ?? "Not recorded")</dd>
+                                    }
+                                </dl>
+
+                                @if (Model.EditMode && grid.Tag == "current")
                                 {
-                                    <dt>@cell.Parent.Text:</dt>
-                                    <dd>@(cell.Text ?? "Not recorded")</dd>
+                                    if (Model.RemovalGid != row.Model.Id)
+                                    {
+                                        <div style="margin-bottom:20px;">
+
+                                            @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "button button-grey" })
+                                            @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", null, null, "gid-" + row.Model.Id, new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id }, new { @class = "button button-grey" })
+
+                                            @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
+                                            {
+                                                @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "button button-grey" })
+                                            }
+                                        </div>
+                                    }
+                                    else // We're in 'removal mode' for this governor.
+                                    {
+                                        <div style="margin-bottom:20px;">
+
+                                            @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post))
+                                            {
+                                                @Html.HiddenFor(x => x.RemovalGid)
+                                                @Html.HiddenFor(x => x.EstablishmentUrn)
+                                                @Html.HiddenFor(x => x.GroupUId)
+
+                                                <div class="form-group">
+                                                    <fieldset class="inline">
+                                                        <legend class="visually-hidden">Do you wish to retire or remove this person?</legend>
+                                                        <label class="block-label selection-button-radio" for="removal-mode-1">
+                                                            <input type="radio" name="removal-mode" id="removal-mode-1" value="1" checked="checked" onchange="$('.retire-governor,.remove-governor').toggle();" />
+                                                            This person has completed their term
+                                                        </label>
+                                                        <label class="block-label selection-button-radio" for="removal-mode-2">
+                                                            <input type="radio" name="removal-mode" id="removal-mode-2" value="2" onchange="$('.retire-governor,.remove-governor').toggle();" />
+                                                            Remove person
+                                                        </label>
+                                                    </fieldset>
+                                                </div>
+
+                                                <div style="border-left:4px solid #bbb; padding-left:20px;" class="retire-governor">
+                                                    <br />
+                                                    <p class="font-xsmall">Provide a data term ends to retire this person</p>
+                                                    @RenderDateSelector(x => x.RemovalAppointmentEndDate, x => x.RemovalAppointmentEndDate.Day, x => x.RemovalAppointmentEndDate.Month, x => x.RemovalAppointmentEndDate.Year, "Date term ends")
+
+                                                    <input type="submit" name="action" value="Save" class="button" />
+
+                                                    @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
+
+                                                </div>
+
+                                                <div style="border-left:4px solid #bbb; padding-left:20px;display:none;" class="remove-governor">
+                                                    <br />
+                                                    <p class="font-xsmall">Confirm you wish to remove this person</p>
+                                                    <input type="submit" name="action" value="Remove" class="button" />
+
+                                                    @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
+                                                </div>
+                                            }
+                                        </div>
+                                    }
                                 }
-                            </dl>
-
-                            if (Model.EditMode && grid.Tag == "current")
-                            {
-                                if (Model.RemovalGid != row.Model.Id)
-                                {
-                                    <div style="margin-bottom:20px;">
-
-                                        @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "button button-grey" })
-                                        @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", null, null, "gid-" + row.Model.Id, new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id }, new { @class = "button button-grey" })
-
-                                        @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
-                                        {
-                                            @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "button button-grey" })
-                                        }
-                                    </div>
-                                }
-                                else // We're in 'removal mode' for this governor.
-                                {
-                                    <div style="margin-bottom:20px;">
-
-                                        @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post))
-                                        {
-                                            @Html.HiddenFor(x => x.RemovalGid)
-                                            @Html.HiddenFor(x => x.EstablishmentUrn)
-                                            @Html.HiddenFor(x => x.GroupUId)
-
-                                            <div class="form-group">
-                                                <fieldset class="inline">
-                                                    <legend class="visually-hidden">Do you wish to retire or remove this person?</legend>
-                                                    <label class="block-label selection-button-radio" for="removal-mode-1">
-                                                        <input type="radio" name="removal-mode" id="removal-mode-1" value="1" checked="checked" onchange="$('.retire-governor,.remove-governor').toggle();" />
-                                                        This person has completed their term
-                                                    </label>
-                                                    <label class="block-label selection-button-radio" for="removal-mode-2">
-                                                        <input type="radio" name="removal-mode" id="removal-mode-2" value="2" onchange="$('.retire-governor,.remove-governor').toggle();" />
-                                                        Remove person
-                                                    </label>
-                                                </fieldset>
-                                            </div>
-
-                                            <div style="border-left:4px solid #bbb; padding-left:20px;" class="retire-governor">
-                                                <br />
-                                                <p class="font-xsmall">Provide a data term ends to retire this person</p>
-                                                @RenderDateSelector(x => x.RemovalAppointmentEndDate, x => x.RemovalAppointmentEndDate.Day, x => x.RemovalAppointmentEndDate.Month, x => x.RemovalAppointmentEndDate.Year, "Date term ends")
-
-                                                <input type="submit" name="action" value="Save" class="button" />
-
-                                                @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
-
-                                            </div>
-
-                                            <div style="border-left:4px solid #bbb; padding-left:20px;display:none;" class="remove-governor">
-                                                <br />
-                                                <p class="font-xsmall">Confirm you wish to remove this person</p>
-                                                <input type="submit" name="action" value="Remove" class="button" />
-
-                                                @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
-                                            </div>
-                                        }
-
-
-
-                                    </div>
-                                }
-                            }
+                            </div>
                         }
                     }
                     else

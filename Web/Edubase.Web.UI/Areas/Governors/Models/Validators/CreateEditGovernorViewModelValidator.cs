@@ -23,7 +23,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                 .Must(x => x.IsNotEmpty())
                 .WithSummaryMessage("Date of appointment is required")
                 .WithMessage("Required")
-                .When(x => x.AppointmentStartDate.IsEmpty(), ApplyConditionTo.CurrentValidator)
+                .When(x => x.AppointmentStartDate.IsEmpty() 
+                       && !x.GovernorRole.OneOfThese(
+                                GR.SharedChairOfLocalGoverningBody,
+                                GR.SharedLocalGovernor), ApplyConditionTo.CurrentValidator)
                 
                 .Must(x => x.ToDateTime().Value <= DateTime.Today)
                 .WithMessage("This cannot be a future date")

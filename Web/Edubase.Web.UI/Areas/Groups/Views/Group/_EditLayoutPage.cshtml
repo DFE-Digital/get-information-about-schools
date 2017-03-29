@@ -13,6 +13,11 @@
 
 <h1 class="heading-large" style="margin-top:8px; margin-bottom:16px;">@Model.GroupName</h1>
 
+@if (ViewData.ContainsKey("DuplicateGovernor"))
+{
+    @Html.Partial("_DuplicateGovernor", ViewData["DuplicateGovernor"])
+}
+
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 <div class="grid-row">

@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Governors.Search;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -107,7 +108,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// <param name="editMode"></param>
         /// <returns></returns>
         [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupEditGovernance"), Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabEditGovernance"), HttpGet]
-        public async Task<ActionResult> Edit(int? groupUId, int? establishmentUrn, int? removalGid)
+        public async Task<ActionResult> Edit(int? groupUId, int? establishmentUrn, int? removalGid, int? duplicateGovernorId)
         {
             Guard.IsTrue(groupUId.HasValue || establishmentUrn.HasValue, () => new InvalidParameterException($"Both parameters '{nameof(groupUId)}' and '{nameof(establishmentUrn)}' are null."));
 
@@ -122,6 +123,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, x => viewModel.GovernanceMode = x.GovernanceMode);
 
                 viewModel.RemovalGid = removalGid;
+                if (duplicateGovernorId.HasValue)
+                {
+
+                    var duplicate = await _governorsReadService.GetGovernorAsync(duplicateGovernorId.Value);
+                    ViewData.Add("DuplicateGovernor", duplicate);
+                }
 
                 return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
             }
@@ -149,7 +156,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             await PopulateLayoutProperties(viewModel, viewModel.EstablishmentUrn, viewModel.GroupUId);
 
-            return await Edit(viewModel.GroupUId, viewModel.EstablishmentUrn, viewModel.RemovalGid);
+            return await Edit(viewModel.GroupUId, viewModel.EstablishmentUrn, viewModel.RemovalGid, null);
         }
 
         [Route]
@@ -260,6 +267,22 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (ModelState.IsValid)
             {
+                if (!viewModel.EstablishmentUrn.HasValue &&
+                    (viewModel.GovernorRole == eLookupGovernorRole.SharedChairOfLocalGoverningBody ||
+                    viewModel.GovernorRole == eLookupGovernorRole.SharedLocalGovernor))
+                {
+                    var existingGovernors = await _governorsReadService.GetGovernorListAsync(null, viewModel.GroupUId, User);
+                    var duplicates = existingGovernors.CurrentGovernors.Where(g => g.RoleId == (int) viewModel.GovernorRole
+                                                                                && string.Equals($"{g.Person_Title} {g.Person_FirstName} {g.Person_MiddleName} {g.Person_LastName}", 
+                                                                                                 $"{viewModel.GovernorTitle} {viewModel.FirstName} {viewModel.MiddleName} {viewModel.LastName}", 
+                                                                                                 StringComparison.OrdinalIgnoreCase));
+                    if (duplicates.Any())
+                    {
+                        ModelState.Clear();
+                        return RedirectToRoute("GroupEditGovernance", new { groupUId = viewModel.GroupUId, duplicateGovernorId = duplicates.First().Id});
+                    }
+                }
+
                 if (viewModel.ReplaceGovernorViewModel.GID.HasValue)
                 {
                     var governorBeingReplaced = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value, User);

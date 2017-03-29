@@ -22,6 +22,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using Edubase.Services.Governors.Models;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -38,6 +39,20 @@ namespace Edubase.Web.UI.Helpers
             if (state == null) return MvcHtmlString.Empty;
             else if (state.Errors.Count == 0) return MvcHtmlString.Empty;
             else return new MvcHtmlString("error");
+        }
+
+        public static MvcHtmlString DuplicateCssClassFor(this HtmlHelper htmlHelper, int? governorId)
+        {
+            if (htmlHelper.ViewContext.ViewData.ContainsKey("DuplicateGovernor") && governorId.HasValue)
+            {
+                var duplicate = (GovernorModel)htmlHelper.ViewContext.ViewData["DuplicateGovernor"];
+                if (governorId == duplicate.Id)
+                {
+                    return new MvcHtmlString("error");
+                }
+            }
+
+            return MvcHtmlString.Empty;
         }
 
         [Obsolete]

@@ -29,6 +29,7 @@ namespace Edubase.Web.UI
 #if (QA)
             GlobalConfiguration.Configure(ODataConfig.Register);
 #endif
+            SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             IocConfig.Register();
