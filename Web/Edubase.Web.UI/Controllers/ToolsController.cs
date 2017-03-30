@@ -67,5 +67,11 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
+
+        [HttpGet, EdubaseAuthorize]
+        public ActionResult SearchChangeHistory()
+        {
+            return View();
+        }
     }
 }

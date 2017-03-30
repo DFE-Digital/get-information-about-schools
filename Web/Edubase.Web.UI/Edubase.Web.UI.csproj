@@ -402,6 +402,7 @@
     <Content Include="Assets\Scripts\JSON\postcodeResults.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.min.js" />
+    <Content Include="Assets\Scripts\standalone\search-change-history.js" />
     <Content Include="Assets\Scripts\Views\bulk-academies.js" />
     <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
@@ -787,6 +788,7 @@
     <Content Include="Assets\Scripts\JSON\establishmenttypes.js" />
     <Content Include="Assets\Scripts\JSON\localauthorities.js" />
     <Content Include="Assets\Scripts\JSON\academyOpenings.stub.js" />
+    <Content Include="Assets\Sass\views\_search-changes.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
