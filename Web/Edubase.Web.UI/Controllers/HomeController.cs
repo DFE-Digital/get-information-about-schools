@@ -38,27 +38,43 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Enums()
         {
             var sb = new StringBuilder();
-            Action<string, IEnumerable<LookupDto>> f = (name, list) =>
-            {
-                sb.AppendLine($"\tpublic enum {name}");
-                sb.AppendLine("\t{");
-                foreach (var item in list)
-                {
-                    sb.AppendLine($"\t\t{AsEnumName(item.Name)} = {item.Id},");
-                }
-                sb.AppendLine("\t}");
-                sb.AppendLine();
-                sb.AppendLine();
-                sb.AppendLine();
-            };
+            //Action<string, IEnumerable<LookupDto>> f = (name, list) =>
+            //{
+            //    sb.AppendLine($"\tpublic enum {name}");
+            //    sb.AppendLine("\t{");
+            //    foreach (var item in list)
+            //    {
+            //        sb.AppendLine($"\t\t{AsEnumName(item.Name)} = {item.Id},");
+            //    }
+            //    sb.AppendLine("\t}");
+            //    sb.AppendLine();
+            //    sb.AppendLine();
+            //    sb.AppendLine();
+            //};
 
-            f("eLookupGovernorRole", await _lookup.GovernorRolesGetAllAsync());
-            f("eLookupGovernorAppointingBody", await _lookup.GovernorAppointingBodiesGetAllAsync());
-            f("eLookupGroupType", await _lookup.GroupTypesGetAllAsync());
-            f("eLookupEstablishmentTypeGroup", await _lookup.EstablishmentTypeGroupsGetAllAsync());
-            f("eLookupEstablishmentType", await _lookup.EstablishmentTypesGetAllAsync());
-            f("eLookupEstablishmentStatus", await _lookup.EstablishmentStatusesGetAllAsync());
-            f("eLookupGroupStatus", await _lookup.GroupStatusesGetAllAsync());
+            //var l = (Services.Texuna.Lookup.LookupApiService)_lookup;
+
+            //foreach (var key in l._map.Keys)
+            //{
+            //    try
+            //    {
+            //        f("e" + AsEnumName(key), await l._map[key]());
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        sb.AppendLine(key+$" failed with {ex}");
+            //    }
+                
+            //}
+
+
+            //f("eLookupGovernorRole", await _lookup.GovernorRolesGetAllAsync());
+            //f("eLookupGovernorAppointingBody", await _lookup.GovernorAppointingBodiesGetAllAsync());
+            //f("eLookupGroupType", await _lookup.GroupTypesGetAllAsync());
+            //f("eLookupEstablishmentTypeGroup", await _lookup.EstablishmentTypeGroupsGetAllAsync());
+            //f("eLookupEstablishmentType", await _lookup.EstablishmentTypesGetAllAsync());
+            //f("eLookupEstablishmentStatus", await _lookup.EstablishmentStatusesGetAllAsync());
+            //f("eLookupGroupStatus", await _lookup.GroupStatusesGetAllAsync());
 
             return Content(sb.ToString(), "text/plain");
         }
