@@ -4,7 +4,7 @@
 }
 
 
-<div id="change-approvals">
+<div id="change-approvals" v-cloak>
     <div class="grid-row">
         <div class="column-full">
             <div class="wait-spinner" v-show="isProcessing" aria-live="polite">
@@ -4885,7 +4885,7 @@
             },
            
             computed: {
-               page: function () {                  
+               page: function () {                 
                     return this.pages[this.currentPage];
                }
             },

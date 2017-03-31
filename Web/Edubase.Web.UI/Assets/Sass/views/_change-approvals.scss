@@ -25,6 +25,10 @@
     .cell-checkbox {
         height: 40px;
         position: relative;
+
+        .edubase-button-checkbox {
+            padding: 0;
+        }
         
         @include media(desktop) {
             width: 40px;
@@ -178,10 +182,10 @@
 .edubase-button-checkbox {
     position: relative;
     display: block;
-    float: left;
-    width: 38px;
-    height: 38px;
+    float: left;   
     cursor: pointer;
+    padding-left: 44px;
+    padding-top: 10px;
 
     &::before {
       content: "";
@@ -190,7 +194,7 @@
       width: 34px;
       height: 34px;
       position: absolute;
-      top: 0;
+      top: 5px;
       left: 0;
     }
 
@@ -202,7 +206,7 @@
       width: 17px;
       height: 7px;
       position: absolute;
-      top: 10px;
+      top: 14px;
       left: 8px;
       -moz-transform: rotate(-45deg); // Firefox 15 compatibility
       -o-transform: rotate(-45deg); // Opera 12.0 compatibility
@@ -213,6 +217,19 @@
     }
 
     
+}
+
+.radio-button-wrap,
+.checkbox-wrap {
+    display: inline-block;
+    position: relative;
+    margin: 0 8px 20px;
+
+   
+    input {
+        position: absolute;
+        @include opacity(0);
+    }
 }
 
 .boldened-checkbox {   
@@ -226,10 +243,48 @@ input:checked + .edubase-button-checkbox:after {
     @include opacity(1);
 }
 
-input:focus + .edubase-button-checkbox {
-    outline: 3px solid $focus-colour;
+input:focus + .edubase-button-checkbox:before {
+    box-shadow: 0 0 3px 3px $focus-colour;
 }
 
+
+.edubase-button-radio {
+    position:relative;
+    padding-left: 44px;
+    padding-top: 6px;
+    cursor: pointer;
+
+     &:before {
+      content: "";
+      border: 2px solid;
+      background: transparent;
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      @include border-radius(50%);
+    }
+
+    &:after {
+      content: "";
+      border: 10px solid;
+      width: 0;
+      height: 0;
+      position: absolute;
+      top: 9px;
+      left: 9px;
+      @include border-radius(50%);
+      @include opacity(0);
+    }
+}
+input:checked + .edubase-button-radio:after {
+    @include opacity(1);
+}
+
+input:focus + .edubase-button-radio:before {
+    box-shadow: 0 0 3px 3px $focus-colour;
+}
 
 .expanding-panel {
     clear: both;

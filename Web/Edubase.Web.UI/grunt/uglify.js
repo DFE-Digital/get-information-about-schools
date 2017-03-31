@@ -52,6 +52,21 @@
               'Assets/Scripts/Views/**/*.js'
             ],
             dest: 'public/assets/scripts/application.js'
+        },
+        "process-standalone": {
+            options: {
+                sourceMap: false,
+                beautify: true,
+                compress: true,
+                mangle: true
+            },
+            files: [{
+                expand: true,
+                flatten: true,
+                cwd: '.',
+                src: ['Assets/Scripts/standalone/*.js'],
+                dest: 'public/assets/scripts/standalone/',                    
+            }]
         }
     };
 };
