@@ -39,9 +39,11 @@ namespace Edubase.Web.UI
                 scope.Resolve<IBlobService>().Initialise("downloads");
             }
 
-            // REMOVE WHEN IN WEBFARM!!!!!
+
+#if (!TEXAPI)
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
             Database.SetInitializer(m);
+#endif
 
             var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.Container));
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
@@ -52,7 +54,6 @@ namespace Edubase.Web.UI
 
             ModelBinders.Binders.DefaultBinder = new Helpers.ModelBinding.DefaultModelBinderEx();
 
-            //MiniProfiler.Settings.Storage = new SqlServerStorage(System.Configuration.ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString);
             MiniProfiler.Settings.Results_Authorize = IsUserAllowedToSeeMiniProfilerUI;
             MiniProfiler.Settings.Results_List_Authorize = IsUserAllowedToSeeMiniProfilerUI;
 

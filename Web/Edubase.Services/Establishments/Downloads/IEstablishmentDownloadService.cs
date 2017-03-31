@@ -3,7 +3,6 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments.Search;
-using static Edubase.Services.Establishments.Downloads.EstablishmentDownloadService;
 using static Edubase.Services.Core.FileDownloadFactoryService;
 using Edubase.Services.Core;
 

@@ -15,10 +15,8 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
 using StackExchange.Profiling;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers

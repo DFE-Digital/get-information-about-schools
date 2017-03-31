@@ -890,13 +890,13 @@
       <Project>{8C3D6834-3FA1-440A-A396-6489E22E8063}</Project>
       <Name>Edubase.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
-      <Project>{D605ACE4-2659-48DC-BF21-94E7B8D230DA}</Project>
-      <Name>Edubase.Services</Name>
+    <ProjectReference Include="..\Edubase.Services.Texuna\Edubase.Services.Texuna.csproj">
+      <Project>{b42efca1-48e9-4c63-9fb3-7be4d2f22efb}</Project>
+      <Name>Edubase.Services.Texuna</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Edubase.StubUserBuilder\Edubase.StubUserBuilder.csproj">
-      <Project>{0c900c37-a5fa-4a79-a2b9-66d372890fda}</Project>
-      <Name>Edubase.StubUserBuilder</Name>
+    <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
+      <Project>{d605ace4-2659-48dc-bf21-94e7b8d230da}</Project>
+      <Name>Edubase.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
@@ -907,6 +907,15 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE;DEBUG;QA</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-TexunaAPI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TEXAPI</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>

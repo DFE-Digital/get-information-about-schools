@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Enums;
+﻿#if (!TEXAPI)
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Establishments.DisplayPolicies
 {
@@ -18,3 +19,5 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         }
     }
 }
+
+#endif

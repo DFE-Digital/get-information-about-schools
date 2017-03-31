@@ -1,7 +1,7 @@
-
+#if(!TEXAPI)
 namespace Edubase.Services.Enums
 {
-    public enum eLookupFurtherEducationType
+    internal enum eLookupFurtherEducationType
     {
         ArtDesignAndPerformingArtsCollege = 1,
 		GeneralFurtherEducationCollege = 2,
@@ -15,3 +15,4 @@ namespace Edubase.Services.Enums
 		Unknown = 10,
     }
 }   
+#endif

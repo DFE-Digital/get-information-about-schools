@@ -1,8 +1,8 @@
 ﻿using Edubase.Services.Domain;
+using Edubase.Services.Establishments.Downloads;
 using Edubase.Web.UI.Models.Search;
 using System;
 using static Edubase.Services.Core.FileDownloadFactoryService;
-using static Edubase.Services.Establishments.Downloads.EstablishmentDownloadService;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {

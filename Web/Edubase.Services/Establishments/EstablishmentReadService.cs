@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿#if(!TEXAPI)
+using AutoMapper;
 using Edubase.Common;
 using Edubase.Data;
 using Edubase.Data.Entity;
@@ -279,10 +280,6 @@ namespace Edubase.Services.Establishments
             else return new ServiceResultDto<bool>(eServiceResultStatus.NotFound);
         }
 
-
-        
-        
-
-
     }
 }
+#endif

@@ -29,10 +29,12 @@ using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Governors;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
-using Edubase.Services.IntegrationEndPoints.ServiceBus;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 using Edubase.Services.Core;
 using Edubase.Services.Nomenclature;
+using Edubase.Services.Texuna.Establishments;
+using Edubase.Services.Texuna.Groups;
+using Edubase.Services.Texuna.Lookup;
 
 namespace Edubase.Web.UI
 {
@@ -89,14 +91,28 @@ namespace Edubase.Web.UI
                 .SingleInstance().As<ICacheAccessor>()
                 .UsingConstructor(typeof(JsonConverterCollection));
 
-            builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
-                ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString)
-                .As<IAzureSearchEndPoint>();
-
             builder.RegisterInstance(Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(
                 ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString));
 
             builder.RegisterType<BlobService>().As<IBlobService>();
+            builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
+
+#if (TEXAPI)
+            builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
+            builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
+            builder.RegisterType<LookupApiService>().As<ILookupService>();
+            builder.RegisterInstance(new HttpClient { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) }).SingleInstance().AsSelf();
+            builder.RegisterType<HttpClientWrapper>().SingleInstance().AsSelf();
+#else
+            
+
+            builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
+                ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString)
+                .As<IAzureSearchEndPoint>();
+
+            
+
+            
 
             builder.RegisterType<ApplicationDbContextFactory<ApplicationDbContext>>()
                 .As<IApplicationDbContextFactory>();
@@ -120,21 +136,13 @@ namespace Edubase.Web.UI
             builder.RegisterType<CachedEstablishmentGroupReadRepository>().As<ICachedEstablishmentGroupReadRepository>();
 
             builder.RegisterType<GroupsWriteService>().As<IGroupsWriteService>();
-            builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
+            
             builder.RegisterType<EstablishmentDownloadService>().As<IEstablishmentDownloadService>();
 
-            if (ConfigurationManager.AppSettings["ServiceLayerType"] == "api")
-            {
-                builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
-                builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
-                builder.RegisterType<LookupApiService>().As<ILookupService>();
-            }
-            else
-            {
-                builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
-                builder.RegisterType<GroupReadService>().As<IGroupReadService>();
-                builder.RegisterType<LookupService>().As<ILookupService>();
-            }
+            builder.RegisterType<EstablishmentReadService>().As<IEstablishmentReadService>();
+            builder.RegisterType<GroupReadService>().As<IGroupReadService>();
+            builder.RegisterType<LookupService>().As<ILookupService>();
+            
 
             builder.RegisterType<EstablishmentWriteService>().As<IEstablishmentWriteService>();
             builder.RegisterType<GovernorsWriteService>().As<IGovernorsWriteService>();
@@ -146,14 +154,16 @@ namespace Edubase.Web.UI
             builder.RegisterType<GovernorDownloadService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadService>().As<IGovernorsReadService>();
             builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
-
-            builder.RegisterType<ServiceBusEndPoint>().As<IServiceBusEndPoint>();
+            
             builder.RegisterType<FileDownloadFactoryService>().As<IFileDownloadFactoryService>();
 
             builder.RegisterInstance(new NomenclatureService()).AsSelf();
+#endif
 
-            builder.RegisterInstance(new HttpClient {BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"])}).SingleInstance().AsSelf();
-            builder.RegisterType<HttpClientWrapper>().SingleInstance().AsSelf();
+
+
+
+
 
         }
 

@@ -1,4 +1,5 @@
-﻿using Edubase.Common.Cache;
+﻿#if(!TEXAPI)
+using Edubase.Common.Cache;
 using Edubase.Common.IO;
 using Edubase.Common.Reflection;
 using Edubase.Services.Domain;
@@ -33,12 +34,7 @@ namespace Edubase.Services.Establishments.Downloads
         private IMessageLoggingService _messageLoggingService;
         private IGroupReadService _groupReadService;
 
-        public enum eDataSet
-        {
-            Core,
-            Full
-        }
-
+        
         public EstablishmentDownloadService(ICacheAccessor cacheAccessor, 
             IEstablishmentReadService establishmentReadService, 
             IBlobService blobService,
@@ -443,3 +439,4 @@ namespace Edubase.Services.Establishments.Downloads
         
     }
 }
+#endif

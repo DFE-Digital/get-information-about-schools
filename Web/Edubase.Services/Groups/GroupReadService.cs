@@ -152,8 +152,11 @@ namespace Edubase.Services.Groups
         /// </summary>
         /// <param name="groupUid"></param>
         /// <returns></returns>
-        public async Task<List<EstablishmentGroup>> GetEstablishmentGroupsAsync(int groupUid) => await _cachedEstablishmentGroupReadRepository.GetForGroupAsync(groupUid);
-
+        public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid)
+        {
+            return (await _cachedEstablishmentGroupReadRepository.GetForGroupAsync(groupUid))
+                .Select(x => new EstablishmentGroupModel { CCIsLeadCentre = x.CCIsLeadCentre, EstablishmentUrn = x.EstablishmentUrn, Id = x.Id, JoinedDate = x.JoinedDate }).ToList();
+        }
 
         public async Task<bool> ExistsAsync(string name, int? localAuthorityId = null, int? existingGroupUId = null)
         {

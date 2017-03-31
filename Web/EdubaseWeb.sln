@@ -11,32 +11,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Common", "Edubase.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Web.UI", "Edubase.Web.UI\Edubase.Web.UI.csproj", "{F32E2A2E-6782-4293-B533-284FF1B17FF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Import", "Edubase.Import\Edubase.Import.csproj", "{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.UnitTest", "Edubase.UnitTest\Edubase.UnitTest.csproj", "{13E16127-6989-497C-83A2-0127B407468E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{9313FD19-2FDE-4C58-B0DE-E469E160CCDE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.IntegrationTest", "Edubase.IntegrationTest\Edubase.IntegrationTest.csproj", "{4309E8AC-70FB-4B9B-88EA-15139156078C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{D22B5186-47D8-494D-AD44-3046980C85C9}"
-	ProjectSection(SolutionItems) = preProject
-		Application Integration EndPoints.txt = Application Integration EndPoints.txt
-		Security.txt = Security.txt
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Util", "Util", "{45BD8978-96E9-434E-95A2-45A5C1185F5C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.StubUserBuilder", "Edubase.StubUserBuilder\Edubase.StubUserBuilder.csproj", "{0C900C37-A5FA-4A79-A2B9-66D372890FDA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.CodeGen", "Edubase.CodeGen\Edubase.CodeGen.csproj", "{CB23D1A9-92D2-46A0-B5C1-B2EE9F6C1614}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.TexunaApi.Fake", "Edubase.TexunaApi.Fake\Edubase.TexunaApi.Fake.csproj", "{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Services.Texuna", "Edubase.Services.Texuna\Edubase.Services.Texuna.csproj", "{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug (QA)|Any CPU = Debug (QA)|Any CPU
 		Debug|Any CPU = Debug|Any CPU
+		DebugTexunaAPI|Any CPU = DebugTexunaAPI|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
@@ -44,71 +33,72 @@ Global
 		{8C3D6834-3FA1-440A-A396-6489E22E8063}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{8C3D6834-3FA1-440A-A396-6489E22E8063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8C3D6834-3FA1-440A-A396-6489E22E8063}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C3D6834-3FA1-440A-A396-6489E22E8063}.DebugTexunaAPI|Any CPU.ActiveCfg = Debug-TexunaAPI|Any CPU
+		{8C3D6834-3FA1-440A-A396-6489E22E8063}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{8C3D6834-3FA1-440A-A396-6489E22E8063}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C3D6834-3FA1-440A-A396-6489E22E8063}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.DebugTexunaAPI|Any CPU.ActiveCfg = Debug-TexunaAPI|Any CPU
+		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.DebugTexunaAPI|Any CPU.ActiveCfg = Debug-TexunaAPI|Any CPU
+		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.DebugTexunaAPI|Any CPU.ActiveCfg = Debug-TexunaAPI|Any CPU
+		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
-		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
-		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13E16127-6989-497C-83A2-0127B407468E}.DebugTexunaAPI|Any CPU.ActiveCfg = Debug-TexunaAPI|Any CPU
+		{13E16127-6989-497C-83A2-0127B407468E}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4309E8AC-70FB-4B9B-88EA-15139156078C}.DebugTexunaAPI|Any CPU.ActiveCfg = Debug-TexunaAPI|Any CPU
+		{4309E8AC-70FB-4B9B-88EA-15139156078C}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB23D1A9-92D2-46A0-B5C1-B2EE9F6C1614}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
-		{CB23D1A9-92D2-46A0-B5C1-B2EE9F6C1614}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
-		{CB23D1A9-92D2-46A0-B5C1-B2EE9F6C1614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB23D1A9-92D2-46A0-B5C1-B2EE9F6C1614}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB23D1A9-92D2-46A0-B5C1-B2EE9F6C1614}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB23D1A9-92D2-46A0-B5C1-B2EE9F6C1614}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Debug (QA)|Any CPU.ActiveCfg = Debug|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Debug (QA)|Any CPU.Build.0 = Debug|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.DebugTexunaAPI|Any CPU.ActiveCfg = Debug-TexunaAPI|Any CPU
+		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug (QA)|Any CPU.ActiveCfg = Debug|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug (QA)|Any CPU.Build.0 = Debug|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.DebugTexunaAPI|Any CPU.ActiveCfg = Debug-TexunaAPI|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2D175D79-ACF7-4F75-8A0C-6B8A70506CDC} = {45BD8978-96E9-434E-95A2-45A5C1185F5C}
 		{13E16127-6989-497C-83A2-0127B407468E} = {9313FD19-2FDE-4C58-B0DE-E469E160CCDE}
 		{4309E8AC-70FB-4B9B-88EA-15139156078C} = {9313FD19-2FDE-4C58-B0DE-E469E160CCDE}
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA} = {45BD8978-96E9-434E-95A2-45A5C1185F5C}
-		{CB23D1A9-92D2-46A0-B5C1-B2EE9F6C1614} = {45BD8978-96E9-434E-95A2-45A5C1185F5C}
 	EndGlobalSection
 EndGlobal

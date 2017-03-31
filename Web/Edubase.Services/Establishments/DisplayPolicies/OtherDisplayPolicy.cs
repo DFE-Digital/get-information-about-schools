@@ -1,4 +1,5 @@
-﻿using Edubase.Common;
+﻿#if (!TEXAPI)
+using Edubase.Common;
 using Edubase.Services.Enums;
 
 namespace Edubase.Services.Establishments.DisplayPolicies
@@ -30,3 +31,4 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         }
     }
 }
+#endif

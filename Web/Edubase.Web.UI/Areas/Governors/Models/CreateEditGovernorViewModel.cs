@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Edubase.Services.Groups.Models;
-using Edubase.Services.Enums;
 using System.Web.Mvc;
 using System.ComponentModel;
 using Edubase.Web.UI.Models;
 using Edubase.Services.Governors.DisplayPolicies;
 using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Models.Establishments;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {

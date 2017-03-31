@@ -34,7 +34,7 @@ namespace Edubase.Services.Groups
         /// </summary>
         /// <param name="groupUid"></param>
         /// <returns></returns>
-        Task<List<EstablishmentGroup>> GetEstablishmentGroupsAsync(int groupUid);
+        Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid);
 
         Task<bool> ExistsAsync(string name, int? localAuthorityId = null, int? existingGroupUId = null);
 

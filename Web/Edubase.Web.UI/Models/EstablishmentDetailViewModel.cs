@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Edubase.Common;
 using Edubase.Services.Domain;
-using Edubase.Services.Enums;
 using System.Security.Principal;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Establishments.DisplayPolicies;
@@ -14,6 +13,7 @@ using System.Web;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using Edubase.Services.Governors.Models;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Models
 {
