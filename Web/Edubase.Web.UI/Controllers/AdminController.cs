@@ -109,7 +109,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 await scope.Resolve<ICacheAccessor>().ClearAsync();
             }
-            return RedirectToAction(nameof(Dashboard), new { message = "Redis cache and MemoryCache cleared successfully." });
+            return RedirectToAction("Dashboard", new { message = "Redis cache and MemoryCache cleared successfully." });
         }
 
         [HttpPost, Route("WarmEstabRepo")]
@@ -126,7 +126,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             });
 
-            return RedirectToAction(nameof(Dashboard), new { message = "Establishments cache is now warming." });
+            return RedirectToAction("Dashboard", new { message = "Establishments cache is now warming." });
         }
 
         [HttpPost, Route("WarmGroupRepo")]
@@ -143,7 +143,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             });
 
-            return RedirectToAction(nameof(Dashboard), new { message = "Groups cache is now warming." });
+            return RedirectToAction("Dashboard", new { message = "Groups cache is now warming." });
         }
 
 #if (!TEXAPI)
