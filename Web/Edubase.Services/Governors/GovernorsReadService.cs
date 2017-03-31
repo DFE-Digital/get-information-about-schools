@@ -1,4 +1,5 @@
-﻿using Edubase.Common;
+﻿#if(!TEXAPI)
+using Edubase.Common;
 using Edubase.Data;
 using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
@@ -245,3 +246,5 @@ namespace Edubase.Services.Governors
         }
     }
 }
+
+#endif

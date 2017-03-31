@@ -1,4 +1,5 @@
-﻿using Edubase.Common.Cache;
+﻿#if(!TEXAPI)
+using Edubase.Common.Cache;
 using Edubase.Services.Lookup;
 using System;
 using System.Collections.Generic;
@@ -214,3 +215,6 @@ namespace Edubase.Services.Groups.Downloads
     }
     
 }
+
+
+#endif

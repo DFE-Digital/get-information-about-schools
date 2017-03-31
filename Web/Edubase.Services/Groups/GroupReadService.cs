@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿#if(!TEXAPI)
+using AutoMapper;
 using Edubase.Data.Entity;
 using Edubase.Services.Enums;
 using Edubase.Services.Groups.Models;
@@ -228,3 +229,4 @@ namespace Edubase.Services.Groups
         }
     }
 }
+#endif

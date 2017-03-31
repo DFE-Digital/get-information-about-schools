@@ -35,6 +35,7 @@ using Edubase.Services.Nomenclature;
 using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Groups;
 using Edubase.Services.Texuna.Lookup;
+using Edubase.Services.Texuna.Governors;
 
 namespace Edubase.Web.UI
 {
@@ -74,11 +75,7 @@ namespace Edubase.Web.UI
 
         private static void RegisterTypes(ContainerBuilder builder)
         {
-#if QA
-            builder.RegisterType<MockSmtpEndPoint>().As<ISmtpEndPoint>();
-#else
-            builder.RegisterType<SmtpEndPoint>().As<ISmtpEndPoint>();
-#endif
+            builder.RegisterType<MockSmtpEndPoint>().As<ISmtpEndPoint>(); // use mock for now, we don't need to email error reports at the moment.
 
             builder.RegisterType<MessageLoggingService>()
                 .As<IMessageLoggingService>()
@@ -99,10 +96,15 @@ namespace Edubase.Web.UI
 
 #if (TEXAPI)
             builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
+            builder.RegisterType<EstablishmentDownloadApiService>().As<IEstablishmentDownloadService>();
             builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
+            builder.RegisterType<GroupDownloadApiService>().As<IGroupDownloadService>();
             builder.RegisterType<LookupApiService>().As<ILookupService>();
             builder.RegisterInstance(new HttpClient { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) }).SingleInstance().AsSelf();
             builder.RegisterType<HttpClientWrapper>().SingleInstance().AsSelf();
+
+            builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
+            builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
 #else
             
 

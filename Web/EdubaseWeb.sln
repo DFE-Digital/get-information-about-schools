@@ -27,6 +27,7 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 		DebugTexunaAPI|Any CPU = DebugTexunaAPI|Any CPU
 		Release|Any CPU = Release|Any CPU
+		ReleaseTexunaAPI|Any CPU = ReleaseTexunaAPI|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8C3D6834-3FA1-440A-A396-6489E22E8063}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
@@ -37,6 +38,8 @@ Global
 		{8C3D6834-3FA1-440A-A396-6489E22E8063}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{8C3D6834-3FA1-440A-A396-6489E22E8063}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C3D6834-3FA1-440A-A396-6489E22E8063}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C3D6834-3FA1-440A-A396-6489E22E8063}.ReleaseTexunaAPI|Any CPU.ActiveCfg = ReleaseTexunaAPI|Any CPU
+		{8C3D6834-3FA1-440A-A396-6489E22E8063}.ReleaseTexunaAPI|Any CPU.Build.0 = ReleaseTexunaAPI|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -45,6 +48,8 @@ Global
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.ReleaseTexunaAPI|Any CPU.ActiveCfg = ReleaseTexunaAPI|Any CPU
+		{D605ACE4-2659-48DC-BF21-94E7B8D230DA}.ReleaseTexunaAPI|Any CPU.Build.0 = ReleaseTexunaAPI|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -53,6 +58,8 @@ Global
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.ReleaseTexunaAPI|Any CPU.ActiveCfg = ReleaseTexunaAPI|Any CPU
+		{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}.ReleaseTexunaAPI|Any CPU.Build.0 = ReleaseTexunaAPI|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -61,6 +68,8 @@ Global
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.ReleaseTexunaAPI|Any CPU.ActiveCfg = ReleaseTexunaAPI|Any CPU
+		{F32E2A2E-6782-4293-B533-284FF1B17FF6}.ReleaseTexunaAPI|Any CPU.Build.0 = ReleaseTexunaAPI|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -69,6 +78,8 @@ Global
 		{13E16127-6989-497C-83A2-0127B407468E}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13E16127-6989-497C-83A2-0127B407468E}.ReleaseTexunaAPI|Any CPU.ActiveCfg = ReleaseTexunaAPI|Any CPU
+		{13E16127-6989-497C-83A2-0127B407468E}.ReleaseTexunaAPI|Any CPU.Build.0 = ReleaseTexunaAPI|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -77,6 +88,8 @@ Global
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4309E8AC-70FB-4B9B-88EA-15139156078C}.ReleaseTexunaAPI|Any CPU.ActiveCfg = ReleaseTexunaAPI|Any CPU
+		{4309E8AC-70FB-4B9B-88EA-15139156078C}.ReleaseTexunaAPI|Any CPU.Build.0 = ReleaseTexunaAPI|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Debug (QA)|Any CPU.ActiveCfg = Debug|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Debug (QA)|Any CPU.Build.0 = Debug|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -85,6 +98,8 @@ Global
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.ReleaseTexunaAPI|Any CPU.ActiveCfg = ReleaseTexunaAPI|Any CPU
+		{5880B171-A7FB-4E94-B4AA-C0E7B17F9DE2}.ReleaseTexunaAPI|Any CPU.Build.0 = ReleaseTexunaAPI|Any CPU
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug (QA)|Any CPU.ActiveCfg = Debug|Any CPU
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug (QA)|Any CPU.Build.0 = Debug|Any CPU
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -93,6 +108,8 @@ Global
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.DebugTexunaAPI|Any CPU.Build.0 = Debug-TexunaAPI|Any CPU
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.ReleaseTexunaAPI|Any CPU.ActiveCfg = ReleaseTexunaAPI|Any CPU
+		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.ReleaseTexunaAPI|Any CPU.Build.0 = ReleaseTexunaAPI|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

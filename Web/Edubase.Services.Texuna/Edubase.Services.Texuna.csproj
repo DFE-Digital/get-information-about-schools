@@ -39,6 +39,15 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseTexunaAPI|AnyCPU'">
+    <OutputPath>bin\ReleaseTexunaAPI\</OutputPath>
+    <DefineConstants>TRACE;TEXAPI</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -59,7 +68,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\HttpClientWrapper.cs" />
+    <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />
     <Compile Include="Establishments\EstablishmentReadApiService.cs" />
+    <Compile Include="Governors\GovernorDownloadApiService.cs" />
+    <Compile Include="Governors\GovernorsReadApiService.cs" />
+    <Compile Include="Groups\GroupDownloadApiService.cs" />
     <Compile Include="Groups\GroupReadApiService.cs" />
     <Compile Include="Lookup\LookupApiService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,9 +83,7 @@
       <Name>Edubase.Services</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Governors\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />

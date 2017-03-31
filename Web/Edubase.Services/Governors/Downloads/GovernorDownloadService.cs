@@ -1,4 +1,5 @@
-﻿using Edubase.Common.Cache;
+﻿#if(!TEXAPI)
+using Edubase.Common.Cache;
 using Edubase.Common.IO;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
@@ -215,3 +216,5 @@ namespace Edubase.Services.Governors.Downloads
     }
     
 }
+
+#endif

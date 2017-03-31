@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Edubase.Common;
 using Edubase.Services.Exceptions;
+using Autofac.Core;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -24,6 +25,16 @@ namespace Edubase.Web.UI.Filters
                 {
                     ViewName = "~/Views/Shared/DomainError.cshtml",
                     ViewData = new ViewDataDictionary() { { "PublicErrorMessage", (filterContext.Exception as EdubaseException).Message } }
+                };
+
+                filterContext.ExceptionHandled = true;
+            }
+            else if (filterContext.Exception.GetBaseException() is NotImplementedException || filterContext.Exception.GetBaseException() is DependencyResolutionException) // TODO: KHD: For removal post integration
+            {
+                filterContext.Result = new ViewResult
+                {
+                    ViewName = "~/Views/Shared/DomainError.cshtml",
+                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "Functionality has not been implemented yet" } }
                 };
 
                 filterContext.ExceptionHandled = true;

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿#if (!TEXAPI)
+using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Data.Entity;
@@ -100,3 +101,5 @@ namespace Edubase.Services.Establishments
         }
     }
 }
+
+#endif

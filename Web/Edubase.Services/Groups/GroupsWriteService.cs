@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity;
+﻿#if(!TEXAPI)
+using Edubase.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -134,3 +135,5 @@ namespace Edubase.Services.Groups
         }
     }
 }
+
+#endif
