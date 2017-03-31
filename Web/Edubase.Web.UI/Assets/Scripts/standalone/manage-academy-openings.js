@@ -159,6 +159,7 @@ $.when(getJson)
                 },
                 validateUrn: function () {
                     var validUrns = this.validUrns();
+                    this.presentDetail = false;
                     this.searchError = validUrns.indexOf(this.searchUrn) === -1;
                     if (!this.searchError) {
                         // this.editEstab(this.searchUrn);
