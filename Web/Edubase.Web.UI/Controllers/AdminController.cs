@@ -35,7 +35,7 @@ namespace Edubase.Web.UI.Controllers
             _azureSearchEndPoint = azureSearchEndPoint;
         }
 
-        
+#if(!TEXAPI)
         public async Task<ActionResult> Dashboard(string message = null)
         {
             ViewBag.Message = message;
@@ -65,7 +65,7 @@ namespace Edubase.Web.UI.Controllers
                 return View(nameof(Dashboard));
             }   
         }
-
+#endif
         [Route("Logs")]
         public async Task<ActionResult> Logs(string date, string skipToken)
         {
@@ -146,6 +146,7 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToAction(nameof(Dashboard), new { message = "Groups cache is now warming." });
         }
 
+#if (!TEXAPI)
         [HttpPost, Route("ResetAzureSearch")]
         public async Task<ActionResult> ResetAzureSearch()
         {
@@ -197,7 +198,8 @@ namespace Edubase.Web.UI.Controllers
             await _azureSearchEndPoint.DeleteDataSourceAsync(indexName + "-ds");
             await _azureSearchEndPoint.DeleteIndexerAsync(indexName + "-indexer");
         }
-        
+#endif
+
         public async Task FlushErrors() => await DependencyResolver.Current
                 .GetService<IMessageLoggingService>().FlushAsync();
     }
