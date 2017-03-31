@@ -34,6 +34,7 @@
             this.town = '';
             this.county = '';
             this.country = '';
+            this.selectAddress = 0;
 
             this.step = 0;
         },
@@ -48,8 +49,11 @@
             if (postCode.length > 0) { // TODO replace with more robust validation
                 self.postcodeError = false;
 
+                $('#address-results').find('option:gt(0)').remove();
+
                 $.getScript(postCodeUrl)
-                    .done(function(data) {
+                    .done(function (data) {
+                        
                         var addressOptions = document.createDocumentFragment();
                         var results = JSON.parse(data);
 
