@@ -39,5 +39,10 @@ namespace Edubase.Services.Texuna.Governors
         {
             return await _httpClient.PostAsync<ApiSearchResult<SearchGovernorDocument>>("governor/search", payload, principal);
         }
+
+        public Task<IEnumerable<GovernorModel>> GetSharedGovernors(int establishmentUrn)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

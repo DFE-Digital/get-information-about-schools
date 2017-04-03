@@ -17,27 +17,35 @@
                         @foreach (var governor in Model.Governors)
                         {
                             <li>
-                                
-                                <h3 class="bold-small"><input type="checkbox" class="form-control"/>@governor.FullName</h3>
-                                <dl>
-                                    <dt>Shared with:</dt>
-                                    <dd>No establishments</dd>
-                                    <dt>Postcode:</dt>
-                                    <dd>@governor.PostCode</dd>
-                                </dl>
-                                <dl>
-                                    <dt>GID:</dt>
-                                    <dd>@governor.Id</dd>
-                                    <dt>Appointed by:</dt>
-                                    <dd>@governor.AppointingBodyName</dd>
-                                    <dt>Date of birth:</dt>
-                                    <dd>@governor.DOB</dd>
-                                    <dt>Nationality:</dt>
-                                    <dd>@governor.Nationality</dd>
-                                </dl>
+                                <div class="expander-panel">
+                                    <h3 class="bold-small">
+                                        <span class="checkbox-wrap">
+                                            <input type="checkbox" id="gov-@governor.Id" class="panel-trigger"/>
+                                            <label for="gov-@governor.Id" class="edubase-button-checkbox">@governor.FullName</label>
+                                        </span>
+                                    </h3>
+                                    <dl>
+                                        <dt>Shared with:</dt>
+                                        <dd>No establishments</dd>
+                                        <dt>Postcode:</dt>
+                                        <dd>@governor.PostCode</dd>
+                                    </dl>
+                                    <div class="expander-panel-content">
+                                        <dl>
+                                            <dt>GID:</dt>
+                                            <dd>@governor.Id</dd>
+                                            <dt>Appointed by:</dt>
+                                            <dd>@governor.AppointingBodyName</dd>
+                                            <dt>Date of birth:</dt>
+                                            <dd>@governor.DOB</dd>
+                                            <dt>Nationality:</dt>
+                                            <dd>@governor.Nationality</dd>
+                                        </dl>
 
-                                @Html.RenderDateSelector(x => governor.AppointmentStartDate, "Date of appointment")
-                                @Html.RenderDateSelector(x => governor.AppointmentEndDate, "Date term ends")
+                                        @Html.RenderDateSelector(x => governor.AppointmentStartDate, "Date of appointment")
+                                        @Html.RenderDateSelector(x => governor.AppointmentEndDate, "Date term ends")
+                                    </div>
+                                </div>
                                 @*<div>
                                     <a href="@Url.RouteUrl("AddSharedGovernor", new {establishmentUrn = Model.Urn.Value, governorId = governor.Id})" class="button mobile-full-width">Select</a>
                                     <a href="#" class="button button-grey mobile-full-width">Cancel</a>
@@ -50,3 +58,16 @@
         </div>
     </div>
 </div>
+
+@section ViewScripts
+{
+    <script type="text/javascript">
+        $(".panel-trigger").change(function() {
+            if ($(this).is(":checked")) {
+                $(this).closest(".expander-panel").addClass("open-expander");
+            } else {
+                $(this).closest(".expander-panel").removeClass("open-expander");
+            }
+        })
+    </script>
+}
