@@ -1,7 +1,7 @@
 ﻿
 
 .changes-list-wrapper {
-    border-top: 4px $black solid;
+    border-top: 1px $black solid;
     padding-top: 12px;
 }
 
@@ -20,10 +20,15 @@
         font-weight: bold;
     }
 
+    thead {
+        td, th {
+            border-bottom: 4px $black solid;
+        }
+    }
    
 
     .cell-checkbox {
-        height: 40px;
+        height: 52px;
         position: relative;
 
         .edubase-button-checkbox {
@@ -37,8 +42,8 @@
             &:after {
                  content: attr(aria-label);
                  position: relative;
-                 top: 10px;
-                 left: 12px;
+                 top: 14px;
+                 left: 44px;
             }
             &:before {
                 content: "";
@@ -98,6 +103,9 @@
 }
 
 @media(max-width: 940px) {
+    .changes-list-wrapper {
+        border-top: 2px $black solid;    
+    }
     .approval-changes {
         thead {
             display: none;
