@@ -89,7 +89,7 @@ category: Forms
     }
 
     a {
-       // color: $error-colour;
+        color: $error-colour;
 
         @include ie-lte(6) {
             color: $error-colour !important;
@@ -200,7 +200,7 @@ category: Forms
         }
 
         a {
-           // color: $error-colour;
+            color: $error-colour;
             font-weight: bold;
             text-decoration: underline;
         }
