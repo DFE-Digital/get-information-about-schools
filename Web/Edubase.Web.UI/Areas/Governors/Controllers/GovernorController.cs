@@ -17,8 +17,11 @@ using StackExchange.Profiling;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http.Routing;
 using System.Web.Mvc;
 using Edubase.Services.Governors.Search;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -42,6 +45,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         const string VIEW_EDIT_GOV_VIEW_NAME = "~/Areas/Governors/Views/Governor/ViewEdit.cshtml";
         const string GROUPS_LAYOUT = "~/Areas/Groups/Views/Group/_EditLayoutPage.cshtml";
         const string ESTAB_LAYOUT = "~/Views/Establishment/_EditLayoutPage.cshtml";
+
+        const string ESTAB_SELECT_SHARED_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/SelectSharedGovernor";
+        const string ESTAB_ADD_SHARED_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/AddSharedGovernor";
 
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGovernorsReadService _governorsReadService;
@@ -198,6 +204,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             var replaceMode = (ControllerContext.RouteData.Route as System.Web.Routing.Route).Url.IndexOf("/Replace/", StringComparison.OrdinalIgnoreCase) > -1;
 
+            if (establishmentUrn.HasValue && role.HasValue &&
+                role.Value.OneOfThese(eLookupGovernorRole.SharedLocalGovernor,
+                    eLookupGovernorRole.SharedChairOfLocalGoverningBody))
+            {
+                return RedirectToRoute("SelectSharedGovernor", new {establishmentUrn = establishmentUrn.Value, role = role.Value});
+            }
+
             if (role == null && gid == null) throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
             var viewModel = new CreateEditGovernorViewModel()
             {
@@ -324,6 +337,42 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await PopulateLayoutProperties(viewModel, viewModel.EstablishmentUrn, viewModel.GroupUId);
             
             return View(viewModel);
+        }
+
+        [HttpGet, Route(ESTAB_SELECT_SHARED_GOVERNOR, Name = "SelectSharedGovernor")]
+        public async Task<ActionResult> SelectSharedGovernor(int establishmentUrn, eLookupGovernorRole role)
+        {
+            var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == (int) role).Name;
+
+            var viewModel = new SelectSharedGovernorViewModel
+            {
+                Governors = (await _governorsReadService.GetSharedGovernors(establishmentUrn)).Where(g => g.RoleId == (int?) role),
+                GovernorType = roleName.ToLowerInvariant()
+            };
+
+            await PopulateLayoutProperties(viewModel, establishmentUrn, null, null);
+
+            return View(viewModel);
+        }
+
+        [HttpPost, Route(ESTAB_SELECT_SHARED_GOVERNOR)]
+        public async Task<ActionResult> SelectSharedGovernor(SelectSharedGovernorViewModel model)
+        {
+            return this.RedirectToRoute("AddSharedGovernor",
+                new {establishmentUrn = model.Urn.Value, governorId = model.SelectedGovernorId});
+        }
+
+        [HttpGet, Route(ESTAB_ADD_SHARED_GOVERNOR, Name = "AddSharedGovernor")]
+        public async Task<ActionResult> AddSharedGovernor(int establishmentUrn, int governorId)
+        {
+            var model = new AddSharedGovernorViewModel
+            {
+                Governor = await _governorsReadService.GetGovernorAsync(governorId)
+            };
+
+            await PopulateLayoutProperties(model, establishmentUrn, null, null);
+
+            return View(model);
         }
 
         private async Task PopulateSelectLists(CreateEditGovernorViewModel viewModel)

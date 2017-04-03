@@ -28,6 +28,7 @@ namespace Edubase.Web.UI.Helpers
 {
     public static class HtmlHelperExtensions
     {
+        private enum DatePart { Day, Month, Year};
 
         public static MvcHtmlString ValidationCssClassFor<TModel, TProperty>(
             this HtmlHelper<TModel> htmlHelper,
@@ -53,6 +54,63 @@ namespace Edubase.Web.UI.Helpers
             }
 
             return MvcHtmlString.Empty;
+        }
+
+        public static MvcHtmlString RenderDateSelector<TModel>(this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, DateTimeViewModel>> dateTimeViewModel, string label)
+        {
+            var dateTimeHtmlHelper = htmlHelper.For<DateTimeViewModel>();
+
+            var id = label.Replace(" ", "").ToLower();
+            
+            var divTag = new TagBuilder("div");
+            divTag.AddCssClass("form-group");
+            divTag.AddCssClass("create-edit-form-group");
+            divTag.AddCssClass("drop-down-date");
+            divTag.AddCssClass("range-group");
+            divTag.AddCssClass(htmlHelper.ValidationCssClassFor(dateTimeViewModel).ToHtmlString());
+
+            var fieldsetTag = new TagBuilder("fieldset");
+            
+            var legendTag = new TagBuilder("legend");
+            legendTag.AddCssClass("bold-xsmall");
+            legendTag.MergeAttribute("style", "font-weight:bold;");
+            legendTag.SetInnerText(label);
+
+            var hintDivTag = new TagBuilder("div");
+            hintDivTag.AddCssClass("form-hint");
+            hintDivTag.SetInnerText("For example, 20 03 2003");
+
+            fieldsetTag.InnerHtml = $@"{legendTag}
+                                       {hintDivTag}
+                                       {htmlHelper.ValidationMessageFor(dateTimeViewModel)}
+                                       {BuildDatePart(dateTimeHtmlHelper, DatePart.Day, id)}
+                                       {BuildDatePart(dateTimeHtmlHelper, DatePart.Month, id)}
+                                       {BuildDatePart(dateTimeHtmlHelper, DatePart.Year, id)}";
+
+            divTag.InnerHtml = fieldsetTag.ToString();
+
+            return new MvcHtmlString(divTag.ToString());
+        }
+
+        private static string BuildDatePart(HtmlHelper<DateTimeViewModel> htmlHelper, DatePart part, string id)
+        {
+            var labelFor = (part == DatePart.Day) ? $"{id}-day" : $"opendate-{part.ToString().ToLower()}";
+
+            var spanTag = new TagBuilder("span");
+            spanTag.AddCssClass("inline-form-control");
+
+            var labelTag = new TagBuilder("label");
+            labelTag.MergeAttribute("for", labelFor);
+            labelTag.InnerHtml = part.ToString();
+
+            var dropDown = part == DatePart.Day ? htmlHelper.EduDayDropDownFor(x => x.Day, new { id = $"{id}-day", @class = "form-control", aria_describedby = $"help-{id}-day"}) 
+                         : part == DatePart.Month ? htmlHelper.EduMonthDropDownFor(x => x.Month, new { id = $"{id}-month", @class = "form-control", aria_describedby = $"help-{id}-month" })
+                         : htmlHelper.EduYearDropDownFor(x => x.Year, new { id = $"{id}-year", @class = "form-control", aria_describedby = $"help-{id}-year" });
+
+            spanTag.InnerHtml = $"{labelTag}{dropDown}";
+
+            return spanTag.ToString();
         }
 
         [Obsolete]
@@ -227,7 +285,44 @@ namespace Edubase.Web.UI.Helpers
 
         }
 
+        public static HtmlHelper<TModel> For<TModel>(this HtmlHelper helper) where TModel : class, new()
+        {
+            return For<TModel>(helper.ViewContext, helper.ViewDataContainer.ViewData, helper.RouteCollection);
+        }
 
+        public static HtmlHelper<TModel> For<TModel>(this HtmlHelper helper, TModel model)
+        {
+            return For<TModel>(helper.ViewContext, helper.ViewDataContainer.ViewData, helper.RouteCollection, model);
+        }
+
+        public static HtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection) where TModel : class, new()
+        {
+            TModel model = new TModel();
+            return For<TModel>(viewContext, viewData, routeCollection, model);
+        }
+
+        public static HtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection, TModel model)
+        {
+            var newViewData = new ViewDataDictionary(viewData) { Model = model };
+            ViewContext newViewContext = new ViewContext(
+                viewContext.Controller.ControllerContext,
+                viewContext.View,
+                newViewData,
+                viewContext.TempData,
+                viewContext.Writer);
+            var viewDataContainer = new ViewDataContainer(newViewContext.ViewData);
+            return new HtmlHelper<TModel>(newViewContext, viewDataContainer, routeCollection);
+        }
+
+        private class ViewDataContainer : System.Web.Mvc.IViewDataContainer
+        {
+            public System.Web.Mvc.ViewDataDictionary ViewData { get; set; }
+
+            public ViewDataContainer(System.Web.Mvc.ViewDataDictionary viewData)
+            {
+                ViewData = viewData;
+            }
+        }
 
     }
 }

@@ -278,12 +278,14 @@
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
+    <Compile Include="Areas\Governors\Models\AddSharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\CreateEditGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\EditGovernanceModeViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
     <Compile Include="Areas\Governors\Models\ReplaceGovernorViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\SelectSharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\Validators\CreateEditGovernorViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\GovernorsGridViewModelValidator.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
@@ -411,6 +413,8 @@
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
     <Content Include="App_Data\Kentor.AuthServices.Tests.pfx" />
     <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\SelectSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\AddSharedGovernor.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -802,7 +806,9 @@
     <Content Include="public\jquery\bower.json" />
     <Content Include="public\jquery\dist\jquery.min.map" />
     <Content Include="public\jquery\src\sizzle\dist\sizzle.min.map" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Areas\Governors\Views\web.config" />
     <Content Include="Areas\Governors\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Governors\Views\GovernorSearch\Index.cshtml" />

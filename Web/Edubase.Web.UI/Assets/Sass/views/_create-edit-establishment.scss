@@ -278,3 +278,36 @@ div.governor-list {
     margin: 40px  0 12px;
     padding-top: 12px;
 }
+
+div.shared-governor-list {
+    padding-left: 15px;
+
+    li {
+        margin-top: 15px;
+    }
+
+    dl {
+        overflow: hidden;
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        @media (min-width: 640px) {
+            font-size: 14px;
+        }
+    }
+    dt, dd {
+        float: left;
+    }
+    dt {
+        clear: left;
+        padding-right: 0.5em;
+
+        &.inline-details {
+            clear: none;
+            margin-left: 12px;
+        }
+    }
+    h2 {
+        margin-bottom:15px;
+    }
+}

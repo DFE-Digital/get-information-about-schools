@@ -1,0 +1,38 @@
+﻿@model SelectSharedGovernorViewModel
+
+@{
+    ViewBag.hideLogo = true;
+    ViewBag.SelectedTab = "EditGovernance";
+    Layout = Model.Layout;
+}
+
+<div id="select-shared-governor" class="tab-content">
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <h2 class="bold-medium">Select @Model.GovernorType</h2>
+
+            <div class="shared-governor-list">
+                <form action="">
+                    <ul>
+                        @foreach (var governor in Model.Governors)
+                        {
+                            <li>
+                                <h3 class="bold-small">@governor.GetFullName()</h3>
+                                <dl>
+                                    <dt>Shared with:</dt>
+                                    <dd>No establishments</dd>
+                                    <dt>Postcode:</dt>
+                                    <dd>@governor.PostCode</dd>
+                                </dl>
+                                <div>
+                                    <a href="@Url.RouteUrl("AddSharedGovernor", new {establishmentUrn = Model.Urn.Value, governorId = governor.Id})" class="button mobile-full-width">Select</a>
+                                    <a href="#" class="button button-grey mobile-full-width">Cancel</a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
