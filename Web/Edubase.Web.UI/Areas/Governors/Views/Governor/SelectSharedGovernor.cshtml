@@ -17,7 +17,8 @@
                         @foreach (var governor in Model.Governors)
                         {
                             <li>
-                                <h3 class="bold-small">@governor.FullName</h3>
+                                
+                                <h3 class="bold-small"><input type="checkbox" class="form-control"/>@governor.FullName</h3>
                                 <dl>
                                     <dt>Shared with:</dt>
                                     <dd>No establishments</dd>
@@ -34,7 +35,7 @@
                                     <dt>Nationality:</dt>
                                     <dd>@governor.Nationality</dd>
                                 </dl>
-                                
+
                                 @Html.RenderDateSelector(x => governor.AppointmentStartDate, "Date of appointment")
                                 @Html.RenderDateSelector(x => governor.AppointmentEndDate, "Date term ends")
                                 @*<div>
