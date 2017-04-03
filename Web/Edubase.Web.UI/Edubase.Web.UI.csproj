@@ -393,6 +393,7 @@
     <Content Include="Assets\Sass\views\_change-approvals.scss" />
     <Content Include="Assets\Sass\views\_academy-openings.scss" />
     <Content Include="Areas\Governors\Views\Governor\EditGovernanceMode.cshtml" />
+    <Content Include="Assets\Sass\elements\_tooltips.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -436,6 +437,7 @@
     <Content Include="public\assets\images\icons\exclaim-transparentx2.PNG" />
     <Content Include="public\assets\images\icons\exclaim.PNG" />
     <Content Include="public\assets\images\icons\field-clear-cross.png" />
+    <Content Include="public\assets\images\icons\help-icon.png" />
     <Content Include="public\assets\images\icons\icon-calendar-2x.png" />
     <Content Include="public\assets\images\icons\icon-calendar.png" />
     <Content Include="public\assets\images\icons\icon-file-download-2x.png" />
@@ -456,6 +458,7 @@
     <Content Include="public\assets\images\icons\icon-search.png" />
     <Content Include="public\assets\images\icons\icon-white-cross-transparent.png" />
     <Content Include="public\assets\images\icons\tick.PNG" />
+    <Content Include="public\assets\images\icons\tooltip-close.gif" />
     <Content Include="public\assets\images\ofsted-logo-sm.jpeg" />
     <Content Include="public\assets\images\ofsted-logo-x-small.jpeg" />
     <Content Include="public\assets\images\ofsted-logo.jpg" />
@@ -873,6 +876,7 @@
     <Content Include="Views\Tools\SearchChangeHistory.cshtml" />
     <Content Include="Views\Tools\ManageAcademyOpenings.cshtml" />
     <Content Include="Views\Prototype\AddressLookup.cshtml" />
+    <Content Include="Views\Prototype\HelpIcon.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
