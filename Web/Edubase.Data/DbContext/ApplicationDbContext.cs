@@ -2,7 +2,6 @@
 using Edubase.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Threading.Tasks;
@@ -22,6 +21,7 @@ namespace Edubase.Data.DbContext
         public DbSet<Governor> Governors { get; set; }
         public DbSet<EstablishmentChangeHistory> EstablishmentChangeHistories { get; set; }
         public DbSet<GroupChangeHistory> GroupChangeHistories { get; set; }
+        public DbSet<EstablishmentGovernor> EstablishmentGovernors { get; set; }
 
         public override IDbSet<ApplicationUser> Users
         {
@@ -179,6 +179,5 @@ namespace Edubase.Data.DbContext
         {
             return base.SaveChangesAsync();
         }
-
     }
 }

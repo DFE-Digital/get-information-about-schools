@@ -116,6 +116,13 @@ namespace Edubase.Services.Governors
                             retVal.ApplicableRoles.AddRange(new[] { GR.ChairOfLocalGoverningBody, GR.LocalGovernor });
                         else retVal.ApplicableRoles.AddRange(commonGovernorRoleSet);
                     }
+
+                    if (domainModel.GovernanceMode == eGovernanceMode.LocalAndSharedGovernors ||
+                        domainModel.GovernanceMode == eGovernanceMode.SharesLocalGovernors ||
+                        domainModel.GovernanceMode == eGovernanceMode.NoLocalGovernors)
+                    {
+                        retVal.ApplicableRoles.AddRange(new [] { GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor });
+                    }
                 }
             }
             else
@@ -205,6 +212,33 @@ namespace Edubase.Services.Governors
             return Map(governorDataModel, displayPolicy);
         }
 
+        public async Task<IEnumerable<GovernorModel>> GetSharedGovernors(int establishmentUrn)
+        {
+            var governors = new List<GovernorModel>();
+
+            var groups = await _groupReadService.GetAllByEstablishmentUrnAsync(establishmentUrn);
+            
+            var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
+            var roles = new List<GR> {GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor};
+            var displayPolicies = roles.ToDictionary(r => r, r => templateDisplayPolicy.Clone());
+            ProcessDisplayPolicyOverrides(displayPolicies);
+
+            foreach (var group in groups)
+            {
+                governors.AddRange(await GetGovernorsAsync(null, group.GroupUID, true, roles.Cast<int>(), displayPolicies, false));
+            }
+
+            return governors;
+        }
+
+        public async Task<SharedGovernorDetailsModel> GetSharedGovernorDetails(int gid)
+        {
+            var displayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
+            var db = _dbContextFactory.Obtain();
+            var governor = await db.Governors.SingleOrThrowAsync(x => x.Id == gid);
+            return MapToSharedDetails(governor, displayPolicy);
+        }
+
         private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)
         {
             var db = _dbContextFactory.Obtain();
@@ -258,11 +292,45 @@ namespace Edubase.Services.Governors
             };
         }
 
+        private SharedGovernorDetailsModel MapToSharedDetails(Governor governor, GovernorDisplayPolicy policy)
+        {
+            return new SharedGovernorDetailsModel
+            {
+                AppointingBodyId = Get(() => governor.AppointingBodyId, policy.AppointingBodyId),
+                AppointingBodyName = Get(() => _cachedLookupService.GovernorAppointingBodiesGetAll().FirstOrDefault(l => l.Id == governor.AppointingBodyId)?.Name, policy.AppointingBodyId),
+                AppointmentEndDate = Get(() => governor.AppointmentEndDate, true),
+                AppointmentStartDate = Get(() => governor.AppointmentStartDate, policy.AppointmentStartDate),
+                DOB = Get(() => governor.DOB, policy.DOB),
+                RoleId = governor.RoleId,
+                EmailAddress = Get(() => governor.EmailAddress, policy.EmailAddress),
+                CreatedUtc = governor.CreatedUtc,
+                EstablishmentUrn = governor.EstablishmentUrn,
+                GroupUID = governor.GroupUID,
+                Id = Get(() => governor.Id, policy.Id),
+                IsDeleted = governor.IsDeleted,
+                LastUpdatedUtc = governor.LastUpdatedUtc,
+                Nationality = Get(() => governor.Nationality, policy.Nationality),
+                Person_FirstName = Get(() => governor.Person.FirstName, policy.FullName),
+                Person_LastName = Get(() => governor.Person.LastName, policy.FullName),
+                Person_MiddleName = Get(() => governor.Person.MiddleName, policy.FullName),
+                Person_Title = Get(() => governor.Person.Title, policy.FullName),
+                PostCode = Get(() => governor.PostCode, policy.PostCode),
+                PreviousPerson_FirstName = Get(() => governor.PreviousPerson.FirstName, policy.PreviousFullName),
+                PreviousPerson_LastName = Get(() => governor.PreviousPerson.LastName, policy.PreviousFullName),
+                PreviousPerson_MiddleName = Get(() => governor.PreviousPerson.MiddleName, policy.PreviousFullName),
+                PreviousPerson_Title = Get(() => governor.PreviousPerson.Title, policy.PreviousFullName),
+                TelephoneNumber = Get(() => governor.TelephoneNumber, policy.TelephoneNumber),
+                Appointments = governor.Establishments.Select(e => new GovernorAppointment { AppointmentStartDate = e.AppointmentEndDate.Value, AppointmentEndDate = e.AppointmentEndDate.Value, EstablishmentUrn = e.EstabishmentUrn })
+            };
+        }
+
         private T Get<T>(Func<T> func, bool flag)
         {
             if (flag) return func();
             else return default(T);
         }
+
+
     }
 }
 

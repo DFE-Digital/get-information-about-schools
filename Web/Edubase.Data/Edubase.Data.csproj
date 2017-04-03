@@ -187,6 +187,7 @@
     <Compile Include="DbGeographyConverter.cs" />
     <Compile Include="DbUtil.cs" />
     <Compile Include="Entity\ComplexTypes\Person.cs" />
+    <Compile Include="Entity\EstablishmentGovernor.cs" />
     <Compile Include="Entity\GroupChangeHistory.cs" />
     <Compile Include="Entity\EstablishmentChangeHistory.cs" />
     <Compile Include="Entity\LogMessage.cs" />
@@ -244,6 +245,10 @@
     <Compile Include="Migrations\201703241120045_8464GovernanceFlagColumn.cs" />
     <Compile Include="Migrations\201703241120045_8464GovernanceFlagColumn.Designer.cs">
       <DependentUpon>201703241120045_8464GovernanceFlagColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704031050493_7742_SharedGovernance.cs" />
+    <Compile Include="Migrations\201704031050493_7742_SharedGovernance.Designer.cs">
+      <DependentUpon>201704031050493_7742_SharedGovernance.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -307,6 +312,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703241120045_8464GovernanceFlagColumn.resx">
       <DependentUpon>201703241120045_8464GovernanceFlagColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704031050493_7742_SharedGovernance.resx">
+      <DependentUpon>201704031050493_7742_SharedGovernance.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

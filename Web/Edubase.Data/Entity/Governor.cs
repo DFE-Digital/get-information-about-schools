@@ -35,6 +35,8 @@ namespace Edubase.Data.Entity
         [ForeignKey("GroupUID")]
         public GroupCollection Group { get; set; }
 
+        public virtual IEnumerable<EstablishmentGovernor> Establishments { get; set; }
+
         public override int? GetId() => Id;
     }
 }
