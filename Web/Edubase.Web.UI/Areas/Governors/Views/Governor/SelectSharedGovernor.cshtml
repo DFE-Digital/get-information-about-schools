@@ -17,17 +17,30 @@
                         @foreach (var governor in Model.Governors)
                         {
                             <li>
-                                <h3 class="bold-small">@governor.GetFullName()</h3>
+                                <h3 class="bold-small">@governor.FullName</h3>
                                 <dl>
                                     <dt>Shared with:</dt>
                                     <dd>No establishments</dd>
                                     <dt>Postcode:</dt>
                                     <dd>@governor.PostCode</dd>
                                 </dl>
-                                <div>
+                                <dl>
+                                    <dt>GID:</dt>
+                                    <dd>@governor.Id</dd>
+                                    <dt>Appointed by:</dt>
+                                    <dd>@governor.AppointingBodyName</dd>
+                                    <dt>Date of birth:</dt>
+                                    <dd>@governor.DOB</dd>
+                                    <dt>Nationality:</dt>
+                                    <dd>@governor.Nationality</dd>
+                                </dl>
+                                
+                                @Html.RenderDateSelector(x => governor.AppointmentStartDate, "Date of appointment")
+                                @Html.RenderDateSelector(x => governor.AppointmentEndDate, "Date term ends")
+                                @*<div>
                                     <a href="@Url.RouteUrl("AddSharedGovernor", new {establishmentUrn = Model.Urn.Value, governorId = governor.Id})" class="button mobile-full-width">Select</a>
                                     <a href="#" class="button button-grey mobile-full-width">Cancel</a>
-                                </div>
+                                </div>*@
                             </li>
                         }
                     </ul>

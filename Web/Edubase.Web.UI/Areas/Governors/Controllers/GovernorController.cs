@@ -343,10 +343,21 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> SelectSharedGovernor(int establishmentUrn, eLookupGovernorRole role)
         {
             var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == (int) role).Name;
+            var governors = (await _governorsReadService.GetSharedGovernors(establishmentUrn)).Where(g => g.RoleId == (int?)role);
 
             var viewModel = new SelectSharedGovernorViewModel
             {
-                Governors = (await _governorsReadService.GetSharedGovernors(establishmentUrn)).Where(g => g.RoleId == (int?) role),
+                Governors = governors.Select(g => new SelectSharedGovernorViewModel.GovernorViewModel
+                {
+                    AppointingBodyName = g.AppointingBodyName,
+                    AppointmentStartDate = new DateTimeViewModel(g.AppointmentStartDate),
+                    AppointmentEndDate = new DateTimeViewModel(g.AppointmentEndDate),
+                    DOB = g.DOB,
+                    FullName = g.GetFullName(),
+                    Id = g.Id.Value,
+                    Nationality = g.Nationality,
+                    PostCode = g.PostCode
+                }),
                 GovernorType = roleName.ToLowerInvariant()
             };
 
