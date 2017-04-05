@@ -27,3 +27,33 @@
     margin-bottom: 0;
   }
 }
+
+
+.date-group-wrap {
+    border-left:4px solid #bbb;
+    padding-left:10px;
+}
+
+.edit-warning {
+    background-color: $yellow-25;
+    background-image: file-url('icons/icon-important-2x.png');
+    background-repeat: no-repeat;
+    background-position: 10px 50%;
+    background-size: 36px;
+    border-left: $black 4px solid;
+    padding-left: 58px;
+    min-height: 60px;
+
+    @include media(mobile) {
+        background-size: 24px;
+    }
+
+    .js-enabled  & {
+        display: none;
+    }
+
+    p {
+        font-weight: bold;
+        padding: 1em 0;
+    }
+}
