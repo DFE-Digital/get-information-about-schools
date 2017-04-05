@@ -264,8 +264,12 @@ namespace Edubase.Web.UI.Models
         public int? TotalNumberOfFullTimePupils { get; set; }
         public int? TotalNumberOfPartTimePupils { get; set; }
         public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
+
+        [Obsolete("Use SENStat/SENNoStat")]
         public int? NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
+        [Obsolete("Use SENStat/SENNoStat")]
         public int? NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
+
         public int? TotalNumberOfPupilsInPublicCare { get; set; }
         public int? PTBoysAged2AndUnder { get; set; }
         public int? PTBoysAged3 { get; set; }
