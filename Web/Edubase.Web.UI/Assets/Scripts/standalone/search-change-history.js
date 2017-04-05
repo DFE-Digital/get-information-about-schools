@@ -81,6 +81,7 @@ var SearchChangeHistory = new Vue({
             'la-maintained',
             'non-maintained',
             'other'],
+        establishmentTypesCleared: false,
 
         establishmentFields: [
             'name',
@@ -142,7 +143,7 @@ var SearchChangeHistory = new Vue({
             'msoa',
             'lsoa'
         ],
-
+        establishmentFieldsCleared: false,
         groupTypes: [
             'academies',
             'academy',
@@ -152,7 +153,7 @@ var SearchChangeHistory = new Vue({
             'childrens-group',
             'childrens-collaboration'
         ],
-
+        groupTypesCleared: false,
 
         //download view
         downloadType: 'csv',
@@ -240,6 +241,14 @@ var SearchChangeHistory = new Vue({
             this.groupTypes = [];
             this.establishmentFields = [];
             this.establishmentTypes = [];
+        },
+        selectSingle: function (panel, item) {
+            if (!this[panel + 'Cleared']) {
+                this[panel] = [];
+                this[panel].push(item);
+                this[panel + 'Cleared'] = true;
+            }
+            
         }
     }
 

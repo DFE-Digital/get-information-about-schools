@@ -11,12 +11,15 @@
             <h1 class="heading-large">Manage academy openings</h1>
             <div class="error-summary" v-show="searchError" v-cloak>
                 <h2 class="heading-medium error-summary-heading" v-show="searchError">No matching establishment</h2>
-                <ul>
-                    <li class="error-message" v-show="searchError">
-                        You have entered an invalid URN<br />
-                        <a href="#academy-search-field">Please correct the URN to continue</a>
-                    </li>
-                </ul>
+                <div v-show="searchError">
+                    <p>You have entered an invalid URN</p>
+                    <ul>
+                        <li class="error-message">
+                            <a href="#academy-search-field">Please correct the URN to continue</a>
+                        </li>
+                    </ul>
+                </div>
+                
             </div>
         </div>
         <div class="column-full">

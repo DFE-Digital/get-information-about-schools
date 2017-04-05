@@ -6,7 +6,7 @@
 <div class="grid-row" id="change-history-app" v-cloak>
     <div class="column-full">
         <h1 class="heading-large">Change history</h1>
-        <div class="error-summary"  v-show="globalError" >
+        <div class="error-summary" v-show="globalError">
             <p class="error-message" v-show="ajaxError">Sorry, something went wrong. Please try again.</p>
             <p class="error-message" v-show="filterTypeSelectedError">Please select establishment or group.</p>
         </div>
@@ -106,42 +106,50 @@
                     <a href="#" class="panel-trigger heading-small">Establishment type</a>
                     <div class="expander-panel-content">
                         <span class="checkbox-wrap">
-                            <input id="et-academies" type="checkbox" value="academies" v-model="establishmentTypes" />
+                            <input id="et-academies" type="checkbox" value="academies" v-model="establishmentTypes"
+                                   v-on:change.once="selectSingle('establishmentTypes', 'academies')" />
                             <label for="et-academies" class="edubase-button-checkbox">Academies</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="et-childrencentres" type="checkbox" value="children-centres" v-model="establishmentTypes" />
+                            <input id="et-childrencentres" type="checkbox" value="children-centres" v-model="establishmentTypes"
+                                   v-on:change.once="selectSingle('establishmentTypes', 'children-centres')" />
                             <label for="et-childrencentres" class="edubase-button-checkbox">Children centres</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="et-freeschools" type="checkbox" value="free-schools" v-model="establishmentTypes" />
+                            <input id="et-freeschools" type="checkbox" value="free-schools" v-model="establishmentTypes"
+                                   v-on:change.once="selectSingle('establishmentTypes', 'free-schools')" />
                             <label for="et-freeschools" class="edubase-button-checkbox">Free schools</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="et-higher-further" type="checkbox" value="higher-education" v-model="establishmentTypes" />
+                            <input id="et-higher-further" type="checkbox" value="higher-education" v-model="establishmentTypes"
+                                   v-on:change.once="selectSingle('establishmentTypes', 'higher-education')" />
                             <label for="et-higher-further" class="edubase-button-checkbox">Higher and further education</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="et-independent" type="checkbox" value="independent" v-model="establishmentTypes" />
+                            <input id="et-independent" type="checkbox" value="independent" v-model="establishmentTypes"
+                                   v-on:change.once="selectSingle('establishmentTypes', 'independent')" />
                             <label for="et-independent" class="edubase-button-checkbox">Independent schools</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="et-la-maintained" type="checkbox" value="la-maintained" v-model="establishmentTypes" />
+                            <input id="et-la-maintained" type="checkbox" value="la-maintained" v-model="establishmentTypes"
+                                   v-on:change.once="selectSingle('establishmentTypes', 'la-maintained')" />
                             <label for="et-la-maintained" class="edubase-button-checkbox">LA maintained schools</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="et-non-maintained" type="checkbox" value="non-maintained" v-model="establishmentTypes" />
+                            <input id="et-non-maintained" type="checkbox" value="non-maintained" v-model="establishmentTypes"
+                                   v-on:change.once="selectSingle('establishmentTypes', 'non-maintained')" />
                             <label for="et-non-maintained" class="edubase-button-checkbox">Non maintained schools</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="et-other" type="checkbox" value="other" v-model="establishmentTypes" />
+                            <input id="et-other" type="checkbox" value="other" v-model="establishmentTypes"
+                                   v-on:change.once="selectSingle('establishmentTypes', 'other')" />
                             <label for="et-other" class="edubase-button-checkbox">Other</label>
                         </span>
 
@@ -153,292 +161,350 @@
 
                     <div class="expander-panel-content">
                         <span class="checkbox-wrap">
-                            <input id="ef-name" type="checkbox" value="name" v-model="establishmentFields" />
+                            <input id="ef-name" type="checkbox" value="name" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'name')" />
                             <label for="ef-name" class="edubase-button-checkbox">Establishment name</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-locality" type="checkbox" value="locality" v-model="establishmentFields" />
+                            <input id="ef-locality" type="checkbox" value="locality" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'locality')" />
                             <label for="ef-locality" class="edubase-button-checkbox">Locality</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-city" type="checkbox" value="city" v-model="establishmentFields" />
+                            <input id="ef-city" type="checkbox" value="city" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'city')" />
                             <label for="ef-city" class="edubase-button-checkbox">City or town</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-postcode" type="checkbox" value="postcode" v-model="establishmentFields" />
+                            <input id="ef-postcode" type="checkbox" value="postcode" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'postcode')" />
                             <label for="ef-postcode" class="edubase-button-checkbox">Postcode</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-additional-address" type="checkbox" value="additional-address" v-model="establishmentFields" />
+                            <input id="ef-additional-address" type="checkbox" value="additional-address" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'additional-address')" />
                             <label for="ef-additional-address" class="edubase-button-checkbox">Additional address</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-head-title" type="checkbox" value="head-title" v-model="establishmentFields" />
+                            <input id="ef-head-title" type="checkbox" value="head-title" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'head-title')" />
                             <label for="ef-head-title" class="edubase-button-checkbox">Head title</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-head-name" type="checkbox" value="head-name" v-model="establishmentFields" />
+                            <input id="ef-head-name" type="checkbox" value="head-name" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'head-name')" />
                             <label for="ef-head-title" class="edubase-button-checkbox">Head name</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-statutory-low-age" type="checkbox" value="statutory-low-age" v-model="establishmentFields" />
+                            <input id="ef-statutory-low-age" type="checkbox" value="statutory-low-age" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'statutory-low-age')" />
                             <label for="ef-statutory-low-age" class="edubase-button-checkbox">Statutory low age</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-statutory-high-age" type="checkbox" value="statutory-high-age" v-model="establishmentFields" />
+                            <input id="ef-statutory-high-age" type="checkbox" value="statutory-high-age" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'statutory-high-age')" />
                             <label for="ef-statutory-high-age" class="edubase-button-checkbox">Statutory high age</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-education-phase" type="checkbox" value="education-phase" v-model="establishmentFields" />
+                            <input id="ef-education-phase" type="checkbox" value="education-phase" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'education-phase')" />
                             <label for="ef-education-phase" class="edubase-button-checkbox">Education phase</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-type" type="checkbox" value="type" v-model="establishmentFields" />
+                            <input id="ef-type" type="checkbox" value="type" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'type')" />
                             <label for="ef-type" class="edubase-button-checkbox">Type</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-further-education-type" type="checkbox" value="further-education-type" v-model="establishmentFields" />
+                            <input id="ef-further-education-type" type="checkbox" value="further-education-type" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'further-education-type')" />
                             <label for="ef-further-education-type" class="edubase-button-checkbox">Further education type</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-gender" type="checkbox" value="gender" v-model="establishmentFields" />
+                            <input id="ef-gender" type="checkbox" value="gender" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'gender')" />
                             <label for="ef-gender" class="edubase-button-checkbox">Gender</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-la" type="checkbox" value="la" v-model="establishmentFields" />
+                            <input id="ef-la" type="checkbox" value="la" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'la')" />
                             <label for="ef-la" class="edubase-button-checkbox">Local authority</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-establishment-number" type="checkbox" value="establishment-number" v-model="establishmentFields" />
+                            <input id="ef-establishment-number" type="checkbox" value="establishment-number" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'establishment-number')" />
                             <label for="ef-establishment-number" class="edubase-button-checkbox">Establishment number</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-ukprn" type="checkbox" value="ukprn" v-model="establishmentFields" />
+                            <input id="ef-ukprn" type="checkbox" value="ukprn" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'ukprn')" />
                             <label for="ef-ukprn" class="edubase-button-checkbox">UKPRN</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-status" type="checkbox" value="status" v-model="establishmentFields" />
+                            <input id="ef-status" type="checkbox" value="status" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'status')" />
                             <label for="ef-status" class="edubase-button-checkbox">Status</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-admissions-policy" type="checkbox" value="admissions-policy" v-model="establishmentFields" />
+                            <input id="ef-admissions-policy" type="checkbox" value="admissions-policy" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'admissions-policy')" />
                             <label for="ef-admissions-policy" class="edubase-button-checkbox">Admissions policy</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-website" type="checkbox" value="website" v-model="establishmentFields" />
+                            <input id="ef-website" type="checkbox" value="website" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'website')" />
                             <label for="ef-website" class="edubase-button-checkbox">Website address</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-phone" type="checkbox" value="phone" v-model="establishmentFields" />
+                            <input id="ef-phone" type="checkbox" value="phone" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'phone')" />
                             <label for="ef-phone" class="edubase-button-checkbox">Telephone number</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-inspectorate" type="checkbox" value="inspectorate" v-model="establishmentFields" />
+                            <input id="ef-inspectorate" type="checkbox" value="inspectorate" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'inspectorate')" />
                             <label for="ef-inspectorate" class="edubase-button-checkbox">Inspectorate</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-proprieter-name" type="checkbox" value="proprieter-name" v-model="establishmentFields" />
+                            <input id="ef-proprieter-name" type="checkbox" value="proprieter-name" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'proprieter-name')" />
                             <label for="ef-proprieter-name" class="edubase-button-checkbox">Proprieter name</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-religious-character" type="checkbox" value="religious-character" v-model="establishmentFields" />
+                            <input id="ef-religious-character" type="checkbox" value="religious-character" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'religious-character')" />
                             <label for="ef-religious-character" class="edubase-button-checkbox">Religious character</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-diocese" type="checkbox" value="diocese" v-model="establishmentFields" />
+                            <input id="ef-diocese" type="checkbox" value="diocese" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'diocese')" />
                             <label for="ef-diocese" class="edubase-button-checkbox">Diocese</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-religious-ethos" type="checkbox" value="religious-ethos" v-model="establishmentFields" />
+                            <input id="ef-religious-ethos" type="checkbox" value="religious-ethos" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'religious-ethos')" />
                             <label for="ef-religious-ethos" class="edubase-button-checkbox">Religious ethos</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-provision-boarding" type="checkbox" value="provision-boarding" v-model="establishmentFields" />
+                            <input id="ef-provision-boarding" type="checkbox" value="provision-boarding" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'provision-boarding')" />
                             <label for="ef-provision-boarding" class="edubase-button-checkbox">Provision boarding</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-provision-nursery" type="checkbox" value="provision-nursery" v-model="establishmentFields" />
+                            <input id="ef-provision-nursery" type="checkbox" value="provision-nursery" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'provision-nursery')" />
                             <label for="ef-provision-nursery" class="edubase-button-checkbox">Provision nursery</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-provision-6thform" type="checkbox" value="provision-6thform" v-model="establishmentFields" />
+                            <input id="ef-provision-6thform" type="checkbox" value="provision-6thform" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'provision-6thform')" />
                             <label for="ef-provision-6thform" class="edubase-button-checkbox">Provision offical sixth form</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-capacity" type="checkbox" value="capacity" v-model="establishmentFields" />
+                            <input id="ef-capacity" type="checkbox" value="capacity" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'capacity')" />
                             <label for="ef-capacity" class="edubase-button-checkbox">Capacity</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-section41" type="checkbox" value="section41" v-model="establishmentFields" />
+                            <input id="ef-section41" type="checkbox" value="section41" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'section41')" />
                             <label for="ef-section41" class="edubase-button-checkbox">Section 41 approval</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-opendate" type="checkbox" value="opendate" v-model="establishmentFields" />
+                            <input id="ef-opendate" type="checkbox" value="opendate" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'opendate')" />
                             <label for="ef-opendate" class="edubase-button-checkbox">Open date</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-reason-opened" type="checkbox" value="reason-opened" v-model="establishmentFields" />
+                            <input id="ef-reason-opened" type="checkbox" value="reason-opened" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'reason-opened')" />
                             <label for="ef-reason-opened" class="edubase-button-checkbox">Reason establishment opened</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-closedate" type="checkbox" value="closedate" v-model="establishmentFields" />
+                            <input id="ef-closedate" type="checkbox" value="closedate" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'closedate')" />
                             <label for="ef-closedate" class="edubase-button-checkbox">Close date</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-reason-closed" type="checkbox" value="reason-closed" v-model="establishmentFields" />
+                            <input id="ef-reason-closed" type="checkbox" value="reason-closed" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'reason-closed')" />
                             <label for="ef-reason-closed" class="edubase-button-checkbox">Reason establishment closed</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-special-classes" type="checkbox" value="special-classes" v-model="establishmentFields" />
+                            <input id="ef-special-classes" type="checkbox" value="special-classes" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'special-classes')" />
                             <label for="ef-special-classes" class="edubase-button-checkbox">Provision special classes</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-sen1" type="checkbox" value="sen1" v-model="establishmentFields" />
+                            <input id="ef-sen1" type="checkbox" value="sen1" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'sen1')" />
                             <label for="ef-sen1" class="edubase-button-checkbox">SEN1</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-sen2" type="checkbox" value="sen2" v-model="establishmentFields" />
+                            <input id="ef-sen2" type="checkbox" value="sen2" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'sen2')" />
                             <label for="ef-sen2" class="edubase-button-checkbox">SEN2</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-sen3" type="checkbox" value="sen3" v-model="establishmentFields" />
+                            <input id="ef-sen3" type="checkbox" value="sen3" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'sen3')" />
                             <label for="ef-sen3" class="edubase-button-checkbox">SEN3</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-sen4" type="checkbox" value="sen4" v-model="establishmentFields" />
+                            <input id="ef-sen4" type="checkbox" value="sen4" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'sen4')" />
                             <label for="ef-sen4" class="edubase-button-checkbox">SEN4</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-type-provision" type="checkbox" value="type-provision" v-model="establishmentFields" />
+                            <input id="ef-type-provision" type="checkbox" value="type-provision" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'type-provision')" />
                             <label for="ef-type-provision" class="edubase-button-checkbox">Type of resourced provision</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-provision-roll" type="checkbox" value="provision-roll" v-model="establishmentFields" />
+                            <input id="ef-provision-roll" type="checkbox" value="provision-roll" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'provision-roll')" />
                             <label for="ef-provision-roll" class="edubase-button-checkbox">Resourced provision on roll</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-sen-roll" type="checkbox" value="sen-roll" v-model="establishmentFields" />
+                            <input id="ef-sen-roll" type="checkbox" value="sen-roll" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'sen-roll')" />
                             <label for="ef-sen-roll" class="edubase-button-checkbox">SEN unit on roll</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-sen-unit-capacity" type="checkbox" value="sen-unit-capacity" v-model="establishmentFields" />
+                            <input id="ef-sen-unit-capacity" type="checkbox" value="sen-unit-capacity" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'sen-unit-capacity')" />
                             <label for="ef-sen-unit-capacity" class="edubase-button-checkbox">SEN unit capacity</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-bso-inspectorate" type="checkbox" value="bso-inspectorate" v-model="establishmentFields" />
+                            <input id="ef-bso-inspectorate" type="checkbox" value="bso-inspectorate" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'bso-inspectorate')" />
                             <label for="ef-bso-inspectorate" class="edubase-button-checkbox">BSO inspectorate</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-bso-last-inspectorate-visit" type="checkbox" value="bso-last-inspectorate-visit" v-model="establishmentFields" />
+                            <input id="ef-bso-last-inspectorate-visit" type="checkbox" value="bso-last-inspectorate-visit" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'bso-last-inspectorate-visit')" />
                             <label for="ef-bso-last-inspectorate-visit" class="edubase-button-checkbox">BSO last inspection visit</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-bso-next-inspectorate-visit" type="checkbox" value="bso-next-inspectorate-visit" v-model="establishmentFields" />
+                            <input id="ef-bso-next-inspectorate-visit" type="checkbox" value="bso-next-inspectorate-visit" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'bso-next-inspectorate-visit')" />
                             <label for="ef-bso-next-inspectorate-visit" class="edubase-button-checkbox">BSO next inspection visit</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-rsc-region" type="checkbox" value="rsc-region" v-model="establishmentFields" />
+                            <input id="ef-rsc-region" type="checkbox" value="rsc-region" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'rsc-region')" />
                             <label for="ef-rsc-region" class="edubase-button-checkbox">RSC region</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-gov-region" type="checkbox" value="gov-region" v-model="establishmentFields" />
+                            <input id="ef-gov-region" type="checkbox" value="gov-region" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'gov-region')" />
                             <label for="ef-gov-region" class="edubase-button-checkbox">Government office region</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-admin-district" type="checkbox" value="admin-district" v-model="establishmentFields" />
+                            <input id="ef-admin-district" type="checkbox" value="admin-district" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'admin-district')" />
                             <label for="ef-admin-district" class="edubase-button-checkbox">Administrative district</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-admin-ward" type="checkbox" value="admin-ward" v-model="establishmentFields" />
+                            <input id="ef-admin-ward" type="checkbox" value="admin-ward" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'admin-ward')" />
                             <label for="ef-admin-ward" class="edubase-button-checkbox">Administrative ward</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-constituency" type="checkbox" value="constituency" v-model="establishmentFields" />
+                            <input id="ef-constituency" type="checkbox" value="constituency" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'constituency')" />
                             <label for="ef-constituency" class="edubase-button-checkbox">Parlimentary constituency</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-urban-rural" type="checkbox" value="urban-rural" v-model="establishmentFields" />
+                            <input id="ef-urban-rural" type="checkbox" value="urban-rural" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'urban-rural')" />
                             <label for="ef-urban-rural" class="edubase-button-checkbox">Urban rural</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-gssla" type="checkbox" value="gssla" v-model="establishmentFields" />
+                            <input id="ef-gssla" type="checkbox" value="gssla" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'gssla')" />
                             <label for="ef-gssla" class="edubase-button-checkbox">GSSLA</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-easting" type="checkbox" value="easting" v-model="establishmentFields" />
+                            <input id="ef-easting" type="checkbox" value="easting" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'easting')" />
                             <label for="ef-easting" class="edubase-button-checkbox">Easting</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-northing" type="checkbox" value="northing" v-model="establishmentFields" />
+                            <input id="ef-northing" type="checkbox" value="northing" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'northing')" />
                             <label for="ef-northing" class="edubase-button-checkbox">Northing</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-casward" type="checkbox" value="casward" v-model="establishmentFields" />
+                            <input id="ef-casward" type="checkbox" value="casward" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'casward')" />
                             <label for="ef-casward" class="edubase-button-checkbox">CAS ward</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-msoa" type="checkbox" value="msoa" v-model="establishmentFields" />
+                            <input id="ef-msoa" type="checkbox" value="msoa" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'msoa')" />
                             <label for="ef-msoa" class="edubase-button-checkbox">MSOA code</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="ef-lsoa" type="checkbox" value="lsoa" v-model="establishmentFields" />
+                            <input id="ef-lsoa" type="checkbox" value="lsoa" v-model="establishmentFields"
+                                   v-on:change.once="selectSingle('establishmentFields', 'lsoa')" />
                             <label for="ef-lsoa" class="edubase-button-checkbox">LSOA code</label>
                         </span>
 
@@ -450,38 +516,45 @@
                     <a href="#" class="panel-trigger heading-small">Group type</a>
                     <div class="expander-panel-content">
                         <span class="checkbox-wrap">
-                            <input id="gt-academies" type="checkbox" value="academies" v-model="groupTypes" />
+                            <input id="gt-academies" type="checkbox" value="academies" v-model="groupTypes"
+                                   v-on:change.once="selectSingle('groupTypes', 'academies')" />
                             <label for="gt-academies" class="edubase-button-checkbox">Multi academy trust</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="gt-academy" type="checkbox" value="academy" v-model="groupTypes" />
+                            <input id="gt-academy" type="checkbox" value="academy" v-model="groupTypes"
+                                   v-on:change.once="selectSingle('groupTypes', 'academy')" />
                             <label for="gt-academy" class="edubase-button-checkbox">Single academy trust</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="gt-sponsor" type="checkbox" value="sponsor" v-model="groupTypes" />
+                            <input id="gt-sponsor" type="checkbox" value="sponsor" v-model="groupTypes"
+                                   v-on:change.once="selectSingle('groupTypes', 'sponsor')" />
                             <label for="gt-sponsor" class="edubase-button-checkbox">Sponsor</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="gt-trust" type="checkbox" value="trust" v-model="groupTypes" />
+                            <input id="gt-trust" type="checkbox" value="trust" v-model="groupTypes"
+                                   v-on:change.once="selectSingle('groupTypes', 'trust')" />
                             <label for="gt-trust" class="edubase-button-checkbox">Trust</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="gt-federation" type="checkbox" value="federation" v-model="groupTypes" />
+                            <input id="gt-federation" type="checkbox" value="federation" v-model="groupTypes"
+                                   v-on:change.once="selectSingle('groupTypes', 'federation')" />
                             <label for="gt-federation" class="edubase-button-checkbox">Federation</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="gt-childrens-group" type="checkbox" value="childrens-group" v-model="groupTypes" />
-                            <label for="gt-childrens-group" class="edubase-button-checkbox">Childrens' centre group</label>
+                            <input id="gt-childrens-group" type="checkbox" value="childrens-group" v-model="groupTypes"
+                                   v-on:change.once="selectSingle('groupTypes', 'childrens-group')" />
+                            <label for="gt-childrens-group" class="edubase-button-checkbox">Childrens centre group</label>
                         </span>
 
                         <span class="checkbox-wrap">
-                            <input id="gt-childrens-collaboration" type="checkbox" value="childrens-collaboration" v-model="groupTypes" />
-                            <label for="gt-childrens-collaboration" class="edubase-button-checkbox">Childrens' centre collaboration</label>
+                            <input id="gt-childrens-collaboration" type="checkbox" value="childrens-collaboration" v-model="groupTypes"
+                                   v-on:change.once="selectSingle('groupTypes', 'childrens-collaboration')" />
+                            <label for="gt-childrens-collaboration" class="edubase-button-checkbox">Childrens centre collaboration</label>
                         </span>
 
 
@@ -591,7 +664,7 @@
         <ul>
             <li class="download-list-item">
                 <span class="icon-link-copy">
-                    <a href="https://edubasedev.blob.core.windows.net/public/zip/Academy sponsor and trust links.zip"
+                    <a href="#"
                        target="_blank" rel="nofollow">{{downloadLinkText}}</a>
                 </span>
                 <span class="alternative-file-directions">

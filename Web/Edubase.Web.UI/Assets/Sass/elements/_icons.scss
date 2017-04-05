@@ -310,3 +310,26 @@
     }
     
 }
+
+.icon-help {
+    position:relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    top: 3px;
+
+    &:after {
+        position: absolute;
+        content: '';
+        width: 20px;
+        height: 20px;
+        background-image: file-url("icons/help-icon.png");
+        background-repeat: no-repeat;
+        background-size: 20px;
+    }
+    &:focus {
+        background-color: transparent;
+        outline: none !important; // todo revisit the style in _tables.scss that has higher specificity
+
+    }
+}

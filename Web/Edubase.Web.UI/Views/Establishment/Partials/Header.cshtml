@@ -49,7 +49,7 @@
     @if (Model.DisplayPolicy.AgeRange)
     {
         <tr>
-            <th scope="col">Age range:</th>
+            <th scope="col">Age range: <a href="#help-text-age-range" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></th>
             <td>
                 @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
                 {
