@@ -11,19 +11,23 @@ $pointer-size: 15px;
 
 .edubase-tooltip {
     position: absolute;
-    min-width: 310px;
-    max-width: 480px;
+    z-index: 600;
+    width: 480px;
     min-height: 120px;
     background: #fff;
     box-shadow: 0px 0px 3px 3px $grey-3;
     border: 1px solid $grey-3;
+
+    @media(max-width: 480px) {
+        width: 310px;
+    }
 
     &.hidden {
         display: none;
     }
     
 
-    &:after {
+    .pointer {
       position: absolute;
       content: '';
       width: 0; 
@@ -32,11 +36,12 @@ $pointer-size: 15px;
       border-right: $pointer-size solid transparent;
       border-bottom: $pointer-size solid #fff;
       position: absolute;
+      z-index: 602;
       left: 20px;
       top: -13px;
       
     }
-     &:before {
+     .pointer-shadow {
       position: absolute;
       content: '';
       width: 0; 
@@ -45,6 +50,7 @@ $pointer-size: 15px;
       border-left: $pointer-size solid transparent;
       border-bottom: $pointer-size solid $grey-3;
       position: absolute;
+      z-index: 601;
       left: 20px;
       top: -18px;
     }

@@ -406,6 +406,7 @@
     <Content Include="Assets\Scripts\standalone\address-lookup.js" />
     <Content Include="Assets\Scripts\standalone\manage-academy-openings.js" />
     <Content Include="Assets\Scripts\standalone\search-change-history.js" />
+    <Content Include="Assets\Scripts\tooltips.js" />
     <Content Include="Assets\Scripts\Views\bulk-academies.js" />
     <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
