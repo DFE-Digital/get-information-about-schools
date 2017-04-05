@@ -231,28 +231,33 @@ namespace Edubase.Services.Governors
             return governors;
         }
 
-        public async Task<SharedGovernorDetailsModel> GetSharedGovernorDetails(int gid)
-        {
-            var displayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
-            var db = _dbContextFactory.Obtain();
-            var governor = await db.Governors.SingleOrThrowAsync(x => x.Id == gid);
-            return MapToSharedDetails(governor, displayPolicy);
-        }
-
         private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)
         {
             var db = _dbContextFactory.Obtain();
             var query = db.Governors.Where(x => (urn != null && x.EstablishmentUrn == urn || groupUId != null && x.GroupUID == groupUId) && x.RoleId != null && roles.Contains(x.RoleId.Value) && x.IsDeleted == false);
+            var sharedQuery =
+                db.EstablishmentGovernors.Where(
+                        x =>
+                            (urn != null && x.EstabishmentUrn == urn) && x.Governor.RoleId != null &&
+                            roles.Contains(x.Governor.RoleId.Value) && x.IsDeleted == false && x.Governor.IsDeleted == false)
+                    .Select(x => x.Governor).Include(x => x.Establishments).Include(x => x.Establishments.Select(y => y.Establishment));
+
 
             var today = DateTime.Now.Date;
             if (historic)
             {
                 var oneYearAgo = DateTime.Now.Date.AddYears(-1);
                 query = query.Where(x => x.AppointmentEndDate > oneYearAgo && x.AppointmentEndDate < today);
+                sharedQuery = sharedQuery.Where(x => x.Establishments.Any(e => e.AppointmentEndDate > oneYearAgo && e.AppointmentEndDate < today));
             }
-            else query = query.Where(x => x.AppointmentEndDate > today || x.AppointmentEndDate == null);
+            else
+            {
+                query = query.Where(x => x.AppointmentEndDate > today || x.AppointmentEndDate == null);
+                sharedQuery = sharedQuery.Where(x => x.Establishments.Any(e => e.AppointmentEndDate > today || e.AppointmentEndDate == null));
+            }
 
-            var dataModels = await query.ToListAsync();
+            var dataModels = (await query.ToListAsync()).Union(await sharedQuery.ToListAsync());
+
             return dataModels.Select(governorDataModel =>
             {
                 var policy = roleDisplayPolicies.Get((GR)governorDataModel.RoleId.Value);
@@ -288,39 +293,8 @@ namespace Edubase.Services.Governors
                 PreviousPerson_LastName = Get(() => governor.PreviousPerson.LastName, policy.PreviousFullName),
                 PreviousPerson_MiddleName = Get(() => governor.PreviousPerson.MiddleName, policy.PreviousFullName),
                 PreviousPerson_Title = Get(() => governor.PreviousPerson.Title, policy.PreviousFullName),
-                TelephoneNumber = Get(() => governor.TelephoneNumber, policy.TelephoneNumber)
-            };
-        }
-
-        private SharedGovernorDetailsModel MapToSharedDetails(Governor governor, GovernorDisplayPolicy policy)
-        {
-            return new SharedGovernorDetailsModel
-            {
-                AppointingBodyId = Get(() => governor.AppointingBodyId, policy.AppointingBodyId),
-                AppointingBodyName = Get(() => _cachedLookupService.GovernorAppointingBodiesGetAll().FirstOrDefault(l => l.Id == governor.AppointingBodyId)?.Name, policy.AppointingBodyId),
-                AppointmentEndDate = Get(() => governor.AppointmentEndDate, true),
-                AppointmentStartDate = Get(() => governor.AppointmentStartDate, policy.AppointmentStartDate),
-                DOB = Get(() => governor.DOB, policy.DOB),
-                RoleId = governor.RoleId,
-                EmailAddress = Get(() => governor.EmailAddress, policy.EmailAddress),
-                CreatedUtc = governor.CreatedUtc,
-                EstablishmentUrn = governor.EstablishmentUrn,
-                GroupUID = governor.GroupUID,
-                Id = Get(() => governor.Id, policy.Id),
-                IsDeleted = governor.IsDeleted,
-                LastUpdatedUtc = governor.LastUpdatedUtc,
-                Nationality = Get(() => governor.Nationality, policy.Nationality),
-                Person_FirstName = Get(() => governor.Person.FirstName, policy.FullName),
-                Person_LastName = Get(() => governor.Person.LastName, policy.FullName),
-                Person_MiddleName = Get(() => governor.Person.MiddleName, policy.FullName),
-                Person_Title = Get(() => governor.Person.Title, policy.FullName),
-                PostCode = Get(() => governor.PostCode, policy.PostCode),
-                PreviousPerson_FirstName = Get(() => governor.PreviousPerson.FirstName, policy.PreviousFullName),
-                PreviousPerson_LastName = Get(() => governor.PreviousPerson.LastName, policy.PreviousFullName),
-                PreviousPerson_MiddleName = Get(() => governor.PreviousPerson.MiddleName, policy.PreviousFullName),
-                PreviousPerson_Title = Get(() => governor.PreviousPerson.Title, policy.PreviousFullName),
                 TelephoneNumber = Get(() => governor.TelephoneNumber, policy.TelephoneNumber),
-                Appointments = governor.Establishments.Select(e => new GovernorAppointment { AppointmentStartDate = e.AppointmentEndDate.Value, AppointmentEndDate = e.AppointmentEndDate.Value, EstablishmentUrn = e.EstabishmentUrn })
+                Appointments = governor.Establishments?.Select(e => new GovernorAppointment { AppointmentStartDate = e.AppointmentStartDate, AppointmentEndDate = e.AppointmentEndDate, EstablishmentUrn = e.EstabishmentUrn, EstablishmentName = e.Establishment?.Name})
             };
         }
 
@@ -329,8 +303,6 @@ namespace Edubase.Services.Governors
             if (flag) return func();
             else return default(T);
         }
-
-
     }
 }
 

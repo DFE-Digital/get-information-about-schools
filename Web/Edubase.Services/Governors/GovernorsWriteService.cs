@@ -69,5 +69,18 @@ namespace Edubase.Services.Governors
             dc.Governors.Remove(dataModel);
             await dc.SaveChangesAsync();
         }
+
+        public async Task AddEstablishmentToSharedGovernor(int governorId, int establishmentUrn, DateTime appointmentStartDate, DateTime appointmentEndDate)
+        {
+            var context = _dbContextFactory.Obtain();
+            context.EstablishmentGovernors.Add(new EstablishmentGovernor
+            {
+                GovernorId = governorId,
+                EstabishmentUrn = establishmentUrn,
+                AppointmentStartDate = appointmentStartDate,
+                AppointmentEndDate = appointmentEndDate
+            });
+            await context.SaveChangesAsync();
+        }
     }
 }

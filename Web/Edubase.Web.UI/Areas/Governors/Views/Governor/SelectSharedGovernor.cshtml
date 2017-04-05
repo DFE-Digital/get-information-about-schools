@@ -12,48 +12,56 @@
             <h2 class="bold-medium">Select @Model.GovernorType</h2>
 
             <div class="shared-governor-list">
-                <form action="">
+                @using (Html.BeginForm("SelectSharedGovernor","Governor", FormMethod.Post))
+                {
+                    @Html.HiddenFor(x => x.Urn)
+                    @Html.HiddenFor(x => x.Role)
                     <ul>
-                        @foreach (var governor in Model.Governors)
+                        @for(var index=0; index<Model.Governors.Count(); index++)
                         {
                             <li>
-                                <div class="expander-panel">
+                                <div class="expander-panel @(Model.Governors[index].Selected ? "open-expander": "")">
                                     <h3 class="bold-small">
-                                        <span class="checkbox-wrap">
-                                            <input type="checkbox" id="gov-@governor.Id" class="panel-trigger"/>
-                                            <label for="gov-@governor.Id" class="edubase-button-checkbox">@governor.FullName</label>
-                                        </span>
+                                        @Html.CheckBoxFor(x => x.Governors[index].Selected, getCheckboxAttributes(Model.Governors[index].PreExisting, "panel-trigger"))
+                                        @Html.LabelFor(x => x.Governors[index].Selected, Model.Governors[index].FullName)
+                                        
                                     </h3>
+                                    @Html.HiddenFor(x => x.Governors[index].Id)
+                                    @Html.HiddenFor(x => x.Governors[index].PostCode)
+                                    @Html.HiddenFor(x => x.Governors[index].AppointingBodyName)
+                                    @Html.HiddenFor(x => x.Governors[index].DOB)
+                                    @Html.HiddenFor(x => x.Governors[index].Nationality)
+                                    @Html.HiddenFor(x => x.Governors[index].FullName)
                                     <dl>
                                         <dt>Shared with:</dt>
                                         <dd>No establishments</dd>
                                         <dt>Postcode:</dt>
-                                        <dd>@governor.PostCode</dd>
+                                        <dd>@Model.Governors[index].PostCode</dd>
                                     </dl>
                                     <div class="expander-panel-content">
                                         <dl>
                                             <dt>GID:</dt>
-                                            <dd>@governor.Id</dd>
+                                            <dd>@Model.Governors[index].Id</dd>
                                             <dt>Appointed by:</dt>
-                                            <dd>@governor.AppointingBodyName</dd>
+                                            <dd>@Model.Governors[index].AppointingBodyName</dd>
                                             <dt>Date of birth:</dt>
-                                            <dd>@governor.DOB</dd>
+                                            <dd>@(Model.Governors[index].DOB?.ToString("dd/MM/yyyy"))</dd>
                                             <dt>Nationality:</dt>
-                                            <dd>@governor.Nationality</dd>
+                                            <dd>@Model.Governors[index].Nationality</dd>
                                         </dl>
-
-                                        @Html.RenderDateSelector(x => governor.AppointmentStartDate, "Date of appointment")
-                                        @Html.RenderDateSelector(x => governor.AppointmentEndDate, "Date term ends")
+                                        
+                                        @Html.EditorFor(x => x.Governors[index].AppointmentStartDate)
+                                        @Html.EditorFor(x => x.Governors[index].AppointmentEndDate)
                                     </div>
                                 </div>
                             </li>
                         }
                     </ul>
                     <div>
-                        <a href="@Url.RouteUrl("GroupEditGovernance", new {establishmentUrn = Model.Urn.Value})" class="button mobile-full-width">Select</a>
+                        <input type="submit" value="Select" class="button mobile-full-width"/>
                         <a href="@Url.RouteUrl("GroupEditGovernance", new {establishmentUrn = Model.Urn.Value})" class="button button-grey mobile-full-width">Cancel</a>
                     </div>
-                </form>
+                }
             </div>
         </div>
     </div>
@@ -70,4 +78,15 @@
             }
         })
     </script>
+}
+
+@functions
+{
+    object getCheckboxAttributes(bool readOnly, string cssClasses)
+    {
+        if (readOnly)
+            return new {@class = cssClasses, @disabled = "disabled"};
+
+        return new {@class = cssClasses};
+    }
 }

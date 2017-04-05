@@ -101,7 +101,5 @@ namespace Edubase.UnitTest.Mocks.IntegrationEndPoints
         public void Dispose()
         {
         }
-
-        public DbSet<EstablishmentGovernor> EstablishmentGovernors { get; set; } = new MockDbSet<EstablishmentGovernor>();
     }
 }

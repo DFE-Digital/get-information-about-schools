@@ -1,0 +1,21 @@
+﻿@model DateTimeViewModel
+
+<div class="form-group create-edit-form-group drop-down-date range-date @Html.ValidationCssClassFor(x => x)">
+    <fieldset>
+        <legend class="bold-xsmall" style="font-weight: bold;">@ViewData.ModelMetadata.DisplayName</legend>
+        <div class="form-hint">For example, 20 03 2003</div>
+        @Html.ValidationMessageFor(x => x)
+        <span class="inline-form-control">
+            @Html.LabelFor(x => x.Day)
+            @Html.DropDownListFor(x => x.Day, Model.Days.Select(d => new SelectListItem { Text = d.ToString(), Value = d.ToString(), Selected = d.ToString() == Model.Day?.ToString() }), "", new {@class="form-control"})
+        </span>
+        <span class="inline-form-control">
+            @Html.LabelFor(x => x.Month)
+            @Html.DropDownListFor(x => x.Month, Model.Months.Select(m => new SelectListItem { Text = m.ToString(), Value = m.ToString(), Selected = m.ToString() == Model.Month?.ToString() }), "", new { @class = "form-control" })
+        </span>
+        <span class="inline-form-control">
+            @Html.LabelFor(x => x.Year)
+            @Html.DropDownListFor(x => x.Year, Model.Years.Select(y => new SelectListItem { Text = y.ToString(), Value = y.ToString(), Selected = y.ToString() == Model.Year?.ToString() }), "", new { @class = "form-control" })
+        </span>
+    </fieldset>
+</div>

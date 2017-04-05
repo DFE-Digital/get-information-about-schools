@@ -17,6 +17,5 @@ namespace Edubase.Services.Governors
         GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role, IPrincipal principal);
         Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal);
         Task<IEnumerable<GovernorModel>> GetSharedGovernors(int establishmentUrn);
-        Task<SharedGovernorDetailsModel> GetSharedGovernorDetails(int gid);
     }
 }

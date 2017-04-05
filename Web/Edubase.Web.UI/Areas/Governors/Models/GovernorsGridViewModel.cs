@@ -95,17 +95,18 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 var list = governors.Where(x => x.RoleId == (int)role);
                 foreach (var governor in list)
                 {
-                    grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
-                        .AddCell(governor.Id, displayPolicy.Id)
-                        .AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId)
-                        .AddCell(governor.AppointmentStartDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
-                        .AddCell(governor.AppointmentEndDate?.ToString("dd/MM/yyyy"), includeEndDate)
-                        .AddCell(governor.PostCode, displayPolicy.PostCode)
-                        .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
-                        .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
-                        .AddCell(governor.Nationality, displayPolicy.Nationality)
-                        .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
-                        .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
+                    var row = grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
+                                                   .AddCell(string.Join(", ", governor.Appointments?.Select(a => $"{a.EstablishmentUrn} {a.EstablishmentName}") ?? new string[] {}), role == GR.SharedChairOfLocalGoverningBody || role == GR.SharedLocalGovernor)
+                                                   .AddCell(governor.Id, displayPolicy.Id)
+                                                   .AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId)
+                                                   .AddCell(governor.AppointmentStartDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
+                                                   .AddCell(governor.AppointmentEndDate?.ToString("dd/MM/yyyy"), includeEndDate)
+                                                   .AddCell(governor.PostCode, displayPolicy.PostCode)
+                                                   .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
+                                                   .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
+                                                   .AddCell(governor.Nationality, displayPolicy.Nationality)
+                                                   .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
+                                                   .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
                 }
 
                 Grids.Add(grid);
@@ -115,6 +116,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         private void SetupHeader(GR role, GridViewModel<GovernorModel> grid, GovernorDisplayPolicy displayPolicy, bool includeEndDate)
         {
             grid.AddHeaderCell("Name", displayPolicy.FullName)
+                .AddHeaderCell("Shared with", role == GR.SharedChairOfLocalGoverningBody || role == GR.SharedLocalGovernor)
                 .AddHeaderCell("GID", displayPolicy.Id)
                 .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
                 .AddHeaderCell("From", displayPolicy.AppointmentStartDate)
@@ -126,7 +128,5 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 .AddHeaderCell("Email address", displayPolicy.EmailAddress)
                 .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber);
         }
-        
-        
     }
 }

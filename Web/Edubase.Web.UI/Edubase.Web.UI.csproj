@@ -278,7 +278,6 @@
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
-    <Compile Include="Areas\Governors\Models\AddSharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\CreateEditGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\EditGovernanceModeViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
@@ -414,7 +413,6 @@
     <Content Include="App_Data\Kentor.AuthServices.Tests.pfx" />
     <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\SelectSharedGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\AddSharedGovernor.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -914,6 +912,7 @@
     <Content Include="Views\Tools\SearchChangeHistory.cshtml" />
     <Content Include="Views\Tools\ManageAcademyOpenings.cshtml" />
     <Content Include="Views\Prototype\AddressLookup.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTimeViewModel.cshtml" />
     <Content Include="Views\Prototype\HelpIcon.cshtml" />
     <Content Include="Views\Prototype\dont-leave.cshtml" />
     <Content Include="Views\Search\Partials\SearchHeader.cshtml" />

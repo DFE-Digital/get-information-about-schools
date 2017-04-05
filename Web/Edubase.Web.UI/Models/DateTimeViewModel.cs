@@ -1,14 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
 {
     public class DateTimeViewModel
     {
-        public int? Day { get; set; }
-        public int? Month { get; set; }
-        public int? Year { get; set; }
-
-        public DateTimeViewModel() {  }
+        public DateTimeViewModel() { }
 
         public DateTimeViewModel(DateTime? dateTime)
         {
@@ -19,6 +18,31 @@ namespace Edubase.Web.UI.Models
                 Year = dateTime.Value.Year;
             }
         }
+
+        [DisplayName("Day")]
+        public int? Day { get; set; }
+
+        [DisplayName("Month")]
+        public int? Month { get; set; }
+
+        [DisplayName("Year")]
+        public int? Year { get; set; }
+
+        public string Label { get; set; }
+
+        public int[] Days => Enumerable.Range(1, 31).ToArray();
+
+        public int[] Months => Enumerable.Range(1, 12).ToArray();
+
+        public int[] Years
+        {
+            get
+            {
+                const int start = 1900;
+                return Enumerable.Range(start, DateTime.UtcNow.Year + 5 - start).Reverse().ToArray();
+            }
+        }
+
 
         public DateTime? ToDateTime()
         {
