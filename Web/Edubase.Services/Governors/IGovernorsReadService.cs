@@ -12,7 +12,7 @@ namespace Edubase.Services.Governors
 {
     public interface IGovernorsReadService
     {
-        Task<AzureSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload);
+        Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload);
         Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = null, int? groupUId = null, IPrincipal principal = null);
         GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role);
         Task<GovernorModel> GetGovernorAsync(int gid);

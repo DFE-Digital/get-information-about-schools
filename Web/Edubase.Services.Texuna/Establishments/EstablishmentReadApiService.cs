@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -62,14 +63,14 @@ namespace Edubase.Services.Texuna.Establishments
             throw new NotImplementedException();
         }
 
-        public int[] GetPermittedStatusIds(IPrincipal principal)
+        public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)
         {
-            throw new NotImplementedException();
+            return (await _httpClient.GetAsync<List<LookupDto>>("establishment/permittedstatuses")).Select(x => x.Id).ToArray();
         }
 
-        public Task<AzureSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
+        public async Task<ApiSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
         {
-            throw new NotImplementedException();
+            return await _httpClient.PostAsync<ApiSearchResult<SearchEstablishmentDocument>>("establishment/search", payload);
         }
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)

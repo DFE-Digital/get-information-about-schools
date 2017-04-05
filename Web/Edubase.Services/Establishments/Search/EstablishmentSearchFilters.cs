@@ -7,12 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MoreLinq;
+using Newtonsoft.Json;
 
 namespace Edubase.Services.Establishments.Search
 {
     public class EstablishmentSearchFilters : EstablishmentSearchFiltersLookups
     {
+        [JsonIgnore]
         public int? UKPRN { get; set; }
+
+        [JsonIgnore]
         public int? EstablishmentNumber { get; set; }
 
         public List<string> ToODataPredicateList(params string[] additionalPredicates)

@@ -54,7 +54,7 @@ namespace Edubase.Services.Governors
             _cachedLookupService = cachedLookupService;
         }
         
-        public async Task<AzureSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload)
+        public async Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload)
         {
             Guard.IsFalse(payload.SortBy == eSortBy.Distance, () => new EdubaseException("Sorting by distance is not supported with Governors"));
 

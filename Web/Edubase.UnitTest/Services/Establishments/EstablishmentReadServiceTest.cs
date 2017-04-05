@@ -123,10 +123,10 @@
 //        //    cacheLookupSvc.Setup(x => x.IsLookupField("LocalAuthorityId")).Returns(true);
 //        //    cacheLookupSvc.Setup(x => x.GetNameAsync(It.IsAny<string>(), 213)).Returns(Task.FromResult("Westminster"));
 //        //    cacheLookupSvc.Setup(x => x.GetNameAsync(It.IsAny<string>(), 301)).Returns(Task.FromResult("BarkingAndDagenham"));
-            
+
 //        //    var user = new GenericPrincipal(new GenericIdentity("test.user"), new string[0]);
 
-            
+
 
 //        //    var subject = new EstablishmentReadService(mockDbContext, CreateMapper(), 
 //        //        cacheLookupSvc.Object, new Mock<IAzureSearchEndPoint>().Object,
@@ -149,8 +149,8 @@
 //            azs.Setup(x => x.SearchAsync<SearchEstablishmentDocument>(It.IsAny<string>(), 
 //                It.IsAny<string>(), It.IsAny<string>(), 
 //                It.IsAny<int>(), It.IsAny<int>(), It.IsAny<IList<string>>(), 
-//                It.IsAny<IList<string>>())).Returns(Task.FromResult(null as AzureSearchResult<SearchEstablishmentDocument>));
-                
+//                It.IsAny<IList<string>>())).Returns(Task.FromResult(null as ApiSearchResult<SearchEstablishmentDocument>));
+
 
 //            var subject = new EstablishmentReadService(new MockApplicationDbContext(), CreateMapper(), 
 //                cacheLookupSvc.Object, azs.Object, null, null, null, null, null);

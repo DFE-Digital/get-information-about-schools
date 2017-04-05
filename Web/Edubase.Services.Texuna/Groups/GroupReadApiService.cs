@@ -70,12 +70,12 @@ namespace Edubase.Services.Texuna.Groups
             throw new NotImplementedException();
         }
 
-        public Task<AzureSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
+        public Task<ApiSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {
             throw new NotImplementedException();
         }
 
-        public Task<AzureSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
+        public Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
         {
             throw new NotImplementedException();
         }

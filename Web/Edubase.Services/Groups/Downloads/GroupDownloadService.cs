@@ -61,7 +61,7 @@ namespace Edubase.Services.Groups.Downloads
                 payload.Skip = 0;
                 payload.Take = 1000;
                 var results = await _groupReadService.SearchAsync(payload, principal);
-                progress.TotalRecordsCount = results.Count.Value;
+                progress.TotalRecordsCount = results.Count;
                 progress.Status = "Retrieving data...";
                 progress.FileExtension = ToFileExtension(format);
                 await updateProgressCache();
@@ -101,8 +101,8 @@ namespace Edubase.Services.Groups.Downloads
         }
 
         private async Task GenerateXlsxFile(GroupSearchPayload payload, IPrincipal principal, 
-            SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache, 
-            AzureSearchResult<SearchGroupDocument> results, string fileName)
+            SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache,
+            ApiSearchResult<SearchGroupDocument> results, string fileName)
         {
             var headers = GetHeaders(principal);
 
@@ -141,7 +141,7 @@ namespace Edubase.Services.Groups.Downloads
         }
 
 
-        private async Task GenerateCsvFile(GroupSearchPayload payload, IPrincipal principal, SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache, AzureSearchResult<SearchGroupDocument> results, string fileName)
+        private async Task GenerateCsvFile(GroupSearchPayload payload, IPrincipal principal, SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache, ApiSearchResult<SearchGroupDocument> results, string fileName)
         {
             var headers = GetHeaders(principal);
 

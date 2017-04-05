@@ -155,9 +155,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.Section41ApprovedIds = model.SelectedSection41Ids.ToArray();
             filters.ProvisionOfficialSixthFormIds = model.SelectedSixthFormProvisionIds.ToArray();
             filters.ProvisionSpecialClassesIds = model.SelectedSpecialClassesProvisionIds.ToArray();
-
-            payload.SENIds = model.SelectedTypeOfSENProvisionIds.ToArray();
-
+#if(TEXAPI)
+            filters.SENIds = model.SelectedTypeOfSENProvisionIds.ToArray();
+#endif
             filters.UrbanRuralIds = model.SelectedUrbanRuralIds.ToArray();
             filters.AdministrativeWardIds = model.SelectedWardIds.ToArray();
 
@@ -175,7 +175,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     try
                     {
                         var results = await _establishmentReadService.SearchAsync(payload, User);
-                        if (payload.Skip == 0) model.Count = results.Count.GetValueOrDefault();
+                        if (payload.Skip == 0) model.Count = results.Count;
                         model.Results = results.Items;
                     }
                     catch (Services.Exceptions.SearchQueryTooLargeException) // expected domain exception when over 800 filters are selected; very much an edge case.
@@ -190,7 +190,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (model.Count == 1 && model.GoToDetailPageOnOneResult) return RedirectToEstabDetail(model.Results.First().Urn.GetValueOrDefault());
             else
             {
-                var permittedStatusIds = _establishmentReadService.GetPermittedStatusIds(User);
+                var permittedStatusIds = await _establishmentReadService.GetPermittedStatusIdsAsync(User);
 
                 using (MiniProfiler.Current.Step("Populate filter lookups from CachedLookupService"))
                 {

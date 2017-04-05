@@ -22,9 +22,9 @@ namespace Edubase.Services.Groups
 
         Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10);
 
-        Task<AzureSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal);
+        Task<ApiSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal);
 
-        Task<AzureSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal);
+        Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal);
 
         Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn);
         Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal);

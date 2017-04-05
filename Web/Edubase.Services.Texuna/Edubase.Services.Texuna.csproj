@@ -76,6 +76,7 @@
     <Compile Include="Groups\GroupReadApiService.cs" />
     <Compile Include="Lookup\LookupApiService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\TexunaCamelCasePropertyNamesContractResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">

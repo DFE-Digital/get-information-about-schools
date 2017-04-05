@@ -39,6 +39,16 @@ namespace Edubase.Web.UI.Filters
 
                 filterContext.ExceptionHandled = true;
             }
+            else if (filterContext.Exception.GetBaseException() is TexunaApiSystemException) // TODO: KHD: For removal post integration
+            {
+                filterContext.Result = new ViewResult
+                {
+                    ViewName = "~/Views/Shared/DomainError.cshtml",
+                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "The API didn't play ball there. Our survey said: " + filterContext.Exception.GetBaseException().Message } }
+                };
+
+                filterContext.ExceptionHandled = true;
+            }
             else // unhandled/unexpected exception; log it and tell the user.
             {
                 var msg = Log(filterContext.HttpContext, filterContext.Exception);

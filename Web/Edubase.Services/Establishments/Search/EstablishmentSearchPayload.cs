@@ -1,6 +1,7 @@
 ﻿using Edubase.Common.Spatial;
 using Edubase.Services.Core.Search;
 using Edubase.Services.Establishments.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +35,12 @@ namespace Edubase.Services.Establishments.Search
 
         public LatLon GeoSearchLocation { get; set; }
 
+        [JsonIgnore]
         public eSortBy SortBy { get; set; }
 
-        public int[] SENIds { get; set; } = new int[0];
+        [JsonProperty("sortBy")]
+        internal string SortByDescriptor => SortBy.ToString();
+
+
     }
 }

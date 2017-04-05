@@ -30,7 +30,7 @@ namespace Edubase.Services.Texuna.Governors
             throw new NotImplementedException();
         }
 
-        public Task<AzureSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload)
+        public Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload)
         {
             throw new NotImplementedException();
         }

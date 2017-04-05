@@ -94,7 +94,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
                 using (MiniProfiler.Current.Step("Searching groups..."))
                 {
-                    AzureSearchResult<SearchGroupDocument> results = null;
+                    ApiSearchResult<SearchGroupDocument> results = null;
                     if (text != null) results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
 
                     if (results != null && results.Count > 0)
@@ -109,7 +109,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                         {
                             results = await _groupReadService.SearchAsync(payload, User);
                             model.Results = results.Items;
-                            if (model.StartIndex == 0) model.Count = results.Count.Value;
+                            if (model.StartIndex == 0) model.Count = results.Count;
                         }
                     }
                 }

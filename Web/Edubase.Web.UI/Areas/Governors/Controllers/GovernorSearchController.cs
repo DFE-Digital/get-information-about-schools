@@ -112,7 +112,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     var results = await _governorsReadService.SearchAsync(payload);
                     model.Results = results.Items;
-                    if (model.StartIndex == 0) model.Count = results.Count.Value;
+                    if (model.StartIndex == 0) model.Count = results.Count;
 
                     foreach (var item in model.Results)
                     {

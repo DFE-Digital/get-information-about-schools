@@ -80,7 +80,7 @@ namespace Edubase.Services.Groups
             return await _azureSearchService.SuggestAsync<GroupSuggestionItem>(GroupsSearchIndex.INDEX_NAME, GroupsSearchIndex.SUGGESTER_NAME, text, oDataFilters.ToString(), take);
         }
 
-        public async Task<AzureSearchResult<Doc>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
+        public async Task<ApiSearchResult<Doc>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {
             Guard.IsFalse(payload.SortBy == eSortBy.Distance, () => new EdubaseException("Sorting by distance is not supported with Groups"));
 
@@ -103,7 +103,7 @@ namespace Edubase.Services.Groups
                 ODataUtil.OrderBy(nameof(Doc.NameDistilled), (payload.SortBy == eSortBy.NameAlphabeticalAZ)));
         }
 
-        public async Task<AzureSearchResult<Doc>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
+        public async Task<ApiSearchResult<Doc>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
         {
             var outerODataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
             if (IsRoleRestrictedOnStatus(principal)) outerODataFilters.Add(nameof(GroupModel.StatusId), (int)eStatus.Open);

@@ -76,7 +76,7 @@ namespace Edubase.Services.Establishments.Downloads
                 payload.Skip = 0;
                 payload.Take = 1000;
                 var results = await _establishmentReadService.SearchAsync(payload, principal);
-                progress.TotalRecordsCount = results.Count.Value;
+                progress.TotalRecordsCount = results.Count;
                 progress.Status = "Retrieving data...";
                 progress.FileExtension = ToFileExtension(format);
                 await updateProgressCache();
@@ -122,7 +122,7 @@ namespace Edubase.Services.Establishments.Downloads
             SearchDownloadGenerationProgressDto progress,
             EstablishmentDownloadCoreFieldList fieldList,
             Func<Task> updateProgressCache,
-            AzureSearchResult<SearchEstablishmentDocument> results,
+            ApiSearchResult<SearchEstablishmentDocument> results,
             string fileName)
         {
             var headers = GetHeaders(fieldList);
@@ -165,8 +165,8 @@ namespace Edubase.Services.Establishments.Downloads
             IPrincipal principal, 
             SearchDownloadGenerationProgressDto progress, 
             EstablishmentDownloadCoreFieldList fieldList, 
-            Func<Task> updateProgressCache, 
-            AzureSearchResult<SearchEstablishmentDocument> results, 
+            Func<Task> updateProgressCache,
+            ApiSearchResult<SearchEstablishmentDocument> results, 
             string fileName)
         {
             var headers = GetHeaders(fieldList);
