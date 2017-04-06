@@ -384,3 +384,12 @@ fieldset legend.heading-small {
     padding: 3px;
     clear: both;
 }
+
+.button-wrapper { // used to contain floats on buttons
+    overflow: hidden;
+}
+
+.inline-submit {
+    font-size: 16px;
+    margin-left: 20px;
+}

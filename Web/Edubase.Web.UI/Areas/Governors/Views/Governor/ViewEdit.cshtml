@@ -7,7 +7,6 @@
 
 @if (Model.EditMode)
 {
-    <div class="grid-row">
         <div class="column-half">
             @if (Model.GroupUId.HasValue)
             {
@@ -21,26 +20,24 @@
             <h2 class="heading-medium">Governance</h2>
             <h3 class="heading-small">Delgated authority of local governing body</h3>
             @DisplayGovernanceMode()
-            <br />
-            <br />
-            <h2 class="bold-small">Add person</h2>
-            <p>Select role</p>
+            
+            <h2 class="heading-small">Add person</h2>
+            
 
             @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
             {
                 <div class="form-group">
-                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole) x.Id).ToString() }),
-                        new { id = "roleid", @class = "form-control" })
-                    <br />
-                    <br />
-                    <input type="submit" value="Add person" class="button" />
-                    <br />
-                    <br />
+                    <label class="form-label">Select role</label>
+                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem {Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole) x.Id).ToString()}),
+                        new {id = "roleid", @class = "form-control"})
                 </div>
+                <div class="form-group">
+                    <input type="submit" value="Add person" class="button mobile-full-width" />
+                </div>
+                
             }
 
         </div>
-    </div>
 }
 else
 {
@@ -49,7 +46,6 @@ else
 
             <h2 class="heading-medium">Governance</h2>
             @DisplayGovernanceMode()
-           
             
         </div>
     </div>
@@ -99,6 +95,7 @@ else
 
 @helper DisplayGovernors()
 {
+
     <div class="column-two-thirds">
         @if (Model.DomainModel.HasFullAccess)
         {
@@ -111,7 +108,7 @@ else
                     {
                         foreach (var row in grid.Rows)
                         {
-                            <div id="gov-id-@row.Model.Id" class="@Html.DuplicateCssClassFor(row.Model.Id)">
+                            <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
                                 <h2 class="bold-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
                                 <dl>
                                     @foreach (var cell in row.Cells.Skip(1))
@@ -125,20 +122,27 @@ else
                                 {
                                     if (Model.RemovalGid != row.Model.Id)
                                     {
-                                        <div style="margin-bottom:20px;">
+                                        <div class="button-wrapper">
 
-                                            @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "button button-grey" })
-                                            @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", null, null, "gid-" + row.Model.Id, new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id }, new { @class = "button button-grey" })
+                                            @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
+                                                new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, 
+                                                new { @class = "button button-grey mobile-full-width" })
+                                            @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
+                                                null, null, "gid-" + row.Model.Id,
+                                                new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id },
+                                                new { @class = "button button-grey mobile-full-width" })
 
                                             @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
                                             {
-                                                @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "button button-grey" })
+                                                @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor",
+                                                    new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id },
+                                                    new { @class = "button button-grey mobile-full-width" })
                                             }
                                         </div>
                                     }
                                     else // We're in 'removal mode' for this governor.
                                     {
-                                        <div style="margin-bottom:20px;">
+                                        <div class="governor-edit-panel">
 
                                             @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post))
                                             {
@@ -147,21 +151,20 @@ else
                                                 @Html.HiddenFor(x => x.GroupUId)
 
                                                 <div class="form-group">
-                                                    <fieldset class="inline">
+                                                    <fieldset class="inline toggle-panels">
                                                         <legend class="visually-hidden">Do you wish to retire or remove this person?</legend>
                                                         <label class="block-label selection-button-radio" for="removal-mode-1">
-                                                            <input type="radio" name="removal-mode" id="removal-mode-1" value="1" checked="checked" onchange="$('.retire-governor,.remove-governor').toggle();" />
+                                                            <input type="radio" name="removal-mode" id="removal-mode-1" value="1" checked="checked" data-toggle-panel=".retire-governor" />
                                                             This person has completed their term
                                                         </label>
                                                         <label class="block-label selection-button-radio" for="removal-mode-2">
-                                                            <input type="radio" name="removal-mode" id="removal-mode-2" value="2" onchange="$('.retire-governor,.remove-governor').toggle();" />
+                                                            <input type="radio" name="removal-mode" id="removal-mode-2" value="2" data-toggle-panel=".remove-governor" />
                                                             Remove person
                                                         </label>
                                                     </fieldset>
                                                 </div>
 
-                                                <div class="retire-governor date-group-wrap">
-                                                   
+                                                <div class="retire-governor date-group-wrap">                                                   
                                                     <p class="font-xsmall">Provide a data term ends to retire this person</p>
                                                     @RenderDateSelector(x => x.RemovalAppointmentEndDate, x => x.RemovalAppointmentEndDate.Day, x => x.RemovalAppointmentEndDate.Month, x => x.RemovalAppointmentEndDate.Year, "Date term ends")
 
@@ -172,7 +175,6 @@ else
                                                 </div>
 
                                                 <div class="remove-governor date-group-wrap">
-                                                    <br />
                                                     <p class="font-xsmall">Confirm you wish to remove this person</p>
                                                     <input type="submit" name="action" value="Remove" class="button" />
 
@@ -227,14 +229,13 @@ else
                     {
                         <p class="none">Not recorded</p>
                     }
-                    <br />
                 </div>
             }
             
             // Render mobile table/list combo
             foreach (var grid in Model.Grids)
             {
-                <div class="governor-list mobile-view">
+                @*<div class="governor-list mobile-view">
                     <h2 class="bold-small">@grid.Title</h2>
                     @if (grid.Rows.Any())
                     {
@@ -257,7 +258,7 @@ else
                     {
                         <p class="none">Not recorded</p>
                     }
-                </div>
+                </div>*@
             }
         }
     </div>
@@ -279,11 +280,11 @@ var id = label.Replace(" ", "").ToLower();
                 @Html.EduDayDropDownFor(daySelector, new { id = $"{id}-day", @class = "form-control", aria_describedby = $"help-{id}-day" })
             </span>
             <span class="inline-form-control">
-                <label for="opendate-month">Month</label>
+                <label for="@id-month">Month</label>
                 @Html.EduMonthDropDownFor(monthSelector, new { id = $"{id}-month", @class = "form-control", aria_describedby = $"help-{id}-month" })
             </span>
             <span class="inline-form-contol">
-                <label for="opendate-year">Year</label>
+                <label for="@id-year">Year</label>
                 @Html.EduYearDropDownFor(yearSelector, new { id = $"{id}-year", @class = "form-control", aria_describedby = $"help-{id}-year" })
             </span>
         </fieldset>
