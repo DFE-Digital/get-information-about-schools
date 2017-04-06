@@ -68,8 +68,7 @@ namespace Edubase.Web.UI.Controllers
             if (urlHelper.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
             else return RedirectToAction("Index", "Search");
         }
-
-#if(QA)
+        
         /*
          *  NOTE: THIS IS A V. FAST LOGIN API FOR QA PURPOSES ONLY. THIS WILL BE REMOVED IN DUE COURSE.
          * 
@@ -90,7 +89,6 @@ namespace Edubase.Web.UI.Controllers
                 + string.Join(",\r\n", id.Claims.Select(x=> $"Type: {x.Type}, Value: {x.Value}")), "text/plain");
         }
         // --------------------------------------------------------------------------------------------------------------------------------
-#endif
 
 
         [Route(nameof(LogOff)), HttpGet]
