@@ -11,6 +11,7 @@ namespace Edubase.Services.Establishments.Search
 
         public Microsoft.Spatial.GeographyPoint Location { get; set; }
 
+        [IntegrationEndPoints.AzureSearch.AZSIgnore]
         public LatLon LatLon { get; set; }
     }
 }
