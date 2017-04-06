@@ -111,7 +111,7 @@ else
                     {
                         foreach (var row in grid.Rows)
                         {
-                            <div id="@row.Model.Id" class="@Html.DuplicateCssClassFor(row.Model.Id)">
+                            <div id="gov-id-@row.Model.Id" class="@Html.DuplicateCssClassFor(row.Model.Id)">
                                 <h2 class="bold-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
                                 <dl>
                                     @foreach (var cell in row.Cells.Skip(1))
@@ -160,8 +160,8 @@ else
                                                     </fieldset>
                                                 </div>
 
-                                                <div style="border-left:4px solid #bbb; padding-left:20px;" class="retire-governor">
-                                                    <br />
+                                                <div class="retire-governor date-group-wrap">
+                                                   
                                                     <p class="font-xsmall">Provide a data term ends to retire this person</p>
                                                     @RenderDateSelector(x => x.RemovalAppointmentEndDate, x => x.RemovalAppointmentEndDate.Day, x => x.RemovalAppointmentEndDate.Month, x => x.RemovalAppointmentEndDate.Year, "Date term ends")
 
@@ -171,7 +171,7 @@ else
 
                                                 </div>
 
-                                                <div style="border-left:4px solid #bbb; padding-left:20px;display:none;" class="remove-governor">
+                                                <div class="remove-governor date-group-wrap">
                                                     <br />
                                                     <p class="font-xsmall">Confirm you wish to remove this person</p>
                                                     <input type="submit" name="action" value="Remove" class="button" />

@@ -38,7 +38,7 @@
             {
                 <p class="bold-small">Replace @Model.GovernorRoleName.ToLower()</p>
                 <p class="bold-xsmall">@Model.ReplaceGovernorViewModel.Name</p>
-                <div style="border-left:4px solid #bbb; padding-left:10px;">
+                <div class="date-group-wrap">
                     @RenderDateSelector(x => x.ReplaceGovernorViewModel.AppointmentEndDate, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Day, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Month, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Year, "Date term ends")
                 </div>
             }
