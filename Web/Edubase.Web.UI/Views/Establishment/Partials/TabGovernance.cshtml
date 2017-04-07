@@ -6,7 +6,6 @@
     {
         @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
     }
-    <div style="clear:both; float:none;margin-bottom:30px;"></div>
 
     @{Html.RenderAction("View", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" });}
 
