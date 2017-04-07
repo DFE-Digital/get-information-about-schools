@@ -40,19 +40,3 @@
     </div>
 </div>
 
-@section ViewScripts {
-    <script>
-        (function() {
-            function showWarning() {
-                $(this).parents('fieldset').find('.edit-warning').css({ display: 'block' });
-            }
-
-            $('#datetermends-day, #datetermends-month, #datetermends-year').on('change', function () {               
-                showWarning.call(this);
-               $('#datetermends-day, #datetermends-month, datetermends-year').off('change');
-            });
-        }());
-
-    </script>
-
-}

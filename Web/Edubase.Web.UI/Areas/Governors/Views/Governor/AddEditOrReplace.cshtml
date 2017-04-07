@@ -89,14 +89,8 @@
             }
 
             if (Model.DisplayPolicy.AppointmentEndDate)
-            {  
-                @RenderDateSelector(
-                    x => x.AppointmentEndDate,
-                    x => x.AppointmentEndDate.Day,
-                    x => x.AppointmentEndDate.Month,
-                    x => x.AppointmentEndDate.Year, 
-                    (Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends"),
-                    true)
+            {
+                @RenderDateSelector(x => x.AppointmentEndDate, x => x.AppointmentEndDate.Day, x => x.AppointmentEndDate.Month, x => x.AppointmentEndDate.Year, (Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends"))
             }
 
             if (Model.DisplayPolicy.EmailAddress)
@@ -199,32 +193,25 @@
 
 @helper RenderDateSelector(Expression<Func<VM, DateTimeViewModel>> vmSelector,
     Expression<Func<VM, int?>> daySelector, Expression<Func<VM, int?>> monthSelector,
-    Expression<Func<VM, int?>> yearSelector, string label, bool showWarning = false, string warningMessage = "Changing this date may reactivate the record.")
+    Expression<Func<VM, int?>> yearSelector, string label)
 {
     var id = label.Replace(" ", "").ToLower();
     <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(vmSelector)">
         <fieldset>
-            <legend class="bold-xsmall" style="font-weight: bold;">@label</legend>
+            <legend class="bold-xsmall" style="font-weight:bold;">@label</legend>
             <div class="form-hint">For example, 20 03 2003</div>
-            @if (showWarning)
-            {
-                <div class="edit-warning">
-                    <p>@warningMessage</p>
-                </div>
-            }
-
             @Html.ValidationMessageFor(vmSelector)
             <span class="inline-form-control">
                 <label for="@id-day">Day</label>
-                @Html.EduDayDropDownFor(daySelector, new {id = $"{id}-day", @class = "form-control", aria_describedby = $"help-{id}-day"})
+                @Html.EduDayDropDownFor(daySelector, new { id = $"{id}-day", @class = "form-control", aria_describedby = $"help-{id}-day" })
             </span>
             <span class="inline-form-control">
                 <label for="opendate-month">Month</label>
-                @Html.EduMonthDropDownFor(monthSelector, new {id = $"{id}-month", @class = "form-control", aria_describedby = $"help-{id}-month"})
+                @Html.EduMonthDropDownFor(monthSelector, new { id = $"{id}-month", @class = "form-control", aria_describedby = $"help-{id}-month" })
             </span>
             <span class="inline-form-contol">
                 <label for="opendate-year">Year</label>
-                @Html.EduYearDropDownFor(yearSelector, new {id = $"{id}-year", @class = "form-control", aria_describedby = $"help-{id}-year"})
+                @Html.EduYearDropDownFor(yearSelector, new { id = $"{id}-year", @class = "form-control", aria_describedby = $"help-{id}-year" })
             </span>
         </fieldset>
     </div>
