@@ -1,4 +1,5 @@
 ﻿using Edubase.Services.Core.Search;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Edubase.Services.Groups.Search
@@ -24,6 +25,10 @@ namespace Edubase.Services.Groups.Search
 
         public int Take { get; set; } = 10;
 
+        [JsonIgnore]
         public eSortBy SortBy { get; set; }
+
+        [JsonProperty("sortBy")]
+        internal string SortByDescriptor => SortBy.ToString();
     }
 }

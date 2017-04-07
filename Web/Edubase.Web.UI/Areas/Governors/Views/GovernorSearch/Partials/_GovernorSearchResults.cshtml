@@ -29,31 +29,15 @@ else if (Model.Count > 0)
                             <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                             <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
                             <dt>Establishment:</dt>
-                            <dd>@Html.ActionLink(Model.EstablishmentNames.Get(result), "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
+                            <dd>@Html.ActionLink(result.EstablishmentName ?? "--", "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
                         }
                         else
                         {
                             <dt>UID:</dt>
                             <dd>@Html.ActionLink(result.GroupUID.ToString(), "Details", "Group", new { id = result.GroupUID, area = "groups" }, null)</dd>
                             <dt>Group:</dt>
-                            <dd>@Html.ActionLink(Model.GroupNames.Get(result), "Details", "Group", new { id = result.GroupUID, area = "groups" }, null)</dd>
+                            <dd>@Html.ActionLink(result.GroupName ?? "--", "Details", "Group", new { id = result.GroupUID, area = "groups" }, null)</dd>
                         }
-
-                        @*<dt>GID:</dt>
-                        <dd>@result.Id</dd>
-                        <dt>Date term of office ends/ended:</dt>
-                        <dd>@(result.AppointmentEndDate?.ToString("dd/MM/yyyy") ?? "None recorded")</dd>
-
-                        @if (result.AppointmentStartDate.HasValue)
-                        {
-                            <dt>Date of appointment:</dt>
-                                <dd>@result.AppointmentStartDate.Value.ToString("dd/MM/yyyy")</dd>
-                        }
-                        @if (result.AppointingBodyId.HasValue)
-                        {
-                            <dt>Appointing body:</dt>
-                                <dd>@(Model.AppointingBodies.FirstOrDefault(x => x.Id == result.AppointingBodyId)?.Name)</dd>
-                        }*@
 
                     </dl>
                 </li>

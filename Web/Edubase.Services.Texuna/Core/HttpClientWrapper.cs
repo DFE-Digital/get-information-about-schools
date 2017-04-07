@@ -17,6 +17,7 @@
         public HttpClientWrapper(HttpClient httpClient)
         {
             _httpClient = httpClient;
+            _httpClient.Timeout = TimeSpan.FromSeconds(20);
             _httpClient.DefaultRequestHeaders.Add("sa_user_id", "3600026"); // TODO: remove this after auth is done!
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", "cmVzdC1hcGktdXNlcjp6ITdrVSJYOyVmI0s+I2U7"); // TODO: remove this after auth is done!
             _formatter.SerializerSettings = new JsonSerializerSettings

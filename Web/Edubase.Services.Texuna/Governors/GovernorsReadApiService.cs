@@ -15,6 +15,13 @@ namespace Edubase.Services.Texuna.Governors
 {
     public class GovernorsReadApiService : IGovernorsReadService
     {
+        private readonly HttpClientWrapper _httpClient;
+
+        public GovernorsReadApiService(HttpClientWrapper httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
         public GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role)
         {
             throw new NotImplementedException();
@@ -30,9 +37,9 @@ namespace Edubase.Services.Texuna.Governors
             throw new NotImplementedException();
         }
 
-        public Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload)
+        public async Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload)
         {
-            throw new NotImplementedException();
+            return await _httpClient.PostAsync<ApiSearchResult<SearchGovernorDocument>>("governor/search", payload);
         }
     }
 }

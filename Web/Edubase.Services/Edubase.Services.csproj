@@ -197,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlobService.cs" />
+    <Compile Include="Domain\AddressDto.cs" />
     <Compile Include="Enums\eGovernanceMode.cs" />
     <Compile Include="Enums\eLocalAuthority.cs" />
     <Compile Include="Enums\eLookupEstablishmentStatus.cs" />

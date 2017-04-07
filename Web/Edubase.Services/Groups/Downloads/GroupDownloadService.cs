@@ -197,7 +197,7 @@ namespace Edubase.Services.Groups.Downloads
             fields.Add((await _cachedLookupService.GroupTypesGetAllAsync()).FirstOrDefault(x => x.Id == item.GroupTypeId)?.Name);
             fields.Add(item.EstablishmentCount.ToString());
             fields.Add(item.OpenDate?.ToString("dd/MM/yyyy"));
-            fields.Add(item.Address);
+            fields.Add("");
             fields.Add(item.ManagerEmailAddress);
 
             if (item.LocalAuthorityId.HasValue) fields.Add((await _cachedLookupService.LocalAuthorityGetAllAsync()).FirstOrDefault(x => x.Id == item.LocalAuthorityId)?.Name);

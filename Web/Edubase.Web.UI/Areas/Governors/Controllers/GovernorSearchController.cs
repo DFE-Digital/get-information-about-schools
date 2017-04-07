@@ -114,21 +114,22 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     model.Results = results.Items;
                     if (model.StartIndex == 0) model.Count = results.Count;
 
+#if (!TEXAPI)
                     foreach (var item in model.Results)
                     {
-                        if (item.EstablishmentUrn.HasValue)
+                        if (item.EstablishmentUrn.HasValue && item.EstablishmentName.IsNullOrEmpty())
                         {
                             var establishment = await _establishmentReadService.GetAsync(item.EstablishmentUrn.Value, User);
-                            if (establishment.Success) model.EstablishmentNames[item] = establishment.ReturnValue.Name;
+                            if (establishment.Success) item.EstablishmentName = establishment.ReturnValue.Name;
                         }
 
-                        if (item.GroupUID.HasValue)
+                        if (item.GroupUID.HasValue && item.GroupName.IsNullOrEmpty())
                         {
                             var result = await _groupReadService.GetAsync(item.GroupUID.Value, User);
-                            if (result.Success) model.GroupNames[item] = result.ReturnValue.Name;
-                            else model.GroupNames[item] = "n/a"; // permission denied
+                            if (result.Success) item.GroupName = result.ReturnValue.Name;
                         }
                     }
+#endif
                 }
             }
             
