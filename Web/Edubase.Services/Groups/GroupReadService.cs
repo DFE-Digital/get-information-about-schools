@@ -93,7 +93,14 @@ namespace Edubase.Services.Groups
                 payload.GroupTypeIds.ForEach(x => typeIdODataFilter.Add(nameof(Doc.GroupTypeId), x));
                 oDataFilters.Add(typeIdODataFilter);
             }
-            
+
+            if (payload.GroupStatusIds != null && payload.GroupStatusIds.Any())
+            {
+                var statusIdODataFilter = new ODataFilterList(ODataFilterList.OR);
+                payload.GroupStatusIds.ForEach(x => statusIdODataFilter.Add(nameof(Doc.StatusId), x));
+                oDataFilters.Add(statusIdODataFilter);
+            }
+
             return await _azureSearchService.SearchAsync<Doc>(GroupsSearchIndex.INDEX_NAME,
                 payload.Text,
                 oDataFilters.ToString(),

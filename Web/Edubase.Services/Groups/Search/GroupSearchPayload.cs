@@ -19,6 +19,8 @@ namespace Edubase.Services.Groups.Search
 
         public int[] GroupTypeIds { get; set; }
 
+        public int[] GroupStatusIds { get; set; }
+
         public string Text { get; set; }
         
         public int Skip { get; set; }
