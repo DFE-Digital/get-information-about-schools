@@ -1,6 +1,8 @@
 ﻿@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
 @using Edubase.Common
+@using Edubase.Services.Enums
+@using Edubase.Web.Resources
 @model EstablishmentDetailViewModel
 @{
     ViewBag.Title = Model.Establishment.Name;
@@ -89,12 +91,20 @@
 *@
     <div id="help-text-age-range">
         <h3 class="heading-small">Age range</h3>
-        <p>The age range that the establishment is legally allowed to make provision for.</p>
+        <p>@Model.AgeRangeToolTip</p>
+        @if (!Model.AgeRangeToolTipLink.IsNullOrEmpty())
+        {
+            <p>Link: <a href="@Model.AgeRangeToolTipLink">@Model.AgeRangeToolTipLink</a></p>
+        }
     </div>
     
     <div id="help-text-school-capacity">
         <h3 class="heading-small">School capacity</h3>
-        <p>The number of pupil places the establishment can accommodate</p>
+        <p>@Model.SchoolCapacityToolTip</p>
+        @if (!Model.SchoolCapacityToolTipLink.IsNullOrEmpty())
+        {
+            <p>Link: <a href="@Model.SchoolCapacityToolTipLink">@Model.SchoolCapacityToolTipLink</a></p>
+        }
     </div>
 
 </div>

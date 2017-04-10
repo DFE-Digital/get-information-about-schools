@@ -25,6 +25,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Enums;
+using Edubase.Web.Resources;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
@@ -41,6 +43,7 @@ namespace Edubase.Web.UI.Controllers
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IFileDownloadFactoryService _downloadService;
         private readonly NomenclatureService _nomenclatureService;
+        private readonly IResourcesHelper _resourcesHelper;
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService, IMapper mapper, 
@@ -49,7 +52,8 @@ namespace Edubase.Web.UI.Controllers
             ICachedLookupService cachedLookupService,
             IGovernorsReadService governorsReadService,
             IFileDownloadFactoryService downloadService,
-            NomenclatureService nomenclatureService)
+            NomenclatureService nomenclatureService,
+            IResourcesHelper resourcesHelper)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
@@ -60,6 +64,7 @@ namespace Edubase.Web.UI.Controllers
             _governorsReadService = governorsReadService;
             _downloadService = downloadService;
             _nomenclatureService = nomenclatureService;
+            _resourcesHelper = resourcesHelper;
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
@@ -268,6 +273,11 @@ namespace Edubase.Web.UI.Controllers
                     viewModel.Groups.Select(x => x.GroupUID.Value).ToArray(),
                     viewModel.Establishment.LocalAuthorityId,
                     viewModel.Establishment.EstablishmentTypeGroupId);
+
+            viewModel.AgeRangeToolTip = _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
 
             return View(viewModel);
         }

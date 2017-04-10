@@ -71,6 +71,11 @@ namespace Edubase.Web.UI.Models
             ? new OfstedRatingUrl(Establishment.Urn).ToString() : null as string);
 
         public string GetGroupFieldLabel(GroupModel model) => _groupType2FieldLabelMappings[model.GroupTypeId.Value];
-        
+
+        public string AgeRangeToolTip { get; set; }
+        public string AgeRangeToolTipLink { get; set; }
+        public string SchoolCapacityToolTip { get; set; }
+        public string SchoolCapacityToolTipLink { get; set; }
+
     }
 }

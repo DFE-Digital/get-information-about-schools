@@ -911,6 +911,10 @@
       <Project>{0c900c37-a5fa-4a79-a2b9-66d372890fda}</Project>
       <Name>Edubase.StubUserBuilder</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Edubase.Web.Resources\Edubase.Web.Resources.csproj">
+      <Project>{7bb77b74-4669-44b7-85c0-f7980274c105}</Project>
+      <Name>Edubase.Web.Resources</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

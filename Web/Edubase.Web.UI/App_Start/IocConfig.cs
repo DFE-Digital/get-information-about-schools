@@ -36,6 +36,7 @@ using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Groups;
 using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Governors;
+using Edubase.Web.Resources;
 
 namespace Edubase.Web.UI
 {
@@ -162,12 +163,7 @@ namespace Edubase.Web.UI
             builder.RegisterInstance(new NomenclatureService()).AsSelf();
 #endif
 
-
-
-
-
-
+            builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();
         }
-
     }
 }
