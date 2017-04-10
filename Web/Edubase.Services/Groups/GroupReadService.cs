@@ -94,6 +94,7 @@ namespace Edubase.Services.Groups
                 oDataFilters.Add(typeIdODataFilter);
             }
 
+            //TODO: TEXCHANGE - filter results by group status
             if (payload.GroupStatusIds != null && payload.GroupStatusIds.Any())
             {
                 var statusIdODataFilter = new ODataFilterList(ODataFilterList.OR);
