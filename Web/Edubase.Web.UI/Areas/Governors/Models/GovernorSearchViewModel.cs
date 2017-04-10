@@ -18,6 +18,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public IList<SearchGovernorDocument> Results { get; set; } = new List<SearchGovernorDocument>();
         public List<LookupItemViewModel> AppointingBodies { get; internal set; }
         public List<LookupItemViewModel> GovernorRoles { get; internal set; }
+        public List<LookupItemViewModel> EstablishmentGroupTypes { get; internal set; }
         public Dictionary<SearchGovernorDocument, string> EstablishmentNames { get; internal set; } = new Dictionary<SearchGovernorDocument, string>();
         public Dictionary<SearchGovernorDocument, string> GroupNames { get; internal set; } = new Dictionary<SearchGovernorDocument, string>();
 
@@ -40,6 +41,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         [BindAlias(BIND_ALIAS_ROLE_ID)]
         public List<int> SelectedRoleIds { get; set; } = new List<int>();
+
+        [BindAlias("g")]
+        public List<int> SelectedGroupIds { get; set; } = new List<int>();
 
         public string RoleNames => StringUtil.Sentenceify(SelectedRoleIds.Select(x => GovernorRoles.First(r => r.Id == x).Name).ToArray(), StringUtil.SentenceifyOptions.OR);
 
