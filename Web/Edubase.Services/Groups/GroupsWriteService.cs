@@ -73,7 +73,7 @@ namespace Edubase.Services.Groups
                 
                 var dataModel = !dto.IsNewEntity ? _dbContext.Groups.SingleOrThrow(x => x.GroupUID == dto.Group.GroupUID) : new GroupCollection();
 
-                if(dto.IsNewEntity) dataModel.Address = dto.Group.Address.ToString(); // TODO: temporarily jsonify!!
+                if(dto.IsNewEntity) dataModel.Address = dto.Group.Address?.ToString();
                 dataModel.ClosedDate = dto.Group.ClosedDate;
                 dataModel.CompaniesHouseNumber = dto.Group.CompaniesHouseNumber;
                 dataModel.EstablishmentCount = (dto.LinkedEstablishments?.Count).GetValueOrDefault();

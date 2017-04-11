@@ -27,10 +27,13 @@
                     <li><a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" 
                            class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "links", "selected-tab")">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
                     </li>
-                    <li>
-                        <a href="@Url.Action("Edit", "Governor", new { groupUId = Model.GroupUId, area = "Governors" })"
-                           class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "governance", "selected-tab")">Governance</a>
-                    </li>
+                    @if (Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                    {
+                        <li>
+                            <a href="@Url.Action("Edit", "Governor", new { groupUId = Model.GroupUId, area = "Governors" })"
+                               class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "governance", "selected-tab")">Governance</a>
+                        </li>
+                    }
                 </ul>
             </div>
             <div class="tab-content-wrapper horizontal-tabs-content">

@@ -36,7 +36,9 @@ namespace Edubase.Web.UI.Controllers
             viewModel.UserCanCreateFederationGroup = permission.CanCreate((int)GT.Federation, permission.LocalAuthorityIds.FirstOrDefault());
 
             viewModel.UserCanCreateSchoolTrustGroup = permission.CanCreate((int)GT.Trust, permission.LocalAuthorityIds.FirstOrDefault());
-            
+
+            viewModel.UserCanCreateAcademySponsor = permission.CanCreate((int)GT.SchoolSponsor, permission.LocalAuthorityIds.FirstOrDefault());
+
             return View(viewModel);
         }
         [HttpGet, EdubaseAuthorize]

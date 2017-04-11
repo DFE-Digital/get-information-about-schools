@@ -167,6 +167,14 @@ namespace Edubase.Services.Groups
             }
         }
 
+        public async Task<bool> ExistsAsync(string groupId, int? existingGroupUId = null)
+        {
+            using (var dc = new ApplicationDbContext()) // no point in putting this into a repo, as Texuna will be doing an API
+            {
+                return await dc.Groups.AnyAsync(x => x.GroupId == groupId && (existingGroupUId == null || x.GroupUID != existingGroupUId));
+            }
+        }
+
         public async Task<bool> ExistsAsync(CompaniesHouseNumber number)
         {
             var v = number.Number;

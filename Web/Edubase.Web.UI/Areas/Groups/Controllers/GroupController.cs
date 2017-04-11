@@ -113,7 +113,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else if (groupTypeMode == eGroupTypeMode.Federation) viewModel.GroupTypeId = (int)GT.Federation;
             else if (groupTypeMode == eGroupTypeMode.Trust) viewModel.GroupTypeId = (int)GT.Trust;
-            
+            else if (groupTypeMode == eGroupTypeMode.Sponsor) viewModel.GroupTypeId = (int)GT.SchoolSponsor;
+
             await PopulateLocalAuthorityFields(viewModel);
 
             if (!_securityService.GetCreateGroupPermission(User).CanCreate(viewModel.GroupTypeId, viewModel.LocalAuthorityId))
