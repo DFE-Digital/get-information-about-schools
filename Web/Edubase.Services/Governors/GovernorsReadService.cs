@@ -212,7 +212,8 @@ namespace Edubase.Services.Governors
             return Map(governorDataModel, displayPolicy);
         }
 
-        public async Task<IEnumerable<GovernorModel>> GetSharedGovernors(int establishmentUrn)
+        //TODO: TEXCHANGE add endpoint to get shared governors
+        public async Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn)
         {
             var governors = new List<GovernorModel>();
 
@@ -229,6 +230,22 @@ namespace Edubase.Services.Governors
             }
 
             return governors;
+        }
+
+        //TODO: TEXCHANGE add endpoint to get a given shared governor
+        public async Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn)
+        {
+            var db = _dbContextFactory.Obtain();
+            var governor = await db.Governors.Where(g => g.Id == governorId).Include(g => g.Establishments.Where(e => e.EstabishmentUrn == establishmentUrn)).SingleOrDefaultAsync();
+
+            var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
+            var roles = new List<GR> { GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor };
+            var displayPolicies = roles.ToDictionary(r => r, r => templateDisplayPolicy.Clone());
+            ProcessDisplayPolicyOverrides(displayPolicies);
+
+            var policy = displayPolicies.Get((GR)governor.RoleId);
+
+            return Map(governor, policy);
         }
 
         private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Edubase.Data.Entity;
 using Edubase.Services.Governors.Search;
 using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using Edubase.Services.Governors.Models;
@@ -17,5 +16,6 @@ namespace Edubase.Services.Governors
         GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role, IPrincipal principal);
         Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal);
         Task<IEnumerable<GovernorModel>> GetSharedGovernors(int establishmentUrn);
+        Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn);
     }
 }

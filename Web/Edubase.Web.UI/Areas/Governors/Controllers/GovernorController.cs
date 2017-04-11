@@ -49,6 +49,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         const string ESTAB_SELECT_SHARED_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/SelectSharedGovernor";
         const string ESTAB_ADD_SHARED_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/AddSharedGovernor";
+        const string ESTAB_EDIT_SHARED_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/EditSharedGovernor";
 
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGovernorsReadService _governorsReadService;
@@ -344,38 +345,17 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> SelectSharedGovernor(int establishmentUrn, eLookupGovernorRole role)
         {
             var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == (int)role).Name;
-            var governors = (await _governorsReadService.GetSharedGovernors(establishmentUrn)).Where(g => g.RoleId == (int?)role).ToList();
-
-            var dateNow = DateTime.Now.Date;
+            var governors = (await _governorsReadService.GetSharedGovernorsAsync(establishmentUrn)).Where(g => g.RoleId == (int?)role).ToList();
 
             var viewModel = new SelectSharedGovernorViewModel
             {
-                Governors = new List<SelectSharedGovernorViewModel.GovernorViewModel>(),
+                Governors = new List<SharedGovernorViewModel>(),
                 GovernorType = roleName.ToLowerInvariant()
             };
 
             foreach (var governor in governors)
             {
-                var appointment = governor.Appointments?.SingleOrDefault(g => g.EstablishmentUrn == establishmentUrn);
-                var sharedWith = governor.Appointments
-                                         .Where(a => a.AppointmentStartDate < dateNow && (a.AppointmentEndDate == null || a.AppointmentEndDate > dateNow))
-                                         .Select(a => new SelectSharedGovernorViewModel.EstablishmentViewModel { Urn = a.EstablishmentUrn.Value, EstablishmentName = a.EstablishmentName })
-                                         .ToList();
-
-                viewModel.Governors.Add(new SelectSharedGovernorViewModel.GovernorViewModel
-                {
-                    AppointingBodyName = governor.AppointingBodyName,
-                    AppointmentStartDate = appointment?.AppointmentStartDate != null ? new DateTimeViewModel(appointment.AppointmentStartDate) : new DateTimeViewModel(),
-                    AppointmentEndDate = appointment?.AppointmentEndDate != null ? new DateTimeViewModel(appointment.AppointmentEndDate) : new DateTimeViewModel(),
-                    DOB = governor.DOB,
-                    FullName = governor.GetFullName(),
-                    Id = governor.Id.Value,
-                    Nationality = governor.Nationality,
-                    PostCode = governor.PostCode,
-                    Selected = appointment != null,
-                    PreExisting = appointment != null,
-                    SharedWith = sharedWith
-                });
+                viewModel.Governors.Add(MapGovernorToSharedGovernorViewModel(governor, establishmentUrn));
             }
 
             await PopulateLayoutProperties(viewModel, establishmentUrn, null, null);
@@ -398,6 +378,44 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await PopulateLayoutProperties(model, model.Urn.Value, null, null);
 
             return View(model);
+        }
+
+        [HttpGet, Route(ESTAB_EDIT_SHARED_GOVERNOR, Name="EditSharedGovernor")]
+        public async Task<ActionResult> EditSharedGovernor(int establishmentUrn, int governorId)
+        {
+            var governor = await _governorsReadService.GetSharedGovernorAsync(governorId, establishmentUrn);
+            var model = new EditSharedGovernorViewModel
+            {
+                Governor = MapGovernorToSharedGovernorViewModel(governor, establishmentUrn)
+            };
+
+            await PopulateLayoutProperties(model, establishmentUrn, null, null);
+            return View(model);
+        }
+
+        private SharedGovernorViewModel MapGovernorToSharedGovernorViewModel(GovernorModel governor, int establishmentUrn)
+        {
+            var dateNow = DateTime.Now.Date;
+            var appointment = governor.Appointments?.SingleOrDefault(g => g.EstablishmentUrn == establishmentUrn);
+            var sharedWith = governor.Appointments
+                                     .Where(a => a.AppointmentStartDate < dateNow && (a.AppointmentEndDate == null || a.AppointmentEndDate > dateNow))
+                                     .Select(a => new SharedGovernorViewModel.EstablishmentViewModel { Urn = a.EstablishmentUrn.Value, EstablishmentName = a.EstablishmentName })
+                                     .ToList();
+
+            return new SharedGovernorViewModel
+            {
+                AppointingBodyName = governor.AppointingBodyName,
+                AppointmentStartDate = appointment?.AppointmentStartDate != null ? new DateTimeViewModel(appointment.AppointmentStartDate) : new DateTimeViewModel(),
+                AppointmentEndDate = appointment?.AppointmentEndDate != null ? new DateTimeViewModel(appointment.AppointmentEndDate) : new DateTimeViewModel(),
+                DOB = governor.DOB,
+                FullName = governor.GetFullName(),
+                Id = governor.Id.Value,
+                Nationality = governor.Nationality,
+                PostCode = governor.PostCode,
+                Selected = appointment != null,
+                PreExisting = appointment != null,
+                SharedWith = sharedWith
+            };
         }
 
         private async Task PopulateSelectLists(CreateEditGovernorViewModel viewModel)
