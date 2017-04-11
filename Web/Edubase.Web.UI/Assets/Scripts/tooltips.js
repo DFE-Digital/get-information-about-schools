@@ -30,7 +30,7 @@
                 opts = this.opts,
                 self = this;
 
-            this.$toolTip = $('#edubase-tooltip');
+           this.$toolTip = $('#edubase-tooltip');
 
            var closeToolTip = function closeToolTip() {
                 self.$toolTip.addClass('hidden')
@@ -41,6 +41,7 @@
 
             $(el).on('click', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 var contentSelector = $(this).attr('href');
                 var content = $(contentSelector).html();
 
