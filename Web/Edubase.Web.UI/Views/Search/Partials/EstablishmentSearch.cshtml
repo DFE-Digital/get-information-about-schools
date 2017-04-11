@@ -1,0 +1,156 @@
+﻿@using Edubase.Web.UI.Models.Search;
+@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
+@using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
+@using Edubase.Web.UI.Helpers;
+@model VM
+
+
+
+@*
+    TODO x3 
+    AC1 - unchecking the checkbox(s) should add all establishment statuses to the search results
+    From Kris:
+    change line 51 of \Web\Edubase.Web.UI\Controllers\SearchController.cs
+to intercept checkbox, and don't execute  `Request.QueryString.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eStatus.Open, (int)eStatus.OpenButProposedToClose).ToString());`
+    *@
+<fieldset class="search-types-accordion">
+    <legend>Search by:</legend>
+    @Html.ValidationSummary()
+
+    <ul class="search-type-list has-typeahead">
+        <li class="search-type-wrapper">
+            @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+            {
+                <fieldset class="search-toggle-panel">
+                    <legend class="visually-hidden">Search by name of reference number</legend>
+                    <span class="radio-button-wrap">
+                        <input id="searchtype-name" name="search-by" value="establishment" type="radio" data-toggle-panel="#searchby-name-ref">
+                        <label class="edubase-button-radio" for="searchtype-name">
+                            Name or reference number
+                        </label>
+                    </span>
+                    <div class="expanding-search-field" id="searchby-name-ref">
+                        <span class="search-hint">
+                            Name or reference number
+                            <a href="#name-reference-help" class="icon-help">
+                                <span class="visuallyhidden">About reference numbers</span>
+                            </a>
+                        </span>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggest?text=" })
+                        </div>
+                        <div class="form-group">
+                            <span class="checkbox-wrap"><!-- AC 1 -->
+                                <input id="include-open-establishments-name"  type="checkbox" checked="checked" @*name="b"  value="2"*@ /> 
+                                <label for="include-open-establishments-name" class="edubase-button-checkbox">Include open schools only</label>
+                            </span>
+
+                        </div>
+                        @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
+                        <button type="submit" class="button button-next" name="searchtype" value="@eSearchType.Text">Search</button>
+                        <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
+                    </div>
+                </fieldset>
+
+            }
+        </li>
+
+        <li class="search-type-wrapper">
+            @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+            {
+                <fieldset class="search-toggle-panel">
+                    <legend class="visually-hidden">Search by location</legend>
+                    <span class="radio-button-wrap">
+                        <input id="searchtype-location" name="search-by" value="location" type="radio" data-toggle-panel="#searchby-location-ref">
+                        <label class="edubase-button-radio" for="searchtype-location">
+                            Location
+                        </label>
+                    </span>
+                    <div class="expanding-search-field" id="searchby-location-ref">
+                        <span class="search-hint">Postcode, town or city</span>
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.LocationSearchModel.Text, new { @class = "form-control location-search", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
+
+                        <div class="form-group">
+                            <span class="checkbox-wrap">
+                                <input id="include-open-establishments-location" type="checkbox" checked="checked" @*name="b" value="2"*@ /> <!-- AC 1-->
+                                <label for="include-open-establishments-location" class="edubase-button-checkbox">Include open schools only</label>
+                            </span>
+                        </div>
+                        <button type="submit" class="button button-next" name="searchtype" value="@eSearchType.Location">Search</button>
+                    </div>
+
+                </fieldset>
+
+            }
+        </li>
+        <li class="search-type-wrapper" id="la">
+            <fieldset class="search-toggle-panel">
+                <legend class="visually-hidden">Search by local authority</legend>
+                @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+                {
+                    <span class="radio-button-wrap">
+                        <input id="searchtype-la" name="search-by" value="la" type="radio" data-toggle-panel="#searchby-la-ref"
+                               @Html.Conditional(Model.SelectedLocalAuthorityIds.Any(), "checked")>
+                        <label class="edubase-button-radio" for="searchtype-la">
+                            Local authority
+                        </label>
+                    </span>
+                    <div class="expanding-search-field" id="searchby-la-ref">
+                        <span class="search-hint">Enter a Local authority</span>
+                        <div class="selected-las">
+                            <div id="la-id-target">
+
+                                @foreach (var id in Model.SelectedLocalAuthorityIds)
+                                {
+                                    var la = Model.LocalAuthorities.First(x => x.Id == id);
+                                    <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
+                                    <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" value="@id">@la.Name</button>
+                                }
+                                <div class="floating-text-field-wrap">
+                                    @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new { @class = "floating-text-field", autocomplete = "off" })
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        <div class="form-group">                            
+                            <button type="submit"
+                                    class="link-button font-small no-js-remove" 
+                                    name="searchtype" value="@eSearchType.LocalAuthorityDisambiguation">Find</button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <span class="checkbox-wrap">
+                                <input id="include-open-establishments-la" type="checkbox" checked="checked"  @*name="b"value="2"*@ /> <!-- AC 1 -->
+                                <label for="include-open-establishments-la" class="edubase-button-checkbox">Include open schools only</label>
+                            </span>
+                        </div>
+    
+                        
+                        @Html.HiddenFieldsFromQueryString()
+                       
+                        @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+                        {
+                            <button type="submit" class="button button-next button-below" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>
+                            @Html.HiddenFieldsFromQueryString()
+                            
+                        }
+                    </div>
+                }
+
+            </fieldset>
+
+        </li>
+
+    </ul>
+    <p class="search-all-shortcut">
+        <a href="@Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all establishments</a>
+    </p>
+</fieldset>
+
+

@@ -1,0 +1,34 @@
+﻿@using Edubase.Web.UI.Models.Search;
+@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
+@using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
+@using Edubase.Web.UI.Helpers;
+@model VM
+
+
+<p>You can search for academy trusts and sponsors, local authority maintained school
+federations and trusts as well as childrens centre groups and collaborations.</p>
+
+@using (Html.BeginForm("Index", "Search", FormMethod.Get))
+{
+    <div class="edubase-search-element with-typeahead has-typeahead">
+        <label class="form-label"><strong>Search by:</strong></label>
+        <span class="search-hint">
+           Name or reference number 
+            <a href="#group-reference" class="icon-help">
+                <span class="visuallyhidden">About reference numbers</span>
+            </a>
+        </span>
+        <div class="form-group">
+            @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=" })
+        </div>
+       
+        @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
+        <input type="hidden" name="g" value="true" />
+        <button type="submit" class="button button-next" name="searchtype" value="@eSearchType.Group">Search</button>
+    </div>
+    
+    <p class="search-all-shortcut">
+        <a href="@Url.Action("Index", "GroupSearch", new { area = "Groups" })?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all Groups</a>
+    </p>
+    
+}

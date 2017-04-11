@@ -408,11 +408,13 @@
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
+    <Content Include="Assets\Scripts\Elements\expanding-content.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ok-cancel.js" />
     <Content Include="Assets\Scripts\Elements\radio-toggles.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\radio-toggles.js" />
     <Content Include="Assets\Scripts\JSON\addressResult.js" />
     <Content Include="Assets\Scripts\JSON\postcodeResults.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.js" />
@@ -472,11 +474,13 @@
     <Content Include="public\assets\images\icons\icon-search-2x.png" />
     <Content Include="public\assets\images\icons\icon-search.png" />
     <Content Include="public\assets\images\icons\icon-white-cross-transparent.png" />
+    <Content Include="public\assets\images\icons\suggest-remove.png" />
     <Content Include="public\assets\images\icons\tick.PNG" />
     <Content Include="public\assets\images\icons\tooltip-close.gif" />
     <Content Include="public\assets\images\ofsted-logo-sm.jpeg" />
     <Content Include="public\assets\images\ofsted-logo-x-small.jpeg" />
     <Content Include="public\assets\images\ofsted-logo.jpg" />
+    <Content Include="public\assets\images\option-select-toggle-sprite.png" />
     <Content Include="public\c3\c3.css" />
     <Content Include="public\c3\c3.js" />
     <Content Include="public\c3\c3.min.css" />
@@ -891,6 +895,11 @@
     <Content Include="Views\Prototype\AddressLookup.cshtml" />
     <Content Include="Views\Prototype\HelpIcon.cshtml" />
     <Content Include="Views\Prototype\dont-leave.cshtml" />
+    <Content Include="Views\Search\Partials\SearchHeader.cshtml" />
+    <Content Include="Views\Search\Partials\HelpText.cshtml" />
+    <Content Include="Views\Search\Partials\EstablishmentSearch.cshtml" />
+    <Content Include="Views\Search\Partials\GroupSearch.cshtml" />
+    <Content Include="Views\Search\Partials\GovernorSearch.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
