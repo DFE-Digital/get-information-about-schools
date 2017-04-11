@@ -37,6 +37,11 @@
                     <li>@Html.ActionLink("Create new School Trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null)</li>
                 }
 
+                @if (Model.UserCanCreateAcademySponsor)
+                {
+                    <li>@Html.ActionLink("Create new sponsor", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null)</li>
+                }
+
                 <li>
                     @Html.ActionLink("Bulk create new academies", "BulkAcademies", "Tools")
                 </li>

@@ -85,7 +85,7 @@
                 {
                     <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
                         <fieldset>
-                            <legend>@Model.OpenDateLabel</legend>
+                            <legend class="bold-xsmall" style="font-weight:bold;">@Model.OpenDateLabel</legend>
 
                             <div class="form-hint">For example, 20 03 2003</div>
                             @Html.ValidationMessageFor(x => x.OpenDate)
@@ -219,7 +219,7 @@
                     </div>
                 }
 
-                @if (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SchoolSponsor))
+                @if(Model.GroupType.Equals(L.SchoolSponsor) || (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust)))
                 {
                     <div class="form-group">
                         <label for="groupid">Group ID</label>

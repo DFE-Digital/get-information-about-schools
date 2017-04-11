@@ -24,7 +24,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             [eGroupTypeMode.ChildrensCentre] = "Group",
             [eGroupTypeMode.Trust] = "Trust",
             [eGroupTypeMode.Federation] = "Federation",
-            [eGroupTypeMode.AcademyTrust] = "Trust"
+            [eGroupTypeMode.AcademyTrust] = "Trust",
+            [eGroupTypeMode.Sponsor] = "Academy sponsor"
         };
 
         public const string ActionSave = "save";

@@ -25,6 +25,11 @@ namespace Edubase.Services.Texuna.Groups
             throw new NotImplementedException();
         }
 
+        public Task<bool> ExistsAsync(string groupId, int? existingGroupUId = default(int?))
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> ExistsAsync(string name, int? localAuthorityId = default(int?), int? existingGroupUId = default(int?))
         {
             throw new NotImplementedException();

@@ -17,7 +17,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             Federation, // Federation
             ChildrensCentre, // Group or Collaboration
             Trust, // School trust
-            AcademyTrust // MATs and SATs
+            AcademyTrust, // MATs and SATs,
+            Sponsor // Academy sponsor
         }
         
         private static readonly Dictionary<eGroupTypeMode, string> _entityNames = new Dictionary<eGroupTypeMode, string>
@@ -25,7 +26,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             [eGroupTypeMode.ChildrensCentre] = "children's centre group or collaboration",
             [eGroupTypeMode.Trust] = "school trust",
             [eGroupTypeMode.Federation] = "school federation",
-            [eGroupTypeMode.AcademyTrust] = "Academy Trust"
+            [eGroupTypeMode.AcademyTrust] = "Academy Trust",
+            [eGroupTypeMode.Sponsor] = "academy sponsor",
         };
 
         public eGroupTypeMode GroupTypeMode
@@ -35,8 +37,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
                 if (GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)) return eGroupTypeMode.ChildrensCentre;
                 else if (GroupTypeId.OneOfThese(GT.Federation)) return eGroupTypeMode.Federation;
                 else if (GroupTypeId.OneOfThese(GT.Trust)) return eGroupTypeMode.Trust;
+                else if (GroupTypeId.OneOfThese(GT.SchoolSponsor)) return eGroupTypeMode.Sponsor;
                 else if (GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)) return eGroupTypeMode.AcademyTrust;
-                else throw new NotImplementedException();
+                else throw new NotImplementedException($"GroupTypeId '{GroupTypeId}' is not supported");
             }
         }
 
