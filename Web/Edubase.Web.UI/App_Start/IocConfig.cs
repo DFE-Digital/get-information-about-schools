@@ -37,6 +37,7 @@ using Edubase.Services.Texuna.Groups;
 using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Governors;
 using Edubase.Web.Resources;
+using Edubase.Services.Texuna.Core;
 
 namespace Edubase.Web.UI
 {
@@ -94,6 +95,8 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<BlobService>().As<IBlobService>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
+            builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
+            builder.RegisterInstance(new NomenclatureService()).AsSelf();
 
 #if (TEXAPI)
             builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
@@ -106,6 +109,9 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
+            builder.RegisterType<EstablishmentWriteApiService>().As<IEstablishmentWriteService>();
+            builder.RegisterType<FileDownloadFactoryApiService>().As<IFileDownloadFactoryService>();
+            builder.RegisterType<GovernorsWriteApiService>().As<IGovernorsWriteService>();
 #else
             
 
@@ -124,7 +130,7 @@ namespace Edubase.Web.UI
                 .As<IInMemoryApplicationDbContextFactory>();
 
             builder.RegisterType<ApplicationDbContext>().As<IApplicationDbContext>();
-            builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
+            
 
             builder.RegisterType<LAReadRepository>().As<ILAReadRepository>();
             builder.RegisterType<CachedLAReadRepository>().As<ICachedLAReadRepository>();
@@ -160,7 +166,7 @@ namespace Edubase.Web.UI
             
             builder.RegisterType<FileDownloadFactoryService>().As<IFileDownloadFactoryService>();
 
-            builder.RegisterInstance(new NomenclatureService()).AsSelf();
+            
 #endif
 
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();

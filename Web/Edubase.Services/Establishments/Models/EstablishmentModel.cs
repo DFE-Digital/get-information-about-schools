@@ -24,7 +24,7 @@ namespace Edubase.Services.Establishments.Models
         /// The number of additional addresses specified, including
         /// any hidden ones.
         /// </summary>
-        public int AdditionalAddressesCount { get; set; }
+        public int? AdditionalAddressesCount { get; set; }
 
         public eGovernanceMode? GovernanceMode { get; set; }
 

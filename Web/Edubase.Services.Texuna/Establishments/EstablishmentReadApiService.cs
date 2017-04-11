@@ -30,37 +30,39 @@ namespace Edubase.Services.Texuna.Establishments
 
         public Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(nameof(CanAccess) + " not implemented yet");
         }
 
-        public Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
+        public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
         {
-            throw new NotImplementedException();
+            return new ServiceResultDto<EstablishmentModel>(await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}"));
         }
 
-        public Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
+        public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
         {
-            throw new NotImplementedException();
+            return Enumerable.Empty<EstablishmentChangeDto>();
+            // TODO: kris to link up establishment/{urn}/changes when Texuna do it
+            //return await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes");
         }
 
-        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModelBase establishment)
+        public async Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModelBase establishment)
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetAsync<EstablishmentDisplayPolicy>($"establishment/{establishment.Urn}/display-policy");
         }
 
-        public Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn)
+        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn)
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetAsync<List<LinkedEstablishmentModel>>($"establishment/{urn}/linked-establishments");
         }
 
         public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(nameof(GetModelChangesAsync) + " not implemented yet");
         }
 
         public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(nameof(GetModelChangesAsync) + " not implemented yet");
         }
 
         public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)

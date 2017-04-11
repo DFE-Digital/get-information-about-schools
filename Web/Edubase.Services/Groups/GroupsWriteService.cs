@@ -1,4 +1,4 @@
-﻿#if(!TEXAPI)
+﻿#if (!TEXAPI)
 using Edubase.Data.Entity;
 using System;
 using System.Collections.Generic;
@@ -73,7 +73,7 @@ namespace Edubase.Services.Groups
                 
                 var dataModel = !dto.IsNewEntity ? _dbContext.Groups.SingleOrThrow(x => x.GroupUID == dto.Group.GroupUID) : new GroupCollection();
 
-                dataModel.Address = dto.Group.Address;
+                if(dto.IsNewEntity) dataModel.Address = dto.Group.Address;
                 dataModel.ClosedDate = dto.Group.ClosedDate;
                 dataModel.CompaniesHouseNumber = dto.Group.CompaniesHouseNumber;
                 dataModel.EstablishmentCount = (dto.LinkedEstablishments?.Count).GetValueOrDefault();

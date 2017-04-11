@@ -11,6 +11,6 @@ namespace Edubase.Services.Domain
         public string Name { get; set; }
         public string Number { get; set; }
         public DateTime? IncorporationDate { get; set; }
-        public string Address { get; set; }
+        public AddressDto Address { get; set; }
     }
 }

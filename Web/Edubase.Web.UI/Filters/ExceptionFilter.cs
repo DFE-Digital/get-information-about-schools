@@ -34,7 +34,7 @@ namespace Edubase.Web.UI.Filters
                 filterContext.Result = new ViewResult
                 {
                     ViewName = "~/Views/Shared/DomainError.cshtml",
-                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "Functionality has not been implemented yet" } }
+                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "Functionality has not been implemented yet: underlying error: " + filterContext.Exception.GetBaseException().Message } }
                 };
 
                 filterContext.ExceptionHandled = true;

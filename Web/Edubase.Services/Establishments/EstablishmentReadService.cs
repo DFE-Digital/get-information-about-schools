@@ -127,7 +127,7 @@ namespace Edubase.Services.Establishments
               || (await GetPermittedStatusIdsAsync(principal)).Any(x => x == statusId.Value);
         }
 
-        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModelBase establishment) 
+        public async Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModelBase establishment) 
             => new DisplayPolicyFactory().Create(user, establishment);
 
 

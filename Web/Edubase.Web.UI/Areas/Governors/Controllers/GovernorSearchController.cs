@@ -87,7 +87,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var progress = await _governorDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
             var principal = User;
 
-            // todo: if this process is hosted by us post-Texuna, then need to put into a separate process/server that processes in serial/limited parallelism due to memory consumption.
+            // todo: remove post-texuna integration.
             HostingEnvironment.QueueBackgroundWorkItem(async ct =>
             {
                 await _governorDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.FileFormat.Value);

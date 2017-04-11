@@ -38,8 +38,7 @@ namespace Edubase.Web.UI
                 scope.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
                 scope.Resolve<IBlobService>().Initialise("downloads");
             }
-
-
+            
 #if (!TEXAPI)
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
             Database.SetInitializer(m);

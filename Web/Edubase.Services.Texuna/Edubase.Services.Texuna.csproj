@@ -67,11 +67,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\FileDownloadFactoryApiService.cs" />
     <Compile Include="Core\HttpClientWrapper.cs" />
     <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />
     <Compile Include="Establishments\EstablishmentReadApiService.cs" />
+    <Compile Include="Establishments\EstablishmentWriteApiService.cs" />
     <Compile Include="Governors\GovernorDownloadApiService.cs" />
     <Compile Include="Governors\GovernorsReadApiService.cs" />
+    <Compile Include="Governors\GovernorsWriteApiService.cs" />
     <Compile Include="Groups\GroupDownloadApiService.cs" />
     <Compile Include="Groups\GroupReadApiService.cs" />
     <Compile Include="Lookup\LookupApiService.cs" />

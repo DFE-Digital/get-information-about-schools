@@ -24,7 +24,7 @@ namespace Edubase.Data.Repositories.Establishments
             ICacheAccessor cache,
             IInMemoryApplicationDbContextFactory inMemoryDbContextFactory,
             IApplicationDbContextFactory dbContextFactory) 
-            : base(cache, inMemoryDbContextFactory, dbContextFactory, repo as RepositoryBase<Establishment>) // todo: remove cast!
+            : base(cache, inMemoryDbContextFactory, dbContextFactory, repo as RepositoryBase<Establishment>)
         {
             _repo = repo;
             _inMemoryDbContextFactory = inMemoryDbContextFactory;

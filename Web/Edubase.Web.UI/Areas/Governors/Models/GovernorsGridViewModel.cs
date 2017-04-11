@@ -67,7 +67,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             _nomenclatureService = nomenclatureService;
             CreateGrids(dto, dto.CurrentGovernors, false);
-            CreateGrids(dto, dto.HistoricGovernors, true);
+            CreateGrids(dto, dto.HistoricalGovernors, true);
             DomainModel = dto;
             EditMode = editMode;
             GroupUId = groudUId;

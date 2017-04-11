@@ -55,6 +55,7 @@
 
             @Html.ActionLink("Change", "SearchCompaniesHouse", "Group", new { area = "Groups" }, new { @class = "button mobile-full-width" })
 
+            @Html.HiddenFor(x => x.CompaniesHouseAddressToken)
             @Html.HiddenFor(x => x.Address)
             @Html.HiddenFor(x => x.Name)
             @Html.HiddenFor(x => x.OpenDate)
