@@ -268,14 +268,17 @@ namespace Edubase.Web.UI.Controllers
             using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
                 viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
 
+            
+#if(!TEXAPI)
+            viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
+                .CanEdit(viewModel.Establishment.Urn.Value,
+                    viewModel.Establishment.TypeId,
+                    viewModel.Groups.Select(x => x.GroupUID.Value).ToArray(),
+                    viewModel.Establishment.LocalAuthorityId,
+                    viewModel.Establishment.EstablishmentTypeGroupId);
+#else 
             // todo: TEXCHANGE: Use the Security API
-            //viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
-            //    .CanEdit(viewModel.Establishment.Urn.Value,
-            //        viewModel.Establishment.TypeId,
-            //        viewModel.Groups.Select(x => x.GroupUID.Value).ToArray(),
-            //        viewModel.Establishment.LocalAuthorityId,
-            //        viewModel.Establishment.EstablishmentTypeGroupId);
-
+#endif
 
             // Retrieve the lookup name values
             await PopulateLookupNames(viewModel);

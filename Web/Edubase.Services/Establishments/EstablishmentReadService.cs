@@ -131,7 +131,7 @@ namespace Edubase.Services.Establishments
             => new DisplayPolicyFactory().Create(user, establishment);
 
 
-        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn)
+        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn)
         {
             return (await _dbContext.EstablishmentLinks
                     .Include(x => x.LinkedEstablishment)

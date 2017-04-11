@@ -68,12 +68,12 @@ namespace Edubase.Services.Groups
                 {
                     var leadCentreUrn = dto.LinkedEstablishments.Single(x => x.CCIsLeadCentre).EstablishmentUrn;
                     var e = (await _establishmentsReadService.GetAsync(leadCentreUrn, principal)).GetResult();
-                    dto.Group.Address = e.GetAddress();
+                    dto.Group.Address = e.GetAddressDto();
                 }
                 
                 var dataModel = !dto.IsNewEntity ? _dbContext.Groups.SingleOrThrow(x => x.GroupUID == dto.Group.GroupUID) : new GroupCollection();
 
-                if(dto.IsNewEntity) dataModel.Address = dto.Group.Address;
+                if(dto.IsNewEntity) dataModel.Address = dto.Group.Address.ToString(); // TODO: temporarily jsonify!!
                 dataModel.ClosedDate = dto.Group.ClosedDate;
                 dataModel.CompaniesHouseNumber = dto.Group.CompaniesHouseNumber;
                 dataModel.EstablishmentCount = (dto.LinkedEstablishments?.Count).GetValueOrDefault();
