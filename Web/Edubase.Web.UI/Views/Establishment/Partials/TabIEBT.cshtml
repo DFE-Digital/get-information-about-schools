@@ -92,14 +92,14 @@
         <tr>
             <th scope="row">Inspectorate:</th>
             <td>
-                @Html.NameFor(x => x.Establishment.InspectorateId)
+                @Model.InspectorateName
             </td>
         </tr>
 
         <tr>
             <th scope="row">Independent school type:</th>
             <td>
-                @Html.NameFor(x => x.Establishment.IndependentSchoolTypeId)
+                @Model.IndependentSchoolTypeName
             </td>
         </tr>
 
@@ -317,7 +317,7 @@
         <tr>
             <th scope="row">Boarding establishment:</th>
             <td>
-                @Html.NameFor(x => x.Establishment.ProvisionBoardingId)
+                @Model.ProvisionBoardingName
             </td>
         </tr>
 

@@ -71,7 +71,8 @@ namespace Edubase.Services.Mapping
                 }))
                 .ForMember(x => x.AdditionalAddresses, opt => opt.MapFrom(x => x.AdditionalAddresses));
 
-            CreateMap<GroupCollection, GroupModel>();
+            CreateMap<GroupCollection, GroupModel>()
+                .ForMember(x => x.Address, opt => opt.MapFrom(x => new AddressDto { Line1 = x.Address })); // TODO: KHD hack, as we're moving to Texuna - all this will be deleted very soon.
         }
     }
 }

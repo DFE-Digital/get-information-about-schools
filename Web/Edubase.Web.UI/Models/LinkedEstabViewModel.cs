@@ -11,9 +11,11 @@ namespace Edubase.Web.UI.Models
     {
         public int? Id { get; set; }
         public int? Urn { get; set; }
-        public string Type { get; set; }
         public DateTime? LinkDate { get; set; }
-        public string Name { get; set; }
+        public string EstablishmentName { get; set; }
+        public int? LinkTypeId { get; set; }
+        public string LinkTypeName { get; set; }
+
 
         public LinkedEstabViewModel()
         {
@@ -24,18 +26,19 @@ namespace Edubase.Web.UI.Models
         {
             Id = link.Id;
             Urn = link.Urn;
-            Type = link.Type;
+            LinkTypeId = link.LinkTypeId;
             LinkDate = link.LinkDate;
-            Name = link.Name;
+            EstablishmentName = link.EstablishmentName;
         }
 
         public LinkedEstabViewModel(EstablishmentLink link)
         {
             Id = link.Id;
             Urn = link.EstablishmentUrn;
-            Type = link.LinkType?.Name;
+            LinkTypeId = link.LinkType?.Id;
+            LinkTypeName = link.LinkType?.Name;
             LinkDate = link.LinkEstablishedDate;
-            Name = link.LinkName;
+            EstablishmentName = link.LinkName;
         }
     }
 }

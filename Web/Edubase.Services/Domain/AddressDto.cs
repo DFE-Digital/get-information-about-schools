@@ -15,5 +15,7 @@ namespace Edubase.Services.Domain
         public string County { get; set; }
         public string Country { get; set; }
         public string PostCode { get; set; }
+
+        public override string ToString() => Common.StringUtil.ConcatNonEmpties(", ", Line1, Line2, Line3, CityOrTown, County, PostCode, Country);
     }
 }

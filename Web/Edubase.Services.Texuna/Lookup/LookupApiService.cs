@@ -13,74 +13,11 @@ namespace Edubase.Services.Texuna.Lookup
         private const string ApiPrefix = "lookup/";
         private readonly HttpClientWrapper _httpClient;
 
-        //private Dictionary<string, Func<Task<IEnumerable<LookupDto>>>> _map = new Dictionary<string, Func<Task<IEnumerable<LookupDto>>>>();
-
         public LookupApiService(HttpClientWrapper httpClient)
         {
             _httpClient = httpClient;
-
-            // TODO: remove all this!
-            //_map.Add("local-authorities", LocalAuthorityGetAllAsync);
-            //_map.Add("governor-roles", GovernorRolesGetAllAsync);
-            //_map.Add("governor-appointing-bodies", GovernorAppointingBodiesGetAllAsync);
-            //_map.Add("group-types", GroupTypesGetAllAsync);
-            //_map.Add("establishment-type-groups", EstablishmentTypeGroupsGetAllAsync);
-            //_map.Add("establishment-statuses", EstablishmentStatusesGetAllAsync);
-            //_map.Add("establishment-types", EstablishmentTypesGetAllAsync);
-            //_map.Add("group-statuses", GroupStatusesGetAllAsync);
-            //_map.Add("accommodation-changed", AccommodationChangedGetAllAsync);
-            //_map.Add("administrative-districts", AdministrativeDistrictsGetAllAsync);
-            //_map.Add("administrative-wards", AdministrativeWardsGetAllAsync);
-            //_map.Add("admissions-policies", AdmissionsPoliciesGetAllAsync);
-            //_map.Add("boarding-establishment", BoardingEstablishmentGetAllAsync);
-            //_map.Add("cas-wards", CASWardsGetAllAsync);
-            //_map.Add("cc-delivery-models", CCDeliveryModelsGetAllAsync);
-            //_map.Add("cc-disadvantaged-areas", CCDisadvantagedAreasGetAllAsync);
-            //_map.Add("cc-governance", CCGovernanceGetAllAsync);
-            //_map.Add("cc-group-leads", CCGroupLeadsGetAllAsync);
-            //_map.Add("cc-operational-hours", CCOperationalHoursGetAllAsync);
-            //_map.Add("cc-phase-types", CCPhaseTypesGetAllAsync);
-            //_map.Add("childcare-facilities", ChildcareFacilitiesGetAllAsync);
-            //_map.Add("dioceses", DiocesesGetAllAsync);
-            //_map.Add("direct-provision-of-early-years", DirectProvisionOfEarlyYearsGetAllAsync);
-            //_map.Add("education-phases", EducationPhasesGetAllAsync);
-            //_map.Add("establishment-link-types", EstablishmentLinkTypesGetAllAsync);
-            //_map.Add("further-education-types", FurtherEducationTypesGetAllAsync);
-            //_map.Add("genders", GendersGetAllAsync);
-            //_map.Add("government-office-regions", GovernmentOfficeRegionsGetAllAsync);
-            //_map.Add("gssla", GSSLAGetAllAsync);
-            //_map.Add("head-titles", HeadTitlesGetAllAsync);
-            //_map.Add("independent-school-types", IndependentSchoolTypesGetAllAsync);
-            //_map.Add("inspectorate-names", InspectorateNamesGetAllAsync);
-            //_map.Add("inspectorates", InspectoratesGetAllAsync);
-            //_map.Add("local-governors", LocalGovernorsGetAllAsync);
-            //_map.Add("lsoas", LSOAsGetAllAsync);
-            //_map.Add("msoas", MSOAsGetAllAsync);
-            //_map.Add("nationalities", NationalitiesGetAllAsync);
-            //_map.Add("parliamentary-constituencies", ParliamentaryConstituenciesGetAllAsync);
-            //_map.Add("provision-boarding", ProvisionBoardingGetAllAsync);
-            //_map.Add("provision-nurseries", ProvisionNurseriesGetAllAsync);
-            //_map.Add("provision-official-sixth-forms", ProvisionOfficialSixthFormsGetAllAsync);
-            //_map.Add("provision-special-classes", ProvisionSpecialClassesGetAllAsync);
-            //_map.Add("pruebds", PRUEBDsGetAllAsync);
-            //_map.Add("pru-educated-by-others", PruEducatedByOthersGetAllAsync);
-            //_map.Add("pru-fulltime-provisions", PruFulltimeProvisionsGetAllAsync);
-            //_map.Add("prusens", PRUSENsGetAllAsync);
-            //_map.Add("reason-establishment-closed", ReasonEstablishmentClosedGetAllAsync);
-            //_map.Add("reason-establishment-opened", ReasonEstablishmentOpenedGetAllAsync);
-            //_map.Add("religious-characters", ReligiousCharactersGetAllAsync);
-            //_map.Add("religious-ethos", ReligiousEthosGetAllAsync);
-            //_map.Add("resourced-provisions", ResourcedProvisionsGetAllAsync);
-            //_map.Add("section41-approved", Section41ApprovedGetAllAsync);
-            //_map.Add("special-education-needs", SpecialEducationNeedsGetAllAsync);
-            //_map.Add("teenage-mothers-provisions", TeenageMothersProvisionsGetAllAsync);
-            //_map.Add("type-of-resourced-provisions", TypeOfResourcedProvisionsGetAllAsync);
-            //_map.Add("urban-rural", UrbanRuralGetAllAsync);
-
         }
-
-
-
+        
         public async Task<IEnumerable<LookupDto>> LocalAuthorityGetAllAsync() => await GetData("local-authorities");
         public async Task<IEnumerable<LookupDto>> GovernorRolesGetAllAsync() => await GetData("governor-roles");
         public async Task<IEnumerable<LookupDto>> GovernorAppointingBodiesGetAllAsync() => await GetData("governor-appointing-bodies");

@@ -127,11 +127,11 @@ namespace Edubase.Services.Establishments
               || (await GetPermittedStatusIdsAsync(principal)).Any(x => x == statusId.Value);
         }
 
-        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModelBase establishment) 
+        public async Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModelBase establishment) 
             => new DisplayPolicyFactory().Create(user, establishment);
 
 
-        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn)
+        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn)
         {
             return (await _dbContext.EstablishmentLinks
                     .Include(x => x.LinkedEstablishment)

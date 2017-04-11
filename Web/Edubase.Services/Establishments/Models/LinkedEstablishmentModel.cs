@@ -1,4 +1,5 @@
 ﻿using Edubase.Data.Entity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,19 @@ namespace Edubase.Services.Establishments.Models
     {
         public int? Id { get; set; }
         public int? Urn { get; set; }
-        public string Type { get; set; }
         public DateTime? LinkDate { get; set; }
-        public string Name { get; set; }
+        public string EstablishmentName { get; set; }
+
+        [JsonProperty("linkType")]
+        public int? LinkTypeId { get; set; }
 
         public LinkedEstablishmentModel(EstablishmentLink link)
         {
             Id = link.Id;
             Urn = link.LinkedEstablishmentUrn;
-            Type = link.LinkType?.Name;
+            LinkTypeId = link.LinkType?.Id;
             LinkDate = link.LinkEstablishedDate;
-            Name = link.LinkedEstablishment.Name;
+            EstablishmentName = link.LinkedEstablishment.Name;
         }
 
         public LinkedEstablishmentModel()

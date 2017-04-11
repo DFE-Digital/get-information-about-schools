@@ -30,9 +30,9 @@ namespace Edubase.Services.Texuna.Groups
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn)
+        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn)
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetAsync<List<GroupModel>>($"establishment/{urn}/groups");
         }
 
         public Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal)

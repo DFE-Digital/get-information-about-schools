@@ -24,7 +24,7 @@
             <tr>
                 <th scope="row">Religious character:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.ReligiousCharacterId)
+                    @Model.ReligiousCharacterName
                 </td>
             </tr>
         }
@@ -34,7 +34,7 @@
             <tr>
                 <th scope="row">Diocese:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.DioceseId)
+                    @Model.DioceseName
                 </td>
             </tr>
         }
@@ -44,7 +44,7 @@
             <tr>
                 <th scope="row">Religious ethos:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.ReligiousEthosId)
+                    @Model.ReligiousEthosName
                 </td>
             </tr>
         }
@@ -53,7 +53,7 @@
         {
             <tr>
                 <th scope="row">Boarders:</th>
-                <td>@Html.NameFor(x => x.Establishment.ProvisionBoardingId)</td>
+                <td>@Model.ProvisionBoardingName</td>
             </tr>
         }
 
@@ -61,7 +61,7 @@
         {
             <tr>
                 <th scope="row">Nursery provision:</th>
-                <td>@Html.NameFor(x => x.Establishment.ProvisionNurseryId)</td>
+                <td>@Model.ProvisionNurseryName</td>
             </tr>
         }
 
@@ -69,7 +69,7 @@
         {
             <tr>
                 <th scope="row">Official sixth form:</th>
-                <td>@Html.NameFor(x => x.Establishment.ProvisionOfficialSixthFormId)</td>
+                <td>@Model.ProvisionOfficialSixthFormName</td>
             </tr>
         }
 
@@ -85,7 +85,7 @@
         {
             <tr>
                 <th scope="row">Section 41 approved:</th>
-                <td>@Html.NameFor(x => x.Establishment.Section41ApprovedId)</td>
+                <td>@Model.Section41ApprovedName</td>
             </tr>
         }
 
@@ -93,7 +93,7 @@
             <th scope="row">Open date / Reason:</th>
             <td>
                 @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
-                @Html.NameFor(x => x.Establishment.ReasonEstablishmentOpenedId)
+                @Model.ReasonEstablishmentOpenedName
             </td>
         </tr>
 
@@ -103,7 +103,7 @@
                 <th scope="row">Close date / Reason:</th>
                 <td>
                     @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
-                    @Html.NameFor(x => x.Establishment.ReasonEstablishmentClosedId)
+                    @Model.ReasonEstablishmentClosedName
                 </td>
             </tr>
         }
@@ -113,7 +113,7 @@
             <tr>
                 <th scope="row">Operational hours:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.CCOperationalHoursId)
+                    @Model.CCOperationalHoursName
                 </td>
             </tr>
         }
@@ -133,7 +133,7 @@
             <tr>
                 <th scope="row">Governance:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.CCGovernanceId)
+                    @Model.CCGovernanceName
                 </td>
             </tr>
         }
@@ -175,7 +175,7 @@
             <tr>
                 <th scope="row">Delivery model:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.CCDeliveryModelId)
+                    @Model.CCDeliveryModelName
                 </td>
             </tr>
         }
@@ -195,7 +195,7 @@
             <tr>
                 <th scope="row">Group lead centre:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.CCGroupLeadId)
+                    @Model.CCGroupLeadName
                 </td>
             </tr>
         }
@@ -205,7 +205,7 @@
             <tr>
                 <th scope="row">Phase:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.CCPhaseTypeId)
+                    @Model.CCPhaseTypeName
                 </td>
             </tr>
         }
@@ -215,7 +215,7 @@
             <tr>
                 <th scope="row">Disadvantaged area:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.CCDisadvantagedAreaId)
+                    @Model.CCDisadvantagedAreaName
                 </td>
             </tr>
         }
@@ -225,7 +225,7 @@
             <tr>
                 <th scope="row">Direct provision of early years:</th>
                 <td>
-                    @Html.NameFor(x => x.Establishment.CCDirectProvisionOfEarlyYearsId)
+                    @Model.CCDirectProvisionOfEarlyYearsName
                 </td>
             </tr>
         }
@@ -234,7 +234,7 @@
         {
             <tr>
                 <th scope="row">Special classes:</th>
-                <td>@Html.NameFor(x => x.Establishment.ProvisionSpecialClassesId)</td>
+                <td>@Model.ProvisionSpecialClassesName</td>
             </tr>
         }
 
@@ -287,19 +287,19 @@
                 <td>
                     @if (Model.Establishment.SEN1Id.HasValue)
                     {
-                        <text>@Html.NameFor(x => x.Establishment.SEN1Id)<br /></text>
+                        <text>@Model.SEN1Name<br /></text>
                     }
                     @if (Model.Establishment.SEN2Id.HasValue)
                     {
-                        <text>@Html.NameFor(x => x.Establishment.SEN2Id)<br /></text>
+                        <text>@Model.SEN2Name<br /></text>
                     }
                     @if (Model.Establishment.SEN3Id.HasValue)
                     {
-                        <text>@Html.NameFor(x => x.Establishment.SEN3Id)<br /></text>
+                        <text>@Model.SEN3Name<br /></text>
                     }
                     @if (Model.Establishment.SEN4Id.HasValue)
                     {
-                        <text>@Html.NameFor(x => x.Establishment.SEN4Id)<br /></text>
+                        <text>@Model.SEN4Name<br /></text>
                     }
                 </td>
             </tr>
@@ -309,7 +309,7 @@
         {
             <tr>
                 <th scope="row">Teenage mothers:</th>
-                <td>@Html.NameFor(x => x.Establishment.TeenageMothersProvisionId)</td>
+                <td>@Model.TeenageMothersProvisionName</td>
             </tr>
         }
 
@@ -325,7 +325,7 @@
         {
             <tr>
                 <th scope="row">Childcare facilities:</th>
-                <td>@Html.NameFor(x => x.Establishment.ChildcareFacilitiesId)</td>
+                <td>@Model.ChildcareFacilitiesName</td>
             </tr>
         }
 
@@ -333,7 +333,7 @@
         {
             <tr>
                 <th scope="row">SEN facilities:</th>
-                <td>@Html.NameFor(x => x.Establishment.PRUSENId)</td>
+                <td>@Model.PRUSENName</td>
             </tr>
         }
 
@@ -341,7 +341,7 @@
         {
             <tr>
                 <th scope="row">Pupils with EBD:</th>
-                <td>@Html.NameFor(x => x.Establishment.PRUEBDId)</td>
+                <td>@Model.PRUEBDName</td>
             </tr>
         }
 
@@ -357,7 +357,7 @@
         {
             <tr>
                 <th scope="row">Full time provision :</th>
-                <td>@Html.NameFor(x => x.Establishment.PruFulltimeProvisionId)</td>
+                <td>@Model.PruFulltimeProvisionName</td>
             </tr>
         }
 
@@ -366,7 +366,7 @@
         {
             <tr>
                 <th scope="row">Pupils educated by other providers:</th>
-                <td>@Model.Establishment.PruEducatedByOthersId</td>
+                <td>@Model.PruEducatedByOthersName</td>
             </tr>
         }
 
@@ -375,7 +375,7 @@
         {
             <tr>
                 <th scope="row">Type of resourced provision:</th>
-                <td>@Html.NameFor(x => x.Establishment.TypeOfResourcedProvisionId)</td>
+                <td>@Model.TypeOfResourcedProvisionName</td>
             </tr>
         }
 
@@ -416,7 +416,7 @@
         {
             <tr>
                 <th scope="row">Inspectorate name:</th>
-                <td>@Html.NameFor(x => x.Establishment.BSOInspectorateId)</td>
+                <td>@Model.BSOInspectorateName</td>
             </tr>
         }
 

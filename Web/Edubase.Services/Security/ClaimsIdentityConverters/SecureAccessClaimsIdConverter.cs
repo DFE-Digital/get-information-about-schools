@@ -14,8 +14,7 @@ namespace Edubase.Services.Security.ClaimsIdentityConverters
             // Converts the ClaimsIdentity data sent by Secure Access into 
             // a new one supported by this application.
             // ... with JSON encoded payloads inside the claim value.
-
-            //TODO
+            
 
             throw new NotImplementedException();
         }

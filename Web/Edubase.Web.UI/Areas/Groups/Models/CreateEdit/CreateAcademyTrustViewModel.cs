@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Domain;
+﻿using Edubase.Common;
+using Edubase.Services.Domain;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             Name = companyProfile.Name;
             OpenDate = companyProfile.IncorporationDate;
             CompaniesHouseNumber = companyProfile.Number;
-            Address = companyProfile.Address;
+            Address = companyProfile.Address.ToString();
+            CompaniesHouseAddressToken = UriHelper.SerializeToUrlToken(companyProfile.Address);
             TrustExists = false;
         }
 
@@ -44,5 +46,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string Address { get; set; }
         public bool TrustExists { get; internal set; }
         public IEnumerable<SelectListItem> GroupTypes { get; set; }
+
+        public string CompaniesHouseAddressToken { get; set; }
+
+
     }
 }

@@ -81,7 +81,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (model.LocalAuthorityId.HasValue) viewModel.LocalAuthorityName = (await _lookup.GetNameAsync(() => model.LocalAuthorityId));
             if (model.StatusId.HasValue) viewModel.GroupStatusName = (await _lookup.GetNameAsync(() => model.StatusId, "Group"));
 
-            if (model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup)) viewModel.Address = model.Address;
+            if (model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup)) viewModel.Address = model.Address.ToString();
 
             viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID.Value, model.GroupTypeId.Value, model.LocalAuthorityId);
             viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
@@ -163,7 +163,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
             var viewModel = new GroupEditorViewModel(eSaveMode.Details);
-            viewModel.Address = domainModel.Address;
+            viewModel.Address = domainModel.Address.ToString();
             viewModel.ClosedDate = new DateTimeViewModel(domainModel.ClosedDate);
             viewModel.OpenDate = new DateTimeViewModel(domainModel.OpenDate);
             viewModel.LocalAuthorityId = domainModel.LocalAuthorityId;
@@ -250,7 +250,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             return View(viewModel);
         }
-
         
 
         [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
@@ -287,12 +286,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var dto = new SaveGroupDto(new GroupModel
                 {
-                    Address = viewModel.Address,
+                    Address = UriHelper.DeserializeUrlToken<AddressDto>(viewModel.CompaniesHouseAddressToken),
                     CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
                     GroupTypeId = viewModel.TypeId,
                     Name = viewModel.Name,
                     OpenDate = viewModel.OpenDate,
-                    StatusId = (int)Services.Enums.eLookupGroupStatus.Open,
+                    StatusId = (int)eLookupGroupStatus.Open,
                     GroupId = viewModel.GroupId
                 });
 
@@ -356,7 +355,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             Func<GroupModel> createDomainModel = () => new GroupModel
             {
-                Address = viewModel.Address,
                 CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
                 GroupId = viewModel.GroupId,
                 GroupTypeId = viewModel.GroupTypeId,

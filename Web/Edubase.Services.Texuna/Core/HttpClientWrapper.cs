@@ -3,6 +3,7 @@
     using Exceptions;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
+    using StackExchange.Profiling;
     using System;
     using System.Net.Http;
     using System.Net.Http.Formatting;
@@ -29,20 +30,29 @@
 
         public async Task<T> GetAsync<T>(string uri)
         {
-            var result = await _httpClient.GetAsync(uri);
-            return await ParseHttpResponseMessageAsync<T>(result);
+            using (MiniProfiler.Current.Step($"TEXAPI: GET {uri}"))
+            {
+                var result = await _httpClient.GetAsync(uri);
+                return await ParseHttpResponseMessageAsync<T>(result);
+            }
         }
         
         public async Task<T> PostAsync<T>(string uri, object data)
         {
-            var result = await _httpClient.PostAsync(uri, data, _formatter);
-            return await ParseHttpResponseMessageAsync<T>(result);
+            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
+            {
+                var result = await _httpClient.PostAsync(uri, data, _formatter);
+                return await ParseHttpResponseMessageAsync<T>(result);
+            }
         }
         
         public async Task<bool> PostAsync(string uri, object data)
         {
-            var result = await _httpClient.PostAsync(uri, data, _formatter);
-            return result.IsSuccessStatusCode;
+            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
+            {
+                var result = await _httpClient.PostAsync(uri, data, _formatter);
+                return result.IsSuccessStatusCode;
+            }
         }
 
         private async Task<T> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message)

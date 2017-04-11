@@ -167,29 +167,6 @@ namespace Edubase.Web.UI.Helpers
             return htmlHelper.DropDownListFor(expression, items, "", attributes);
         }
         
-        /// <summary>
-        /// Gets the name of the item associated with a Lookup item id
-        /// </summary>
-        /// <typeparam name="EstablishmentDetailViewModel"></typeparam>
-        /// <param name="htmlHelper"></param>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        public static IHtmlString NameFor<EstablishmentDetailViewModel>(this HtmlHelper<EstablishmentDetailViewModel> htmlHelper,
-            Expression<Func<EstablishmentDetailViewModel, int?>> expression)
-        {
-            using (var scope = IocConfig.Container.BeginLifetimeScope())
-            {
-                var cachedLookupService = scope.Resolve<ICachedLookupService>();
-                var expressionText = ExpressionHelper.GetExpressionText(expression).Split('.').Last();
-                var id = expression.Compile()(htmlHelper.ViewData.Model);
-                if (cachedLookupService.IsLookupField(expressionText))
-                {
-                    if (id.HasValue) return new MvcHtmlString(cachedLookupService.GetName(expressionText, id.Value));
-                    else return new MvcHtmlString("Not recorded");
-                }
-                else throw new Exception($"The lookup name '{expressionText}' was not recognised");
-            }
-        }
 
 
         public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 

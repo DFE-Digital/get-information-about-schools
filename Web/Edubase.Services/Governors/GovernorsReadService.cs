@@ -134,8 +134,8 @@ namespace Edubase.Services.Governors
             retVal.ApplicableRoles.ForEach(x => retVal.RoleDisplayPolicies.Add(x, templateDisplayPolicy.Clone()));
             ProcessDisplayPolicyOverrides(retVal.RoleDisplayPolicies);
             
-            retVal.CurrentGovernors = await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, false);
-            retVal.HistoricGovernors = await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, true);
+            retVal.CurrentGovernors = (await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, false)).ToList();
+            retVal.HistoricalGovernors = (await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, true)).ToList();
 
             return retVal;
         }

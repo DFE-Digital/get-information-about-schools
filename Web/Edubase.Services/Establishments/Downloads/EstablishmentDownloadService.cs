@@ -298,7 +298,7 @@ namespace Edubase.Services.Establishments.Downloads
         private async Task<List<string>> GetRowData(SearchEstablishmentDocument doc, IPrincipal principal, EstablishmentFieldList list)
         {   
             var lsvc = _cachedLookupService;
-            var dp = _establishmentReadService.GetDisplayPolicy(principal, doc);
+            var dp = await _establishmentReadService.GetDisplayPolicyAsync(principal, doc);
             var fields = new List<string>();
 
             Action<bool, bool, object> AddIf = (shouldIncludeField, isValueAllowedByPolicy, theValue) =>

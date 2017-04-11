@@ -49,6 +49,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MiniProfiler, Version=3.2.0.157, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiniProfiler.3.2.0.157\lib\net40\MiniProfiler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -67,11 +71,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\FileDownloadFactoryApiService.cs" />
     <Compile Include="Core\HttpClientWrapper.cs" />
     <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />
     <Compile Include="Establishments\EstablishmentReadApiService.cs" />
+    <Compile Include="Establishments\EstablishmentWriteApiService.cs" />
     <Compile Include="Governors\GovernorDownloadApiService.cs" />
     <Compile Include="Governors\GovernorsReadApiService.cs" />
+    <Compile Include="Governors\GovernorsWriteApiService.cs" />
     <Compile Include="Groups\GroupDownloadApiService.cs" />
     <Compile Include="Groups\GroupReadApiService.cs" />
     <Compile Include="Lookup\LookupApiService.cs" />

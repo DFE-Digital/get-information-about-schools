@@ -67,7 +67,7 @@ namespace Edubase.Services.Groups.Validation
             // When an MAT/SAT group type
             When(x => x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust), () =>
             {
-                RuleFor(x => x.Group.Address)
+                RuleFor(x => x.Group.Address.ToString())
                     .NotEmpty().WithMessage("The Address field should be supplied for types: MultiAcademyTrust and SingleAcademyTrust.")
                     .When(x => x.IsNewEntity);
 
