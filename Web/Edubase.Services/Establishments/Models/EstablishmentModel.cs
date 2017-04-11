@@ -1,6 +1,7 @@
 ﻿using Edubase.Common.Spatial;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace Edubase.Services.Establishments.Models
         
         public ChildrensCentreLocalAuthorityDto CCLAContactDetail { get; set; }
 
+        [JsonProperty("latLon")]
         public LatLon Location { get; set; }
 
         public override LatLon Coordinate => Location;

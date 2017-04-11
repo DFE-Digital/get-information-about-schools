@@ -16,6 +16,9 @@ using System.Linq.Expressions;
 
 namespace Edubase.Services.Lookup
 {
+    /// <summary>
+    /// TODO: TEXCHANGE: Establish which lookups are immutable.  May need to remove mutable lookups, or develop a way to enable cache invalidation from the back-end via messaging etc.
+    /// </summary>
     public class CachedLookupService : ICachedLookupService
     {
         Dictionary<string, Func<int, Task<string>>> _mappingAsync = null;
