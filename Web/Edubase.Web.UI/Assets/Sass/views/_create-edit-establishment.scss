@@ -273,11 +273,12 @@ div.shared-governor-list {
 
     dl {
         overflow: hidden;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 1.6;
         margin-bottom: 15px;
+        clear: both;
         @media (min-width: 640px) {
-            font-size: 14px;
+            font-size: 16px;
         }
     }
     dt, dd {

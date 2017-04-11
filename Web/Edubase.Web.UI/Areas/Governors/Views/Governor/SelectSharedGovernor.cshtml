@@ -36,25 +36,30 @@
                             {
                                 <li>
                                     <div class="expander-panel @(Model.Governors[index].Selected ? "open-expander" : "")">
-                                        <h3 class="bold-small">
-                                            @Html.CheckBoxFor(x => x.Governors[index].Selected, getCheckboxAttributes(Model.Governors[index].PreExisting, "panel-trigger"))
-                                            @Html.LabelFor(x => x.Governors[index].Selected, Model.Governors[index].FullName)
+                                        <div class="form-group">
+                                            <label class="block-label selection-button-checkbox" for="IncludeHistoric">
+                                                @Html.CheckBoxFor(x => x.Governors[index].Selected, getCheckboxAttributes(Model.Governors[index].PreExisting, "panel-trigger"))
+                                                @Model.Governors[index].FullName
+                                            </label>
+                                        </div>
                                         
-                                        </h3>
-                                        @Html.HiddenFor(x => x.Governors[index].Id)
-                                        @Html.HiddenFor(x => x.Governors[index].PostCode)
-                                        @Html.HiddenFor(x => x.Governors[index].AppointingBodyName)
-                                        @Html.HiddenFor(x => x.Governors[index].DOB)
-                                        @Html.HiddenFor(x => x.Governors[index].Nationality)
-                                        @Html.HiddenFor(x => x.Governors[index].FullName)
-                                        <dl>
-                                            <dt>Shared with:</dt>
-                                            <dd>@foreach (var establishment in Model.Governors[index].SharedWith)
-                                            {
-                                                <div>
-                                                    @Html.ActionLink($"{establishment.EstablishmentName}, URN: {establishment.Urn}", "Details", "Establishment", new { id = establishment.Urn, area = "" }, null)
-                                                </div>
-                                            }
+
+                                            @Html.HiddenFor(x => x.Governors[index].Id)
+                                            @Html.HiddenFor(x => x.Governors[index].PostCode)
+                                            @Html.HiddenFor(x => x.Governors[index].AppointingBodyName)
+                                            @Html.HiddenFor(x => x.Governors[index].DOB)
+                                            @Html.HiddenFor(x => x.Governors[index].Nationality)
+                                            @Html.HiddenFor(x => x.Governors[index].FullName)
+
+                                            <dl>
+                                                <dt>Shared with:</dt>
+                                                <dd>
+                                                    @foreach (var establishment in Model.Governors[index].SharedWith)
+                                                {
+                                                    <div>
+                                                        @Html.ActionLink($"{establishment.EstablishmentName}, URN: {establishment.Urn}", "Details", "Establishment", new { id = establishment.Urn, area = "" }, null)
+                                                    </div>
+                                                }
                                             </dd>
                                             <dt>Postcode:</dt>
                                             <dd>@Model.Governors[index].PostCode</dd>
@@ -70,7 +75,7 @@
                                                 <dt>Nationality:</dt>
                                                 <dd>@Model.Governors[index].Nationality</dd>
                                             </dl>
-                                        
+
                                             @Html.EditorFor(x => x.Governors[index].AppointmentStartDate)
                                             @Html.EditorFor(x => x.Governors[index].AppointmentEndDate)
                                         </div>
@@ -78,7 +83,7 @@
                                 </li>
                             }
                         </ul>
-                        <div>
+                        <div class="button-row">
                             <input type="submit" value="Select" class="button mobile-full-width"/>
                             <a href="@Url.RouteUrl("GroupEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                         </div>
