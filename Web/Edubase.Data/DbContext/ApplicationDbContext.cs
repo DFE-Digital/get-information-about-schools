@@ -113,7 +113,7 @@ namespace Edubase.Data.DbContext
         public ApplicationDbContext()
             : base("EdubaseSqlDb", throwIfV1Schema: false)
         {
-            
+            this.Configuration.ProxyCreationEnabled = false;
         }
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

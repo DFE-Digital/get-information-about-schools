@@ -234,14 +234,15 @@ namespace Edubase.Services.Governors
         private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)
         {
             var db = _dbContextFactory.Obtain();
-            var query = db.Governors.Where(x => (urn != null && x.EstablishmentUrn == urn || groupUId != null && x.GroupUID == groupUId) && x.RoleId != null && roles.Contains(x.RoleId.Value) && x.IsDeleted == false);
-            var sharedQuery =
-                db.EstablishmentGovernors.Where(
-                        x =>
-                            (urn != null && x.EstabishmentUrn == urn) && x.Governor.RoleId != null &&
-                            roles.Contains(x.Governor.RoleId.Value) && x.IsDeleted == false && x.Governor.IsDeleted == false)
-                    .Select(x => x.Governor).Include(x => x.Establishments).Include(x => x.Establishments.Select(y => y.Establishment));
-
+            var query = db.Governors
+                          .Include(x => x.Establishments)
+                          .Include(x => x.Establishments.Select(y => y.Establishment))
+                          .Where(x => (urn != null && x.EstablishmentUrn == urn || groupUId != null && x.GroupUID == groupUId) && x.RoleId != null && roles.Contains(x.RoleId.Value) && x.IsDeleted == false);
+            var sharedQuery = db.EstablishmentGovernors
+                                .Where(x => (urn != null && x.EstabishmentUrn == urn) && x.Governor.RoleId != null && roles.Contains(x.Governor.RoleId.Value) && x.IsDeleted == false && x.Governor.IsDeleted == false)
+                                .Select(x => x.Governor)
+                                .Include(x => x.Establishments)
+                                .Include(x => x.Establishments.Select(y => y.Establishment));
 
             var today = DateTime.Now.Date;
             if (historic)
@@ -256,7 +257,7 @@ namespace Edubase.Services.Governors
                 sharedQuery = sharedQuery.Where(x => x.Establishments.Any(e => e.AppointmentEndDate > today || e.AppointmentEndDate == null));
             }
 
-            var dataModels = (await query.ToListAsync()).Union(await sharedQuery.ToListAsync());
+            var dataModels = (await query.ToListAsync()).Union(await sharedQuery.ToListAsync()).ToList();
 
             return dataModels.Select(governorDataModel =>
             {

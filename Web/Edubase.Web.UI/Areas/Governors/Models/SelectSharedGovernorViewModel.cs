@@ -37,12 +37,19 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             public DateTime? DOB { get; set; }
             public string Nationality { get; set; }
             public string PostCode { get; set; }
+            public List<EstablishmentViewModel> SharedWith { get; set; }
 
             [DisplayName("Date of appointment")]
             public DateTimeViewModel AppointmentStartDate { get; set; }
 
             [DisplayName("Date term ends")]
             public DateTimeViewModel AppointmentEndDate { get; set; }
+        }
+
+        public class EstablishmentViewModel
+        {
+            public int Urn { get; set; }
+            public string EstablishmentName { get; set; }
         }
     }
 

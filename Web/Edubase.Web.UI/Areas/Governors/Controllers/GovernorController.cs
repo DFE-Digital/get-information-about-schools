@@ -346,6 +346,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == (int)role).Name;
             var governors = (await _governorsReadService.GetSharedGovernors(establishmentUrn)).Where(g => g.RoleId == (int?)role).ToList();
 
+            var dateNow = DateTime.Now.Date;
+
             var viewModel = new SelectSharedGovernorViewModel
             {
                 Governors = new List<SelectSharedGovernorViewModel.GovernorViewModel>(),
@@ -355,6 +357,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             foreach (var governor in governors)
             {
                 var appointment = governor.Appointments?.SingleOrDefault(g => g.EstablishmentUrn == establishmentUrn);
+                var sharedWith = governor.Appointments
+                                         .Where(a => a.AppointmentStartDate < dateNow && (a.AppointmentEndDate == null || a.AppointmentEndDate > dateNow))
+                                         .Select(a => new SelectSharedGovernorViewModel.EstablishmentViewModel { Urn = a.EstablishmentUrn.Value, EstablishmentName = a.EstablishmentName })
+                                         .ToList();
 
                 viewModel.Governors.Add(new SelectSharedGovernorViewModel.GovernorViewModel
                 {
@@ -367,7 +373,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     Nationality = governor.Nationality,
                     PostCode = governor.PostCode,
                     Selected = appointment != null,
-                    PreExisting = appointment != null
+                    PreExisting = appointment != null,
+                    SharedWith = sharedWith
                 });
             }
 

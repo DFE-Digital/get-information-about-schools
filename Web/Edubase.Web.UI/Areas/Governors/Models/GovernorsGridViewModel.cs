@@ -96,7 +96,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 foreach (var governor in list)
                 {
                     var row = grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
-                                                   .AddCell(string.Join(", ", governor.Appointments?.Select(a => $"{a.EstablishmentUrn} {a.EstablishmentName}") ?? new string[] {}), role == GR.SharedChairOfLocalGoverningBody || role == GR.SharedLocalGovernor)
+                                                   .AddCell(string.Join(", ", governor.Appointments?.Select(a => $"{a.EstablishmentName}, URN: {a.EstablishmentUrn}") ?? new string[] {}), role == GR.SharedChairOfLocalGoverningBody || role == GR.SharedLocalGovernor)
                                                    .AddCell(governor.Id, displayPolicy.Id)
                                                    .AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId)
                                                    .AddCell(governor.AppointmentStartDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
