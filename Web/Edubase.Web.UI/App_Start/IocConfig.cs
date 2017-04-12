@@ -39,6 +39,8 @@ using Edubase.Services.Texuna.Governors;
 using Edubase.Web.Resources;
 using Edubase.Services.Texuna.Core;
 using Edubase.Services.Texuna.Security;
+using Edubase.Services.Downloads;
+using Edubase.Services.Texuna.Downloads;
 
 namespace Edubase.Web.UI
 {
@@ -115,17 +117,14 @@ namespace Edubase.Web.UI
             builder.RegisterType<GovernorsWriteApiService>().As<IGovernorsWriteService>();
             builder.RegisterType<SecurityApiService>().As<ISecurityService>();
             builder.RegisterType<GroupsWriteApiService>().As<IGroupsWriteService>();
+            builder.RegisterType<DownloadsApiService>().As<IDownloadsService>();
 #else
-            
+
 
             builder.RegisterType<AzureSearchEndPoint>().WithParameter("connectionString", 
                 ConfigurationManager.ConnectionStrings["Microsoft.Azure.Search.ConnectionString"].ConnectionString)
                 .As<IAzureSearchEndPoint>();
-
             
-
-            
-
             builder.RegisterType<ApplicationDbContextFactory<ApplicationDbContext>>()
                 .As<IApplicationDbContextFactory>();
 
@@ -134,7 +133,6 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<ApplicationDbContext>().As<IApplicationDbContext>();
             
-
             builder.RegisterType<LAReadRepository>().As<ILAReadRepository>();
             builder.RegisterType<CachedLAReadRepository>().As<ICachedLAReadRepository>();
             
@@ -166,10 +164,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<GovernorDownloadService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadService>().As<IGovernorsReadService>();
             
-            
             builder.RegisterType<FileDownloadFactoryService>().As<IFileDownloadFactoryService>();
-
-            
+            builder.RegisterType<DownloadsService>().As<IDownloadsService>();
 #endif
 
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();

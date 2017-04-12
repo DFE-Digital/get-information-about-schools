@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Core\FileDownloadFactoryApiService.cs" />
     <Compile Include="Core\HttpClientWrapper.cs" />
+    <Compile Include="Downloads\DownloadsApiService.cs" />
     <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />
     <Compile Include="Establishments\EstablishmentReadApiService.cs" />
     <Compile Include="Establishments\EstablishmentWriteApiService.cs" />
