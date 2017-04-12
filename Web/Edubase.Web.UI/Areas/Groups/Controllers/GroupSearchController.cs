@@ -92,6 +92,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var text = model.GroupSearchModel.Text.Clean();
                 model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
+                model.GroupStatuses = (await _lookupService.GroupStatusesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
+
                 using (MiniProfiler.Current.Step("Searching groups..."))
                 {
                     ApiSearchResult<SearchGroupDocument> results = null;
@@ -128,8 +130,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             Text = model.GroupSearchModel.Text.Clean(),
             GroupTypeIds = model.SelectedGroupTypeIds.ToArray(),
+            GroupStatusIds = (this.User.Identity.IsAuthenticated) ? model.SelectedGroupStatusIds.ToArray() : null,
             SortBy = model.SortOption
         };
-
     }
 }
