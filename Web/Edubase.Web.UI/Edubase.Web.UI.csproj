@@ -438,7 +438,6 @@
     <Content Include="public\assets\images\icons\exclaim-transparentx2.PNG" />
     <Content Include="public\assets\images\icons\exclaim.PNG" />
     <Content Include="public\assets\images\icons\field-clear-cross.png" />
-    <Content Include="public\assets\images\icons\help-icon.png" />
     <Content Include="public\assets\images\icons\icon-calendar-2x.png" />
     <Content Include="public\assets\images\icons\icon-calendar.png" />
     <Content Include="public\assets\images\icons\icon-file-download-2x.png" />
