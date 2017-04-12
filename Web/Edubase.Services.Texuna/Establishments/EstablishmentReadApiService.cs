@@ -41,7 +41,7 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
         {
             return Enumerable.Empty<EstablishmentChangeDto>();
-            // TODO: kris to link up establishment/{urn}/changes when Texuna do it
+            // TODO: TEXCHANGE kris to link up establishment/{urn}/changes when Texuna do it
             //return await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes");
         }
 

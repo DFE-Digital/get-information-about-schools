@@ -38,6 +38,7 @@ using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Governors;
 using Edubase.Web.Resources;
 using Edubase.Services.Texuna.Core;
+using Edubase.Services.Texuna.Security;
 
 namespace Edubase.Web.UI
 {
@@ -112,6 +113,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<EstablishmentWriteApiService>().As<IEstablishmentWriteService>();
             builder.RegisterType<FileDownloadFactoryApiService>().As<IFileDownloadFactoryService>();
             builder.RegisterType<GovernorsWriteApiService>().As<IGovernorsWriteService>();
+            builder.RegisterType<SecurityApiService>().As<ISecurityService>();
+            builder.RegisterType<GroupsWriteApiService>().As<IGroupsWriteService>();
 #else
             
 
@@ -162,7 +165,7 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<GovernorDownloadService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadService>().As<IGovernorsReadService>();
-            builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
+            
             
             builder.RegisterType<FileDownloadFactoryService>().As<IFileDownloadFactoryService>();
 
@@ -170,6 +173,7 @@ namespace Edubase.Web.UI
 #endif
 
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();
+            builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
         }
     }
 }

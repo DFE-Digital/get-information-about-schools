@@ -32,10 +32,8 @@ namespace Edubase.Services.Texuna.Governors
             throw new NotImplementedException();
         }
 
-        public async Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null)
-        {
-            return await _httpClient.GetAsync<GovernorsDetailsTexunaDto>($"governors?uId={groupUId}&urn={urn}");
-        }
+        public async Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null) 
+            => await _httpClient.GetAsync<GovernorsDetailsTexunaDto>($"governors?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}");
 
         public async Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload)
         {

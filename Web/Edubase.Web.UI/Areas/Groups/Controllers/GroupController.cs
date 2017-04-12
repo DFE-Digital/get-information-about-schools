@@ -83,7 +83,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup)) viewModel.Address = model.Address.ToString();
 
+#if (TEXAPI)
+            // TODO: TEXCHANGE
+            // Use the new security API for this
+#else
             viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID.Value, model.GroupTypeId.Value, model.LocalAuthorityId);
+#endif
             viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
             if (viewModel.IsUserLoggedOn)
@@ -426,6 +431,22 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(groupUId);
             foreach (var establishmentGroup in establishmentGroups)
             {
+                // TODO TEXCHANGE: need to use the full object graph from the API rather than more service calls in texuna context as it would be very inefficient.  Need to tidy this post int.
+#if (TEXAPI)
+                list.Add(new EstablishmentGroupViewModel
+                {
+                    Id = establishmentGroup.Id,
+                    Address = establishmentGroup.Address.ToString(),
+                    HeadFirstName = establishmentGroup.HeadFirstName,
+                    HeadLastName = establishmentGroup.HeadLastName,
+                    Name = establishmentGroup.Name,
+                    Urn = establishmentGroup.Urn.Value,
+                    TypeName = establishmentGroup.TypeName,
+                    HeadTitleName = establishmentGroup.HeadTitle,
+                    JoinedDate = establishmentGroup.JoinedDate,
+                    CCIsLeadCentre = establishmentGroup.CCIsLeadCentre
+                });
+#else
                 var result = await _establishmentReadService.GetAsync(establishmentGroup.EstablishmentUrn, User);
                 if (result.Success)
                 {
@@ -444,6 +465,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                         CCIsLeadCentre = establishmentGroup.CCIsLeadCentre
                     });
                 }
+#endif
             }
         }
 
