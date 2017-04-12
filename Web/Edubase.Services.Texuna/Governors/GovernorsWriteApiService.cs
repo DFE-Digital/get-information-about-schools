@@ -16,6 +16,12 @@ namespace Edubase.Services.Texuna.Governors
             throw new NotImplementedException();
         }
 
+        public Task AddUpdateEstablishmentToSharedGovernor(int governorId, int establishmentUrn, DateTime appointmentStartDate,
+            DateTime appointmentEndDate)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<int> SaveAsync(GovernorModelBase model, IPrincipal principal)
         {
             throw new NotImplementedException();

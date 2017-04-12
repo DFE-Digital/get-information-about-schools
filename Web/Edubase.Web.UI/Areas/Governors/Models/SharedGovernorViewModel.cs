@@ -7,6 +7,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 {
     public class SharedGovernorViewModel
     {
+        public bool MultiSelect { get; set; }
         public bool Selected { get; set; }
         public bool PreExisting { get; set; }
         public int Id { get; set; }

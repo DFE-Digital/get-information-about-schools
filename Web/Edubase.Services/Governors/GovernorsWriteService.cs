@@ -6,6 +6,7 @@ using Edubase.Services.Governors.Models;
 using Edubase.Services.Security;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -70,16 +71,29 @@ namespace Edubase.Services.Governors
             await dc.SaveChangesAsync();
         }
 
-        public async Task AddEstablishmentToSharedGovernor(int governorId, int establishmentUrn, DateTime appointmentStartDate, DateTime appointmentEndDate)
+        //TODO: TEXCHANGE - implement ability to add an establishment to a shared governor
+        public async Task AddUpdateEstablishmentToSharedGovernor(int governorId, int establishmentUrn, DateTime appointmentStartDate, DateTime appointmentEndDate)
         {
             var context = _dbContextFactory.Obtain();
-            context.EstablishmentGovernors.Add(new EstablishmentGovernor
+            if (! await context.EstablishmentGovernors.AnyAsync(e => e.GovernorId == governorId &&
+                                                         e.EstabishmentUrn == establishmentUrn))
             {
-                GovernorId = governorId,
-                EstabishmentUrn = establishmentUrn,
-                AppointmentStartDate = appointmentStartDate,
-                AppointmentEndDate = appointmentEndDate
-            });
+                context.EstablishmentGovernors.Add(new EstablishmentGovernor
+                {
+                    GovernorId = governorId,
+                    EstabishmentUrn = establishmentUrn,
+                    AppointmentStartDate = appointmentStartDate,
+                    AppointmentEndDate = appointmentEndDate
+                });
+            }
+            else
+            {
+                var governor = context.EstablishmentGovernors.SingleOrThrow(
+                        e => e.GovernorId == governorId && e.EstabishmentUrn == establishmentUrn);
+                governor.AppointmentStartDate = appointmentStartDate;
+                governor.AppointmentEndDate = appointmentEndDate;
+            }
+
             await context.SaveChangesAsync();
         }
     }

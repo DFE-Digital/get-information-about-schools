@@ -15,13 +15,13 @@
                 {
                     <div class="column-full">
                         <input type="submit" value="Select" class="button mobile-full-width" />
-                        <a href="@Url.RouteUrl("GroupEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                     </div>
                 }
                 else
                 {
                     <div class="column-full">
-                        <a href="@Url.RouteUrl("GroupEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                     </div>
                 }
                 <h2 class="bold-medium column-full">Select @Model.GovernorType</h2>
@@ -34,64 +34,18 @@
                         <ul>
                             @for (var index = 0; index < Model.Governors.Count(); index++)
                             {
-                                <li>
-                                    <div class="expander-panel @(Model.Governors[index].Selected ? "open-expander" : "")">
-                                        <div class="form-group">
-                                            <label class="block-label selection-button-checkbox" for="IncludeHistoric">
-                                                @Html.CheckBoxFor(x => x.Governors[index].Selected, getCheckboxAttributes(Model.Governors[index].PreExisting, "panel-trigger"))
-                                                @Model.Governors[index].FullName
-                                            </label>
-                                        </div>
-                                        
-
-                                            @Html.HiddenFor(x => x.Governors[index].Id)
-                                            @Html.HiddenFor(x => x.Governors[index].PostCode)
-                                            @Html.HiddenFor(x => x.Governors[index].AppointingBodyName)
-                                            @Html.HiddenFor(x => x.Governors[index].DOB)
-                                            @Html.HiddenFor(x => x.Governors[index].Nationality)
-                                            @Html.HiddenFor(x => x.Governors[index].FullName)
-
-                                            <dl>
-                                                <dt>Shared with:</dt>
-                                                <dd>
-                                                    @foreach (var establishment in Model.Governors[index].SharedWith)
-                                                {
-                                                    <div>
-                                                        @Html.ActionLink($"{establishment.EstablishmentName}, URN: {establishment.Urn}", "Details", "Establishment", new { id = establishment.Urn, area = "" }, null)
-                                                    </div>
-                                                }
-                                            </dd>
-                                            <dt>Postcode:</dt>
-                                            <dd>@Model.Governors[index].PostCode</dd>
-                                        </dl>
-                                        <div class="expander-panel-content">
-                                            <dl>
-                                                <dt>GID:</dt>
-                                                <dd>@Model.Governors[index].Id</dd>
-                                                <dt>Appointed by:</dt>
-                                                <dd>@Model.Governors[index].AppointingBodyName</dd>
-                                                <dt>Date of birth:</dt>
-                                                <dd>@(Model.Governors[index].DOB?.ToString("dd/MM/yyyy"))</dd>
-                                                <dt>Nationality:</dt>
-                                                <dd>@Model.Governors[index].Nationality</dd>
-                                            </dl>
-
-                                            @Html.EditorFor(x => x.Governors[index].AppointmentStartDate)
-                                            @Html.EditorFor(x => x.Governors[index].AppointmentEndDate)
-                                        </div>
-                                    </div>
-                                </li>
+                                @Html.EditorFor(x => x.Governors[index])
                             }
                         </ul>
                         <div class="button-row">
                             <input type="submit" value="Select" class="button mobile-full-width"/>
-                            <a href="@Url.RouteUrl("GroupEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                            <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                         </div>
                     }
                     else
                     {
                         <p>There are no shared governors available for this establishment</p>
-                        <a href="@Url.RouteUrl("GroupEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                     }
                 </div>
             }
@@ -103,22 +57,13 @@
 {
     <script type="text/javascript">
         $(".panel-trigger").change(function() {
-            if ($(this).is(":checked")) {
-                $(this).closest(".expander-panel").addClass("open-expander");
-            } else {
-                $(this).closest(".expander-panel").removeClass("open-expander");
-            }
+            $(".panel-trigger").each(function() {
+                if ($(this).is(":checked")) {
+                    $(this).closest(".expander-panel").addClass("open-expander");
+                } else {
+                    $(this).closest(".expander-panel").removeClass("open-expander");
+                }
+            });
         })
     </script>
-}
-
-@functions
-{
-    object getCheckboxAttributes(bool readOnly, string cssClasses)
-    {
-        if (readOnly)
-            return new {@class = cssClasses, @disabled = "disabled"};
-
-        return new {@class = cssClasses};
-    }
 }

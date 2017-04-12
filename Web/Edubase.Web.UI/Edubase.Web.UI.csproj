@@ -923,6 +923,7 @@
     <Content Include="Views\Search\Partials\EstablishmentSearch.cshtml" />
     <Content Include="Views\Search\Partials\GroupSearch.cshtml" />
     <Content Include="Views\Search\Partials\GovernorSearch.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SharedGovernorViewModel.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

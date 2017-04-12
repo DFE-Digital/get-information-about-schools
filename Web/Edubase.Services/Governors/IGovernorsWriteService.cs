@@ -12,6 +12,6 @@ namespace Edubase.Services.Governors
     {
         Task<int> SaveAsync(GovernorModelBase model, IPrincipal principal);
         Task DeleteAsync(int id, IPrincipal principal);
-        Task AddEstablishmentToSharedGovernor(int governorId, int establishmentUrn, DateTime appointmentStartDate, DateTime appointmentEndDate);
+        Task AddUpdateEstablishmentToSharedGovernor(int governorId, int establishmentUrn, DateTime appointmentStartDate, DateTime appointmentEndDate);
     }
 }

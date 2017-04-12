@@ -222,7 +222,6 @@
     <Compile Include="Governors\Models\GovernorAppointment.cs" />
     <Compile Include="Governors\Models\GovernorModelBase.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
-    <Compile Include="Governors\Models\SharedGovernorDetailsModel.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\AZSIgnoreAttribute.cs" />
     <Compile Include="Core\FileDownloadFactoryService.cs" />
     <Compile Include="Core\IFileDownloadFactoryService.cs" />

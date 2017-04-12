@@ -1,17 +1,33 @@
-﻿
+﻿@model EditSharedGovernorViewModel
+
 @{
-    Layout = null;
+    ViewBag.hideLogo = true;
+    ViewBag.SelectedTab = "EditGovernance";
+    Layout = Model.Layout;
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>EditSharedGovernor</title>
-</head>
-<body>
-    <div> 
+<div id="edit-shared-governor" class="tab-content">
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            @using (Html.BeginForm("EditSharedGovernor", "Governor", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.Governor.Id)
+                @Html.HiddenFor(m => m.Urn)
+                <div class="button-row">
+                    <input type="submit" value="Replace" class="button mobile-full-width" />
+                    <a href="@Url.RouteUrl("GroupEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                </div>
+                <h2 class="bold-medium column-full">Replace @Model.GovernorType</h2>
+                <div class="edit-governor">
+                    <h3 class="bold-small column-full">@Model.Governor.FullName</h3>
+                    @Html.EditorFor(x => x.Governor.AppointmentStartDate)
+                    @Html.EditorFor(x => x.Governor.AppointmentEndDate)
+                    <div class="button-row">
+                        <input type="submit" value="Replace" class="button mobile-full-width" />
+                        <a href="@Url.RouteUrl("GroupEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
-</body>
-</html>
+</div>

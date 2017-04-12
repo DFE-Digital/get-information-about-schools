@@ -297,3 +297,12 @@ div.shared-governor-list {
         margin-bottom:15px;
     }
 }
+
+.open-expander {
+    div.shared-governor {
+        border-left-style: solid;
+        border-left-color: dimgrey;
+        border-left-width: 5px;
+        padding-left: 15px;
+    }
+}

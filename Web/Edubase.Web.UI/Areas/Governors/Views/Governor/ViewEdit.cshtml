@@ -123,10 +123,18 @@ else
                                     if (Model.RemovalGid != row.Model.Id)
                                     {
                                         <div class="button-wrapper">
-
-                                            @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
-                                                new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, 
-                                                new { @class = "button button-grey mobile-full-width" })
+                                            @if ((eLookupGovernorRole) row.Model.RoleId == eLookupGovernorRole.SharedLocalGovernor)
+                                            {
+                                                @Html.RouteLink("Edit", "EditSharedGovernor", 
+                                                    new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id },
+                                                    new { @class = "button button-grey mobile-full-width" })
+                                            }
+                                            else
+                                            {
+                                                @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
+                                                    new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, 
+                                                    new { @class = "button button-grey mobile-full-width" })
+                                            }
                                             @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
                                                 null, null, "gid-" + row.Model.Id,
                                                 new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id },

@@ -368,11 +368,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             if (ModelState.IsValid)
             {
-                foreach (var governor in model.Governors.Where(g => g.Selected && !g.PreExisting))
+                foreach (var governor in model.Governors.Where(g => (g.Selected && !g.PreExisting) || string.Equals(g.Id.ToString(), model.SelectedGovernorId)))
                 {
-                    await _governorsWriteService.AddEstablishmentToSharedGovernor(governor.Id, model.Urn.Value, governor.AppointmentStartDate.ToDateTime().Value, governor.AppointmentEndDate.ToDateTime().Value);
+                    await _governorsWriteService.AddUpdateEstablishmentToSharedGovernor(governor.Id, model.Urn.Value, governor.AppointmentStartDate.ToDateTime().Value, governor.AppointmentEndDate.ToDateTime().Value);
                 }
-                return RedirectToRoute("EstabEditGovernance", new {establishmentUrn = model.Urn, role = model.Role});
+                return RedirectToRoute("EstabEditGovernance", new {establishmentUrn = model.Urn});
             }
 
             await PopulateLayoutProperties(model, model.Urn.Value, null, null);
@@ -384,12 +384,34 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> EditSharedGovernor(int establishmentUrn, int governorId)
         {
             var governor = await _governorsReadService.GetSharedGovernorAsync(governorId, establishmentUrn);
+            var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == governor.RoleId.Value).Name;
+
             var model = new EditSharedGovernorViewModel
             {
-                Governor = MapGovernorToSharedGovernorViewModel(governor, establishmentUrn)
+                Governor = MapGovernorToSharedGovernorViewModel(governor, establishmentUrn),
+                GovernorType = roleName
             };
 
             await PopulateLayoutProperties(model, establishmentUrn, null, null);
+            return View(model);
+        }
+
+        [HttpPost, Route(ESTAB_EDIT_SHARED_GOVERNOR)]
+        public async Task<ActionResult> EditSharedGovernor(EditSharedGovernorViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _governorsWriteService.AddUpdateEstablishmentToSharedGovernor(model.Governor.Id, model.Urn.Value, model.Governor.AppointmentStartDate.ToDateTime().Value, model.Governor.AppointmentEndDate.ToDateTime().Value);
+                return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = model.Urn });
+            }
+
+            var governor = await _governorsReadService.GetSharedGovernorAsync(model.Governor.Id, model.Urn.Value);
+            var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == governor.RoleId.Value).Name;
+            model.Governor = MapGovernorToSharedGovernorViewModel(governor, model.Urn.Value);
+            model.GovernorType = roleName;
+
+            await PopulateLayoutProperties(model, model.Urn.Value, null, null);
+
             return View(model);
         }
 
@@ -414,8 +436,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 PostCode = governor.PostCode,
                 Selected = appointment != null,
                 PreExisting = appointment != null,
-                SharedWith = sharedWith
+                SharedWith = sharedWith,
+                MultiSelect = IsSharedGovernorRoleMultiSelect((eLookupGovernorRole)governor.RoleId)
             };
+        }
+
+        private bool IsSharedGovernorRoleMultiSelect(eLookupGovernorRole role)
+        {
+            return role == eLookupGovernorRole.SharedLocalGovernor;
         }
 
         private async Task PopulateSelectLists(CreateEditGovernorViewModel viewModel)

@@ -236,7 +236,7 @@ namespace Edubase.Services.Governors
         public async Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn)
         {
             var db = _dbContextFactory.Obtain();
-            var governor = await db.Governors.Where(g => g.Id == governorId).Include(g => g.Establishments.Where(e => e.EstabishmentUrn == establishmentUrn)).SingleOrDefaultAsync();
+            var governor = await db.Governors.Where(g => g.Id == governorId).Include(g => g.Establishments).SingleOrDefaultAsync();
 
             var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
             var roles = new List<GR> { GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor };
