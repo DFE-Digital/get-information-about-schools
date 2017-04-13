@@ -284,7 +284,9 @@
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\ReplaceGovernorViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\ReplaceChairViewModel.cs" />
     <Compile Include="Areas\Governors\Models\SelectSharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\SharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\Validators\CreateEditGovernorViewModelValidator.cs" />
@@ -416,6 +418,7 @@
     <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\SelectSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\EditSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -924,6 +927,7 @@
     <Content Include="Views\Search\Partials\GroupSearch.cshtml" />
     <Content Include="Views\Search\Partials\GovernorSearch.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SharedGovernorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\GovernorViewModel.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
