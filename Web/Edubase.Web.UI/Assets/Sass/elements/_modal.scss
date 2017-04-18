@@ -44,11 +44,16 @@
         display: none;
     }
 
+    .heading-large:focus {
+        outline: none;
+    }
     #modal-inner {
         padding: 2em 2em 0;
+        
         @include media(mobile) {
            // padding: 2em 1.2em 0;
-        }        
+        }
+          
     }
 
     .button-row {        
