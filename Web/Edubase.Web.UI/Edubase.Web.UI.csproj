@@ -266,6 +266,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\AutoMapperWebProfile.cs" />
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\ODataConfig.cs" />
@@ -372,6 +373,9 @@
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\sa-dev.education.gov.uk-metadata.xml" />
+    <Content Include="App_Data\sa-uat.education.gov.uk-metadata.xml" />
+    <Content Include="App_Data\sa.education.gov.uk-metadata.xml" />
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
     <Content Include="Assets\Sass\elements\_mobile-nav.scss" />
     <Content Include="Assets\Sass\elements\forms\_clear-fields.scss" />
@@ -395,6 +399,9 @@
     <Content Include="Areas\Governors\Views\Governor\EditGovernanceMode.cshtml" />
     <Content Include="Assets\Sass\elements\_tooltips.scss" />
     <Content Include="Assets\Sass\elements\_modal.scss" />
+    <Content Include="App_Data\sa-dev.education.gov.uk-certificate.cer" />
+    <Content Include="App_Data\sa-uat.education.gov.uk-certificate.cer" />
+    <Content Include="App_Data\sa.education.gov.uk-certificate.cer" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -785,7 +792,6 @@
     <Content Include="Areas\Governors\Views\GovernorSearch\Index.cshtml" />
     <Content Include="Assets\Sass\views\_search-page.scss" />
     <Content Include="Assets\Sass\views\_view-logs.scss" />
-    <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
     <Content Include="Assets\Sass\views\_school-details.scss" />
     <Content Include="Assets\Sass\views\_school-search.scss" />
     <Content Include="Assets\Sass\views\_search-results.scss" />
