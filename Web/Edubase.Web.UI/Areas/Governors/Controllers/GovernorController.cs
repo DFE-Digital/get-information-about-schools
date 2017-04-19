@@ -15,15 +15,10 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
 using StackExchange.Profiling;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http.Routing;
 using System.Web.Mvc;
 using Edubase.Services;
-using Edubase.Services.Governors.Search;
-using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -132,6 +127,16 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, x => viewModel.GovernanceMode = x.GovernanceMode);
 
                 viewModel.RemovalGid = removalGid;
+                viewModel.GovernorShared = false;
+                if (removalGid.HasValue)
+                {
+                    var govToBeRemoved = domainModel.CurrentGovernors.SingleOrDefault(g => g.Id == removalGid.Value);
+                    if (govToBeRemoved != null && EnumSets.SharedGovernorRoles.Contains(govToBeRemoved.RoleId.Value))
+                    {
+                        viewModel.GovernorShared = true;
+                    }
+                }
+
                 if (duplicateGovernorId.HasValue)
                 {
 
@@ -150,13 +155,30 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 if (viewModel.Action == "Save") // retire selected governor with the chosen appt. end date
                 {
-                    var domainModel = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value, User);
-                    domainModel.AppointmentEndDate = viewModel.RemovalAppointmentEndDate.ToDateTime().Value;
-                    await _governorsWriteService.SaveAsync(domainModel, User);
+                    if (viewModel.GovernorShared.HasValue && viewModel.GovernorShared.Value)
+                    {
+                        var sharedGovernor = await _governorsReadService.GetSharedGovernorAsync(viewModel.RemovalGid.Value, viewModel.EstablishmentUrn.Value);
+                        var appointment = sharedGovernor.Appointments.Single(a => a.EstablishmentUrn == viewModel.EstablishmentUrn.Value);
+                        await _governorsWriteService.AddUpdateEstablishmentToSharedGovernor(viewModel.RemovalGid.Value,
+                            viewModel.EstablishmentUrn.Value, appointment.AppointmentStartDate.Value, viewModel.RemovalAppointmentEndDate.ToDateTime().Value);
+                    }
+                    else
+                    {
+                        var domainModel = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value, User);
+                        domainModel.AppointmentEndDate = viewModel.RemovalAppointmentEndDate.ToDateTime().Value;
+                        await _governorsWriteService.SaveAsync(domainModel, User);
+                    }
                 }
                 else if (viewModel.Action == "Remove") // mark the governor record as deleted
                 {
-                    await _governorsWriteService.DeleteAsync(viewModel.RemovalGid.Value, User);
+                    if (viewModel.GovernorShared.HasValue && viewModel.GovernorShared.Value)
+                    {
+                        await _governorsWriteService.DeleteSharedGovernorEstablishment(viewModel.RemovalGid.Value, viewModel.EstablishmentUrn.Value);
+                    }
+                    else
+                    {
+                        await _governorsWriteService.DeleteAsync(viewModel.RemovalGid.Value, User);
+                    }
                 }
                 else throw new InvalidParameterException($"The parameter for action is invalid: '{viewModel.Action}'");
 

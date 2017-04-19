@@ -1,8 +1,5 @@
 ﻿using Edubase.Services.Governors;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Edubase.Services.Governors.Models;
 using System.Security.Principal;
@@ -18,6 +15,11 @@ namespace Edubase.Services.Texuna.Governors
 
         public Task AddUpdateEstablishmentToSharedGovernor(int governorId, int establishmentUrn, DateTime appointmentStartDate,
             DateTime appointmentEndDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteSharedGovernorEstablishment(int governorId, int establishmentUrn)
         {
             throw new NotImplementedException();
         }

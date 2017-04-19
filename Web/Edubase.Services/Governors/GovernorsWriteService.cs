@@ -96,5 +96,13 @@ namespace Edubase.Services.Governors
 
             await context.SaveChangesAsync();
         }
+
+        public async Task DeleteSharedGovernorEstablishment(int governorId, int establishmentUrn)
+        {
+            var context = _dbContextFactory.Obtain();
+            var entity = context.EstablishmentGovernors.SingleOrThrow(e => e.GovernorId == governorId && e.EstabishmentUrn == establishmentUrn);
+            context.EstablishmentGovernors.Remove(entity);
+            await context.SaveChangesAsync();
+        }
     }
 }

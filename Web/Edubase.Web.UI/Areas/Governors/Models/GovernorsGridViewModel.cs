@@ -43,6 +43,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         /// </summary>
         public int? RemovalGid { get; set; }
 
+        public bool? GovernorShared { get; set; }
+
         public DateTimeViewModel RemovalAppointmentEndDate { get; set; } = new DateTimeViewModel();
 
         public string ListOfEstablishmentsPluralName { get; set; }
