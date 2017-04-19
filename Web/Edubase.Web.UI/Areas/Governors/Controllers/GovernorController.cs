@@ -482,7 +482,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         PreviousPerson_LastName = model.NewLocalGovernor.PreviousLastName,
                         PreviousPerson_Title = model.NewLocalGovernor.PreviousTitle,
                         PostCode = model.NewLocalGovernor.PostCode,
-                        RoleId = (int)model.NewLocalGovernor.GovernorRole,
+                        RoleId = (int)eLookupGovernorRole.ChairOfTrustees,
                         TelephoneNumber = model.NewLocalGovernor.TelephoneNumber
                     }, User);
                 }

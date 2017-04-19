@@ -291,6 +291,8 @@
     <Compile Include="Areas\Governors\Models\SharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\Validators\CreateEditGovernorViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\GovernorsGridViewModelValidator.cs" />
+    <Compile Include="Areas\Governors\Models\Validators\GovernorViewModelValidator.cs" />
+    <Compile Include="Areas\Governors\Models\Validators\ReplaceChairViewModelValidator.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\CreateAcademyTrustViewModel.cs" />
