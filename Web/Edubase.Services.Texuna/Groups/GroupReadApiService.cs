@@ -13,7 +13,7 @@ namespace Edubase.Services.Texuna.Groups
 {
     public class GroupReadApiService : IGroupReadService
     {
-        private const string ApiSuggestPath = "/suggest/group";
+        private const string ApiSuggestPath = "suggest/group";
         private readonly HttpClientWrapper _httpClient;
 
         public GroupReadApiService(HttpClientWrapper httpClient)
@@ -73,14 +73,14 @@ namespace Edubase.Services.Texuna.Groups
             return await _httpClient.PostAsync<ApiSearchResult<SearchGroupDocument>>("group/search", payload);
         }
 
-        public Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
+        public async Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
         {
-            throw new NotImplementedException($"{nameof(GroupReadApiService)}::{nameof(SearchByIdsAsync)}");
+            return await _httpClient.GetAsync<ApiSearchResult<SearchGroupDocument>>($"group/searchbyids?groupId={groupId}&groupUId={groupUId}&companiesHouseNumber={companiesHouseNumber}");
         }
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
-            return await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}");
+            return await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}");
         }
     }
 }
