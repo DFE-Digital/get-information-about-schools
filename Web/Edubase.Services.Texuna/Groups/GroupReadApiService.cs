@@ -13,7 +13,7 @@ namespace Edubase.Services.Texuna.Groups
 {
     public class GroupReadApiService : IGroupReadService
     {
-        private const string ApiSuggestPath = "/suggest/group";
+        private const string ApiSuggestPath = "suggest/group";
         private readonly HttpClientWrapper _httpClient;
 
         public GroupReadApiService(HttpClientWrapper httpClient)
@@ -80,7 +80,7 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
-            return await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}");
+            return await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}");
         }
     }
 }
