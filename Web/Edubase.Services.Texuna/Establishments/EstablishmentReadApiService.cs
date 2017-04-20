@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Linq;
+using Edubase.Services.Texuna.Models;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -33,9 +34,14 @@ namespace Edubase.Services.Texuna.Establishments
             throw new NotImplementedException(nameof(CanAccess) + " not implemented yet");
         }
 
+        public async Task<bool> CanEditAsync(int urn, IPrincipal principal)
+        {
+            return (await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canedit", principal)).Value;
+        }
+
         public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
         {
-            return new ServiceResultDto<EstablishmentModel>(await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}"));
+            return new ServiceResultDto<EstablishmentModel>(await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}", principal));
         }
 
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
@@ -47,12 +53,12 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModelBase establishment)
         {
-            return await _httpClient.GetAsync<EstablishmentDisplayPolicy>($"establishment/{establishment.Urn}/display-policy");
+            return await _httpClient.GetAsync<EstablishmentDisplayPolicy>($"establishment/{establishment.Urn}/display-policy", user);
         }
 
-        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn)
+        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn, IPrincipal principal)
         {
-            return await _httpClient.GetAsync<List<LinkedEstablishmentModel>>($"establishment/{urn}/linked-establishments");
+            return await _httpClient.GetAsync<List<LinkedEstablishmentModel>>($"establishment/{urn}/linked-establishments", principal);
         }
 
         public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model)
@@ -67,17 +73,17 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)
         {
-            return (await _httpClient.GetAsync<List<LookupDto>>("establishment/permittedstatuses")).Select(x => x.Id).ToArray();
+            return (await _httpClient.GetAsync<List<LookupDto>>("establishment/permittedstatuses", principal)).Select(x => x.Id).ToArray();
         }
 
         public async Task<ApiSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
         {
-            return await _httpClient.PostAsync<ApiSearchResult<SearchEstablishmentDocument>>("establishment/search", payload);
+            return await _httpClient.PostAsync<ApiSearchResult<SearchEstablishmentDocument>>("establishment/search", payload, principal);
         }
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
-            return await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}");
+            return await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal);
         }
         
 

@@ -245,7 +245,7 @@ namespace Edubase.Web.UI.Controllers
 
             using (MiniProfiler.Current.Step("Retrieving LinkedEstablishments"))
             {
-                viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id)).Select(x => new LinkedEstabViewModel(x));
+                viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id, User)).Select(x => new LinkedEstabViewModel(x));
                 foreach (var item in viewModel.LinkedEstablishments)
 	            {
                     item.LinkTypeName = await _cachedLookupService.GetNameAsync(() => item.LinkTypeId);
@@ -260,7 +260,7 @@ namespace Edubase.Web.UI.Controllers
             }
 
             using (MiniProfiler.Current.Step("Retrieving parent group records"))
-                viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id);
+                viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id, User);
             
             using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
                 viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, viewModel.Establishment);
@@ -268,16 +268,16 @@ namespace Edubase.Web.UI.Controllers
             using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
                 viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
 
-            
-#if(!TEXAPI)
+
+#if (!TEXAPI)
             viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
                 .CanEdit(viewModel.Establishment.Urn.Value,
                     viewModel.Establishment.TypeId,
                     viewModel.Groups.Select(x => x.GroupUID.Value).ToArray(),
                     viewModel.Establishment.LocalAuthorityId,
                     viewModel.Establishment.EstablishmentTypeGroupId);
-#else 
-            // todo: TEXCHANGE: Use the Security API
+#else
+            viewModel.UserCanEdit = await _establishmentReadService.CanEditAsync(viewModel.Establishment.Urn.Value, User);
 #endif
 
             // Retrieve the lookup name values

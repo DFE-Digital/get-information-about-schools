@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Edubase.Services.Downloads.Models;
+using System.Security.Principal;
 
 namespace Edubase.Services.Texuna.Downloads
 {
@@ -17,6 +18,6 @@ namespace Edubase.Services.Texuna.Downloads
             _httpClient = httpClient;
         }
 
-        public async Task<FileDownload[]> GetListAsync()=> await _httpClient.GetAsync<FileDownload[]>($"downloads");
+        public async Task<FileDownload[]> GetListAsync(IPrincipal principal) => await _httpClient.GetAsync<FileDownload[]>($"downloads", principal);
     }
 }

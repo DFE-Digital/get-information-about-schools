@@ -25,17 +25,17 @@ using Edubase.Data.Repositories.Groups.Abstract;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [EdubaseAuthorize(Roles = EdubaseRoles.Admin), RoutePrefix("Admin"), Route("{action=dashboard}")]
+    [RoutePrefix("Admin"), Route("{action=dashboard}")]
     public class AdminController : EduBaseController
     {
         private IAzureSearchEndPoint _azureSearchEndPoint;
 
+#if (!TEXAPI)
         public AdminController(IAzureSearchEndPoint azureSearchEndPoint)
         {
             _azureSearchEndPoint = azureSearchEndPoint;
         }
-
-#if(!TEXAPI)
+        
         public async Task<ActionResult> Dashboard(string message = null)
         {
             ViewBag.Message = message;
@@ -99,7 +99,7 @@ namespace Edubase.Web.UI.Controllers
                 .GetService<IMessageLoggingService>().InstanceId);
         }
 
-        [Authorize, Route("Secure")]
+        [Route("Secure")]
         public ActionResult Secure() => View((User.Identity as ClaimsIdentity).Claims);
 
         [Route("ClearCache")]

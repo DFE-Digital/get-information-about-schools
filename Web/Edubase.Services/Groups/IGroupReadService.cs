@@ -16,9 +16,9 @@ namespace Edubase.Services.Groups
         /// </summary>
         /// <param name="urn"></param>
         /// <returns></returns>
-        Task<int[]> GetParentGroupIdsAsync(int establishmentUrn);
+        Task<int[]> GetParentGroupIdsAsync(int establishmentUrn, IPrincipal principal);
 
-        Task<GroupModel> GetByEstablishmentUrnAsync(int urn);
+        Task<GroupModel> GetByEstablishmentUrnAsync(int urn, IPrincipal principal);
 
         Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10);
 
@@ -26,7 +26,8 @@ namespace Edubase.Services.Groups
 
         Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal);
 
-        Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn);
+        Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal);
+
         Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal);
 
         /// <summary>
@@ -34,9 +35,10 @@ namespace Edubase.Services.Groups
         /// </summary>
         /// <param name="groupUid"></param>
         /// <returns></returns>
-        Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid);
-        Task<bool> ExistsAsync(string name, int? localAuthorityId = null, int? existingGroupUId = null);
-        Task<bool> ExistsAsync(CompaniesHouseNumber number); // TODO: TEXCHANGE: add to the API spec
+        Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal);
+
+        Task<bool> ExistsAsync(IPrincipal principal, string name, int? localAuthorityId = null, int? existingGroupUId = null);
+        Task<bool> ExistsAsync(CompaniesHouseNumber number, IPrincipal principal); // TODO: TEXCHANGE: add to the API spec
 
         /// <summary>
         /// Checks whether a groud id already exists within the database
@@ -44,7 +46,7 @@ namespace Edubase.Services.Groups
         /// <param name="groupId">The Group ID to check</param>
         /// <param name="existingGroupUId">The existing UID of the record, so it can be excluded from the check</param>
         /// <returns></returns>
-        Task<bool> ExistsAsync(string groupId, int? existingGroupUId = null); // TODO: TEXCHANGE: add to the API spec
+        Task<bool> ExistsAsync(IPrincipal principal, string groupId, int? existingGroupUId = null); // TODO: TEXCHANGE: add to the API spec
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel original, GroupModel model);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model);
         Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal user);

@@ -23,7 +23,7 @@ namespace Edubase.Web.UI.Controllers
         
         public async Task<ActionResult> Index()
         {
-            var list = await _downloadsService.GetListAsync();
+            var list = await _downloadsService.GetListAsync(User);
             return View(list);
         }
     }

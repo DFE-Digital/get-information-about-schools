@@ -64,13 +64,21 @@ namespace Edubase.Web.UI
                 ReturnUrl = AuthConfig.ExternalAuthDefaultCallbackUrl
             };
 
+            var cert = new X509Certificate2(HostingEnvironment.MapPath("~/app_data/edubase3.pfx"), "testtest");
+            spOptions.ServiceCertificates.Add(new ServiceCertificate
+            {
+                Use = CertificateUse.Signing,
+                Certificate = cert
+            });
+
             var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false) { SPOptions = spOptions };
 
             var idp = new IdentityProvider(new EntityId(AuthConfig.ExternalIdpEntityId.AbsoluteUri), spOptions)
             {
                 AllowUnsolicitedAuthnResponse = true,
                 Binding = Saml2BindingType.HttpRedirect,
-                MetadataLocation = AuthConfig.ExternalIdpMetadataPath
+                MetadataLocation = AuthConfig.ExternalIdpMetadataPath,
+                WantAuthnRequestsSigned = true
             };
 
             idp.SigningKeys.AddConfiguredKey(new X509Certificate2(AuthConfig.ExternalIdpCertificatePath));

@@ -22,22 +22,22 @@ namespace Edubase.Services.Texuna.Governors
             _httpClient = httpClient;
         }
 
-        public GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role)
+        public GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role, IPrincipal principal)
         {
             throw new NotImplementedException();
         }
 
-        public Task<GovernorModel> GetGovernorAsync(int gid)
+        public Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal)
         {
             throw new NotImplementedException();
         }
 
         public async Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null) 
-            => await _httpClient.GetAsync<GovernorsDetailsTexunaDto>($"governors?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}");
+            => await _httpClient.GetAsync<GovernorsDetailsTexunaDto>($"governors?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}", principal);
 
-        public async Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload)
+        public async Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal)
         {
-            return await _httpClient.PostAsync<ApiSearchResult<SearchGovernorDocument>>("governor/search", payload);
+            return await _httpClient.PostAsync<ApiSearchResult<SearchGovernorDocument>>("governor/search", payload, principal);
         }
     }
 }

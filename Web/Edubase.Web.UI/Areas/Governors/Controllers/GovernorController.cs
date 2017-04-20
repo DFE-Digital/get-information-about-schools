@@ -134,7 +134,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 if (viewModel.Action == "Save") // retire selected governor with the chosen appt. end date
                 {
-                    var domainModel = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value);
+                    var domainModel = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value, User);
                     domainModel.AppointmentEndDate = viewModel.RemovalAppointmentEndDate.ToDateTime().Value;
                     await _governorsWriteService.SaveAsync(domainModel, User);
                 }
@@ -200,7 +200,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (gid.HasValue)
             {
-                var model = await _governorsReadService.GetGovernorAsync(gid.Value);
+                var model = await _governorsReadService.GetGovernorAsync(gid.Value, User);
                 role = (eLookupGovernorRole)model.RoleId.Value;
 
                 if (replaceMode)
@@ -242,7 +242,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.GovernorRoleName = _nomenclatureService.GetGovernorRoleName(role.Value);
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
-            viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(role.Value);
+            viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(role.Value, User);
 
             ModelState.Clear();
 
@@ -256,13 +256,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> AddEditOrReplace(CreateEditGovernorViewModel viewModel)
         {
             await PopulateSelectLists(viewModel);
-            viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(viewModel.GovernorRole);
+            viewModel.DisplayPolicy = _governorsReadService.GetEditorDisplayPolicy(viewModel.GovernorRole, User);
 
             if (ModelState.IsValid)
             {
                 if (viewModel.ReplaceGovernorViewModel.GID.HasValue)
                 {
-                    var governorBeingReplaced = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value);
+                    var governorBeingReplaced = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value, User);
                     governorBeingReplaced.AppointmentEndDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime();
                     await _governorsWriteService.SaveAsync(governorBeingReplaced, User);
                 }

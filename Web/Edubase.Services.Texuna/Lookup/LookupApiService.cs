@@ -1,5 +1,6 @@
 ﻿using Edubase.Services.Domain;
 using Edubase.Services.Lookup;
+using Edubase.Services.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,11 @@ namespace Edubase.Services.Texuna.Lookup
     {
         private const string ApiPrefix = "lookup/";
         private readonly HttpClientWrapper _httpClient;
+        private readonly ISecurityService _securityService;
 
-        public LookupApiService(HttpClientWrapper httpClient)
+        public LookupApiService(HttpClientWrapper httpClient, ISecurityService securityService)
         {
+            _securityService = securityService;
             _httpClient = httpClient;
         }
         
@@ -74,7 +77,7 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> TeenageMothersProvisionsGetAllAsync() => await GetData("teenage-mothers-provisions");
         public async Task<IEnumerable<LookupDto>> TypeOfResourcedProvisionsGetAllAsync() => await GetData("type-of-resourced-provisions");
         public async Task<IEnumerable<LookupDto>> UrbanRuralGetAllAsync() => await GetData("urban-rural");
-        private async Task<IEnumerable<LookupDto>> GetData(string name) => await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + name);
+        private async Task<IEnumerable<LookupDto>> GetData(string name) => await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + name, _securityService.CreateAnonymousPrincipal());
 
         #region Synchronous methods (deprecating)
 

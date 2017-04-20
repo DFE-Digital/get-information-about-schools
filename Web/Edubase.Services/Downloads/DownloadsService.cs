@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace Edubase.Services.Downloads
 {
     public class DownloadsService : IDownloadsService
     {
-        public async Task<FileDownload[]> GetListAsync()
+        public async Task<FileDownload[]> GetListAsync(IPrincipal principal)
         {
             var client = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString).CreateCloudBlobClient();
             var blobs = client.GetContainerReference("public").GetDirectoryReference("zip").ListBlobs().Cast<CloudBlob>();

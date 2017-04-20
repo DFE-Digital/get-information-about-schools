@@ -280,7 +280,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var groupTypes = await GetAcademyTrustGroupTypes();
 
             var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
-            vm.TrustExists = await _groupReadService.ExistsAsync(CompaniesHouseNumber.Parse(companiesHouseNumber));
+            vm.TrustExists = await _groupReadService.ExistsAsync(CompaniesHouseNumber.Parse(companiesHouseNumber), User);
             
             return View(vm);
         }
@@ -428,7 +428,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private async Task PopulateEstablishmentList(List<EstablishmentGroupViewModel> list, int groupUId)
         {
-            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(groupUId);
+            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(groupUId, User);
             foreach (var establishmentGroup in establishmentGroups)
             {
                 // TODO TEXCHANGE: need to use the full object graph from the API rather than more service calls in texuna context as it would be very inefficient.  Need to tidy this post int.
