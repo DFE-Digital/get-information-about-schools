@@ -50,7 +50,6 @@
 @if (Model.DisplayPolicy.AppointmentEndDate)
 {
     @Html.EditorFor(x => x.AppointmentStartDate, new {title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends"})
-    @*@RenderDateSelector(x => x.AppointmentEndDate, x => x.AppointmentEndDate.Day, x => x.AppointmentEndDate.Month, x => x.AppointmentEndDate.Year, (Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends"))*@
 }
 
 @if (Model.DisplayPolicy.EmailAddress)
@@ -74,7 +73,6 @@
 @if (Model.DisplayPolicy.DOB)
 {
     @Html.EditorFor(x => x.DOB)
-    @*@RenderDateSelector(x => x.DOB, x => x.DOB.Day, x => x.DOB.Month, x => x.DOB.Year, "Date of birth")*@
 }
 
 @if (Model.DisplayPolicy.PreviousFullName)

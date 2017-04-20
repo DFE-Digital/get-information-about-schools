@@ -142,7 +142,7 @@ namespace Edubase.Services.Governors
             
             var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(retVal.HasFullAccess);
             retVal.ApplicableRoles.ForEach(x => retVal.RoleDisplayPolicies.Add(x, templateDisplayPolicy.Clone()));
-            ProcessDisplayPolicyOverrides(retVal.RoleDisplayPolicies);
+            ProcessDisplayPolicyOverrides(retVal.RoleDisplayPolicies, groupUId.HasValue);
             
             retVal.CurrentGovernors = (await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, false)).ToList();
             retVal.HistoricalGovernors = (await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, true)).ToList();
@@ -155,10 +155,10 @@ namespace Edubase.Services.Governors
         /// </summary>
         /// <param name="role"></param>
         /// <returns></returns>
-        public GovernorDisplayPolicy GetEditorDisplayPolicy(GR role, IPrincipal principal)
+        public GovernorDisplayPolicy GetEditorDisplayPolicy(GR role, bool isGroup, IPrincipal principal)
         {
             var retVal = new GovernorDisplayPolicy().SetFullAccess(true);
-            ProcessDisplayPolicyOverrides(new Dictionary<GR, GovernorDisplayPolicy> { [role] = retVal });
+            ProcessDisplayPolicyOverrides(new Dictionary<GR, GovernorDisplayPolicy> { [role] = retVal }, isGroup);
 
             if (role.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer))
             {
@@ -174,7 +174,7 @@ namespace Edubase.Services.Governors
             return retVal;
         }
 
-        private void ProcessDisplayPolicyOverrides(Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies)
+        private void ProcessDisplayPolicyOverrides(Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies, bool isGroup)
         {
             // Override policies at the role level
             roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Governor, GR.Trustee, GR.LocalGovernor, GR.Member, GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor))
@@ -199,8 +199,8 @@ namespace Edubase.Services.Governors
             roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor))
                 .ForEach(x =>
                 {
-                    x.Value.AppointmentStartDate = false;
-                    x.Value.AppointmentEndDate = false;
+                    x.Value.AppointmentStartDate = !isGroup;
+                    x.Value.AppointmentEndDate = !isGroup;
                 });
         }
 
@@ -222,7 +222,7 @@ namespace Edubase.Services.Governors
             var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
             var roles = new List<GR> {GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor};
             var displayPolicies = roles.ToDictionary(r => r, r => templateDisplayPolicy.Clone());
-            ProcessDisplayPolicyOverrides(displayPolicies);
+            ProcessDisplayPolicyOverrides(displayPolicies, false);
 
             foreach (var group in groups)
             {
@@ -241,7 +241,7 @@ namespace Edubase.Services.Governors
             var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
             var roles = new List<GR> { GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor };
             var displayPolicies = roles.ToDictionary(r => r, r => templateDisplayPolicy.Clone());
-            ProcessDisplayPolicyOverrides(displayPolicies);
+            ProcessDisplayPolicyOverrides(displayPolicies, false);
 
             var policy = displayPolicies.Get((GR)governor.RoleId);
 

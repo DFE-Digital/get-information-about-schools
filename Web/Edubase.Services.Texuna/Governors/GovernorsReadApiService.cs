@@ -20,7 +20,7 @@ namespace Edubase.Services.Texuna.Governors
             _httpClient = httpClient;
         }
 
-        public GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role, IPrincipal principal)
+        public GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role, bool isGroup, IPrincipal principal)
         {
             throw new NotImplementedException();
         }

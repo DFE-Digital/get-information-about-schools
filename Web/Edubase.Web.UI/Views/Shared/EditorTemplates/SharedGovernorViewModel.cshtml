@@ -29,7 +29,7 @@
         <div class="shared-governor">
             @if (Model.PreExisting)
             {
-                <p class="bold-xsmall">Already shread with this establishment</p>
+                <p class="bold-xsmall">Already shared with this establishment</p>
             }
             <dl>
                 <dt>Shared with:</dt>
@@ -37,7 +37,7 @@
                     @foreach (var establishment in Model.SharedWith)
                     {
                         <div>
-                            @Html.ActionLink($"{establishment.EstablishmentName}, URN: {establishment.Urn}", "Details", "Establishment", new {id = establishment.Urn, area = ""}, null)
+                            @establishment.EstablishmentName, URN: @establishment.Urn
                         </div>
                     }
                 </dd>
