@@ -93,6 +93,12 @@ select#headtitleid {
     legend {
         font-weight: normal;
         font-size: 16px;
+
+        &.bold-legend {
+            font-weight: bold;
+            display: block;
+            margin: 20px 0;
+        }
     }
     .hint-text, .form-hint {
         font-size: 16px;
@@ -259,4 +265,16 @@ div.governor-list {
 
 .estab-number-wrap {
     margin-top: 20px;
+}
+
+
+.edu-edit-panel {
+    margin: 0 0 30px 5px;
+}
+
+
+.edu-section-break {
+    border-top: $grey-2 1px solid;
+    margin: 40px  0 12px;
+    padding-top: 12px;
 }

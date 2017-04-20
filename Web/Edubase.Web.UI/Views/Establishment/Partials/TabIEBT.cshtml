@@ -1,404 +1,197 @@
 ﻿@model EstablishmentDetailViewModel
 
 <div id="school-iebt" class="tab-content">
-    <h2 class="bold-medium">Independent Education and Boarding Team</h2>
-    <br />
-
-    <table class="borderless">
-        <tr>
-            <td style="font-weight:bold;">Notes:</td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                @(Model.Establishment.Notes ?? "Not recorded")
-                <br />
-                <br />
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Date of the last Bridge visit:</th>
-            <td>
-                @(Model.Establishment.DateOfTheLastBridgeVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Date of last Ofsted visit:</th>
-            <td>
-                @(Model.Establishment.OfstedInspectionDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Date of last ISI visit:</th>
-            <td>
-                @(Model.Establishment.DateOfTheLastISIVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Date of last welfare visit:</th>
-            <td>
-                @(Model.Establishment.DateOfTheLastWelfareVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Date of last FP visit:</th>
-            <td>
-                @(Model.Establishment.DateOfTheLastFPVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Date of last SIS visit:</th>
-            <td>
-                @(Model.Establishment.DateOfTheLastSISVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Next Ofsted visit:</th>
-            <td>
-                @(Model.Establishment.NextOfstedVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Next general action required:</th>
-            <td>
-                @(Model.Establishment.NextGeneralActionRequired?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Next action required by WEL:</th>
-            <td>
-                @(Model.Establishment.NextActionRequiredByWEL?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Next action required by FP:</th>
-            <td>
-                @(Model.Establishment.NextActionRequiredByFP?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-
-
-
-        <tr>
-            <th scope="row">Inspectorate:</th>
-            <td>
-                @Model.InspectorateName
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Independent school type:</th>
-            <td>
-                @Model.IndependentSchoolTypeName
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Charity organisation:</th>
-            <td>
-                @(Model.Establishment.CharityOrganisation ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Charity registration number:</th>
-            <td>
-                @(Model.Establishment.CharityRegistrationNumber?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-
-
-
-        <tr>
-            <th scope="row">Total number of full time pupils:</th>
-            <td>
-                @(Model.Establishment.TotalNumberOfFullTimePupils?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Total number of part time pupils:</th>
-            <td>
-                @(Model.Establishment.TotalNumberOfPartTimePupils?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Total number of pupils of compulsory school age:</th>
-            <td>
-                @(Model.Establishment.TotalNumberOfPupilsOfCompulsorySchoolAge?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Total number of special pupils under a SEN statement/ECHP:</th>
-            <td>
-                @(Model.Establishment.NumberOfSpecialPupilsUnderASENStatementEHCP?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Number of special pupils not under a SEN statement/EHCP:</th>
-            <td>
-                @(Model.Establishment.NumberOfSpecialPupilsNotUnderASENStatementEHCP?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Total number of pupils in public care:</th>
-            <td>
-                @(Model.Establishment.TotalNumberOfPupilsInPublicCare?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-
-
-
-
-
-        <tr>
-            <th scope="row">PT boys (aged 2 and under):</th>
-            <td>
-                @(Model.Establishment.PTBoysAged2AndUnder?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">PT boys (aged 3):</th>
-            <td>
-                @(Model.Establishment.PTBoysAged3?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">PT boys (aged 4a):</th>
-            <td>
-                @(Model.Establishment.PTBoysAged4A?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">PT boys (aged 4b):</th>
-            <td>
-                @(Model.Establishment.PTBoysAged4B?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">PT boys (aged 4c):</th>
-            <td>
-                @(Model.Establishment.PTBoysAged4C?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Total number of boys in boarding schools:</th>
-            <td>
-                @(Model.Establishment.TotalNumberOfBoysInBoardingSchools?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-
-
-
-
-        <tr>
-            <th scope="row">PT girls (aged 2 and under):</th>
-            <td>
-                @(Model.Establishment.PTGirlsAged2AndUnder?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">PT girls (aged 3):</th>
-            <td>
-                @(Model.Establishment.PTGirlsAged3?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">PT girls (aged 4a):</th>
-            <td>
-                @(Model.Establishment.PTGirlsAged4A?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">PT girls (aged 4b):</th>
-            <td>
-                @(Model.Establishment.PTGirlsAged4B?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">PT girls (aged 4c):</th>
-            <td>
-                @(Model.Establishment.PTGirlsAged4C?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Total number of girls in boarding schools:</th>
-            <td>
-                @(Model.Establishment.TotalNumberOfGirlsInBoardingSchools?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-
-
-
-
-
-        <tr>
-            <th scope="row">Total number of full time staff:</th>
-            <td>
-                @(Model.Establishment.TotalNumberOfFullTimeStaff?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Total number of part time staff:</th>
-            <td>
-                @(Model.Establishment.TotalNumberOfPartTimeStaff?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-
-
-
-
-
-
-        <tr>
-            <th scope="row">Lowest annual rate for day pupils:</th>
-            <td>
-                @(Model.Establishment.HighestAnnualRateForDayPupils?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Highest annual rate for day pupils:</th>
-            <td>
-                @(Model.Establishment.LowestAnnualRateForDayPupils?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Lowest annual rate for boarding pupils:</th>
-            <td>
-                @(Model.Establishment.HighestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Highest annual rate for boarding pupils:</th>
-            <td>
-                @(Model.Establishment.LowestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")
-            </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-
-
-
-
-
-
-
-
-        <tr>
-            <th scope="row">Boarding establishment:</th>
-            <td>
-                @Model.ProvisionBoardingName
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Proprietor's name:</th>
-            <td>
-                @(Model.Establishment.ProprietorName ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Proprietor's address:</th>
-            <td>
-                @Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.ProprietorsStreet, Model.Establishment.ProprietorsLocality, Model.Establishment.ProprietorsAddress3, Model.Establishment.ProprietorsTown, Model.Establishment.ProprietorsCounty, Model.Establishment.ProprietorsPostcode)
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Proprietor's telephone:</th>
-            <td>
-                @(Model.Establishment.ProprietorsTelephoneNumber ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Proprietor's fax:</th>
-            <td>
-                @(Model.Establishment.ProprietorsFaxNumber ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Proprietor's email:</th>
-            <td>
-                @(Model.Establishment.ProprietorsEmail ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Proprietor's preferred job title:</th>
-            <td>
-                @(Model.Establishment.ProprietorsPreferredJobTitle ?? "Not recorded")
-            </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-
-
-        <tr>
-            <th scope="row">Chair of proprietor's name:</th>
-            <td>
-                @(Model.Establishment.ChairOfProprietorsBodyName ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Chair of proprietor's address:</th>
-            <td>
-                @Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.ChairOfProprietorsBodyStreet, Model.Establishment.ChairOfProprietorsBodyLocality, Model.Establishment.ChairOfProprietorsBodyAddress3, Model.Establishment.ChairOfProprietorsBodyTown, Model.Establishment.ChairOfProprietorsBodyCounty, Model.Establishment.ChairOfProprietorsBodyPostcode)
-            </td>
-        </tr>
-
-        <tr>
-            <th scope="row">Chair of proprietor's telephone:</th>
-            <td>
-                @(Model.Establishment.ChairOfProprietorsBodyTelephoneNumber ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Chair of proprietor's fax:</th>
-            <td>
-                @(Model.Establishment.ChairOfProprietorsBodyFaxNumber ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Chair of proprietor's email:</th>
-            <td>
-                @(Model.Establishment.ChairOfProprietorsBodyEmail ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Chair of proprietor's preferred job title:</th>
-            <td>
-                @(Model.Establishment.ChairOfProprietorsBodyPreferredJobTitle ?? "Not recorded")
-            </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
+    @if (Model.UserCanEdit)
+    {
+        <div class="button-row">
+            @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null,new { @class = "button button-grey mobile-full-width" })
+        </div>
         
-    </table>
+    }
+    
+    <div class="detail-summary">        
+        <h2 class="heading-medium">Independent Education and Boarding Team</h2>
+        <h2 class="heading-small">Notes</h2>
+        <div>@(Model.Establishment.Notes ?? "Not recorded")</div>
+
+        <dl>
+            <dt>Date of the last Bridge visit:</dt>
+            <dd>@(Model.Establishment.DateOfTheLastBridgeVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+            <dt>Date of last Ofsted visit:</dt>
+            <dd>@(Model.Establishment.OfstedInspectionDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+            <dt>Date of last ISI visit:</dt>
+            <dd>@(Model.Establishment.DateOfTheLastISIVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+            <dt>Date of last welfare visit:</dt>
+            <dd>@(Model.Establishment.DateOfTheLastWelfareVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+            <dt>Date of last FP visit:</dt>
+            <dd>@(Model.Establishment.DateOfTheLastFPVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+            <dt>Date of last SIS visit:</dt>
+            <dd>@(Model.Establishment.DateOfTheLastSISVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+            <dt>Next Ofsted visit:</dt>
+            <dd>@(Model.Establishment.NextOfstedVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+            <dt>Next general action required:</dt>
+            <dd>@(Model.Establishment.NextGeneralActionRequired?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+            <dt>Next action required by WEL:</dt>
+            <dd>@(Model.Establishment.NextActionRequiredByWEL?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+            <dt>Next action required by FP:</dt>
+            <dd>@(Model.Establishment.NextActionRequiredByFP?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+
+
+        </dl>
+
+        <dl>
+            <dt>Inspectorate:</dt>
+            <dd>@Model.InspectorateName</dd>
+
+            <dt>Independent school type:</dt>
+            <dd>@Model.IndependentSchoolTypeName</dd>
+
+            <dt>Charity organisation:</dt>
+            <dd>@(Model.Establishment.CharityOrganisation ?? "Not recorded")</dd>
+
+            <dt>Charity registration number:</dt>
+            <dd>@(Model.Establishment.CharityRegistrationNumber?.ToString() ?? "Not recorded")</dd>
+
+        </dl>
+
+        <dl>
+            <dt>Total number of full time pupils:</dt>
+            <dd>@(Model.Establishment.TotalNumberOfFullTimePupils?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Total number of part time pupils:</dt>
+            <dd>@(Model.Establishment.TotalNumberOfPartTimePupils?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Total number of pupils of compulsory school age:</dt>
+            <dd>@(Model.Establishment.TotalNumberOfPupilsOfCompulsorySchoolAge?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Total number of special pupils under a SEN statement/ECHP:</dt>
+            <dd>@(Model.Establishment.NumberOfSpecialPupilsUnderASENStatementEHCP?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Number of special pupils not under a SEN statement/EHCP:</dt>
+            <dd>@(Model.Establishment.NumberOfSpecialPupilsNotUnderASENStatementEHCP?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Total number of pupils in public care:</dt>
+            <dd>@(Model.Establishment.TotalNumberOfPupilsInPublicCare?.ToString() ?? "Not recorded")</dd>
+
+        </dl>
+
+        <dl>
+            <dt>PT boys (aged 2 and under):</dt>
+            <dd>@(Model.Establishment.PTBoysAged2AndUnder?.ToString() ?? "Not recorded")</dd>
+
+            <dt>PT boys (aged 3):</dt>
+            <dd>@(Model.Establishment.PTBoysAged3?.ToString() ?? "Not recorded")</dd>
+
+            <dt>PT boys (aged 4a):</dt>
+            <dd>@(Model.Establishment.PTBoysAged4A?.ToString() ?? "Not recorded")</dd>
+
+            <dt>PT boys (aged 4b):</dt>
+            <dd>@(Model.Establishment.PTBoysAged4B?.ToString() ?? "Not recorded")</dd>
+
+            <dt>PT boys (aged 4c):</dt>
+            <dd>@(Model.Establishment.PTBoysAged4C?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Total number of boys in boarding schools:</dt>
+            <dd> @(Model.Establishment.TotalNumberOfBoysInBoardingSchools?.ToString() ?? "Not recorded")</dd>
+        </dl>
+
+        <dl>
+            <dt>PT girls (aged 2 and under):</dt>
+            <dd>@(Model.Establishment.PTGirlsAged2AndUnder?.ToString() ?? "Not recorded")</dd>
+
+            <dt>PT girls (aged 3):</dt>
+            <dd>@(Model.Establishment.PTGirlsAged3?.ToString() ?? "Not recorded")</dd>
+
+            <dt>PT girls (aged 4a):</dt>
+            <dd>@(Model.Establishment.PTGirlsAged4A?.ToString() ?? "Not recorded")</dd>
+
+            <dt>PT girls (aged 4b):</dt>
+            <dd>@(Model.Establishment.PTGirlsAged4B?.ToString() ?? "Not recorded")</dd>
+
+            <dt>PT girls (aged 4c):</dt>
+            <dd>@(Model.Establishment.PTGirlsAged4C?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Total number of girls in boarding schools:</dt>
+            <dd>@(Model.Establishment.TotalNumberOfGirlsInBoardingSchools?.ToString() ?? "Not recorded")</dd>
+
+        </dl>
+
+        <dl>
+            <dt>Total number of full time staff:</dt>
+            <dd>@(Model.Establishment.TotalNumberOfFullTimeStaff?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Total number of part time staff:</dt>
+            <dd>@(Model.Establishment.TotalNumberOfPartTimeStaff?.ToString() ?? "Not recorded")</dd>
+
+        </dl>
+
+        <dl>
+            <dt>Lowest annual rate for day pupils:</dt>
+            <dd>@(Model.Establishment.HighestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Highest annual rate for day pupils:</dt>
+            <dd>@(Model.Establishment.LowestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Lowest annual rate for boarding pupils:</dt>
+            <dd>@(Model.Establishment.HighestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
+
+            <dt>Highest annual rate for boarding pupils:</dt>
+
+            <dd>@(Model.Establishment.LowestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
+        </dl>
+
+
+        <dl>
+            <dt>Boarding establishment:</dt>
+            <dd>@Model.ProvisionBoardingName</dd>
+
+            <dt>Proprietor's name:</dt>
+            <dd>@(Model.Establishment.ProprietorName ?? "Not recorded")</dd>
+
+            <dt>Proprietor's address:</dt>
+            <dd>@Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.ProprietorsStreet, Model.Establishment.ProprietorsLocality, Model.Establishment.ProprietorsAddress3, Model.Establishment.ProprietorsTown, Model.Establishment.ProprietorsCounty, Model.Establishment.ProprietorsPostcode)</dd>
+
+            <dt>Proprietor's telephone:</dt>
+            <dd>@(Model.Establishment.ProprietorsTelephoneNumber ?? "Not recorded")</dd>
+
+            <dt>Proprietor's fax:</dt>
+            <dd>@(Model.Establishment.ProprietorsFaxNumber ?? "Not recorded")</dd>
+
+            <dt>Proprietor's email:</dt>
+            <dd>@(Model.Establishment.ProprietorsEmail ?? "Not recorded")</dd>
+
+            <dt>Proprietor's preferred job title:</dt>
+            <dd>@(Model.Establishment.ProprietorsPreferredJobTitle ?? "Not recorded")</dd>
+        </dl>
+        <dl>
+            <dt>Chair of proprietor's name:</dt>
+            <dd>@(Model.Establishment.ChairOfProprietorsBodyName ?? "Not recorded")</dd>
+
+            <dt>Chair of proprietor's address:</dt>
+            <dd>@Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.ChairOfProprietorsBodyStreet, Model.Establishment.ChairOfProprietorsBodyLocality, Model.Establishment.ChairOfProprietorsBodyAddress3, Model.Establishment.ChairOfProprietorsBodyTown, Model.Establishment.ChairOfProprietorsBodyCounty, Model.Establishment.ChairOfProprietorsBodyPostcode)</dd>
+
+            <dt>Chair of proprietor's telephone:</dt>
+            <dd>@(Model.Establishment.ChairOfProprietorsBodyTelephoneNumber ?? "Not recorded")</dd>
+
+            <dt>Chair of proprietor's fax:</dt>
+            <dd>@(Model.Establishment.ChairOfProprietorsBodyFaxNumber ?? "Not recorded")</dd>
+
+            <dt>Chair of proprietor's email:</dt>
+            <dd>@(Model.Establishment.ChairOfProprietorsBodyEmail ?? "Not recorded")</dd>
+
+            <dt>Chair of proprietor's preferred job title:</dt>
+            <dd>@(Model.Establishment.ChairOfProprietorsBodyPreferredJobTitle ?? "Not recorded")</dd>
+        </dl>
+
+    </div>
+
 </div>
