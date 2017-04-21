@@ -96,12 +96,8 @@ namespace Edubase.Web.UI
             MiniProfiler.Stop();
         }
 
-        private bool IsUserAllowedToSeeMiniProfilerUI(HttpRequest httpRequest)
-        {
-            var principal = httpRequest.RequestContext.HttpContext.User;
-            return principal.IsInRole(Services.Security.EdubaseRoles.Admin);
-        }
+        private bool IsUserAllowedToSeeMiniProfilerUI(HttpRequest httpRequest) => true; // TODO: TEXCHANGE: SECURE THIS
 
-        public static bool IsRunningOnAzure => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
+        //public static bool IsRunningOnAzure => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
     }
 }
