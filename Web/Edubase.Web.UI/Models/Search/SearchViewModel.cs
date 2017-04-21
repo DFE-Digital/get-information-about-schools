@@ -1,13 +1,13 @@
 ﻿using Edubase.Web.UI.Helpers.ModelBinding;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Edubase.Web.UI.Models.Search
 {
     public class SearchViewModel
     {
+        private List<int> selectedLocalAuthorityIds = new List<int>();
+
         public const string BIND_ALIAS_GOONERES = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_GOONERES;
         public const string BIND_ALIAS_STATUSIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_STATUSIDS;
         public const string BIND_ALIAS_LAIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_LAIDS;
@@ -15,7 +15,11 @@ namespace Edubase.Web.UI.Models.Search
         public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }
 
         [BindAlias(BIND_ALIAS_LAIDS)]
-        public List<int> SelectedLocalAuthorityIds { get; set; } = new List<int>();
+        public List<int> SelectedLocalAuthorityIds
+        {
+            get { return this.selectedLocalAuthorityIds.Distinct().ToList(); }
+            set { this.selectedLocalAuthorityIds = value; }
+        }
 
         public IEnumerable<LookupItemViewModel> GovernorRoles { get; internal set; }
 
@@ -34,13 +38,20 @@ namespace Edubase.Web.UI.Models.Search
 
         public SearchViewModel AddLocalAuthorityId(int id)
         {
-            SelectedLocalAuthorityIds.Add(id);
+            if (!this.selectedLocalAuthorityIds.Contains(id))
+            {
+                this.selectedLocalAuthorityIds.Add(id);
+            }
             return this;
         }
 
         public SearchViewModel RemoveLocalAuthorityId(int id)
         {
-            SelectedLocalAuthorityIds.Remove(id);
+            if (this.selectedLocalAuthorityIds.Contains(id))
+            {
+                this.selectedLocalAuthorityIds.RemoveAll(la => la == id);
+            }
+            
             return this;
         }
 

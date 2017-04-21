@@ -33,6 +33,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
 
+
             if (viewModel.LocalAuthorityToRemove.HasValue)
             {
                 return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
@@ -96,8 +97,8 @@ namespace Edubase.Web.UI.Controllers
                 model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
             else
             {
-                var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(model.SelectedLocalAuthorityIds, model.LocalAuthorityToAdd,
-                    localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList());
+                var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(model.SelectedLocalAuthorityIds, model.LocalAuthorityToAdd ?? "",
+                    localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd ?? "", StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList());
                 return View("LocalAuthorityDisambiguation", localAuthorityDisambiguationViewModel);
             }
         }

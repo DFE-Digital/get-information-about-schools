@@ -11,7 +11,7 @@
 
 <div class="grid-row">
     <div class="column-full">
-        @{ Html.RenderPartial("Partials/SearchHeader"); }
+        @{ Html.RenderPartial("Partials/_SearchHeader"); }
     </div>
     <div class="column-full">
         <div class="horizontal-tabs-wrapper">
@@ -36,24 +36,24 @@
             <div class="tab-content-wrapper horizontal-tabs-content">
                 <div id="establishments" class="tab-content">
 
-                    @{ Html.RenderPartial("Partials/EstablishmentSearch"); }
+                    @{ Html.RenderPartial("Partials/_EstablishmentSearch"); }
 
                 </div>
 
                 <div id="groups" class="tab-content">
-                    @{ Html.RenderPartial("Partials/GroupSearch"); }
+                    @{ Html.RenderPartial("Partials/_GroupSearch"); }
                    
                 </div>
 
                 <div id="governors" class="tab-content">
-                    @{ Html.RenderPartial("Partials/GovernorSearch");}
+                    @{ Html.RenderPartial("Partials/_GovernorSearch");}
 
                 </div>
             </div>
 
         </div>
         @* Tool tip texts - Potential TODO add to resource file *@
-        @{ Html.RenderPartial("Partials/HelpText"); }
+        @{ Html.RenderPartial("Partials/_HelpText"); }
 
     </div>
 
