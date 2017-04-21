@@ -237,6 +237,17 @@
     input {
         position: absolute;
         @include opacity(0);
+
+        &[disabled="disabled"] {
+            + input + label:before {
+                background-color: $grey-3;
+                border-color: $grey-1;
+            }
+
+            + input + label:after {
+                border-color: $grey-1;
+            }
+        }
     }
 }
 
@@ -252,6 +263,14 @@ input:checked + .edubase-button-checkbox:after {
 }
 
 input:focus + .edubase-button-checkbox:before {
+    box-shadow: 0 0 3px 3px $focus-colour;
+}
+
+input:checked + input + .edubase-button-checkbox:after {
+    @include opacity(1);
+}
+
+input:focus + input + .edubase-button-checkbox:before {
     box-shadow: 0 0 3px 3px $focus-colour;
 }
 

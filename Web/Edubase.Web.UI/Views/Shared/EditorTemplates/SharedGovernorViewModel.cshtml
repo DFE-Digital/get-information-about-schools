@@ -5,18 +5,20 @@
         <div class="form-group">
             @if (Model.MultiSelect)
             {
-                <label class="block-label selection-button-checkbox" for="IncludeHistoric">
-                    @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger"))
-                    @Model.FullName
-                </label>
+               
+                <span class="checkbox-wrap">
+                    @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger", @Html.NameFor(x => x.Selected)))
+                    
+                    <label class="edubase-button-checkbox" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
+                </span>
             }
             else
             {
-                <label class="block-label radio-button-wrap" for="IncludeHistoric">
-                    @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected, new { Name = "SelectedGovernorId", @class = "panel-trigger"})
-                    @Model.FullName
-                </label>
-            }
+                <span class="checkbox-wrap">
+                    @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected, new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = @Model.Id})
+                    <label class="edubase-button-checkbox" for="@Model.Id">@Model.FullName</label>
+                </span>
+                    }
         </div>
                                         
 
@@ -65,11 +67,11 @@
 
 @functions
 {
-    object GetCheckboxAttributes(bool readOnly, string cssClasses)
+    object GetCheckboxAttributes(bool readOnly, string cssClasses, HtmlString elemId)
     {
         if (readOnly)
-            return new { @class = cssClasses, @disabled = "disabled" };
+            return new { @class = cssClasses, @disabled = "disabled" , @id = elemId };
 
-        return new { @class = cssClasses };
+        return new { @class = cssClasses, @id = elemId };
     }
 }
