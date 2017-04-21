@@ -138,13 +138,6 @@ select#headtitleid {
         }
     }
     
-    .column-full {
-        .column-half,
-        .column-two-thirds {
-                padding-left: 0;
-            }
-    }
-
 
     .grey-bar {
         border-top: $grey-3 3px solid;
@@ -317,5 +310,24 @@ div.shared-governor-list {
         padding-left: 15px;
         padding-top: 20px;
         margin-left: 20px;
+    }
+}
+
+
+
+.tab-content {
+    .grid-row,
+    .column-full,
+    .column-half,
+    .column-two-thirds {
+        margin: 0;
+        padding:0;
+    }
+}
+
+
+.exapanding-list-wrap {
+    .shared-governor {
+        margin-bottom: 20px;
     }
 }

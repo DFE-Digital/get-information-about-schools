@@ -13,24 +13,24 @@
             {
                 if (Model.Governors.Any())
                 {
-                    <div class="column-full">
+                    <div class="button-row">
                         <input type="submit" value="Select" class="button mobile-full-width" />
                         <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                     </div>
                 }
                 else
                 {
-                    <div class="column-full">
+                    <div class="button-row">
                         <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                     </div>
                 }
                 <h2 class="bold-medium column-full">Select @Model.GovernorType</h2>
-
-                <div class="shared-governor-list">
-                    @Html.HiddenFor(x => x.Urn)
-                    @Html.HiddenFor(x => x.Role)
-                    @if (Model.Governors.Any())
-                    {
+                if (Model.Governors.Any())
+                {
+                    <div class="exapanding-list-wrap">
+                        @Html.HiddenFor(x => x.Urn)
+                        @Html.HiddenFor(x => x.Role)
+                    
                         <ul>
                             @for (var index = 0; index < Model.Governors.Count(); index++)
                             {
@@ -41,13 +41,14 @@
                             <input type="submit" value="Select" class="button mobile-full-width"/>
                             <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                         </div>
-                    }
-                    else
-                    {
-                        <p>There are no shared governors available for this establishment</p>
-                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
-                    }
-                </div>
+                   
+                    </div>
+                }
+                else
+                {
+                    <p>There are no shared governors available for this establishment</p>
+                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                }
             }
         </div>
     </div>
