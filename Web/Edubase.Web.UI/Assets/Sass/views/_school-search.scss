@@ -18,7 +18,7 @@
         float: none;
     }
 
-     .twitter-typeahead {
+    .twitter-typeahead {
         width: 50%;
 
         @include media(mobile) {
@@ -29,6 +29,8 @@
             width: 100%;
         }
     }
+
+
 
     .tt-menu {
         background-color: white;
@@ -103,31 +105,30 @@
     display: list-item;
 }
 
-.js-enabled {
-    .remove-suggest-la {
-        background-color: $grey-3;       
-        color: $black;
-        padding: 4px 32px 4px 4px;
-        text-decoration: none;
-        font-size: 14px;
-        margin-right: 3px;
-        margin-bottom: 3px;
-        float: left;
-        position: relative;
+.remove-suggest-la {
+    background-color: $grey-3;       
+    color: $black;
+    padding: 4px 32px 4px 4px;
+    text-decoration: none;
+    font-size: 14px;
+    margin-right: 3px;
+    margin-bottom: 3px;
+    float: left;
+    position: relative;
 
-        &:after {
-            content: '';
-            position: absolute;
-            right: 6px;
-            top: 8px;
-            width: 12px;
-            height: 12px;
-            background-image: file-url('icons/suggest-remove.png');
-            background-repeat: no-repeat;
-            background-size: 12px;
-        }
+    &:after {
+        content: '';
+        position: absolute;
+        right: 6px;
+        top: 8px;
+        width: 12px;
+        height: 12px;
+        background-image: file-url('icons/suggest-remove.png');
+        background-repeat: no-repeat;
+        background-size: 12px;
     }
 }
+
 
 .selected-las {
     position: relative;
@@ -193,5 +194,20 @@
         display: block;
         padding: 8px;
         border-bottom: $grey-2 1px solid;
+    }
+}
+
+.no-js {
+    .search-type-wrapper .edubase-button-radio {
+        padding-left: 0;
+            &:before,
+            &:after {
+                border: 0;
+                width: 0;
+            }
+    }
+
+    #TextSearchModel_Text {
+        width: 50%;
     }
 }

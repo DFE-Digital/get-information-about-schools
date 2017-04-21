@@ -16,19 +16,19 @@
     <div class="column-full">
         <div class="horizontal-tabs-wrapper">
             <div class="tab-wrap">
-                <ul class="horizontal-tabs trio-tabs">
+                <ul class="horizontal-tabs">
                     <li>
-                        <a href="#establishments" class="horizontal-tab estab @((Model.SelectedTab == SearchViewModel.Tab.Establishments) ? "selected-tab" : "" )">
+                        <a href="/?SelectedTab=Establishments" class="horizontal-tab estab @((Model.SelectedTab == SearchViewModel.Tab.Establishments) ? "selected-tab" : "" )">
                             Find an establishment
                         </a>
                     </li>
                     <li>
-                        <a href="#groups" class="horizontal-tab group @((Model.SelectedTab == SearchViewModel.Tab.Groups) ? "selected-tab" : "" )">
-                            Find an establishment group<br />
+                        <a href="/?SelectedTab=Groups" class="horizontal-tab group @((Model.SelectedTab == SearchViewModel.Tab.Groups) ? "selected-tab" : "" )">
+                            Find an establishment group
                         </a>
                     </li>
                     <li>
-                        <a href="#governors" class="horizontal-tab governors @((Model.SelectedTab == SearchViewModel.Tab.Governors) ? "selected-tab" : "" )">Find a governor</a>
+                        <a href="/?SelectedTab=Governors" class="horizontal-tab governors @((Model.SelectedTab == SearchViewModel.Tab.Governors) ? "selected-tab" : "" )">Find a governor</a>
                     </li>
                 </ul>
             </div>
