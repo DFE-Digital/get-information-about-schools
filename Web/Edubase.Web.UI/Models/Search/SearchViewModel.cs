@@ -6,6 +6,8 @@ namespace Edubase.Web.UI.Models.Search
 {
     public class SearchViewModel
     {
+        public enum Tab { Establishments, Groups, Governors }
+
         private List<int> selectedLocalAuthorityIds = new List<int>();
 
         public const string BIND_ALIAS_GOONERES = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_GOONERES;
@@ -20,6 +22,8 @@ namespace Edubase.Web.UI.Models.Search
             get { return this.selectedLocalAuthorityIds.Distinct().ToList(); }
             set { this.selectedLocalAuthorityIds = value; }
         }
+
+        public Tab SelectedTab { get; set; }
 
         public IEnumerable<LookupItemViewModel> GovernorRoles { get; internal set; }
 

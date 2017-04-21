@@ -18,34 +18,34 @@
             <div class="tab-wrap">
                 <ul class="horizontal-tabs trio-tabs">
                     <li>
-                        <a href="#establishments" class="horizontal-tab estab">
+                        <a href="#establishments" class="horizontal-tab estab @((Model.SelectedTab == SearchViewModel.Tab.Establishments) ? "selected-tab" : "" )">
                             Find an establishment
                         </a>
                     </li>
                     <li>
-                        <a href="#groups" class="horizontal-tab group">
+                        <a href="#groups" class="horizontal-tab group @((Model.SelectedTab == SearchViewModel.Tab.Groups) ? "selected-tab" : "" )">
                             Find an establishment group<br />
                         </a>
                     </li>
                     <li>
-                        <a href="#governors" class="horizontal-tab governors">Find a governor</a>
+                        <a href="#governors" class="horizontal-tab governors @((Model.SelectedTab == SearchViewModel.Tab.Governors) ? "selected-tab" : "" )">Find a governor</a>
                     </li>
                 </ul>
             </div>
 
             <div class="tab-content-wrapper horizontal-tabs-content">
-                <div id="establishments" class="tab-content">
+                <div id="establishments" class="tab-content @((Model.SelectedTab != SearchViewModel.Tab.Establishments) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != SearchViewModel.Tab.Establishments)">
 
                     @{ Html.RenderPartial("Partials/_EstablishmentSearch"); }
 
                 </div>
 
-                <div id="groups" class="tab-content">
+                <div id="groups" class="tab-content @((Model.SelectedTab != SearchViewModel.Tab.Groups) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != SearchViewModel.Tab.Groups)">
                     @{ Html.RenderPartial("Partials/_GroupSearch"); }
                    
                 </div>
 
-                <div id="governors" class="tab-content">
+                <div id="governors" class="tab-content @((Model.SelectedTab != SearchViewModel.Tab.Governors) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != SearchViewModel.Tab.Governors)">
                     @{ Html.RenderPartial("Partials/_GovernorSearch");}
 
                 </div>
