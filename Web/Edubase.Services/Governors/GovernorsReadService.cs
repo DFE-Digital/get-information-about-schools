@@ -60,6 +60,7 @@ namespace Edubase.Services.Governors
 
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
 
+            if (payload.Gid != null) oDataFilters.Add(nameof(SearchGovernorDocument.Id), payload.Gid);
             if (payload.FirstName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_FirstNameDistilled), payload.FirstName.Distill());
             if (payload.LastName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_LastNameDistilled), payload.LastName.Distill());
             

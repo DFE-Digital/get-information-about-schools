@@ -17,6 +17,7 @@ namespace Edubase.Services.Governors.Search
             Take = take;
         }
 
+        public string Gid { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int[] RoleIds { get; set; }

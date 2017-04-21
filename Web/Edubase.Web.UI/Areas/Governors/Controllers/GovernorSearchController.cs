@@ -138,6 +138,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private GovernorSearchPayload CreateSearchPayload(GovernorSearchViewModel model) => new GovernorSearchPayload(model.StartIndex, model.PageSize)
         {
+            Gid = model.GovernorSearchModel.Gid?.ToString(),
             FirstName = model.GovernorSearchModel.Forename.Clean(),
             LastName = model.GovernorSearchModel.Surname.Clean(),
             RoleIds = model.SelectedRoleIds.ToArray(),
