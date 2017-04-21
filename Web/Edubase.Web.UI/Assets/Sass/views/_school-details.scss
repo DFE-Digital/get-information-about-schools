@@ -445,3 +445,36 @@ table.mvo { // mobile-visible-only
         }
     }
 }
+
+
+.detail-summary {
+    clear: both;
+    div {
+        font-size: 16px;
+    }
+
+    dl {
+        overflow: hidden;
+        margin: 16px 0;
+        font-size: 16px;
+    }
+
+    dt {
+        float: left;
+        clear: left;
+        width: 36%;
+        margin-right: 12px;
+        padding: 8px 0;
+
+        @include media(mobile) {
+            width: 40%;
+        }
+    }
+
+    dd {
+        float: left;
+        padding: 8px 0;
+    }
+}
+
+

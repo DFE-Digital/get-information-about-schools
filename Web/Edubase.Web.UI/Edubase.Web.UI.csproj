@@ -411,6 +411,8 @@
     <Content Include="Assets\Scripts\Elements\Forms\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\ok-cancel.js" />
+    <Content Include="Assets\Scripts\Elements\radio-toggles.js" />
     <Content Include="Assets\Scripts\JSON\addressResult.js" />
     <Content Include="Assets\Scripts\JSON\postcodeResults.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.js" />
@@ -420,6 +422,7 @@
     <Content Include="Assets\Scripts\standalone\search-change-history.js" />
     <Content Include="Assets\Scripts\tooltips.js" />
     <Content Include="Assets\Scripts\Views\bulk-academies.js" />
+    <Content Include="Assets\Scripts\Views\edit-iebt.js" />
     <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
     <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
