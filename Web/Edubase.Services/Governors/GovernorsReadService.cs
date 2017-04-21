@@ -213,11 +213,11 @@ namespace Edubase.Services.Governors
         }
 
         //TODO: TEXCHANGE add endpoint to get shared governors
-        public async Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn)
+        public async Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal)
         {
             var governors = new List<GovernorModel>();
 
-            var groups = await _groupReadService.GetAllByEstablishmentUrnAsync(establishmentUrn);
+            var groups = await _groupReadService.GetAllByEstablishmentUrnAsync(establishmentUrn, principal);
             
             var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
             var roles = new List<GR> {GR.SharedChairOfLocalGoverningBody, GR.SharedLocalGovernor};
@@ -233,7 +233,7 @@ namespace Edubase.Services.Governors
         }
 
         //TODO: TEXCHANGE add endpoint to get a given shared governor
-        public async Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn)
+        public async Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn, IPrincipal principal)
         {
             var db = _dbContextFactory.Obtain();
             var governor = await db.Governors.Where(g => g.Id == governorId).Include(g => g.Establishments).SingleOrDefaultAsync();

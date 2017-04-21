@@ -15,7 +15,7 @@ namespace Edubase.Services.Governors
         Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = null, int? groupUId = null, IPrincipal principal = null);
         GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role, bool isGroup, IPrincipal principal); //TODO: TEXCHANGE - added isGroup
         Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal);
-        Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn);
-        Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn);
+        Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal);
+        Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn, IPrincipal principal);
     }
 }

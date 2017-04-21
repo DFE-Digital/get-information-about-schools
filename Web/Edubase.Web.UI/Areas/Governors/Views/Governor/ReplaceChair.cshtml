@@ -12,6 +12,7 @@
             @using (Html.BeginForm("ReplaceChair", "Governor", FormMethod.Post))
             {
                 @Html.HiddenFor(m => m.ExistingGovernorId)
+                @Html.HiddenFor(m => m.GovernorFullName)
                 @Html.HiddenFor(m => m.ExistingChairType)
                 @Html.HiddenFor(m => m.Urn)
                 @Html.HiddenFor(m => m.Name)
