@@ -1,0 +1,70 @@
+﻿@model SelectSharedGovernorViewModel
+
+@{
+    ViewBag.hideLogo = true;
+    ViewBag.SelectedTab = "EditGovernance";
+    Layout = Model.Layout;
+}
+
+<div id="select-shared-governor" class="tab-content">
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            @using (Html.BeginForm("SelectSharedGovernor", "Governor", FormMethod.Post))
+            {
+                if (Model.Governors.Any())
+                {
+                    <div class="button-row">
+                        <input type="submit" value="Select" class="button mobile-full-width" />
+                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="button-row">
+                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                    </div>
+                }
+                <h2 class="bold-medium column-full">Select @Model.GovernorType</h2>
+                if (Model.Governors.Any())
+                {
+                    <div class="exapanding-list-wrap">
+                        @Html.HiddenFor(x => x.Urn)
+                        @Html.HiddenFor(x => x.Role)
+                    
+                        <ul>
+                            @for (var index = 0; index < Model.Governors.Count(); index++)
+                            {
+                                @Html.EditorFor(x => x.Governors[index])
+                            }
+                        </ul>
+                        <div class="button-row">
+                            <input type="submit" value="Select" class="button mobile-full-width"/>
+                            <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                        </div>
+                   
+                    </div>
+                }
+                else
+                {
+                    <p>There are no shared governors available for this establishment</p>
+                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section ViewScripts
+{
+    <script type="text/javascript">
+        $(".panel-trigger").change(function() {
+            $(".panel-trigger").each(function() {
+                if ($(this).is(":checked")) {
+                    $(this).closest(".expander-panel").addClass("open-expander");
+                } else {
+                    $(this).closest(".expander-panel").removeClass("open-expander");
+                }
+            });
+        })
+    </script>
+}

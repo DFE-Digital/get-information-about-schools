@@ -13,7 +13,7 @@ namespace Edubase.Services.Governors.DisplayPolicies
         /// </summary>
         public bool Id { get; internal set; }
         public bool FullName { get; private set; } = true;
-        public bool AppointmentStartDate { get; private set; } = true;
+        public bool AppointmentStartDate { get; internal set; } = true;
         public bool AppointmentEndDate { get; internal set; } = true;
         public bool RoleId { get; private set; } = true;
         public bool AppointingBodyId { get; internal set; } = true;

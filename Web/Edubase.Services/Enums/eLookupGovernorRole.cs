@@ -35,6 +35,8 @@ namespace Edubase.Services.Enums
 		LocalGovernor = 7,
 		Member = 8,
 		Trustee = 9,
+        SharedLocalGovernor = 10,
+        SharedChairOfLocalGoverningBody = 11
     }
 
 #endif

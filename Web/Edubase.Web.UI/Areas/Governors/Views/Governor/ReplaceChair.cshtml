@@ -1,0 +1,98 @@
+﻿@model ReplaceChairViewModel
+    
+@{
+    ViewBag.hideLogo = true;
+    ViewBag.SelectedTab = "EditGovernance";
+    Layout = Model.Layout;
+}
+
+<div id="select-shared-governor" class="tab-content">
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            @using (Html.BeginForm("ReplaceChair", "Governor", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.ExistingGovernorId)
+                @Html.HiddenFor(m => m.GovernorFullName)
+                @Html.HiddenFor(m => m.ExistingChairType)
+                @Html.HiddenFor(m => m.Urn)
+                @Html.HiddenFor(m => m.Name)
+                <div class="column-full">
+                    <input type="submit" value="Select" class="button mobile-full-width" />
+                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                </div>
+                <h2 class="bold-medium column-full">Replace chair of local governing body</h2>
+                <div>@Model.GovernorFullName</div>
+
+                @Html.EditorFor(m => m.DateTermEnds)
+                <div class="column-half">
+                    <label class="block-label radio-button-wrap">
+                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.LocalChair, new { id = "newChair", @class = "panel-trigger", data_panel_trigger = "newChairDetails" })
+                        New Chair
+                    </label>
+                </div>
+                <div class="column-half">
+                    <label class="block-label radio-button-wrap">
+                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.SharedChair, new { id = "sharedChair", @class = "panel-trigger", data_panel_trigger = "sharedChairDetails" })
+                        Shared Chair
+                    </label>
+                </div>
+                <div id="replacement-chair-details" class="grid-row">
+                    <div class="column-two-thirds">
+                        <div id="newChairDetails" class="expander-panel open-expander">
+                            <div class="expander-panel-content replacement-chair-option">
+                                @Html.EditorFor(m => m.NewLocalGovernor)
+                            </div>
+                        </div>
+                        <div id="sharedChairDetails" class="expander-panel">
+                            <div class="expander-panel-content replacement-chair-option">
+                                <div class="shared-governor-list">
+                                    @if (Model.SharedGovernors.Any())
+                                    {
+                                        <ul>
+                                            @for (var index = 0; index < Model.SharedGovernors.Count; index++)
+                                            {
+                                                @Html.EditorFor(x => x.SharedGovernors[index])
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <p>There are no shared governors available for this establishment</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-full">
+                    <input type="submit" value="Select" class="button mobile-full-width" />
+                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section ViewScripts
+{
+    <script type="text/javascript">
+        $(".panel-trigger").change(function() {
+            $(".panel-trigger").each(function() {
+                var $panel = $(this).data("panel-trigger");
+                if ($(this).is(":checked")) {
+                    if ($panel == null) {
+                        $(this).closest(".expander-panel").addClass("open-expander");
+                    } else {
+                        $("#" + $panel).addClass("open-expander");
+                    }
+                } else {
+                    if ($panel == null) {
+                        $(this).closest(".expander-panel").removeClass("open-expander");
+                    } else {
+                        $("#" + $panel).removeClass("open-expander");
+                    }
+                }
+            });
+        })
+    </script>
+}

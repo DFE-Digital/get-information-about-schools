@@ -198,10 +198,7 @@ nav.tabs {
         @include media(mobile){
             padding-top:16px;
         }
-        h3 {
-            clear: both;
-            margin: 0 8px 0.2em;
-        }
+        
         .tab-heading {
             margin-top: 0;
         }
@@ -209,10 +206,6 @@ nav.tabs {
             margin-bottom: 1em;
         }
 
-        h3 {
-            clear: both;
-            margin: 0 8px 0.2em;
-        }
         p {
             clear: both;
         }
@@ -222,6 +215,15 @@ nav.tabs {
 
         &.hidden-tab-content {
             display: none;
+        }
+    }
+}
+
+
+.governance {
+    .tab-content-wrapper {
+        .column-half, .column-two-thirds {
+            padding-left: 0;
         }
     }
 }

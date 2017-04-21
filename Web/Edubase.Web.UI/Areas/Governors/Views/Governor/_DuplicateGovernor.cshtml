@@ -1,0 +1,10 @@
+﻿@model Edubase.Services.Governors.Models.GovernorModel
+
+<div class="error-summary">
+    <h2 class="heading-medium error-summary-heading">Duplicate record found</h2>
+    <p>A record for this person already exists</p>
+    <ul class="error-summary-list">
+        <li class="error-message"><a href="#@Model.Id">@Model.GetFullName()</a></li>
+    </ul>
+</div>
+
