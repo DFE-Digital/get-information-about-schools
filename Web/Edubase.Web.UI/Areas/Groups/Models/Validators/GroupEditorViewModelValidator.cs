@@ -137,7 +137,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .When(x => x.SaveGroupDetail)
                     .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), groupId, model.GroupUId)))
                     .WithMessage("Group ID already exists. Enter a different group ID.")
-                    .When(x => x.GroupTypeMode.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
+                    .When(x => x.GroupTypeMode.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
 
                 RuleFor(x => x.GroupName).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), name, existingGroupUId: model.GroupUId)))
                     .WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
