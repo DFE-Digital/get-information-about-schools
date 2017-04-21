@@ -65,7 +65,7 @@ namespace Edubase.Services.Groups
             _securityService = securityService;
         }
 
-        public async Task<GroupModel> GetByEstablishmentUrnAsync(int urn)
+        public async Task<GroupModel> GetByEstablishmentUrnAsync(int urn, IPrincipal principal)
         {
             var g = (await _dbContext.EstablishmentGroups.Include(x => x.Group)
                 .FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.IsDeleted == false))?.Group;
@@ -128,12 +128,12 @@ namespace Edubase.Services.Groups
         private bool IsRoleRestrictedOnStatus(IPrincipal principal)
             => !_nonStatusRestrictiveRoles.Any(x => principal.IsInRole(x));
 
-        public async Task<int[]> GetParentGroupIdsAsync(int establishmentUrn)
+        public async Task<int[]> GetParentGroupIdsAsync(int establishmentUrn, IPrincipal principal)
         {
             return await _dbContext.EstablishmentGroups.Where(x => x.EstablishmentUrn == establishmentUrn && x.IsDeleted == false).Select(x => x.GroupUID).ToArrayAsync();
         }
 
-        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn)
+        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal)
         {
             var retVal = new List<GroupModel>();
             var links = await _cachedEstablishmentGroupReadRepository.GetForUrnAsync(urn);
@@ -161,13 +161,13 @@ namespace Edubase.Services.Groups
         /// </summary>
         /// <param name="groupUid"></param>
         /// <returns></returns>
-        public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid)
+        public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal)
         {
             return (await _cachedEstablishmentGroupReadRepository.GetForGroupAsync(groupUid))
                 .Select(x => new EstablishmentGroupModel { CCIsLeadCentre = x.CCIsLeadCentre, EstablishmentUrn = x.EstablishmentUrn, Id = x.Id, JoinedDate = x.JoinedDate }).ToList();
         }
 
-        public async Task<bool> ExistsAsync(string name, int? localAuthorityId = null, int? existingGroupUId = null)
+        public async Task<bool> ExistsAsync(IPrincipal principal, string name, int? localAuthorityId = null, int? existingGroupUId = null)
         {
             using (var dc = new ApplicationDbContext()) // no point in putting this into a repo, as Texuna will be doing an API
             {
@@ -175,7 +175,7 @@ namespace Edubase.Services.Groups
             }
         }
 
-        public async Task<bool> ExistsAsync(string groupId, int? existingGroupUId = null)
+        public async Task<bool> ExistsAsync(IPrincipal principal, string groupId, int? existingGroupUId = null)
         {
             using (var dc = new ApplicationDbContext()) // no point in putting this into a repo, as Texuna will be doing an API
             {
@@ -183,7 +183,7 @@ namespace Edubase.Services.Groups
             }
         }
 
-        public async Task<bool> ExistsAsync(CompaniesHouseNumber number)
+        public async Task<bool> ExistsAsync(CompaniesHouseNumber number, IPrincipal principal)
         {
             var v = number.Number;
             using (var dc = new ApplicationDbContext())

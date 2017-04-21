@@ -51,7 +51,7 @@ namespace Edubase.Services.Establishments
             if (model.Urn.HasValue)
             {
                 var editPermissions = cp.GetEditEstablishmentPermissions();
-                var groupIds = editPermissions.GroupIds.Any() ? await _groupReadService.GetParentGroupIdsAsync(model.Urn.Value) : null as int[];
+                var groupIds = editPermissions.GroupIds.Any() ? await _groupReadService.GetParentGroupIdsAsync(model.Urn.Value, principal) : null as int[];
                 if (!editPermissions.CanEdit(originalModel.Urn.Value, originalModel.TypeId, groupIds, originalModel.LocalAuthorityId, originalModel.EstablishmentTypeGroupId))
                 {
                     throw new PermissionDeniedException("Principal cannot edit Establishment. Permission denied.");

@@ -131,7 +131,7 @@ namespace Edubase.Services.Establishments
             => new DisplayPolicyFactory().Create(user, establishment);
 
 
-        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn)
+        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn, IPrincipal principal)
         {
             return (await _dbContext.EstablishmentLinks
                     .Include(x => x.LinkedEstablishment)
@@ -271,6 +271,10 @@ namespace Edubase.Services.Establishments
             else return new ServiceResultDto<bool>(eServiceResultStatus.NotFound);
         }
 
+        public Task<bool> CanEditAsync(int urn, IPrincipal user)
+        {
+            throw new NotImplementedException("Not required in bespoke BE");
+        }
     }
 }
 #endif

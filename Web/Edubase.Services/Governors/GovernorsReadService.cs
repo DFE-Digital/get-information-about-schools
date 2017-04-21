@@ -54,7 +54,7 @@ namespace Edubase.Services.Governors
             _cachedLookupService = cachedLookupService;
         }
         
-        public async Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload)
+        public async Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal)
         {
             Guard.IsFalse(payload.SortBy == eSortBy.Distance, () => new EdubaseException("Sorting by distance is not supported with Governors"));
 
@@ -112,7 +112,7 @@ namespace Edubase.Services.Governors
                         retVal.ApplicableRoles.AddRange(new[] { GR.ChairOfGovernors, GR.Governor });
                     else if (EnumSets.AcademiesAndFreeSchools.Any(x => x == domainModel.TypeId))
                     {
-                        var groupModel = await _groupReadService.GetByEstablishmentUrnAsync(urn.Value); // TODO: GET ALL!!!!
+                        var groupModel = await _groupReadService.GetByEstablishmentUrnAsync(urn.Value, principal);
                         if (groupModel != null && groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                             retVal.ApplicableRoles.AddRange(new[] { GR.ChairOfLocalGoverningBody, GR.LocalGovernor });
                         else retVal.ApplicableRoles.AddRange(commonGovernorRoleSet);
@@ -145,7 +145,7 @@ namespace Edubase.Services.Governors
         /// </summary>
         /// <param name="role"></param>
         /// <returns></returns>
-        public GovernorDisplayPolicy GetEditorDisplayPolicy(GR role)
+        public GovernorDisplayPolicy GetEditorDisplayPolicy(GR role, IPrincipal principal)
         {
             var retVal = new GovernorDisplayPolicy().SetFullAccess(true);
             ProcessDisplayPolicyOverrides(new Dictionary<GR, GovernorDisplayPolicy> { [role] = retVal });
@@ -178,7 +178,7 @@ namespace Edubase.Services.Governors
             });
         }
 
-        public async Task<GovernorModel> GetGovernorAsync(int gid)
+        public async Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal)
         {
             var displayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
             var db = _dbContextFactory.Obtain();

@@ -334,7 +334,7 @@ namespace Edubase.Services.Establishments.Downloads
 
             if (list.GroupDetails)
             {
-                var groups = await _groupReadService.GetAllByEstablishmentUrnAsync(doc.Urn.Value);
+                var groups = await _groupReadService.GetAllByEstablishmentUrnAsync(doc.Urn.Value, principal);
                 AddIf(true, dp.GroupDetails, groups.FirstOrDefault(x => x.GroupTypeId == (int)eLookupGroupType.SingleacademyTrust)?.Name);
                 AddIf(true, dp.GroupDetails, groups.FirstOrDefault(x => x.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)?.Name);
                 AddIf(true, dp.GroupDetails, groups.FirstOrDefault(x => x.GroupTypeId == (int)eLookupGroupType.SchoolSponsor)?.Name);
