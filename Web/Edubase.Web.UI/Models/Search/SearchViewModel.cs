@@ -30,6 +30,8 @@ namespace Edubase.Web.UI.Models.Search
 
         public eSearchType? SearchType { get; set; }
 
+        public bool OpenOnly { get; set; }
+
         public SearchViewModel AddLocalAuthorityId(int id)
         {
             SelectedLocalAuthorityIds.Add(id);
