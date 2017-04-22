@@ -111,7 +111,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// <param name="establishmentUrn"></param>
         /// <param name="editMode"></param>
         /// <returns></returns>
-        [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupEditGovernance"), Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabEditGovernance"), HttpGet]
+        [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupEditGovernance"), 
+         Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabEditGovernance"),
+         HttpGet]
         public async Task<ActionResult> Edit(int? groupUId, int? establishmentUrn, int? removalGid, int? duplicateGovernorId)
         {
             Guard.IsTrue(groupUId.HasValue || establishmentUrn.HasValue, () => new InvalidParameterException($"Both parameters '{nameof(groupUId)}' and '{nameof(establishmentUrn)}' are null."));
@@ -230,8 +232,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var replaceMode = (ControllerContext.RouteData.Route as System.Web.Routing.Route).Url.IndexOf("/Replace/", StringComparison.OrdinalIgnoreCase) > -1;
 
             if (establishmentUrn.HasValue && role.HasValue &&
-                role.Value.OneOfThese(eLookupGovernorRole.SharedLocalGovernor,
-                    eLookupGovernorRole.SharedChairOfLocalGoverningBody))
+                role.Value.OneOfThese(eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody,
+                    eLookupGovernorRole.Establishment_SharedLocalGovernor))
             {
                 return RedirectToRoute("SelectSharedGovernor", new {establishmentUrn = establishmentUrn.Value, role = role.Value});
             }
@@ -305,8 +307,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (ModelState.IsValid)
             {
                 if (!viewModel.EstablishmentUrn.HasValue &&
-                    (viewModel.GovernorRole == eLookupGovernorRole.SharedChairOfLocalGoverningBody ||
-                    viewModel.GovernorRole == eLookupGovernorRole.SharedLocalGovernor))
+                    (viewModel.GovernorRole == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
+                    viewModel.GovernorRole == eLookupGovernorRole.Establishment_SharedLocalGovernor))
                 {
                     var existingGovernors = await _governorsReadService.GetGovernorListAsync(null, viewModel.GroupUId, User);
                     var duplicates = existingGovernors.CurrentGovernors.Where(g => g.RoleId == (int) viewModel.GovernorRole
@@ -552,7 +554,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private bool IsSharedGovernorRoleMultiSelect(eLookupGovernorRole role)
         {
-            return role == eLookupGovernorRole.SharedLocalGovernor;
+            return role == eLookupGovernorRole.Establishment_SharedLocalGovernor;
         }
 
         private async Task PopulateSelectLists(GovernorViewModel viewModel)

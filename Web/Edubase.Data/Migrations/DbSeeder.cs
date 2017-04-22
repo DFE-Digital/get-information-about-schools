@@ -62,6 +62,18 @@ namespace Edubase.Data.Migrations
                   BEGIN 
                       INSERT INTO dbo.LookupGovernorRole (Id, Name, IsDeleted, CreatedUtc, LastUpdatedUtc) VALUES (11, 'Shared Chair of Local Governing Body', 0, GETUTCDATE(), GETUTCDATE()) 
                   END; 
+                  SET IDENTITY_INSERT dbo.LookupGovernorRole OFF;",
+                 @"SET IDENTITY_INSERT dbo.LookupGovernorRole ON; 
+                  IF NOT EXISTS(SELECT * FROM dbo.LookupGovernorRole WHERE Id = 12) 
+                  BEGIN 
+                      INSERT INTO dbo.LookupGovernorRole (Id, Name, IsDeleted, CreatedUtc, LastUpdatedUtc) VALUES (12, 'Shared Local Governor', 0, GETUTCDATE(), GETUTCDATE()) 
+                  END; 
+                  SET IDENTITY_INSERT dbo.LookupGovernorRole OFF;",
+                 @"SET IDENTITY_INSERT dbo.LookupGovernorRole ON; 
+                  IF NOT EXISTS(SELECT * FROM dbo.LookupGovernorRole WHERE Id = 13) 
+                  BEGIN 
+                      INSERT INTO dbo.LookupGovernorRole (Id, Name, IsDeleted, CreatedUtc, LastUpdatedUtc) VALUES (13, 'Shared Chair of Local Governing Body', 0, GETUTCDATE(), GETUTCDATE()) 
+                  END; 
                   SET IDENTITY_INSERT dbo.LookupGovernorRole OFF;"}
             .Concat(new[] { "Establishment", "Governor", "GroupCollection" }
                 .Select(x => $@"ALTER TABLE {x} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = ON)"));

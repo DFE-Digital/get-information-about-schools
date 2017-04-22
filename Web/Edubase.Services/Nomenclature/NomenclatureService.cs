@@ -13,7 +13,16 @@ namespace Edubase.Services.Nomenclature
 
     public class NomenclatureService
     {
-        public string GetGovernorRoleName(eLookupGovernorRole role, eTextCase textCase = eTextCase.SentenceCase) => role.ToString().ToProperCase().ToTextCase(textCase);
+        public string GetGovernorRoleName(eLookupGovernorRole role, eTextCase textCase = eTextCase.SentenceCase)
+        {
+            var roleName =  role.ToString();
+            if (roleName.Contains("_"))
+            {
+                var index = roleName.IndexOf("_", StringComparison.Ordinal);
+                roleName = roleName.Substring(index + 1);
+            }
+            return roleName.ToProperCase().ToTextCase(textCase);
+        }
 
         public string GetEstablishmentsPluralName(GT groupType, eTextCase textCase = eTextCase.TitleCase)
         {
