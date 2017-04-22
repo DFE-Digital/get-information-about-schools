@@ -106,7 +106,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var endDate = (isShared && appointment != null) ? appointment.AppointmentEndDate : governor.AppointmentEndDate;
 
                     var row = grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
-                                                   .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role == GR.SharedChairOfLocalGoverningBody || role == GR.SharedLocalGovernor)
+                                                   .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
                                                    .AddCell(governor.Id, displayPolicy.Id)
                                                    .AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId)
                                                    .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
@@ -126,7 +126,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         private void SetupHeader(GR role, GridViewModel<GovernorModel> grid, GovernorDisplayPolicy displayPolicy, bool includeEndDate)
         {
             grid.AddHeaderCell("Name", displayPolicy.FullName)
-                .AddHeaderCell("Shared with", role == GR.SharedChairOfLocalGoverningBody || role == GR.SharedLocalGovernor)
+                .AddHeaderCell("Shared with", role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
                 .AddHeaderCell("GID", displayPolicy.Id)
                 .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
                 .AddHeaderCell("From", displayPolicy.AppointmentStartDate)

@@ -125,7 +125,7 @@ else
                                     if (Model.RemovalGid != row.Model.Id)
                                     {
                                         <div class="button-wrapper">
-                                            @if ((eLookupGovernorRole) row.Model.RoleId == eLookupGovernorRole.SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.SharedChairOfLocalGoverningBody)
+                                            @if ((eLookupGovernorRole) row.Model.RoleId == eLookupGovernorRole.Establishment_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody)
                                             {
                                                 @Html.RouteLink("Edit", "EditSharedGovernor", 
                                                     new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id },
