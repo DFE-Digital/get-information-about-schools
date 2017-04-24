@@ -125,12 +125,8 @@
                         
                         @Html.HiddenFieldsFromQueryString()
                        
-                        @using (Html.BeginForm("Index", "Search", FormMethod.Get))
-                        {
-                            <button type="submit" class="button button-next button-below" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>
-                            @Html.HiddenFieldsFromQueryString()
-                            
-                        }
+                        <button type="submit" class="button button-next button-below" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>                           
+                       
                     </div>
                 }
 
