@@ -72,6 +72,7 @@ namespace Edubase.Data.DbContext
         public DbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; } = new InMemoryDbSet<LookupTypeOfResourcedProvision>();
         public DbSet<LookupUrbanRural> LookupUrbanRural { get; set; } = new InMemoryDbSet<LookupUrbanRural>();
         public DbSet<EstablishmentPermission> Permissions { get; set; } = new InMemoryDbSet<EstablishmentPermission>();
+        public DbSet<EstablishmentGovernor> EstablishmentGovernors { get; set; } = new InMemoryDbSet<EstablishmentGovernor>();
         public IDbSet<IdentityRole> Roles { get; set; } = new InMemoryDbSet<IdentityRole>();
         public IDbSet<ApplicationUser> Users { get; set; } = new InMemoryDbSet<ApplicationUser>();
 
@@ -98,6 +99,6 @@ namespace Edubase.Data.DbContext
         public void Dispose()
         {
             
-        }
+        }   
     }
 }

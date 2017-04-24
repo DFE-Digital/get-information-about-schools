@@ -32,6 +32,8 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
+
+
             if (viewModel.LocalAuthorityToRemove.HasValue)
             {
                 return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
@@ -44,17 +46,34 @@ namespace Edubase.Web.UI.Controllers
                 {
                     return await ProcessLocalAuthorityDisambiguation(viewModel);
                 }
-                else if (ModelState.IsValid)
+
+                if (ModelState.IsValid)
                 {
                     if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text))
-                        return Redirect(Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" }) + "?" 
-                            + Request.QueryString.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eStatus.Open, (int)eStatus.OpenButProposedToClose).ToString());
-                    else if (viewModel.SearchType == eSearchType.Group)
-                        return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
-                    else if (viewModel.SearchType == eSearchType.Governor)
-                        return Redirect(Url.Action("Index", "GovernorSearch", new { area = "Governors" }) + "?" + Request.QueryString + (viewModel.GovernorSearchModel.RoleId.HasValue 
-                            ? $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}=" + viewModel.GovernorSearchModel.RoleId : ""));
-                    else throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
+                    {
+                        var url = Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"});
+                        url = viewModel.OpenOnly
+                            ? $"{url}?{Request.QueryString.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose)}"
+                            : $"{url}?{Request.QueryString}";
+
+                        return Redirect(url);
+                    }
+
+                    if (viewModel.SearchType == eSearchType.Group)
+                    {
+                        return Redirect(Url.Action("Index", "GroupSearch", new {area = "Groups"}) + "?" + Request.QueryString);
+                    }
+
+                    if (viewModel.SearchType == eSearchType.Governor)
+                    {
+                        return Redirect(Url.Action("Index", "GovernorSearch", new {area = "Governors"}) + "?" +
+                                        Request.QueryString + (viewModel.GovernorSearchModel.RoleId.HasValue
+                                            ? $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}=" +
+                                              viewModel.GovernorSearchModel.RoleId
+                                            : ""));
+                    }
+
+                    throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
                 }
             }
 
@@ -78,8 +97,8 @@ namespace Edubase.Web.UI.Controllers
                 model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
             else
             {
-                var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(model.SelectedLocalAuthorityIds, model.LocalAuthorityToAdd,
-                    localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList());
+                var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(model.SelectedLocalAuthorityIds, model.LocalAuthorityToAdd ?? "",
+                    localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd ?? "", StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList());
                 return View("LocalAuthorityDisambiguation", localAuthorityDisambiguationViewModel);
             }
         }

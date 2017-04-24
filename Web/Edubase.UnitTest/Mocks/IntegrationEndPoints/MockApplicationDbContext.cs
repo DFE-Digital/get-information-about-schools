@@ -74,6 +74,7 @@ namespace Edubase.UnitTest.Mocks.IntegrationEndPoints
         public DbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; } = new MockDbSet<LookupTypeOfResourcedProvision>();
         public DbSet<LookupUrbanRural> LookupUrbanRural { get; set; } = new MockDbSet<LookupUrbanRural>();
         public DbSet<EstablishmentPermission> Permissions { get; set; } = new MockDbSet<EstablishmentPermission>();
+        public DbSet<EstablishmentGovernor> EstablishmentGovernors { get; set; } = new MockDbSet<EstablishmentGovernor>();
         public IDbSet<IdentityRole> Roles { get; set; } = new MockDbSet<IdentityRole>();
         public IDbSet<ApplicationUser> Users { get; set; } = new MockDbSet<ApplicationUser>();
 

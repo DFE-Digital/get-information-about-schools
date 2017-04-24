@@ -8,7 +8,7 @@
 
 <div class="grid-row">
     <div class="column-full">
-        @Html.ActionLink("Go back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+        @Html.ActionLink("Go back", "Index", "Search", new { area = "", SelectedTab = "Governors" }, new { @class = "home-link" })
         <h1 class="heading-xlarge">Search results</h1>
         <p>
             We found <span class="heading-xlarge count">@Model.Count</span> result@(Model.Count == 1 ? "" : "s") matching
@@ -43,7 +43,7 @@
                  data-track="search-results||edit-search"
                  aria-controls="EditSearchCollapse"
                  role="button">
-                <a class="help-toggle" href="@Url.Action("Index", "Search", new { area = "" })">Edit search</a>
+                <a class="help-toggle" href="@Url.Action("Index", "Search", new { area = "", SelectedTab = "Governors" })">Edit search</a>
             </div>
 
             <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">

@@ -79,12 +79,12 @@
 
     @RenderSection("Head", required: false)
 </head>
-<body class="@(ViewBag.bodyClasses)">
+<body class="@(ViewBag.bodyClasses) no-js">
     <div id="full-content">
         @if (!Request.Browser.Browser.Contains("MSIE 8"))
         {
             <script type="text/javascript">
-                document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+                document.body.className = document.body.className.replace(/\bno-js\b/, 'js-enabled');
                 if (!('ontouchstart' in document.documentElement)) { document.body.className += ' no-touch'; }
             </script>
         }

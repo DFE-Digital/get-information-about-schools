@@ -9,7 +9,7 @@ namespace Edubase.Services.Governors.Models
 {
     public class GovernorModel : GovernorModelBase
     {
-
         public string AppointingBodyName { get; set; }
+        public IEnumerable<GovernorAppointment> Appointments { get; set; }
     }
 }

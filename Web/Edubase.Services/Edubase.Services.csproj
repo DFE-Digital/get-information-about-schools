@@ -219,6 +219,7 @@
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
     <Compile Include="Governors\GovernorsWriteService.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />
+    <Compile Include="Governors\Models\GovernorAppointment.cs" />
     <Compile Include="Governors\Models\GovernorModelBase.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\AZSIgnoreAttribute.cs" />

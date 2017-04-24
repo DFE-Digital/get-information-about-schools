@@ -151,6 +151,10 @@
       <HintPath>..\packages\WindowsAzure.ServiceBus.3.4.0\lib\net45-full\Microsoft.ServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.314.76\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -276,12 +280,19 @@
     <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
     <Compile Include="Areas\Governors\Models\CreateEditGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\EditGovernanceModeViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\EditSharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\ReplaceGovernorViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\ReplaceChairViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\SelectSharedGovernorViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\SharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\Validators\CreateEditGovernorViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\GovernorsGridViewModelValidator.cs" />
+    <Compile Include="Areas\Governors\Models\Validators\GovernorViewModelValidator.cs" />
+    <Compile Include="Areas\Governors\Models\Validators\ReplaceChairViewModelValidator.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\CreateAcademyTrustViewModel.cs" />
@@ -329,6 +340,7 @@
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
     <Compile Include="Models\Grid\GridViewModel.cs" />
+    <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />
     <Compile Include="Validation\AutofacValidatorFactory.cs" />
     <Compile Include="Helpers\FormatHelpers.cs" />
@@ -405,14 +417,20 @@
     <Content Include="App_Data\edubase3.pfx" />
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
     <Content Include="App_Data\Kentor.AuthServices.Tests.pfx" />
+    <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\SelectSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\EditSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
+    <Content Include="Assets\Scripts\Elements\expanding-content.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ok-cancel.js" />
     <Content Include="Assets\Scripts\Elements\radio-toggles.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\radio-toggles.js" />
     <Content Include="Assets\Scripts\JSON\addressResult.js" />
     <Content Include="Assets\Scripts\JSON\postcodeResults.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.js" />
@@ -472,11 +490,13 @@
     <Content Include="public\assets\images\icons\icon-search-2x.png" />
     <Content Include="public\assets\images\icons\icon-search.png" />
     <Content Include="public\assets\images\icons\icon-white-cross-transparent.png" />
+    <Content Include="public\assets\images\icons\suggest-remove.png" />
     <Content Include="public\assets\images\icons\tick.PNG" />
     <Content Include="public\assets\images\icons\tooltip-close.gif" />
     <Content Include="public\assets\images\ofsted-logo-sm.jpeg" />
     <Content Include="public\assets\images\ofsted-logo-x-small.jpeg" />
     <Content Include="public\assets\images\ofsted-logo.jpg" />
+    <Content Include="public\assets\images\option-select-toggle-sprite.png" />
     <Content Include="public\c3\c3.css" />
     <Content Include="public\c3\c3.js" />
     <Content Include="public\c3\c3.min.css" />
@@ -792,7 +812,9 @@
     <Content Include="public\jquery\bower.json" />
     <Content Include="public\jquery\dist\jquery.min.map" />
     <Content Include="public\jquery\src\sizzle\dist\sizzle.min.map" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Areas\Governors\Views\web.config" />
     <Content Include="Areas\Governors\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Governors\Views\GovernorSearch\Index.cshtml" />
@@ -820,6 +842,15 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="SqlServerTypes\readme.htm" />
+    <Content Include="SqlServerTypes\x64\msvcr120.dll" />
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll" />
+    <Content Include="SqlServerTypes\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -889,8 +920,16 @@
     <Content Include="Views\Tools\SearchChangeHistory.cshtml" />
     <Content Include="Views\Tools\ManageAcademyOpenings.cshtml" />
     <Content Include="Views\Prototype\AddressLookup.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTimeViewModel.cshtml" />
     <Content Include="Views\Prototype\HelpIcon.cshtml" />
     <Content Include="Views\Prototype\dont-leave.cshtml" />
+    <Content Include="Views\Search\Partials\SearchHeader.cshtml" />
+    <Content Include="Views\Search\Partials\HelpText.cshtml" />
+    <Content Include="Views\Search\Partials\EstablishmentSearch.cshtml" />
+    <Content Include="Views\Search\Partials\GroupSearch.cshtml" />
+    <Content Include="Views\Search\Partials\GovernorSearch.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SharedGovernorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\GovernorViewModel.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

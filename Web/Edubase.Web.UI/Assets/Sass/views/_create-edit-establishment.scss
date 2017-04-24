@@ -138,13 +138,6 @@ select#headtitleid {
         }
     }
     
-    .column-full {
-        .column-half,
-        .column-two-thirds {
-                padding-left: 0;
-            }
-    }
-
 
     .grey-bar {
         border-top: $grey-3 3px solid;
@@ -209,7 +202,7 @@ div.governor-list, div.governor-grid {
     p.none { font-size:16px; }
 }
 
-div.governor-grid {
+.governor-grid {
     display:none;
     @include media(desktop){
         display:block;
@@ -219,14 +212,14 @@ div.governor-grid {
     }
 }
 
-div.governor-list {
+.governor-list {
     dl {
         overflow: hidden;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 1.6;
         margin-bottom: 15px;
         @media (min-width: 640px) {
-            font-size: 14px;
+            font-size: 16px;
         }
     }
     dt, dd {
@@ -245,21 +238,6 @@ div.governor-list {
         margin-bottom:15px;
     }
 
-    &.mobile-view {
-        display:none;
-        @include media(mobile){
-            display:block;
-        }
-        td {
-            padding:10px 8px 10px 0px;
-            font-size: 12px;
-            border-bottom:2px solid $grey-2;
-            &.name {
-                font-weight:bold;
-            }
-        }
-        p.none { font-size: 12px; }
-    }
 }
 
 
@@ -277,4 +255,79 @@ div.governor-list {
     border-top: $grey-2 1px solid;
     margin: 40px  0 12px;
     padding-top: 12px;
+}
+
+div.shared-governor-list {
+    padding-left: 15px;
+
+    li {
+        margin-top: 15px;
+    }
+
+    dl {
+        overflow: hidden;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        clear: both;
+        @media (min-width: 640px) {
+            font-size: 16px;
+        }
+    }
+    dt, dd {
+        float: left;
+    }
+    dt {
+        clear: left;
+        padding-right: 0.5em;
+
+        &.inline-details {
+            clear: none;
+            margin-left: 12px;
+        }
+    }
+    h2 {
+        margin-bottom:15px;
+    }
+}
+
+.open-expander {
+    div.shared-governor {
+        border-left-style: solid;
+        border-left-color: dimgrey;
+        border-left-width: 5px;
+        padding-left: 15px;
+    }
+}
+
+
+
+#replacement-chair-details {
+    .replacement-chair-option {
+        border-left-style: solid;
+        border-left-color: dimgrey;
+        border-left-width: 5px;
+        padding-left: 15px;
+        padding-top: 20px;
+        margin-left: 20px;
+    }
+}
+
+
+
+.tab-content {
+    .grid-row,
+    .column-full,
+    .column-half,
+    .column-two-thirds {
+        margin: 0;
+        padding:0;
+    }
+}
+
+
+.exapanding-list-wrap {
+    .shared-governor {
+        margin-bottom: 20px;
+    }
 }

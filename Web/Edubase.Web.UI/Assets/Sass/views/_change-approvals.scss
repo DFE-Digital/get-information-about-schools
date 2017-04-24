@@ -237,6 +237,52 @@
     input {
         position: absolute;
         @include opacity(0);
+
+        &[disabled="disabled"] {
+            + input + label:before {
+                background-color: $grey-3;
+                border-color: $grey-1;
+            }
+
+            + input + label:after {
+                border-color: $grey-1;
+            }
+        }
+    }
+}
+
+@if ($is-ie and $ie-version < 9) {
+    .radio-button-wrap,
+    .checkbox-wrap {
+        input {
+            @include opacity(1);
+            position: relative;
+            top: 12px;
+            left: 0;
+            float: left;
+
+            &:before, &:after {
+                border: 0;
+            }
+        }
+
+        label {
+            padding-left: 12px;
+        }
+    }
+
+    .search-type-wrapper .edubase-button-radio {
+        padding-left: 0;
+
+        &:before,
+        &:after {
+            border: 0;
+            width: 0;
+        }
+    }
+
+    #TextSearchModel_Text {
+        width: 50%;
     }
 }
 
@@ -252,6 +298,14 @@ input:checked + .edubase-button-checkbox:after {
 }
 
 input:focus + .edubase-button-checkbox:before {
+    box-shadow: 0 0 3px 3px $focus-colour;
+}
+
+input:checked + input + .edubase-button-checkbox:after {
+    @include opacity(1);
+}
+
+input:focus + input + .edubase-button-checkbox:before {
     box-shadow: 0 0 3px 3px $focus-colour;
 }
 

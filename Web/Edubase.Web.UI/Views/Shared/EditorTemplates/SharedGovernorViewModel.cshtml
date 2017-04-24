@@ -1,0 +1,77 @@
+﻿@model Edubase.Web.UI.Areas.Governors.Models.SharedGovernorViewModel
+    
+<li>
+    <div class="expander-panel @(Model.Selected ? "open-expander" : "")">
+        <div class="form-group">
+            @if (Model.MultiSelect)
+            {
+               
+                <span class="checkbox-wrap">
+                    @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger", @Html.NameFor(x => x.Selected)))
+                    
+                    <label class="edubase-button-checkbox" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
+                </span>
+            }
+            else
+            {
+                <span class="checkbox-wrap">
+                    @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected, new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = @Model.Id})
+                    <label class="edubase-button-checkbox" for="@Model.Id">@Model.FullName</label>
+                </span>
+                    }
+        </div>
+                                        
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.PostCode)
+        @Html.HiddenFor(x => x.AppointingBodyName)
+        @Html.HiddenFor(x => x.DOB)
+        @Html.HiddenFor(x => x.Nationality)
+        @Html.HiddenFor(x => x.FullName)
+        <div class="shared-governor">
+            @if (Model.PreExisting)
+            {
+                <p class="bold-xsmall">Already shared with this establishment</p>
+            }
+            <dl>
+                <dt>Shared with:</dt>
+                <dd>
+                    @foreach (var establishment in Model.SharedWith)
+                    {
+                        <div>
+                            @establishment.EstablishmentName, URN: @establishment.Urn
+                        </div>
+                    }
+                </dd>
+                <dt>Postcode:</dt>
+                <dd>@Model.PostCode</dd>
+            </dl>
+            <div class="expander-panel-content">
+                <dl>
+                    <dt>GID:</dt>
+                    <dd>@Model.Id</dd>
+                    <dt>Appointed by:</dt>
+                    <dd>@Model.AppointingBodyName</dd>
+                    <dt>Date of birth:</dt>
+                    <dd>@(Model.DOB?.ToString("dd/MM/yyyy"))</dd>
+                    <dt>Nationality:</dt>
+                    <dd>@Model.Nationality</dd>
+                </dl>
+
+                @Html.EditorFor(x => x.AppointmentStartDate)
+                @Html.EditorFor(x => x.AppointmentEndDate)
+            </div>
+        </div>
+    </div>
+</li>
+
+@functions
+{
+    object GetCheckboxAttributes(bool readOnly, string cssClasses, HtmlString elemId)
+    {
+        if (readOnly)
+            return new { @class = cssClasses, @disabled = "disabled" , @id = elemId };
+
+        return new { @class = cssClasses, @id = elemId };
+    }
+}

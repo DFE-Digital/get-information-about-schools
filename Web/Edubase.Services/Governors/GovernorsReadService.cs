@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 using MoreLinq;
 using Edubase.Services.Exceptions;
@@ -26,7 +25,6 @@ namespace Edubase.Services.Governors
 {
     using DisplayPolicies;
     using Lookup;
-    using System.Linq.Expressions;
     using GR = eLookupGovernorRole;
 
     public class GovernorsReadService : IGovernorsReadService
@@ -60,6 +58,7 @@ namespace Edubase.Services.Governors
 
             var oDataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
 
+            if (payload.Gid != null) oDataFilters.Add(nameof(SearchGovernorDocument.Id), payload.Gid);
             if (payload.FirstName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_FirstNameDistilled), payload.FirstName.Distill());
             if (payload.LastName.Clean() != null) oDataFilters.Add(nameof(SearchGovernorDocument.Person_LastNameDistilled), payload.LastName.Distill());
             
@@ -117,22 +116,34 @@ namespace Edubase.Services.Governors
                             retVal.ApplicableRoles.AddRange(new[] { GR.ChairOfLocalGoverningBody, GR.LocalGovernor });
                         else retVal.ApplicableRoles.AddRange(commonGovernorRoleSet);
                     }
+
+                    if (domainModel.GovernanceMode == eGovernanceMode.LocalAndSharedGovernors ||
+                        domainModel.GovernanceMode == eGovernanceMode.SharesLocalGovernors ||
+                        domainModel.GovernanceMode == eGovernanceMode.NoLocalGovernors)
+                    {
+                        retVal.ApplicableRoles.AddRange(new [] { GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor });
+                    }
                 }
             }
             else
             {
+                retVal.ApplicableRoles.AddRange(commonGovernorRoleSet);
                 var model = await _groupReadService.GetAsync(groupUId.Value, principal);
                 if (model.Success)
                 {
                     var domainModel = model.GetResult();
                     retVal.HasFullAccess = _securityService.GetEditGroupPermission(principal).CanEdit(groupUId.Value, domainModel.GroupTypeId, domainModel.LocalAuthorityId);
+                    if (domainModel.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust)
+                    {
+                        retVal.ApplicableRoles.AddRange(new[] {GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor});
+                    }
                 }
-                retVal.ApplicableRoles.AddRange(commonGovernorRoleSet);
             }
             
             var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(retVal.HasFullAccess);
             retVal.ApplicableRoles.ForEach(x => retVal.RoleDisplayPolicies.Add(x, templateDisplayPolicy.Clone()));
-            ProcessDisplayPolicyOverrides(retVal.RoleDisplayPolicies);
+
+            ProcessDisplayPolicyOverrides(retVal.RoleDisplayPolicies, groupUId.HasValue);
             
             retVal.CurrentGovernors = (await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, false)).ToList();
             retVal.HistoricalGovernors = (await GetGovernorsAsync(urn, groupUId, retVal.HasFullAccess, retVal.ApplicableRoles.Cast<int>(), retVal.RoleDisplayPolicies, true)).ToList();
@@ -145,20 +156,31 @@ namespace Edubase.Services.Governors
         /// </summary>
         /// <param name="role"></param>
         /// <returns></returns>
-        public GovernorDisplayPolicy GetEditorDisplayPolicy(GR role, IPrincipal principal)
+        public GovernorDisplayPolicy GetEditorDisplayPolicy(GR role, bool isGroup, IPrincipal principal)
         {
             var retVal = new GovernorDisplayPolicy().SetFullAccess(true);
-            ProcessDisplayPolicyOverrides(new Dictionary<GR, GovernorDisplayPolicy> { [role] = retVal });
+            ProcessDisplayPolicyOverrides(new Dictionary<GR, GovernorDisplayPolicy> { [role] = retVal }, isGroup);
 
-            retVal.AppointmentEndDate = !(role.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)); // Story 7741: Goverance fields by role.xlsx: ** This is not editable, the date is populated on replacement with the day before the date of appointment of the replacement AO/CFO
+            if (role.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer))
+            {
+                // Story 7741: Goverance fields by role.xlsx: ** This is not editable, the date is populated on replacement with the day before the date of appointment of the replacement AO/CFO
+                retVal.AppointmentEndDate = false;
+            }
+
+            if (role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody))
+            {
+                retVal.Id = false;
+            }
 
             return retVal;
         }
 
-        private void ProcessDisplayPolicyOverrides(Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies)
+        private void ProcessDisplayPolicyOverrides(Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies, bool isGroup)
         {
             // Override policies at the role level
-            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Governor, GR.Trustee, GR.LocalGovernor, GR.Member))
+            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Governor, GR.Trustee, GR.LocalGovernor, GR.Member,
+                    GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor,
+                    GR.Group_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody))
                 .ForEach(x => x.Value.EmailAddress = false);
 
             roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.AccountingOfficer, GR.ChiefFinancialOfficer)).ForEach(x =>
@@ -176,6 +198,15 @@ namespace Edubase.Services.Governors
             {
                 kvp.Value.TelephoneNumber = kvp.Key.OneOfThese(GR.ChairOfGovernors, GR.ChairOfLocalGoverningBody);
             });
+
+            roleDisplayPolicies.Where(x => x.Key.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody,
+                    GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody,
+                    GR.Group_SharedLocalGovernor))
+                .ForEach(x =>
+                {
+                    x.Value.AppointmentStartDate = !isGroup;
+                    x.Value.AppointmentEndDate = !isGroup;
+                });
         }
 
         public async Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal)
@@ -186,20 +217,70 @@ namespace Edubase.Services.Governors
             return Map(governorDataModel, displayPolicy);
         }
 
+        //TODO: TEXCHANGE add endpoint to get shared governors
+        public async Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal)
+        {
+            var governors = new List<GovernorModel>();
+
+            var groups = await _groupReadService.GetAllByEstablishmentUrnAsync(establishmentUrn, principal);
+            
+            var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
+            var roles = new List<GR> {GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor};
+            var displayPolicies = roles.ToDictionary(r => r, r => templateDisplayPolicy.Clone());
+            ProcessDisplayPolicyOverrides(displayPolicies, false);
+
+            foreach (var group in groups)
+            {
+                governors.AddRange(await GetGovernorsAsync(null, group.GroupUID, true, roles.Cast<int>(), displayPolicies, false));
+            }
+
+            return governors;
+        }
+
+        //TODO: TEXCHANGE add endpoint to get a given shared governor
+        public async Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn, IPrincipal principal)
+        {
+            var db = _dbContextFactory.Obtain();
+            var governor = await db.Governors.Where(g => g.Id == governorId).Include(g => g.Establishments).SingleOrDefaultAsync();
+
+            var templateDisplayPolicy = new GovernorDisplayPolicy().SetFullAccess(true);
+            var roles = new List<GR> { GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor };
+            var displayPolicies = roles.ToDictionary(r => r, r => templateDisplayPolicy.Clone());
+            ProcessDisplayPolicyOverrides(displayPolicies, false);
+
+            var policy = displayPolicies.Get((GR)governor.RoleId);
+
+            return Map(governor, policy);
+        }
+
         private async Task<IEnumerable<GovernorModel>> GetGovernorsAsync(int? urn, int? groupUId, bool fullAccess, IEnumerable<int> roles, Dictionary<GR, GovernorDisplayPolicy> roleDisplayPolicies, bool historic)
         {
             var db = _dbContextFactory.Obtain();
-            var query = db.Governors.Where(x => (urn != null && x.EstablishmentUrn == urn || groupUId != null && x.GroupUID == groupUId) && x.RoleId != null && roles.Contains(x.RoleId.Value) && x.IsDeleted == false);
+            var query = db.Governors
+                          .Include(x => x.Establishments)
+                          .Include(x => x.Establishments.Select(y => y.Establishment))
+                          .Where(x => (urn != null && x.EstablishmentUrn == urn || groupUId != null && x.GroupUID == groupUId) && x.RoleId != null && roles.Contains(x.RoleId.Value) && x.IsDeleted == false);
+            var sharedQuery = db.EstablishmentGovernors
+                                .Where(x => (urn != null && x.EstabishmentUrn == urn) && x.Governor.RoleId != null && roles.Contains(x.Governor.RoleId.Value) && x.IsDeleted == false && x.Governor.IsDeleted == false)
+                                .Select(x => x.Governor)
+                                .Include(x => x.Establishments)
+                                .Include(x => x.Establishments.Select(y => y.Establishment));
 
             var today = DateTime.Now.Date;
             if (historic)
             {
                 var oneYearAgo = DateTime.Now.Date.AddYears(-1);
                 query = query.Where(x => x.AppointmentEndDate > oneYearAgo && x.AppointmentEndDate < today);
+                sharedQuery = sharedQuery.Where(x => x.Establishments.Any(e => e.AppointmentEndDate > oneYearAgo && e.AppointmentEndDate < today));
             }
-            else query = query.Where(x => x.AppointmentEndDate > today || x.AppointmentEndDate == null);
+            else
+            {
+                query = query.Where(x => x.AppointmentEndDate > today || x.AppointmentEndDate == null);
+                sharedQuery = sharedQuery.Where(x => x.Establishments.Any(e => e.AppointmentEndDate > today || e.AppointmentEndDate == null));
+            }
 
-            var dataModels = await query.ToListAsync();
+            var dataModels = (await query.ToListAsync()).Union(await sharedQuery.ToListAsync()).ToList();
+
             return dataModels.Select(governorDataModel =>
             {
                 var policy = roleDisplayPolicies.Get((GR)governorDataModel.RoleId.Value);
@@ -235,7 +316,8 @@ namespace Edubase.Services.Governors
                 PreviousPerson_LastName = Get(() => governor.PreviousPerson.LastName, policy.PreviousFullName),
                 PreviousPerson_MiddleName = Get(() => governor.PreviousPerson.MiddleName, policy.PreviousFullName),
                 PreviousPerson_Title = Get(() => governor.PreviousPerson.Title, policy.PreviousFullName),
-                TelephoneNumber = Get(() => governor.TelephoneNumber, policy.TelephoneNumber)
+                TelephoneNumber = Get(() => governor.TelephoneNumber, policy.TelephoneNumber),
+                Appointments = governor.Establishments?.Select(e => new GovernorAppointment { AppointmentStartDate = e.AppointmentStartDate, AppointmentEndDate = e.AppointmentEndDate, EstablishmentUrn = e.EstabishmentUrn, EstablishmentName = e.Establishment?.Name})
             };
         }
 

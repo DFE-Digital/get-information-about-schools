@@ -1,8 +1,6 @@
 ﻿using Edubase.Services.Governors;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
@@ -22,7 +20,7 @@ namespace Edubase.Services.Texuna.Governors
             _httpClient = httpClient;
         }
 
-        public GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role, IPrincipal principal)
+        public GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role, bool isGroup, IPrincipal principal)
         {
             throw new NotImplementedException();
         }
@@ -38,6 +36,16 @@ namespace Edubase.Services.Texuna.Governors
         public async Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal)
         {
             return await _httpClient.PostAsync<ApiSearchResult<SearchGovernorDocument>>("governor/search", payload, principal);
+        }
+
+        public Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn, IPrincipal principal)
+        {
+            throw new NotImplementedException();
         }
     }
 }
