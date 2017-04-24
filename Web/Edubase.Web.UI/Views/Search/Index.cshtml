@@ -53,7 +53,11 @@
 
         </div>
         @* Tool tip texts - Potential TODO add to resource file *@
-        @{ Html.RenderPartial("Partials/_HelpText"); }
+    @if (User.Identity.IsAuthenticated || Model.SelectedTab != SearchViewModel.Tab.Governors)
+    {
+        Html.RenderPartial("Partials/_HelpText");
+        
+    }
 
     </div>
 
