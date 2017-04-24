@@ -6,8 +6,7 @@
 
 <fieldset class="search-types-accordion">
     <legend>Search by:</legend>
-    @Html.ValidationSummary()
-
+    
     <ul class="search-type-list has-typeahead">
         <li class="search-type-wrapper">
             @using (Html.BeginForm("Index", "Search", FormMethod.Get))

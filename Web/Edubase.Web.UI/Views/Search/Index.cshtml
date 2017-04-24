@@ -12,6 +12,8 @@
 <div class="grid-row">
     <div class="column-full">
         @{ Html.RenderPartial("Partials/_SearchHeader"); }
+        
+        @Html.ValidationSummary(false, null, new { @class = "error-summary" })
     </div>
     <div class="column-full">
         <div class="horizontal-tabs-wrapper">
