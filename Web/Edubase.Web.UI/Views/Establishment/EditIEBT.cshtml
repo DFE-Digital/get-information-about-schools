@@ -118,7 +118,7 @@
                         @RenderTextBox("Address 3", x => x.ProprietorsAddress3, "cloneable")
                         @RenderTextBox("Town", x => x.ProprietorsTown, "cloneable")
                         @RenderTextBox("County", x => x.ProprietorsCounty, "cloneable")
-                        @RenderTextBox("Postcode", x => x.ProprietorsPostcode, "cloneable")
+                        @RenderTextBox("Postcode", x => x.ProprietorsPostcode, "cloneable",  "postcode-field")
                         @RenderTextBox("Telephone number", x => x.ProprietorsTelephoneNumber, "cloneable")
                         @RenderTextBox("Fax number", x => x.ProprietorsFaxNumber, "cloneable")
                         @RenderTextBox("Email", x => x.ProprietorsEmail, "cloneable")
@@ -135,17 +135,17 @@
                     
                     <h4 class="heading-small edu-section-break">Chair of the proprietary body details</h4>
 
-                    @RenderTextBox("Chair of proprietor's preferred job title", x => x.ChairOfProprietorsBodyPreferredJobTitle)
-                    @RenderTextBox("Chair of proprietor's name", x => x.ChairOfProprietorsBodyName)
-                    @RenderTextBox("Chair of proprietor's street", x => x.ChairOfProprietorsBodyStreet)
-                    @RenderTextBox("Chair of proprietor's locality", x => x.ChairOfProprietorsBodyLocality)
-                    @RenderTextBox("Chair of proprietor's address 3", x => x.ChairOfProprietorsBodyAddress3)
-                    @RenderTextBox("Chair of proprietor's town", x => x.ChairOfProprietorsBodyTown)
-                    @RenderTextBox("Chair of proprietor's county", x => x.ChairOfProprietorsBodyCounty)
-                    @RenderTextBox("Chair of proprietor's postcode", x => x.ChairOfProprietorsBodyPostcode)
-                    @RenderTextBox("Chair of proprietor's telephone", x => x.ChairOfProprietorsBodyTelephoneNumber)
-                    @RenderTextBox("Chair of proprietor's fax", x => x.ChairOfProprietorsBodyFaxNumber)
-                    @RenderTextBox("Chair of proprietor's email", x => x.ChairOfProprietorsBodyEmail)
+                    @RenderTextBox("Preferred job title", x => x.ChairOfProprietorsBodyPreferredJobTitle)
+                    @RenderTextBox("Name", x => x.ChairOfProprietorsBodyName)
+                    @RenderTextBox("Street", x => x.ChairOfProprietorsBodyStreet)
+                    @RenderTextBox("Locality", x => x.ChairOfProprietorsBodyLocality)
+                    @RenderTextBox("Address 3", x => x.ChairOfProprietorsBodyAddress3)
+                    @RenderTextBox("Town", x => x.ChairOfProprietorsBodyTown)
+                    @RenderTextBox("County", x => x.ChairOfProprietorsBodyCounty)
+                    @RenderTextBox("Postcode", x => x.ChairOfProprietorsBodyPostcode, null, "postcode-field")
+                    @RenderTextBox("Telephone number", x => x.ChairOfProprietorsBodyTelephoneNumber)
+                    @RenderTextBox("Fax number", x => x.ChairOfProprietorsBodyFaxNumber)
+                    @RenderTextBox("Email", x => x.ChairOfProprietorsBodyEmail)
 
                 </div>
                 
@@ -178,12 +178,13 @@
     </div>
 }
 
-@helper RenderTextBox(string label, Expression<Func<ViewModel, string>> fnc, string wrapperClass = "")
+@helper RenderTextBox(string label, Expression<Func<ViewModel, string>> fnc, string wrapperClass = "", string fieldClasses = "")
 {
     var id = label.Replace(" ", "").ToLower();
+    var classes = "form-control " + fieldClasses;
     <div class="form-group @wrapperClass">
-        @Html.LabelFor(fnc, label)
-        @Html.TextBoxFor(fnc, new { @class = "form-control "})
+        @Html.LabelFor(fnc, label, new { @class = "form-label" })
+        @Html.TextBoxFor(fnc, new { @class = classes })
     </div>
 }
 
@@ -191,7 +192,7 @@
 {
     var id = label.Replace(" ", "").ToLower();
     <div class="form-group">
-        @Html.LabelFor(fnc, label)
+        @Html.LabelFor(fnc, label, new { @class = "form-label" })
         @Html.TextBoxFor(fnc, new { @class = "form-control", type = "text" })
     </div>
 }

@@ -21,10 +21,13 @@
     init: function () {
         var self = this;
         var radioValue;
+       // var popOverInitialised = false;
 
         if (self.radios.length === 0) {
             return;
         }
+
+        console.log('init');
         
         radioValue = self.radios.filter(':checked').val();
 
@@ -33,12 +36,11 @@
             radioValue = self.radios.filter(':checked').val();
         }
 
-        if (radioValue === 'single') {
-            $('#cloneable-fields-container').append(self.cloneFields);
-        }
 
         if (radioValue === 'body') {
             $('#field-clone-target').append(self.cloneFields);
+        } else {
+            $('#cloneable-fields-container').append(self.cloneFields);
         }
 
         $(window).on('radioChange', function (e) {
@@ -60,10 +62,18 @@
 
         });
 
-        self.radios.okCancel({
-            ok: self.okClick,
-            cancel: self.cancelClick
+        $('#proprietor-body, #proprietor-single').on('change', '.form-control', function() {
+            console.log('CCCCCHHHHanges');
+                self.radios.okCancel({
+                    ok: self.okClick,
+                    cancel: self.cancelClick
+                });
+
+                $('#proprietor-body, #proprietor-single').off('change', '.form-control');
+            
         });
+
+        
 
     }
     
