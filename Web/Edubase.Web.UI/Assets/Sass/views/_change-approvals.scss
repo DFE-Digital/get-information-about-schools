@@ -255,7 +255,7 @@
     .radio-button-wrap,
     .checkbox-wrap {
         input {
-            @include opacity(0);
+            @include opacity(1);
 
             &:before, &:after {
                 border: 0;
