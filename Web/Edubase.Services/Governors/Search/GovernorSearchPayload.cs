@@ -17,6 +17,7 @@ namespace Edubase.Services.Governors.Search
             Take = take;
         }
 
+        [JsonIgnore] // TODO: TEXCHANGE:  support Gid search
         public string Gid { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
