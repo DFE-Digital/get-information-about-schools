@@ -251,6 +251,33 @@
     }
 }
 
+@if ($is-ie and $ie-version < 9) {
+    .radio-button-wrap,
+    .checkbox-wrap {
+        input {
+            @include opacity(0);
+
+            &:before, &:after {
+                border: 0;
+            }
+        }
+    }
+
+    .search-type-wrapper .edubase-button-radio {
+        padding-left: 0;
+
+        &:before,
+        &:after {
+            border: 0;
+            width: 0;
+        }
+    }
+
+    #TextSearchModel_Text {
+        width: 50%;
+    }
+}
+
 .boldened-checkbox {   
     @include opacity(0);
     position: absolute;
