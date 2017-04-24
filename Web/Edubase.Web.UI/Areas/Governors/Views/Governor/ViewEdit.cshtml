@@ -5,7 +5,6 @@
     Layout = Model.Layout;
 }
 
-<div class="tab-content">
 @if (Model.EditMode)
 {
         <div class="column-half">
@@ -93,7 +92,6 @@ else
 {
     <p>There is no governance information for this @Model.ParentEntityName</p>
 }
-</div>
 
 @helper DisplayGovernors()
 {
