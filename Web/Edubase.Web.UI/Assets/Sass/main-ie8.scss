@@ -1,4 +1,138 @@
 $is-ie: true;
 $ie-version: 8;
  
-@import "main";
+// Reset
+@import "elements/reset";
+
+// Import GOV.UK frontend toolkit
+@import "colours";
+@import "measurements";
+@import "conditionals";
+@import "shims";
+
+// Colours
+@import "styleguide/colours";
+
+// vars
+@import "variables";
+
+// utils
+@import "utils/conditionals";
+@import "utils/vendor-prefixes";
+@import "utils/clearfix-me";
+@import "utils/whitespace";
+@import "utils/border-radius";
+@import "utils/toggles";
+@import "utils/buttons";
+
+// prototype spacers
+@include whitespace((5px,10px,15px,20px), 4);
+
+// Helpers
+@import "elements/helpers";
+
+// Base
+// ==========================================================================
+
+// Typography
+@import "elements/elements-typography";
+
+// Layout
+@import "elements/layout";
+@import "elements/footer";
+
+// Links
+@import "elements/links";
+
+// Buttons
+@import "elements/buttons";
+
+// Icons
+@import "elements/icons";
+
+// Tables
+@import "elements/tables";
+
+// Boxes
+@import "elements/related-box";
+@import "elements/box/box";
+
+// Tabs
+@import "elements/_tabs";
+
+// Help icon
+@import "elements/_helpicon";
+
+//edubase mixins
+
+@import "utils/_edubase-mixins";
+
+// Components
+// ==========================================================================
+
+// Forms
+@import "elements/forms";
+@import "elements/forms/form-validation";
+@import "elements/forms/form-questions";
+
+@import "elements/forms/filter-form/text-filter";
+@import "elements/forms/filter-form/option-select";
+
+@import "elements/forms/feedback/feedback";
+
+// Form validation
+@import "elements/forms/form-validation";
+
+// Form patterns
+@import "elements/forms/form-date";
+@import "elements/forms/form-block-labels";
+
+// Collapsibles
+@import "elements/collapsible/collapsible";
+
+// Panels
+@import "elements/panels";
+
+// Details
+@import "elements/details";
+
+// Lists
+@import "elements/lists";
+
+// Breadcumbs
+@import "elements/breadcrumbs";
+
+// Browse
+@import "elements/browse";
+
+// Rating
+@import "elements/rating/rating";
+
+// Pagination
+@import "elements/pagination";
+
+// mobile navigation
+@import "elements/mobile-nav";
+
+// clearing text fields
+@import 'elements/forms/clear-fields';
+
+@import "elements/tooltips";
+@import "elements/modal";
+
+// Views
+// ==========================================================================
+@import "views/base";
+@import "views/_school-details";
+@import "views/_search-results";
+@import "views/_school-search";
+@import "views/_search-page";
+@import "views/_view-logs";
+@import "views/_create-edit-establishment";
+@import "views/_bulk-academies";
+@import "views/_mergers";
+@import "views/_change-approvals";
+@import"views/academy-openings";
+@import"views/search-changes";
+
+

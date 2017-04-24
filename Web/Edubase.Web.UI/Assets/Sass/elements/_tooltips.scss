@@ -8,6 +8,12 @@ $pointer-size: 15px;
     }
 }
 
+@if ($ie-version < 9) {
+
+    .js-enabled .helptext-container {
+        display: block;
+    }
+}
 
 .edubase-tooltip {
     position: absolute;
