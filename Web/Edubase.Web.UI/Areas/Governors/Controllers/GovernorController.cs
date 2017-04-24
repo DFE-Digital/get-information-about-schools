@@ -19,6 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Services;
+using Edubase.Services.Groups.Models;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -53,6 +54,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly NomenclatureService _nomenclatureService;
         private readonly IGovernorsWriteService _governorsWriteService;
         private readonly IGroupReadService _groupReadService;
+        private readonly IGroupsWriteService _groupWriteService;
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IEstablishmentWriteService _establishmentWriteService;
 
@@ -126,6 +128,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                 var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
                 viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
+                viewModel.DelegationInformation = "not defined";
 
                 await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, x => viewModel.GovernanceMode = x.GovernanceMode);
 
@@ -145,6 +148,15 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                     var duplicate = await _governorsReadService.GetGovernorAsync(duplicateGovernorId.Value, User);
                     ViewData.Add("DuplicateGovernor", duplicate);
+                }
+
+                if (groupUId.HasValue)
+                {
+                    var groupTask = await _groupReadService.GetAsync(groupUId.Value, User);
+                    if (groupTask.Success)
+                    {
+                        viewModel.DelegationInformation = groupTask.ReturnValue.DelegationInformation;
+                    }
                 }
 
                 return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
@@ -544,6 +556,28 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return View(model);
             }
             return RedirectToRoute("GroupEditGovernance", new { GroupUId = groupUId });
+        }
+
+        [HttpPut]
+        [Route(GROUP_EDIT_DELEGATION)]
+        public async Task<ActionResult> GroupEditDelegation(EditGroupDelegationInformation model)
+        {
+            if (ModelState.IsValid)
+            {
+                var groupResult = await _groupReadService.GetAsync(model.GroupId, User);
+                if (groupResult.Success)
+                {
+                    var group = groupResult.ReturnValue;
+                    group.DelegationInformation = model.DelegationInformation;
+                    var updatedGroup = new SaveGroupDto(group);
+                    await _groupWriteService.SaveAsync(updatedGroup, User);
+                }
+                return RedirectToRoute("GroupEditGovernance", new { GroupUId = model.GroupUId });
+            }
+
+            await PopulateLayoutProperties(model, null, model.GroupUId);
+
+            return View(model);
         }
 
         private SharedGovernorViewModel MapGovernorToSharedGovernorViewModel(GovernorModel governor, int establishmentUrn)

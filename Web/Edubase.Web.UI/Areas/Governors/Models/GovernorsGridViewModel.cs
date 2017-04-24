@@ -38,6 +38,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public string ParentEntityName => GroupUId.HasValue ? "group" : "establishment";
 
+        public string DelegationInformation { get; set; }
+
         /// <summary>
         /// GID of the governor that's being removed.
         /// </summary>

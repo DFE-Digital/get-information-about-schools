@@ -53,7 +53,7 @@ else
 }
 
 
-@if (Model.DomainModel.HasGovernors)
+@if (Model.GroupUId.HasValue && Model.DomainModel.HasGovernors)
 {
     if (!Model.EditMode)
      {
@@ -80,24 +80,7 @@ else
             Show details
         </a>
         <div class="expanding-content panel-indent">
-            Delegated authority in relation to:
-            - the conduct of the schools;
-            - promoting high standards of educational achievement in line with the
-            overall strategic direction of the Trust (contributing, in collaboration
-            with the head of school and senior leadership team, to producing,
-            monitoring and evaluating the implementation and effectiveness of the
-            school improvement plan in relation to expected outcomes for
-            learners, leadership and management, teaching and learning, quality
-            of provision, safeguarding, students' personal development, behaviour
-            and welfare;
-            - ensuring that the curriculum for the schools is appropriate, balanced,
-            broadly based and operates within the context of the school's
-            statement of values and ethos as agreed by the Trust;
-            - detailed scrutiny of performance against the schools'improvement
-            plans and decision making on action required;
-            - approval of school policies;
-            - providing advice and information to the Trust Board on performance
-            in relation to the above.
+            @Model.DelegationInformation
         </div>
     </div>
     if (Model.EditMode)
