@@ -2,7 +2,7 @@
 $pointer-size: 15px;
 
 .helptext-container {
-    
+    border-top: $grey-1 1px solid;
     .js-enabled & {
         display: none;
     }

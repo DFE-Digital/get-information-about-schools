@@ -923,13 +923,13 @@
     <Content Include="Views\Shared\EditorTemplates\DateTimeViewModel.cshtml" />
     <Content Include="Views\Prototype\HelpIcon.cshtml" />
     <Content Include="Views\Prototype\dont-leave.cshtml" />
-    <Content Include="Views\Search\Partials\SearchHeader.cshtml" />
-    <Content Include="Views\Search\Partials\HelpText.cshtml" />
-    <Content Include="Views\Search\Partials\EstablishmentSearch.cshtml" />
-    <Content Include="Views\Search\Partials\GroupSearch.cshtml" />
-    <Content Include="Views\Search\Partials\GovernorSearch.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SharedGovernorViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\GovernorViewModel.cshtml" />
+    <Content Include="Views\Search\Partials\_EstablishmentSearch.cshtml" />
+    <Content Include="Views\Search\Partials\_GovernorSearch.cshtml" />
+    <Content Include="Views\Search\Partials\_GroupSearch.cshtml" />
+    <Content Include="Views\Search\Partials\_HelpText.cshtml" />
+    <Content Include="Views\Search\Partials\_SearchHeader.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
