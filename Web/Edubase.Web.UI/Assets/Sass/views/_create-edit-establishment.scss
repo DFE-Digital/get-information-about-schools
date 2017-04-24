@@ -90,6 +90,11 @@ select#headtitleid {
         margin-bottom: 2px;
     }
 
+    .edubase-button-radio {
+        font-size: 19px;
+    }
+    
+    
     legend {
         font-weight: normal;
         font-size: 16px;
@@ -252,7 +257,6 @@ div.governor-list, div.governor-grid {
 
 
 .edu-section-break {
-    border-top: $grey-2 1px solid;
     margin: 40px  0 12px;
     padding-top: 12px;
 }
