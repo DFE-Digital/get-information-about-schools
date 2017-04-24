@@ -256,10 +256,18 @@
     .checkbox-wrap {
         input {
             @include opacity(1);
+            position: relative;
+            top: 12px;
+            left: 0;
+            float: left;
 
             &:before, &:after {
                 border: 0;
             }
+        }
+
+        label {
+            padding-left: 12px;
         }
     }
 

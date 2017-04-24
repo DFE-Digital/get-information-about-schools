@@ -8,7 +8,7 @@ $pointer-size: 15px;
     }
 }
 
-@if ($ie-version == 9) {
+@if ($ie-version < 9) {
 
     .js-enable .helptext-container {
         display: block;
