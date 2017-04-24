@@ -40,6 +40,9 @@ namespace Edubase.Data.Entity
         public string GroupId { get; set; }
         public int EstablishmentCount { get; set; }
 
+        [MaxLength(1000)]
+        public string DelegationInformation { get; set; }
+
         public LocalAuthority LocalAuthority { get; set; }
         public int? LocalAuthorityId { get; set; }
 

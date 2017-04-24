@@ -44,8 +44,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         const string ESTAB_LAYOUT = "~/Views/Establishment/_EditLayoutPage.cshtml";
 
         const string ESTAB_SELECT_SHARED_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/SelectSharedGovernor";
-        const string ESTAB_ADD_SHARED_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/AddSharedGovernor";
         const string ESTAB_EDIT_SHARED_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/EditSharedGovernor";
+
+        private const string GROUP_EDIT_DELEGATION = "~/Groups/Group/Edit/{groupUId:int}/Governance/Delegation";
 
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGovernorsReadService _governorsReadService;
@@ -524,6 +525,25 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await PopulateLayoutProperties(model, model.Urn, null, null);
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Route(GROUP_EDIT_DELEGATION, Name = "GroupEditDelegation")]
+        public async Task<ActionResult> GroupEditDelegation(int groupUId)
+        {
+            var group = await _groupReadService.GetAsync(groupUId, User);
+            if (group.Success)
+            {
+                var model = new EditGroupDelegationInformation
+                {
+                    DelegationInformation = group.ReturnValue.DelegationInformation
+                };
+
+                await PopulateLayoutProperties(model, null, groupUId);
+
+                return View(model);
+            }
+            return RedirectToRoute("GroupEditGovernance", new { GroupUId = groupUId });
         }
 
         private SharedGovernorViewModel MapGovernorToSharedGovernorViewModel(GovernorModel governor, int establishmentUrn)

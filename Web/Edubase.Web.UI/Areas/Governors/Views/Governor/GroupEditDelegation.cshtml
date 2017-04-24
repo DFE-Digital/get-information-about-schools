@@ -1,0 +1,26 @@
+﻿@model EditGroupDelegationInformation
+    
+@{
+    ViewBag.hideLogo = true;
+    ViewBag.SelectedTab = "EditGovernance";
+    Layout = Model.Layout;
+}
+
+<div id="" class="tab-content">
+    <div class="column-two-thirds">
+        @using (Html.BeginForm("EditGroupDelegationInformation", "Governor", FormMethod.Post))
+        {
+            @Html.HiddenFor(m => m.GroupUId)
+            <h2 class="heading-medium">Delegated authority of local governing body</h2>
+            <div class="edit-governor">
+                @*<h3 class="heading-small">@Model.Governor.FullName</h3>*@
+                @Html.LabelFor(x => x.DelegationInformation)
+                @Html.TextAreaFor(x => x.DelegationInformation)
+                <div class="button-row">
+                    <input type="submit" value="Save" class="button mobile-full-width" />
+                    <a href="@Url.RouteUrl("GroupEditGovernance", new { GroupUId = Model.GroupUId })" class="button button-grey mobile-full-width">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

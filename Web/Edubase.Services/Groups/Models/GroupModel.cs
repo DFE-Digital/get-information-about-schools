@@ -18,6 +18,7 @@ namespace Edubase.Services.Groups.Models
         public PersonDto Head { get; set; } = new PersonDto();
         public AddressDto Address { get; set; }
         public string ManagerEmailAddress { get; set; }
+        public string DelegationInformation { get; set; }
 
         [DisplayName("Group Id")]
         public string GroupId { get; set; }

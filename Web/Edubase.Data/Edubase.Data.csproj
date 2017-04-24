@@ -250,6 +250,10 @@
     <Compile Include="Migrations\201704031050493_7742_SharedGovernance.Designer.cs">
       <DependentUpon>201704031050493_7742_SharedGovernance.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704241352595_Add_Group_Delegation_Information.cs" />
+    <Compile Include="Migrations\201704241352595_Add_Group_Delegation_Information.Designer.cs">
+      <DependentUpon>201704241352595_Add_Group_Delegation_Information.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ODataFilterList.cs" />
@@ -315,6 +319,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704031050493_7742_SharedGovernance.resx">
       <DependentUpon>201704031050493_7742_SharedGovernance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704241352595_Add_Group_Delegation_Information.resx">
+      <DependentUpon>201704241352595_Add_Group_Delegation_Information.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
