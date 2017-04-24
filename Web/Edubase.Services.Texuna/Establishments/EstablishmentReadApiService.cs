@@ -29,9 +29,9 @@ namespace Edubase.Services.Texuna.Establishments
             _httpClient = httpClient;
         }
 
-        public Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
+        public async Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
         {
-            throw new NotImplementedException(nameof(CanAccess) + " not implemented yet");
+            return new ServiceResultDto<bool>((await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canaccess", principal)).Value);
         }
 
         public async Task<bool> CanEditAsync(int urn, IPrincipal principal)
@@ -46,9 +46,7 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
         {
-            return Enumerable.Empty<EstablishmentChangeDto>();
-            // TODO: TEXCHANGE kris to link up establishment/{urn}/changes when Texuna do it
-            //return await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes");
+            return await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes", user);
         }
 
         public async Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModelBase establishment)
