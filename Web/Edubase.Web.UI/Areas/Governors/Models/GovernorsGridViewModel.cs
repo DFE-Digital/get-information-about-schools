@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Edubase.Common;
+using Edubase.Common.Text;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
@@ -89,7 +90,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             foreach (var role in dto.ApplicableRoles)
             {
-                var grid = new GridViewModel<GovernorModel>(_nomenclatureService.GetGovernorRoleName(role) + (isHistoric ? $" (in past 12 months)" : string.Empty));
+                var grid = new GridViewModel<GovernorModel>(_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true) + (isHistoric ? $" (in past 12 months)" : string.Empty));
                 grid.Tag = isHistoric ? "historic" : "current";
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
                 Guard.IsNotNull(displayPolicy, () => new Exception($"The display policy should not be null for the role '{role}'"));
