@@ -55,20 +55,33 @@
         var value = "id";
         var source = null;
         var minChars = 0;
-        var selectedLaButtonTemplate = '<button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="{1}">{0}</button>',
+        var selectedLocalAuthorities = [];
+        var selectedLaButtonTemplate = '<button type="submit" id="button-{1}" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="{1}">{0}</button>',
             selectedLaHiddenTemplate = '<input type="hidden" name="d" value="{0}" id="{1}" />',
             re = /\{0\}/g,
+            reId = /\{1}/g,
             addedLaCount = 0;
 
         function includeLa(la) {
-            var idString = "la-" + la.id + addedLaCount;
-            var hiddenField = selectedLaHiddenTemplate.replace(re, la.id).replace('{1}', idString);
-            var textField = selectedLaButtonTemplate.replace(re, la.name).replace('{1}', idString);
+            var idString = "la-" + la.id;
+            var hiddenField = selectedLaHiddenTemplate.replace(re, la.id).replace(reId, idString);
+            var rmButton = selectedLaButtonTemplate.replace(re, la.name).replace(reId, idString);
             var $inputField = $('.floating-text-field-wrap');
+            var previouslySelected = $.inArray(la.id, selectedLocalAuthorities) > -1;
 
-            addedLaCount ++;
-            $(textField).insertBefore($inputField);
-            $('#la-id-target').append(hiddenField);
+            console.log("previouslySelected " + previouslySelected);
+
+            if (!previouslySelected) {
+                selectedLocalAuthorities.push(la.id);
+                
+                addedLaCount++;
+                $(rmButton).insertBefore($inputField);
+                $('#la-id-target').append(hiddenField);
+            } else {
+                var button = $('#button-' + idString).detach();
+                
+                button.insertBefore($inputField);
+            }
    
         }
 
@@ -165,6 +178,14 @@
             var currentValue = $(event.target).val();
             if (currentValue !== currentSuggestionName) {
                 $(targetResolvedInputElementName).val("");
+            }
+        });
+
+        $(targetInputElementName).on('keydown', function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                console.log('Enter press...');
+                $(".tt-suggestion:first-child").click();
             }
         });
     } 

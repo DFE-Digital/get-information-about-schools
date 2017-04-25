@@ -38,7 +38,7 @@
 
                         </div>
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                        <button type="submit" class="button button-next" name="searchtype" value="@eSearchType.Text">Search</button>
+                        <button type="submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Text">Search</button>
                         <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                     </div>
                 </fieldset>
@@ -72,7 +72,7 @@
                                 <label for="include-open-establishments-location" class="edubase-button-checkbox">Include open schools only</label>
                             </span>
                         </div>
-                        <button type="submit" class="button button-next" name="searchtype" value="@eSearchType.Location">Search</button>
+                        <button type="submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Location">Search</button>
                     </div>
 
                 </fieldset>
@@ -105,18 +105,15 @@
                                 }
                                 <div class="floating-text-field-wrap">
                                     @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new { @class = "floating-text-field", autocomplete = "off" })
-                                </div>
+                                </div>                                
                             </div>
-                            
-                        </div>
-                        
-                        
-                        <div class="form-group">                            
                             <button type="submit"
-                                    class="link-button font-small no-js-remove" 
-                                    name="searchtype" value="@eSearchType.LocalAuthorityDisambiguation">Find</button>
+                                    class="button-grey button mobile-full-width no-js-remove"
+                                    name="searchtype" value="@eSearchType.LocalAuthorityDisambiguation">
+                                Find
+                            </button>
                         </div>
-                        
+                       
                         <div class="form-group">
                             <span class="checkbox-wrap">
                                 <input id="include-open-establishments-la" type="checkbox" checked="checked" name="OpenOnly" value="true" />
@@ -127,7 +124,7 @@
                         
                         @Html.HiddenFieldsFromQueryString()
                        
-                        <button type="submit" class="button button-next button-below" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>                           
+                        <button type="submit" class="button mobile-full-width button-below" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>                           
                        
                     </div>
                 }

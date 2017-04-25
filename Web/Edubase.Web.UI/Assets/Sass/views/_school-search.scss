@@ -120,12 +120,12 @@
         content: '';
         position: absolute;
         right: 6px;
-        top: 8px;
+        top: 7px;
         width: 12px;
         height: 12px;
         background-image: file-url('icons/suggest-remove.png');
         background-repeat: no-repeat;
-        background-size: 12px;
+        background-size: cover;
     }
 }
 
@@ -198,16 +198,48 @@
 }
 
 .no-js {
+    .search-toggle-panel {
+        .radio-button-wrap {
+            margin-left: 0;
+        }
+    }
+
+    .selected-las {
+        width: 100%;
+    }
+
+    #la-id-target {
+        border-width: 2px;
+        width: 50%;
+        float: left;
+        margin-right: 12px;
+        @include media(mobile) {
+            width: 98%;
+            margin-bottom: 12px;
+        }
+    }
+
     .search-type-wrapper .edubase-button-radio {
         padding-left: 0;
-            &:before,
-            &:after {
-                border: 0;
-                width: 0;
-            }
+        font-weight: bold;
+
+        &:before,
+        &:after {
+            border: 0;
+            width: 0;
+        }
+    }
+
+    .expanding-search-field {
+        border-left: 0;
+        padding-left: 0;
+        margin-left: 0;
     }
 
     #TextSearchModel_Text {
         width: 50%;
+         @include media(mobile) {
+            width: 100%;
+        }
     }
 }
