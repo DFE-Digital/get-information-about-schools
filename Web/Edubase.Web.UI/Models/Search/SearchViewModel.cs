@@ -13,6 +13,7 @@ namespace Edubase.Web.UI.Models.Search
         public const string BIND_ALIAS_GOONERES = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_GOONERES;
         public const string BIND_ALIAS_STATUSIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_STATUSIDS;
         public const string BIND_ALIAS_LAIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_LAIDS;
+        
 
         public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }
 

@@ -7,7 +7,7 @@ namespace Edubase.Web.UI.Models.Search
     {
         public string Forename { get; set; }
         public string Surname { get; set; }
-        public int? RoleId { get; set; }
+        public int?[] RoleId { get; set; }
         public bool IncludeHistoric { get; set; }
 
         [Display(Name = "GID")]
