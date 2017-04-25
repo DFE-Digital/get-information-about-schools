@@ -14,6 +14,7 @@
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by name of reference number</legend>
                     <span class="radio-button-wrap">
+                        @Html.HiddenFor(m => m.SelectedTab)
                         <input id="searchtype-name" name="search-by" value="establishment" type="radio" data-toggle-panel="#searchby-name-ref">
                         <label class="edubase-button-radio" for="searchtype-name">
                             Name or reference number
@@ -51,6 +52,7 @@
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by location</legend>
                     <span class="radio-button-wrap">
+                        @Html.HiddenFor(m => m.SelectedTab)
                         <input id="searchtype-location" name="search-by" value="location" type="radio" data-toggle-panel="#searchby-location-ref">
                         <label class="edubase-button-radio" for="searchtype-location">
                             Location
@@ -83,6 +85,7 @@
                 @using (Html.BeginForm("Index", "Search", FormMethod.Get))
                 {
                     <span class="radio-button-wrap">
+                        @Html.HiddenFor(m => m.SelectedTab)
                         <input id="searchtype-la" name="search-by" value="la" type="radio" data-toggle-panel="#searchby-la-ref"
                                @Html.Conditional(Model.SelectedLocalAuthorityIds.Any(), "checked")>
                         <label class="edubase-button-radio" for="searchtype-la">

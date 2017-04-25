@@ -32,8 +32,6 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
-
-
             if (viewModel.LocalAuthorityToRemove.HasValue)
             {
                 return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
