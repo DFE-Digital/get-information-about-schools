@@ -97,7 +97,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private async Task<ActionResult> SearchGovernors(GovernorSearchViewModel model)
         {
-            if (model.GovernorSearchModel.RoleId.Any())
+            if (model.GovernorSearchModel?.RoleId != null && model.GovernorSearchModel.RoleId.Any())
             {
                 model.SelectedRoleIds.AddRange(model.GovernorSearchModel.RoleId
                     .Where(r => r.HasValue && !model.SelectedRoleIds.Contains(r.Value))
