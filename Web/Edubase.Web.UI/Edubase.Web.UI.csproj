@@ -432,7 +432,6 @@
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ok-cancel.js" />
     <Content Include="Assets\Scripts\Elements\radio-toggles.js" />
-    <Content Include="Assets\Scripts\Elements\Forms\radio-toggles.js" />
     <Content Include="Assets\Scripts\JSON\addressResult.js" />
     <Content Include="Assets\Scripts\JSON\postcodeResults.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.js" />

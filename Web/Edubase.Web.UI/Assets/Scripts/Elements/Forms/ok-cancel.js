@@ -9,7 +9,8 @@
         },
         title: 'Are you sure...',
         content: 'That you want to perform this action?',
-        triggerEvent: 'change'
+        triggerEvent: 'change',
+        onPause: false
     };
 
 
@@ -38,6 +39,9 @@
     
 
     OkCancel.prototype = {
+        pause: function (pausedState) {
+            this.opts.onPause = pausedState || false;
+        },
         init: function () {
             var opts = this.opts;
             var $el = $(this.el);
@@ -56,14 +60,16 @@
             
             $el.on(opts.triggerEvent, function(e) {
                 e.preventDefault();
-                self.showModal();
+                if (!opts.onPause) {
+                    self.showModal();
+                }                
             });
 
-            $('#exit-overlay , #modal-overlay')
-                .on('click', function (e) {
-                    e.preventDefault();
-                    self.closeModal();
-                });
+
+            $('#exit-overlay , #modal-overlay').on('click', function (e) {
+                e.preventDefault();
+                self.closeModal();
+            });
         },
         closeModal: function () {
             unbindEscapeKey();
@@ -80,8 +86,6 @@
             if (content) {
                 $('#modal-content-area').text(content);
             }
-            
-
         },
         showModal: function () {
             var opts = this.opts;
