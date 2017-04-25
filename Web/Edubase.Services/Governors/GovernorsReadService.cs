@@ -132,9 +132,11 @@ namespace Edubase.Services.Governors
                 if (model.Success)
                 {
                     var domainModel = model.GetResult();
+                    retVal.GroupDelegationInformation = domainModel.DelegationInformation;
                     retVal.HasFullAccess = _securityService.GetEditGroupPermission(principal).CanEdit(groupUId.Value, domainModel.GroupTypeId, domainModel.LocalAuthorityId);
                     if (domainModel.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust)
                     {
+                        retVal.ShowDelegationInformation = true;
                         retVal.ApplicableRoles.AddRange(new[] {GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor});
                     }
                 }

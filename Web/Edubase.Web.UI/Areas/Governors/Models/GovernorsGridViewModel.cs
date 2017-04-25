@@ -3,9 +3,7 @@ using Edubase.Web.UI.Models.Grid;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Edubase.Common;
-using Edubase.Data.Entity.Lookups;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
@@ -40,6 +38,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public string DelegationInformation { get; set; }
 
+        public bool ShowDelegationInformation { get; set; }
+
         /// <summary>
         /// GID of the governor that's being removed.
         /// </summary>
@@ -70,6 +70,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groudUId, int? establishmentUrn, NomenclatureService nomenclatureService)
         {
             _nomenclatureService = nomenclatureService;
+            DelegationInformation = dto.GroupDelegationInformation;
+            ShowDelegationInformation = dto.ShowDelegationInformation;
             DomainModel = dto;
             EditMode = editMode;
             GroupUId = groudUId;

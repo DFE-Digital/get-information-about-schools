@@ -18,7 +18,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Edubase.Services;
 using Edubase.Services.Groups.Models;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
@@ -64,6 +63,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             ICachedLookupService cachedLookupService,
             IGovernorsWriteService governorsWriteService,
             IGroupReadService groupReadService,
+            IGroupsWriteService groupWriteService,
             IEstablishmentReadService establishmentReadService,
             IEstablishmentWriteService establishmentWriteService)
         {
@@ -72,6 +72,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _cachedLookupService = cachedLookupService;
             _governorsWriteService = governorsWriteService;
             _groupReadService = groupReadService;
+            _groupWriteService = groupWriteService;
             _establishmentReadService = establishmentReadService;
             _establishmentWriteService = establishmentWriteService;
         }
@@ -128,7 +129,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                 var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
                 viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
-                viewModel.DelegationInformation = "not defined";
 
                 await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, x => viewModel.GovernanceMode = x.GovernanceMode);
 
@@ -148,15 +148,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                     var duplicate = await _governorsReadService.GetGovernorAsync(duplicateGovernorId.Value, User);
                     ViewData.Add("DuplicateGovernor", duplicate);
-                }
-
-                if (groupUId.HasValue)
-                {
-                    var groupTask = await _groupReadService.GetAsync(groupUId.Value, User);
-                    if (groupTask.Success)
-                    {
-                        viewModel.DelegationInformation = groupTask.ReturnValue.DelegationInformation;
-                    }
                 }
 
                 return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
@@ -558,13 +549,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return RedirectToRoute("GroupEditGovernance", new { GroupUId = groupUId });
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route(GROUP_EDIT_DELEGATION)]
         public async Task<ActionResult> GroupEditDelegation(EditGroupDelegationInformation model)
         {
             if (ModelState.IsValid)
             {
-                var groupResult = await _groupReadService.GetAsync(model.GroupId, User);
+                var groupResult = await _groupReadService.GetAsync(model.GroupUId.Value, User);
                 if (groupResult.Success)
                 {
                     var group = groupResult.ReturnValue;

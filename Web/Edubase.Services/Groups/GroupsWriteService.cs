@@ -84,6 +84,7 @@ namespace Edubase.Services.Groups
                 dataModel.Name = dto.Group.Name;
                 dataModel.OpenDate = dto.Group.OpenDate;
                 dataModel.StatusId = dto.Group.StatusId;
+                dataModel.DelegationInformation = dto.Group.DelegationInformation;
 
                 if (dto.IsNewEntity) _dbContext.Groups.Add(dataModel);
 

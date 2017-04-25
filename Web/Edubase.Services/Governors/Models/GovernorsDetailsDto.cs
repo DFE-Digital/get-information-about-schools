@@ -38,6 +38,9 @@ namespace Edubase.Services.Governors.Models
         /// Returns whether there are any current or historic governors in this dto.
         /// </summary>
         public bool HasGovernors => (CurrentGovernors != null && CurrentGovernors.Any()) || (HistoricalGovernors != null && HistoricalGovernors.Any());
+
+        public string GroupDelegationInformation { get; set; }
+        public bool ShowDelegationInformation { get; set; }
     }
 
     public class GovernorsDetailsTexunaDto : GovernorsDetailsDto

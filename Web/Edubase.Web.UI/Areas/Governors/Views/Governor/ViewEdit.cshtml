@@ -18,7 +18,10 @@
             }
 
             <h2 class="heading-medium">Governance</h2>
-            @ShowDelegationInformation()
+            @if (Model.ShowDelegationInformation)
+            {
+                @ShowDelegationInformation()
+            }
 
             @DisplayGovernanceMode()
             
@@ -53,14 +56,17 @@ else
 }
 
 
-@if (Model.GroupUId.HasValue && Model.DomainModel.HasGovernors)
+@if (Model.DomainModel.HasGovernors)
 {
-    if (!Model.EditMode)
-     {
-         <div class="column-full">
-             @ShowDelegationInformation()
-         </div>
-     }
+    if (Model.ShowDelegationInformation)
+    {
+        if (!Model.EditMode)
+        {
+            <div class="column-full">
+                @ShowDelegationInformation()
+            </div>
+        }
+    }
 
     @DisplayGovernors()
 
@@ -80,7 +86,7 @@ else
             Show details
         </a>
         <div class="expanding-content panel-indent">
-            @Model.DelegationInformation
+            @(Model.DelegationInformation ?? "Not recorded")
         </div>
     </div>
     if (Model.EditMode)
@@ -91,8 +97,6 @@ else
             </div>
         </div>
     }
-
-//Html.ActionLink("Edit", "GroupEditDelegation", "Governor", new {GroupUId = Model.GroupUId}, new {@class = "button button-grey"});
 
 }
 
