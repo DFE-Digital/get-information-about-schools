@@ -38,7 +38,10 @@
 
                         </div>
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                        <button type="submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Text">Search</button>
+                        <div class="form-group">
+                            <button type="submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Text">Search</button>
+                        </div>
+                        
                         <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                     </div>
                 </fieldset>
@@ -72,7 +75,9 @@
                                 <label for="include-open-establishments-location" class="edubase-button-checkbox">Include open schools only</label>
                             </span>
                         </div>
-                        <button type="submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Location">Search</button>
+                        <div class="form-group">
+                            <button type="submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Location">Search</button>
+                        </div>
                     </div>
 
                 </fieldset>
@@ -94,7 +99,7 @@
                     </span>
                     <div class="expanding-search-field" id="searchby-la-ref">
                         <span class="search-hint">Enter one or more local authorities</span>
-                        <div class="selected-las">
+                        <div class="selected-las form-group">
                             <div id="la-id-target">
 
                                 @foreach (var id in Model.SelectedLocalAuthorityIds)
@@ -123,9 +128,9 @@
     
                         
                         @Html.HiddenFieldsFromQueryString()
-                       
-                        <button type="submit" class="button mobile-full-width button-below" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>                           
-                       
+                        <div class="form-group">
+                            <button type="submit" class="button mobile-full-width button-below" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>                           
+                        </div>
                     </div>
                 }
 

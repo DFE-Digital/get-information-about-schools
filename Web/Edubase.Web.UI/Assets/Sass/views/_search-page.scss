@@ -29,11 +29,14 @@
 .edubase-search-element {
     display: block;
     margin-bottom: 20px;
-    padding: 4px;
+    padding: 4px 0;
     width: 100%;
     clear: both;
-    overflow: hidden;
 
+
+    .checkbox-wrap {
+        margin-left: 0;
+    }
     .bold-small {
         display: block;
     }

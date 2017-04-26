@@ -108,7 +108,7 @@
 .remove-suggest-la {
     background-color: $grey-3;       
     color: $black;
-    padding: 4px 32px 4px 4px;
+    padding: 5px 32px 4px 5px;
     text-decoration: none;
     font-size: 14px;
     margin-right: 3px;
@@ -120,9 +120,9 @@
         content: '';
         position: absolute;
         right: 6px;
-        top: 7px;
-        width: 12px;
-        height: 12px;
+        top: 8px;
+        width: 10px;
+        height: 10px;
         background-image: file-url('icons/suggest-remove.png');
         background-repeat: no-repeat;
         background-size: cover;
