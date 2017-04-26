@@ -86,7 +86,9 @@ namespace Edubase.Web.UI.Models
 
         public string Address_PostCode { get; set; }
 
+        public string OldHeadFirstName { get; set; }
         public string HeadFirstName { get; set; }
+        public string OldHeadLastName { get; set; }
         public string HeadLastName { get; set; }
         public int? HeadTitleId { get; set; }
         public ContactDetailsViewModel Contact { get; set; } = new ContactDetailsViewModel();

@@ -3,6 +3,7 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Validation;
 using FluentValidation;
 using System.Linq;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Models.Validators
 {
@@ -51,8 +52,18 @@ namespace Edubase.Web.UI.Models.Validators
             RuleFor(x => x.LocalAuthorityId).NotEmpty().WithMessage("Local authority is invalid");
             RuleFor(x => x.TypeId).NotEmpty().WithMessage("Type is invalid");
             RuleFor(x => x.StatusId).NotEmpty().WithMessage("Status is invalid");
-        }
-        
 
+            RuleFor(x => x.HeadFirstName)
+                .Must(x => !string.IsNullOrWhiteSpace(x))
+                .WithMessage("Please enter the headteacher/principal's first name")
+                .WithSummaryMessage("You have not entered the headteacher / principal's first name")
+                .When(x => EnumSets.AcademiesAndFreeSchools.Contains(x.TypeId.Value) && !string.IsNullOrWhiteSpace(x.OldHeadFirstName));
+
+            RuleFor(x => x.HeadLastName)
+                .Must(x => !string.IsNullOrWhiteSpace(x))
+                .WithMessage("Please enter the headteacher/principal's last name")
+                .WithSummaryMessage("You have not entered the headteacher / principal's last name")
+                .When(x => EnumSets.AcademiesAndFreeSchools.Contains(x.TypeId.Value) && !string.IsNullOrWhiteSpace(x.OldHeadLastName));
+        }
     }
 }
