@@ -69,7 +69,6 @@
             var $inputField = $('.floating-text-field-wrap');
             var previouslySelected = $.inArray(la.id, selectedLocalAuthorities) > -1;
 
-            console.log("previouslySelected " + previouslySelected);
 
             if (!previouslySelected) {
                 selectedLocalAuthorities.push(la.id);
@@ -184,7 +183,6 @@
         $(targetInputElementName).on('keydown', function(e) {
             if (e.which === 13) {
                 e.preventDefault();
-                console.log('Enter press...');
                 $(".tt-suggestion:first-child").click();
             }
         });
