@@ -58,8 +58,8 @@
                     <dd>@Model.Nationality</dd>
                 </dl>
 
-                @Html.EditorFor(x => x.AppointmentStartDate)
-                @Html.EditorFor(x => x.AppointmentEndDate)
+                @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting })
+                @Html.EditorFor(x => x.AppointmentEndDate, new { @readonly = Model.PreExisting })
             </div>
         </div>
     </div>

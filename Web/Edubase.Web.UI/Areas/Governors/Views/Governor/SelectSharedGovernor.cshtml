@@ -11,6 +11,7 @@
         <div class="column-two-thirds">
             @using (Html.BeginForm("SelectSharedGovernor", "Governor", FormMethod.Post))
             {
+                @Html.HiddenFor(x => x.GovernorType);
                 if (Model.Governors.Any())
                 {
                     <div class="button-row">
@@ -32,7 +33,7 @@
                         @Html.HiddenFor(x => x.Role)
                     
                         <ul>
-                            @for (var index = 0; index < Model.Governors.Count(); index++)
+                            @for (var index = 0; index < Model.Governors.Count; index++)
                             {
                                 @Html.EditorFor(x => x.Governors[index])
                             }
