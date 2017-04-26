@@ -158,7 +158,7 @@
                                 @(Model.DisplayPolicy.HeadteacherLabel) first name
                             </label>
                             @Html.TextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", placeholder = "First name" })
-
+                            @Html.HiddenFor(x => x.OldHeadFirstName)
                         </div>
 
                         <div class="form-group">
@@ -166,6 +166,7 @@
                                 @(Model.DisplayPolicy.HeadteacherLabel) last name
                             </label>
                             @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
+                            @Html.HiddenFor(x => x.OldHeadLastName)
                         </div>
                     }
 

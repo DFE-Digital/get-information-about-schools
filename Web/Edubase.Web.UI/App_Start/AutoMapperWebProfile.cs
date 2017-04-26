@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Edubase.Data.Entity.ComplexTypes;
-using Edubase.Services.Domain;
 using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Models;
 using System;
@@ -11,7 +9,10 @@ namespace Edubase.Web.UI
     {
         public AutoMapperWebProfile()
         {
-            CreateMap<EditEstablishmentModel, EstablishmentModel>().ReverseMap();
+            CreateMap<EditEstablishmentModel, EstablishmentModel>();
+            CreateMap<EstablishmentModel, EditEstablishmentModel>()
+                .ForMember(dst => dst.OldHeadFirstName, mapping => mapping.MapFrom(src => src.HeadFirstName))
+                .ForMember(dst => dst.OldHeadLastName, mapping => mapping.MapFrom(src => src.HeadLastName));
             CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();
             CreateMap<DateTime?, DateTimeViewModel>().ConvertUsing<DateTimeViewModelTypeConverter>();
         }
