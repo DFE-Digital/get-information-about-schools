@@ -8,14 +8,9 @@
 @if (Model.EditMode)
 {
         <div class="column-half">
-            @if (Model.GroupUId.HasValue)
-            {
-                @Html.ActionLink("View governance", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel" })
-            }
-            else
-            {
-                @Html.ActionLink("View governance", "Details", "Establishment", null, null, "governance", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" })
-            }
+            @(Model.GroupUId.HasValue 
+                ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-grey cancel"}) 
+                : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "governance", new {area = "", id = Model.EstablishmentUrn}, new {@class = "button button-grey cancel"}))
 
             <h2 class="heading-medium">Governance</h2>
             @if (Model.ShowDelegationInformation)
