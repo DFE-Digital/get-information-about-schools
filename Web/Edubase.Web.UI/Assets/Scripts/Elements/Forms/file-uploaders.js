@@ -1,18 +1,13 @@
 ﻿(function($) {
     'use strict';
 
-    var defaults = {}
-
     function Uploader(el, opts) {
         this.el = el;
-        this.opts = $.extend({}, defaults, opts);
-
         this.init();
     }
 
     Uploader.prototype = {
         init: function() {
-            console.log("init");
             var $el = $(this.el),
                 opts = this.opts;
 
