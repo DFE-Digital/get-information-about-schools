@@ -3,7 +3,7 @@
     var validationResult = (FluentValidation.Results.ValidationResult) ViewBag.FVErrors;
 }
 
-@if (!Model.IsValid)
+@if (!Model.IsValid && validationResult != null)
 {
     <div class="error-summary">
         <h2 class="heading-medium error-summary-heading">Incorrect or missing details</h2>

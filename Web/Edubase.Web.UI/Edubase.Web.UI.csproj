@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -280,7 +280,7 @@
     <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
     <Compile Include="Areas\Governors\Models\CreateEditGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\EditGovernanceModeViewModel.cs" />
-    <Compile Include="Areas\Governors\Models\EditGroupDelegationInformation.cs" />
+    <Compile Include="Areas\Governors\Models\EditGroupDelegationInformationViewModel.cs" />
     <Compile Include="Areas\Governors\Models\EditSharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
@@ -291,6 +291,7 @@
     <Compile Include="Areas\Governors\Models\SelectSharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\SharedGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\Validators\CreateEditGovernorViewModelValidator.cs" />
+    <Compile Include="Areas\Governors\Models\Validators\EditGroupDelegationInformationViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\GovernorsGridViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\GovernorViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\ReplaceChairViewModelValidator.cs" />

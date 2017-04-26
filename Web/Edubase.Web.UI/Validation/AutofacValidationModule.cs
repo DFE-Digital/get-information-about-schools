@@ -1,16 +1,9 @@
 ﻿using Autofac;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
-using Edubase.Web.UI.Areas.Groups.Models;
-using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
-using Edubase.Web.UI.Areas.Groups.Models.Validators;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Edubase.Web.UI.Validation
 {
@@ -32,6 +25,10 @@ namespace Edubase.Web.UI.Validation
 
             builder.RegisterType<ReplaceChairViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<ReplaceChairViewModel>))
+                .As<IValidator>();
+
+            builder.RegisterType<EditGroupDelegationInformationViewModelValidator>()
+                .Keyed<IValidator>(typeof(IValidator<EditGroupDelegationInformationViewModel>))
                 .As<IValidator>();
         }
     }

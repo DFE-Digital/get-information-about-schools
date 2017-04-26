@@ -19,6 +19,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Services.Groups.Models;
+using Edubase.Web.UI.Areas.Governors.Models.Validators;
+using FluentValidation.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -537,7 +539,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var group = await _groupReadService.GetAsync(groupUId, User);
             if (group.Success)
             {
-                var model = new EditGroupDelegationInformation
+                var model = new EditGroupDelegationInformationViewModel
                 {
                     DelegationInformation = group.ReturnValue.DelegationInformation
                 };
@@ -551,8 +553,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         [HttpPost]
         [Route(GROUP_EDIT_DELEGATION)]
-        public async Task<ActionResult> GroupEditDelegation(EditGroupDelegationInformation model)
+        public async Task<ActionResult> GroupEditDelegation(EditGroupDelegationInformationViewModel model)
         {
+            var result = await new EditGroupDelegationInformationViewModelValidator().ValidateAsync(model);
+            result.AddToModelState(ModelState, string.Empty);
+
             if (ModelState.IsValid)
             {
                 var groupResult = await _groupReadService.GetAsync(model.GroupUId.Value, User);
@@ -566,8 +571,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return RedirectToRoute("GroupEditGovernance", new { GroupUId = model.GroupUId });
             }
 
-            await PopulateLayoutProperties(model, null, model.GroupUId);
-
+            ViewBag.FVErrors = result;
+            await PopulateLayoutProperties(model, null, model.GroupUId); 
             return View(model);
         }
 
