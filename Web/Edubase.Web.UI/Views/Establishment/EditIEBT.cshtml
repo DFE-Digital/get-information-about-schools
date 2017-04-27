@@ -5,146 +5,186 @@
 @{
     Layout = "_EditLayoutPage.cshtml";
 }
-<div class="tab-content">
 
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(x => x.Urn)
-    @Html.HiddenFor(x => x.Name)
-    @Html.HiddenFor(x => x.SelectedTab)
+@using (Html.BeginForm())
+{
+    <div class="tab-content" id="edit-iebt">
 
-    <div class="" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.Urn)
+        @Html.HiddenFor(x => x.Name)
+        @Html.HiddenFor(x => x.SelectedTab)
+
+        <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
         
-        <h2 class="heading-medium" style="margin-top:0;">Independent Education and Boarding Team</h2>
-        <div class="column-half">
+            <h2 class="heading-medium">Independent Education and Boarding Team</h2>
+            <div class="column-half">
 
-            <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveIEBT">Save</button>
-            @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveIEBT">Save</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
                 
-            <div class="form-group first">
-                <label for="notes">Notes</label>
-                @Html.TextAreaFor(x=>x.Notes, new { @class = "form-control", rows = "10" })
-            </div>
+                <div class="form-group first">
+                    <label for="notes">Notes</label>
+                    @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "10" })
+                </div>
 
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
-                <label for="boarders">Boarders</label>
-                @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control", id = "boarders" })
-            </div>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
+                    <label for="boarders">Boarders</label>
+                    @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control", id = "boarders" })
+                </div>
                 
-            @RenderDateSelector(x => x.DateOfTheLastBridgeVisit, x => x.DateOfTheLastBridgeVisit.Day, x => x.DateOfTheLastBridgeVisit.Month, x => x.DateOfTheLastBridgeVisit.Year, "Date of last Bridge visit")
-            @RenderDateSelector(x => x.OfstedInspectionDate, x => x.OfstedInspectionDate.Day, x => x.OfstedInspectionDate.Month, x => x.OfstedInspectionDate.Year, "Date of last Ofsted visit")
-            @RenderDateSelector(x => x.DateOfTheLastISIVisit, x => x.DateOfTheLastISIVisit.Day, x => x.DateOfTheLastISIVisit.Month, x => x.DateOfTheLastISIVisit.Year, "Date of last ISI visit")
-            @RenderDateSelector(x => x.DateOfTheLastWelfareVisit, x => x.DateOfTheLastWelfareVisit.Day, x => x.DateOfTheLastWelfareVisit.Month, x => x.DateOfTheLastWelfareVisit.Year, "Date of last welfare visit")
-            @RenderDateSelector(x => x.DateOfTheLastFPVisit, x => x.DateOfTheLastFPVisit.Day, x => x.DateOfTheLastFPVisit.Month, x => x.DateOfTheLastFPVisit.Year, "Date of last FP visit")
-            @RenderDateSelector(x => x.DateOfTheLastSISVisit, x => x.DateOfTheLastSISVisit.Day, x => x.DateOfTheLastSISVisit.Month, x => x.DateOfTheLastSISVisit.Year, "Date of last SIS visit")
-            @RenderDateSelector(x => x.NextOfstedVisit, x => x.NextOfstedVisit.Day, x => x.NextOfstedVisit.Month, x => x.NextOfstedVisit.Year, "Next Ofsted visit")
-            @RenderDateSelector(x => x.NextGeneralActionRequired, x => x.NextGeneralActionRequired.Day, x => x.NextGeneralActionRequired.Month, x => x.NextGeneralActionRequired.Year, "Next general action required")
-            @RenderDateSelector(x => x.NextActionRequiredByWEL, x => x.NextActionRequiredByWEL.Day, x => x.NextActionRequiredByWEL.Month, x => x.NextActionRequiredByWEL.Year, "Next action required by WEL")
-            @RenderDateSelector(x => x.NextActionRequiredByFP, x => x.NextActionRequiredByFP.Day, x => x.NextActionRequiredByFP.Month, x => x.NextActionRequiredByFP.Year, "Next action required by FP")
+                @RenderDateSelector(x => x.DateOfTheLastBridgeVisit, x => x.DateOfTheLastBridgeVisit.Day, x => x.DateOfTheLastBridgeVisit.Month, x => x.DateOfTheLastBridgeVisit.Year, "Date of last Bridge visit")
+                @RenderDateSelector(x => x.OfstedInspectionDate, x => x.OfstedInspectionDate.Day, x => x.OfstedInspectionDate.Month, x => x.OfstedInspectionDate.Year, "Date of last Ofsted visit")
+                @RenderDateSelector(x => x.DateOfTheLastISIVisit, x => x.DateOfTheLastISIVisit.Day, x => x.DateOfTheLastISIVisit.Month, x => x.DateOfTheLastISIVisit.Year, "Date of last ISI visit")
+                @RenderDateSelector(x => x.DateOfTheLastWelfareVisit, x => x.DateOfTheLastWelfareVisit.Day, x => x.DateOfTheLastWelfareVisit.Month, x => x.DateOfTheLastWelfareVisit.Year, "Date of last welfare visit")
+                @RenderDateSelector(x => x.DateOfTheLastFPVisit, x => x.DateOfTheLastFPVisit.Day, x => x.DateOfTheLastFPVisit.Month, x => x.DateOfTheLastFPVisit.Year, "Date of last FP visit")
+                @RenderDateSelector(x => x.DateOfTheLastSISVisit, x => x.DateOfTheLastSISVisit.Day, x => x.DateOfTheLastSISVisit.Month, x => x.DateOfTheLastSISVisit.Year, "Date of last SIS visit")
+                @RenderDateSelector(x => x.NextOfstedVisit, x => x.NextOfstedVisit.Day, x => x.NextOfstedVisit.Month, x => x.NextOfstedVisit.Year, "Next Ofsted visit")
+                @RenderDateSelector(x => x.NextGeneralActionRequired, x => x.NextGeneralActionRequired.Day, x => x.NextGeneralActionRequired.Month, x => x.NextGeneralActionRequired.Year, "Next general action required")
+                @RenderDateSelector(x => x.NextActionRequiredByWEL, x => x.NextActionRequiredByWEL.Day, x => x.NextActionRequiredByWEL.Month, x => x.NextActionRequiredByWEL.Year, "Next action required by WEL")
+                @RenderDateSelector(x => x.NextActionRequiredByFP, x => x.NextActionRequiredByFP.Day, x => x.NextActionRequiredByFP.Month, x => x.NextActionRequiredByFP.Year, "Next action required by FP")
 
-            <div class="form-group">
-                <label for="InspectorateId">Inspectorate</label>
-                @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "form-control" })
-            </div>
+                <div class="form-group">
+                    <label for="InspectorateId">Inspectorate</label>
+                    @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "form-control" })
+                </div>
 
-            <div class="form-group">
-                <label for="InspectorateId">Independent school type</label>
-                @Html.DropDownListFor(x => x.IndependentSchoolTypeId, Model.IndependentSchoolTypes, "", new { @class = "form-control" })
-            </div>
+                <div class="form-group">
+                    <label for="InspectorateId">Independent school type</label>
+                    @Html.DropDownListFor(x => x.IndependentSchoolTypeId, Model.IndependentSchoolTypes, "", new { @class = "form-control" })
+                </div>
 
-            @RenderTextBox("Charity organisation", x => x.CharityOrganisation)
-            @RenderNumericTextBox("Charity registration number", x => x.CharityRegistrationNumber)
-            @RenderNumericTextBox("Total number of full time pupils", x => x.TotalNumberOfFullTimePupils)
-            @RenderNumericTextBox("Total number of part time pupils", x => x.TotalNumberOfPartTimePupils)
-            @RenderNumericTextBox("Total number of pupils of compulsory school age", x => x.TotalNumberOfPupilsOfCompulsorySchoolAge)
-            @RenderNumericTextBox("Total number of special pupils under a SEN statement/ECHP", x => x.NumberOfSpecialPupilsUnderASENStatementEHCP)
-            @RenderNumericTextBox("Number of special pupils not under a SEN statement/EHCP", x => x.NumberOfSpecialPupilsNotUnderASENStatementEHCP)
-            @RenderNumericTextBox("Total number of pupils in public care", x => x.TotalNumberOfPupilsInPublicCare)
+                @RenderTextBox("Charity organisation", x => x.CharityOrganisation)
+                @RenderNumericTextBox("Charity registration number", x => x.CharityRegistrationNumber)
+                @RenderNumericTextBox("Total number of full time pupils", x => x.TotalNumberOfFullTimePupils)
+                @RenderNumericTextBox("Total number of part time pupils", x => x.TotalNumberOfPartTimePupils)
+                @RenderNumericTextBox("Total number of pupils of compulsory school age", x => x.TotalNumberOfPupilsOfCompulsorySchoolAge)
+                @RenderNumericTextBox("Total number of special pupils under a SEN statement/ECHP", x => x.NumberOfSpecialPupilsUnderASENStatementEHCP)
+                @RenderNumericTextBox("Number of special pupils not under a SEN statement/EHCP", x => x.NumberOfSpecialPupilsNotUnderASENStatementEHCP)
+                @RenderNumericTextBox("Total number of pupils in public care", x => x.TotalNumberOfPupilsInPublicCare)
                 
-            @RenderNumericTextBox("PT boys (aged 2 and under)", x => x.PTBoysAged2AndUnder)
-            @RenderNumericTextBox("PT boys (aged 3)", x => x.PTBoysAged3)
-            @RenderNumericTextBox("PT boys (aged 4a)", x => x.PTBoysAged4A)
-            @RenderNumericTextBox("PT boys (aged 4b)", x => x.PTBoysAged4B)
-            @RenderNumericTextBox("PT boys (aged 4c)", x => x.PTBoysAged4C)
-            @RenderNumericTextBox("Total number of boys in boarding schools", x => x.TotalNumberOfBoysInBoardingSchools)
+                @RenderNumericTextBox("PT boys (aged 2 and under)", x => x.PTBoysAged2AndUnder)
+                @RenderNumericTextBox("PT boys (aged 3)", x => x.PTBoysAged3)
+                @RenderNumericTextBox("PT boys (aged 4a)", x => x.PTBoysAged4A)
+                @RenderNumericTextBox("PT boys (aged 4b)", x => x.PTBoysAged4B)
+                @RenderNumericTextBox("PT boys (aged 4c)", x => x.PTBoysAged4C)
+                @RenderNumericTextBox("Total number of boys in boarding schools", x => x.TotalNumberOfBoysInBoardingSchools)
 
-            @RenderNumericTextBox("PT girls (aged 2 and under) ", x => x.PTGirlsAged2AndUnder)
-            @RenderNumericTextBox("PT girls (aged 3)", x => x.PTGirlsAged3)
-            @RenderNumericTextBox("PT girls (aged 4a)", x => x.PTGirlsAged4A)
-            @RenderNumericTextBox("PT girls (aged 4b)", x => x.PTGirlsAged4B)
-            @RenderNumericTextBox("PT girls (aged 4c)", x => x.PTGirlsAged4C)
-            @RenderNumericTextBox("Total number of girls in boarding schools ", x => x.TotalNumberOfGirlsInBoardingSchools)
+                @RenderNumericTextBox("PT girls (aged 2 and under) ", x => x.PTGirlsAged2AndUnder)
+                @RenderNumericTextBox("PT girls (aged 3)", x => x.PTGirlsAged3)
+                @RenderNumericTextBox("PT girls (aged 4a)", x => x.PTGirlsAged4A)
+                @RenderNumericTextBox("PT girls (aged 4b)", x => x.PTGirlsAged4B)
+                @RenderNumericTextBox("PT girls (aged 4c)", x => x.PTGirlsAged4C)
+                @RenderNumericTextBox("Total number of girls in boarding schools ", x => x.TotalNumberOfGirlsInBoardingSchools)
 
-            @RenderNumericTextBox("Total number of full time staff", x => x.TotalNumberOfFullTimeStaff)
-            @RenderNumericTextBox("Total number of part time staff", x => x.TotalNumberOfPartTimeStaff)
-
-
-            @RenderNumericTextBox("Lowest annual rate for day pupils", x => x.HighestAnnualRateForDayPupils)
-            @RenderNumericTextBox("Highest annual rate for day pupils", x => x.LowestAnnualRateForDayPupils)
-            @RenderNumericTextBox("Lowest annual rate for boarding pupils", x => x.HighestAnnualRateForBoardingPupils)
-            @RenderNumericTextBox("Highest annual rate for boarding pupils", x => x.LowestAnnualRateForBoardingPupils)
+                @RenderNumericTextBox("Total number of full time staff", x => x.TotalNumberOfFullTimeStaff)
+                @RenderNumericTextBox("Total number of part time staff", x => x.TotalNumberOfPartTimeStaff)
 
 
-            <div class="form-group">
-                @Html.LabelFor(x=>x.ProvisionBoardingId, "Boarding establishment")
-                @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control" })
-            </div>
+                @RenderNumericTextBox("Lowest annual rate for day pupils", x => x.HighestAnnualRateForDayPupils)
+                @RenderNumericTextBox("Highest annual rate for day pupils", x => x.LowestAnnualRateForDayPupils)
+                @RenderNumericTextBox("Lowest annual rate for boarding pupils", x => x.HighestAnnualRateForBoardingPupils)
+                @RenderNumericTextBox("Highest annual rate for boarding pupils", x => x.LowestAnnualRateForBoardingPupils)
 
 
-            @RenderTextBox("Proprietor's name", x => x.ProprietorName)
-            @RenderTextBox("Proprietor's street", x => x.ProprietorsStreet)
-            @RenderTextBox("Proprietor's locality", x => x.ProprietorsLocality)
-            @RenderTextBox("Proprietor's address 3", x => x.ProprietorsAddress3)
-            @RenderTextBox("Proprietor's town", x => x.ProprietorsTown)
-            @RenderTextBox("Proprietor's county", x => x.ProprietorsCounty)
-            @RenderTextBox("Proprietor's postcode", x => x.ProprietorsPostcode)
-            @RenderTextBox("Proprietor's telephone", x => x.ProprietorsTelephoneNumber)
-            @RenderTextBox("Proprietor's fax", x => x.ProprietorsFaxNumber)
-            @RenderTextBox("Proprietor's email", x => x.ProprietorsEmail)
-            @RenderTextBox("Proprietor's preferred job title", x => x.ProprietorsPreferredJobTitle)
-
-            @RenderTextBox("Chair of proprietor's name", x => x.ChairOfProprietorsBodyName)
-            @RenderTextBox("Chair of proprietor's street", x => x.ChairOfProprietorsBodyStreet)
-            @RenderTextBox("Chair of proprietor's locality", x => x.ChairOfProprietorsBodyLocality)
-            @RenderTextBox("Chair of proprietor's address 3", x => x.ChairOfProprietorsBodyAddress3)
-            @RenderTextBox("Chair of proprietor's town", x => x.ChairOfProprietorsBodyTown)
-            @RenderTextBox("Chair of proprietor's county", x => x.ChairOfProprietorsBodyCounty)
-            @RenderTextBox("Chair of proprietor's postcode", x => x.ChairOfProprietorsBodyPostcode)
-            @RenderTextBox("Chair of proprietor's telephone", x => x.ChairOfProprietorsBodyTelephoneNumber)
-            @RenderTextBox("Chair of proprietor's fax", x => x.ChairOfProprietorsBodyFaxNumber)
-            @RenderTextBox("Chair of proprietor's email", x => x.ChairOfProprietorsBodyEmail)
-            @RenderTextBox("Chair of proprietor's preferred job title", x => x.ChairOfProprietorsBodyPreferredJobTitle)
-
-            <div class="form-group">
-                @Html.LabelFor(x => x.AccommodationChangedId, "Accommodation changes")
-                @Html.DropDownListFor(x => x.AccommodationChangedId, Model.AccommodationChanges, "", new { @class = "form-control" })
-            </div>
-
-            <br />
+                <div class="form-group">
+                    @Html.LabelFor(x => x.ProvisionBoardingId, "Boarding establishment")
+                    @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control" })
+                </div>
                 
-            <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveIEBT">Save</button>
-            @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                <fieldset class="toggle-panels" id="proprietor-radios">
+                    <legend class="bold-legend">Proprietor</legend>
+                    <span class="radio-button-wrap">
+                        <input type="radio" name="proprietor-type" value="single" id="proprietor-type-single" data-toggle-panel="#proprietor-single" />
+                        <label class="edubase-button-radio" for="proprietor-type-single">
+                            Single proprietor
+                        </label>
+                    </span>
+                    <span class="radio-button-wrap">
+                        <input type="radio" name="proprietor-type" value="body" id="proprietor-type-body" data-toggle-panel="#proprietor-body" />
+                        <label class="edubase-button-radio" for="proprietor-type-body">
+                            Proprietory body
+                        </label>
+                    </span>
+                </fieldset>
+                <div id="proprietor-single" class="panel-indent edu-edit-panel">
+                    <h4 class="heading-small">Proprietor details</h4>
+                    <div id="cloneable-fields-container">
+                        @RenderTextBox("Preferred job title", x => x.ProprietorsPreferredJobTitle)
+                        @RenderTextBox("Name", x => x.ProprietorName, "cloneable")
+                        @RenderTextBox("Street", x => x.ProprietorsStreet, "cloneable")
+                        @RenderTextBox("Locality", x => x.ProprietorsLocality, "cloneable")
+                        @RenderTextBox("Address 3", x => x.ProprietorsAddress3, "cloneable")
+                        @RenderTextBox("Town", x => x.ProprietorsTown, "cloneable")
+                        @RenderTextBox("County", x => x.ProprietorsCounty, "cloneable")
+                        @RenderTextBox("Postcode", x => x.ProprietorsPostcode, "cloneable",  "postcode-field")
+                        @RenderTextBox("Telephone number", x => x.ProprietorsTelephoneNumber, "cloneable")
+                        @RenderTextBox("Fax number", x => x.ProprietorsFaxNumber, "cloneable")
+                        @RenderTextBox("Email", x => x.ProprietorsEmail, "cloneable")
+                    </div>
+                   
+
+                </div>
+                <div id="proprietor-body" class="panel-indent edu-edit-panel">
+                    <h4 class="heading-small">Proprietor body details</h4>
+                    <div id="field-clone-target">
+                        
+                    </div>
+                    
+                    
+                    <h4 class="heading-small edu-section-break">Chair of the proprietary body details</h4>
+
+                    @RenderTextBox("Preferred job title", x => x.ChairOfProprietorsBodyPreferredJobTitle)
+                    @RenderTextBox("Name", x => x.ChairOfProprietorsBodyName)
+                    @RenderTextBox("Street", x => x.ChairOfProprietorsBodyStreet)
+                    @RenderTextBox("Locality", x => x.ChairOfProprietorsBodyLocality)
+                    @RenderTextBox("Address 3", x => x.ChairOfProprietorsBodyAddress3)
+                    @RenderTextBox("Town", x => x.ChairOfProprietorsBodyTown)
+                    @RenderTextBox("County", x => x.ChairOfProprietorsBodyCounty)
+                    @RenderTextBox("Postcode", x => x.ChairOfProprietorsBodyPostcode, null, "postcode-field")
+                    @RenderTextBox("Telephone number", x => x.ChairOfProprietorsBodyTelephoneNumber)
+                    @RenderTextBox("Fax number", x => x.ChairOfProprietorsBodyFaxNumber)
+                    @RenderTextBox("Email", x => x.ChairOfProprietorsBodyEmail)
+
+                </div>
+                
+                
+
+                <div class="form-group">
+                    @Html.LabelFor(x => x.AccommodationChangedId, "Accommodation changes")
+                    @Html.DropDownListFor(x => x.AccommodationChangedId, Model.AccommodationChanges, "", new { @class = "form-control" })
+                </div>
+
+                <div class="button-row">
+                    <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveIEBT">Save</button>
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                </div>
+                
+
+            </div>
 
         </div>
 
-    </div>
-
-    @if (Model.ChangesSummary != null)
-    {
-        Html.RenderPartial("Partials/_ConfirmChanges");
-        <br />
-        <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
-        <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
-    }
+        @if (Model.ChangesSummary != null)
+        {
+            Html.RenderPartial("Partials/_ConfirmChanges");
+            <div class="button-row">
+                <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
+                <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
+            </div>            
+        }
     
-</div>
+    </div>
+}
 
-@helper RenderTextBox(string label, Expression<Func<ViewModel, string>> fnc)
+@helper RenderTextBox(string label, Expression<Func<ViewModel, string>> fnc, string wrapperClass = "", string fieldClasses = "")
 {
     var id = label.Replace(" ", "").ToLower();
-    <div class="form-group">
-        @Html.LabelFor(fnc, label);
-        @Html.TextBoxFor(fnc, new { @class = "form-control" })
+    var classes = "form-control " + fieldClasses;
+    <div class="form-group @wrapperClass">
+        @Html.LabelFor(fnc, label, new { @class = "form-label" })
+        @Html.TextBoxFor(fnc, new { @class = classes })
     </div>
 }
 
@@ -152,8 +192,8 @@
 {
     var id = label.Replace(" ", "").ToLower();
     <div class="form-group">
-        @Html.LabelFor(fnc, label);
-        @Html.TextBoxFor(fnc, new { @class = "form-control", type = "numeric" })
+        @Html.LabelFor(fnc, label, new { @class = "form-label" })
+        @Html.TextBoxFor(fnc, new { @class = "form-control", type = "text" })
     </div>
 }
 
@@ -182,3 +222,4 @@
         </fieldset>
     </div>
 }
+

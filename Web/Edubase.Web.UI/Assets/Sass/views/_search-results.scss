@@ -254,9 +254,13 @@ ul.approval-items{
         background-color:$turquoise;
         font-size:15px;
         color:white;
-        padding:6px 36px 6px 36px;
+        padding: 12px 36px 12px 44px;
         position:relative;
         margin-bottom:10px;
+        
+        p {
+            margin: 0;
+        }
 
         .tick {
             position:absolute;
@@ -264,17 +268,17 @@ ul.approval-items{
             top:0;
             width:35px;
             height:35px;
-            background-image: url('/public/assets/images/icons/tick.PNG');
+            background-image: url('/public/assets/images/icons/tick.png');
             background-repeat:no-repeat;
             background-size:contain;
         }
         .cross {
             position:absolute;
-            background-image: url('/public/assets/images/icons/cross.PNG');
-            top:0;
-            right:0;
-            width:31px;
-            height:31px;
+            background-image: url('/public/assets/images/icons/white-cross-transparent.png');
+            top:10px;
+            right:8px;
+            width:20px;
+            height:20px;
             background-repeat:no-repeat;
             background-size:contain;
             cursor:pointer;

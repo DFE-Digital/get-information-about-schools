@@ -1,7 +1,7 @@
-
+#if!(TEXAPI)
 namespace Edubase.Services.Enums
 {
-    public enum eLookupTypeOfResourcedProvision
+    internal enum eLookupTypeOfResourcedProvision
     {
         NotApplicable = 1,
 		ResourceProvision = 2,
@@ -10,3 +10,4 @@ namespace Edubase.Services.Enums
 		Unknown = 5,
     }
 }   
+#endif

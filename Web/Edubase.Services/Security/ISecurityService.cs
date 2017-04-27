@@ -15,6 +15,8 @@ namespace Edubase.Services.Security
         /// </summary>
         /// <returns></returns>
         IPrincipal CreateSystemPrincipal();
+        IPrincipal CreateAnonymousPrincipal();
+
         CreateEstablishmentPermissions GetCreateEstablishmentPermission(IPrincipal principal);
         CreateGroupPermissions GetCreateGroupPermission(IPrincipal principal);
         EditEstablishmentPermissions GetEditEstablishmentPermission(IPrincipal principal);

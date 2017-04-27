@@ -1,4 +1,5 @@
-﻿using Edubase.Common.Cache;
+﻿#if(!TEXAPI)
+using Edubase.Common.Cache;
 using Edubase.Common.IO;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
@@ -62,8 +63,8 @@ namespace Edubase.Services.Governors.Downloads
             {
                 payload.Skip = 0;
                 payload.Take = 1000;
-                var results = await _governorsReadService.SearchAsync(payload);
-                progress.TotalRecordsCount = results.Count.Value;
+                var results = await _governorsReadService.SearchAsync(payload, principal);
+                progress.TotalRecordsCount = results.Count;
                 progress.Status = "Retrieving data...";
                 progress.FileExtension = ToFileExtension(format);
                 await updateProgressCache();
@@ -103,8 +104,8 @@ namespace Edubase.Services.Governors.Downloads
         }
 
         private async Task GenerateXlsxFile(GovernorSearchPayload payload, IPrincipal principal, 
-            SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache, 
-            AzureSearchResult<SearchGovernorDocument> results, string fileName)
+            SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache,
+            ApiSearchResult<SearchGovernorDocument> results, string fileName)
         {
             var headers = GetHeaders(principal);
 
@@ -134,7 +135,7 @@ namespace Edubase.Services.Governors.Downloads
                     }
 
                     payload.Skip += 1000;
-                    results = await _governorsReadService.SearchAsync(payload);
+                    results = await _governorsReadService.SearchAsync(payload, principal);
                     await updateProgressCache();
                 }
 
@@ -143,7 +144,7 @@ namespace Edubase.Services.Governors.Downloads
         }
 
 
-        private async Task GenerateCsvFile(GovernorSearchPayload payload, IPrincipal principal, SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache, AzureSearchResult<SearchGovernorDocument> results, string fileName)
+        private async Task GenerateCsvFile(GovernorSearchPayload payload, IPrincipal principal, SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache, ApiSearchResult<SearchGovernorDocument> results, string fileName)
         {
             var headers = GetHeaders(principal);
 
@@ -162,7 +163,7 @@ namespace Edubase.Services.Governors.Downloads
                         }
 
                         payload.Skip += 1000;
-                        results = await _governorsReadService.SearchAsync(payload);
+                        results = await _governorsReadService.SearchAsync(payload, principal);
                         await updateProgressCache();
                     }
                 }
@@ -215,3 +216,5 @@ namespace Edubase.Services.Governors.Downloads
     }
     
 }
+
+#endif

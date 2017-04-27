@@ -30,7 +30,7 @@ category: Forms
 // Forms
 // ==========================================================================
 // GOV.UK front end toolkit dependencies
-@import "helpers";
+//@import "helpers";
 @import "colours";
 
 // Fieldset is used to group more than one .form-group
@@ -331,4 +331,69 @@ input[disabled=disabled], select[disabled=disabled] {
 .panel-border-narrow {
     border-left: 5px $grey-2 solid;
     padding: 10px 10px 20px;
+}
+
+fieldset.column-half {
+    overflow: hidden;
+    float: none;
+}
+
+.button-row {
+    clear: both;
+    margin: 20px 0;
+
+    &.lower {
+        margin: 40px 0 20px;
+    }
+}
+
+.postcode-field {
+    width: 180px;
+    float: left;
+    margin-right: 1.5em;
+}
+
+.edubase-button {
+    font-size: 16px;
+}
+
+.block-button {
+    display: block;
+    margin: 20px 0;
+}
+
+fieldset legend.heading-small {
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 1.31em;
+    font-size: 19px;
+}
+
+.replace-address {
+    font-size: 16px;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+.lookup-heading {
+    margin-top: 1em;
+}
+
+.button-wrap {
+    //overflow: hidden;
+    padding: 3px;
+    clear: both;
+}
+
+.button-wrapper { // used to contain floats on buttons
+    overflow: hidden;
+}
+
+.inline-submit {
+    font-size: 16px;
+    margin-left: 20px;
+}
+
+textarea {
+    margin-top: 20px;
 }

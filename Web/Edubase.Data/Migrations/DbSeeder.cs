@@ -50,13 +50,38 @@ namespace Edubase.Data.Migrations
                 context.Database.ExecuteSqlCommand(sql);
             }
 
-            var commands = new[] { "ALTER DATABASE CURRENT SET CHANGE_TRACKING = ON (CHANGE_RETENTION = 2 DAYS, AUTO_CLEANUP = ON)" }
+            var commands = new[] { "ALTER DATABASE CURRENT SET CHANGE_TRACKING = ON (CHANGE_RETENTION = 2 DAYS, AUTO_CLEANUP = ON)",
+                @"SET IDENTITY_INSERT dbo.LookupGovernorRole ON; 
+                  IF NOT EXISTS(SELECT * FROM dbo.LookupGovernorRole WHERE Id = 10) 
+                  BEGIN 
+                      INSERT INTO dbo.LookupGovernorRole (Id, Name, IsDeleted, CreatedUtc, LastUpdatedUtc) VALUES (10, 'Shared Local Governor', 0, GETUTCDATE(), GETUTCDATE()) 
+                  END; 
+                  SET IDENTITY_INSERT dbo.LookupGovernorRole OFF;",
+                @"SET IDENTITY_INSERT dbo.LookupGovernorRole ON; 
+                  IF NOT EXISTS(SELECT * FROM dbo.LookupGovernorRole WHERE Id = 11) 
+                  BEGIN 
+                      INSERT INTO dbo.LookupGovernorRole (Id, Name, IsDeleted, CreatedUtc, LastUpdatedUtc) VALUES (11, 'Shared Chair of Local Governing Body', 0, GETUTCDATE(), GETUTCDATE()) 
+                  END; 
+                  SET IDENTITY_INSERT dbo.LookupGovernorRole OFF;",
+                 @"SET IDENTITY_INSERT dbo.LookupGovernorRole ON; 
+                  IF NOT EXISTS(SELECT * FROM dbo.LookupGovernorRole WHERE Id = 12) 
+                  BEGIN 
+                      INSERT INTO dbo.LookupGovernorRole (Id, Name, IsDeleted, CreatedUtc, LastUpdatedUtc) VALUES (12, 'Shared Local Governor', 0, GETUTCDATE(), GETUTCDATE()) 
+                  END; 
+                  SET IDENTITY_INSERT dbo.LookupGovernorRole OFF;",
+                 @"SET IDENTITY_INSERT dbo.LookupGovernorRole ON; 
+                  IF NOT EXISTS(SELECT * FROM dbo.LookupGovernorRole WHERE Id = 13) 
+                  BEGIN 
+                      INSERT INTO dbo.LookupGovernorRole (Id, Name, IsDeleted, CreatedUtc, LastUpdatedUtc) VALUES (13, 'Shared Chair of Local Governing Body', 0, GETUTCDATE(), GETUTCDATE()) 
+                  END; 
+                  SET IDENTITY_INSERT dbo.LookupGovernorRole OFF;"}
             .Concat(new[] { "Establishment", "Governor", "GroupCollection" }
                 .Select(x => $@"ALTER TABLE {x} ENABLE CHANGE_TRACKING WITH(TRACK_COLUMNS_UPDATED = ON)"));
             commands.ForEach(x => Common.Invoker.IgnoringException(() => context.Database.ExecuteSqlCommand(x)));
 
 
             Common.Invoker.IgnoringException(() => context.Database.ExecuteSqlCommand(StackExchange.Profiling.Storage.SqlServerStorage.TableCreationScript));
+
         }
     }
 }

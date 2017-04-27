@@ -66,9 +66,12 @@
         <!--[if gt IE 9]>
         <script src="/public/termi/element.details.js"></script>
         <!--<![endif]-->
-        
+      
+        <!--[if (gt IE 8)|!(IE)]><!-->
+            <script src="/public/assets/scripts/application.js?v=@version"></script>
+        <!--<![endif]-->
 
-        <script src="/public/assets/scripts/application.js?v=@version"></script>
+
         @(RenderSection("ViewScripts", required: false))
     }
 

@@ -1,6 +1,8 @@
+using System;
 
 namespace Edubase.Services.Enums
 {
+    [Obsolete("There should be no need to use this enum after Texuna integration")]
     public enum eLocalAuthority
     {
         DoesNotApply = 0,

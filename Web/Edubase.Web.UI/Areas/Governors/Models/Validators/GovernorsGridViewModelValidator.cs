@@ -1,10 +1,5 @@
-﻿using Edubase.Web.UI.Models;
-using Edubase.Web.UI.Validation;
+﻿using Edubase.Web.UI.Validation;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Edubase.Web.UI.Areas.Governors.Models.Validators
 {

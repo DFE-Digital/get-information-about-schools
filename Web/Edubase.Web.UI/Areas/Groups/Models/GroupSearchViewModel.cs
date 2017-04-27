@@ -6,9 +6,6 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using static Edubase.Services.Groups.Search.GroupSearchPayload;
 
 namespace Edubase.Web.UI.Areas.Groups.Models
 {
@@ -19,6 +16,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public IList<SearchGroupDocument> Results { get; set; } = new List<SearchGroupDocument>();
 
         public List<LookupItemViewModel> GroupTypes { get; set; }
+        public List<LookupItemViewModel> GroupStatuses { get; set; }
 
         public long Count { get; set; }
 
@@ -39,8 +37,12 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         [BindAlias("t")]
         public List<int> SelectedGroupTypeIds { get; set; } = new List<int>();
 
+        [BindAlias("s")]
+        public List<int> SelectedGroupStatusIds { get; set; } = new List<int>();
+
         [BindAlias("g")]
         public bool GoToDetailPageOnOneResult { get; set; }
+
 
     }
 }

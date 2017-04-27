@@ -1,4 +1,5 @@
-﻿using Edubase.Common;
+﻿#if (!TEXAPI)
+using Edubase.Common;
 using Edubase.Data.Entity;
 using Edubase.Services.Domain;
 using System;
@@ -16,7 +17,7 @@ namespace Edubase.Services.Establishments
     {
         private ICachedLookupService _cachedLookupService;
 
-        #region EstabNoRules
+#region EstabNoRules
 
         private static readonly string[][] _estabNoRules = new string[][]
         {
@@ -67,7 +68,7 @@ namespace Edubase.Services.Establishments
             new[]{"98 - Legacy types","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE","NO RULE"}
         };
 
-        #endregion
+#endregion
 
         public LAESTABService(ICachedLookupService cachedLookupService)
         {
@@ -146,3 +147,4 @@ namespace Edubase.Services.Establishments
         }
     }
 }
+#endif

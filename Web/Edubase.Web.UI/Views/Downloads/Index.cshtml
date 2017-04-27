@@ -1,5 +1,5 @@
-﻿@using Microsoft.WindowsAzure.Storage.Blob
-@model IEnumerable<CloudBlob>
+﻿@using Edubase.Services.Downloads.Models;
+@model FileDownload[]
 @{
     ViewBag.Title = "Downloads";
     ViewBag.HideLogo = true;
@@ -13,8 +13,8 @@
     {
         <li class="download-list-item">
            <span class="icon-link-copy">
-                <a href="@item.Uri" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Name.Substring(4, item.Name.Length - 8)|download">@item.Name.Substring(4, item.Name.Length - 8)</a>
-                in ZIP format. @ConvertBytesToMegabytes(item.Properties.Length) MB
+                <a href="@item.Url" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Description)|download">@item.Description</a>
+                in ZIP format. @ConvertBytesToMegabytes(item.FileSizeInBytes) MB
             </span>
 
         </li>

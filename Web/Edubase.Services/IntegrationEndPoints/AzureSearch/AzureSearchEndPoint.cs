@@ -76,7 +76,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch
             await client.Indexes.CreateOrUpdateAsync(new Index(name, fields.Cast<Field>().ToList(), suggesters: suggesters));
         }
 
-        public async Task<AzureSearchResult<T>> SearchAsync<T>(string indexName, string text = null, string filter = null, int skip = 0, int take = 10, IList<string> fullTextSearchFields = null, IList<string> orderBy = null) where T : class
+        public async Task<ApiSearchResult<T>> SearchAsync<T>(string indexName, string text = null, string filter = null, int skip = 0, int take = 10, IList<string> fullTextSearchFields = null, IList<string> orderBy = null) where T : class
         {
             try
             {
@@ -96,8 +96,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureSearch
                     SearchFields = fullTextSearchFields
                 });
 
-                var retVal = new AzureSearchResult<T>(result);
-                if (skip > 0) retVal.CountAccessor = () => { throw new Exception("Count is not populated when the Skip value is greater than 0"); };
+                var retVal = new ApiSearchResult<T>(result);
                 return retVal;
             }
             catch (CloudException ex) when (ex.Message.Contains("The filter expression has too many clauses"))

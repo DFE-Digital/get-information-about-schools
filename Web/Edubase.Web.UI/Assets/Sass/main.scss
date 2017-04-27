@@ -1,3 +1,6 @@
+$is-ie: false;
+$ie-version: 9;
+
 // Reset
 @import "elements/reset";
 
@@ -114,6 +117,10 @@
 // clearing text fields
 @import 'elements/forms/clear-fields';
 
+@import "elements/tooltips";
+@import "elements/modal";
+@import "elements/forms/fileupload";
+
 // Views
 // ==========================================================================
 @import "views/base";
@@ -127,3 +134,4 @@
 @import "views/_mergers";
 @import "views/_change-approvals";
 @import"views/academy-openings";
+@import"views/search-changes";

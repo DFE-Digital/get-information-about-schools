@@ -59,17 +59,19 @@ namespace Edubase.Web.UI.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             var id = loginInfo.ExternalIdentity;
 
+#if (!TEXAPI)
             // todo: when SA is enabled, convert to our json based claim tokens
             id = await new SecurityService().LoginAsync(id, new StubClaimsIdConverter(), UserManager); // todo: SecureAccessClaimsIdConverter
-            
+#else
+            id = new SecureAccessClaimsIdConverter().Convert(id);
+#endif
             AuthenticationManager.SignIn(id);
 
             var urlHelper = new UrlHelper(Request.RequestContext);
             if (urlHelper.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
             else return RedirectToAction("Index", "Search");
         }
-
-#if(QA)
+        
         /*
          *  NOTE: THIS IS A V. FAST LOGIN API FOR QA PURPOSES ONLY. THIS WILL BE REMOVED IN DUE COURSE.
          * 
@@ -90,7 +92,6 @@ namespace Edubase.Web.UI.Controllers
                 + string.Join(",\r\n", id.Claims.Select(x=> $"Type: {x.Type}, Value: {x.Value}")), "text/plain");
         }
         // --------------------------------------------------------------------------------------------------------------------------------
-#endif
 
 
         [Route(nameof(LogOff)), HttpGet]

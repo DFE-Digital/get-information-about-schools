@@ -55,6 +55,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .When(m => m.GroupType == GT.Federation || m.GroupType == GT.Trust, ApplyConditionTo.CurrentValidator)
 
                     .MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
+                        .GetResult().EstablishmentTypeGroupId == (int)EG.Academies)
+                    .WithMessage("Establishment is not an academy, please select another one.")
+                    .When(m => m.GroupType == GT.SchoolSponsor, ApplyConditionTo.CurrentValidator)
+
+                    .MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
                         .GetResult().EstablishmentTypeGroupId.Equals((int)EG.ChildrensCentres))
                     .WithMessage("Establishment is not a children's centre, please select another one.")
                     .When(m => m.GroupType == GT.ChildrensCentresCollaboration || m.GroupType == GT.ChildrensCentresGroup, ApplyConditionTo.CurrentValidator);
@@ -100,27 +105,41 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 RuleFor(x => x.GroupTypeId).NotNull().WithMessage("Group Type must be supplied");
 
                 RuleFor(x => x.GroupStatusId)
-                    .NotNull().WithMessage("This is a mandatory field")
-                    .WithSummaryMessage("Status must be set")
+                    .NotNull()
+                    .WithMessage("Select the {0} status", x => x.FieldNamePrefix.ToLower())
                     .When(x => x.SaveGroupDetail);
 
                 RuleFor(x => x.OpenDate)
-                    .Must(x => x.IsEmpty() || x.IsValid())
-                    .WithMessage("Open date is invalid")
-                    .Must(x => x.IsNotEmpty() && x.IsValid())
-                    .WithMessage("{0} is a mandatory field", m => m.OpenDateLabel)
-                    .When(x => !x.GroupUId.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
-
+                    .Must(x => !x.IsEmpty())
+                    .WithMessage("{0} missing. Please enter the date", x => x.OpenDateLabel)
+                    .When(x => !x.GroupUId.HasValue, ApplyConditionTo.CurrentValidator)
+                    .Must(x => x.IsValid() || x.IsEmpty())
+                    .WithMessage("{0} is invalid. Please enter a valid date", x => x.OpenDateLabel);
+                
                 RuleFor(x => x.GroupName)
                     .NotEmpty()
-                    .WithMessage("This field is mandatory")
-                    .WithSummaryMessage("Please enter a name for the group")
+                    .WithMessage("Enter an {0} name", x => x.FieldNamePrefix.ToLower())
                     .When(x => x.SaveGroupDetail)
-                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, model.LocalAuthorityId.Value, model.GroupUId)))
-                    .WithMessage("Group name already exists at this authority, please select another name")
-                    .When(x => x.GroupTypeMode == eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
 
-                RuleFor(x => x.GroupName).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(name, existingGroupUId: model.GroupUId)))
+                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), name, model.LocalAuthorityId.Value, model.GroupUId)))
+                    .WithMessage("Group name already exists at this authority, please select another name")
+                    .When(x => x.GroupTypeMode == eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator)
+
+                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), name, null, model.GroupUId)))
+                    .WithMessage("{0} name already exists. Enter a different {0} name", x => x.FieldNamePrefix)
+                    .When(x => x.GroupTypeMode == eGroupTypeMode.Sponsor && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
+
+
+                RuleFor(x => x.GroupId)
+                    .NotEmpty()
+                    .WithMessage("This field is mandatory")
+                    .WithSummaryMessage("Please enter a Group ID")
+                    .When(x => x.SaveGroupDetail)
+                    .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), groupId, model.GroupUId)))
+                    .WithMessage("Group ID already exists. Enter a different group ID.")
+                    .When(x => x.GroupTypeMode.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
+
+                RuleFor(x => x.GroupName).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), name, existingGroupUId: model.GroupUId)))
                     .WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
                     .When(x => x.GroupTypeMode != eGroupTypeMode.ChildrensCentre && x.GroupTypeMode != eGroupTypeMode.AcademyTrust && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
             });

@@ -1,6 +1,7 @@
 ﻿using Edubase.Common.Spatial;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace Edubase.Services.Establishments.Models
         
         public ChildrensCentreLocalAuthorityDto CCLAContactDetail { get; set; }
 
+        [JsonProperty("latLon")]
         public LatLon Location { get; set; }
 
         public override LatLon Coordinate => Location;
@@ -24,7 +26,7 @@ namespace Edubase.Services.Establishments.Models
         /// The number of additional addresses specified, including
         /// any hidden ones.
         /// </summary>
-        public int AdditionalAddressesCount { get; set; }
+        public int? AdditionalAddressesCount { get; set; }
 
         public eGovernanceMode? GovernanceMode { get; set; }
 
@@ -61,11 +63,15 @@ namespace Edubase.Services.Establishments.Models
         public int? TotalNumberOfPartTimePupils { get; set; }
         public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
 
+        [Obsolete("Use SENStat/NoStat")]
         [DisplayName("Total number of special pupils under a SEN statement/ECHP")]
         public int? NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
 
+        [Obsolete("Use SENStat/NoStat")]
         [DisplayName("Number of special pupils not under a SEN statement/EHCP")]
         public int? NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
+
+
         public int? TotalNumberOfPupilsInPublicCare { get; set; }
 
         [DisplayName("PT boys (aged 2 and under)")]

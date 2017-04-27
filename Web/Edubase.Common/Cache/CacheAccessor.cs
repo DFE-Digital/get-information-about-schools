@@ -569,8 +569,11 @@
                     if (IsRedisAccessible()) // Couldn't get it from memory, so try redis
                     {
                         var byteBuffer = await _cacheDatabase.StringGetAsync(key);
-                        Log(eCacheEvent.KeyValueGotFromCentralAttempt, key);
-                        PostProcessRedisBuffer(key, ref dto, byteBuffer);
+                        if (!byteBuffer.IsNullOrEmpty)
+                        {
+                            Log(eCacheEvent.KeyValueGotFromCentralAttempt, key);
+                            PostProcessRedisBuffer(key, ref dto, byteBuffer);
+                        }
                     }
                 }
             }

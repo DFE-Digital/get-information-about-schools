@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿#if (!TEXAPI)
+using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Data.Entity;
@@ -14,7 +15,6 @@ namespace Edubase.Services.Establishments
     using Domain;
     using Exceptions;
     using Groups;
-    using IntegrationEndPoints.ServiceBus;
     using Models;
     using Security;
     using System;
@@ -28,15 +28,13 @@ namespace Edubase.Services.Establishments
         private readonly IMapper _mapper;
         private readonly ICachedEstablishmentReadRepository _cachedEstablishmentReadRepository;
         private readonly ISecurityService _securityService;
-        private readonly IServiceBusEndPoint _serviceBusEndPoint;
 
         public EstablishmentWriteService(IEstablishmentReadService readService, 
             IGroupReadService groupReadService, 
             IApplicationDbContextFactory dbContextFactory,
             IMapper mapper, 
             ICachedEstablishmentReadRepository cachedEstablishmentReadRepository,
-            ISecurityService securityService,
-            IServiceBusEndPoint serviceBusEndPoint)
+            ISecurityService securityService)
         {
             _readService = readService;
             _groupReadService = groupReadService;
@@ -44,7 +42,6 @@ namespace Edubase.Services.Establishments
             _mapper = mapper;
             _cachedEstablishmentReadRepository = cachedEstablishmentReadRepository;
             _securityService = securityService;
-            _serviceBusEndPoint = serviceBusEndPoint;
         }
 
         public async Task SaveAsync(EstablishmentModel model, IPrincipal principal)
@@ -54,7 +51,7 @@ namespace Edubase.Services.Establishments
             if (model.Urn.HasValue)
             {
                 var editPermissions = cp.GetEditEstablishmentPermissions();
-                var groupIds = editPermissions.GroupIds.Any() ? await _groupReadService.GetParentGroupIdsAsync(model.Urn.Value) : null as int[];
+                var groupIds = editPermissions.GroupIds.Any() ? await _groupReadService.GetParentGroupIdsAsync(model.Urn.Value, principal) : null as int[];
                 if (!editPermissions.CanEdit(originalModel.Urn.Value, originalModel.TypeId, groupIds, originalModel.LocalAuthorityId, originalModel.EstablishmentTypeGroupId))
                 {
                     throw new PermissionDeniedException("Principal cannot edit Establishment. Permission denied.");
@@ -91,9 +88,6 @@ namespace Edubase.Services.Establishments
                 await _cachedEstablishmentReadRepository.ClearRelationshipCacheAsync(model.Urn);
 
                 await Task.Delay(2000); // allow enough time for the cache to clear on other servers in the webfarm (could replace this with messaging, or server-affinity).
-
-                await _serviceBusEndPoint.SendEstablishmentUpdateMessageAsync(entity);
-
             }
         }
 
@@ -107,3 +101,5 @@ namespace Edubase.Services.Establishments
         }
     }
 }
+
+#endif

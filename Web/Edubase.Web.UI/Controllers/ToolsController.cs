@@ -2,6 +2,7 @@
 using Edubase.Web.UI.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -36,7 +37,9 @@ namespace Edubase.Web.UI.Controllers
             viewModel.UserCanCreateFederationGroup = permission.CanCreate((int)GT.Federation, permission.LocalAuthorityIds.FirstOrDefault());
 
             viewModel.UserCanCreateSchoolTrustGroup = permission.CanCreate((int)GT.Trust, permission.LocalAuthorityIds.FirstOrDefault());
-            
+
+            viewModel.UserCanCreateAcademySponsor = permission.CanCreate((int)GT.SchoolSponsor, permission.LocalAuthorityIds.FirstOrDefault());
+
             return View(viewModel);
         }
         [HttpGet, EdubaseAuthorize]
@@ -65,6 +68,52 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, EdubaseAuthorize]
         public ActionResult ManageAcademyOpenings()
         {
+            return View();
+        }
+
+        [HttpGet, EdubaseAuthorize]
+        public ActionResult SearchChangeHistory()
+        {
+            return View();
+        }
+
+        [HttpGet, EdubaseAuthorize]
+        public ActionResult EstablishmentBulkUpdate()
+        {
+            return View();
+        }
+
+        [HttpPost, EdubaseAuthorize]
+        public ActionResult EstablishmentBulkUpdate(
+            HttpPostedFileBase bulkfile,
+            string fileType,
+            string effectiveddateDay,
+            string effectiveddateMonth,
+            string effectiveddateYear)
+        {
+            ViewBag.globalError = false;
+            ViewBag.invalidFileError = false;
+            ViewBag.fileTypeError = false;
+            ViewBag.missingFileError = false;
+
+            ViewBag.fileTypeUnselected = fileType == "";
+
+            if (bulkfile != null && bulkfile.ContentLength > 0)
+            {
+                ViewBag.fileName = Path.GetFileName(bulkfile.FileName);
+                ViewBag.fileExtension = Path.GetExtension(bulkfile.FileName);
+                ViewBag.invalidFileError = ViewBag.fileName == "invalid.csv";
+                ViewBag.fileTypeError = !(ViewBag.fileExtension == ".csv" || ViewBag.fileExtension == ".xlsx");
+            }
+            else
+            {
+                ViewBag.missingFileError = true;
+            }
+
+            ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
+            ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
+
+            ViewBag.success = !(ViewBag.globalError || ViewBag.fileTypeUnselected);
             return View();
         }
     }

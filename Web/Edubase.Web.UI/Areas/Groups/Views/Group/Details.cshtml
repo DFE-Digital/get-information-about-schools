@@ -180,10 +180,11 @@
                 
                 @if (Model.CanUserEdit)
                 {
-                    @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUID, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
+                    <div class="button-wrap">
+                        @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUID, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
+                    </div>
+                    
                 }
-
-                <div style="clear:both; float:none;margin-bottom:30px;"></div>
 
                 @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUID, area = "Governors" });}
 

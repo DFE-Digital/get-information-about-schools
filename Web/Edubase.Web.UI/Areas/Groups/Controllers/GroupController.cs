@@ -81,9 +81,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (model.LocalAuthorityId.HasValue) viewModel.LocalAuthorityName = (await _lookup.GetNameAsync(() => model.LocalAuthorityId));
             if (model.StatusId.HasValue) viewModel.GroupStatusName = (await _lookup.GetNameAsync(() => model.StatusId, "Group"));
 
-            if (model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup)) viewModel.Address = model.Address;
+            if (model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup)) viewModel.Address = model.Address.ToString();
 
+#if (TEXAPI)
+            // TODO: TEXCHANGE
+            // Use the new security API for this
+#else
             viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID.Value, model.GroupTypeId.Value, model.LocalAuthorityId);
+#endif
             viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
             if (viewModel.IsUserLoggedOn)
@@ -113,7 +118,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else if (groupTypeMode == eGroupTypeMode.Federation) viewModel.GroupTypeId = (int)GT.Federation;
             else if (groupTypeMode == eGroupTypeMode.Trust) viewModel.GroupTypeId = (int)GT.Trust;
-            
+            else if (groupTypeMode == eGroupTypeMode.Sponsor) viewModel.GroupTypeId = (int)GT.SchoolSponsor;
+
             await PopulateLocalAuthorityFields(viewModel);
 
             if (!_securityService.GetCreateGroupPermission(User).CanCreate(viewModel.GroupTypeId, viewModel.LocalAuthorityId))
@@ -163,7 +169,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
             var viewModel = new GroupEditorViewModel(eSaveMode.Details);
-            viewModel.Address = domainModel.Address;
+            viewModel.Address = domainModel.Address.ToString();
             viewModel.ClosedDate = new DateTimeViewModel(domainModel.ClosedDate);
             viewModel.OpenDate = new DateTimeViewModel(domainModel.OpenDate);
             viewModel.LocalAuthorityId = domainModel.LocalAuthorityId;
@@ -250,7 +256,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             return View(viewModel);
         }
-
         
 
         [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
@@ -275,7 +280,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var groupTypes = await GetAcademyTrustGroupTypes();
 
             var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
-            vm.TrustExists = await _groupReadService.ExistsAsync(CompaniesHouseNumber.Parse(companiesHouseNumber));
+            vm.TrustExists = await _groupReadService.ExistsAsync(CompaniesHouseNumber.Parse(companiesHouseNumber), User);
             
             return View(vm);
         }
@@ -287,12 +292,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var dto = new SaveGroupDto(new GroupModel
                 {
-                    Address = viewModel.Address,
+                    Address = UriHelper.DeserializeUrlToken<AddressDto>(viewModel.CompaniesHouseAddressToken),
                     CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
                     GroupTypeId = viewModel.TypeId,
                     Name = viewModel.Name,
                     OpenDate = viewModel.OpenDate,
-                    StatusId = (int)Services.Enums.eLookupGroupStatus.Open,
+                    StatusId = (int)eLookupGroupStatus.Open,
                     GroupId = viewModel.GroupId
                 });
 
@@ -356,7 +361,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             Func<GroupModel> createDomainModel = () => new GroupModel
             {
-                Address = viewModel.Address,
                 CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
                 GroupId = viewModel.GroupId,
                 GroupTypeId = viewModel.GroupTypeId,
@@ -424,9 +428,25 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private async Task PopulateEstablishmentList(List<EstablishmentGroupViewModel> list, int groupUId)
         {
-            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(groupUId);
+            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(groupUId, User);
             foreach (var establishmentGroup in establishmentGroups)
             {
+                // TODO TEXCHANGE: need to use the full object graph from the API rather than more service calls in texuna context as it would be very inefficient.  Need to tidy this post int.
+#if (TEXAPI)
+                list.Add(new EstablishmentGroupViewModel
+                {
+                    Id = establishmentGroup.Id,
+                    Address = establishmentGroup.Address.ToString(),
+                    HeadFirstName = establishmentGroup.HeadFirstName,
+                    HeadLastName = establishmentGroup.HeadLastName,
+                    Name = establishmentGroup.Name,
+                    Urn = establishmentGroup.Urn.Value,
+                    TypeName = establishmentGroup.TypeName,
+                    HeadTitleName = establishmentGroup.HeadTitle,
+                    JoinedDate = establishmentGroup.JoinedDate,
+                    CCIsLeadCentre = establishmentGroup.CCIsLeadCentre
+                });
+#else
                 var result = await _establishmentReadService.GetAsync(establishmentGroup.EstablishmentUrn, User);
                 if (result.Success)
                 {
@@ -445,6 +465,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                         CCIsLeadCentre = establishmentGroup.CCIsLeadCentre
                     });
                 }
+#endif
             }
         }
 

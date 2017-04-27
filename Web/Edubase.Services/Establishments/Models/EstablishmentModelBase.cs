@@ -1,5 +1,6 @@
 ﻿using Edubase.Common;
 using Edubase.Common.Spatial;
+using Edubase.Services.Domain;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -92,6 +93,8 @@ namespace Edubase.Services.Establishments.Models
         public string HeadEmailAddress { get; set; }
 
         public string HeadPreferredJobTitle { get; set; }
+
+        //public DateTime? HeadAppointmentDate { get; set; }
 
         public string Contact_TelephoneNumber { get; set; }
 
@@ -250,6 +253,7 @@ namespace Edubase.Services.Establishments.Models
         public bool? IsDeleted { get; set; }
         
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Address_County, Address_PostCode);
+        public AddressDto GetAddressDto() => new AddressDto { Line1 = Address_Line1, Line2 = Address_Line2, Line3 = Address_Line3, CityOrTown = Address_CityOrTown, County = Address_County, PostCode = Address_PostCode, Country = Address_Country };
         public string GetLAESTAB() => string.Concat(LocalAuthorityId, "/", EstablishmentNumber.GetValueOrDefault().ToString("D4"));
     }
 }

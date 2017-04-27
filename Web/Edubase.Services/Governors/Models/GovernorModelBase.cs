@@ -1,4 +1,5 @@
 ﻿using Edubase.Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,24 @@ namespace Edubase.Services.Governors.Models
     {
         public int? Id { get; set; }
         public int? EstablishmentUrn { get; set; }
+
+#if (TEXAPI)
+        [JsonProperty("title")]
+#endif
         public string Person_Title { get; set; }
+
+#if (TEXAPI)
+        [JsonProperty("firstName")]
+#endif
         public string Person_FirstName { get; set; }
+
+
+#if (TEXAPI)
+        [JsonProperty("middleName")]
+#endif
         public string Person_MiddleName { get; set; }
+
+        [JsonProperty("lastName")]
         public string Person_LastName { get; set; }
 
         public string Person_TitleDistilled { get; set; }

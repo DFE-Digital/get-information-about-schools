@@ -19,7 +19,7 @@
             @if (Model.Establishment.LocalAuthorityId.HasValue)
             {
                 <a href="/Establishments/Search?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
-                    @Html.NameFor(x => x.Establishment.LocalAuthorityId)
+                    @Model.LocalAuthorityName
                 </a>
                 <text>(@Model.Establishment.LocalAuthorityId)</text>
             }
@@ -31,9 +31,24 @@
         <tr>
             <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel):</th>
             <td>
-                @Html.Raw(Html.NameFor(x => x.Establishment.HeadTitleId).ToString().Replace("Unknown", "")) @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
+                @Model.HeadTitleName @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
             </td>
         </tr>
+        @*<tr>
+            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th>
+            <td>
+                @Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded"
+            </td>
+        </tr>*@
+        if (User.Identity.IsAuthenticated)
+        {
+            <tr>
+                <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) email address</th>
+                <td>
+                    @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
+                </td>
+            </tr>
+        }
     }
 
     @if (Model.DisplayPolicy.HeadEmailAddress)
@@ -49,7 +64,7 @@
     @if (Model.DisplayPolicy.AgeRange)
     {
         <tr>
-            <th scope="col">Age range:</th>
+            <th scope="col">Age range: <a href="#help-text-age-range" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></th>
             <td>
                 @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
                 {
@@ -62,7 +77,7 @@
     <tr>
         <th scope="row">Phase of education:</th>
         <td>
-            @Html.NameFor(x => x.Establishment.EducationPhaseId)
+            @Model.EducationPhaseName
         </td>
     </tr>
 
@@ -71,7 +86,7 @@
         <tr>
             <th scope="row">@(Model.DisplayPolicy.EstablishmentTypeLabel):</th>
             <td>
-                @Html.NameFor(x => x.Establishment.TypeId)
+                @Model.TypeName
             </td>
         </tr>
     }
@@ -81,7 +96,7 @@
         <tr>
             <th scope="row">Further education type:</th>
             <td>
-                @Html.NameFor(x => x.Establishment.FurtherEducationTypeId)
+                @Model.FurtherEducationTypeName
             </td>
         </tr>
     }
@@ -104,7 +119,7 @@
         <tr>
             <th scope="row">Gender of entry:</th>
             <td>
-                @Html.NameFor(x => x.Establishment.GenderId)
+                @Model.GenderName
             </td>
         </tr>
     }
@@ -127,12 +142,12 @@
             @if (Model.IsClosed)
             {
                 <span class="pending-closure">
-                    @Html.NameFor(x => x.Establishment.StatusId)
+                    @Model.StatusName
                 </span>
             }
             else
             {
-                @Html.NameFor(x => x.Establishment.StatusId)
+                @Model.StatusName
             }
         </td>
     </tr>
@@ -142,7 +157,7 @@
         <tr>
             <th scope="row">Admissions policy:</th>
             <td>
-                @Html.NameFor(x => x.Establishment.AdmissionsPolicyId)
+                @Model.AdmissionsPolicyName
             </td>
         </tr>
     }
@@ -203,7 +218,7 @@
         <tr>
             <th scope="row">Inspectorate:</th>
             <td>
-                @Html.NameFor(x => x.Establishment.InspectorateId)
+                @Model.InspectorateName
             </td>
         </tr>
     }

@@ -77,7 +77,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var progress = await _groupDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
             var principal = User;
 
-            // todo: if this process is hosted by us post-Texuna, then need to put into a separate process/server that processes in serial/limited parallelism due to memory consumption.
+            // todo: remove post-texuna integration.
             HostingEnvironment.QueueBackgroundWorkItem(async ct =>
             {
                 await _groupDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.FileFormat.Value);
@@ -92,9 +92,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var text = model.GroupSearchModel.Text.Clean();
                 model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
+                model.GroupStatuses = (await _lookupService.GroupStatusesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
+
                 using (MiniProfiler.Current.Step("Searching groups..."))
                 {
-                    AzureSearchResult<SearchGroupDocument> results = null;
+                    ApiSearchResult<SearchGroupDocument> results = null;
                     if (text != null) results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
 
                     if (results != null && results.Count > 0)
@@ -109,7 +111,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                         {
                             results = await _groupReadService.SearchAsync(payload, User);
                             model.Results = results.Items;
-                            if (model.StartIndex == 0) model.Count = results.Count.Value;
+                            if (model.StartIndex == 0) model.Count = results.Count;
                         }
                     }
                 }
@@ -128,8 +130,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             Text = model.GroupSearchModel.Text.Clean(),
             GroupTypeIds = model.SelectedGroupTypeIds.ToArray(),
+            GroupStatusIds = (this.User.Identity.IsAuthenticated) ? model.SelectedGroupStatusIds.ToArray() : null,
             SortBy = model.SortOption
         };
-
     }
 }

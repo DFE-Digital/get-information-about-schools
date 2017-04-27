@@ -1,7 +1,7 @@
 ﻿
 
 .changes-list-wrapper {
-    border-top: 4px $black solid;
+    border-top: 1px $black solid;
     padding-top: 12px;
 }
 
@@ -20,11 +20,20 @@
         font-weight: bold;
     }
 
+    thead {
+        td, th {
+            border-bottom: 4px $black solid;
+        }
+    }
    
 
     .cell-checkbox {
-        height: 40px;
+        height: 52px;
         position: relative;
+
+        .edubase-button-checkbox {
+            padding: 0;
+        }
         
         @include media(desktop) {
             width: 40px;
@@ -33,8 +42,8 @@
             &:after {
                  content: attr(aria-label);
                  position: relative;
-                 top: 10px;
-                 left: 12px;
+                 top: 14px;
+                 left: 44px;
             }
             &:before {
                 content: "";
@@ -94,6 +103,9 @@
 }
 
 @media(max-width: 940px) {
+    .changes-list-wrapper {
+        border-top: 2px $black solid;    
+    }
     .approval-changes {
         thead {
             display: none;
@@ -178,10 +190,10 @@
 .edubase-button-checkbox {
     position: relative;
     display: block;
-    float: left;
-    width: 38px;
-    height: 38px;
+    float: left;   
     cursor: pointer;
+    padding-left: 44px;
+    padding-top: 10px;
 
     &::before {
       content: "";
@@ -190,7 +202,7 @@
       width: 34px;
       height: 34px;
       position: absolute;
-      top: 0;
+      top: 5px;
       left: 0;
     }
 
@@ -202,7 +214,7 @@
       width: 17px;
       height: 7px;
       position: absolute;
-      top: 10px;
+      top: 14px;
       left: 8px;
       -moz-transform: rotate(-45deg); // Firefox 15 compatibility
       -o-transform: rotate(-45deg); // Opera 12.0 compatibility
@@ -213,6 +225,65 @@
     }
 
     
+}
+
+.radio-button-wrap,
+.checkbox-wrap {
+    display: inline-block;
+    position: relative;
+    margin: 0 8px 20px;
+
+   
+    input {
+        position: absolute;
+        @include opacity(0);
+
+        &[disabled="disabled"] {
+            + input + label:before {
+                background-color: $grey-3;
+                border-color: $grey-1;
+            }
+
+            + input + label:after {
+                border-color: $grey-1;
+            }
+        }
+    }
+}
+
+@if ($is-ie and $ie-version < 9) {
+    .radio-button-wrap,
+    .checkbox-wrap {
+        input {
+            @include opacity(1);
+            position: relative;
+            top: 12px;
+            left: 0;
+            float: left;
+
+            &:before, &:after {
+                border: 0;
+            }
+        }
+
+        label {
+            padding-left: 12px;
+        }
+    }
+
+    .search-type-wrapper .edubase-button-radio {
+        padding-left: 0;
+
+        &:before,
+        &:after {
+            border: 0;
+            width: 0;
+        }
+    }
+
+    #TextSearchModel_Text {
+        width: 50%;
+    }
 }
 
 .boldened-checkbox {   
@@ -226,10 +297,56 @@ input:checked + .edubase-button-checkbox:after {
     @include opacity(1);
 }
 
-input:focus + .edubase-button-checkbox {
-    outline: 3px solid $focus-colour;
+input:focus + .edubase-button-checkbox:before {
+    box-shadow: 0 0 3px 3px $focus-colour;
 }
 
+input:checked + input + .edubase-button-checkbox:after {
+    @include opacity(1);
+}
+
+input:focus + input + .edubase-button-checkbox:before {
+    box-shadow: 0 0 3px 3px $focus-colour;
+}
+
+
+.edubase-button-radio {
+    position:relative;
+    padding-left: 44px;
+    padding-top: 6px;
+    cursor: pointer;
+
+     &:before {
+      content: "";
+      border: 2px solid;
+      background: transparent;
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      @include border-radius(50%);
+    }
+
+    &:after {
+      content: "";
+      border: 10px solid;
+      width: 0;
+      height: 0;
+      position: absolute;
+      top: 9px;
+      left: 9px;
+      @include border-radius(50%);
+      @include opacity(0);
+    }
+}
+input:checked + .edubase-button-radio:after {
+    @include opacity(1);
+}
+
+input:focus + .edubase-button-radio:before {
+    box-shadow: 0 0 3px 3px $focus-colour;
+}
 
 .expanding-panel {
     clear: both;

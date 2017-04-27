@@ -57,7 +57,7 @@ namespace Edubase.Services.Core
             var blobFileName = _blobService.CreateRandomBlobName("zip");
             var blobLocation = "/downloads/" + blobFileName;
             await _blobService.UploadAsync(zipFileName, new FileHelper().GetMimeType(zipFileName), blobLocation, "edubase-search-results.zip");
-            var url = _blobService.GetReadOnlySharedAccessUrl("downloads", blobFileName, DateTimeOffset.UtcNow.AddDays(7)); // TODO: add an auto-delete facility.
+            var url = _blobService.GetReadOnlySharedAccessUrl("downloads", blobFileName, DateTimeOffset.UtcNow.AddDays(7)); 
             return url;
         }
 

@@ -5,7 +5,7 @@ using System.Security.Principal;
 
 namespace Edubase.Services.Establishments.DisplayPolicies
 {
-    public abstract class EstablishmentDisplayPolicy : EstablishmentFieldList
+    public class EstablishmentDisplayPolicy : EstablishmentFieldList
     {
         public string HeadteacherLabel { get; set; } = "Headteacher/Principal";
         public string HeadEmailAddressLabel { get; set; } = "Headteacher/Principal email";
@@ -52,7 +52,9 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             return this;
         }
 
-        protected abstract bool IsMatchInternal(eLookupEstablishmentType type, eLookupEstablishmentTypeGroup typeGroup);
-        protected abstract void ConfigureInternal();
+        protected virtual bool IsMatchInternal(eLookupEstablishmentType type, eLookupEstablishmentTypeGroup typeGroup) => false;
+        protected virtual void ConfigureInternal()
+        {
+        }
     }
 }

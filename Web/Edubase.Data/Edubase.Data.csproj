@@ -39,6 +39,24 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-TexunaAPI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug-TexunaAPI\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseTexunaAPI|AnyCPU'">
+    <OutputPath>bin\ReleaseTexunaAPI\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
@@ -169,6 +187,7 @@
     <Compile Include="DbGeographyConverter.cs" />
     <Compile Include="DbUtil.cs" />
     <Compile Include="Entity\ComplexTypes\Person.cs" />
+    <Compile Include="Entity\EstablishmentGovernor.cs" />
     <Compile Include="Entity\GroupChangeHistory.cs" />
     <Compile Include="Entity\EstablishmentChangeHistory.cs" />
     <Compile Include="Entity\LogMessage.cs" />
@@ -226,6 +245,18 @@
     <Compile Include="Migrations\201703241120045_8464GovernanceFlagColumn.cs" />
     <Compile Include="Migrations\201703241120045_8464GovernanceFlagColumn.Designer.cs">
       <DependentUpon>201703241120045_8464GovernanceFlagColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704031050493_7742_SharedGovernance.cs" />
+    <Compile Include="Migrations\201704031050493_7742_SharedGovernance.Designer.cs">
+      <DependentUpon>201704031050493_7742_SharedGovernance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704241352595_Add_Group_Delegation_Information.cs" />
+    <Compile Include="Migrations\201704241352595_Add_Group_Delegation_Information.Designer.cs">
+      <DependentUpon>201704241352595_Add_Group_Delegation_Information.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704271419143_AddedTeacherAppointmentDate.cs" />
+    <Compile Include="Migrations\201704271419143_AddedTeacherAppointmentDate.Designer.cs">
+      <DependentUpon>201704271419143_AddedTeacherAppointmentDate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DbSeeder.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -289,6 +320,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703241120045_8464GovernanceFlagColumn.resx">
       <DependentUpon>201703241120045_8464GovernanceFlagColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704031050493_7742_SharedGovernance.resx">
+      <DependentUpon>201704031050493_7742_SharedGovernance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704241352595_Add_Group_Delegation_Information.resx">
+      <DependentUpon>201704241352595_Add_Group_Delegation_Information.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704271419143_AddedTeacherAppointmentDate.resx">
+      <DependentUpon>201704271419143_AddedTeacherAppointmentDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

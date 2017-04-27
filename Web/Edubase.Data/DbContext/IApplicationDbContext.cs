@@ -72,6 +72,7 @@ namespace Edubase.Data.DbContext
         DbSet<LookupTypeOfResourcedProvision> LookupTypeOfResourcedProvisions { get; set; }
         DbSet<LookupUrbanRural> LookupUrbanRural { get; set; }
         DbSet<EstablishmentPermission> Permissions { get; set; }
+        DbSet<EstablishmentGovernor> EstablishmentGovernors { get; set; }
         IDbSet<IdentityRole> Roles { get; set; }
         IDbSet<ApplicationUser> Users { get; set; }
 

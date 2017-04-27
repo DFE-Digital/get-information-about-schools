@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity;
+﻿#if (!TEXAPI)
+using Edubase.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,12 +68,12 @@ namespace Edubase.Services.Groups
                 {
                     var leadCentreUrn = dto.LinkedEstablishments.Single(x => x.CCIsLeadCentre).EstablishmentUrn;
                     var e = (await _establishmentsReadService.GetAsync(leadCentreUrn, principal)).GetResult();
-                    dto.Group.Address = e.GetAddress();
+                    dto.Group.Address = e.GetAddressDto();
                 }
                 
                 var dataModel = !dto.IsNewEntity ? _dbContext.Groups.SingleOrThrow(x => x.GroupUID == dto.Group.GroupUID) : new GroupCollection();
 
-                dataModel.Address = dto.Group.Address;
+                if(dto.IsNewEntity) dataModel.Address = dto.Group.Address?.ToString();
                 dataModel.ClosedDate = dto.Group.ClosedDate;
                 dataModel.CompaniesHouseNumber = dto.Group.CompaniesHouseNumber;
                 dataModel.EstablishmentCount = (dto.LinkedEstablishments?.Count).GetValueOrDefault();
@@ -83,6 +84,7 @@ namespace Edubase.Services.Groups
                 dataModel.Name = dto.Group.Name;
                 dataModel.OpenDate = dto.Group.OpenDate;
                 dataModel.StatusId = dto.Group.StatusId;
+                dataModel.DelegationInformation = dto.Group.DelegationInformation;
 
                 if (dto.IsNewEntity) _dbContext.Groups.Add(dataModel);
 
@@ -134,3 +136,5 @@ namespace Edubase.Services.Groups
         }
     }
 }
+
+#endif

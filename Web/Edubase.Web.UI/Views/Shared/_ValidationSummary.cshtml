@@ -3,10 +3,10 @@
     var validationResult = (FluentValidation.Results.ValidationResult) ViewBag.FVErrors;
 }
 
-@if (!Model.IsValid)
+@if (!Model.IsValid && validationResult != null)
 {
     <div class="error-summary">
-        <h2 class="heading-medium error-summary-heading">Validation error</h2>
+        <h2 class="heading-medium error-summary-heading">Incorrect or missing details</h2>
         <ul class="error-summary-list">
             @foreach (var modelError in validationResult.Errors)
             { 

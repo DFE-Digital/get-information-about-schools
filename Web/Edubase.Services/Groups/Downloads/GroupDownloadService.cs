@@ -1,4 +1,5 @@
-﻿using Edubase.Common.Cache;
+﻿#if(!TEXAPI)
+using Edubase.Common.Cache;
 using Edubase.Services.Lookup;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace Edubase.Services.Groups.Downloads
                 payload.Skip = 0;
                 payload.Take = 1000;
                 var results = await _groupReadService.SearchAsync(payload, principal);
-                progress.TotalRecordsCount = results.Count.Value;
+                progress.TotalRecordsCount = results.Count;
                 progress.Status = "Retrieving data...";
                 progress.FileExtension = ToFileExtension(format);
                 await updateProgressCache();
@@ -100,8 +101,8 @@ namespace Edubase.Services.Groups.Downloads
         }
 
         private async Task GenerateXlsxFile(GroupSearchPayload payload, IPrincipal principal, 
-            SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache, 
-            AzureSearchResult<SearchGroupDocument> results, string fileName)
+            SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache,
+            ApiSearchResult<SearchGroupDocument> results, string fileName)
         {
             var headers = GetHeaders(principal);
 
@@ -140,7 +141,7 @@ namespace Edubase.Services.Groups.Downloads
         }
 
 
-        private async Task GenerateCsvFile(GroupSearchPayload payload, IPrincipal principal, SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache, AzureSearchResult<SearchGroupDocument> results, string fileName)
+        private async Task GenerateCsvFile(GroupSearchPayload payload, IPrincipal principal, SearchDownloadGenerationProgressDto progress, Func<Task> updateProgressCache, ApiSearchResult<SearchGroupDocument> results, string fileName)
         {
             var headers = GetHeaders(principal);
 
@@ -196,7 +197,7 @@ namespace Edubase.Services.Groups.Downloads
             fields.Add((await _cachedLookupService.GroupTypesGetAllAsync()).FirstOrDefault(x => x.Id == item.GroupTypeId)?.Name);
             fields.Add(item.EstablishmentCount.ToString());
             fields.Add(item.OpenDate?.ToString("dd/MM/yyyy"));
-            fields.Add(item.Address);
+            fields.Add("");
             fields.Add(item.ManagerEmailAddress);
 
             if (item.LocalAuthorityId.HasValue) fields.Add((await _cachedLookupService.LocalAuthorityGetAllAsync()).FirstOrDefault(x => x.Id == item.LocalAuthorityId)?.Name);
@@ -214,3 +215,6 @@ namespace Edubase.Services.Groups.Downloads
     }
     
 }
+
+
+#endif

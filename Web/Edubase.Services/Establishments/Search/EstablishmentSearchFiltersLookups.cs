@@ -1,4 +1,7 @@
-﻿namespace Edubase.Services.Establishments.Search
+﻿using Newtonsoft.Json;
+using System;
+
+namespace Edubase.Services.Establishments.Search
 {
     public abstract class EstablishmentSearchFiltersLookups
     {
@@ -40,20 +43,29 @@
 
         public int[] Section41ApprovedIds { get; set; } = new int[0];
 
+        [Obsolete("Use SENIds"), JsonIgnore]
         public int[] SEN1Ids { get; set; } = new int[0];
 
+        [Obsolete("Use SENIds"), JsonIgnore]
         public int[] SEN2Ids { get; set; } = new int[0];
 
+        [Obsolete("Use SENIds"), JsonIgnore]
         public int[] SEN3Ids { get; set; } = new int[0];
 
+        [Obsolete("Use SENIds"), JsonIgnore]
         public int[] SEN4Ids { get; set; } = new int[0];
+
+        [JsonProperty("SENIds"), JsonIgnore]
+        public int[] SENIds { get; set; } = new int[0];
 
         public int[] TeenageMothersProvisionIds { get; set; } = new int[0];
 
         public int[] ChildcareFacilitiesIds { get; set; } = new int[0];
 
+        [JsonProperty("PRUSENIds"), JsonIgnore]
         public int[] PRUSENIds { get; set; } = new int[0];
 
+        [JsonProperty("PRUEBDIds"), JsonIgnore]
         public int[] PRUEBDIds { get; set; } = new int[0];
 
         public int[] PruFulltimeProvisionIds { get; set; } = new int[0];
@@ -72,12 +84,16 @@
 
         public int[] UrbanRuralIds { get; set; } = new int[0];
 
+        [JsonProperty("GSSLAIds"), JsonIgnore]
         public int[] GSSLAIds { get; set; } = new int[0];
 
+        [JsonProperty("casWardIds"), JsonIgnore]
         public int[] CASWardIds { get; set; } = new int[0];
 
+        [JsonProperty("MSOAIds"), JsonIgnore]
         public int[] MSOAIds { get; set; } = new int[0];
 
+        [JsonProperty("LSOAIds"), JsonIgnore]
         public int[] LSOAIds { get; set; } = new int[0];
 
         public int[] FurtherEducationTypeIds { get; set; } = new int[0];

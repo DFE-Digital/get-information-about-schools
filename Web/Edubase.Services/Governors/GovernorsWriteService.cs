@@ -6,6 +6,7 @@ using Edubase.Services.Governors.Models;
 using Edubase.Services.Security;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -68,6 +69,40 @@ namespace Edubase.Services.Governors
             var dataModel = dc.Governors.SingleOrThrow(x => x.Id == id);
             dc.Governors.Remove(dataModel);
             await dc.SaveChangesAsync();
+        }
+
+        //TODO: TEXCHANGE - implement ability to add an establishment to a shared governor
+        public async Task AddUpdateEstablishmentToSharedGovernor(int governorId, int establishmentUrn, DateTime appointmentStartDate, DateTime appointmentEndDate)
+        {
+            var context = _dbContextFactory.Obtain();
+            if (! await context.EstablishmentGovernors.AnyAsync(e => e.GovernorId == governorId &&
+                                                         e.EstabishmentUrn == establishmentUrn))
+            {
+                context.EstablishmentGovernors.Add(new EstablishmentGovernor
+                {
+                    GovernorId = governorId,
+                    EstabishmentUrn = establishmentUrn,
+                    AppointmentStartDate = appointmentStartDate,
+                    AppointmentEndDate = appointmentEndDate
+                });
+            }
+            else
+            {
+                var governor = context.EstablishmentGovernors.SingleOrThrow(
+                        e => e.GovernorId == governorId && e.EstabishmentUrn == establishmentUrn);
+                governor.AppointmentStartDate = appointmentStartDate;
+                governor.AppointmentEndDate = appointmentEndDate;
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteSharedGovernorEstablishment(int governorId, int establishmentUrn)
+        {
+            var context = _dbContextFactory.Obtain();
+            var entity = context.EstablishmentGovernors.SingleOrThrow(e => e.GovernorId == governorId && e.EstabishmentUrn == establishmentUrn);
+            context.EstablishmentGovernors.Remove(entity);
+            await context.SaveChangesAsync();
         }
     }
 }

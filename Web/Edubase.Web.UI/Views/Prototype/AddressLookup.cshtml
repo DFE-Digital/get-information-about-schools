@@ -1,0 +1,134 @@
+﻿@using System.Web.UI.HtmlControls
+
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = "Edubase : Address lookup prototype";
+}
+
+
+
+<div id="postcode-lookup" v-cloak>
+    <h1 class="heading-large">[ Establishment Name ]</h1>
+    <p class="urn">URN: 123456</p>
+    <div class="grid-row">
+        <div class="column-full">
+            <div class="error-summary" v-show="globalError">
+                <p class="error-message" v-show="ajaxError">There was a problem looking up the postcode. Please reload the page and start again.</p>
+
+                <p class="error-message" v-show="postcodeError">The postcode was invalid. Please check the postcode and try again.</p>
+            </div>
+            <div class="horizontal-tabs-wrapper">
+                <div class="tab-wrap">
+                    <ul class="horizontal-tabs">
+                        <li>
+                            <a href="/Establishment/Edit/101242" class="horizontal-tab selected-tab">Details</a>
+                        </li>
+
+                        <li>
+                            <a href="/Establishment/Edit/101242/Location" class="horizontal-tab ">Location</a>
+                        </li>
+
+                        <li>
+                            <a href="/Establishment/Edit/101242/Governance" class="horizontal-tab ">Governance</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content-wrapper horizontal-tabs-content">
+                    <div class="tab-content">
+                        <input type="submit" class="button" value="Save" v-show="step === 2 || !isUk" v-on:click.prevent="allDone" />
+                        <a href="#" class="button button-grey" v-on:click.prevent="allDone">Cancel</a>
+
+                        <h2 class="heading-medium lookup-heading">Address</h2>
+                        <form>
+                            <fieldset class="column-half">
+                                <legend class="heading-small">Address details</legend>
+                                <div id="address-search-step1" v-show="(step === 0 || step === 1)">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Country
+                                        </label>
+                                        <select class="form-control" v-model="selectedCountry" v-on:change.prevent="switchCountry">
+                                            <option value="UK">United Kingdom</option>
+                                            <option value="USA">United States of America</option>
+                                        </select>
+                                    </div>
+
+                                    <div v-bind:class="['form-group postcode-search', (postcodeError) ? 'error' : '']" v-show="isUk">
+                                        <label for="postcode" class="form-label">
+                                            Postcode
+                                        </label>
+                                        <span class="error-message" v-show="postcodeError">Please check the postcode</span>
+                                        <input type="text" class="form-control postcode-field" id="postcode" v-model="postcode"/>
+                                        <input type="submit" class="button edubase-button inline-button" value="Find address" v-on:click.prevent="validatePostcode"/>
+                                    </div>
+                                </div>
+                                <div id="address-search-step2" v-show="step === 1">
+                                    <div v-bind:class="['form-group ', (addressLookupError) ? 'error' : '']">
+                                        <label class="form-label">Pick an address</label>
+                                        <span class="error-message" v-show="addressLookupError">Sorry, something went wrong. Please try reselecting an address.</span>
+                                        <select class="form-control" id="address-results" v-on:change.prevent="selectAddress">
+                                            <option value="0">Please select</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <div id="address-search-step3" v-show="step===2 || !isUk">
+                                    <div class="form-group">
+                                        <label class="form-label" for="estab-street">Street</label>
+                                        <input type="text" id="estab-street" class="form-control" v-model="addressLineOne"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="estab-locality">Locality</label>
+                                        <input type="text" id="estab-locality" class="form-control" v-model="addressLineTwo"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="estab-address3">Address 3</label>
+                                        <input type="text" id="estab-address3" class="form-control" v-model="addressLineThree"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="estab-city" v-show="!isUk">City / Town</label>
+                                        <label class="form-label" for="estab-city" v-show="isUk">Town</label>
+                                        <input type="text" id="estab-city" class="form-control" v-model="town"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="estab-county" v-show="isUk">County</label>
+                                        <label class="form-label" for="estab-county" v-show="!isUk">County / State / Region</label>
+                                        <input type="text" id="estab-county" class="form-control" v-model="county"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="estab-postcode" v-show="isUk">Postcode</label>
+                                        <label class="form-label" for="estab-postcode" v-show="!isUk">Postcode / Zipcode</label>
+                                        <input type="text" id="estab-postcode" class="form-control postcode-field" :disabled="isUk ? 'disabled': null" v-model="postcode"/>
+                                    </div>
+                                    <a href="#" class="font-xsmall" v-show="isUk" v-on:click.prevent="resetSearch">Wrong postcode?</a>
+
+                                </div>
+                            </fieldset>
+
+                            <div class="button-row">
+                                <input type="submit" class="button" value="Save" v-show="step === 2 || !isUk" v-on:click.prevent="allDone"/>
+                                <a href="#" class="button button-grey" v-on:click.prevent="allDone">Cancel</a>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ViewScripts {
+    <script src="/public/assets/scripts/standalone/address-lookup.js"></script>
+
+}
+
+

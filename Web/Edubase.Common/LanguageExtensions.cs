@@ -163,7 +163,7 @@ namespace Edubase.Common
         /// <returns></returns>
         public static T2 Get<T1,T2>(this IDictionary<T1, T2> data, T1 key)
         {
-            if (key != null && data.ContainsKey(key)) return data[key];
+            if (key != null && data != null && data.ContainsKey(key)) return data[key];
             return default(T2);
         }
 

@@ -117,7 +117,7 @@ $path: $images-path;
 .button-grey {
   @include button-variant($grey-1, $btn-secondary-bg , $btn-default-border);
 }
-input.button-grey,button.button-grey {
+input.button-grey,button.button-grey, a.button-grey {
     background-color:#e6e6e6;
 }
 .button-comparison {

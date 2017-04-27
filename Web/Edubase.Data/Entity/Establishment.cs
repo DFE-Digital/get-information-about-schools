@@ -134,6 +134,8 @@ namespace Edubase.Data.Entity
 
         public string HeadEmailAddress { get; set; }
 
+        public DateTime? HeadAppointmentDate { get; set; }
+
         public ContactDetail Contact { get; set; }
 
         public ContactDetail ContactAlt { get; set; }

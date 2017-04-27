@@ -29,6 +29,7 @@ namespace Edubase.Web.UI
 #if (QA)
             GlobalConfiguration.Configure(ODataConfig.Register);
 #endif
+            SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             IocConfig.Register();
@@ -38,10 +39,11 @@ namespace Edubase.Web.UI
                 scope.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
                 scope.Resolve<IBlobService>().Initialise("downloads");
             }
-
-            // REMOVE WHEN IN WEBFARM!!!!!
+            
+#if (!TEXAPI)
             var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
             Database.SetInitializer(m);
+#endif
 
             var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.Container));
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
@@ -52,7 +54,6 @@ namespace Edubase.Web.UI
 
             ModelBinders.Binders.DefaultBinder = new Helpers.ModelBinding.DefaultModelBinderEx();
 
-            //MiniProfiler.Settings.Storage = new SqlServerStorage(System.Configuration.ConfigurationManager.ConnectionStrings["EdubaseSqlDb"].ConnectionString);
             MiniProfiler.Settings.Results_Authorize = IsUserAllowedToSeeMiniProfilerUI;
             MiniProfiler.Settings.Results_List_Authorize = IsUserAllowedToSeeMiniProfilerUI;
 
@@ -96,12 +97,8 @@ namespace Edubase.Web.UI
             MiniProfiler.Stop();
         }
 
-        private bool IsUserAllowedToSeeMiniProfilerUI(HttpRequest httpRequest)
-        {
-            var principal = httpRequest.RequestContext.HttpContext.User;
-            return principal.IsInRole(Services.Security.EdubaseRoles.Admin);
-        }
+        private bool IsUserAllowedToSeeMiniProfilerUI(HttpRequest httpRequest) => true; // TODO: TEXCHANGE: SECURE THIS
 
-        public static bool IsRunningOnAzure => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
+        //public static bool IsRunningOnAzure => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
     }
 }

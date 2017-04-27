@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity;
+﻿#if (!TEXAPI)
+using Edubase.Data.Entity;
 using Edubase.Services;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
@@ -30,3 +31,4 @@ namespace Edubase.Services.Establishments.DisplayPolicies
                 () => new Exception($"A Display Profile could not be found for Establishment (TypeId: {establishment.TypeId}, EstablishmentTypeGroupId: {establishment.EstablishmentTypeGroupId}. (FYI, An Establishment needs both a Type and TypeGroup; if they're populated, then no Display Profile is available for the Type/TypeGroup combination.)")).Configure(principal, establishment);
     }
 }
+#endif

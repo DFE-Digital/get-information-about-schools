@@ -87,7 +87,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var progress = await _governorDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
             var principal = User;
 
-            // todo: if this process is hosted by us post-Texuna, then need to put into a separate process/server that processes in serial/limited parallelism due to memory consumption.
+            // todo: remove post-texuna integration.
             HostingEnvironment.QueueBackgroundWorkItem(async ct =>
             {
                 await _governorDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.FileFormat.Value);
@@ -97,9 +97,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private async Task<ActionResult> SearchGovernors(GovernorSearchViewModel model)
         {
-            if (model.GovernorSearchModel.RoleId.HasValue && !model.SelectedRoleIds.Contains(model.GovernorSearchModel.RoleId.Value))
+            if (model.GovernorSearchModel?.RoleId != null && model.GovernorSearchModel.RoleId.Any())
             {
-                model.SelectedRoleIds.Add(model.GovernorSearchModel.RoleId.Value);
+                model.SelectedRoleIds.AddRange(model.GovernorSearchModel.RoleId
+                    .Where(r => !model.SelectedRoleIds.Contains(r))
+                    .Cast<int>());
             }
 
             model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
@@ -110,25 +112,26 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 var payload = CreateSearchPayload(model);
                 using (MiniProfiler.Current.Step("Searching governors (in text mode)..."))
                 {
-                    var results = await _governorsReadService.SearchAsync(payload);
+                    var results = await _governorsReadService.SearchAsync(payload, User);
                     model.Results = results.Items;
-                    if (model.StartIndex == 0) model.Count = results.Count.Value;
+                    if (model.StartIndex == 0) model.Count = results.Count;
 
+#if (!TEXAPI)
                     foreach (var item in model.Results)
                     {
-                        if (item.EstablishmentUrn.HasValue)
+                        if (item.EstablishmentUrn.HasValue && item.EstablishmentName.IsNullOrEmpty())
                         {
                             var establishment = await _establishmentReadService.GetAsync(item.EstablishmentUrn.Value, User);
-                            if (establishment.Success) model.EstablishmentNames[item] = establishment.ReturnValue.Name;
+                            if (establishment.Success) item.EstablishmentName = establishment.ReturnValue.Name;
                         }
 
-                        if (item.GroupUID.HasValue)
+                        if (item.GroupUID.HasValue && item.GroupName.IsNullOrEmpty())
                         {
                             var result = await _groupReadService.GetAsync(item.GroupUID.Value, User);
-                            if (result.Success) model.GroupNames[item] = result.ReturnValue.Name;
-                            else model.GroupNames[item] = "n/a"; // permission denied
+                            if (result.Success) item.GroupName = result.ReturnValue.Name;
                         }
                     }
+#endif
                 }
             }
             
@@ -137,6 +140,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private GovernorSearchPayload CreateSearchPayload(GovernorSearchViewModel model) => new GovernorSearchPayload(model.StartIndex, model.PageSize)
         {
+            Gid = model.GovernorSearchModel.Gid?.ToString(),
             FirstName = model.GovernorSearchModel.Forename.Clean(),
             LastName = model.GovernorSearchModel.Surname.Clean(),
             RoleIds = model.SelectedRoleIds.ToArray(),

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿#if (!TEXAPI)
+using AutoMapper;
 using Edubase.Common;
 using Edubase.Data;
 using Edubase.Data.Entity;
@@ -91,7 +92,7 @@ namespace Edubase.Services.Establishments
 
             if (dataModel != null)
             {
-                if (HasAccess(principal, dataModel.StatusId))
+                if (await HasAccessAsync(principal, dataModel.StatusId))
                 {
                     var domainModel = _mapper.Map<Establishment, EstablishmentModel>(dataModel);
                     domainModel.AdditionalAddressesCount = domainModel.AdditionalAddresses.Count;
@@ -118,19 +119,19 @@ namespace Edubase.Services.Establishments
             else return new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound);
         }
 
-        private bool HasAccess(IPrincipal principal, int? statusId)
+        private async Task<bool> HasAccessAsync(IPrincipal principal, int? statusId)
         {
             var isRestricted = IsRoleRestrictedOnStatus(principal);
             if (isRestricted && !statusId.HasValue) throw new Exception("StatusId is null but the principal has restricted access; impossible to acertain permissions");
             return !IsRoleRestrictedOnStatus(principal)
-              || GetPermittedStatusIds(principal).Any(x => x == statusId.Value);
+              || (await GetPermittedStatusIdsAsync(principal)).Any(x => x == statusId.Value);
         }
 
-        public EstablishmentDisplayPolicy GetDisplayPolicy(IPrincipal user, EstablishmentModelBase establishment) 
+        public async Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModelBase establishment) 
             => new DisplayPolicyFactory().Create(user, establishment);
 
 
-        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishments(int urn)
+        public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn, IPrincipal principal)
         {
             return (await _dbContext.EstablishmentLinks
                     .Include(x => x.LinkedEstablishment)
@@ -203,7 +204,7 @@ namespace Edubase.Services.Establishments
             return await _azureSearchService.SuggestAsync<EstablishmentSuggestionItem>(EstablishmentsSearchIndex.INDEX_NAME, EstablishmentsSearchIndex.SUGGESTER_NAME, text, oDataFilters.ToString(), take);
         }
 
-        public int[] GetPermittedStatusIds(IPrincipal principal)
+        public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)
         {
             if (IsRoleRestrictedOnStatus(principal)) return _restrictedStatuses;
             else return null;
@@ -219,7 +220,7 @@ namespace Edubase.Services.Establishments
         ///     There's a chance that when you pass in a large query with 100s of filters
         ///     you'll get a SearchQueryTooLargeException.  There is no work-around; the size of the query needs to be reduced; this is due to a limitation in Azure Search.
         /// </exception>
-        public async Task<AzureSearchResult<Doc>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
+        public async Task<ApiSearchResult<Doc>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
         {
             if (IsRoleRestrictedOnStatus(principal))
             {
@@ -245,15 +246,6 @@ namespace Edubase.Services.Establishments
             if (payload.SortBy.OneOfThese(eSortBy.NameAlphabeticalAZ, eSortBy.NameAlphabeticalZA))
                 orderByODataExpression = string.Concat(nameof(Doc.NameDistilled), " ", (payload.SortBy == eSortBy.NameAlphabeticalAZ ? "asc" : "desc"));
 
-            if (payload.SENIds.Any())
-            {
-                var senPredicates = new[] { nameof(Doc.SEN1Id), nameof(Doc.SEN2Id), nameof(Doc.SEN3Id), nameof(Doc.SEN4Id) }
-                    .SelectMany(x => payload.SENIds.Select(s => new { Name = x, Value = s }));
-                var senODataFilter = new ODataFilterList(ODataFilterList.OR);
-                senPredicates.ForEach(x => senODataFilter.Add(x.Name, x.Value));
-                predicates.Add($"({senODataFilter})");
-            }
-
             var oDataFilterExpression = string.Join(" and ", predicates);
 
             return await _azureSearchService.SearchAsync<Doc>(EstablishmentsSearchIndex.INDEX_NAME,
@@ -273,16 +265,16 @@ namespace Edubase.Services.Establishments
             var statusId = await _establishmentRepository.GetStatusAsync(urn);
             if (statusId.HasValue)
             {
-                if (HasAccess(principal, statusId)) return new ServiceResultDto<bool>(true);
+                if (await HasAccessAsync(principal, statusId)) return new ServiceResultDto<bool>(true);
                 else return new ServiceResultDto<bool>(eServiceResultStatus.PermissionDenied);
             }
             else return new ServiceResultDto<bool>(eServiceResultStatus.NotFound);
         }
 
-
-        
-        
-
-
+        public Task<bool> CanEditAsync(int urn, IPrincipal user)
+        {
+            throw new NotImplementedException("Not required in bespoke BE");
+        }
     }
 }
+#endif

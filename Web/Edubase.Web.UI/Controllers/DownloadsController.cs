@@ -6,18 +6,25 @@ using System.Web.Mvc;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage;
 using System.Configuration;
+using Edubase.Services.Downloads;
+using System.Threading.Tasks;
 
 namespace Edubase.Web.UI.Controllers
 {
     [RoutePrefix("Downloads"), Route("{action=index}")]
     public class DownloadsController : Controller
     {
-        // GET: Downloads
-        public ActionResult Index()
+        private readonly IDownloadsService _downloadsService;
+
+        public DownloadsController(IDownloadsService downloadsService)
         {
-            var client = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString).CreateCloudBlobClient();
-            var blobs = client.GetContainerReference("public").GetDirectoryReference("zip").ListBlobs().Cast<CloudBlob>();
-            return View(blobs);
+            _downloadsService = downloadsService;
+        }
+        
+        public async Task<ActionResult> Index()
+        {
+            var list = await _downloadsService.GetListAsync(User);
+            return View(list);
         }
     }
 }

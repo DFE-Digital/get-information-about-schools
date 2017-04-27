@@ -33,8 +33,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28QA%29|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug %28QA%29\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;QA</DefineConstants>
     <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-TexunaAPI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug-TexunaAPI\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TEXAPI</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseTexunaAPI|AnyCPU'">
+    <OutputPath>bin\ReleaseTexunaAPI\</OutputPath>
+    <DefineConstants>TRACE;TEXAPI</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -71,6 +89,9 @@
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Humanizer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Humanizer.Core.2.1.0\lib\netstandard1.0\Humanizer.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -156,6 +177,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -179,16 +201,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlobService.cs" />
+    <Compile Include="Domain\AddressDto.cs" />
+    <Compile Include="Downloads\DownloadsService.cs" />
+    <Compile Include="Downloads\IDownloadsService.cs" />
+    <Compile Include="Downloads\Models\FileDownload.cs" />
     <Compile Include="Enums\eGovernanceMode.cs" />
+    <Compile Include="Enums\eLocalAuthority.cs" />
+    <Compile Include="Enums\eLookupEstablishmentStatus.cs" />
+    <Compile Include="Enums\eLookupEstablishmentType.cs" />
+    <Compile Include="Enums\eLookupEstablishmentTypeGroup.cs" />
+    <Compile Include="Enums\eLookupFurtherEducationType.cs" />
+    <Compile Include="Enums\eLookupGovernorAppointingBody.cs" />
+    <Compile Include="Enums\eLookupGovernorRole.cs" />
+    <Compile Include="Enums\eLookupGroupStatus.cs" />
+    <Compile Include="Enums\eLookupGroupType.cs" />
+    <Compile Include="Enums\eLookupTypeOfResourcedProvision.cs" />
     <Compile Include="Enums\EnumSets.cs" />
+    <Compile Include="Establishments\Downloads\eDataSet.cs" />
+    <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
     <Compile Include="Governors\GovernorsWriteService.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />
+    <Compile Include="Governors\Models\GovernorAppointment.cs" />
     <Compile Include="Governors\Models\GovernorModelBase.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
     <Compile Include="IntegrationEndPoints\AzureSearch\AZSIgnoreAttribute.cs" />
-    <Compile Include="IntegrationEndPoints\ServiceBus\IServiceBusEndPoint.cs" />
-    <Compile Include="IntegrationEndPoints\ServiceBus\ServiceBusEndPoint.cs" />
     <Compile Include="Core\FileDownloadFactoryService.cs" />
     <Compile Include="Core\IFileDownloadFactoryService.cs" />
     <Compile Include="Core\Search\eSortBy.cs" />
@@ -225,58 +262,6 @@
     <Compile Include="Domain\PersonDto.cs" />
     <Compile Include="Domain\SearchDownloadGenerationProgressDto.cs" />
     <Compile Include="Domain\ServiceResultDto.cs" />
-    <Compile Include="Enums\eLocalAuthority.cs" />
-    <Compile Include="Enums\eLookupAccommodationChanged.cs" />
-    <Compile Include="Enums\eLookupAdmissionsPolicy.cs" />
-    <Compile Include="Enums\eLookupBoardingEstablishment.cs" />
-    <Compile Include="Enums\eLookupCCDisadvantagedArea.cs" />
-    <Compile Include="Enums\eLookupCCGovernance.cs" />
-    <Compile Include="Enums\eLookupCCGroupLead.cs" />
-    <Compile Include="Enums\eLookupCCOperationalHours.cs" />
-    <Compile Include="Enums\eLookupCCPhaseType.cs" />
-    <Compile Include="Enums\eLookupChildcareFacilities.cs" />
-    <Compile Include="Enums\eLookupDeliveryModel.cs" />
-    <Compile Include="Enums\eLookupDiocese.cs" />
-    <Compile Include="Enums\eLookupDirectProvisionOfEarlyYears.cs" />
-    <Compile Include="Enums\eLookupDistrictAdministrative.cs" />
-    <Compile Include="Enums\eLookupEducationPhase.cs" />
-    <Compile Include="Enums\eLookupEstablishmentLinkType.cs" />
-    <Compile Include="Enums\eLookupEstablishmentStatus.cs" />
-    <Compile Include="Enums\eLookupEstablishmentType.cs" />
-    <Compile Include="Enums\eLookupEstablishmentTypeGroup.cs" />
-    <Compile Include="Enums\eLookupFurtherEducationType.cs" />
-    <Compile Include="Enums\eLookupGender.cs" />
-    <Compile Include="Enums\eLookupGovernmentOfficeRegion.cs" />
-    <Compile Include="Enums\eLookupGovernorAppointingBody.cs" />
-    <Compile Include="Enums\eLookupGovernorRole.cs" />
-    <Compile Include="Enums\eLookupGroupStatus.cs" />
-    <Compile Include="Enums\eLookupGroupType.cs" />
-    <Compile Include="Enums\eLookupGSSLA.cs" />
-    <Compile Include="Enums\eLookupHeadTitle.cs" />
-    <Compile Include="Enums\eLookupIndependentSchoolType.cs" />
-    <Compile Include="Enums\eLookupInspectorate.cs" />
-    <Compile Include="Enums\eLookupInspectorateName.cs" />
-    <Compile Include="Enums\eLookupLocalGovernors.cs" />
-    <Compile Include="Enums\eLookupNationality.cs" />
-    <Compile Include="Enums\eLookupParliamentaryConstituency.cs" />
-    <Compile Include="Enums\eLookupProvisionBoarding.cs" />
-    <Compile Include="Enums\eLookupProvisionNursery.cs" />
-    <Compile Include="Enums\eLookupProvisionOfficialSixthForm.cs" />
-    <Compile Include="Enums\eLookupProvisionSpecialClasses.cs" />
-    <Compile Include="Enums\eLookupPRUEBD.cs" />
-    <Compile Include="Enums\eLookupPruEducatedByOthers.cs" />
-    <Compile Include="Enums\eLookupPruFulltimeProvision.cs" />
-    <Compile Include="Enums\eLookupPRUSEN.cs" />
-    <Compile Include="Enums\eLookupReasonEstablishmentClosed.cs" />
-    <Compile Include="Enums\eLookupReasonEstablishmentOpened.cs" />
-    <Compile Include="Enums\eLookupReligiousCharacter.cs" />
-    <Compile Include="Enums\eLookupReligiousEthos.cs" />
-    <Compile Include="Enums\eLookupResourcedProvision.cs" />
-    <Compile Include="Enums\eLookupSection41Approved.cs" />
-    <Compile Include="Enums\eLookupSpecialEducationNeeds.cs" />
-    <Compile Include="Enums\eLookupTeenageMothersProvision.cs" />
-    <Compile Include="Enums\eLookupTypeOfResourcedProvision.cs" />
-    <Compile Include="Enums\eLookupUrbanRural.cs" />
     <Compile Include="Establishments\DisplayPolicies\AcademyDisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\BSODisplayPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\ChildrensCentreLinkedSitesDisplayPolicy.cs" />

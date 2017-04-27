@@ -41,6 +41,78 @@ namespace Edubase.Web.UI
             }
         }
 
+#if (TEXAPI)
+
+        public void ConfigureAuth(IAppBuilder app)
+        {
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                LoginPath = new PathString("/Account/Login"),
+                Provider = new CookieAuthenticationProvider(),
+                ExpireTimeSpan = ConfiguredExpireTimeSpan
+            });
+            
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+            app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
+            
+        }
+        private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
+        {
+            var spOptions = new SPOptions
+            {
+                EntityId = new EntityId(AuthConfig.ApplicationIdpEntityId),
+                ReturnUrl = AuthConfig.ExternalAuthDefaultCallbackUrl,
+                AuthenticateRequestSigningBehavior = SigningBehavior.Always
+            };
+
+            spOptions.ServiceCertificates.Add(new ServiceCertificate
+            {
+                Use = CertificateUse.Signing,
+                Certificate = GetSPCertificate()
+            });
+
+            var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false) { SPOptions = spOptions };
+
+            var idp = new IdentityProvider(new EntityId(AuthConfig.ExternalIdpEntityId.AbsoluteUri), spOptions)
+            {
+                AllowUnsolicitedAuthnResponse = true,
+                Binding = Saml2BindingType.HttpRedirect,
+                MetadataLocation = AuthConfig.ExternalIdpMetadataPath,
+                WantAuthnRequestsSigned = true
+            };
+
+            idp.SigningKeys.AddConfiguredKey(new X509Certificate2(AuthConfig.ExternalIdpCertificatePath));
+            authServicesOptions.IdentityProviders.Add(idp);
+            return authServicesOptions;
+        }
+
+        private static X509Certificate2 GetSPCertificate()
+        {
+#if (DEBUG)
+            return GetSPCertificateFromAppData();
+#else
+            return GetSPCertificateFromCertStore();
+#endif
+        }
+
+        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/edubase3.pfx"), "testtest");
+
+        private static X509Certificate2 GetSPCertificateFromCertStore()
+        {
+            using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+            {
+                var thumbprint = ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"];
+                store.Open(OpenFlags.ReadOnly);
+                var certCollection = store.Certificates.Find(X509FindType.FindByThumbprint, ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"], false);
+                var cert = certCollection.Cast<X509Certificate2>().FirstOrDefault();
+                Guard.IsNotNull(cert, () => new Exception($"Service provider certificate could not be found by thumbprint [{thumbprint}]"));
+                return cert;
+            }
+        }
+
+#else
         public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context, user manager and signin manager to use a single instance per request
@@ -66,15 +138,15 @@ namespace Edubase.Web.UI
                 },
                 ExpireTimeSpan = ConfiguredExpireTimeSpan
             });
-            
+
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
 
-           
+
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
-            
+
         }
 
         private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
@@ -119,9 +191,6 @@ namespace Edubase.Web.UI
             var spOptions = new SPOptions
             {
                 EntityId = new EntityId("http://edubase.gov"),
-                //EntityId = new EntityId("http://localhost:55600/AuthServices"),
-                //ReturnUrl = new Uri("http://localhost:55600/Account/ExternalLoginCallback"),
-                //DiscoveryServiceUrl = new Uri("http://secure-access-simulator.azurewebsites.net/DiscoveryService"),
                 Organization = organization
             };
 
@@ -156,22 +225,11 @@ namespace Edubase.Web.UI
                 new RequestedAttribute("Minimal"));
 
             spOptions.AttributeConsumingServices.Add(attributeConsumingService);
-            //spOptions.ServiceCertificates.Add(GetCert());
             
             return spOptions;
         }
 
-        private static X509Certificate2 GetCert() => MvcApplication.IsRunningOnAzure ? GetCertWhenHostedOnAzure() : GetCertWhenNotHostedOnAzure();
-
-        private static X509Certificate2 GetCertWhenHostedOnAzure()
-        {
-            var certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
-            certStore.Open(OpenFlags.ReadOnly);
-            var certCollection = certStore.Certificates.Find(X509FindType.FindByThumbprint,
-                                 ConfigurationManager.AppSettings["Kentor.AuthServices.Certificate.Thumbprint"], false);
-            return certCollection.Cast<X509Certificate2>().FirstOrThrow(() => new Exception("Certificate not found"));
-        }
-
-        private static X509Certificate2 GetCertWhenNotHostedOnAzure() => new X509Certificate2(HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.Tests.pfx"));
+        
+#endif
     }
 }

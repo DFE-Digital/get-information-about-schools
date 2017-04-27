@@ -3,7 +3,6 @@ using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services;
 using Edubase.Services.Core;
-using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
@@ -26,7 +25,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Enums;
+using Edubase.Web.Resources;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
+using MoreLinq;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -36,31 +38,31 @@ namespace Edubase.Web.UI.Controllers
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
         private readonly IMapper _mapper;
-        private readonly ILAESTABService _laEstabService;
         private readonly IEstablishmentWriteService _establishmentWriteService;
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IFileDownloadFactoryService _downloadService;
         private readonly NomenclatureService _nomenclatureService;
+        private readonly IResourcesHelper _resourcesHelper;
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService, IMapper mapper, 
-            ILAESTABService laEstabService,
             IEstablishmentWriteService establishmentWriteService,
             ICachedLookupService cachedLookupService,
             IGovernorsReadService governorsReadService,
             IFileDownloadFactoryService downloadService,
-            NomenclatureService nomenclatureService)
+            NomenclatureService nomenclatureService,
+            IResourcesHelper resourcesHelper)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _mapper = mapper;
-            _laEstabService = laEstabService;
             _establishmentWriteService = establishmentWriteService;
             _cachedLookupService = cachedLookupService;
             _governorsReadService = governorsReadService;
             _downloadService = downloadService;
             _nomenclatureService = nomenclatureService;
+            _resourcesHelper = resourcesHelper;
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
@@ -97,7 +99,7 @@ namespace Edubase.Web.UI.Controllers
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
             var viewModel = _mapper.Map<ViewModel>(domainModel);
 
-            viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, domainModel);
+            viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
 
             viewModel.AllowHidingOfAddress = User.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT);
@@ -127,7 +129,7 @@ namespace Edubase.Web.UI.Controllers
         private async Task<ActionResult> SaveEstablishment(ViewModel model)
         {
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
-            model.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, domainModel);
+            model.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel);
             model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
             await PopulateSelectLists(model);
 
@@ -243,7 +245,11 @@ namespace Edubase.Web.UI.Controllers
 
             using (MiniProfiler.Current.Step("Retrieving LinkedEstablishments"))
             {
-                viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishments(id)).Select(x => new LinkedEstabViewModel(x));
+                viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id, User)).Select(x => new LinkedEstabViewModel(x));
+                foreach (var item in viewModel.LinkedEstablishments)
+	            {
+                    item.LinkTypeName = await _cachedLookupService.GetNameAsync(() => item.LinkTypeId);
+                }
             }
             
 
@@ -254,24 +260,37 @@ namespace Edubase.Web.UI.Controllers
             }
 
             using (MiniProfiler.Current.Step("Retrieving parent group records"))
-                viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id);
+                viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id, User);
             
             using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
-                viewModel.DisplayPolicy = _establishmentReadService.GetDisplayPolicy(User, viewModel.Establishment);
+                viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, viewModel.Establishment);
 
             using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
                 viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
 
 
+#if (!TEXAPI)
             viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
                 .CanEdit(viewModel.Establishment.Urn.Value,
                     viewModel.Establishment.TypeId,
                     viewModel.Groups.Select(x => x.GroupUID.Value).ToArray(),
                     viewModel.Establishment.LocalAuthorityId,
                     viewModel.Establishment.EstablishmentTypeGroupId);
+#else
+            viewModel.UserCanEdit = await _establishmentReadService.CanEditAsync(viewModel.Establishment.Urn.Value, User);
+#endif
+
+            // Retrieve the lookup name values
+            await PopulateLookupNames(viewModel);
+
+            viewModel.AgeRangeToolTip = _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
 
             return View(viewModel);
         }
+
 
         [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/csv/{id}")]
         public async Task<ActionResult> DownloadCsvChangeHistory(int id)
@@ -372,6 +391,60 @@ namespace Edubase.Web.UI.Controllers
 
             if (viewModel.MSOAId.HasValue) viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.MSOAId.Value)?.Code;
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
+        }
+
+        private async Task PopulateLookupNames(EstablishmentDetailViewModel vm)
+        {
+            var c = _cachedLookupService;
+            vm.ReligiousCharacterName = await c.GetNameAsync(() => vm.Establishment.ReligiousCharacterId);
+            vm.DioceseName = await c.GetNameAsync(() => vm.Establishment.DioceseId);
+            vm.ReligiousEthosName = await c.GetNameAsync(() => vm.Establishment.ReligiousEthosId);
+            vm.ProvisionBoardingName = await c.GetNameAsync(() => vm.Establishment.ProvisionBoardingId);
+            vm.ProvisionNurseryName = await c.GetNameAsync(() => vm.Establishment.ProvisionNurseryId);
+            vm.ProvisionOfficialSixthFormName = await c.GetNameAsync(() => vm.Establishment.ProvisionOfficialSixthFormId);
+            vm.Section41ApprovedName = await c.GetNameAsync(() => vm.Establishment.Section41ApprovedId);
+            vm.ReasonEstablishmentOpenedName = await c.GetNameAsync(() => vm.Establishment.ReasonEstablishmentOpenedId);
+            vm.ReasonEstablishmentClosedName = await c.GetNameAsync(() => vm.Establishment.ReasonEstablishmentClosedId);
+            vm.CCOperationalHoursName = await c.GetNameAsync(() => vm.Establishment.CCOperationalHoursId);
+            vm.CCGovernanceName = await c.GetNameAsync(() => vm.Establishment.CCGovernanceId);
+            vm.CCDeliveryModelName = await c.GetNameAsync(() => vm.Establishment.CCDeliveryModelId);
+            vm.CCGroupLeadName = await c.GetNameAsync(() => vm.Establishment.CCGroupLeadId);
+            vm.CCPhaseTypeName = await c.GetNameAsync(() => vm.Establishment.CCPhaseTypeId);
+            vm.CCDisadvantagedAreaName = await c.GetNameAsync(() => vm.Establishment.CCDisadvantagedAreaId);
+            vm.CCDirectProvisionOfEarlyYearsName = await c.GetNameAsync(() => vm.Establishment.CCDirectProvisionOfEarlyYearsId);
+            vm.ProvisionSpecialClassesName = await c.GetNameAsync(() => vm.Establishment.ProvisionSpecialClassesId);
+            vm.SEN1Name = await c.GetNameAsync(() => vm.Establishment.SEN1Id);
+            vm.SEN2Name = await c.GetNameAsync(() => vm.Establishment.SEN2Id);
+            vm.SEN3Name = await c.GetNameAsync(() => vm.Establishment.SEN3Id);
+            vm.SEN4Name = await c.GetNameAsync(() => vm.Establishment.SEN4Id);
+            vm.TeenageMothersProvisionName = await c.GetNameAsync(() => vm.Establishment.TeenageMothersProvisionId);
+            vm.ChildcareFacilitiesName = await c.GetNameAsync(() => vm.Establishment.ChildcareFacilitiesId);
+            vm.PRUSENName = await c.GetNameAsync(() => vm.Establishment.PRUSENId);
+            vm.PRUEBDName = await c.GetNameAsync(() => vm.Establishment.PRUEBDId);
+            vm.PruFulltimeProvisionName = await c.GetNameAsync(() => vm.Establishment.PruFulltimeProvisionId);
+            vm.PruEducatedByOthersName = await c.GetNameAsync(() => vm.Establishment.PruEducatedByOthersId);
+            vm.TypeOfResourcedProvisionName = await c.GetNameAsync(() => vm.Establishment.TypeOfResourcedProvisionId);
+            vm.BSOInspectorateName = await c.GetNameAsync(() => vm.Establishment.BSOInspectorateId);
+            vm.InspectorateName = await c.GetNameAsync(() => vm.Establishment.InspectorateId);
+            vm.IndependentSchoolTypeName = await c.GetNameAsync(() => vm.Establishment.IndependentSchoolTypeId);
+            vm.RSCRegionName = await c.GetNameAsync(() => vm.Establishment.RSCRegionId);
+            vm.GovernmentOfficeRegionName = await c.GetNameAsync(() => vm.Establishment.GovernmentOfficeRegionId);
+            vm.AdministrativeDistrictName = await c.GetNameAsync(() => vm.Establishment.AdministrativeDistrictId);
+            vm.AdministrativeWardName = await c.GetNameAsync(() => vm.Establishment.AdministrativeWardId);
+            vm.ParliamentaryConstituencyName = await c.GetNameAsync(() => vm.Establishment.ParliamentaryConstituencyId);
+            vm.UrbanRuralName = await c.GetNameAsync(() => vm.Establishment.UrbanRuralId);
+            vm.GSSLAName = await c.GetNameAsync(() => vm.Establishment.GSSLAId);
+            vm.CASWardName = await c.GetNameAsync(() => vm.Establishment.CASWardId);
+            vm.MSOAName = await c.GetNameAsync(() => vm.Establishment.MSOAId);
+            vm.LSOAName = await c.GetNameAsync(() => vm.Establishment.LSOAId);
+            vm.LocalAuthorityName = await c.GetNameAsync(() => vm.Establishment.LocalAuthorityId);
+            vm.HeadTitleName = await c.GetNameAsync(() => vm.Establishment.HeadTitleId);
+            vm.EducationPhaseName = await c.GetNameAsync(() => vm.Establishment.EducationPhaseId);
+            vm.TypeName = await c.GetNameAsync(() => vm.Establishment.TypeId);
+            vm.FurtherEducationTypeName = await c.GetNameAsync(() => vm.Establishment.FurtherEducationTypeId);
+            vm.GenderName = await c.GetNameAsync(() => vm.Establishment.GenderId);
+            vm.StatusName = await c.GetNameAsync(() => vm.Establishment.StatusId);
+            vm.AdmissionsPolicyName = await c.GetNameAsync(() => vm.Establishment.AdmissionsPolicyId);
         }
 
     }

@@ -4,7 +4,7 @@
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @model VM
 @{
-    ViewBag.bodyClasses = "create-edit-school school-details";
+    //ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
     ViewBag.Title = Model.PageTitle;
     Layout = "_EditLayoutPage.cshtml";
@@ -67,7 +67,7 @@
                 {
                     <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
                         <fieldset>
-                            <legend>@Model.OpenDateLabel</legend>
+                            <legend class="bold-xsmall" style="font-weight:bold;">@Model.OpenDateLabel</legend>
 
                             <div class="form-hint">For example, 20 03 2003</div>
                             @Html.ValidationMessageFor(x => x.OpenDate)
@@ -111,7 +111,7 @@
                 {
                     <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.ClosedDate)">
                         <fieldset>
-                            <legend>Closed date</legend>
+                            <legend class="bold-xsmall" style="font-weight:bold;">Closed date</legend>
 
                             <div class="form-hint">For example, 20 03 2003</div>
                             @Html.ValidationMessageFor(x => x.ClosedDate)

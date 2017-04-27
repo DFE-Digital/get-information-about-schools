@@ -2,7 +2,6 @@
 @using Edubase.Common;
 @using Edubase.Common.Text;
 @using VM = Edubase.Web.UI.Areas.Governors.Models.CreateEditGovernorViewModel;
-@using L = Edubase.Services.Enums.eLookupGroupType;
 @using System.Linq.Expressions
 
 @model VM
@@ -13,163 +12,47 @@
     Layout = Model.Layout;
 }
 
-<div class="grid-row">
-    <div class="column-half">
+<div class="column-half">
         
-        @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post))
+    @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post))
+    {
+        @Buttons()
+        <h2 class="heading-medium">Governance</h2>
+            
+        @Html.HiddenFor(x => x.GovernorRole)
+        @Html.HiddenFor(x => x.GovernorRoleName)
+        @Html.HiddenFor(x => x.GID)
+        @Html.HiddenFor(x => x.EstablishmentUrn)
+        @Html.HiddenFor(x => x.GroupUId)
+        @Html.HiddenFor(x => x.SelectedTabName)
+        @Html.HiddenFor(x => x.GroupName)
+        @Html.HiddenFor(x => x.GroupTypeId)
+        @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
+
+        @Html.HiddenFor(x => x.ReplaceGovernorViewModel.GID)
+        @Html.HiddenFor(x => x.ReplaceGovernorViewModel.Name)
+            
+        if (Model.ReplaceGovernorViewModel.GID.HasValue)
         {
-            @Buttons()
-            <br /><br />
-            <h1 class="bold-medium">Governance</h1>
-            
-            @Html.HiddenFor(x => x.GovernorRole)
-            @Html.HiddenFor(x => x.GovernorRoleName)
-            @Html.HiddenFor(x => x.GID)
-            @Html.HiddenFor(x => x.EstablishmentUrn)
-            @Html.HiddenFor(x => x.GroupUId)
-            @Html.HiddenFor(x => x.SelectedTabName)
-            @Html.HiddenFor(x => x.GroupName)
-            @Html.HiddenFor(x => x.GroupTypeId)
-            @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
-
-            @Html.HiddenFor(x => x.ReplaceGovernorViewModel.GID)
-            @Html.HiddenFor(x => x.ReplaceGovernorViewModel.Name)
-            
-            if (Model.ReplaceGovernorViewModel.GID.HasValue)
-            {
-                <p class="bold-small">Replace @Model.GovernorRoleName.ToLower()</p>
-                <p class="bold-xsmall">@Model.ReplaceGovernorViewModel.Name</p>
-                <div style="border-left:4px solid #bbb; padding-left:10px;">
-                    @RenderDateSelector(x => x.ReplaceGovernorViewModel.AppointmentEndDate, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Day, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Month, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Year, "Date term ends")
-                </div>
-            }
-            <br />
-            <p  class="bold-small">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</p>
-            
-            <div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitle)">
-                @Html.LabelFor(x => x.GovernorTitle)
-                @Html.ValidationMessageFor(x => x.GovernorTitle)
-                @Html.DropDownListFor(x => x.GovernorTitle, Model.Titles, "", new { @class = "form-control" })
+            <p class="bold-small">Replace @Model.GovernorRoleName.ToLower()</p>
+            <p class="bold-xsmall">@Model.ReplaceGovernorViewModel.Name</p>
+            <div class="date-group-wrap">
+                @RenderDateSelector(x => x.ReplaceGovernorViewModel.AppointmentEndDate, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Day, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Month, x => x.ReplaceGovernorViewModel.AppointmentEndDate.Year, "Date term ends")
             </div>
-
-            <div class="form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-                @Html.LabelFor(x => x.FirstName)
-                @Html.ValidationMessageFor(x => x.FirstName)
-                @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
-            </div>
-
-            <div class="form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
-                @Html.LabelFor(x => x.MiddleName)
-                @Html.ValidationMessageFor(x => x.MiddleName)
-                @Html.TextBoxFor(x => x.MiddleName, new { @class = "form-control" })
-            </div>
-
-            <div class="form-group @Html.ValidationCssClassFor(x => x.LastName)">
-                @Html.LabelFor(x => x.LastName)
-                @Html.ValidationMessageFor(x => x.LastName)
-                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(x => x.GID)
-                <input class="form-control" value="@Model.GID" readonly="readonly" disabled="disabled" />
-            </div>
-
-            if (Model.DisplayPolicy.AppointingBodyId)
-            {
-                <div class="form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
-                    @Html.LabelFor(x => x.AppointingBodyId)
-                    @Html.ValidationMessageFor(x => x.AppointingBodyId)
-                    @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "", new { @class = "form-control" })
-                </div>
-            }
-
-            if (Model.DisplayPolicy.AppointmentStartDate)
-            {
-                @RenderDateSelector(x => x.AppointmentStartDate, x => x.AppointmentStartDate.Day, x => x.AppointmentStartDate.Month, x => x.AppointmentStartDate.Year, "Date of appointment")
-            }
-
-            if (Model.DisplayPolicy.AppointmentEndDate)
-            {
-                @RenderDateSelector(x => x.AppointmentEndDate, x => x.AppointmentEndDate.Day, x => x.AppointmentEndDate.Month, x => x.AppointmentEndDate.Year, (Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends"))
-            }
-
-            if (Model.DisplayPolicy.EmailAddress)
-            {
-                <div class="form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
-                    @Html.LabelFor(x => x.EmailAddress)
-                    @Html.ValidationMessageFor(x => x.EmailAddress)
-                    @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control" })
-                </div>
-            }
-
-            if (Model.DisplayPolicy.PostCode)
-            {
-                <div class="form-group @Html.ValidationCssClassFor(x => x.PostCode)">
-                    @Html.LabelFor(x => x.PostCode)
-                    @Html.ValidationMessageFor(x => x.PostCode)
-                    @Html.TextBoxFor(x => x.PostCode, new { @class = "form-control" })
-                </div>
-            }
-
-            if (Model.DisplayPolicy.DOB)
-            {
-                @RenderDateSelector(x => x.DOB, x => x.DOB.Day, x => x.DOB.Month, x => x.DOB.Year, "Date of birth")
-            }
-
-            if (Model.DisplayPolicy.PreviousFullName)
-            {
-                <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousTitle)">
-                    @Html.LabelFor(x => x.PreviousTitle)
-                    @Html.ValidationMessageFor(x => x.PreviousTitle)
-                    @Html.DropDownListFor(x => x.PreviousTitle, Model.PreviousTitles, "", new { @class = "form-control" })
-                </div>
-
-                <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">
-                    @Html.LabelFor(x => x.PreviousFirstName)
-                    @Html.ValidationMessageFor(x => x.PreviousFirstName)
-                    @Html.TextBoxFor(x => x.PreviousFirstName, new { @class = "form-control" })
-                </div>
-
-                <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousMiddleName)">
-                    @Html.LabelFor(x => x.PreviousMiddleName)
-                    @Html.ValidationMessageFor(x => x.PreviousMiddleName)
-                    @Html.TextBoxFor(x => x.PreviousMiddleName, new { @class = "form-control" })
-                </div>
-
-                <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousLastName)">
-                    @Html.LabelFor(x => x.PreviousLastName)
-                    @Html.ValidationMessageFor(x => x.PreviousLastName)
-                    @Html.TextBoxFor(x => x.PreviousLastName, new { @class = "form-control" })
-                </div>
-            }
-
-            if (Model.DisplayPolicy.Nationality)
-            {
-                <div class="form-group @Html.ValidationCssClassFor(x => x.NationalityId)">
-                    @Html.LabelFor(x => x.NationalityId)
-                    @Html.ValidationMessageFor(x => x.NationalityId)
-                    @Html.DropDownListFor(x => x.NationalityId, Model.Nationalities, "", new { @class = "form-control" })
-                </div>
-            }
-
-            if (Model.DisplayPolicy.TelephoneNumber)
-            {
-                <div class="form-group @Html.ValidationCssClassFor(x => x.TelephoneNumber)">
-                    @Html.LabelFor(x => x.TelephoneNumber)
-                    @Html.ValidationMessageFor(x => x.TelephoneNumber)
-                    @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = "form-control" })
-                </div>
-            }
-
-            <br />
-            <br />
-            @Buttons()
-            
         }
+        <br />
+        <p  class="bold-small">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</p>
+            
+        @Html.EditorFor(m => m)
+
+        <div class="button-row">
+            @Buttons()
+        </div>
+            
+            
+    }
 
         
-    </div>
 </div>
 
 @helper Buttons()

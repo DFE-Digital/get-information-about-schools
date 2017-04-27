@@ -25,16 +25,16 @@ using Edubase.Data.Repositories.Groups.Abstract;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [EdubaseAuthorize(Roles = EdubaseRoles.Admin), RoutePrefix("Admin"), Route("{action=dashboard}")]
+    [RoutePrefix("Admin"), Route("{action=dashboard}")]
     public class AdminController : EduBaseController
     {
         private IAzureSearchEndPoint _azureSearchEndPoint;
 
+#if (!TEXAPI)
         public AdminController(IAzureSearchEndPoint azureSearchEndPoint)
         {
             _azureSearchEndPoint = azureSearchEndPoint;
         }
-
         
         public async Task<ActionResult> Dashboard(string message = null)
         {
@@ -65,7 +65,7 @@ namespace Edubase.Web.UI.Controllers
                 return View(nameof(Dashboard));
             }   
         }
-
+#endif
         [Route("Logs")]
         public async Task<ActionResult> Logs(string date, string skipToken)
         {
@@ -99,7 +99,7 @@ namespace Edubase.Web.UI.Controllers
                 .GetService<IMessageLoggingService>().InstanceId);
         }
 
-        [Authorize, Route("Secure")]
+        [Route("Secure")]
         public ActionResult Secure() => View((User.Identity as ClaimsIdentity).Claims);
 
         [Route("ClearCache")]
@@ -109,7 +109,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 await scope.Resolve<ICacheAccessor>().ClearAsync();
             }
-            return RedirectToAction(nameof(Dashboard), new { message = "Redis cache and MemoryCache cleared successfully." });
+            return RedirectToAction("Dashboard", new { message = "Redis cache and MemoryCache cleared successfully." });
         }
 
         [HttpPost, Route("WarmEstabRepo")]
@@ -126,7 +126,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             });
 
-            return RedirectToAction(nameof(Dashboard), new { message = "Establishments cache is now warming." });
+            return RedirectToAction("Dashboard", new { message = "Establishments cache is now warming." });
         }
 
         [HttpPost, Route("WarmGroupRepo")]
@@ -143,9 +143,10 @@ namespace Edubase.Web.UI.Controllers
                 }
             });
 
-            return RedirectToAction(nameof(Dashboard), new { message = "Groups cache is now warming." });
+            return RedirectToAction("Dashboard", new { message = "Groups cache is now warming." });
         }
 
+#if (!TEXAPI)
         [HttpPost, Route("ResetAzureSearch")]
         public async Task<ActionResult> ResetAzureSearch()
         {
@@ -197,7 +198,8 @@ namespace Edubase.Web.UI.Controllers
             await _azureSearchEndPoint.DeleteDataSourceAsync(indexName + "-ds");
             await _azureSearchEndPoint.DeleteIndexerAsync(indexName + "-indexer");
         }
-        
+#endif
+
         public async Task FlushErrors() => await DependencyResolver.Current
                 .GetService<IMessageLoggingService>().FlushAsync();
     }

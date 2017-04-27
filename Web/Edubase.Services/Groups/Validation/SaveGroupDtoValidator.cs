@@ -49,10 +49,16 @@ namespace Edubase.Services.Groups.Validation
             RuleFor(x => x.Group.Name)
                 .NotEmpty()
                 .WithMessage("The Group Name must not be empty")
-                .MustAsync(async (model, name, ct) => !await _groupReadService.ExistsAsync(name, model.Group.LocalAuthorityId, model.Group.GroupUID))
+                .MustAsync(async (model, name, ct) => !await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), name, model.Group.LocalAuthorityId, model.Group.GroupUID))
                 .WithMessage("The specified group name already exists")
-                .When(x => x.Group.GroupTypeId != (int)GT.MultiacademyTrust 
-                    && x.Group.GroupTypeId != (int)GT.SingleacademyTrust, ApplyConditionTo.CurrentValidator); // user has no control over academy trust names
+                .When(x => x.Group.GroupTypeId != (int)GT.MultiacademyTrust && x.Group.GroupTypeId != (int)GT.SingleacademyTrust, ApplyConditionTo.CurrentValidator); // user has no control over academy trust names
+
+            RuleFor(x => x.Group.GroupId)
+                .NotEmpty()
+                .WithMessage("The Group ID must not be empty")
+                .MustAsync(async (model, groupId, ct) => !await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), groupId, model.Group.GroupUID))
+                .WithMessage("The specified group id already exists")
+                .When(x => x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor), ApplyConditionTo.AllValidators); // user has no control over academy trust names
 
             RuleFor(x => x.Group.GroupTypeId).NotEmpty().WithMessage("The Group Type must not be empty");
             RuleFor(x => x.Group.StatusId).NotEmpty().WithMessage("The Group Status must not be empty");
@@ -67,7 +73,7 @@ namespace Edubase.Services.Groups.Validation
             // When an MAT/SAT group type
             When(x => x.Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust), () =>
             {
-                RuleFor(x => x.Group.Address)
+                RuleFor(x => x.Group.Address.ToString())
                     .NotEmpty().WithMessage("The Address field should be supplied for types: MultiAcademyTrust and SingleAcademyTrust.")
                     .When(x => x.IsNewEntity);
 
@@ -94,6 +100,15 @@ namespace Edubase.Services.Groups.Validation
                     .MustAsync(async (m, e, ct) => (await _establishmentReadService.GetAsync(e.EstablishmentUrn, _principal))
                     .GetResult().EstablishmentTypeGroupId.OneOfThese(eLookupEstablishmentTypeGroup.LAMaintainedSchools))
                     .WithMessage("The linked establishments' type groups must be LAMaintainedSchools");
+            });
+
+            // When group type is a sponsor
+            When(x => x.Group.GroupTypeId.OneOfThese(GT.SchoolSponsor), () =>
+            {
+                RuleForEach(x => x.LinkedEstablishments)
+                    .MustAsync(async (m, e, ct) => (await _establishmentReadService.GetAsync(e.EstablishmentUrn, _principal))
+                    .GetResult().EstablishmentTypeGroupId.OneOfThese(eLookupEstablishmentTypeGroup.Academies))
+                    .WithMessage("The linked establishments' type groups must be Academies");
             });
 
             // A children's centre group

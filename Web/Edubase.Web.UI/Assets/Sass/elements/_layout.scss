@@ -67,7 +67,7 @@ category: Base
 @import "measurements";
 @import "conditionals";
 @import "grid_layout";
-@import "helpers";
+//@import "helpers";
 @import "design-patterns/alpha-beta";
 
 
@@ -111,6 +111,7 @@ category: Base
 // Use .grid-row to define a row for grid columns to sit in
 .grid-row {
   @extend %grid-row;
+  clear: both;
 }
 
 // Use .grid-column to create a grid column with 15px gutter

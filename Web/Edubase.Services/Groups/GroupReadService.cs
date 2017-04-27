@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿#if(!TEXAPI)
+using AutoMapper;
 using Edubase.Data.Entity;
 using Edubase.Services.Enums;
 using Edubase.Services.Groups.Models;
@@ -64,7 +65,7 @@ namespace Edubase.Services.Groups
             _securityService = securityService;
         }
 
-        public async Task<GroupModel> GetByEstablishmentUrnAsync(int urn)
+        public async Task<GroupModel> GetByEstablishmentUrnAsync(int urn, IPrincipal principal)
         {
             var g = (await _dbContext.EstablishmentGroups.Include(x => x.Group)
                 .FirstOrDefaultAsync(x => x.EstablishmentUrn == urn && x.IsDeleted == false))?.Group;
@@ -79,7 +80,7 @@ namespace Edubase.Services.Groups
             return await _azureSearchService.SuggestAsync<GroupSuggestionItem>(GroupsSearchIndex.INDEX_NAME, GroupsSearchIndex.SUGGESTER_NAME, text, oDataFilters.ToString(), take);
         }
 
-        public async Task<AzureSearchResult<Doc>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
+        public async Task<ApiSearchResult<Doc>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {
             Guard.IsFalse(payload.SortBy == eSortBy.Distance, () => new EdubaseException("Sorting by distance is not supported with Groups"));
 
@@ -92,7 +93,15 @@ namespace Edubase.Services.Groups
                 payload.GroupTypeIds.ForEach(x => typeIdODataFilter.Add(nameof(Doc.GroupTypeId), x));
                 oDataFilters.Add(typeIdODataFilter);
             }
-            
+
+            //TODO: TEXCHANGE - filter results by group status
+            if (payload.GroupStatusIds != null && payload.GroupStatusIds.Any())
+            {
+                var statusIdODataFilter = new ODataFilterList(ODataFilterList.OR);
+                payload.GroupStatusIds.ForEach(x => statusIdODataFilter.Add(nameof(Doc.StatusId), x));
+                oDataFilters.Add(statusIdODataFilter);
+            }
+
             return await _azureSearchService.SearchAsync<Doc>(GroupsSearchIndex.INDEX_NAME,
                 payload.Text,
                 oDataFilters.ToString(),
@@ -102,7 +111,7 @@ namespace Edubase.Services.Groups
                 ODataUtil.OrderBy(nameof(Doc.NameDistilled), (payload.SortBy == eSortBy.NameAlphabeticalAZ)));
         }
 
-        public async Task<AzureSearchResult<Doc>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
+        public async Task<ApiSearchResult<Doc>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
         {
             var outerODataFilters = new ODataFilterList(ODataFilterList.AND, AzureSearchEndPoint.ODATA_FILTER_DELETED);
             if (IsRoleRestrictedOnStatus(principal)) outerODataFilters.Add(nameof(GroupModel.StatusId), (int)eStatus.Open);
@@ -119,12 +128,12 @@ namespace Edubase.Services.Groups
         private bool IsRoleRestrictedOnStatus(IPrincipal principal)
             => !_nonStatusRestrictiveRoles.Any(x => principal.IsInRole(x));
 
-        public async Task<int[]> GetParentGroupIdsAsync(int establishmentUrn)
+        public async Task<int[]> GetParentGroupIdsAsync(int establishmentUrn, IPrincipal principal)
         {
             return await _dbContext.EstablishmentGroups.Where(x => x.EstablishmentUrn == establishmentUrn && x.IsDeleted == false).Select(x => x.GroupUID).ToArrayAsync();
         }
 
-        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn)
+        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal)
         {
             var retVal = new List<GroupModel>();
             var links = await _cachedEstablishmentGroupReadRepository.GetForUrnAsync(urn);
@@ -152,10 +161,13 @@ namespace Edubase.Services.Groups
         /// </summary>
         /// <param name="groupUid"></param>
         /// <returns></returns>
-        public async Task<List<EstablishmentGroup>> GetEstablishmentGroupsAsync(int groupUid) => await _cachedEstablishmentGroupReadRepository.GetForGroupAsync(groupUid);
+        public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal)
+        {
+            return (await _cachedEstablishmentGroupReadRepository.GetForGroupAsync(groupUid))
+                .Select(x => new EstablishmentGroupModel { CCIsLeadCentre = x.CCIsLeadCentre, EstablishmentUrn = x.EstablishmentUrn, Id = x.Id, JoinedDate = x.JoinedDate }).ToList();
+        }
 
-
-        public async Task<bool> ExistsAsync(string name, int? localAuthorityId = null, int? existingGroupUId = null)
+        public async Task<bool> ExistsAsync(IPrincipal principal, string name, int? localAuthorityId = null, int? existingGroupUId = null)
         {
             using (var dc = new ApplicationDbContext()) // no point in putting this into a repo, as Texuna will be doing an API
             {
@@ -163,7 +175,15 @@ namespace Edubase.Services.Groups
             }
         }
 
-        public async Task<bool> ExistsAsync(CompaniesHouseNumber number)
+        public async Task<bool> ExistsAsync(IPrincipal principal, string groupId, int? existingGroupUId = null)
+        {
+            using (var dc = new ApplicationDbContext()) // no point in putting this into a repo, as Texuna will be doing an API
+            {
+                return await dc.Groups.AnyAsync(x => x.GroupId == groupId && (existingGroupUId == null || x.GroupUID != existingGroupUId));
+            }
+        }
+
+        public async Task<bool> ExistsAsync(CompaniesHouseNumber number, IPrincipal principal)
         {
             var v = number.Number;
             using (var dc = new ApplicationDbContext())
@@ -225,3 +245,4 @@ namespace Edubase.Services.Groups
         }
     }
 }
+#endif

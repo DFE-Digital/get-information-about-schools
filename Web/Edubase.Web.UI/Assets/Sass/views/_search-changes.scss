@@ -1,0 +1,113 @@
+﻿// expanding panels
+.panel-trigger {
+    display: block;
+    text-decoration: none;
+    margin: 0;
+    padding: 20px 1px;
+    text-indent: 20px;
+    position: relative;
+    border-bottom: $grey-2 2px solid;
+
+
+    &:link,
+    &:visited, 
+    &:hover {
+        color: $black;
+    }
+
+    .last-panel & {
+        border-bottom: 0;
+    }
+
+    &:active,
+    &:focus {
+        outline: none;
+        background-color: #fff;
+    }
+
+    &:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 24px;
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 14px solid $black;
+    }
+
+    .open-expander & {
+        border-bottom: 0;
+        &:before {
+            border-bottom: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 14px solid $black;
+            top: 25px;
+        }
+    }
+
+}
+
+
+.expander-panel-content {   
+    display: none;
+    padding-bottom: 20px;
+    border-bottom: $grey-2 2px solid;
+    overflow: hidden;
+
+    .open-expander & {
+        display: block;        
+    }
+
+    .last-panel & {
+        border-bottom: 0;
+    }
+
+    .inline {
+        padding-top: 12px;
+        @media(max-width: 600px) {
+            .radio-button-wrap {
+                display: block;
+                margin-bottom: 32px;
+            }
+        }
+    }
+   
+}
+
+.search-changes {
+    .panel-indent {
+        margin-top: 0;
+        margin-left: 8px;
+        padding-top: 0;
+    }
+
+    .expander-panel {
+        .checkbox-wrap {
+            width: 32%;
+            margin-right: 0;
+            margin-left: 0;
+            padding-left: 3px;
+
+            @media(max-width: 980px) {
+                width: 49%;
+            }
+
+        }
+    }
+}
+
+.range-group {
+    legend {
+        margin: 0 0 8px;
+    }
+}
+
+.range-group-to {
+    margin-top: 20px;
+}
+.padded-group {
+    padding: 20px 0 0;
+}

@@ -56,5 +56,7 @@ namespace Edubase.Services.Security
         /// </summary>
         /// <returns></returns>
         public IPrincipal CreateSystemPrincipal() => new GenericPrincipal(new GenericIdentity("SYSTEM"), new[] { EdubaseRoles.Admin });
+
+        public IPrincipal CreateAnonymousPrincipal() => new GenericPrincipal(new GenericIdentity("ANON"), new string[0]);
     }
 }

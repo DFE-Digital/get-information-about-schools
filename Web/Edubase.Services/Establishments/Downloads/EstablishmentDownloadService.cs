@@ -1,4 +1,5 @@
-﻿using Edubase.Common.Cache;
+﻿#if(!TEXAPI)
+using Edubase.Common.Cache;
 using Edubase.Common.IO;
 using Edubase.Common.Reflection;
 using Edubase.Services.Domain;
@@ -33,12 +34,7 @@ namespace Edubase.Services.Establishments.Downloads
         private IMessageLoggingService _messageLoggingService;
         private IGroupReadService _groupReadService;
 
-        public enum eDataSet
-        {
-            Core,
-            Full
-        }
-
+        
         public EstablishmentDownloadService(ICacheAccessor cacheAccessor, 
             IEstablishmentReadService establishmentReadService, 
             IBlobService blobService,
@@ -80,7 +76,7 @@ namespace Edubase.Services.Establishments.Downloads
                 payload.Skip = 0;
                 payload.Take = 1000;
                 var results = await _establishmentReadService.SearchAsync(payload, principal);
-                progress.TotalRecordsCount = results.Count.Value;
+                progress.TotalRecordsCount = results.Count;
                 progress.Status = "Retrieving data...";
                 progress.FileExtension = ToFileExtension(format);
                 await updateProgressCache();
@@ -126,7 +122,7 @@ namespace Edubase.Services.Establishments.Downloads
             SearchDownloadGenerationProgressDto progress,
             EstablishmentDownloadCoreFieldList fieldList,
             Func<Task> updateProgressCache,
-            AzureSearchResult<SearchEstablishmentDocument> results,
+            ApiSearchResult<SearchEstablishmentDocument> results,
             string fileName)
         {
             var headers = GetHeaders(fieldList);
@@ -169,8 +165,8 @@ namespace Edubase.Services.Establishments.Downloads
             IPrincipal principal, 
             SearchDownloadGenerationProgressDto progress, 
             EstablishmentDownloadCoreFieldList fieldList, 
-            Func<Task> updateProgressCache, 
-            AzureSearchResult<SearchEstablishmentDocument> results, 
+            Func<Task> updateProgressCache,
+            ApiSearchResult<SearchEstablishmentDocument> results, 
             string fileName)
         {
             var headers = GetHeaders(fieldList);
@@ -302,7 +298,7 @@ namespace Edubase.Services.Establishments.Downloads
         private async Task<List<string>> GetRowData(SearchEstablishmentDocument doc, IPrincipal principal, EstablishmentFieldList list)
         {   
             var lsvc = _cachedLookupService;
-            var dp = _establishmentReadService.GetDisplayPolicy(principal, doc);
+            var dp = await _establishmentReadService.GetDisplayPolicyAsync(principal, doc);
             var fields = new List<string>();
 
             Action<bool, bool, object> AddIf = (shouldIncludeField, isValueAllowedByPolicy, theValue) =>
@@ -338,7 +334,7 @@ namespace Edubase.Services.Establishments.Downloads
 
             if (list.GroupDetails)
             {
-                var groups = await _groupReadService.GetAllByEstablishmentUrnAsync(doc.Urn.Value);
+                var groups = await _groupReadService.GetAllByEstablishmentUrnAsync(doc.Urn.Value, principal);
                 AddIf(true, dp.GroupDetails, groups.FirstOrDefault(x => x.GroupTypeId == (int)eLookupGroupType.SingleacademyTrust)?.Name);
                 AddIf(true, dp.GroupDetails, groups.FirstOrDefault(x => x.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)?.Name);
                 AddIf(true, dp.GroupDetails, groups.FirstOrDefault(x => x.GroupTypeId == (int)eLookupGroupType.SchoolSponsor)?.Name);
@@ -443,3 +439,4 @@ namespace Edubase.Services.Establishments.Downloads
         
     }
 }
+#endif

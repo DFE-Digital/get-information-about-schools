@@ -4,6 +4,7 @@ using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Models.Establishments;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
@@ -86,9 +87,13 @@ namespace Edubase.Web.UI.Models
 
         public string Address_PostCode { get; set; }
 
+        public string OldHeadFirstName { get; set; }
         public string HeadFirstName { get; set; }
+        public string OldHeadLastName { get; set; }
         public string HeadLastName { get; set; }
         public int? HeadTitleId { get; set; }
+        public string HeadEmailAddress { get; set; }
+        //public DateTimeViewModel HeadAppointmentDate { get; set; }
         public ContactDetailsViewModel Contact { get; set; } = new ContactDetailsViewModel();
         public ContactDetailsViewModel ContactAlt { get; set; } = new ContactDetailsViewModel();
         //public int? LAESTAB { get; set; }
@@ -264,8 +269,12 @@ namespace Edubase.Web.UI.Models
         public int? TotalNumberOfFullTimePupils { get; set; }
         public int? TotalNumberOfPartTimePupils { get; set; }
         public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
+
+        [Obsolete("Use SENStat/SENNoStat")]
         public int? NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
+        [Obsolete("Use SENStat/SENNoStat")]
         public int? NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
+
         public int? TotalNumberOfPupilsInPublicCare { get; set; }
         public int? PTBoysAged2AndUnder { get; set; }
         public int? PTBoysAged3 { get; set; }

@@ -5,7 +5,8 @@ module.exports = {
   ],
   "compile-dev-js": [
     "clean:elements-js",
-    "uglify:bundle-elements-dev"
+    "uglify:bundle-elements-dev",
+    "uglify:process-standalone"
   ],
   "compile-dev-css": [
     "clean:elements-css",

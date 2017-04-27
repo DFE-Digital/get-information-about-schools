@@ -7,36 +7,28 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.IntegrationEndPoints.AzureSearch.Models
 {
-    public class AzureSearchResult<T> where T : class
+    public class ApiSearchResult<T> where T : class
     {
-        internal Action CountAccessor { get; set; }
+        public List<T> Items { get; set; }
 
-        public IList<T> Items { get; internal set; }
-        
-        private long? _count;
+        public long Count { get; set; }
 
-        public long? Count
+        public ApiSearchResult(DocumentSearchResult<T> result)
         {
-            get
-            {
-                CountAccessor?.Invoke();
-                return _count;
-            }
-            private set { _count = value; }
-        }
-
-        public AzureSearchResult(DocumentSearchResult<T> result)
-        {
-            Count = result.Count;
+            Count = result.Count.GetValueOrDefault();
             Items = result.Results.Select(x => x.Document).ToList();
         }
 
-        public AzureSearchResult(long? count, IList<T> items)
+        public ApiSearchResult(long count, List<T> items)
         {
             Count = count;
             Items = items;
         }
 
+        public ApiSearchResult()
+        {
+
+        }
 
     }
 }
