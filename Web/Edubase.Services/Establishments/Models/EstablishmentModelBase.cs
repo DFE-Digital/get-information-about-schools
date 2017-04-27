@@ -94,6 +94,8 @@ namespace Edubase.Services.Establishments.Models
 
         public string HeadPreferredJobTitle { get; set; }
 
+        //public DateTime? HeadAppointmentDate { get; set; }
+
         public string Contact_TelephoneNumber { get; set; }
 
         public string Contact_EmailAddress { get; set; }
