@@ -100,7 +100,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (model.GovernorSearchModel?.RoleId != null && model.GovernorSearchModel.RoleId.Any())
             {
                 model.SelectedRoleIds.AddRange(model.GovernorSearchModel.RoleId
-                    .Where(r => r.HasValue && !model.SelectedRoleIds.Contains(r.Value))
+                    .Where(r => !model.SelectedRoleIds.Contains(r))
                     .Cast<int>());
             }
 
