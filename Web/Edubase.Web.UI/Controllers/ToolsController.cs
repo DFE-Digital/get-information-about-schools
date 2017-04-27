@@ -103,17 +103,23 @@ namespace Edubase.Web.UI.Controllers
                 ViewBag.fileName = Path.GetFileName(bulkfile.FileName);
                 ViewBag.fileExtension = Path.GetExtension(bulkfile.FileName);
                 ViewBag.invalidFileError = ViewBag.fileName == "invalid.csv";
-                ViewBag.fileTypeError = !(ViewBag.fileExtension == ".csv" || ViewBag.fileExtension == ".xlxs");                
+                ViewBag.fileTypeError = !(ViewBag.fileExtension == ".csv" || ViewBag.fileExtension == ".xlxs");
+                ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
+                ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
+
+                ViewBag.success = !ViewBag.globalError;
             }
             else
             {
                 ViewBag.missingFileError = true;
+                ViewBag.globalError = true;
+                ViewBag.success = false;
             }
 
-            ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
-            ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
+            //ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
+            //ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
 
-            ViewBag.success = !ViewBag.globalError;
+            //ViewBag.success = !ViewBag.globalError;
             return View();
         }
     }
