@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -496,8 +496,9 @@
     <Content Include="public\assets\images\icons\icon-search.png" />
     <Content Include="public\assets\images\icons\icon-white-cross-transparent.png" />
     <Content Include="public\assets\images\icons\suggest-remove.png" />
-    <Content Include="public\assets\images\icons\tick.PNG" />
+    <Content Include="public\assets\images\icons\tick.png" />
     <Content Include="public\assets\images\icons\tooltip-close.gif" />
+    <Content Include="public\assets\images\icons\white-cross-transparent.png" />
     <Content Include="public\assets\images\ofsted-logo-sm.jpeg" />
     <Content Include="public\assets\images\ofsted-logo-x-small.jpeg" />
     <Content Include="public\assets\images\ofsted-logo.jpg" />
