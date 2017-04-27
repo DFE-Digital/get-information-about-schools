@@ -13,9 +13,13 @@
         {
             @Html.HiddenFor(m => m.GroupUId)
             <h2 class="heading-small">Delegated authority of local governing body</h2>
-            <div class="edit-governor">
-                @Html.LabelFor(x => x.DelegationInformation)
-                @Html.TextAreaFor(x => x.DelegationInformation, new {rows = "6", cols = "60"})
+            <div class="edit-governor">                
+                <div class="form-group">
+                    @Html.LabelFor(x => x.DelegationInformation, new {@class = "form-label"})
+
+                    @Html.TextAreaFor(x => x.DelegationInformation, new {rows = "6", cols = "60", @class="form-control"})
+                </div>
+
                 <div class="button-row">
                     <input type="submit" value="Save" class="button mobile-full-width"/>
                     <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="button button-grey mobile-full-width">Cancel</a>

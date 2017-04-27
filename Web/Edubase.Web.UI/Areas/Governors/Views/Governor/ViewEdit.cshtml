@@ -7,19 +7,22 @@
 
 @if (Model.EditMode)
 {
-        <div class="column-half">
-            @(Model.GroupUId.HasValue 
-                ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-grey cancel"}) 
-                : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "governance", new {area = "", id = Model.EstablishmentUrn}, new {@class = "button button-grey cancel"}))
+    <div class="column-half">
+        @(Model.GroupUId.HasValue 
+              ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-grey cancel"}) 
+              : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "governance", new {area = "", id = Model.EstablishmentUrn}, new {@class = "button button-grey cancel"}))
+    </div>
+    <div class="column-two-thirds">
+        <h2 class="heading-medium">Governance</h2>
+        @if (Model.ShowDelegationInformation)
+        {
+            @ShowDelegationInformation()
+        }
 
-            <h2 class="heading-medium">Governance</h2>
-            @if (Model.ShowDelegationInformation)
-            {
-                @ShowDelegationInformation()
-            }
-
-            @DisplayGovernanceMode()
+        @DisplayGovernanceMode()
+    </div>
             
+     <div class="column-half">
             <h2 class="heading-small">Add person</h2>
             
 
