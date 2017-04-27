@@ -104,6 +104,7 @@ namespace Edubase.Web.UI.Controllers
                 ViewBag.fileExtension = Path.GetExtension(bulkfile.FileName);
                 ViewBag.invalidFileError = ViewBag.fileName == "invalid.csv";
                 ViewBag.fileTypeError = !(ViewBag.fileExtension == ".csv" || ViewBag.fileExtension == ".xlxs");
+
                 ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
                 ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
 
