@@ -79,6 +79,24 @@ select#headtitleid {
     }
 }
 
+.date-group {
+    .form-control {
+        width: 60px;        
+    }
+    legend {
+        margin-bottom: 8px;
+    }
+
+    .form-label {
+        display: block;
+    }
+    .inline-form-control {
+        display: block;
+        float: left;
+        margin-right: 1em;
+    }
+}
+
 .create-edit-school {
 
     .form-group.first {

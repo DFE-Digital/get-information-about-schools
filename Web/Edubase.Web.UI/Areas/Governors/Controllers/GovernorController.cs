@@ -400,6 +400,21 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return RedirectToRoute("EstabEditGovernance", new {establishmentUrn = model.Urn});
             }
 
+            var governors = (await _governorsReadService.GetSharedGovernorsAsync(model.Urn.Value, User))
+                .Where(g => g.RoleId == (int?) model.Role)
+                .Select(g => MapGovernorToSharedGovernorViewModel(g, model.Urn.Value))
+                .ToList();
+
+            foreach (var previousGovernor in model.Governors)
+            {
+                var newGovernor = governors.Single(g => g.Id == previousGovernor.Id);
+                if (!newGovernor.PreExisting)
+                {
+                    newGovernor.Selected = previousGovernor.Selected;
+                }
+            }
+
+            model.Governors = governors;
             await PopulateLayoutProperties(model, model.Urn.Value, null, null);
 
             return View(model);

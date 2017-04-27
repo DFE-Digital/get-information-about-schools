@@ -30,6 +30,10 @@ namespace Edubase.Web.UI.Validation
             builder.RegisterType<EditGroupDelegationInformationViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<EditGroupDelegationInformationViewModel>))
                 .As<IValidator>();
+
+            builder.RegisterType<SelectSharedGovernorViewModelValidator>()
+                .Keyed<IValidator>(typeof(IValidator<SelectSharedGovernorViewModel>))
+                .As<IValidator>();
         }
     }
 }

@@ -7,15 +7,26 @@
         @Html.ValidationMessageFor(x => x)
         <span class="inline-form-control">
             @Html.LabelFor(x => x.Day)
-            @Html.DropDownListFor(x => x.Day, Model.Days.Select(d => new SelectListItem { Text = d.ToString(), Value = d.ToString(), Selected = d.ToString() == Model.Day?.ToString() }), "", new {@class="form-control"})
+            @Html.DropDownListFor(x => x.Day, Model.Days.Select(d => new SelectListItem { Text = d.ToString(), Value = d.ToString(), Selected = d.ToString() == Model.Day?.ToString() }), "", GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control"))
         </span>
         <span class="inline-form-control">
             @Html.LabelFor(x => x.Month)
-            @Html.DropDownListFor(x => x.Month, Model.Months.Select(m => new SelectListItem { Text = m.ToString(), Value = m.ToString(), Selected = m.ToString() == Model.Month?.ToString() }), "", new { @class = "form-control" })
+            @Html.DropDownListFor(x => x.Month, Model.Months.Select(m => new SelectListItem { Text = m.ToString(), Value = m.ToString(), Selected = m.ToString() == Model.Month?.ToString() }), "", GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control"))
         </span>
         <span class="inline-form-control">
             @Html.LabelFor(x => x.Year)
-            @Html.DropDownListFor(x => x.Year, Model.Years.Select(y => new SelectListItem { Text = y.ToString(), Value = y.ToString(), Selected = y.ToString() == Model.Year?.ToString() }), "", new { @class = "form-control" })
+            @Html.DropDownListFor(x => x.Year, Model.Years.Select(y => new SelectListItem { Text = y.ToString(), Value = y.ToString(), Selected = y.ToString() == Model.Year?.ToString() }), "", GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control"))
         </span>
     </fieldset>
 </div>
+
+@functions
+{
+    object GetCheckboxAttributes(bool? readOnly, string cssClasses)
+    {
+        if (readOnly.HasValue && readOnly.Value)
+            return new { @class = cssClasses, @disabled = "disabled"};
+
+        return new { @class = cssClasses};
+    }
+}

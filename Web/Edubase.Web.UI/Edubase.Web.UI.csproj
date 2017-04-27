@@ -295,6 +295,7 @@
     <Compile Include="Areas\Governors\Models\Validators\GovernorsGridViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\GovernorViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\ReplaceChairViewModelValidator.cs" />
+    <Compile Include="Areas\Governors\Models\Validators\SelectSharedGovernorViewModelValidator.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\CreateAcademyTrustViewModel.cs" />
@@ -424,6 +425,7 @@
     <Content Include="Areas\Governors\Views\Governor\EditSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\GroupEditDelegation.cshtml" />
+    <Content Include="Assets\Sass\elements\forms\_fileupload.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -431,6 +433,7 @@
     <Content Include="Assets\Scripts\Elements\Forms\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\file-uploaders.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ok-cancel.js" />
     <Content Include="Assets\Scripts\Elements\radio-toggles.js" />
     <Content Include="Assets\Scripts\JSON\addressResult.js" />
@@ -493,8 +496,9 @@
     <Content Include="public\assets\images\icons\icon-search.png" />
     <Content Include="public\assets\images\icons\icon-white-cross-transparent.png" />
     <Content Include="public\assets\images\icons\suggest-remove.png" />
-    <Content Include="public\assets\images\icons\tick.PNG" />
+    <Content Include="public\assets\images\icons\tick.png" />
     <Content Include="public\assets\images\icons\tooltip-close.gif" />
+    <Content Include="public\assets\images\icons\white-cross-transparent.png" />
     <Content Include="public\assets\images\ofsted-logo-sm.jpeg" />
     <Content Include="public\assets\images\ofsted-logo-x-small.jpeg" />
     <Content Include="public\assets\images\ofsted-logo.jpg" />
@@ -932,6 +936,7 @@
     <Content Include="Views\Search\Partials\_GroupSearch.cshtml" />
     <Content Include="Views\Search\Partials\_HelpText.cshtml" />
     <Content Include="Views\Search\Partials\_SearchHeader.cshtml" />
+    <Content Include="Views\Tools\EstablishmentBulkUpdate.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
