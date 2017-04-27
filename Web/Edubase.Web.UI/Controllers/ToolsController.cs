@@ -85,7 +85,7 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpPost, EdubaseAuthorize]
         public ActionResult EstablishmentBulkUpdate(
-            HttpPostedFileBase bulkfile, 
+            HttpPostedFileBase bulkfile,
             string fileType,
             string effectiveddateDay,
             string effectiveddateMonth,
@@ -103,24 +103,17 @@ namespace Edubase.Web.UI.Controllers
                 ViewBag.fileName = Path.GetFileName(bulkfile.FileName);
                 ViewBag.fileExtension = Path.GetExtension(bulkfile.FileName);
                 ViewBag.invalidFileError = ViewBag.fileName == "invalid.csv";
-                ViewBag.fileTypeError = !(ViewBag.fileExtension == ".csv" || ViewBag.fileExtension == ".xlxs");
-
-                ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
-                ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
-
-                ViewBag.success = !ViewBag.globalError;
+                ViewBag.fileTypeError = !(ViewBag.fileExtension == ".csv" || ViewBag.fileExtension == ".xlsx");
             }
             else
             {
                 ViewBag.missingFileError = true;
-                ViewBag.globalError = true;
-                ViewBag.success = false;
             }
 
-            //ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
-            //ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
+            ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
+            ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
 
-            //ViewBag.success = !ViewBag.globalError;
+            ViewBag.success = !(ViewBag.globalError || ViewBag.fileTypeUnselected);
             return View();
         }
     }
