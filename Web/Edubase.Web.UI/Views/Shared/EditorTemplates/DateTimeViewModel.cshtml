@@ -1,33 +1,33 @@
 ﻿@using System.Web.UI.WebControls
 @model DateTimeViewModel
 
-<div class="form-group create-edit-form-group drop-down-date range-date @Html.ValidationCssClassFor(x => x)">
+<div class="form-group create-edit-form-group date-group @Html.ValidationCssClassFor(x => x)">
     <fieldset class="range-group">
         <legend class="bold-xsmall" style="font-weight: bold;">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
         <div class="form-hint">For example, 20 03 2003</div>
         @Html.ValidationMessageFor(x => x)
         <span class="inline-form-control">
             @Html.LabelFor(x => x.Day)
-            @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2, "dd"))
+            @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2))
         </span>
         <span class="inline-form-control">
             @Html.LabelFor(x => x.Month)
-            @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2, "mm"))
+            @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2))
         </span>
         <span class="inline-form-control">
             @Html.LabelFor(x => x.Year)
-            @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 4, "yyyy"))
+            @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 4))
         </span>
     </fieldset>
 </div>
 
 @functions
 {
-    object GetCheckboxAttributes(bool? readOnly, string cssClasses, int maxlength, string placeholder = null)
+    object GetCheckboxAttributes(bool? readOnly, string cssClasses, int maxlength)
     {
         if (readOnly.HasValue && readOnly.Value)
-            return new { @class = cssClasses, @disabled = "disabled", placeholder = placeholder, maxlength = maxlength};
+            return new { @class = cssClasses, @disabled = "disabled", maxlength = maxlength};
 
-        return new { @class = cssClasses, placeholder = placeholder, maxlength = maxlength };
+        return new { @class = cssClasses, maxlength = maxlength };
     }
 }
