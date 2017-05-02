@@ -39,7 +39,7 @@
                         </div>
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                         <div class="form-group">
-                            <button type="submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Text">Search</button>
+                            <button type="submit" class="button mobile-full-width search-button" name="searchtype" value="@eSearchType.Text">Search</button>
                         </div>
                         
                         <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
@@ -76,7 +76,7 @@
                             </span>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Location">Search</button>
+                            <button type="submit" class="button mobile-full-width search-button" name="searchtype" value="@eSearchType.Location">Search</button>
                         </div>
                     </div>
 
@@ -129,7 +129,7 @@
                         
                         @Html.HiddenFieldsFromQueryString()
                         <div class="form-group">
-                            <button type="submit" class="button mobile-full-width button-below" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>                           
+                            <button type="submit" class="button mobile-full-width button-below search-button" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>                           
                         </div>
                     </div>
                 }

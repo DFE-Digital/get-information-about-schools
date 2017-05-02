@@ -55,8 +55,9 @@
         var value = "id";
         var source = null;
         var minChars = 0;
+        var suggestionsOpen = false;
         var selectedLocalAuthorities = [];
-        var selectedLaButtonTemplate = '<button type="submit" id="button-{1}" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="{1}">{0}</button>',
+        var selectedLaButtonTemplate = '<a id="button-{1}" class="link-button font-small remove-suggest-la" data-remove="{1}">{0}</a>',
             selectedLaHiddenTemplate = '<input type="hidden" name="d" value="{0}" id="{1}" />',
             re = /\{0\}/g,
             reId = /\{1}/g,
@@ -167,6 +168,7 @@
 
         });
 
+
         $(targetInputElementName).bind("typeahead:autocomplete", function (src, suggestion) {
             $(targetResolvedInputElementName).val(suggestion[value]);
             currentSuggestionName = suggestion[name];
@@ -180,10 +182,28 @@
             }
         });
 
-        $(targetInputElementName).on('keydown', function(e) {
+        $(targetInputElementName).on('typeahead:open', function() {
+            suggestionsOpen = true;
+        });
+
+        $(targetInputElementName).on('typeahead:close', function() {
+            window.setTimeout(function() {
+                suggestionsOpen = false;
+            }, 0);
+        });
+
+
+        $(targetInputElementName).on('keydown', function (e) {            
+            var $field = $(this);
             if (e.which === 13) {
                 e.preventDefault();
-                $(".tt-suggestion:first-child").click();
+                e.stopPropagation();
+                if (suggestionsOpen) {                    
+                    $(".tt-suggestion:first-child").click();
+
+                } else {
+                    $field.parents('form').find('.search-button').click();
+                }
             }
         });
     } 
