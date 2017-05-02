@@ -34,16 +34,16 @@
                     @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control", id = "boarders" })
                 </div>
                 
-                @RenderDateSelector(x => x.DateOfTheLastBridgeVisit, x => x.DateOfTheLastBridgeVisit.Day, x => x.DateOfTheLastBridgeVisit.Month, x => x.DateOfTheLastBridgeVisit.Year, "Date of last Bridge visit")
-                @RenderDateSelector(x => x.OfstedInspectionDate, x => x.OfstedInspectionDate.Day, x => x.OfstedInspectionDate.Month, x => x.OfstedInspectionDate.Year, "Date of last Ofsted visit")
-                @RenderDateSelector(x => x.DateOfTheLastISIVisit, x => x.DateOfTheLastISIVisit.Day, x => x.DateOfTheLastISIVisit.Month, x => x.DateOfTheLastISIVisit.Year, "Date of last ISI visit")
-                @RenderDateSelector(x => x.DateOfTheLastWelfareVisit, x => x.DateOfTheLastWelfareVisit.Day, x => x.DateOfTheLastWelfareVisit.Month, x => x.DateOfTheLastWelfareVisit.Year, "Date of last welfare visit")
-                @RenderDateSelector(x => x.DateOfTheLastFPVisit, x => x.DateOfTheLastFPVisit.Day, x => x.DateOfTheLastFPVisit.Month, x => x.DateOfTheLastFPVisit.Year, "Date of last FP visit")
-                @RenderDateSelector(x => x.DateOfTheLastSISVisit, x => x.DateOfTheLastSISVisit.Day, x => x.DateOfTheLastSISVisit.Month, x => x.DateOfTheLastSISVisit.Year, "Date of last SIS visit")
-                @RenderDateSelector(x => x.NextOfstedVisit, x => x.NextOfstedVisit.Day, x => x.NextOfstedVisit.Month, x => x.NextOfstedVisit.Year, "Next Ofsted visit")
-                @RenderDateSelector(x => x.NextGeneralActionRequired, x => x.NextGeneralActionRequired.Day, x => x.NextGeneralActionRequired.Month, x => x.NextGeneralActionRequired.Year, "Next general action required")
-                @RenderDateSelector(x => x.NextActionRequiredByWEL, x => x.NextActionRequiredByWEL.Day, x => x.NextActionRequiredByWEL.Month, x => x.NextActionRequiredByWEL.Year, "Next action required by WEL")
-                @RenderDateSelector(x => x.NextActionRequiredByFP, x => x.NextActionRequiredByFP.Day, x => x.NextActionRequiredByFP.Month, x => x.NextActionRequiredByFP.Year, "Next action required by FP")
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Bridge visit" })
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Ofsted visit" })
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last ISI visit" })
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last welfare visit"})
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last FP visit"})
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last SIS visit"})
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Next Ofsted visit"})
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Next general action required"})
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Next action required by WEL"})
+                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Next action required by FP"})
 
                 <div class="form-group">
                     <label for="InspectorateId">Inspectorate</label>
@@ -196,30 +196,3 @@
         @Html.TextBoxFor(fnc, new { @class = "form-control", type = "text" })
     </div>
 }
-
-@helper RenderDateSelector(Expression<Func<ViewModel, DateTimeViewModel>> vmSelector, 
-    Expression<Func<ViewModel, int?>> daySelector, Expression<Func<ViewModel, int?>> monthSelector, 
-    Expression<Func<ViewModel, int?>> yearSelector, string label)
-{
-    var id = label.Replace(" ", "").ToLower();
-    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(vmSelector)">
-        <fieldset>
-            <legend>@label</legend>
-            <div class="form-hint">For example, 20 03 2003</div>
-            @Html.ValidationMessageFor(vmSelector)
-            <span class="inline-form-control">
-                <label for="@id-day">Day</label>
-                @Html.EduDayDropDownFor(daySelector, new { id = $"{id}-day", @class = "form-control", aria_describedby = $"help-{id}-day" })
-            </span>
-            <span class="inline-form-control">
-                <label for="opendate-month">Month</label>
-                @Html.EduMonthDropDownFor(monthSelector, new { id = $"{id}-month", @class = "form-control", aria_describedby = $"help-{id}-month" })
-            </span>
-            <span class="inline-form-contol">
-                <label for="opendate-year">Year</label>
-                @Html.EduYearDropDownFor(yearSelector, new { id = $"{id}-year", @class = "form-control", aria_describedby = $"help-{id}-year" })
-            </span>
-        </fieldset>
-    </div>
-}
-
