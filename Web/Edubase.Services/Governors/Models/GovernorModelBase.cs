@@ -29,7 +29,9 @@ namespace Edubase.Services.Governors.Models
 #endif
         public string Person_MiddleName { get; set; }
 
+#if (TEXAPI)
         [JsonProperty("lastName")]
+#endif
         public string Person_LastName { get; set; }
 
         public string Person_TitleDistilled { get; set; }
