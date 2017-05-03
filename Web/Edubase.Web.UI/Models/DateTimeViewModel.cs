@@ -26,7 +26,7 @@ namespace Edubase.Web.UI.Models
         [DisplayName("Month"), Range(1, 12)]
         public int? Month { get; set; }
 
-        [DisplayName("Year"), Range(1900, 2100)]
+        [DisplayName("Year"), Range(1800, 2100)]
         public int? Year { get; set; }
 
         public string Label { get; set; }
