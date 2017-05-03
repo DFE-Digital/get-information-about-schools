@@ -182,7 +182,7 @@ else
 
                                                 <div class="retire-governor date-group-wrap">                                                   
                                                     <p class="font-xsmall">Provide a data term ends to retire this person</p>
-                                                    @RenderDateSelector(x => x.RemovalAppointmentEndDate, x => x.RemovalAppointmentEndDate.Day, x => x.RemovalAppointmentEndDate.Month, x => x.RemovalAppointmentEndDate.Year, "Date term ends")
+                                                    @Html.EditorFor(x => x.RemovalAppointmentEndDate, new { title = "Date term ends" })
 
                                                     <input type="submit" name="action" value="Save" class="button" />
 
@@ -277,33 +277,6 @@ else
                 </div>*@
             }
         }
-    </div>
-}
-
-
-@helper RenderDateSelector(Expression<Func<GovernorsGridViewModel, DateTimeViewModel>> vmSelector,
-    Expression<Func<GovernorsGridViewModel, int?>> daySelector, Expression<Func<GovernorsGridViewModel, int?>> monthSelector,
-    Expression<Func<GovernorsGridViewModel, int?>> yearSelector, string label)
-{
-var id = label.Replace(" ", "").ToLower();
-    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(vmSelector)">
-        <fieldset>
-            <legend class="bold-xsmall" style="font-weight:bold;">@label</legend>
-            <div class="form-hint">For example, 20 03 2003</div>
-            @Html.ValidationMessageFor(vmSelector)
-            <span class="inline-form-control">
-                <label for="@id-day">Day</label>
-                @Html.EduDayDropDownFor(daySelector, new { id = $"{id}-day", @class = "form-control", aria_describedby = $"help-{id}-day" })
-            </span>
-            <span class="inline-form-control">
-                <label for="@id-month">Month</label>
-                @Html.EduMonthDropDownFor(monthSelector, new { id = $"{id}-month", @class = "form-control", aria_describedby = $"help-{id}-month" })
-            </span>
-            <span class="inline-form-contol">
-                <label for="@id-year">Year</label>
-                @Html.EduYearDropDownFor(yearSelector, new { id = $"{id}-year", @class = "form-control", aria_describedby = $"help-{id}-year" })
-            </span>
-        </fieldset>
     </div>
 }
 

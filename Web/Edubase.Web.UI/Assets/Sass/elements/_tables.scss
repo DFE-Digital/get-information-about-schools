@@ -519,3 +519,223 @@ table {
         padding:0;
     }
 }
+
+
+.edubase-table {
+    border-top: 1px solid $black;
+     th {
+        font-weight: bold;
+        text-align: left;
+    }
+
+    thead {
+        td, th {
+            border-bottom: 4px $black solid;
+        }
+
+        th {
+            padding: 8px 0 8px 6px;
+        }
+    }
+    // links table
+    .links-urn {
+        width: 16%;
+    }
+
+    .links-name {
+        width: 35%;
+    }
+
+    .links-type { 
+        width: 23%;
+    }
+
+    .links-date {
+        width: 16%;
+    }
+
+    @include media(mobile) {
+         thead {
+            display: none;
+        }
+
+         tr {
+            border-top: 1px solid $black;
+             &:first-child {
+                border: none;
+            }
+        }
+
+        td {
+            clear: left;
+            display: block;
+            float: left;
+            width: 100% !important;
+            border-bottom: $grey-3 1px solid;
+            max-width: 100%;
+            padding: 12px 0;
+
+
+            &:before {
+                content: attr(aria-label);
+                float: left;
+                font-weight: bold;
+                padding-right: 0.5em;
+            }
+
+            &:last-child {
+                border: 0;
+            }
+        }
+    }
+}
+.approval-changes {
+    table-layout: fixed;
+    display: table;
+    border-top: 0;
+    th, td {
+        word-wrap: break-word;
+        text-align: left;
+        max-width: 11.1%;
+        overflow: hidden;
+        padding-top: 12px;
+    }
+
+    .cell-checkbox {
+        height: 52px;
+        position: relative;
+
+        .edubase-button-checkbox {
+            padding: 0;
+        }
+        
+        @include media(desktop) {
+            width: 40px;
+        }
+        @media(max-width: 940px) {
+            &:after {
+                 content: attr(aria-label);
+                 position: relative;
+                 top: 14px;
+                 left: 44px;
+            }
+            &:before {
+                content: "";
+            }
+        }
+    }
+
+    .cell-urn {
+         @include media(desktop) {
+            width: 40px;
+        }
+    }
+
+    .cell-estab {
+        @include media(desktop) {
+            width:80px;
+        }
+    }
+
+    .cell-updatedfield {
+        @include media(desktop) {
+            width:80px;
+        }
+    }
+
+    .cell-oldvalue {
+       @include media(desktop) {
+            width:80px;
+        }
+
+    }
+    .cell-newvalue {
+        @include media(desktop) {
+            width:80px;
+        }
+
+    }
+
+    .cell-edate {
+        @include media(desktop) {
+            width: 55px;
+        }
+    }
+
+    .cell-rdate {
+       @include media(desktop) {
+            width: 55px;
+        }
+    }
+
+    .cell-suggested {
+        @include media(desktop) {
+            width: 60px;
+        }
+    }
+
+}
+
+@media(max-width: 940px) {
+    .changes-list-wrapper {
+        border-top: 2px $black solid;    
+    }
+    .approval-changes {
+        thead {
+            display: none;
+        }
+
+        tr {
+            border-top: 1px solid $black;
+             &:first-child {
+                border: none;
+            }
+        }
+
+        td {
+            clear: left;
+            display: block;
+            float: left;
+            width: 100% !important;
+            border-bottom: $grey-3 1px solid;
+            max-width: 100%;
+            padding: 12px 0;
+
+
+            &:before {
+                content: attr(aria-label);
+                float: left;
+                font-weight: bold;
+                padding-right: 0.5em;
+            }
+
+            &:last-child {
+                border: 0;
+            }
+        }
+    }
+}
+
+
+
+
+
+.table-count {
+    
+    margin-bottom: 12px;
+
+    p {
+        margin: 0 0 12px;
+        padding: 0;
+        font-size: 16px;
+    }
+}
+
+
+p.table-caption {
+    width: 66%;
+    margin: 20px 0;
+    @include media(mobile) {
+        width: 100%;
+    }
+}

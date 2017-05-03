@@ -49,7 +49,7 @@
                         </ul>
                     }
                     
-                    @*@if (ViewBag.fileTypeUnselected != null && ViewBag.fileTypeUnselected)
+                    @if (ViewBag.fileTypeUnselected != null && ViewBag.fileTypeUnselected && ViewBag.globalError == null)
                     {
                         <h2 class="heading-medium error-summary-heading">File type no specified</h2>
                         <ul class="error-list">
@@ -58,8 +58,20 @@
                                 <a href="#error-log">Please download the error log to correct your data before resubmitting</a>
                             </li>
                         </ul>
-                    }*@
+                    }
                     </div>
+            }
+            @if (ViewBag.fileTypeUnselected != null && ViewBag.fileTypeUnselected && ViewBag.globalError != null && !ViewBag.globalError)
+            {
+                <div class="error-summary">
+                    <h2 class="heading-medium error-summary-heading">File type no specified</h2>
+                    <ul class="error-list">
+                        <li>
+                            Please select a file type to upload.
+                            <a href="#error-log">Please download the error log to correct your data before resubmitting</a>
+                        </li>
+                    </ul>
+                </div>
             }
 
             <p>Update establishment records by uploading a CSV or XLSX file.</p>
@@ -106,7 +118,7 @@
                     <input type="file" class="file-input" id="bulkfile" name="bulkfile" />
                     <button class="button button-grey file-selector">Choose file</button>
                     <div class="text-field-wrapper">
-                        <input type="text" class="file-name" readonly="readonly" />
+                        <input type="text" class="file-name" readonly="readonly" value="No file chosen" />
                     </div>
                     
                 </div>

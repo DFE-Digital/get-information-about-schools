@@ -1,13 +1,6 @@
-﻿using Autofac;
-using Edubase.Common;
-using Edubase.Common.Reflection;
+﻿using Edubase.Common.Reflection;
 using Edubase.Data.DbContext;
 using Edubase.Data.Entity;
-using Edubase.Data.Entity.Lookups;
-using Edubase.Services;
-using Edubase.Services.Domain;
-using Edubase.Services.Lookup;
-using Edubase.Web.UI.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -15,9 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Caching;
-using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -28,8 +19,6 @@ namespace Edubase.Web.UI.Helpers
 {
     public static class HtmlHelperExtensions
     {
-        private enum DatePart { Day, Month, Year};
-
         public static MvcHtmlString ValidationCssClassFor<TModel, TProperty>(
             this HtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TProperty>> expression)
@@ -38,8 +27,7 @@ namespace Edubase.Web.UI.Helpers
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
             if (state == null) return MvcHtmlString.Empty;
-            else if (state.Errors.Count == 0) return MvcHtmlString.Empty;
-            else return new MvcHtmlString("error");
+            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("error");
         }
 
         public static MvcHtmlString DuplicateCssClassFor(this HtmlHelper htmlHelper, int? governorId)
@@ -54,63 +42,6 @@ namespace Edubase.Web.UI.Helpers
             }
 
             return MvcHtmlString.Empty;
-        }
-
-        public static MvcHtmlString RenderDateSelector<TModel>(this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, DateTimeViewModel>> dateTimeViewModel, string label)
-        {
-            var dateTimeHtmlHelper = htmlHelper.For<DateTimeViewModel>();
-
-            var id = label.Replace(" ", "").ToLower();
-            
-            var divTag = new TagBuilder("div");
-            divTag.AddCssClass("form-group");
-            divTag.AddCssClass("create-edit-form-group");
-            divTag.AddCssClass("drop-down-date");
-            divTag.AddCssClass("range-group");
-            divTag.AddCssClass(htmlHelper.ValidationCssClassFor(dateTimeViewModel).ToHtmlString());
-
-            var fieldsetTag = new TagBuilder("fieldset");
-            
-            var legendTag = new TagBuilder("legend");
-            legendTag.AddCssClass("bold-xsmall");
-            legendTag.MergeAttribute("style", "font-weight:bold;");
-            legendTag.SetInnerText(label);
-
-            var hintDivTag = new TagBuilder("div");
-            hintDivTag.AddCssClass("form-hint");
-            hintDivTag.SetInnerText("For example, 20 03 2003");
-
-            fieldsetTag.InnerHtml = $@"{legendTag}
-                                       {hintDivTag}
-                                       {htmlHelper.ValidationMessageFor(dateTimeViewModel)}
-                                       {BuildDatePart(dateTimeHtmlHelper, DatePart.Day, id)}
-                                       {BuildDatePart(dateTimeHtmlHelper, DatePart.Month, id)}
-                                       {BuildDatePart(dateTimeHtmlHelper, DatePart.Year, id)}";
-
-            divTag.InnerHtml = fieldsetTag.ToString();
-
-            return new MvcHtmlString(divTag.ToString());
-        }
-
-        private static string BuildDatePart(HtmlHelper<DateTimeViewModel> htmlHelper, DatePart part, string id)
-        {
-            var labelFor = (part == DatePart.Day) ? $"{id}-day" : $"opendate-{part.ToString().ToLower()}";
-
-            var spanTag = new TagBuilder("span");
-            spanTag.AddCssClass("inline-form-control");
-
-            var labelTag = new TagBuilder("label");
-            labelTag.MergeAttribute("for", labelFor);
-            labelTag.InnerHtml = part.ToString();
-
-            var dropDown = part == DatePart.Day ? htmlHelper.EduDayDropDownFor(x => x.Day, new { id = $"{id}-day", @class = "form-control", aria_describedby = $"help-{id}-day"}) 
-                         : part == DatePart.Month ? htmlHelper.EduMonthDropDownFor(x => x.Month, new { id = $"{id}-month", @class = "form-control", aria_describedby = $"help-{id}-month" })
-                         : htmlHelper.EduYearDropDownFor(x => x.Year, new { id = $"{id}-year", @class = "form-control", aria_describedby = $"help-{id}-year" });
-
-            spanTag.InnerHtml = $"{labelTag}{dropDown}";
-
-            return spanTag.ToString();
         }
 
         [Obsolete]
@@ -204,7 +135,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            if (isDisabled) d["style"] = d.ContainsKey("style") ? (d["style"].ToString() + ";background-color:#eee;") : "background-color:#eee";
+            if (isDisabled) d["style"] = d.ContainsKey("style") ? (d["style"] + ";background-color:#eee;") : "background-color:#eee";
             return d;
         }
         
@@ -239,8 +170,6 @@ namespace Edubase.Web.UI.Helpers
                     Selected = (x.ToString() == v?.ToString()) });
             return htmlHelper.DropDownListFor(expression, items, "", attributes);
         }
-        
-
 
         public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 
             new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
