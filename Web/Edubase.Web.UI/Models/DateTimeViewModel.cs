@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -19,30 +20,16 @@ namespace Edubase.Web.UI.Models
             }
         }
 
-        [DisplayName("Day")]
+        [DisplayName("Day"), Range(1, 31)]
         public int? Day { get; set; }
 
-        [DisplayName("Month")]
+        [DisplayName("Month"), Range(1, 12)]
         public int? Month { get; set; }
 
-        [DisplayName("Year")]
+        [DisplayName("Year"), Range(1900, 2100)]
         public int? Year { get; set; }
 
         public string Label { get; set; }
-
-        public int[] Days => Enumerable.Range(1, 31).ToArray();
-
-        public int[] Months => Enumerable.Range(1, 12).ToArray();
-
-        public int[] Years
-        {
-            get
-            {
-                const int start = 1900;
-                return Enumerable.Range(start, DateTime.UtcNow.Year + 5 - start).Reverse().ToArray();
-            }
-        }
-
 
         public DateTime? ToDateTime()
         {
@@ -60,6 +47,7 @@ namespace Edubase.Web.UI.Models
         public bool IsValid() => !IsEmpty() && ToDateTime() != null;
 
         public bool IsEmpty() => !Day.HasValue && !Month.HasValue && !Year.HasValue;
+
         public bool IsNotEmpty() => !IsEmpty();
     }
 }
