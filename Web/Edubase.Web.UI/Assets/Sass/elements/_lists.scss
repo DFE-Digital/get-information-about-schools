@@ -77,3 +77,17 @@ ol {
     text-decoration: none;
   }
 }
+
+
+.key-value-list {
+    margin-bottom: 20px;
+    overflow: hidden;
+    font-size: 16px;
+    dt, dd {
+        float: left;
+    }
+    dt {
+        clear: left;
+        margin-right: 12px;
+    }
+}

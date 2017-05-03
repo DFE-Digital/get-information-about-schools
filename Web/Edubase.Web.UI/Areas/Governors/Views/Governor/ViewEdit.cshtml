@@ -103,7 +103,7 @@ else
 @helper DisplayGovernors()
 {
 
-    <div class="column-two-thirds">
+    <div class="column-full">
         @if (Model.DomainModel.HasFullAccess)
         {
             // Render lists
@@ -219,7 +219,7 @@ else
                     <h2 class="bold-small">@grid.Title</h2>
                     @if (grid.Rows.Any())
                     {
-                        <table>
+                        <table class="edubase-table">
                             <thead>
                                 <tr>
                                     @foreach (var column in grid.HeaderCells)

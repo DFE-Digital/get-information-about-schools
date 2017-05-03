@@ -32,7 +32,7 @@
                         @Html.HiddenFor(x => x.Urn)
                         @Html.HiddenFor(x => x.Role)
                     
-                        <ul>
+                        <ul class="toggle-panels">
                             @for (var index = 0; index < Model.Governors.Count; index++)
                             {
                                 @Html.EditorFor(x => x.Governors[index])
@@ -55,17 +55,4 @@
     </div>
 </div>
 
-@section ViewScripts
-{
-    <script type="text/javascript">
-        $(".panel-trigger").change(function() {
-            $(".panel-trigger").each(function() {
-                if ($(this).is(":checked")) {
-                    $(this).closest(".expander-panel").addClass("open-expander");
-                } else {
-                    $(this).closest(".expander-panel").removeClass("open-expander");
-                }
-            });
-        })
-    </script>
-}
+

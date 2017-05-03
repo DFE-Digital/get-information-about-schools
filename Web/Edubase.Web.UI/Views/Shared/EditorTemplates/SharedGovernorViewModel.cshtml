@@ -7,16 +7,17 @@
             {
                
                 <span class="checkbox-wrap">
-                    @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger", @Html.NameFor(x => x.Selected)))
+                    @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger", @Html.NameFor(x => x.Selected), "#expand-"+Model.Id))
                     
                     <label class="edubase-button-checkbox" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
                 </span>
             }
             else
             {
-                <span class="checkbox-wrap">
-                    @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected, new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = @Model.Id})
-                    <label class="edubase-button-checkbox" for="@Model.Id">@Model.FullName</label>
+                <span class="radio-button-wrap">
+                    @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected,
+                        new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = "gov-"+Model.Id, data_toggle_panel = "#expand-"+Model.Id })
+                    <label class="edubase-button-radio" for="gov-@Model.Id">@Model.FullName</label>
                 </span>
                     }
         </div>
@@ -33,7 +34,7 @@
             {
                 <p class="bold-xsmall">Already shared with this establishment</p>
             }
-            <dl>
+            <dl class="key-value-list">
                 <dt>Shared with:</dt>
                 <dd>
                     @foreach (var establishment in Model.SharedWith)
@@ -46,8 +47,8 @@
                 <dt>Postcode:</dt>
                 <dd>@Model.PostCode</dd>
             </dl>
-            <div class="expander-panel-content">
-                <dl>
+            <div class="panel-indent" id="expand-@Model.Id">
+                <dl class="key-value-list">
                     <dt>GID:</dt>
                     <dd>@Model.Id</dd>
                     <dt>Appointed by:</dt>
@@ -67,11 +68,11 @@
 
 @functions
 {
-    object GetCheckboxAttributes(bool readOnly, string cssClasses, HtmlString elemId)
+    object GetCheckboxAttributes(bool readOnly, string cssClasses, HtmlString elemId, string toggleTarget = "")
     {
         if (readOnly)
-            return new { @class = cssClasses, @disabled = "disabled" , @id = elemId };
+            return new { @class = cssClasses, @disabled = "disabled" , @id = elemId, data_toggle_panel= toggleTarget};
 
-        return new { @class = cssClasses, @id = elemId };
+        return new { @class = cssClasses, @id = elemId, data_toggle_panel = toggleTarget };
     }
 }
