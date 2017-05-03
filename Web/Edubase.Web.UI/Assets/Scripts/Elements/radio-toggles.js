@@ -7,8 +7,9 @@
     'use strict';
     var defaults = {
         panelDataKey: 'togglePanel',
-        untoggle: false
-    }
+        untoggle: false,
+        toggleCallBack: null
+}
 
     function RadioToggle(el, opts) {
         this.el = el;
@@ -22,11 +23,14 @@
             var $el = $(this.el),
                 opts = this.opts,
                 $radios = $el.find(':radio, :checkbox'),
-                $panels = [];
+                $panels = [],
+                self = this;
 
-            $radios.each(function () {
+            $radios.each(function (n) {
                 if ($(this).data().hasOwnProperty(opts.panelDataKey)) {
                     $panels.push($(this).data()[opts.panelDataKey]);
+                } else {
+                    $radios.splice(n, 1);
                 }
             });
 
@@ -36,6 +40,13 @@
 
             if ($radios.filter(':checked').length > 0) {
                 $($radios.filter(':checked').data()[opts.panelDataKey]).removeClass('hidden');
+               
+            }
+
+            if ($.isFunction(opts.toggleCallBack)) {
+                $radios.each(function() {
+                    opts.toggleCallBack.call(self, this);
+                });
             }
 
 
@@ -65,6 +76,10 @@
                     } else {
                         $(panelClass).attr('aria-hidden', 'true');
                     }                        
+                }
+
+                if ($.isFunction(opts.toggleCallBack)) {
+                    opts.toggleCallBack.call(self, radioButton);
                 }
             });
 

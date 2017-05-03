@@ -676,6 +676,16 @@ table {
 
 }
 
+
+.list-table {
+    border-top: 0;
+    
+    tr:last-child {
+        td {
+            border-bottom: 0;
+        }
+    }
+}
 @media(max-width: 940px) {
     .changes-list-wrapper {
         border-top: 2px $black solid;    

@@ -219,7 +219,7 @@ else
                     <h2 class="bold-small">@grid.Title</h2>
                     @if (grid.Rows.Any())
                     {
-                        <table class="edubase-table">
+                        <table class="edubase-table list-table">
                             <thead>
                                 <tr>
                                     @foreach (var column in grid.HeaderCells)
@@ -231,10 +231,13 @@ else
                             <tbody>
                                 @foreach (var row in grid.Rows)
                                 {
+                                    var cellCount = 0;
                                     <tr>
                                         @foreach (var cell in row.Cells)
                                         {
-                                            <td>@(cell.Text ?? "Not recorded")</td>
+                                            
+                                            <td aria-label="@grid.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
+                                            cellCount++;
                                         }
                                     </tr>
                                 }

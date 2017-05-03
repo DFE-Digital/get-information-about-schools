@@ -32,7 +32,7 @@
                         @Html.HiddenFor(x => x.Urn)
                         @Html.HiddenFor(x => x.Role)
                     
-                        <ul class="toggle-panels">
+                        <ul class="governor-toggles">
                             @for (var index = 0; index < Model.Governors.Count; index++)
                             {
                                 @Html.EditorFor(x => x.Governors[index])

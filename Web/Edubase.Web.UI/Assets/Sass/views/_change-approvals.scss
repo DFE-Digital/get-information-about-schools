@@ -242,5 +242,9 @@ input:focus + .edubase-button-radio:before {
         margin-top: 8px;
         padding: 5px;
         padding-left: 0;
+
+        .edubase-button-checkbox {
+            font-size: 19px;
+        }
     }
 }

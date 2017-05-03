@@ -225,15 +225,6 @@ div.governor-list, div.governor-grid {
     p.none { font-size:16px; }
 }
 
-.governor-grid {
-    display:none;
-    @include media(desktop){
-        display:block;
-    }
-    @include media(tablet){
-        display:block;
-    }
-}
 
 .governor-list {
     dl {
@@ -343,5 +334,7 @@ div.shared-governor-list {
 .exapanding-list-wrap {
     .shared-governor {
         margin-bottom: 20px;
+        margin-left: 16px;
+        padding-left: 24px;
     }
 }
