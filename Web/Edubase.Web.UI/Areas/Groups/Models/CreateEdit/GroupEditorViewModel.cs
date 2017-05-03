@@ -2,6 +2,7 @@
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Models;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -54,6 +55,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
         public DateTimeViewModel OpenDate { get; set; } = new DateTimeViewModel();
+
+        [Display(Name = "Closed date")]
         public DateTimeViewModel ClosedDate { get; set; } = new DateTimeViewModel();
 
         public int? CCLeadCentreUrn { get; set; }

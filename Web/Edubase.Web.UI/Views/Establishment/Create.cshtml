@@ -137,38 +137,8 @@
                 @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
                 @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.LookupReasonEstablishmentOpened.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-opened", @class = "form-control" })
             </div>
-
-            <div class="form-group create-edit-form-group drop-down-date @Html.ValidationCssClassFor(x => x.OpenDate)">
-                <label for="open-date-day" class="form-label">Establishment open date</label>
-                <span class="form-hint">For example, 20 03 2003</span>
-                @Html.ValidationMessageFor(x => x.OpenDate)
-                @Html.EduDropDownFor(x => x.OpenDate.Day,
-                            Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                            new
-                            {
-                                id = "opendate-day",
-                                @class = "form-control",
-                                aria_describedby = "help-opendate-day"
-                            }, label: "DD", fieldName: "OpenDate")
-
-                @Html.EduDropDownFor(x => x.OpenDate.Month,
-                            Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                            new
-                            {
-                                id = "opendate-month",
-                                @class = "form-control",
-                                aria_describedby = "help-opendate-month"
-                            }, label: "MM", fieldName: "OpenDate")
-
-                @Html.EduDropDownFor(x => x.OpenDate.Year,
-                            Enumerable.Range(1900, 2050).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                            new
-                            {
-                                id = "opendate-year",
-                                @class = "form-control",
-                                aria_describedby = "help-opendate-year"
-                            }, label: "YYYY", fieldName: "OpenDate")
-            </div>
+            
+            @Html.EditorFor(x => x.OpenDate)
 
         </div>
     </div>

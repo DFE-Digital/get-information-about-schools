@@ -2,6 +2,7 @@
 using Edubase.Web.UI.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -17,7 +18,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string HeadFirstName { get; set; }
         public string HeadLastName { get; set; }
         public DateTime? JoinedDate { get; set; }
+
+        [Display(Name = "Joined date")]
         public DateTimeViewModel JoinedDateEditable { get; set; } = new DateTimeViewModel();
+
         public string HeadTitleName { get; set; }
         public bool EditMode { get; set; }
 

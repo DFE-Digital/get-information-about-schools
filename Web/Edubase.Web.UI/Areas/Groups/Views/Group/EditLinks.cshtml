@@ -37,44 +37,7 @@
             <p class="bold-xsmall">Establishment found</p>
             <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
 
-            <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate)">
-                <fieldset>
-                    <legend>Joined date</legend>
-                    <div class="form-hint">For example, 20 03 2003</div>
-                    @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate)
-                    <span class="inline-form-control">
-                        <label for="opendate-day">Day</label>
-                        @Html.EduDayDropDownFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.Day,
-                                new
-                                {
-                                    id = "joineddate-day",
-                                    @class = "form-control",
-                                    aria_describedby = "help-joineddate-day",
-                                })
-                    </span>
-                    <span class="inline-form-control">
-                        <label for="joineddate-month">Month</label>
-                        @Html.EduMonthDropDownFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.Month,
-                                new
-                                {
-                                    id = "joineddate-month",
-                                    @class = "form-control",
-                                    aria_describedby = "help-joineddate-month",
-                                })
-
-                    </span>
-                    <span class="inline-form-contol">
-                        <label for="joineddate-year">Year</label>
-                        @Html.EduYearDropDownFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.Year,
-                                new
-                                {
-                                    id = "joineddate-year",
-                                    @class = "form-control",
-                                    aria_describedby = "help-joineddate-year",
-                                })
-                    </span>
-                </fieldset>
-            </div>
+            @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate)
 
             <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
             @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
@@ -124,45 +87,10 @@
                         }
 
                     @if (Model.LinkedEstablishments.Establishments[i].EditMode)
-                        {
-                        <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable)">
-                            <fieldset>
-                                <legend>Joined date</legend>
-                                <div class="form-hint">For example, 20 03 2003</div>
-                                @Html.ValidationMessageFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable)
-                                <span class="inline-form-control">
-                                    <label for="opendate-day">Day</label>
-                                    @Html.EduDayDropDownFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable.Day,
-                                            new
-                                            {
-                                                id = "joineddate-day",
-                                                @class = "form-control",
-                                                aria_describedby = "help-joineddate-day",
-                                            })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="joineddate-month">Month</label>
-                                    @Html.EduMonthDropDownFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable.Month,
-                                            new
-                                            {
-                                                id = "joineddate-month",
-                                                @class = "form-control",
-                                                aria_describedby = "help-joineddate-month",
-                                            })
-                                </span>
-                                <span class="inline-form-contol">
-                                    <label for="joineddate-year">Year</label>
-                                    @Html.EduYearDropDownFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable.Year,
-                                            new
-                                            {
-                                                id = "joineddate-year",
-                                                @class = "form-control",
-                                                aria_describedby = "help-joineddate-year",
-                                            })
-                                </span>
-                            </fieldset>
-                        </div>
-                        }
+                    {
+                        @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable)
+                        
+                    }
 
                     @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {

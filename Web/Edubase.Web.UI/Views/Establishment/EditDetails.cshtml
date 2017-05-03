@@ -170,14 +170,6 @@
                             @Html.HiddenFor(x => x.OldHeadLastName)
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">
-                                @(Model.DisplayPolicy.HeadteacherLabel) last name
-                            </label>
-                            @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
-                            @Html.HiddenFor(x => x.OldHeadLastName)
-                        </div>
-
                         if (EnumSets.AcademiesAndFreeSchools.Contains(Model.TypeId.Value))
                         {
                             @*<div class="form-group">
@@ -307,46 +299,7 @@
                             @Html.LabelFor(x => x.OfstedRating, "Ofsted rating")
                             @Html.TextBoxFor(x => x.OfstedRating, new { @class = "form-control", type = "number", min = "0", max = "5" })
                         </div>
-
-                        <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OfstedInspectionDate)">
-                            <fieldset>
-                                <legend>Ofsted last inspection</legend>
-                                <div class="form-hint">For example, 20 03 2003</div>
-
-                                @Html.ValidationMessageFor(x => x.OfstedInspectionDate)
-                                <span class="inline-form-control">
-                                    <label for="ofstedinspectiondate-day">Day</label>
-                                    @Html.EduDayDropDownFor(x => x.OfstedInspectionDate.Day,
-                 new
-                 {
-                     id = "ofstedinspectiondate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-ofstedinspectiondate-day",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="ofstedinspectiondate-month">Month</label>
-                                    @Html.EduMonthDropDownFor(x => x.OfstedInspectionDate.Month,
-                 new
-                 {
-                     id = "ofstedinspectiondate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-ofstedinspectiondate-month",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="ofstedinspectiondate-year">Year</label>
-                                    @Html.EduYearDropDownFor(x => x.OfstedInspectionDate.Year,
-                 new
-                 {
-                     id = "ofstedinspectiondate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-ofstedinspectiondate-year",
-                 })
-                                </span>
-                            </fieldset>
-                        </div>
-
+                        @Html.EditorFor(x => x.OfstedInspectionDate)
                         <div class="form-group">
                             <label for="ofsted-report" class="form-label">Ofsted report link</label>
                             <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
@@ -437,46 +390,8 @@
                             @Html.DropDownListFor(x => x.Section41ApprovedId, Model.Section41ApprovedItems, "", new { @class = "form-control", id = "section-41" })
                         </div>
                     }
-
-                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
-                        <fieldset>
-                            <legend>Open date</legend>
-
-                            <div class="form-hint">For example, 20 03 2003</div>
-                            @Html.ValidationMessageFor(x => x.OpenDate)
-                            <span class="inline-form-control">
-                                <label for="opendate-day">Day</label>
-                                @Html.EduDayDropDownFor(x => x.OpenDate.Day,
-                 new
-                 {
-                     id = "opendate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-opendate-day",
-                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="opendate-month">Month</label>
-                                @Html.EduMonthDropDownFor(x => x.OpenDate.Month,
-                 new
-                 {
-                     id = "opendate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-opendate-month",
-                 })
-
-                            </span>
-                            <span class="inline-form-contol">
-                                <label for="opendate-year">Year</label>
-                                @Html.EduYearDropDownFor(x => x.OpenDate.Year,
-                 new
-                 {
-                     id = "opendate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-opendate-year",
-                 })
-                            </span>
-                        </fieldset>
-                    </div>
+                    
+                    @Html.EditorFor(x => x.OpenDate)
 
                     <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
                         <label for="reason-establishment-opened">Reason establishment opened</label>
@@ -484,45 +399,7 @@
                         @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "form-control", id = "reason-establishment-opened" })
                     </div>
 
-
-                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.CloseDate)">
-                        <fieldset>
-                            <legend>Close date</legend>
-                            <div class="form-hint">For example, 20 03 2003</div>
-
-                            @Html.ValidationMessageFor(x => x.CloseDate)
-                            <span class="inline-form-control">
-                                <label for="Closedate-day">Day</label>
-                                @Html.EduDayDropDownFor(x => x.CloseDate.Day,
-                 new
-                 {
-                     id = "Closedate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-day",
-                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="Closedate-month">Month</label>
-                                @Html.EduMonthDropDownFor(x => x.CloseDate.Month,
-                 new
-                 {
-                     id = "Closedate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-month",
-                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="Closedate-year">Year</label>
-                                @Html.EduYearDropDownFor(x => x.CloseDate.Year,
-                 new
-                 {
-                     id = "Closedate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-year",
-                 })
-                            </span>
-                        </fieldset>
-                    </div>
+                    @Html.EditorFor(x => x.CloseDate)
 
                     <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
                         <label for="reason-establishment-closed">Reason establishment closed</label>
@@ -708,85 +585,12 @@
 
                     @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
                     {
-                        <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.BSODateOfLastInspectionVisit)">
-                            <fieldset>
-                                <legend>BSO: Date of last inspection</legend>
-                                <div class="form-hint">For example, 20 03 2003</div>
-
-                                @Html.ValidationMessageFor(x => x.BSODateOfLastInspectionVisit)
-                                <span class="inline-form-control">
-                                    <label for="Closedate-day">Day</label>
-                                    @Html.EduDayDropDownFor(x => x.BSODateOfLastInspectionVisit.Day,
-                 new
-                 {
-                     id = "Closedate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-day",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="Closedate-month">Month</label>
-                                    @Html.EduMonthDropDownFor(x => x.BSODateOfLastInspectionVisit.Month,
-                 new
-                 {
-                     id = "Closedate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-month",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="Closedate-year">Year</label>
-                                    @Html.EduYearDropDownFor(x => x.BSODateOfLastInspectionVisit.Year,
-                 new
-                 {
-                     id = "Closedate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-year",
-                 })
-                                </span>
-                            </fieldset>
-                        </div>
+                        @Html.EditorFor(x => x.BSODateOfLastInspectionVisit)
                     }
 
                     @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
                     {
-                        <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.BSODateOfNextInspectionVisit)">
-                            <fieldset>
-                                <legend>BSO: Next inspection visit</legend>
-                                <div class="form-hint">For example, 20 03 2003</div>
-                                <span class="inline-form-control">
-                                    @Html.ValidationMessageFor(x => x.BSODateOfNextInspectionVisit)
-                                    <label for="Closedate-day">Day</label>
-                                    @Html.EduDayDropDownFor(x => x.BSODateOfNextInspectionVisit.Day,
-                 new
-                 {
-                     id = "Closedate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-day",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="Closedate-month">Month</label>
-                                    @Html.EduMonthDropDownFor(x => x.BSODateOfNextInspectionVisit.Month,
-                 new
-                 {
-                     id = "Closedate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-month",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="Closedate-year">Year</label>
-                                    @Html.EduYearDropDownFor(x => x.BSODateOfNextInspectionVisit.Year,
-                 new
-                 {
-                     id = "Closedate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-year",
-                 })
-                                </span>
-                            </fieldset>
-                        </div>
+                        @Html.EditorFor(x => x.BSODateOfNextInspectionVisit)
                     }
 
 

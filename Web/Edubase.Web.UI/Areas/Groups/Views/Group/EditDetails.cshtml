@@ -65,89 +65,13 @@
                 }
                 else
                 {
-                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
-                        <fieldset>
-                            <legend class="bold-xsmall" style="font-weight:bold;">@Model.OpenDateLabel</legend>
-
-                            <div class="form-hint">For example, 20 03 2003</div>
-                            @Html.ValidationMessageFor(x => x.OpenDate)
-                            <span class="inline-form-control">
-                                <label for="opendate-day">Day</label>
-                                @Html.EduDayDropDownFor(x => x.OpenDate.Day,
-                                 new
-                                 {
-                                     id = "opendate-day",
-                                     @class = "form-control",
-                                     aria_describedby = "help-opendate-day",
-                                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="opendate-month">Month</label>
-                                @Html.EduMonthDropDownFor(x => x.OpenDate.Month,
-                                 new
-                                 {
-                                     id = "opendate-month",
-                                     @class = "form-control",
-                                     aria_describedby = "help-opendate-month",
-                                 })
-
-                            </span>
-                            <span class="inline-form-contol">
-                                <label for="opendate-year">Year</label>
-                                @Html.EduYearDropDownFor(x => x.OpenDate.Year,
-                                 new
-                                 {
-                                     id = "opendate-year",
-                                     @class = "form-control",
-                                     aria_describedby = "help-opendate-year",
-                                 })
-                            </span>
-                        </fieldset>
-                    </div>
+                    @Html.EditorFor(x => x.OpenDate)
                 }
 
 
                 @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                 {
-                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.ClosedDate)">
-                        <fieldset>
-                            <legend class="bold-xsmall" style="font-weight:bold;">Closed date</legend>
-
-                            <div class="form-hint">For example, 20 03 2003</div>
-                            @Html.ValidationMessageFor(x => x.ClosedDate)
-                            <span class="inline-form-control">
-                                <label for="opendate-day">Day</label>
-                                @Html.EduDayDropDownFor(x => x.ClosedDate.Day,
-                                 new
-                                 {
-                                     id = "closeddate-day",
-                                     @class = "form-control",
-                                     aria_describedby = "help-closeddate-day",
-                                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="opendate-month">Month</label>
-                                @Html.EduMonthDropDownFor(x => x.ClosedDate.Month,
-                                 new
-                                 {
-                                     id = "closeddate-month",
-                                     @class = "form-control",
-                                     aria_describedby = "help-closeddate-month",
-                                 })
-
-                            </span>
-                            <span class="inline-form-contol">
-                                <label for="opendate-year">Year</label>
-                                @Html.EduYearDropDownFor(x => x.ClosedDate.Year,
-                                 new
-                                 {
-                                     id = "closeddate-year",
-                                     @class = "form-control",
-                                     aria_describedby = "help-closeddate-year",
-                                 })
-                            </span>
-                        </fieldset>
-                    </div>
+                    @Html.EditorFor(x => x.ClosedDate)
                 }
 
 

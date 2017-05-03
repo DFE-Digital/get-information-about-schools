@@ -1,6 +1,7 @@
 ﻿using Edubase.Web.UI.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -25,6 +26,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public bool HasResult => FoundUrn.HasValue;
 
+        [Display(Name = "Joined Date")]
         public DateTimeViewModel JoinedDate { get; set; } = new DateTimeViewModel();
 
         public void Reset()

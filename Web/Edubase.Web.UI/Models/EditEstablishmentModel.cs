@@ -100,7 +100,11 @@ namespace Edubase.Web.UI.Models
         public int? EstablishmentNumber { get; set; }
 
         public int? TypeId { get; set; }
+
+        [Display(Name = "Open date")]
         public DateTimeViewModel OpenDate { get; set; } = new DateTimeViewModel();
+
+        [Display(Name = "Close date")]
         public DateTimeViewModel CloseDate { get; set; } = new DateTimeViewModel();
         public eAction Action { get; set; }
 
@@ -123,7 +127,10 @@ namespace Edubase.Web.UI.Models
         public string Contact_TelephoneNumber { get; set; }
         public byte? OfstedRating { get; set; }
         public string OfstedRatingText => _ofstedRatingsLookup.Get(OfstedRating);
+
+        [Display(Name = "Ofsted last inspection")]
         public DateTimeViewModel OfstedInspectionDate { get; set; } = new DateTimeViewModel();
+
         public int? InspectorateId { get; set; }
         public string ProprietorName { get; set; }
         public int? Section41ApprovedId { get; set; }
@@ -155,7 +162,11 @@ namespace Edubase.Web.UI.Models
         public string LSOACode { get; set; }
         public List<AdditionalAddressModel> AdditionalAddresses { get; set; } = new List<AdditionalAddressModel>();
         public int AdditionalAddressesCount { get; set; }
+
+        [Display(Name = "BSO: Date of last inspection")]
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
+
+        [Display(Name = "BSO: Next inspection visit")]
         public DateTimeViewModel BSODateOfNextInspectionVisit { get; set; } = new DateTimeViewModel();
 
         public IEnumerable<SelectListItem> AccommodationChanges { get; set; }
@@ -213,6 +224,7 @@ namespace Edubase.Web.UI.Models
 
         public bool IsAcademy => TypeId.OneOfThese(ET.Academy1619Converter, ET.Academy1619SponsorLed, ET.AcademyAlternativeProvisionConverter, ET.AcademyAlternativeProvisionSponsorLed, ET.AcademyConverter, ET.AcademySpecialConverter, ET.AcademySpecialSponsorLed, ET.AcademySponsorLed, ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsAlternativeProvision, ET.FreeSchoolsSpecial, ET.StudioSchools, ET.UniversityTechnicalCollege, ET.CityTechnologyCollege);
 
+        [Display(Name = "Effective date (optional)")]
         public DateTimeViewModel ChangeEffectiveDate { get; set; } = new DateTimeViewModel();
 
         public string OriginalEstablishmentName { get; set; }
