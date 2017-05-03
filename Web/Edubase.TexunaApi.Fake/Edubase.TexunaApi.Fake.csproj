@@ -101,6 +101,7 @@
     </Content>
     <Content Include="ExampleConfiguration.ps1" />
     <None Include="Properties\PublishProfiles\fake-api - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\fake-api - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\fake-api - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

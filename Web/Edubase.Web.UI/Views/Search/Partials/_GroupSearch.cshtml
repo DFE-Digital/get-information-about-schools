@@ -29,7 +29,7 @@ federations and trusts as well as childrens centre groups and collaborations.</p
             <input type="hidden" name="g" value="true" />
 
         </div>
-        <button type="submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Group">Search</button>
+        <button type="submit" class="button mobile-full-width  search-button" name="searchtype" value="@eSearchType.Group">Search</button>
         <p class="search-all-shortcut">
             <a href="@Url.Action("Index", "GroupSearch", new { area = "Groups" })?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all Groups</a>
         </p>

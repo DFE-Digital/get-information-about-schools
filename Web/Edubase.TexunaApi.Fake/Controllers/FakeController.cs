@@ -53,6 +53,12 @@ namespace Edubase.TexunaApi.Fake.Controllers
             }));
         }
 
+        [HttpGet, Route("throwexception")]
+        public IHttpActionResult ThrowException()
+        {
+            throw new Exception("Test exception");
+        }
+
         [HttpGet, Route("_request-payload/{id}")]
         public IHttpActionResult GetRequestPayload(string id)
         {
@@ -64,6 +70,10 @@ namespace Edubase.TexunaApi.Fake.Controllers
         [HttpPut, Route("configure/{method}")]
         public IHttpActionResult SetResponse(string uri, string method, [FromBody]object response)
         {
+            if (uri.StartsWith("/")) throw new Exception("The URI cannot start with a slash");
+
+
+
             var paramsStart = uri.IndexOf("?");
             if (paramsStart > -1)
             {

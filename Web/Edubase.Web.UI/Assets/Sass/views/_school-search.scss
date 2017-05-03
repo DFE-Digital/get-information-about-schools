@@ -116,6 +116,10 @@
     float: left;
     position: relative;
 
+    &:hover {
+        color: $black;
+    }
+
     &:after {
         content: '';
         position: absolute;
