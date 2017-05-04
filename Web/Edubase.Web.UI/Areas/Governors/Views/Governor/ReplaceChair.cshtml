@@ -38,12 +38,12 @@
                 </div>
                 <div id="replacement-chair-details" class="grid-row">
                     <div class="column-two-thirds">
-                        <div id="newChairDetails" class="expander-panel open-expander">
+                        <div id="newChairDetails" class="expander-panel @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">
                             <div class="expander-panel-content replacement-chair-option">
                                 @Html.EditorFor(m => m.NewLocalGovernor)
                             </div>
                         </div>
-                        <div id="sharedChairDetails" class="expander-panel">
+                        <div id="sharedChairDetails" class="expander-panel @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
                             <div class="expander-panel-content replacement-chair-option">
                                 <div class="shared-governor-list">
                                     @if (Model.SharedGovernors.Any())
