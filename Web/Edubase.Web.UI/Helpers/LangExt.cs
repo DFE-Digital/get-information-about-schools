@@ -73,6 +73,23 @@ namespace Edubase.Web.UI
             return nvc;
         }
 
+        public static NameValueCollection RemoveKey(this NameValueCollection nvc, string key)
+        {
+            nvc = HttpUtility.ParseQueryString(nvc.ToString());
+            Guard.IsNotNull(key.Clean(), () => new ArgumentNullException(nameof(key)));
+            nvc.Remove(key);
+            return nvc;
+        }
+
+        public static NameValueCollection RemoveKeys(this NameValueCollection nvc, params string[] keys)
+        {
+            foreach (var item in keys)
+            {
+                nvc = nvc.RemoveKey(item);
+            }
+            return nvc;
+        }
+
         /// <summary>
         /// Adds a message that will appear in the validation summary, in addition to the field-level message.
         /// </summary>
