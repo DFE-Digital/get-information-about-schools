@@ -61,4 +61,21 @@
 
 .governor-toggles li {
     margin-bottom: 36px;
+.panel-warning {
+    @extend %contain-floats;
+    clear: both;
+    border-left: 4px solid $notice-warning-border;
+    background-color: $notice-warning-bg;
+    padding: 5px 0 5px 12px;
+    margin: (0 $gutter-half 4px 3px);
+
+    .panel-icon {
+        float: left;
+        margin-top: 10px;
+    }
+
+    .panel-text {
+        margin: ($gutter-half $gutter-half $gutter-half 50px);
+        font-weight: bold;
+    }
 }

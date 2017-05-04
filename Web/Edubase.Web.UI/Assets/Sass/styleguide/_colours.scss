@@ -55,9 +55,11 @@ $notice-subtle-bg:         white;
 $notice-subtle-text:       gray !default;
 $notice-subtle-border:     gray;
 
+$notice-warning-bg:        #fdf0d2;
+$notice-warning-border:    black;
+
 // Tables
 // ==========================================================================
-
 //** Default background color used for all tables.
 $table-bg:                      transparent !default;
 //** Background color used for `.table-striped`.
