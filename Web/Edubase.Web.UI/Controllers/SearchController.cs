@@ -12,18 +12,23 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using Common.Spatial;
+    using Services.IntegrationEndPoints.Google;
     using eStatus = Services.Enums.eLookupEstablishmentStatus;
 
     public class SearchController : EduBaseController
     {
-        private IEstablishmentReadService _establishmentReadService;
-        private ICachedLookupService _cachedLookupService;
-        private IGroupReadService _groupReadService;
+        private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly ICachedLookupService _cachedLookupService;
+        private readonly IGroupReadService _groupReadService;
+        private readonly IGooglePlacesService _googlePlacesService;
 
         public SearchController(IEstablishmentReadService establishmentReadService,
             ICachedLookupService cachedLookupService,
-            IGroupReadService groupReadService)
+            IGroupReadService groupReadService,
+            IGooglePlacesService googlePlacesService)
         {
+            _googlePlacesService = googlePlacesService;
             _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
@@ -43,6 +48,11 @@ namespace Edubase.Web.UI.Controllers
                 if (viewModel.SearchType == eSearchType.LocalAuthorityDisambiguation)
                 {
                     return await ProcessLocalAuthorityDisambiguation(viewModel);
+                }
+
+                if(LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
+                {
+                    return await ProcessLocationDisambiguation(viewModel);
                 }
 
                 if (ModelState.IsValid)
@@ -84,6 +94,8 @@ namespace Edubase.Web.UI.Controllers
         [Route("Search/SuggestGroup"), HttpGet]
         public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text.Distill(), User));
 
+        
+
         private async Task<ActionResult> ProcessLocalAuthorityDisambiguation(SearchViewModel model)
         {
             var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
@@ -96,6 +108,23 @@ namespace Edubase.Web.UI.Controllers
                     localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd ?? "", StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList());
                 return View("LocalAuthorityDisambiguation", localAuthorityDisambiguationViewModel);
             }
+        }
+
+        [Route("Search/ResolveLocation"), HttpGet]
+        public async Task<ActionResult> ResolveLocation(string placeId)
+        {
+            var location = await _googlePlacesService.GetCoordinateAsync(placeId);
+            var url = Url.Action("Index", "Search", new { area = "" });
+            const string key = "LocationSearchModel.AutoSuggestValue";
+            url += "?" + Request.QueryString.RemoveKeys("placeId", key).AddIfNonExistent(key, $"{location.Latitude},{location.Longitude}");
+            return Redirect(url);
+        }
+
+        private async Task<ActionResult> ProcessLocationDisambiguation(SearchViewModel model)
+        {
+            var items = await _googlePlacesService.SearchAsync(model.LocationSearchModel.Text);
+            return View("LocationDisambiguation", new LocationDisambiguationViewModel() { SearchText = model.LocationSearchModel.Text, MatchingLocations = items.ToList() });
+
         }
     }
 }

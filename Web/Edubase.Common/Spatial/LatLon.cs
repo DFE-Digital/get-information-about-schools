@@ -26,5 +26,11 @@ namespace Edubase.Common.Spatial
             if (lat.HasValue && lng.HasValue) return new LatLon(lat.Value, lng.Value);
             else return null;
         }
+
+        public static LatLon Create(double? lat, double? lng)
+        {
+            if (lat.HasValue && lng.HasValue) return new LatLon(lat.Value, lng.Value);
+            else return null;
+        }
     }
 }

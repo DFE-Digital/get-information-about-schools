@@ -41,6 +41,7 @@ using Edubase.Services.Texuna.Core;
 using Edubase.Services.Texuna.Security;
 using Edubase.Services.Downloads;
 using Edubase.Services.Texuna.Downloads;
+using Edubase.Services.IntegrationEndPoints.Google;
 
 namespace Edubase.Web.UI
 {
@@ -98,6 +99,7 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<BlobService>().As<IBlobService>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
+            builder.RegisterType<GooglePlacesService>().As<IGooglePlacesService>();
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
             builder.RegisterInstance(new NomenclatureService()).AsSelf();
 

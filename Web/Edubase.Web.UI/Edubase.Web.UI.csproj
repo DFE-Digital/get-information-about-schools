@@ -343,6 +343,7 @@
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
     <Compile Include="Models\Grid\GridViewModel.cs" />
+    <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />
     <Compile Include="Validation\AutofacValidatorFactory.cs" />
@@ -938,6 +939,7 @@
     <Content Include="Views\Search\Partials\_HelpText.cshtml" />
     <Content Include="Views\Search\Partials\_SearchHeader.cshtml" />
     <Content Include="Views\Tools\EstablishmentBulkUpdate.cshtml" />
+    <Content Include="Views\Search\LocationDisambiguation.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
