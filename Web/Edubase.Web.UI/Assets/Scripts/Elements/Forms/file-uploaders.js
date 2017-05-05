@@ -18,7 +18,10 @@
 
 
             $fileInput.on('change', function () {
-                var fileName = $(this).val().split('\\').slice(-1);
+                var fileName = $(this).val().split('\\').slice(-1).toString();
+                if (fileName.length === 0) {
+                    fileName = 'No file chosen';
+                }
                 $displayBox.val(fileName);
             });
 
