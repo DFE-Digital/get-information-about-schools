@@ -42,19 +42,16 @@
             }
 
         </div>
-
-    }
-    else
-    {
-        <div class="grid-row">
-            <div class="column-half">
-
-                <h2 class="heading-medium">Governance</h2>
-                @DisplayGovernanceMode()
-
-            </div>
+}
+else
+{
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium">Governance</h2>
+            @DisplayGovernanceMode()
         </div>
-    }
+    </div>
+}
 
 
     @if (Model.DomainModel.HasGovernors)
@@ -215,72 +212,9 @@ if (Model.EditMode)
         }
         else
         {
-            // Render tables
-            foreach (var grid in Model.Grids)
+            for (var index = 0; index < Model.Grids.Count; index++)
             {
-                <div class="governor-grid">
-                    <h2 class="bold-small">@grid.Title</h2>
-                    @if (grid.Rows.Any())
-                    {
-                        <table class="edubase-table list-table">
-                            <thead>
-                                <tr>
-                                    @foreach (var column in grid.HeaderCells)
-                                    {
-                                        <th>@(column.Text ?? "Not recorded")</th>
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var row in grid.Rows)
-                                {
-                                    var cellCount = 0;
-                                    <tr>
-                                        @foreach (var cell in row.Cells)
-                                        {
-                                            
-                                            <td aria-label="@grid.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
-                                            cellCount++;
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <p class="none">Not recorded</p>
-                    }
-                </div>
-            }
-            
-            // Render mobile table/list combo
-            foreach (var grid in Model.Grids)
-            {
-                @*<div class="governor-list mobile-view">
-                    <h2 class="bold-small">@grid.Title</h2>
-                    @if (grid.Rows.Any())
-                    {
-                        <table>
-                            <tbody>
-                                @foreach (var row in grid.Rows)
-                                {
-                                    foreach (var cell in row.Cells)
-                                    {
-                                        <tr>
-                                            <td class="label">@cell.Parent.Text</td>
-                                            <td class="@Html.Conditional(cell == row.Cells.First(), "name")">@(cell.Text ?? "Not recorded")</td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <p class="none">Not recorded</p>
-                    }
-                </div>*@
+                @Html.DisplayForGeneric(m => m.Grids[index])
             }
         }
     </div>

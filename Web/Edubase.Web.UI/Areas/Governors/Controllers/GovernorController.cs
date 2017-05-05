@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
+using Edubase.Web.UI.Helpers;
 using FluentValidation.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
@@ -120,7 +121,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupEditGovernance"), 
          Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabEditGovernance"),
          HttpGet]
-        public async Task<ActionResult> Edit(int? groupUId, int? establishmentUrn, int? removalGid, int? duplicateGovernorId)
+        public async Task<ActionResult> Edit(int? groupUId, int? establishmentUrn, int? removalGid, int? duplicateGovernorId, bool roleAlreadyExists = false)
         {
             Guard.IsTrue(groupUId.HasValue || establishmentUrn.HasValue, () => new InvalidParameterException($"Both parameters '{nameof(groupUId)}' and '{nameof(establishmentUrn)}' are null."));
 
@@ -150,6 +151,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                     var duplicate = await _governorsReadService.GetGovernorAsync(duplicateGovernorId.Value, User);
                     ViewData.Add("DuplicateGovernor", duplicate);
+                }
+
+                if (roleAlreadyExists)
+                {
+                    ModelState.AddModelError("role", "The selected role already contains an appointee.");
                 }
 
                 return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
@@ -237,12 +243,22 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             var replaceMode = (ControllerContext.RouteData.Route as System.Web.Routing.Route).Url.IndexOf("/Replace/", StringComparison.OrdinalIgnoreCase) > -1;
 
-            if (establishmentUrn.HasValue && role.HasValue &&
-                role.Value.OneOfThese(eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody,
-                    eLookupGovernorRole.Establishment_SharedLocalGovernor))
+            if (role.HasValue)
             {
-                return RedirectToRoute("SelectSharedGovernor", new {establishmentUrn = establishmentUrn.Value, role = role.Value});
-            }
+                var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
+                
+                if (EnumSets.eSingularGovernorRoles.Contains(role.Value) && existingGovernors.CurrentGovernors.Any(g => g.RoleId == (int)role.Value))
+                {
+                    return RedirectToRoute(establishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn, groupUId, roleAlreadyExists = true });
+                }
+
+                if (establishmentUrn.HasValue && role.Value.OneOfThese(eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, eLookupGovernorRole.Establishment_SharedLocalGovernor))
+                {
+                    return RedirectToRoute("SelectSharedGovernor", new { establishmentUrn = establishmentUrn.Value, role = role.Value });
+                }
+            } 
+
+            
 
             if (role == null && gid == null) throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
             var viewModel = new CreateEditGovernorViewModel
@@ -571,7 +587,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> GroupEditDelegation(EditGroupDelegationInformationViewModel model)
         {
             var result = await new EditGroupDelegationInformationViewModelValidator().ValidateAsync(model);
-            result.AddToModelState(ModelState, string.Empty);
 
             if (ModelState.IsValid)
             {
@@ -586,7 +601,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return RedirectToRoute("GroupEditGovernance", new { GroupUId = model.GroupUId });
             }
 
-            ViewBag.FVErrors = result;
+            result.EduBaseAddToModelState(ModelState, null);
+            //ViewBag.FVErrors = result;
             await PopulateLayoutProperties(model, null, model.GroupUId); 
             return View(model);
         }

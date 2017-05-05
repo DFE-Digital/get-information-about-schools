@@ -23,7 +23,8 @@
             <h1 class="heading-xlarge">@Model.PageTitle</h1>
            
             <div class="column-half">
-                @Html.Partial("_ValidationSummary", ViewData.ModelState)
+                @*@Html.Partial("_ValidationSummary", ViewData.ModelState)*@
+                @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
                 <div class="form-group @Html.ValidationCssClassFor(x=>x.GroupName)">
                     <label for="name">@Model.FieldNamePrefix name</label>

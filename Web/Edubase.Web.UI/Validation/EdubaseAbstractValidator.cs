@@ -6,6 +6,7 @@ using System.Web;
 using FluentValidation;
 using FluentValidation.Results;
 using System.Web.Mvc;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Validation
 {
@@ -13,7 +14,8 @@ namespace Edubase.Web.UI.Validation
     {
         public ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result)
         {
-            controllerContext.Controller.ViewBag.FVErrors = result;
+            result.EduBaseAddToModelState(controllerContext.Controller.ViewData.ModelState, null);
+            //controllerContext.Controller.ViewBag.FVErrors = result;
             return result;
         }
 

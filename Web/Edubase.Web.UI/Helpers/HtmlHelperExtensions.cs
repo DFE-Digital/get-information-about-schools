@@ -3,6 +3,7 @@ using Edubase.Services.Governors.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -61,38 +62,6 @@ namespace Edubase.Web.UI.Helpers
 
             if (isDisabled) d["style"] = d.ContainsKey("style") ? (d["style"] + ";background-color:#eee;") : "background-color:#eee";
             return d;
-        }
-        
-        
-        public static MvcHtmlString EduDayDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
-            TProperty>> expression, object attributes)
-        {
-            var v = expression.Compile()(htmlHelper.ViewData.Model);
-            var items = Enumerable.Range(1, 31)
-                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(), Selected = (x.ToString() == v?.ToString()) });
-            return htmlHelper.DropDownListFor(expression, items, "", attributes);
-        }
-
-        public static MvcHtmlString EduMonthDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
-            TProperty>> expression, object attributes)
-        {
-            var v = expression.Compile()(htmlHelper.ViewData.Model);
-            var items = Enumerable.Range(1, 12)
-                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(),
-                    Selected = (x.ToString() == v?.ToString())});
-            return htmlHelper.DropDownListFor(expression, items, "", attributes);
-        }
-
-        public static MvcHtmlString EduYearDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
-            TProperty>> expression, object attributes)
-        {
-            var v = expression.Compile()(htmlHelper.ViewData.Model);
-            var start = 1900;
-            var count = (DateTime.UtcNow.Year + 5) - start;
-            var items = Enumerable.Range(start, count).Reverse()
-                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(),
-                    Selected = (x.ToString() == v?.ToString()) });
-            return htmlHelper.DropDownListFor(expression, items, "", attributes);
         }
 
         public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 
@@ -177,5 +146,36 @@ namespace Edubase.Web.UI.Helpers
             }
         }
 
+        public static MvcHtmlString EditorForGeneric<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
+        {
+            var propertyType = typeof(TValue);
+            if (!propertyType.IsGenericType)
+                throw new ArgumentException();
+
+            var genericType = propertyType.GetGenericArguments()[0];
+            var templateName = $"{propertyType.Name.Split('`')[0]}_{genericType.Name}";
+            return html.EditorFor<TModel, TValue>(expression, templateName);
+        }
+
+        public static MvcHtmlString DisplayForGeneric<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
+        {
+            var propertyType = typeof(TValue);
+            if (!propertyType.IsGenericType)
+                throw new ArgumentException();
+
+            var genericType = propertyType.GetGenericArguments()[0];
+            var templateName = $"{propertyType.Name.Split('`')[0]}_{genericType.Name}";
+            return html.DisplayFor<TModel, TValue>(expression, templateName);
+        }
+
+        //public static MvcHtmlString EdubaseValidationSummary(this HtmlHelper htmlHelper)
+        //{
+        //    return htmlHelper.EdubaseValidationSummary(false);
+        //}
+
+        //public static MvcHtmlString EdubaseValidationSummary(this HtmlHelper htmlHelper, bool excludePropertyErrors)
+        //{
+
+        //}
     }
 }

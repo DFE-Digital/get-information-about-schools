@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
@@ -148,7 +149,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
-            ViewBag.FVErrors = result;
+            //ViewBag.FVErrors = result;
 
             await PopulateSelectLists(viewModel);
 
@@ -199,7 +200,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
-            ViewBag.FVErrors = result;
+            //ViewBag.FVErrors = result;
 
             await PopulateSelectLists(viewModel);
             if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
@@ -245,7 +246,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
-            ViewBag.FVErrors = result;
+            //ViewBag.FVErrors = result;
 
             if (ModelState.IsValid)
             {
