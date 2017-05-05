@@ -99,3 +99,20 @@ $path: $images-path;
     @extend .back-to-previous;
     width: 17.5em;
 }
+
+
+
+.plus-link {
+    position: relative;
+    padding-left: 1em;
+    font-size: 16px;
+    margin: 20px 0;
+    display: block;
+    float: left;
+
+    &:before {
+        content: '+';
+        position: absolute;
+        left: 0;
+    }
+}
