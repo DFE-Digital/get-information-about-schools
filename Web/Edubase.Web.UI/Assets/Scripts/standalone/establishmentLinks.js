@@ -32,7 +32,7 @@
                 self.overlay = overlay;
                 window.setTimeout(function() {
                     DfE.Views.EstablishmentLinks.init();
-                }, 1000);
+                }, 1500);
                 
             })
             .fail(function(jqxhr, setting, ex) {
