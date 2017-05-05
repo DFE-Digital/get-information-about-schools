@@ -15,7 +15,6 @@
 
             <h2 class="heading-medium">Create</h2>
             <ul>
-                <li>@Html.ActionLink("Create new School", "Create", "Establishment")</li>
                 
                 @if (Model.UserCanCreateAcademyTrustGroup)
                 {
@@ -67,6 +66,12 @@
             <ul>
                 <li>
                     @Html.ActionLink("Establishment bulk update", "EstablishmentBulkUpdate", "Tools")
+                </li>
+            </ul>
+            <h2 class="heading-medium">Manage</h2>
+            <ul>
+                <li>
+                    @Html.ActionLink("Academy openings", "ManageAcademyOpenings", "Tools")
                 </li>
             </ul>
         </div>
