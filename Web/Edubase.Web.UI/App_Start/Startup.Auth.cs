@@ -91,7 +91,7 @@ namespace Edubase.Web.UI
 #if (DEBUG)
             return GetSecureAccessSPCertificateFromAppData();
 #else
-            return GetSPCertificateFromCertStore();
+            return GetSecureAccessSPCertificateFromCertStore();
 #endif
         }
 
