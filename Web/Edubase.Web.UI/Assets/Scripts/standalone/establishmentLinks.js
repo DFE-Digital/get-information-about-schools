@@ -18,6 +18,8 @@
                     self.linkedEstablishments.push(self.establishments[self.randomInt(0, self.establishments.length)]);
                 }
 
+                self.linkedEstablishments[1].backLink = true;
+
                 var overlay = $('<div id="demo-establishment-list" class="hidden"><ul></ul></div>'),
                     schoolsContent = [];
 
@@ -85,9 +87,17 @@
                     this.findEstablishment();
                     this.linkedEstablishments.filter(function (estab) {
                         if (estab.urn === urn) {
+                            var dateParts = estab.linkDate.split('/');
+
+                            self.linkDateDay = dateParts[0];
+                            self.linkDateMonth = dateParts[1];
+                            self.linkDateYear = dateParts[2];
+
                             self.forwardLinkType = estab.linkType.code;
                         }
                     });
+
+                    
                 },
                 validateUrn: function () {
                     var linkedUrns = this.linkedEstablishments.map(function(estab) {
@@ -114,7 +124,6 @@
                     var found = false;
 
                     this.availableEstablishments.filter(function (estab) {
-                        console.log(estab.urn === urn);
                         if (estab.urn === urn) {
                             self.linkingEstab = estab;
                             found = true;
@@ -123,7 +132,9 @@
 
                     if (!found) {
                         this.urnInvalidError = true;
+                        return;
                     }
+                    this.updateModalMessaging();
                 },
                 toggleDateClone: function() {
                     if (this.cloneDate) {
@@ -184,16 +195,22 @@
                     var est = this.linkingEstab;
                     var self = this;
                     var selectedLinkType = self.linkTypes.filter(function (lt) {
-                        console.log(lt.code + "  " + self.forwardLinkType);
                         if (lt.code === self.forwardLinkType) {
-                            console.info(lt);
                             return lt;
                         }
                     });
                     est.linkType = selectedLinkType[0];
                     est.linkDate = [this.linkDateDay, this.linkDateMonth, this.linkDateYear].join('/');
-                    console.log(est);
-                    this.linkedEstablishments.push(est);
+                    est.backLink = this.reverseLink;
+                    if (this.addMode) {
+                        this.linkedEstablishments.push(est);
+                    } else {
+                        var index = self.linkedEstablishments.map(function(estab) {
+                            return estab.urn;
+                        }).indexOf(est.urn);
+                        self.linkedEstablishments[index] = est;
+                    }
+                    
                     this.reset();
                 },
                 reset: function() {
@@ -219,6 +236,16 @@
                     this.forwardLinkError = false;
                     this.backLinkError = false;
                     this.reverselinkDateError = false;
+                },
+                updateModalMessaging: function () {
+                    var mTitle = "Are you sure you want to delete this link?";
+                    var mContent = "This will remove the link entry on this page";
+                    
+                    if (this.linkingEstab.backLink) {
+                        mContent = "This will also remove the link entry on the linked establishments page";
+                    }
+
+                    $('#content').find('.estab-link-delete').data().okCancel.updateModalContent(mTitle, mContent);
                 }
             },
             computed: {
@@ -249,11 +276,10 @@
         $('#content').find('.estab-link-delete').okCancel({
             triggerEvent: 'click',
             title: 'Are you sure you want to delete this link?',
-            content: 'This will also remove the link entry on the linked establishments page',
+            content: 'This will remove the link entry on this page',
             ok: function () {
                 var linkedEstabUrn = establishmentLinks.linkingEstab.urn;
                 var updatedEstabList = establishmentLinks.linkedEstablishments.filter(function (estab) {
-                    console.log(estab.urn + ' ' + linkedEstabUrn);
                     if (estab.urn !== linkedEstabUrn) {
                         return estab;
                     }
