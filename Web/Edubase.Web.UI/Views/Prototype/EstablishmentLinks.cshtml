@@ -30,7 +30,7 @@
                     <div class="links-list" v-show="viewMode">
                         <div class="button-row">
                             <button class="button mobile-full-width" v-on:click.prevent="saveLinkedEstablishment" v-show="editMode || addMode">Save</button>
-                            <button class="button button-grey mobile-full-width estab-link-delete" v-show="editMode">Delete</button>
+                            
                             <a href="#" class="button button-grey  mobile-full-width" v-on:click.prevent="reset">Cancel</a>
                         </div>
 
@@ -38,7 +38,9 @@
                             These establishments are linked with {{baseEstab.name}},
                             URN: {{baseEstab.urn}} For example, they may be predecessor or successor establishments.
                         </p>
-
+                        <div class="table-count">
+                            <p>Showing 1 - {{linkedEstablishments.length}} of {{linkedEstablishments.length}}</p>
+                        </div>
                         <table class="edubase-table">
                             <thead>
                                 <tr>
@@ -63,6 +65,9 @@
                         <p>
                             <a href="#" class="plus-link" v-on:click.prevent="addNewLink">Add another link</a>
                         </p>
+                        <div class="button-row">
+                            <a href="#" class="button button-grey  mobile-full-width" v-on:click.prevent="reset">Cancel</a>
+                        </div>
 
                     </div>
                     <div class="links-search" v-show="addMode && linkingEstab ===''">
@@ -70,12 +75,15 @@
                             <a class="button button-grey" href="#" v-on:click.prevent="reset">Cancel</a>
                         </div>
 
-                        <h2 class="bold-medium" v-show="addMode">Link to other establishment</h2>
-                        <h2 class="bold-medium" v-show="editMode">Edit link</h2>
+                        <h2 class="heading-medium" v-show="addMode">Link to other establishment</h2>
+                        <h2 class="heading-medium" v-show="editMode">Edit link</h2>
 
                         <form>
                             <div class="column-half">
                                 <div v-bind:class="['form-group', urnSearchError || urnInvalidError ? 'error' : '']" v-show="linkingEstab === ''">
+                                    <label class="form-label">
+                                        Other establishments URN
+                                    </label>
                                     <span class="error-message" v-show="urnInvalidError">
                                         Please enter a valid URN
                                     </span>
@@ -83,7 +91,7 @@
                                         This URN is already linked to this establishment
                                     </span>
 
-                                    <input type="text" class="form-control urn-search" v-model="userUrn" />
+                                    <input type="text" class="form-control urn-search" v-model="userUrn"/>
                                     <button class="button inline-button" v-on:click.prevent="validateUrn">Find URN</button>
                                 </div>
                             </div>
@@ -97,8 +105,9 @@
 
                     <div class="attach-link" v-show="(addMode && linkingEstab !=='') || editMode">
                         <div class="button-row">
-                            <button class="button">Save</button>
-                            <a href="#" class="button button-grey" v-on:click="reset">Cancel</a>
+                            <button class="button mobile-full-width">Save</button>
+                            <button class="button button-grey mobile-full-width estab-link-delete" v-show="editMode">Delete</button>
+                            <a href="#" class="button button-grey mobile-full-width" v-on:click="reset">Cancel</a>
                         </div>
                         <div class="column-two-thirds">
                             <h2 class="bold-medium">Link to other establishment</h2>
@@ -108,7 +117,7 @@
                                 <li>{{linkingEstabAddress}}</li>
                                 <li>URN: {{linkingEstab.urn}}</li>
                             </ul>
-                            <a href="#" v-show="addMode" v-on:click.prevent="addMode = true, linkingEstab =''">Wrong establishment?</a>
+                            <a href="#" class="body-link" v-show="addMode" v-on:click.prevent="addMode = true, linkingEstab =''">Wrong establishment?</a>
                         </div>
 
 
@@ -212,7 +221,7 @@
 
                         <div class="button-row">
                             <button class="button mobile-full-width" v-on:click.prevent="validateEstablishmentLink">Save</button>
-                            <button class="button button-grey mobile-full-width estab-link-delete">Delete</button>
+                            <button class="button button-grey mobile-full-width estab-link-delete" v-show="editMode">Delete</button>
                             <a href="#" class="button button-grey  mobile-full-width" v-on:click.prevent="reset">Cancel</a>
                         </div>
                     </div>
