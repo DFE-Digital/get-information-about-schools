@@ -271,10 +271,9 @@ div.governor-list, div.governor-grid {
 }
 
 div.shared-governor-list {
-    padding-left: 15px;
 
     li {
-        margin-top: 15px;
+        margin-bottom: 15px;
     }
 
     dl {
@@ -307,19 +306,6 @@ div.shared-governor-list {
 
 
 
-#replacement-chair-details {
-    .replacement-chair-option {
-        border-left-style: solid;
-        border-left-color: dimgrey;
-        border-left-width: 5px;
-        padding-left: 15px;
-        padding-top: 20px;
-        margin-left: 20px;
-    }
-}
-
-
-
 .tab-content {
     .grid-row,
     .column-full,
@@ -332,10 +318,23 @@ div.shared-governor-list {
 
 
 .exapanding-list-wrap {
-    .shared-governor {
-        margin-top: 0;
-        margin-bottom: 20px;
-        margin-left: 16px;
+    .shared-governor {        
         padding-left: 26px;
+        padding-top: 0;
+        margin: 0 15px 20px 16px;
+        border-left: 4px solid #fff;
     }
+     .panel-indent  {
+       padding-left: 26px;
+       padding-top: 0;
+       margin: 0 15px 20px 16px;
+       border-left: 4px solid $border-colour;
+     }
+     .remove-border {
+         border-left-color: #fff;
+     }
+}
+
+.chair-replace {
+
 }

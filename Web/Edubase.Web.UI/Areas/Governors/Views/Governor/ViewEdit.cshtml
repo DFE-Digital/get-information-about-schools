@@ -4,80 +4,83 @@
 @{ 
     Layout = Model.Layout;
 }
+<div class="tab-content">
 
-@if (Model.EditMode)
-{
-    <div class="column-half">
-        @(Model.GroupUId.HasValue 
-              ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-grey cancel"}) 
-              : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "governance", new {area = "", id = Model.EstablishmentUrn}, new {@class = "button button-grey cancel"}))
-    </div>
-    <div class="column-two-thirds">
-        <h2 class="heading-medium">Governance</h2>
-        @if (Model.ShowDelegationInformation)
-        {
-            @ShowDelegationInformation()
-        }
 
-        @DisplayGovernanceMode()
-    </div>
-            
-     <div class="column-half">
+    @if (Model.EditMode)
+    {
+        <div class="column-half">
+            @(Model.GroupUId.HasValue
+              ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel" })
+              : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "governance", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" }))
+        </div>
+        <div class="column-two-thirds">
+            <h2 class="heading-medium">Governance</h2>
+            @if (Model.ShowDelegationInformation)
+            {
+                @ShowDelegationInformation()
+            }
+
+            @DisplayGovernanceMode()
+        </div>
+
+        <div class="column-half">
             <h2 class="heading-small">Add person</h2>
-            
+
 
             @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
             {
                 <div class="form-group">
                     <label class="form-label">Select role</label>
-                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem {Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole) x.Id).ToString()}),
-                        new {id = "roleid", @class = "form-control"})
+                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }),
+                        new { id = "roleid", @class = "form-control" })
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Add person" class="button mobile-full-width" />
                 </div>
-                
+
             }
 
         </div>
-}
-else
-{
-    <div class="grid-row">
-        <div class="column-half">
 
-            <h2 class="heading-medium">Governance</h2>
-            @DisplayGovernanceMode()
-            
-        </div>
-    </div>
-}
-
-
-@if (Model.DomainModel.HasGovernors)
-{
-    if (Model.ShowDelegationInformation)
+    }
+    else
     {
-        if (!Model.EditMode)
-        {
-            <div class="column-full">
-                @ShowDelegationInformation()
+        <div class="grid-row">
+            <div class="column-half">
+
+                <h2 class="heading-medium">Governance</h2>
+                @DisplayGovernanceMode()
+
             </div>
-        }
+        </div>
     }
 
-    @DisplayGovernors()
 
-       
-}
-else
-{
-    <p>There is no governance information for this @Model.ParentEntityName</p>
-}
+    @if (Model.DomainModel.HasGovernors)
+    {
+        if (Model.ShowDelegationInformation)
+        {
+            if (!Model.EditMode)
+            {
+                <div class="column-full">
+                    @ShowDelegationInformation()
+                </div>
+            }
+        }
+
+        @DisplayGovernors()
 
 
-@helper ShowDelegationInformation()
-{
+    }
+    else
+    {
+        <p>There is no governance information for this @Model.ParentEntityName</p>
+    }
+
+
+    @helper ShowDelegationInformation()
+    {
     <h2 class="bold-small">Delgated authority of local governing body</h2>
     <div class="expanding-content-wrapper">
         <a href="#" class="expanding-content-trigger">
@@ -87,17 +90,17 @@ else
             @(Model.DelegationInformation ?? "Not recorded")
         </div>
     </div>
-    if (Model.EditMode)
-    {
+if (Model.EditMode)
+{
         <div class="grid-row">
             <div class="column-full">
-            @Html.RouteLink("Edit", "GroupEditDelegation", new {GroupUId = Model.GroupUId}, new {@class = "button button-grey mobile-full-width"})
+                @Html.RouteLink("Edit", "GroupEditDelegation", new { GroupUId = Model.GroupUId }, new { @class = "button button-grey mobile-full-width" })
             </div>
         </div>
-    }
-
 }
 
+}
+</div>
 
 
 @helper DisplayGovernors()

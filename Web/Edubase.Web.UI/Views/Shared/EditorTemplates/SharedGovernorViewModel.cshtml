@@ -29,7 +29,7 @@
         @Html.HiddenFor(x => x.DOB)
         @Html.HiddenFor(x => x.Nationality)
         @Html.HiddenFor(x => x.FullName)
-        <div class="shared-governor">
+        <div class="shared-governor @(Model.PreExisting ? "remove-border": "")">
             @if (Model.PreExisting)
             {
                 <p class="bold-xsmall">Already shared with this establishment</p>
@@ -47,21 +47,26 @@
                 <dt>Postcode:</dt>
                 <dd>@Model.PostCode</dd>
             </dl>
-            <div id="expand-@Model.Id">
-                <dl class="key-value-list">
-                    <dt>GID:</dt>
-                    <dd>@Model.Id</dd>
-                    <dt>Appointed by:</dt>
-                    <dd>@Model.AppointingBodyName</dd>
-                    <dt>Date of birth:</dt>
-                    <dd>@(Model.DOB?.ToString("dd/MM/yyyy"))</dd>
-                    <dt>Nationality:</dt>
-                    <dd>@Model.Nationality</dd>
-                </dl>
+            @if (!Model.PreExisting)
+            {
+                <div id="expand-@Model.Id">
+                    <dl class="key-value-list">
+                        <dt>GID:</dt>
+                        <dd>@Model.Id</dd>
+                        <dt>Appointed by:</dt>
+                        <dd>@Model.AppointingBodyName</dd>
+                        <dt>Date of birth:</dt>
+                        <dd>@(Model.DOB?.ToString("dd/MM/yyyy"))</dd>
+                        <dt>Nationality:</dt>
+                        <dd>@Model.Nationality</dd>
+                    </dl>
 
-                @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting })
-                @Html.EditorFor(x => x.AppointmentEndDate, new { @readonly = Model.PreExisting })
-            </div>
+                    @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting })
+                    @Html.EditorFor(x => x.AppointmentEndDate, new { @readonly = Model.PreExisting })
+                </div>
+            }
+
+                
         </div>
     </div>
 </li>

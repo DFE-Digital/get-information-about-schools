@@ -7,7 +7,6 @@
 }
 
 <div id="select-shared-governor" class="tab-content">
-    <div class="grid-row">
         <div class="column-two-thirds">
             @using (Html.BeginForm("ReplaceChair", "Governor", FormMethod.Post))
             {
@@ -16,35 +15,34 @@
                 @Html.HiddenFor(m => m.ExistingChairType)
                 @Html.HiddenFor(m => m.Urn)
                 @Html.HiddenFor(m => m.Name)
-                <div class="column-full">
+                <div class="button-row">
                     <input type="submit" value="Select" class="button mobile-full-width" />
                     <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                 </div>
-                <h2 class="bold-medium column-full">Replace chair of local governing body</h2>
-                <div>@Model.GovernorFullName</div>
+                <h2 class="heading-medium">Replace chair of local governing body</h2>
+                <h3 class="heading-small">@Model.GovernorFullName</h3>
 
                 @Html.EditorFor(m => m.DateTermEnds)
-                <div class="column-half">
-                    <label class="block-label radio-button-wrap">
-                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.LocalChair, new { id = "newChair", @class = "panel-trigger", data_panel_trigger = "newChairDetails" })
+                <div class="form-group inline toggle-panels">
+                    <label class="block-label">
+                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.LocalChair, new { id = "newChair", @class = "panel-trigger", data_toggle_panel = "#newChairDetails" })
                         New Chair
                     </label>
-                </div>
-                <div class="column-half">
-                    <label class="block-label radio-button-wrap">
-                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.SharedChair, new { id = "sharedChair", @class = "panel-trigger", data_panel_trigger = "sharedChairDetails" })
+                
+                    <label class="block-label ">
+                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.SharedChair, new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#sharedChairDetails" })
                         Shared Chair
                     </label>
                 </div>
-                <div id="replacement-chair-details" class="grid-row">
+                <div id="replacement-chair-details" class="exapanding-list-wrap chair-replace governor-toggles">
                     <div class="column-two-thirds">
-                        <div id="newChairDetails" class="expander-panel @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">
-                            <div class="expander-panel-content replacement-chair-option">
+                        <div id="newChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">
+                            <div class="replacement-chair-option">
                                 @Html.EditorFor(m => m.NewLocalGovernor)
                             </div>
                         </div>
-                        <div id="sharedChairDetails" class="expander-panel @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
-                            <div class="expander-panel-content replacement-chair-option">
+                        <div id="sharedChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
+                            <div class="replacement-chair-option">
                                 <div class="shared-governor-list">
                                     @if (Model.SharedGovernors.Any())
                                     {
@@ -64,35 +62,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="column-full">
+                <div class="button-row">
                     <input type="submit" value="Select" class="button mobile-full-width" />
                     <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                 </div>
             }
         </div>
-    </div>
 </div>
 
-@section ViewScripts
-{
-    <script type="text/javascript">
-        $(".panel-trigger").change(function() {
-            $(".panel-trigger").each(function() {
-                var $panel = $(this).data("panel-trigger");
-                if ($(this).is(":checked")) {
-                    if ($panel == null) {
-                        $(this).closest(".expander-panel").addClass("open-expander");
-                    } else {
-                        $("#" + $panel).addClass("open-expander");
-                    }
-                } else {
-                    if ($panel == null) {
-                        $(this).closest(".expander-panel").removeClass("open-expander");
-                    } else {
-                        $("#" + $panel).removeClass("open-expander");
-                    }
-                }
-            });
-        })
-    </script>
-}
