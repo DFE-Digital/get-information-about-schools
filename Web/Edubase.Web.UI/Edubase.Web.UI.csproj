@@ -274,6 +274,8 @@
     <Compile Include="App_Start\AutoMapperWebProfile.cs" />
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\ODataConfig.cs" />
+    <Compile Include="App_Start\StartupSASimulator.cs" />
+    <Compile Include="App_Start\StartupSecureAccess.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorController.cs" />
@@ -321,7 +323,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnauthorizedAccessAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -384,7 +385,6 @@
     <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
     <Compile Include="MvcResult\ChallengeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup.cs" />
     <Compile Include="Validation\EdubaseAbstractValidator.cs" />
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>

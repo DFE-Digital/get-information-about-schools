@@ -1,35 +1,36 @@
-﻿using System;
-using System.Configuration;
+﻿using Edubase.Data.DbContext;
+using Edubase.Data.Entity;
+using Edubase.Data.Identity;
+using Kentor.AuthServices;
+using Kentor.AuthServices.Configuration;
+using Kentor.AuthServices.Metadata;
+using Kentor.AuthServices.Owin;
+using Kentor.AuthServices.WebSso;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
-using Edubase.Web.UI.Models;
-using Edubase.Data.Entity;
-using Edubase.Data.Identity;
-using Kentor.AuthServices.Owin;
-using System.IdentityModel.Metadata;
-using Kentor.AuthServices;
+using System;
+using System.Configuration;
 using System.Globalization;
-using Kentor.AuthServices.Configuration;
-using Kentor.AuthServices.Metadata;
-using System.Security.Cryptography.X509Certificates;
-using Kentor.AuthServices.WebSso;
-using System.Web.Hosting;
-using System.Web.Helpers;
+using System.IdentityModel.Metadata;
 using System.Security.Claims;
-using System.Linq;
-using MoreLinq;
-using Edubase.Common;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Edubase.Data.DbContext;
+using System.Security.Cryptography.X509Certificates;
+using System.Web.Helpers;
+using System.Web.Hosting;
+
+[assembly: OwinStartup("SASimulatorConfiguration", typeof(Edubase.Web.UI.StartupSASimulator))]
 
 namespace Edubase.Web.UI
 {
-    public partial class Startup
+    public class StartupSASimulator
     {
+        public void Configuration(IAppBuilder app)
+        {
+            ConfigureAuth(app);
+        }
+
         private static TimeSpan ConfiguredExpireTimeSpan
         {
             get
@@ -40,77 +41,7 @@ namespace Edubase.Web.UI
                     : TimeSpan.FromMinutes(60);
             }
         }
-        
-        public void ConfigureSecureAccessAuth(IAppBuilder app)
-        {
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account/Login"),
-                Provider = new CookieAuthenticationProvider(),
-                ExpireTimeSpan = ConfiguredExpireTimeSpan
-            });
-            
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            app.UseKentorAuthServicesAuthentication(CreateSecureAccessAuthServicesOptions());
-            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
-            
-        }
-        private static KentorAuthServicesAuthenticationOptions CreateSecureAccessAuthServicesOptions()
-        {
-            var spOptions = new SPOptions
-            {
-                EntityId = new EntityId(AuthConfig.ApplicationIdpEntityId),
-                ReturnUrl = AuthConfig.ExternalAuthDefaultCallbackUrl,
-                AuthenticateRequestSigningBehavior = SigningBehavior.Always
-            };
-
-            spOptions.ServiceCertificates.Add(new ServiceCertificate
-            {
-                Use = CertificateUse.Signing,
-                Certificate = GetSecureAccessSPCertificate()
-            });
-
-            var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false) { SPOptions = spOptions };
-
-            var idp = new IdentityProvider(new EntityId(AuthConfig.ExternalIdpEntityId.AbsoluteUri), spOptions)
-            {
-                AllowUnsolicitedAuthnResponse = true,
-                Binding = Saml2BindingType.HttpRedirect,
-                MetadataLocation = AuthConfig.ExternalIdpMetadataPath,
-                WantAuthnRequestsSigned = true
-            };
-
-            idp.SigningKeys.AddConfiguredKey(new X509Certificate2(AuthConfig.ExternalIdpCertificatePath));
-            authServicesOptions.IdentityProviders.Add(idp);
-            return authServicesOptions;
-        }
-
-        private static X509Certificate2 GetSecureAccessSPCertificate()
-        {
-#if (DEBUG)
-            return GetSecureAccessSPCertificateFromAppData();
-#else
-            return GetSecureAccessSPCertificateFromCertStore();
-#endif
-        }
-
-        private static X509Certificate2 GetSecureAccessSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/edubase3.pfx"), "testtest");
-
-        private static X509Certificate2 GetSecureAccessSPCertificateFromCertStore()
-        {
-            using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-            {
-                var thumbprint = ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"];
-                store.Open(OpenFlags.ReadOnly);
-                var certCollection = store.Certificates.Find(X509FindType.FindByThumbprint, ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"], false);
-                var cert = certCollection.Cast<X509Certificate2>().FirstOrDefault();
-                Guard.IsNotNull(cert, () => new Exception($"Service provider certificate could not be found by thumbprint [{thumbprint}]"));
-                return cert;
-            }
-        }
-        
-        public void ConfigureSASimulatorAuth(IAppBuilder app)
+        public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context, user manager and signin manager to use a single instance per request
             app.CreatePerOwinContext(ApplicationDbContext.Create);
@@ -139,16 +70,16 @@ namespace Edubase.Web.UI
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            app.UseKentorAuthServicesAuthentication(CreateSASimulatorAuthServicesOptions());
+            app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
 
 
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
         }
 
-        private static KentorAuthServicesAuthenticationOptions CreateSASimulatorAuthServicesOptions()
+        private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
         {
-            var spOptions = CreateSASimulatorSPOptions();
+            var spOptions = CreateSPOptions();
             var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false)
             {
                 SPOptions = spOptions
@@ -176,7 +107,7 @@ namespace Edubase.Web.UI
             return authServicesOptions;
         }
 
-        private static SPOptions CreateSASimulatorSPOptions()
+        private static SPOptions CreateSPOptions()
         {
             var swedish = CultureInfo.GetCultureInfo("sv-se");
 
@@ -225,6 +156,5 @@ namespace Edubase.Web.UI
             
             return spOptions;
         }
-        
     }
 }
