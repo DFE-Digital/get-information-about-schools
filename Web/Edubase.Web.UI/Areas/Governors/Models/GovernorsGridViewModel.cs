@@ -19,7 +19,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     {
         private readonly NomenclatureService _nomenclatureService;
 
-        public List<GridViewModel<GovernorModel>> Grids { get; set; } = new List<GridViewModel<GovernorModel>>();
+        public List<GovernorGridViewModel> Grids { get; set; } = new List<GovernorGridViewModel>();
         public List<LookupItemViewModel> GovernorRoles { get; internal set; }
         public GovernorsDetailsDto DomainModel { get; set; }
 
@@ -68,17 +68,17 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public eGovernanceMode? GovernanceMode { get; set; }
 
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groudUId, int? establishmentUrn, NomenclatureService nomenclatureService)
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService)
         {
             _nomenclatureService = nomenclatureService;
             DelegationInformation = dto.GroupDelegationInformation;
             ShowDelegationInformation = dto.ShowDelegationInformation;
             DomainModel = dto;
             EditMode = editMode;
-            GroupUId = groudUId;
+            GroupUId = groupUId;
             EstablishmentUrn = establishmentUrn;
-            CreateGrids(dto, dto.CurrentGovernors, false);
-            CreateGrids(dto, dto.HistoricalGovernors, true);
+            CreateGrids(dto, dto.CurrentGovernors, false, groupUId, establishmentUrn);
+            CreateGrids(dto, dto.HistoricalGovernors, true, groupUId, establishmentUrn);
         }
 
         public GovernorsGridViewModel()
@@ -86,12 +86,19 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         }
 
-        private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric)
+        private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric, int? groupUid, int? establishmentUrn)
         {
             foreach (var role in dto.ApplicableRoles)
             {
-                var grid = new GridViewModel<GovernorModel>(_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true) + (isHistoric ? $" (in past 12 months)" : string.Empty));
-                grid.Tag = isHistoric ? "historic" : "current";
+                var grid = new GovernorGridViewModel($"{_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
+                {
+                    Tag = isHistoric ? "historic" : "current",
+                    Role = role,
+                    IsSharedRole = EnumSets.eSharedGovernorRoles.Contains(role),
+                    GroupUid = groupUid,
+                    EstablishmentUrn = establishmentUrn
+                };
+
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
                 Guard.IsNotNull(displayPolicy, () => new Exception($"The display policy should not be null for the role '{role}'"));
                 bool includeEndDate = ((isHistoric && role == GR.Member || role != GR.Member) 

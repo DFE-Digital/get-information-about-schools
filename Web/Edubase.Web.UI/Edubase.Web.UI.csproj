@@ -330,6 +330,7 @@
     <Compile Include="Helpers\ValidationExtensions.cs" />
     <Compile Include="Helpers\WebHelpers.cs" />
     <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
+    <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
     <Compile Include="Models\Grid\GridViewModel.cs" />
@@ -932,7 +933,7 @@
     <Content Include="Views\Tools\EstablishmentBulkUpdate.cshtml" />
     <Content Include="Views\Search\LocationDisambiguation.cshtml" />
     <Content Include="Views\Prototype\EstablishmentLinks.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\GridViewModel_GovernorModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\GovernorGridViewModel.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

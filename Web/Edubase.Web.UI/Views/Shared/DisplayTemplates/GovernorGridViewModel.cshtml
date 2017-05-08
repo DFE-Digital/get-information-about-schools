@@ -1,0 +1,50 @@
+﻿@model Edubase.Web.UI.Models.Grid.GovernorGridViewModel
+
+<div class="governor-grid">
+    <h2 class="bold-small">@Model.Title</h2>
+    @if (!User.Identity.IsAuthenticated && Model.GroupUid != null && Model.IsSharedRole)
+    {
+        if (Model.Rows.Any())
+        {
+            <p class="none">This multi academy trust operates a shared governance model, please see the information displayed on the individual academy records.</p>
+        }
+        else
+        {
+            <p class="none">Not recorded</p>
+        }
+    }
+    else
+    {
+        if (Model.Rows.Any())
+        {
+             <table class="edubase-table list-table">
+                 <thead>
+                 <tr>
+                     @foreach (var column in Model.HeaderCells)
+                     {
+                         <th>@(column.Text ?? "Not recorded")</th>
+                     }
+                 </tr>
+                 </thead>
+                 <tbody>
+                 @foreach (var row in Model.Rows)
+                 {
+                     var cellCount = 0;
+                     <tr>
+                         @foreach (var cell in row.Cells)
+                         {
+                                            
+                             <td aria-label="@Model.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
+                             cellCount++;
+                         }
+                     </tr>
+                 }
+                 </tbody>
+             </table>
+        }
+        else
+        {
+            <p class="none">Not recorded</p>
+        }
+    }
+</div>
