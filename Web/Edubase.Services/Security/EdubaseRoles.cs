@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.Security
 {
+    [Obsolete("Delete post-Texuna")]
     public static class EdubaseRoles
     {
         public const string Establishment = "Establishment";

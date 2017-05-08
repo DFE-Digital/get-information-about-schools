@@ -33,7 +33,7 @@ namespace Edubase.Services.Lookup
             _mappingAsync = new Dictionary<string, Func<int, Task<string>>>()
             {
                 { "LocalAuthorityId", async id => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "RSCRegionId", async id => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "RSCRegionId", async id => (await RscRegionsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "TypeId", async id => (await EstablishmentTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "GroupTypeId", async id => (await GroupTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "Group.StatusId", async id => (await GroupStatusesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -51,7 +51,7 @@ namespace Edubase.Services.Lookup
                 { "DioceseId", async id => (await DiocesesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "AdmissionsPolicyId", async id => (await AdmissionsPoliciesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ProvisionSpecialClassesId", async id => (await ProvisionSpecialClassesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "HeadTitleId", async id => (await HeadTitlesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "HeadTitleId", async id => (await TitlesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "EstablishmentTypeGroupId", async id => (await EstablishmentTypeGroupsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "InspectorateId", async id => (await InspectoratesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "Section41ApprovedId", async id => (await Section41ApprovedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -160,8 +160,11 @@ namespace Edubase.Services.Lookup
         public IEnumerable<LookupDto> GendersGetAll() => Auto(_lookupService.GendersGetAll);
         public async Task<IEnumerable<LookupDto>> GroupTypesGetAllAsync() => await AutoAsync(_lookupService.GroupTypesGetAllAsync);
         public IEnumerable<LookupDto> GroupTypesGetAll() => Auto(_lookupService.GroupTypesGetAll);
-        public async Task<IEnumerable<LookupDto>> HeadTitlesGetAllAsync() => await AutoAsync(_lookupService.HeadTitlesGetAllAsync);
+        public async Task<IEnumerable<LookupDto>> TitlesGetAllAsync() => await AutoAsync(_lookupService.TitlesGetAllAsync);
         public IEnumerable<LookupDto> HeadTitlesGetAll() => Auto(_lookupService.HeadTitlesGetAll);
+        public async Task<IEnumerable<LookupDto>> CountiesGetAllAsync() => await AutoAsync(_lookupService.CountiesGetAllAsync);
+        public async Task<IEnumerable<LookupDto>> OfstedRatingsGetAllAsync() => await AutoAsync(_lookupService.OfstedRatingsGetAllAsync);
+        public async Task<IEnumerable<LookupDto>> RscRegionsGetAllAsync() => await AutoAsync(_lookupService.RscRegionsGetAllAsync);
         public async Task<IEnumerable<LookupDto>> ProvisionBoardingGetAllAsync() => await AutoAsync(_lookupService.ProvisionBoardingGetAllAsync);
         public IEnumerable<LookupDto> ProvisionBoardingGetAll() => Auto(_lookupService.ProvisionBoardingGetAll);
         public async Task<IEnumerable<LookupDto>> ProvisionNurseriesGetAllAsync() => await AutoAsync(_lookupService.ProvisionNurseriesGetAllAsync);
@@ -309,5 +312,7 @@ namespace Edubase.Services.Lookup
         }
 
         public void Dispose() => _lookupService.Dispose();
+
+        
     }
 }

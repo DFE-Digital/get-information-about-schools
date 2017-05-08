@@ -502,6 +502,11 @@ namespace Edubase.StubUserBuilder
                         {
                             Type = EduClaimTypes.CreateGroup,
                             ValueObject = new CreateGroupPermissions()
+                        },
+                        new AttributeStatement
+                        {
+                            Type = EduClaimTypes.SAUserId,
+                            Value = "777406"
                         }
                     }
                 }

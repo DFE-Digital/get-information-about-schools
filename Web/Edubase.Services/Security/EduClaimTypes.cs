@@ -10,11 +10,12 @@ namespace Edubase.Services.Security
         public const string EditGroup = ClaimTypeNamespace + "EditGroup";
         public const string CreateEstablishment = ClaimTypeNamespace + "CreateEstablishment";
         public const string CreateGroup = ClaimTypeNamespace + "CreateGroup";
+        public const string SAUserId = ClaimTypeNamespace + "SAUserId";
         #endregion
 
-        public const string FirstName = ClaimTypeNamespace + "FirstName";
-        public const string LastName = ClaimTypeNamespace + "LastName";
+        public const string FirstName = ClaimTypeNamespace + "FirstName"; // obsolete
+        public const string LastName = ClaimTypeNamespace + "LastName"; // olsolete
         public const string UserId = ClaimTypes.NameIdentifier;
-        public const string UserName = ClaimTypes.Name;
+        public const string UserName = ClaimTypes.Name; // obsolete
     }
 }

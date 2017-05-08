@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -59,12 +60,9 @@ namespace Edubase.Web.UI.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             var id = loginInfo.ExternalIdentity;
 
-#if (!TEXAPI)
-            // todo: when SA is enabled, convert to our json based claim tokens
-            id = await new SecurityService().LoginAsync(id, new StubClaimsIdConverter(), UserManager); // todo: SecureAccessClaimsIdConverter
-#else
-            id = new SecureAccessClaimsIdConverter().Convert(id);
-#endif
+            if (ConfigurationManager.AppSettings["LoginProviderName"] == "SASimulator") id = new StubClaimsIdConverter().Convert(id);
+            else id = new SecureAccessClaimsIdConverter().Convert(id);
+            
             AuthenticationManager.SignIn(id);
 
             var urlHelper = new UrlHelper(Request.RequestContext);
@@ -84,7 +82,7 @@ namespace Edubase.Web.UI.Controllers
             var u = _stubUserConfig.Value.UserList.FirstOrDefault(x => x.Assertion.NameId == username);
             if (u == null) return Content($"The username '{username}' was not found; choose from: " + string.Join(", ", _stubUserConfig.Value.UserList.Select(x => x.Assertion.NameId)), "text/plain");
             
-            var id = await new SecurityService().LoginAsync(u.ToClaimsIdentity(), new StubClaimsIdConverter(), UserManager);
+            var id = new StubClaimsIdConverter().Convert(u.ToClaimsIdentity());
 
             AuthenticationManager.SignIn(id);
 

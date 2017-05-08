@@ -40,10 +40,8 @@ namespace Edubase.Web.UI
                     : TimeSpan.FromMinutes(60);
             }
         }
-
-#if (TEXAPI)
-
-        public void ConfigureAuth(IAppBuilder app)
+        
+        public void ConfigureSecureAccessAuth(IAppBuilder app)
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
@@ -54,11 +52,11 @@ namespace Edubase.Web.UI
             });
             
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
+            app.UseKentorAuthServicesAuthentication(CreateSecureAccessAuthServicesOptions());
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
             
         }
-        private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
+        private static KentorAuthServicesAuthenticationOptions CreateSecureAccessAuthServicesOptions()
         {
             var spOptions = new SPOptions
             {
@@ -70,7 +68,7 @@ namespace Edubase.Web.UI
             spOptions.ServiceCertificates.Add(new ServiceCertificate
             {
                 Use = CertificateUse.Signing,
-                Certificate = GetSPCertificate()
+                Certificate = GetSecureAccessSPCertificate()
             });
 
             var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false) { SPOptions = spOptions };
@@ -88,18 +86,18 @@ namespace Edubase.Web.UI
             return authServicesOptions;
         }
 
-        private static X509Certificate2 GetSPCertificate()
+        private static X509Certificate2 GetSecureAccessSPCertificate()
         {
 #if (DEBUG)
-            return GetSPCertificateFromAppData();
+            return GetSecureAccessSPCertificateFromAppData();
 #else
             return GetSPCertificateFromCertStore();
 #endif
         }
 
-        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/edubase3.pfx"), "testtest");
+        private static X509Certificate2 GetSecureAccessSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/edubase3.pfx"), "testtest");
 
-        private static X509Certificate2 GetSPCertificateFromCertStore()
+        private static X509Certificate2 GetSecureAccessSPCertificateFromCertStore()
         {
             using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
             {
@@ -111,9 +109,8 @@ namespace Edubase.Web.UI
                 return cert;
             }
         }
-
-#else
-        public void ConfigureAuth(IAppBuilder app)
+        
+        public void ConfigureSASimulatorAuth(IAppBuilder app)
         {
             // Configure the db context, user manager and signin manager to use a single instance per request
             app.CreatePerOwinContext(ApplicationDbContext.Create);
@@ -142,16 +139,16 @@ namespace Edubase.Web.UI
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
+            app.UseKentorAuthServicesAuthentication(CreateSASimulatorAuthServicesOptions());
 
 
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
         }
 
-        private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
+        private static KentorAuthServicesAuthenticationOptions CreateSASimulatorAuthServicesOptions()
         {
-            var spOptions = CreateSPOptions();
+            var spOptions = CreateSASimulatorSPOptions();
             var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false)
             {
                 SPOptions = spOptions
@@ -179,7 +176,7 @@ namespace Edubase.Web.UI
             return authServicesOptions;
         }
 
-        private static SPOptions CreateSPOptions()
+        private static SPOptions CreateSASimulatorSPOptions()
         {
             var swedish = CultureInfo.GetCultureInfo("sv-se");
 
@@ -228,8 +225,6 @@ namespace Edubase.Web.UI
             
             return spOptions;
         }
-
         
-#endif
     }
 }

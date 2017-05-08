@@ -32,7 +32,7 @@ namespace Edubase.Services.Lookup
         public IEnumerable<LookupDto> GendersGetAll() => DataContext.LookupGenders.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> GroupTypesGetAllAsync() => (await DataContext.LookupGroupTypes.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> GroupTypesGetAll() => DataContext.LookupGroupTypes.ToArray().Select(x => new LookupDto(x));
-        public async Task<IEnumerable<LookupDto>> HeadTitlesGetAllAsync() => (await DataContext.LookupHeadTitles.ToArrayAsync()).Select(x => new LookupDto(x));
+        public async Task<IEnumerable<LookupDto>> TitlesGetAllAsync() => (await DataContext.LookupHeadTitles.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> HeadTitlesGetAll() => DataContext.LookupHeadTitles.ToArray().Select(x => new LookupDto(x));
         public async Task<IEnumerable<LookupDto>> ProvisionBoardingGetAllAsync() => (await DataContext.LookupProvisionBoarding.ToArrayAsync()).Select(x => new LookupDto(x));
         public IEnumerable<LookupDto> ProvisionBoardingGetAll() => DataContext.LookupProvisionBoarding.ToArray().Select(x => new LookupDto(x));
@@ -146,6 +146,19 @@ namespace Edubase.Services.Lookup
                 DataContext.Dispose();
         }
 
-        
+        public Task<IEnumerable<LookupDto>> CountiesGetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<LookupDto>> OfstedRatingsGetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<LookupDto>> RscRegionsGetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

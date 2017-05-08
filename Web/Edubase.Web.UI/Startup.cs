@@ -1,4 +1,5 @@
 ﻿using Owin;
+using System.Configuration;
 
 namespace Edubase.Web.UI
 {
@@ -6,7 +7,8 @@ namespace Edubase.Web.UI
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);
+            if (ConfigurationManager.AppSettings["LoginProviderName"] == "SA") ConfigureSecureAccessAuth(app);
+            else if (ConfigurationManager.AppSettings["LoginProviderName"] == "SASimulator") ConfigureSASimulatorAuth(app);
         }
     }
 }
