@@ -20,6 +20,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         private readonly NomenclatureService _nomenclatureService;
 
         public List<GovernorGridViewModel> Grids { get; set; } = new List<GovernorGridViewModel>();
+        public List<GovernorGridViewModel> HistoricGrids { get; set; } = new List<GovernorGridViewModel>();
         public List<LookupItemViewModel> GovernorRoles { get; internal set; }
         public GovernorsDetailsDto DomainModel { get; set; }
 
@@ -96,7 +97,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     Role = role,
                     IsSharedRole = EnumSets.eSharedGovernorRoles.Contains(role),
                     GroupUid = groupUid,
-                    EstablishmentUrn = establishmentUrn
+                    EstablishmentUrn = establishmentUrn,
+                    IsHistoricRole = isHistoric
                 };
 
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
@@ -131,7 +133,14 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                                                    .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
                 }
 
-                Grids.Add(grid);
+                if (isHistoric)
+                {
+                    HistoricGrids.Add(grid);
+                }
+                else
+                {
+                    Grids.Add(grid);
+                }
             }
         }
 
