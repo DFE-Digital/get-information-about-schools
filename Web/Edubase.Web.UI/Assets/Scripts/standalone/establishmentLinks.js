@@ -152,6 +152,7 @@
                     this.reverselinkDateError = false;
 
                     function validDate(d, m, y, prop) {
+                       var isLeap = new Date(y, 1, 29).getMonth() === 1;
                        if (isNaN(d) ||
                            isNaN(m) ||
                            isNaN(y) ||
@@ -166,6 +167,14 @@
                            y > 3000) {
                                 self[prop] = true;
                        }
+
+                        if (isLeap && m === 2 && d > 29) {
+                            self[prop] = true;
+                        }
+                        if (!isLeap && m === 2 && d > 28) {
+                            self[prop] = true;
+                        }
+
                     }
 
                     if (!this.forwardLinkType) {
@@ -173,22 +182,23 @@
                     }
 
                    
-                    validDate(this.linkDateDay, this.linkDateMonth, this.linkDateYear, 'linkDateError');
+                    validDate(Number(this.linkDateDay), Number(this.linkDateMonth), Number(this.linkDateYear), 'linkDateError');
 
                     if (this.reverseLink) {
                         if (!this.reverseLinkType) {
                             this.backLinkError = true;
                         }
 
-                        validDate(this.reverseLinkDateDay, this.reverseLinkDateMonth, this.reverseLinkDateYear, 'reverseLinkDateError');
+                        validDate(Number(this.reverseLinkDateDay), Number(this.reverseLinkDateMonth), Number(this.reverseLinkDateYear), 'reverseLinkDateError');
                     }
 
-                    if (!this.forwardLinkError &&
-                        !this.linkDateError &&
-                        !this.backLinkError &&
-                        !this.reverselinkDateError) {
-                        this.saveLinkedEstablishment();
+                    if (!self.forwardLinkError &&
+                        !self.linkDateError &&
+                        !self.backLinkError &&
+                        !self.reverseLinkDateError) {
+                            self.saveLinkedEstablishment();
                     }
+                    
                     
                 },
                 saveLinkedEstablishment: function () {
