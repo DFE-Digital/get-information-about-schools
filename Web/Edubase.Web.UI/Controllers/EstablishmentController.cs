@@ -130,7 +130,7 @@ namespace Edubase.Web.UI.Controllers
                     model.OriginalEstablishmentName = domainModel.Name;
                     await PrepareModels(model, domainModel);
 
-                    var changes = await _establishmentReadService.GetModelChangesAsync(domainModel);
+                    var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, User);
 
                     if (model.RequireConfirmationOfChanges && changes.Any()) model.ChangesSummary = changes;
                     else

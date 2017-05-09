@@ -10,6 +10,9 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Linq;
 using Edubase.Services.Texuna.Models;
+using Edubase.Common.Reflection;
+using Edubase.Services.Lookup;
+using Edubase.Common;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -22,10 +25,12 @@ namespace Edubase.Services.Texuna.Establishments
         private const string ApiSuggestPath = "suggest/establishment";
 
         private readonly HttpClientWrapper _httpClient;
+        private readonly ICachedLookupService _cachedLookupService;
 
-        public EstablishmentReadApiService(HttpClientWrapper httpClient)
+        public EstablishmentReadApiService(HttpClientWrapper httpClient, ICachedLookupService cachedLookupService)
         {
             _httpClient = httpClient;
+            _cachedLookupService = cachedLookupService;
         }
 
         public async Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
@@ -58,14 +63,38 @@ namespace Edubase.Services.Texuna.Establishments
             return await _httpClient.GetAsync<List<LinkedEstablishmentModel>>($"establishment/{urn}/linked-establishments", principal);
         }
 
-        public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model)
+        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model)
         {
-            throw new NotImplementedException(nameof(GetModelChangesAsync) + " not implemented yet");
+            var changes = ReflectionHelper.DetectChanges(model, original);
+            var retVal = new List<ChangeDescriptorDto>();
+
+            foreach (var change in changes)
+            {
+                if (_cachedLookupService.IsLookupField(change.Name))
+                {
+                    change.OldValue = await _cachedLookupService.GetNameAsync(change.Name, change.OldValue.ToInteger());
+                    change.NewValue = await _cachedLookupService.GetNameAsync(change.Name, change.NewValue.ToInteger());
+                }
+
+                if (change.Name.EndsWith("Id", StringComparison.Ordinal)) change.Name = change.Name.Substring(0, change.Name.Length - 2);
+                change.Name = change.Name.Replace("_", "");
+                change.Name = change.Name.ToProperCase(true);
+
+                retVal.Add(new ChangeDescriptorDto
+                {
+                    Name = change.DisplayName ?? change.Name,
+                    NewValue = change.NewValue.Clean(),
+                    OldValue = change.OldValue.Clean()
+                });
+            }
+
+            return retVal;
         }
 
-        public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model)
+        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal)
         {
-            throw new NotImplementedException(nameof(GetModelChangesAsync) + " not implemented yet");
+            var originalModel = (await GetAsync(model.Urn.Value, principal)).GetResult();
+            return await GetModelChangesAsync(originalModel, model);
         }
 
         public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)

@@ -50,13 +50,33 @@
             }
         }
         
-        public async Task<bool> PostAsync(string uri, object data, IPrincipal principal)
+        public async Task PostAsync(string uri, object data, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
                 var result = await _httpClient.SendAsync(requestMessage);
-                return result.IsSuccessStatusCode;
+                Validate(result);
+            }
+        }
+
+        public async Task<T> PutAsync<T>(string uri, object data, IPrincipal principal)
+        {
+            using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
+            {
+                var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
+                var result = await _httpClient.SendAsync(requestMessage);
+                return await ParseHttpResponseMessageAsync<T>(result);
+            }
+        }
+
+        public async Task PutAsync(string uri, object data, IPrincipal principal)
+        {
+            using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
+            {
+                var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
+                var result = await _httpClient.SendAsync(requestMessage);
+                Validate(result);
             }
         }
 
@@ -73,10 +93,15 @@
             if (message.IsSuccessStatusCode)
             {
                 if (!message.Content.Headers.ContentType.MediaType.Equals("application/json"))
-                    throw new TexunaApiSystemException($"The API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+                    throw new TexunaApiSystemException($"The TEX-API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
                 return await message.Content.ReadAsAsync<T>(new[] { _formatter });
             }
-            else throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+            else throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+        }
+
+        private void Validate(HttpResponseMessage message)
+        {
+            if (!message.IsSuccessStatusCode) throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
         }
     }
 }

@@ -11,9 +11,25 @@ namespace Edubase.Services.Texuna.Establishments
 {
     public class EstablishmentWriteApiService : IEstablishmentWriteService
     {
-        public Task SaveAsync(EstablishmentModel model, IPrincipal principal)
+        private readonly HttpClientWrapper _httpClient;
+        
+        public EstablishmentWriteApiService(HttpClientWrapper httpClient)
         {
-            throw new NotImplementedException();
+            _httpClient = httpClient;
+        }
+
+        public async Task SaveAsync(EstablishmentModel model, IPrincipal principal)
+        {
+            throw new NotImplementedException("Awaiting the Create/Edit establishment APIs");
+
+            if (model.Urn.HasValue)
+            {
+                await _httpClient.PutAsync($"establishment/{model.Urn}", model, principal);
+            }
+            else
+            {
+
+            }
         }
     }
 }

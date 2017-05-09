@@ -41,7 +41,7 @@ namespace Edubase.Services.Establishments
         Task<ApiSearchResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
         Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal);
 
-        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model);
+        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model);
     }
 }
