@@ -6,8 +6,8 @@ using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Governors.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System.Security.Principal;
+using Edubase.Services.Domain;
 
 namespace Edubase.Services.Texuna.Governors
 {

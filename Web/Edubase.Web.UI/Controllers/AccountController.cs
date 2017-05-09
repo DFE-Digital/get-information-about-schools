@@ -1,5 +1,4 @@
 ﻿using Edubase.Common;
-using Edubase.Data.Identity;
 using Edubase.Services.Security;
 using Edubase.Services.Security.ClaimsIdentityConverters;
 using Edubase.Web.UI.Helpers;
@@ -20,30 +19,6 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("Account")]
     public class AccountController : Controller
     {
-        
-        public AccountController()
-        {
-
-        }
-
-        public AccountController(ApplicationUserManager userManager)
-        {
-            UserManager = userManager;
-        }
-
-        private ApplicationUserManager _userManager;
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
         //
         // GET: /Account/Login
         [Route(nameof(Login)), AllowAnonymous]
@@ -69,44 +44,12 @@ namespace Edubase.Web.UI.Controllers
             if (urlHelper.IsLocalUrl(returnUrl)) return Redirect(returnUrl);
             else return RedirectToAction("Index", "Search");
         }
-        
-        /*
-         *  NOTE: THIS IS A V. FAST LOGIN API FOR QA PURPOSES ONLY. THIS WILL BE REMOVED IN DUE COURSE.
-         * 
-         */
-        private Lazy<StubUserBuilder.Config> _stubUserConfig = new Lazy<StubUserBuilder.Config>(() => new StubUserBuilder.Configurator().Configure());
-
-        [Route(nameof(QA_Login)), AllowAnonymous]
-        public async Task<ActionResult> QA_Login(string username)
-        {
-            var u = _stubUserConfig.Value.UserList.FirstOrDefault(x => x.Assertion.NameId == username);
-            if (u == null) return Content($"The username '{username}' was not found; choose from: " + string.Join(", ", _stubUserConfig.Value.UserList.Select(x => x.Assertion.NameId)), "text/plain");
-            
-            var id = new StubClaimsIdConverter().Convert(u.ToClaimsIdentity());
-
-            AuthenticationManager.SignIn(id);
-
-            return Content($"You are now logged in as {username} and have the following claims: \r\n" 
-                + string.Join(",\r\n", id.Claims.Select(x=> $"Type: {x.Type}, Value: {x.Value}")), "text/plain");
-        }
-        // --------------------------------------------------------------------------------------------------------------------------------
-
 
         [Route(nameof(LogOff)), HttpGet]
         public ActionResult LogOff(string returnUrl)
         {
             AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = returnUrl.Clean() ?? "/Search" });
             return Url.IsLocalUrl(returnUrl) ? (ActionResult) Redirect(returnUrl) : RedirectToAction("Index", "Search");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
-            base.Dispose(disposing);
         }
         
         private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;

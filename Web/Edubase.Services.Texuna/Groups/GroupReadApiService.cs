@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System.Security.Principal;
 using System.Linq;
 

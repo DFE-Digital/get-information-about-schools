@@ -10,8 +10,7 @@ namespace Edubase.Services.Establishments.Search
         public override LatLon Coordinate => LatLon ?? (Location == null || Location.IsEmpty ? null as LatLon : new LatLon(Location.Latitude, Location.Longitude));
 
         public Microsoft.Spatial.GeographyPoint Location { get; set; }
-
-        [IntegrationEndPoints.AzureSearch.AZSIgnore]
+        
         public LatLon LatLon { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Edubase.Data.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,12 +20,5 @@ namespace Edubase.Services.Domain
 
         }
 
-        public ChildrensCentreLocalAuthorityDto(LocalAuthority la)
-        {
-            FirstName = la.FirstName;
-            Surname = la.LastName;
-            EmailAddress = la.EmailAddress;
-            TelephoneNumber = la.TelephoneNumber;
-        }
     }
 }

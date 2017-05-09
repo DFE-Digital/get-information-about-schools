@@ -3,7 +3,6 @@ using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;

@@ -102,7 +102,7 @@ namespace Edubase.Web.UI.Controllers
             viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
 
-            viewModel.AllowHidingOfAddress = User.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT);
+            //viewModel.AllowHidingOfAddress = User.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT); // todo: TEXCHANGE. No idea what we're doing with this yet
 
             await PopulateSelectLists(viewModel);
             return viewModel;

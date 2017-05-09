@@ -1,5 +1,4 @@
 ﻿using Edubase.Common;
-using Edubase.Services.Security.Permissions;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -9,17 +8,6 @@ namespace Edubase.Services.Security
 {
     public static class SecurityExtensionMethods
     {
-        public static EditEstablishmentPermissions GetEditEstablishmentPermissions(this ClaimsPrincipal principal) 
-            => principal.GetFromClaim<EditEstablishmentPermissions, NoEditEstablishmentPermissions>(EduClaimTypes.EditEstablishment);
-
-        public static CreateEstablishmentPermissions GetCreateEstablishmentPermissions(this ClaimsPrincipal principal) 
-            => principal.GetFromClaim<CreateEstablishmentPermissions, NoCreateEstablishmentPermissions>(EduClaimTypes.CreateEstablishment);
-
-        public static CreateGroupPermissions GetCreateGroupPermissions(this ClaimsPrincipal principal)
-                    => principal.GetFromClaim<CreateGroupPermissions, NoCreateGroupPermissions>(EduClaimTypes.CreateGroup);
-
-        public static EditGroupPermissions GetEditGroupPermissions(this ClaimsPrincipal principal)
-                            => principal.GetFromClaim<EditGroupPermissions, NoEditGroupPermissions>(EduClaimTypes.EditGroup);
 
         private static T GetFromClaim<T, TDefault>(this ClaimsPrincipal principal, string claimType) where TDefault : T, new()
         {
