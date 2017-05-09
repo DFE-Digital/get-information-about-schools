@@ -2,10 +2,10 @@
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Edubase.Services.Governors.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Governors.DisplayPolicies;
 using Edubase.Services.Enums;
+using Edubase.Services.Domain;
 
 namespace Edubase.Services.Governors
 {

@@ -21,8 +21,8 @@ namespace Edubase.Web.UI.Models.Establishments
 
         public TabDisplayPolicy(EstablishmentModel model, IPrincipal principal)
         {
-            IEBT = model.TypeId.OneOfThese(ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool)
-                && (new[] { EdubaseRoles.IEBT, EdubaseRoles.Admin }).Any(x => principal.IsInRole(x));
+            //IEBT = model.TypeId.OneOfThese(ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool)
+            //    && (new[] { EdubaseRoles.IEBT, EdubaseRoles.Admin }).Any(x => principal.IsInRole(x)); // TODO: TEXCHANGE
 
             Governance = model.TypeId.OneOfThese(
                     ET.Academy1619Converter, 

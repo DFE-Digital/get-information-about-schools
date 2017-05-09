@@ -10,6 +10,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
     using Common;
     using Services.Establishments;
     using Services.Security;
+    using System.Security.Principal;
     using static GroupEditorViewModel;
     using static GroupEditorViewModelBase;
     using EG = eLookupEstablishmentTypeGroup;
@@ -20,14 +21,12 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
-        private readonly ISecurityService _securityService;
 
-        public GroupEditorViewModelValidator(IGroupReadService groupReadService, IEstablishmentReadService establishmentReadService, ISecurityService securityService)
+        public GroupEditorViewModelValidator(IGroupReadService groupReadService, IEstablishmentReadService establishmentReadService, IPrincipal principal, ISecurityService securityService)
         {
             _groupReadService = groupReadService;
             _establishmentReadService = establishmentReadService;
-            _securityService = securityService;
-            var principal = _securityService.CreateSystemPrincipal();
+            
 
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
@@ -121,11 +120,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("Enter an {0} name", x => x.FieldNamePrefix.ToLower())
                     .When(x => x.SaveGroupDetail)
 
-                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), name, model.LocalAuthorityId.Value, model.GroupUId)))
+                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name, model.LocalAuthorityId.Value, model.GroupUId)))
                     .WithMessage("Group name already exists at this authority, please select another name")
                     .When(x => x.GroupTypeMode == eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator)
 
-                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), name, null, model.GroupUId)))
+                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name, null, model.GroupUId)))
                     .WithMessage("{0} name already exists. Enter a different {0} name", x => x.FieldNamePrefix)
                     .When(x => x.GroupTypeMode == eGroupTypeMode.Sponsor && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
 
@@ -135,11 +134,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("This field is mandatory")
                     .WithSummaryMessage("Please enter a Group ID")
                     .When(x => x.SaveGroupDetail)
-                    .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), groupId, model.GroupUId)))
+                    .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId, model.GroupUId)))
                     .WithMessage("Group ID already exists. Enter a different group ID.")
                     .When(x => x.GroupTypeMode.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
 
-                RuleFor(x => x.GroupName).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(_securityService.CreateAnonymousPrincipal(), name, existingGroupUId: model.GroupUId)))
+                RuleFor(x => x.GroupName).MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name, existingGroupUId: model.GroupUId)))
                     .WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
                     .When(x => x.GroupTypeMode != eGroupTypeMode.ChildrensCentre && x.GroupTypeMode != eGroupTypeMode.AcademyTrust && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
             });

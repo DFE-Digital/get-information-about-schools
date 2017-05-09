@@ -1,10 +1,4 @@
-﻿using Edubase.Data.Entity;
-using Edubase.Data.Entity.Lookups;
-using Edubase.Services.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Edubase.Services.Domain;
 
 namespace Edubase.Web.UI.Models
 {
@@ -17,30 +11,14 @@ namespace Edubase.Web.UI.Models
         {
 
         }
-
-        public LookupItemViewModel(LookupBase item)
-        {
-            Id = item.Id;
-            Name = item.Name;
-        }
+        
         public LookupItemViewModel(LookupDto item)
         {
             Id = item.Id;
             Name = item.Name;
         }
 
-        public LookupItemViewModel(LocalAuthority item)
-        {
-            Id = item.Id;
-            Name = item.Name;
-        }
-
-        public LookupItemViewModel(LookupDiocese item)
-        {
-            Id = item.Id;
-            Name = item.Name;
-        }
-
+        
         public override string ToString() => Name;
     }
 }

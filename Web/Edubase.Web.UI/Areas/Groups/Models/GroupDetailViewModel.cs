@@ -29,8 +29,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             (Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup) ? "Children's centres" : "Schools");
 
         public List<EstablishmentGroupViewModel> Establishments { get; private set; } = new List<EstablishmentGroupViewModel>();
-        public IEnumerable<Governor> Governors { get; internal set; }
-        public IEnumerable<Governor> HistoricalGovernors { get; internal set; }
 
         public string CompaniesHouseUrl => ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"].Append(Group.CompaniesHouseNumber);
 

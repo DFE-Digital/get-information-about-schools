@@ -21,8 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.TexunaApi.Fake", "E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Services.Texuna", "Edubase.Services.Texuna\Edubase.Services.Texuna.csproj", "{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.StubUserBuilder", "Edubase.StubUserBuilder\Edubase.StubUserBuilder.csproj", "{0C900C37-A5FA-4A79-A2B9-66D372890FDA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Web.Resources", "Edubase.Web.Resources\Edubase.Web.Resources.csproj", "{7BB77B74-4669-44B7-85C0-F7980274C105}"
 EndProject
 Global
@@ -114,16 +112,6 @@ Global
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.ReleaseTexunaAPI|Any CPU.ActiveCfg = ReleaseTexunaAPI|Any CPU
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.ReleaseTexunaAPI|Any CPU.Build.0 = ReleaseTexunaAPI|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug (QA)|Any CPU.ActiveCfg = Debug (QA)|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug (QA)|Any CPU.Build.0 = Debug (QA)|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.DebugTexunaAPI|Any CPU.ActiveCfg = Debug (QA)|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.DebugTexunaAPI|Any CPU.Build.0 = Debug (QA)|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.ReleaseTexunaAPI|Any CPU.ActiveCfg = Release|Any CPU
-		{0C900C37-A5FA-4A79-A2B9-66D372890FDA}.ReleaseTexunaAPI|Any CPU.Build.0 = Release|Any CPU
 		{7BB77B74-4669-44B7-85C0-F7980274C105}.Debug (QA)|Any CPU.ActiveCfg = Debug|Any CPU
 		{7BB77B74-4669-44B7-85C0-F7980274C105}.Debug (QA)|Any CPU.Build.0 = Debug|Any CPU
 		{7BB77B74-4669-44B7-85C0-F7980274C105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

@@ -122,7 +122,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             await PopulateLocalAuthorityFields(viewModel);
 
-            if (!_securityService.GetCreateGroupPermission(User).CanCreate(viewModel.GroupTypeId, viewModel.LocalAuthorityId))
+            // TODO TEXCHANGE: add support for new security api
+            //if (!_securityService.GetCreateGroupPermission(User).CanCreate(viewModel.GroupTypeId, viewModel.LocalAuthorityId))
                 throw new PermissionDeniedException("Current principal does not have permission to create a group of this type.");
             
             return View("Create", viewModel);
@@ -130,24 +131,25 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private async Task PopulateLocalAuthorityFields(GroupEditorViewModel viewModel)
         {
-            if (viewModel.GroupTypeMode == eGroupTypeMode.ChildrensCentre)
-            {
-                var permission = _securityService.GetCreateGroupPermission(User);
-                if (permission.LocalAuthorityIds.Any())
-                {
-                    viewModel.IsLocalAuthorityEditable = false;
-                    viewModel.LocalAuthorityId = permission.LocalAuthorityIds[0];
-                    viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
-                }
-                else viewModel.IsLocalAuthorityEditable = true;
-            }
+            // TODO: TEXTCHANGE; ADD SUPPORT FOR SECURITY API
+            //if (viewModel.GroupTypeMode == eGroupTypeMode.ChildrensCentre)
+            //{
+            //    var permission = _securityService.GetCreateGroupPermission(User);
+            //    if (permission.LocalAuthorityIds.Any())
+            //    {
+            //        viewModel.IsLocalAuthorityEditable = false;
+            //        viewModel.LocalAuthorityId = permission.LocalAuthorityIds[0];
+            //        viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
+            //    }
+            //    else viewModel.IsLocalAuthorityEditable = true;
+            //}
         }
 
         [HttpPost]
         [Route("Create")]
         public async Task<ActionResult> Create(GroupEditorViewModel viewModel)
         {
-            var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, _securityService).ValidateAsync(viewModel);
+            var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
             ViewBag.FVErrors = result;
 
@@ -198,7 +200,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [Route("Edit/{id:int}/Details")]
         public async Task<ActionResult> EditDetails(GroupEditorViewModel viewModel)
         {
-            var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, _securityService).ValidateAsync(viewModel);
+            var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
             ViewBag.FVErrors = result;
 
@@ -244,7 +246,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [Route("Edit/{id:int}/Links")]
         public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
         {
-            var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, _securityService).ValidateAsync(viewModel);
+            var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
             ViewBag.FVErrors = result;
 

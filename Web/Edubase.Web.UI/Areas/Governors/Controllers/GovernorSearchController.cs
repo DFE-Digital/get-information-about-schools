@@ -6,7 +6,6 @@ using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Controllers;

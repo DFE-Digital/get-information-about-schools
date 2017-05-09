@@ -1,19 +1,16 @@
 ﻿using Edubase.Common.Reflection;
-using Edubase.Data.DbContext;
-using Edubase.Data.Entity;
+using Edubase.Services.Governors.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.Caching;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
-using Edubase.Services.Governors.Models;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -43,80 +40,7 @@ namespace Edubase.Web.UI.Helpers
 
             return MvcHtmlString.Empty;
         }
-
-        [Obsolete]
-        private static Lazy<EstablishmentPermission[]> _permissions = new Lazy<EstablishmentPermission[]>(() =>
-        {
-            var permissions = MemoryCache.Default.Get("permissions") as EstablishmentPermission[];
-            if (permissions == null)
-            {
-                using (var dc = new ApplicationDbContext()) permissions = dc.Permissions.ToArray();
-                MemoryCache.Default.Set("permissions", permissions, DateTimeOffset.UtcNow.AddMinutes(10));
-            }
-            return permissions;
-        });
-
-        [Obsolete]
-        public static bool CanUpdateFor<TModel, TProperty>(
-            this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression)
-        {
-            var name = ExpressionHelper.GetExpressionText(expression);
-            var role = AuthHelper.GetRole();
-            var permission = _permissions.Value.FirstOrDefault(x => x.PropertyName == name && x.RoleName == role);
-            return permission?.AllowUpdate ?? true;
-        }
-
-        [Obsolete]
-        public static bool CanUpdate<TModel>(
-            this HtmlHelper<TModel> htmlHelper,
-            string name)
-        {
-            var role = AuthHelper.GetRole();
-            var permission = _permissions.Value.FirstOrDefault(x => x.PropertyName == name && x.RoleName == role);
-            return permission?.AllowUpdate ?? true;
-        }
-
-        [Obsolete]
-        public static bool CanApproveFor<TModel, TProperty>(
-            this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression)
-        {
-            var name = ExpressionHelper.GetExpressionText(expression);
-            var role = AuthHelper.GetRole();
-            var permission = _permissions.Value.FirstOrDefault(x => x.PropertyName == name && x.RoleName == role);
-            return permission?.AllowApproval ?? true;
-        }
-
-        [Obsolete]
-        public static MvcHtmlString EduTextBoxFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, object attributes, string fieldName = null)
-        {
-            var canUpdate = fieldName == null ? CanUpdateFor(htmlHelper, expression) : CanUpdate(htmlHelper, fieldName);
-            var result = htmlHelper.TextBoxFor(expression, SetAttributes(!canUpdate, attributes));
-            var valMsg = htmlHelper.ValidationMessageFor(expression);
-            if (valMsg != null) result = new MvcHtmlString(valMsg.ToHtmlString() + result.ToHtmlString());
-            if (!canUpdate)
-            {
-                result = new MvcHtmlString(result.ToHtmlString() + htmlHelper.HiddenFor(expression).ToHtmlString());
-            }
-            return result;
-        }
-
-        [Obsolete]
-        public static MvcHtmlString EduDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression,
-            IEnumerable<SelectListItem> selectList, object attributes = null, string fieldName = null, string label = null)
-        {
-            var expressionText = ExpressionHelper.GetExpressionText(expression);
-            var canUpdate = fieldName == null ? CanUpdateFor(htmlHelper, expression) : CanUpdate(htmlHelper, fieldName);
-            var result = htmlHelper.DropDownListFor(expression, selectList, label ?? string.Empty, SetAttributes(!canUpdate, attributes, expressionText));
-            var valMsg = htmlHelper.ValidationMessageFor(expression);
-            if (valMsg != null) result = new MvcHtmlString(valMsg.ToHtmlString() + result.ToHtmlString());
-            if (!canUpdate)
-            {
-                result = new MvcHtmlString(result.ToHtmlString() + htmlHelper.HiddenFor(expression).ToHtmlString());
-            }
-            return result;
-        }
+        
         
 
         private static Dictionary<string, object> SetAttributes(bool isDisabled, object otherAttributes = null, string id = null)

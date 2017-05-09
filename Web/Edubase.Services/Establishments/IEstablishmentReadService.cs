@@ -6,7 +6,6 @@ using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Establishments.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System;
 
 namespace Edubase.Services.Establishments
