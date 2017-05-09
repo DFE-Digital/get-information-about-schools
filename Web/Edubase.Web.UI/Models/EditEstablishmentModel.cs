@@ -35,8 +35,6 @@ namespace Edubase.Web.UI.Models
             Confirm,
             AddLinkedSchool,
             RemoveLinkedSchool,
-            AddAddress,
-            RemoveAddress,
             CancelChanges
         }
 
@@ -160,8 +158,6 @@ namespace Edubase.Web.UI.Models
 
         public string MSOACode { get; set; }
         public string LSOACode { get; set; }
-        public List<AdditionalAddressModel> AdditionalAddresses { get; set; } = new List<AdditionalAddressModel>();
-        public int AdditionalAddressesCount { get; set; }
 
         [Display(Name = "BSO: Date of last inspection")]
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
@@ -211,11 +207,8 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }
 
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
-
-        public Guid? AddressToRemoveId { get; set; }
-
-        public bool AllowHidingOfAddress { get; set; }
-
+        
+        
         public List<ChangeDescriptorDto> ChangesSummary { get; set; }
 
         public bool RequireConfirmationOfChanges => true;

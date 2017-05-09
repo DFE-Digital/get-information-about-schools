@@ -1,34 +1,26 @@
 ﻿using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Reflection;
-using Edubase.Services;
 using Edubase.Services.Core;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
-using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
-using Edubase.Services.Security;
+using Edubase.Web.Resources;
 using Edubase.Web.UI.Filters;
-using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
-using FluentValidation.Mvc;
 using StackExchange.Profiling;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Edubase.Services.Enums;
-using Edubase.Web.Resources;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
-using MoreLinq;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -102,8 +94,6 @@ namespace Edubase.Web.UI.Controllers
             viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
 
-            //viewModel.AllowHidingOfAddress = User.InRole(EdubaseRoles.Admin, EdubaseRoles.IEBT); // todo: TEXCHANGE. No idea what we're doing with this yet
-
             await PopulateSelectLists(viewModel);
             return viewModel;
         }
@@ -159,24 +149,6 @@ namespace Edubase.Web.UI.Controllers
                     return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                 }
             }
-            else if (model.AddressToRemoveId.HasValue)
-            {
-                var item = model.AdditionalAddresses.FirstOrDefault(x => x.Id == model.AddressToRemoveId.Value);
-                if (item != null)
-                {
-                    model.AdditionalAddresses.Remove(item);
-                    model.AdditionalAddressesCount = model.AdditionalAddressesCount - 1;
-                }
-
-                ModelState.Clear();
-            }
-            else if (model.Action == ViewModel.eAction.AddAddress)
-            {
-                model.AdditionalAddressesCount = model.AdditionalAddressesCount + 1;
-                model.AdditionalAddresses.Add(new AdditionalAddressModel());
-
-                ModelState.Clear();
-            }
 
             return View(model);
         }
@@ -187,8 +159,6 @@ namespace Edubase.Web.UI.Controllers
             model.MSOAId = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.MSOACode)?.Id;
 
             MapToDomainModel(model, domainModel, Request.Form);
-
-            domainModel.AdditionalAddresses = model.AdditionalAddresses;
         }
 
         /// <summary>
@@ -268,17 +238,7 @@ namespace Edubase.Web.UI.Controllers
             using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
                 viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
 
-
-#if (!TEXAPI)
-            viewModel.UserCanEdit = ((ClaimsPrincipal)User).GetEditEstablishmentPermissions()
-                .CanEdit(viewModel.Establishment.Urn.Value,
-                    viewModel.Establishment.TypeId,
-                    viewModel.Groups.Select(x => x.GroupUID.Value).ToArray(),
-                    viewModel.Establishment.LocalAuthorityId,
-                    viewModel.Establishment.EstablishmentTypeGroupId);
-#else
             viewModel.UserCanEdit = await _establishmentReadService.CanEditAsync(viewModel.Establishment.Urn.Value, User);
-#endif
 
             // Retrieve the lookup name values
             await PopulateLookupNames(viewModel);
@@ -295,56 +255,18 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/csv/{id}")]
         public async Task<ActionResult> DownloadCsvChangeHistory(int id)
         {
-            var model = (await _establishmentReadService.GetAsync(id, User)).GetResult();
-            var data = await GetChangeHistoryDownloadDataAsync(id);
-            var csvStream = await _downloadService.CreateCsvStreamAsync(data.Item1, data.Item2);
-            return File(csvStream, "text/csv", string.Concat(model.Name, $"({id})", "-change-history.csv"));
+            // todo: TEXCHANGE; wating for API: 
+            throw new NotImplementedException("Not done yet; requires API '/establishment/{urn}/changes/download'");
         }
 
         
         [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/xlsx/{id}")]
         public async Task<ActionResult> DownloadXlsxChangeHistory(int id)
         {
-            var model = (await _establishmentReadService.GetAsync(id, User)).GetResult();
-            var data = await GetChangeHistoryDownloadDataAsync(id);
-            var xlsxStream = _downloadService.CreateXlsxStream($"Change history for {model.Name} ({model.Urn})", $"Change history for {model.Name} ({model.Urn})", data.Item1, data.Item2);
-            return File(xlsxStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
-                string.Concat(model.Name, $"({id})", "-change-history.xlsx"));
+            // todo: TEXCHANGE; wating for API
+            throw new NotImplementedException("Not done yet; requires API '/establishment/{urn}/changes/download'");
         }
-
-        private async Task<Tuple<List<string>, List<List<string>>>> GetChangeHistoryDownloadDataAsync(int urn)
-        {
-            var headers = new List<string>
-            {
-                "Updated field",
-                "New value",
-                "Old value",
-                "Date changed",
-                "Effective date",
-                "Date requested",
-                "Suggested by",
-                "Approved by",
-                "Reason"
-            };
-
-            var changes = await _establishmentReadService.GetChangeHistoryAsync(urn, 200, User);
-
-            var data = changes.Select(x => new List<string>
-            {
-                x.Name,
-                x.NewValue,
-                x.OldValue,
-                x.RequestedDateUtc?.ToString("dd/MM/yyyy"),
-                x.EffectiveDateUtc?.ToString("dd/MM/yyyy"),
-                x.RequestedDateUtc?.ToString("dd/MM/yyyy"),
-                x.OriginatorUserName,
-                string.Empty, 
-                string.Empty
-            }).ToList();
-
-            return new Tuple<List<string>, List<List<string>>>(headers, data);
-        }
-
+        
         private async Task PopulateSelectLists(ViewModel viewModel)
         {
             viewModel.AccommodationChanges = (await _cachedLookupService.AccommodationChangedGetAllAsync()).ToSelectList(viewModel.AccommodationChangedId);

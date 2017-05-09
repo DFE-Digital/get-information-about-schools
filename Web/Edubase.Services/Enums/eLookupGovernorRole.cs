@@ -1,9 +1,6 @@
 
 namespace Edubase.Services.Enums
 {
-
-#if (TEXAPI)
-
     public enum eLookupGovernorRole
     {
         NA = 14,
@@ -22,25 +19,6 @@ namespace Edubase.Services.Enums
         Group_SharedLocalGovernor = 13,
     }
 
-#else
 
-    public enum eLookupGovernorRole
-    {
-        AccountingOfficer = 1,
-		ChairOfGovernors = 2,
-		ChairOfLocalGoverningBody = 3,
-		ChairOfTrustees = 4,
-		ChiefFinancialOfficer = 5,
-		Governor = 6,
-		LocalGovernor = 7,
-		Member = 8,
-		Trustee = 9,
-        Establishment_SharedChairOfLocalGoverningBody = 11,
-        Group_SharedChairOfLocalGoverningBody = 13,
-        Establishment_SharedLocalGovernor = 10,
-        Group_SharedLocalGovernor = 12
-    }
-
-#endif
 
 }

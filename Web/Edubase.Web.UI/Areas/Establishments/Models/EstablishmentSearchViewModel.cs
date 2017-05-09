@@ -11,6 +11,7 @@ using Edubase.Common.Spatial;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
 using Edubase.Services.Core.Search;
+using Edubase.Services.Establishments.Models;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {
@@ -72,7 +73,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
             UKPRN
         }
 
-        public IList<SearchEstablishmentDocument> Results { get; set; }
+        public IList<EstablishmentModel> Results { get; set; }
         public string Error { get; set; }
 
         public eTextSearchType TextSearchType

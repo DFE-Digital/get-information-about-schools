@@ -48,7 +48,7 @@ namespace Edubase.Services.Texuna.Establishments
             return await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes", user);
         }
 
-        public async Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModelBase establishment)
+        public async Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModel establishment)
         {
             return await _httpClient.GetAsync<EstablishmentDisplayPolicy>($"establishment/{establishment.Urn}/display-policy", user);
         }
@@ -73,9 +73,9 @@ namespace Edubase.Services.Texuna.Establishments
             return (await _httpClient.GetAsync<List<LookupDto>>("establishment/permittedstatuses", principal)).Select(x => x.Id).ToArray();
         }
 
-        public async Task<ApiSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
+        public async Task<ApiSearchResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
         {
-            return await _httpClient.PostAsync<ApiSearchResult<SearchEstablishmentDocument>>("establishment/search", payload, principal);
+            return await _httpClient.PostAsync<ApiSearchResult<EstablishmentModel>>("establishment/search", payload, principal);
         }
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)

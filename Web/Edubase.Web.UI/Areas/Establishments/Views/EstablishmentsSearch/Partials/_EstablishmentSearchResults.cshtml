@@ -42,7 +42,7 @@ else if (Model.Results.Count > 0)
                     <dd>@(Model.LocalAuthorities.FirstOrDefault(x => x.Id == result.LocalAuthorityId)?.Name ?? "Not recorded")</dd>
                     @if (Model.SearchType == eSearchType.Location)
                     {
-                        var distanceInMiles = Math.Round(Edubase.Common.Spatial.DistanceCalculator.Calculate(Model.LocationSearchCoordinate, result.Coordinate).Miles, 2);
+                        var distanceInMiles = Math.Round(Edubase.Common.Spatial.DistanceCalculator.Calculate(Model.LocationSearchCoordinate, result.Location).Miles, 2);
                         <dt>Distance:</dt>
                                 <dd>@distanceInMiles mile@(Html.Conditional(distanceInMiles != 1, "s"))</dd>
                     }

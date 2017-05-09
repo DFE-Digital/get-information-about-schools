@@ -56,13 +56,13 @@
             <td>@Model.LSOAName</td>
         </tr>
     </table>
-    @if (Model.Establishment.AdditionalAddresses.Count > 0)
+    @* TODO TEXCHANGE; STORY 10909. USE ALT ADDRESS
     {
         <h3 class="font-small">Other sites</h3>
         <table class="borderless">
             <caption class="visually-hidden">Additional site information for @Model.Establishment.Name</caption>
 
-            @foreach (var address in Model.Establishment.AdditionalAddresses)
+            @foreach (var address in .......
             {
                 <tr>
                     <th colspan="2">@address.SiteName</th>
@@ -82,7 +82,7 @@
             }
 
         </table>
-    }
+    }*@
     
     
     @if (Model.UserCanEdit)

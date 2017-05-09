@@ -86,7 +86,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var progress = await _governorDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
             var principal = User;
 
-            // todo: remove post-texuna integration.
+            // todo: TEXCHANGE: remove post-texuna integration.
             HostingEnvironment.QueueBackgroundWorkItem(async ct =>
             {
                 await _governorDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.FileFormat.Value);
@@ -114,23 +114,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     var results = await _governorsReadService.SearchAsync(payload, User);
                     model.Results = results.Items;
                     if (model.StartIndex == 0) model.Count = results.Count;
-
-#if (!TEXAPI)
-                    foreach (var item in model.Results)
-                    {
-                        if (item.EstablishmentUrn.HasValue && item.EstablishmentName.IsNullOrEmpty())
-                        {
-                            var establishment = await _establishmentReadService.GetAsync(item.EstablishmentUrn.Value, User);
-                            if (establishment.Success) item.EstablishmentName = establishment.ReturnValue.Name;
-                        }
-
-                        if (item.GroupUID.HasValue && item.GroupName.IsNullOrEmpty())
-                        {
-                            var result = await _groupReadService.GetAsync(item.GroupUID.Value, User);
-                            if (result.Success) item.GroupName = result.ReturnValue.Name;
-                        }
-                    }
-#endif
                 }
             }
             

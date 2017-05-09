@@ -1,7 +1,6 @@
 
 namespace Edubase.Services.Enums
 {
-#if (TEXAPI)
     public enum eLookupEstablishmentType
     {
         Academy1619Converter = 39,
@@ -49,48 +48,4 @@ namespace Edubase.Services.Enums
         VoluntaryControlledSchool = 3,
         WelshEstablishment = 24,
     }
-#else
-    public enum eLookupEstablishmentType
-    {
-        Academy1619Converter = 1,
-		Academy1619SponsorLed = 2,
-		AcademyAlternativeProvisionConverter = 3,
-		AcademyAlternativeProvisionSponsorLed = 4,
-		AcademyConverter = 5,
-		AcademySpecialConverter = 6,
-		AcademySpecialSponsorLed = 7,
-		AcademySponsorLed = 8,
-		BritishSchoolsOverseas = 9,
-		ChildrensCentre = 10,
-		ChildrensCentreLinkedSite = 11,
-		CityTechnologyCollege = 12,
-		CommunitySchool = 13,
-		CommunitySpecialSchool = 14,
-		FoundationSchool = 17,
-		FoundationSpecialSchool = 18,
-		FreeSchools = 19,
-		FreeSchools1619 = 20,
-		FreeSchoolsAlternativeProvision = 21,
-		FreeSchoolsSpecial = 22,
-		FurtherEducation = 23,
-		HigherEducationInstitutions = 24,
-		InstitutionFundedByOtherGovernmentDepartment = 26,
-		LANurserySchool = 27,
-		Miscellaneous = 29,
-		NonmaintainedSpecialSchool = 30,
-		OffshoreSchools = 31,
-		OtherIndependentSchool = 32,
-		OtherIndependentSpecialSchool = 33,
-		PupilReferralUnit = 35,
-		SecureUnits = 36,
-		ServiceChildrensEducation = 37,
-		SixthFormCentres = 38,
-		SpecialPost16Institution = 39,
-		StudioSchools = 40,
-		UniversityTechnicalCollege = 41,
-		VoluntaryAidedSchool = 42,
-		VoluntaryControlledSchool = 43,
-		WelshEstablishment = 44,
-    }
-#endif
 }   

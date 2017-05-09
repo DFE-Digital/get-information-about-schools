@@ -155,9 +155,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.Section41ApprovedIds = model.SelectedSection41Ids.ToArray();
             filters.ProvisionOfficialSixthFormIds = model.SelectedSixthFormProvisionIds.ToArray();
             filters.ProvisionSpecialClassesIds = model.SelectedSpecialClassesProvisionIds.ToArray();
-#if(TEXAPI)
             filters.SENIds = model.SelectedTypeOfSENProvisionIds.ToArray();
-#endif
             filters.UrbanRuralIds = model.SelectedUrbanRuralIds.ToArray();
             filters.AdministrativeWardIds = model.SelectedWardIds.ToArray();
 

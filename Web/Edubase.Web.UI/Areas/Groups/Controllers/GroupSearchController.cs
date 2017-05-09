@@ -130,7 +130,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             Text = model.GroupSearchModel.Text.Clean(),
             GroupTypeIds = model.SelectedGroupTypeIds.ToArray(),
-            GroupStatusIds = (this.User.Identity.IsAuthenticated) ? model.SelectedGroupStatusIds.ToArray() : null,
+            GroupStatusIds = (User.Identity.IsAuthenticated) ? model.SelectedGroupStatusIds.ToArray() : null,
             SortBy = model.SortOption
         };
     }

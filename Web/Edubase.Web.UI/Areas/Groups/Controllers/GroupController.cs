@@ -83,12 +83,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup)) viewModel.Address = model.Address.ToString();
 
-#if (TEXAPI)
             // TODO: TEXCHANGE
             // Use the new security API for this
-#else
-            viewModel.CanUserEdit = _securityService.GetEditGroupPermission(User).CanEdit(model.GroupUID.Value, model.GroupTypeId.Value, model.LocalAuthorityId);
-#endif
+
             viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
             if (viewModel.IsUserLoggedOn)
@@ -433,8 +430,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(groupUId, User);
             foreach (var establishmentGroup in establishmentGroups)
             {
-                // TODO TEXCHANGE: need to use the full object graph from the API rather than more service calls in texuna context as it would be very inefficient.  Need to tidy this post int.
-#if (TEXAPI)
                 list.Add(new EstablishmentGroupViewModel
                 {
                     Id = establishmentGroup.Id,
@@ -448,26 +443,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     JoinedDate = establishmentGroup.JoinedDate,
                     CCIsLeadCentre = establishmentGroup.CCIsLeadCentre
                 });
-#else
-                var result = await _establishmentReadService.GetAsync(establishmentGroup.EstablishmentUrn, User);
-                if (result.Success)
-                {
-                    var estabModel = result.GetResult();
-                    list.Add(new EstablishmentGroupViewModel
-                    {
-                        Id = establishmentGroup.Id,
-                        Address = estabModel.GetAddress(),
-                        HeadFirstName = estabModel.HeadFirstName,
-                        HeadLastName = estabModel.HeadLastName,
-                        Name = estabModel.Name,
-                        Urn = estabModel.Urn.Value,
-                        TypeName = await _lookup.GetNameAsync(() => estabModel.TypeId),
-                        HeadTitleName = await _lookup.GetNameAsync(() => estabModel.HeadTitleId),
-                        JoinedDate = establishmentGroup.JoinedDate,
-                        CCIsLeadCentre = establishmentGroup.CCIsLeadCentre
-                    });
-                }
-#endif
             }
         }
 
@@ -475,54 +450,16 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/csv/{id}")]
         public async Task<ActionResult> DownloadCsvChangeHistory(int id)
         {
-            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
-            var data = await GetChangeHistoryDownloadDataAsync(id);
-            var csvStream = await _downloadService.CreateCsvStreamAsync(data.Item1, data.Item2);
-            return File(csvStream, "text/csv", string.Concat(model.Name, $"({id})", "-change-history.csv"));
+            // todo: TEXCHANGE; wating for API: 
+            throw new NotImplementedException("Not done yet; requires API '/group/{urn}/changes/download'");
         }
 
 
         [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/xlsx/{id}")]
         public async Task<ActionResult> DownloadXlsxChangeHistory(int id)
         {
-            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
-            var data = await GetChangeHistoryDownloadDataAsync(id);
-            var xlsxStream = _downloadService.CreateXlsxStream($"Change history for {model.Name} ({model.GroupUID})", $"Change history for {model.Name} ({model.GroupUID})", data.Item1, data.Item2);
-            return File(xlsxStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                string.Concat(model.Name, $"({id})", "-change-history.xlsx"));
-        }
-
-        private async Task<Tuple<List<string>, List<List<string>>>> GetChangeHistoryDownloadDataAsync(int uid)
-        {
-            var headers = new List<string>
-            {
-                "Updated field",
-                "New value",
-                "Old value",
-                "Date changed",
-                "Effective date",
-                "Date requested",
-                "Suggested by",
-                "Approved by",
-                "Reason"
-            };
-
-            var changes = await _groupReadService.GetChangeHistoryAsync(uid, 200, User);
-
-            var data = changes.Select(x => new List<string>
-            {
-                x.Name,
-                x.NewValue,
-                x.OldValue,
-                x.RequestedDateUtc?.ToString("dd/MM/yyyy"),
-                x.EffectiveDateUtc?.ToString("dd/MM/yyyy"),
-                x.RequestedDateUtc?.ToString("dd/MM/yyyy"),
-                x.OriginatorUserName,
-                string.Empty,
-                string.Empty
-            }).ToList();
-
-            return new Tuple<List<string>, List<List<string>>>(headers, data);
+            // todo: TEXCHANGE; wating for API: 
+            throw new NotImplementedException("Not done yet; requires API '/group/{urn}/changes/download'");
         }
     }
 }

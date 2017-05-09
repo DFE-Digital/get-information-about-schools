@@ -74,77 +74,44 @@
                             @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control" })
                         </div>
                     }
-                
-
-
-                    @for (var i = 0; i < Model.AdditionalAddresses.Count; i++)
+                    
+                    @* TODO TEXCHANGE: use alt address 
                     {
                         var siteNumber = i + 2;
                         <div class="grey-bar"></div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].SiteName, $"Site {siteNumber} name")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].SiteName, new { @class = "form-control" })
+                            @Html.LabelFor(x => x.[i].SiteName, $"Site {siteNumber} name")
+                            @Html.TextBoxFor(x => x.[i].SiteName, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].Line1, "Street")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Line1, new { @class = "form-control" })
+                            @Html.LabelFor(x => x.[i].Line1, "Street")
+                            @Html.TextBoxFor(x => x.[i].Line1, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].Locality, "Locality")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Locality, new { @class = "form-control" })
+                            @Html.LabelFor(x => x.[i].Locality, "Locality")
+                            @Html.TextBoxFor(x => x.[i].Locality, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].Line3, "Address 3")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Line3, new { @class = "form-control" })
+                            @Html.LabelFor(x => x.[i].Line3, "Address 3")
+                            @Html.TextBoxFor(x => x.[i].Line3, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].CityOrTown, "Town")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].CityOrTown, new { @class = "form-control" })
+                            @Html.LabelFor(x => x.[i].CityOrTown, "Town")
+                            @Html.TextBoxFor(x => x.[i].CityOrTown, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].County, "County")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].County, new { @class = "form-control" })
+                            @Html.LabelFor(x => x.[i].County, "County")
+                            @Html.TextBoxFor(x => x.[i].County, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].PostCode, "Postcode")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].PostCode, new { @class = "form-control" })
+                            @Html.LabelFor(x => x.[i].PostCode, "Postcode")
+                            @Html.TextBoxFor(x => x.[i].PostCode, new { @class = "form-control" })
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].TelephoneNumber, "Telephone")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].TelephoneNumber, new { @class = "form-control" })
+                            @Html.LabelFor(x => x.[i].TelephoneNumber, "Telephone")
+                            @Html.TextBoxFor(x => x.[i].TelephoneNumber, new { @class = "form-control" })
                         </div>
-                        if (Model.AllowHidingOfAddress)
-                        {
-                            <div class="form-group">
-                                <label class="block-label selection-button-checkbox">
-                                    @Html.CheckBoxFor(x => x.AdditionalAddresses[i].IsRestricted, new { @class = "form-control" })
-                                    Hide address from other users
-                                </label>
-                            </div>
-                        }
-                        <div class="form-group">
-                            <button type="submit" name="@nameof(Model.AddressToRemoveId)"
-                                    class="link-button font-xsmall"
-                                    value="@Model.AdditionalAddresses[i].Id">
-                                Remove this address
-                            </button>
-                        </div>
-                        @Html.HiddenFor(x => x.AdditionalAddresses[i].Id)
-                    }
-
-                    @if (Model.AdditionalAddressesCount > 0)
-                    {
-                        <div class="grey-bar"></div>
-                    }
-
-                    @if (Model.AdditionalAddressesCount < 4)
-                    {
-                        <div class="form-group">
-                            <button type="submit" name="action" class="link-button font-xsmall" value="@ViewModel.eAction.AddAddress">Add another address</button>
-                        </div>
-                    }
-
-                    @Html.HiddenFor(x => x.AdditionalAddressesCount)
+                    }*@
 
                     @if (Model.DisplayPolicy.HeadteacherDetails)
                     {
