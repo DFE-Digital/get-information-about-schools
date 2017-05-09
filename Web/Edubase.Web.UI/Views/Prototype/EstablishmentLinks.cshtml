@@ -38,10 +38,10 @@
                             These establishments are linked with {{baseEstab.name}},
                             URN: {{baseEstab.urn}} For example, they may be predecessor or successor establishments.
                         </p>
-                        <div class="table-count">
+                        @*<div class="table-count">
                             <p>Showing 1 - {{linkedEstablishments.length}} of {{linkedEstablishments.length}}</p>
-                        </div>
-                        <table class="edubase-table">
+                        </div>*@
+                        <table class="edubase-table no-pagination">
                             <thead>
                                 <tr>
                                     <th class="links-urn"><abbr title="Unique Reference Number">URN</abbr></th>
@@ -75,8 +75,8 @@
                             <a class="button button-grey" href="#" v-on:click.prevent="reset">Cancel</a>
                         </div>
 
-                        <h2 class="heading-medium" v-show="addMode">Link to other establishment</h2>
-                        <h2 class="heading-medium" v-show="editMode">Edit link</h2>
+                        <h2 class="bold-medium custom-margin" v-show="addMode">Link to other establishment</h2>
+                        <h2 class="bold-medium" v-show="editMode">Edit link</h2>
 
                         <form>
                             <div class="column-half">
@@ -128,7 +128,7 @@
                                 <p class="link-relationship">
                                     {{baseEstab.name}}, URN: {{baseEstab.urn}}
                                     <strong>to</strong>
-                                    {{linkingEstab.name}}, {{linkingEstab.urn}}
+                                    {{linkingEstab.name}}, URN: {{linkingEstab.urn}}
                                 </p>
                             </div>
                             <div class="column-half">
@@ -173,8 +173,9 @@
 
                             <div v-show="reverseLink">
                                 <div class="column-half">
+                                    <h4 class="bold-xsmall">Relationship of:</h4>
                                     <p class="link-relationship">
-                                        {{linkingEstab.name}}, {{linkingEstab.urn}}
+                                        {{linkingEstab.name}}, URN: {{linkingEstab.urn}}
                                         <strong>to</strong>
                                         {{baseEstab.name}}, URN: {{baseEstab.urn}}
                                     </p>

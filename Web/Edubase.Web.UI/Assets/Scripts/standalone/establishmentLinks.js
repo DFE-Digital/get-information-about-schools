@@ -152,8 +152,7 @@
                     this.reverselinkDateError = false;
 
                     function validDate(d, m, y, prop) {
-                        var isLeap = new Date(y, 1, 29).getMonth() === 1;
-                        console.log('isLeap == ' + isLeap);
+                       var isLeap = new Date(y, 1, 29).getMonth() === 1;
                        if (isNaN(d) ||
                            isNaN(m) ||
                            isNaN(y) ||
@@ -193,12 +192,13 @@
                         validDate(Number(this.reverseLinkDateDay), Number(this.reverseLinkDateMonth), Number(this.reverseLinkDateYear), 'reverseLinkDateError');
                     }
 
-                    if (!this.forwardLinkError &&
-                        !this.linkDateError &&
-                        !this.backLinkError &&
-                        !this.reverselinkDateError) {
-                        this.saveLinkedEstablishment();
+                    if (!self.forwardLinkError &&
+                        !self.linkDateError &&
+                        !self.backLinkError &&
+                        !self.reverseLinkDateError) {
+                            self.saveLinkedEstablishment();
                     }
+                    
                     
                 },
                 saveLinkedEstablishment: function () {

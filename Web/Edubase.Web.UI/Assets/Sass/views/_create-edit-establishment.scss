@@ -89,11 +89,19 @@ select#headtitleid {
 
     .form-label {
         display: block;
+        font-size: 16px;
     }
     .inline-form-control {
         display: block;
         float: left;
         margin-right: 1em;
+    }
+    legend {
+        font-size: 16px;
+        margin-bottom: 0;
+    }
+    .form-hint {
+        font-size: 16px;
     }
 }
 
@@ -340,4 +348,15 @@ div.shared-governor-list {
 
 .chair-replace {
 
+}
+
+.establishment-links {
+    .form-label,
+    .edubase-button-checkbox {
+        font-size: 16px;
+    }
+
+    .custom-margin {
+        margin-bottom: 0.8em;
+    }
 }

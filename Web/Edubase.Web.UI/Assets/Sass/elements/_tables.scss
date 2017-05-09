@@ -523,6 +523,13 @@ table {
 
 .edubase-table {
     border-top: 1px solid $black;
+    &.no-pagination {
+        border-top: 0;
+
+        tbody tr:last-child {
+              td {  border-bottom: 0;}
+            }
+    }
      th {
         font-weight: bold;
         text-align: left;
