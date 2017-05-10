@@ -198,12 +198,13 @@ namespace Edubase.Web.UI.Controllers
         
 
         [HttpGet, Route("Details/{id}")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "")
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", string searchSource = "Establishments")
         {
             var viewModel = new EstablishmentDetailViewModel()
             {
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
-                SearchQueryString = searchQueryString
+                SearchQueryString = searchQueryString,
+                SearchSource = searchSource
             };
 
             using (MiniProfiler.Current.Step("Retrieving establishment"))

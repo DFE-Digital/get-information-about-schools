@@ -53,6 +53,8 @@ namespace Edubase.Web.UI.Models
 
         public string SearchQueryString { get; set; }
 
+        public string SearchSource { get; set; }
+
         public EstablishmentDetailViewModel()
         {
 

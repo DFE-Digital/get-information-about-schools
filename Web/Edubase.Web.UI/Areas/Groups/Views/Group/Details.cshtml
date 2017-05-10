@@ -13,7 +13,14 @@
 }
 else
 {
-    <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+    if (Model.SearchSource == "Governors")
+    {
+        <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+    }
+    else
+    {
+        <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+    }
 }
 
 <h1 class="heading-large">@Model.Group.Name</h1>

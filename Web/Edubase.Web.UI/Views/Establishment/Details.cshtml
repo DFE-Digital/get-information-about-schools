@@ -17,7 +17,14 @@
 }
 else
 {
-    <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+    if (Model.SearchSource == "Governors")
+    {
+        <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+    }
+    else
+    {
+        <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+    }
 }
 
 <h1 class="heading-large">@Model.Establishment.Name</h1>
