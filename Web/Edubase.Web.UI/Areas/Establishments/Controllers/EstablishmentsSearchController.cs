@@ -3,7 +3,7 @@ using Edubase.Web.UI.Models;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using ViewModel = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
+//using ViewModel = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -12,8 +12,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     using Services.Establishments;
     using Services.Establishments.Downloads;
     using Services.Establishments.Search;
-    using Services.Groups;
-    using Services.Groups.Downloads;
     using Services.Lookup;
     using StackExchange.Profiling;
     using System;
@@ -25,27 +23,25 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     [RouteArea("Establishments"), RoutePrefix("Search"), Route("{action=index}")]
     public class EstablishmentsSearchController : EduBaseController
     {
-        IEstablishmentReadService _establishmentReadService;
-        IGroupReadService _groupReadService;
-        IEstablishmentDownloadService _establishmentDownloadService;
-        ICachedLookupService _lookupService;
+        private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly IEstablishmentDownloadService _establishmentDownloadService;
+        private readonly ICachedLookupService _lookupService;
 
         public EstablishmentsSearchController(IEstablishmentReadService establishmentReadService,
-            IGroupReadService groupReadService,
             IEstablishmentDownloadService establishmentDownloadService,
-            IGroupDownloadService groupDownloadService,
             ICachedLookupService lookupService)
         {
             _establishmentReadService = establishmentReadService;
-            _groupReadService = groupReadService;
             _establishmentDownloadService = establishmentDownloadService;
             _lookupService = lookupService;
         }
         
 
         [HttpGet]
-        public async Task<ActionResult> Index(ViewModel model)
+        public async Task<ActionResult> Index(EstablishmentSearchViewModel model)
         {
+            model.SearchQueryString = Request.QueryString.ToString();
+            
             var retVal = await SearchByUrnAsync(model);
             if (retVal != null) return retVal;
 
@@ -55,7 +51,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("results-js")]
-        public async Task<PartialViewResult> ResultsPartial(ViewModel model)
+        public async Task<PartialViewResult> ResultsPartial(EstablishmentSearchViewModel model)
         {
             var payload = GetEstablishmentSearchPayload(model);
             if (!payload.Success) model.Error = payload.ErrorMessage;
@@ -64,7 +60,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return PartialView("Partials/_EstablishmentSearchResults", model);
         }
 
-        private async Task<ViewModel> PopulateLookups(ViewModel vm)
+        private async Task<EstablishmentSearchViewModel> PopulateLookups(EstablishmentSearchViewModel vm)
         {
             using (MiniProfiler.Current.Step($"{GetType().Name}.{nameof(PopulateLookups)}"))
             {
@@ -101,7 +97,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             });
 
 
-        private Returns<EstablishmentSearchPayload> GetEstablishmentSearchPayload(ViewModel model)
+        private Returns<EstablishmentSearchPayload> GetEstablishmentSearchPayload(EstablishmentSearchViewModel model)
         {
             var retVal = new Returns<EstablishmentSearchPayload>();
             var payload = new EstablishmentSearchPayload(model.StartIndex, model.PageSize);
@@ -109,17 +105,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (model.SearchType == eSearchType.Text)
             {
-                if (model.TextSearchType == ViewModel.eTextSearchType.UKPRN)
+                if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.UKPRN)
                 {
                     filters.UKPRN = model.TextSearchModel.Text.ToInteger();
                 }
-                else if (model.TextSearchType == ViewModel.eTextSearchType.LAESTAB)
+                else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.LAESTAB)
                 {
                     var laestab = LAESTAB.TryParse(model.TextSearchModel.Text).Value;
                     filters.LocalAuthorityIds = new int[] { laestab.LocalAuthorityId };
                     filters.EstablishmentNumber = laestab.EstablishmentNumber;
                 }
-                else if (model.TextSearchType == ViewModel.eTextSearchType.EstablishmentName)
+                else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName)
                 {
                     payload.Text = model.TextSearchModel.Text;
                 }
@@ -164,7 +160,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return retVal.Set(payload);
         }
 
-        private async Task<ActionResult> ProcessEstablishmentsSearch(ViewModel model, EstablishmentSearchPayload payload)
+        private async Task<ActionResult> ProcessEstablishmentsSearch(EstablishmentSearchViewModel model, EstablishmentSearchPayload payload)
         {
             if (!model.HasError)
             {
@@ -203,10 +199,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        private async Task<ActionResult> SearchByUrnAsync(ViewModel model)
+        private async Task<ActionResult> SearchByUrnAsync(EstablishmentSearchViewModel model)
         {
             var urn = model.TextSearchModel.AutoSuggestValueAsInt
-                ?? (model.TextSearchType == ViewModel.eTextSearchType.URN
+                ?? (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.URN
                 ? model.TextSearchModel.Text.ToInteger() : null);
 
             if (urn.HasValue)

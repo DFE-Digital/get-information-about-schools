@@ -71,9 +71,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
 
         [Route(nameof(Details) + "/{id:int}"), HttpGet]
-        public async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "")
         {
-            var viewModel = new GroupDetailViewModel();
+            var viewModel = new GroupDetailViewModel
+            {
+                SearchQueryString = searchQueryString
+            };
             var model = (await _groupReadService.GetAsync(id, User)).GetResult();
             
             viewModel.Group = model;

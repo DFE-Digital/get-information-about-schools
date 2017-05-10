@@ -90,6 +90,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (model.GroupSearchModel.AutoSuggestValueAsInt.HasValue) return RedirectToDetailPage(model.GroupSearchModel.AutoSuggestValueAsInt.Value);
             else
             {
+                model.SearchQueryString = Request.QueryString.ToString();
                 var text = model.GroupSearchModel.Text.Clean();
                 model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
                 model.GroupStatuses = (await _lookupService.GroupStatusesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();

@@ -8,7 +8,7 @@
 
 <div class="grid-row">
     <div class="column-full">
-        @Html.ActionLink("Go back", "Index", "Search", new { area = "", SelectedTab = "Governors" }, new { @class = "home-link" })
+        @Html.ActionLink("« Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors" }, new { @class = "home-link" })
         <h1 class="heading-xlarge">Search results</h1>
         <p>
             We found <span class="heading-xlarge count">@Model.Count</span> result@(Model.Count == 1 ? "" : "s") matching

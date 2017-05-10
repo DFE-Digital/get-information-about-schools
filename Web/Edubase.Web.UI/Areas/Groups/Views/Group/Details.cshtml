@@ -1,13 +1,20 @@
 ﻿@using Edubase.Common
 @using Edubase.Services.Enums
+@using Microsoft.Ajax.Utilities
 @model GroupDetailViewModel
 @{
     ViewBag.Title = Model.Group.Name;
     ViewBag.PageClass = "mat-details";
 }
-<p>
-    <a class="font-xsmall" href="/#groups">Back to search</a>
-</p>
+
+@if (Model.SearchQueryString.IsNullOrWhiteSpace())
+{
+    @Html.ActionLink("Home", "Index", "Search", new { area = "", selectedTab = "Groups" }, new { @class = "home-link" })
+}
+else
+{
+    <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+}
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 

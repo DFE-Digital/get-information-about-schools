@@ -2,14 +2,14 @@
 @using Edubase.Services.Groups.Search;
 @model GroupSearchViewModel
 @{
-    ViewBag.Title = string.Format("Search results for '{0}'", Model.GroupSearchModel.Text);
+    ViewBag.Title = $"Search results for '{Model.GroupSearchModel.Text}'";
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 }
 
 <div class="grid-row">
     <div class="column-full">
-        @Html.ActionLink("Go back", "Index", "Search", new { area = "", SelectedTab = "Groups" }, new { @class = "home-link" })
+        @Html.ActionLink("« Back to find an establishment group", "Index", "Search", new { area = "", SelectedTab = "Groups" }, new { @class = "home-link" })
         <h1 class="heading-xlarge">Search results</h1>
         <p>
             @if (Model.GroupSearchModel.Text.IsInteger())
