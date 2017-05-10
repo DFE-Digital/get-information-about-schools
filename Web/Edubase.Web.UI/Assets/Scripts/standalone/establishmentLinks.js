@@ -149,7 +149,7 @@
                     this.forwardLinkError = false;
                     this.linkDateError = false;
                     this.backLinkError = false;
-                    this.reverselinkDateError = false;
+                    this.reverseLinkDateError = false;
 
                     function validDate(d, m, y, prop) {
                        var isLeap = new Date(y, 1, 29).getMonth() === 1;
@@ -245,7 +245,7 @@
                     this.linkDateError = false;
                     this.forwardLinkError = false;
                     this.backLinkError = false;
-                    this.reverselinkDateError = false;
+                    this.reverseLinkDateError = false;
                 },
                 updateModalMessaging: function () {
                     var mTitle = "Are you sure you want to delete this link?";
