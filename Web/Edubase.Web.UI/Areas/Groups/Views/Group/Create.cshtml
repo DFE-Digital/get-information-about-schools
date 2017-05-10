@@ -18,7 +18,9 @@
 
     <div class="grid-row">
         <div class="column-full">
-            @Html.ActionLink("Back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+            <div class="breadcrumbs">
+                @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null) > @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+            </div>
             
             <h1 class="heading-xlarge">@Model.PageTitle</h1>
            

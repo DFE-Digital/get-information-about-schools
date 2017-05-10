@@ -8,29 +8,31 @@
 
 <div class="grid-row">
     <div class="column-full">
-        @Html.ActionLink("« Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors" }, new { @class = "home-link" })
-        <h1 class="heading-xlarge">Search results</h1>
-        <p>
-            We found <span class="heading-xlarge count">@Model.Count</span> result@(Model.Count == 1 ? "" : "s") matching
-                 
-            @if (Model.GovernorSearchModel.Forename.Clean() != null)
-            {
-                <text>first name <span class="bold-small">'@Model.GovernorSearchModel.Forename'</span>&nbsp;</text>
-            }
-            
-            @if (Model.GovernorSearchModel.Surname.Clean() != null)
-            {
-                <text>last name <span class="bold-small">'@Model.GovernorSearchModel.Surname'</span>&nbsp;</text>
-            }
+        <div class="breadcrumbs">
+            @Html.ActionLink("« Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors" }, new { @class = "home-link" })
+        </div>
+            <h1 class="heading-xlarge">Search results</h1>
+            <p>
+                We found <span class="heading-xlarge count">@Model.Count</span> result@(Model.Count == 1 ? "" : "s") matching
 
-            @if (Model.SelectedRoleIds.Any())
+                @if (Model.GovernorSearchModel.Forename.Clean() != null)
             {
-                <text>roles <span class="bold-small">@Model.RoleNames</span>&nbsp;</text>
-            }
+                    <text>first name <span class="bold-small">'@Model.GovernorSearchModel.Forename'</span>&nbsp;</text>
+                }
 
-            <a class="download-link" href="@Url.Action("PrepareDownload", "GovernorSearch", new { area = "Governors" })?@Url.CurrentQueryString()">Download these search results</a>
-        </p>
-    </div>
+                @if (Model.GovernorSearchModel.Surname.Clean() != null)
+            {
+                    <text>last name <span class="bold-small">'@Model.GovernorSearchModel.Surname'</span>&nbsp;</text>
+                }
+
+                @if (Model.SelectedRoleIds.Any())
+            {
+                    <text>roles <span class="bold-small">@Model.RoleNames</span>&nbsp;</text>
+                }
+
+                <a class="download-link" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
+            </p>
+        </div>
 </div>
 
 <div class="grid-row">

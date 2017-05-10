@@ -3,6 +3,9 @@
     ViewBag.bodyClasses = "change-approvals";
 }
 
+<div class="breadcrumbs">
+    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null) > @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+</div>
 
 <div id="change-approvals" v-cloak>
     <div class="grid-row">

@@ -4,6 +4,9 @@
     ViewBag.Title = "Downloads";
     ViewBag.HideLogo = true;
 }
+<div class="breadcrumbs">
+    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+</div>
 
 <h1 class="heading-large">Downloads</h1>
 <p>Select a file to download</p>
