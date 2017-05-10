@@ -335,10 +335,10 @@ namespace Edubase.Web.UI.Controllers
             vm.CCDisadvantagedAreaName = await c.GetNameAsync(() => vm.Establishment.CCDisadvantagedAreaId);
             vm.CCDirectProvisionOfEarlyYearsName = await c.GetNameAsync(() => vm.Establishment.CCDirectProvisionOfEarlyYearsId);
             vm.ProvisionSpecialClassesName = await c.GetNameAsync(() => vm.Establishment.ProvisionSpecialClassesId);
-            vm.SEN1Name = await c.GetNameAsync(() => vm.Establishment.SEN1Id);
-            vm.SEN2Name = await c.GetNameAsync(() => vm.Establishment.SEN2Id);
-            vm.SEN3Name = await c.GetNameAsync(() => vm.Establishment.SEN3Id);
-            vm.SEN4Name = await c.GetNameAsync(() => vm.Establishment.SEN4Id);
+            //vm.SEN1Name = await c.GetNameAsync(() => vm.Establishment.SEN1Id); // TODO: TEXCHANGE: SUPPORT COMBINED PROPERTY
+            //vm.SEN2Name = await c.GetNameAsync(() => vm.Establishment.SEN2Id);
+            //vm.SEN3Name = await c.GetNameAsync(() => vm.Establishment.SEN3Id);
+            //vm.SEN4Name = await c.GetNameAsync(() => vm.Establishment.SEN4Id);
             vm.TeenageMothersProvisionName = await c.GetNameAsync(() => vm.Establishment.TeenageMothersProvisionId);
             vm.ChildcareFacilitiesName = await c.GetNameAsync(() => vm.Establishment.ChildcareFacilitiesId);
             vm.PRUSENName = await c.GetNameAsync(() => vm.Establishment.PRUSENId);
@@ -348,7 +348,7 @@ namespace Edubase.Web.UI.Controllers
             vm.TypeOfResourcedProvisionName = await c.GetNameAsync(() => vm.Establishment.TypeOfResourcedProvisionId);
             vm.BSOInspectorateName = await c.GetNameAsync(() => vm.Establishment.BSOInspectorateId);
             vm.InspectorateName = await c.GetNameAsync(() => vm.Establishment.InspectorateId);
-            vm.IndependentSchoolTypeName = await c.GetNameAsync(() => vm.Establishment.IndependentSchoolTypeId);
+            vm.IndependentSchoolTypeName = await c.GetNameAsync(() => vm.Establishment.IEBTModel.IndependentSchoolTypeId);
             vm.RSCRegionName = await c.GetNameAsync(() => vm.Establishment.RSCRegionId);
             vm.GovernmentOfficeRegionName = await c.GetNameAsync(() => vm.Establishment.GovernmentOfficeRegionId);
             vm.AdministrativeDistrictName = await c.GetNameAsync(() => vm.Establishment.AdministrativeDistrictId);

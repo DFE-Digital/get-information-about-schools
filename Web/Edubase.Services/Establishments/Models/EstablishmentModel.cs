@@ -11,120 +11,17 @@ namespace Edubase.Services.Establishments.Models
 {
     public class EstablishmentModel
     {
+        [JsonProperty("ccLAContactDetail")]
         public ChildrensCentreLocalAuthorityDto CCLAContactDetail { get; set; }
 
         [JsonProperty("latLon")]
         public LatLon Location { get; set; }
         
+        [JsonIgnore] // TODO: texchange: NOT DEFINED in YAML
         public eGovernanceMode? GovernanceMode { get; set; }
 
-        #region IEBT properties
-        public string Notes { get; set; }
-        public DateTime? DateOfTheLastBridgeVisit { get; set; }
-
-        [DisplayName("Date of the last ISI visit")]
-        public DateTime? DateOfTheLastISIVisit { get; set; }
-
-        public DateTime? DateOfTheLastWelfareVisit { get; set; }
-
-        [DisplayName("Date of the last FP visit")]
-        public DateTime? DateOfTheLastFPVisit { get; set; }
-
-        [DisplayName("Date of the last SIS visit")]
-        public DateTime? DateOfTheLastSISVisit { get; set; }
-        public DateTime? NextOfstedVisit { get; set; }
-        public DateTime? NextGeneralActionRequired { get; set; }
-
-        [DisplayName("Next action required by WEL")]
-        public DateTime? NextActionRequiredByWEL { get; set; }
-
-        [DisplayName("Next action required by FP")]
-        public DateTime? NextActionRequiredByFP { get; set; }
-        
-        public int? IndependentSchoolTypeId { get; set; } 
-        public string CharityOrganisation { get; set; }
-        public int? CharityRegistrationNumber { get; set; }
-        public int? TotalNumberOfFullTimePupils { get; set; }
-        public int? TotalNumberOfPartTimePupils { get; set; }
-        public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
-
-        [Obsolete("Use SENStat/NoStat")]
-        [DisplayName("Total number of special pupils under a SEN statement/ECHP")]
-        public int? NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
-
-        [Obsolete("Use SENStat/NoStat")]
-        [DisplayName("Number of special pupils not under a SEN statement/EHCP")]
-        public int? NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
-
-
-        public int? TotalNumberOfPupilsInPublicCare { get; set; }
-
-        [DisplayName("PT boys (aged 2 and under)")]
-        public int? PTBoysAged2AndUnder { get; set; }
-
-        [DisplayName("PT boys (aged 3)")]
-        public int? PTBoysAged3 { get; set; }
-
-        [DisplayName("PT boys (aged 4a)")]
-        public int? PTBoysAged4A { get; set; }
-
-        [DisplayName("PT boys (aged 4b)")]
-        public int? PTBoysAged4B { get; set; }
-
-        [DisplayName("PT boys (aged 4c)")]
-        public int? PTBoysAged4C { get; set; }
-
-        public int? TotalNumberOfBoysInBoardingSchools { get; set; }
-
-        [DisplayName("PT girls (aged 2 and under)")]
-        public int? PTGirlsAged2AndUnder { get; set; }
-
-        [DisplayName("PT girls (aged 3)")]
-        public int? PTGirlsAged3 { get; set; }
-
-        [DisplayName("PT girls (aged 4a)")]
-        public int? PTGirlsAged4A { get; set; }
-
-        [DisplayName("PT girls (aged 4b)")]
-        public int? PTGirlsAged4B { get; set; }
-
-        [DisplayName("PT girls (aged 4c)")]
-        public int? PTGirlsAged4C { get; set; }
-
-        public int? TotalNumberOfGirlsInBoardingSchools { get; set; }
-        public int? TotalNumberOfFullTimeStaff { get; set; }
-        public int? TotalNumberOfPartTimeStaff { get; set; }
-        public int? LowestAnnualRateForDayPupils { get; set; }
-        public int? HighestAnnualRateForDayPupils { get; set; }
-        public int? LowestAnnualRateForBoardingPupils { get; set; }
-        public int? HighestAnnualRateForBoardingPupils { get; set; }
-        //public Lookup BoardingEstablishment { get; set; } //ProvisionBoardingId
-        //public string ProprietorsName { get; set; } //ProprietorName
-        public string ProprietorsStreet { get; set; }
-        public string ProprietorsLocality { get; set; }
-        public string ProprietorsAddress3 { get; set; }
-        public string ProprietorsTown { get; set; }
-        public string ProprietorsCounty { get; set; }
-        public string ProprietorsPostcode { get; set; }
-        public string ProprietorsTelephoneNumber { get; set; }
-        public string ProprietorsFaxNumber { get; set; }
-        public string ProprietorsEmail { get; set; }
-        public string ProprietorsPreferredJobTitle { get; set; }
-        public string ChairOfProprietorsBodyName { get; set; }
-        public string ChairOfProprietorsBodyStreet { get; set; }
-        public string ChairOfProprietorsBodyLocality { get; set; }
-        public string ChairOfProprietorsBodyAddress3 { get; set; }
-        public string ChairOfProprietorsBodyTown { get; set; }
-        public string ChairOfProprietorsBodyCounty { get; set; }
-        public string ChairOfProprietorsBodyPostcode { get; set; }
-        public string ChairOfProprietorsBodyTelephoneNumber { get; set; }
-        public string ChairOfProprietorsBodyFaxNumber { get; set; }
-        public string ChairOfProprietorsBodyEmail { get; set; }
-        public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
-        public int? AccommodationChangedId { get; set; }
-
-        #endregion
-
+        [JsonProperty("iebtDetail")]
+        public IEBTModel IEBTModel { get; set; }
 
         public int? Urn { get; set; }
 
@@ -133,8 +30,6 @@ namespace Edubase.Services.Establishments.Models
         public int? EstablishmentNumber { get; set; }
 
         public string Name { get; set; }
-
-        public string NameDistilled { get; internal set; }
 
         public int? StatusId { get; set; }
 
@@ -177,7 +72,7 @@ namespace Edubase.Services.Establishments.Models
         [DisplayName("Special classes")]
         public int? ProvisionSpecialClassesId { get; set; }
 
-        [DisplayName("UKPRN")]
+        [DisplayName("UKPRN"), JsonProperty("UKPRN")]
         public int? UKPRN { get; set; }
 
         public DateTime? LastChangedDate { get; set; }
@@ -190,9 +85,10 @@ namespace Edubase.Services.Establishments.Models
 
         public string Address_CityOrTown { get; set; }
 
-        public string Address_County { get; set; }
+        public int? Address_CountyId { get; set; }
 
-        public string Address_Country { get; set; }
+        [JsonIgnore] // todo: TEXCHANGE: the api doesn't seem to recognise this
+        public int? Address_CountryId { get; set; }
 
         public string Address_Locality { get; set; }
 
@@ -238,7 +134,8 @@ namespace Edubase.Services.Establishments.Models
         
         public int? EstablishmentTypeGroupId { get; set; }
 
-        public byte? OfstedRating { get; set; }
+        //[JsonIgnore] // todo: TEXCHANGE: need to support this
+        public int? OfstedRatingId { get; set; }
 
         public DateTime? OfstedInspectionDate { get; set; }
 
@@ -248,27 +145,28 @@ namespace Edubase.Services.Establishments.Models
 
         public string ProprietorName { get; set; }
 
-        [DisplayName("Number of special pupils under a SEN statement/EHCP")]
+        [DisplayName("Number of special pupils under a SEN statement/EHCP"), JsonProperty("SENStat")]
         public int? SENStat { get; set; }
 
-        [DisplayName("Number of special pupils not under a SEN statement/EHCP")]
+        [DisplayName("Number of special pupils not under a SEN statement/EHCP"), JsonProperty("SENNoStat")]
         public int? SENNoStat { get; set; }
 
-        [DisplayName("Type of SEN provision 1")]
+        // todo: TEXCHANGE: support new combined SENIds property
+        //[DisplayName("Type of SEN provision 1")]
 
-        public int? SEN1Id { get; set; }
+        //public int? SEN1Id { get; set; }
 
-        [DisplayName("Type of SEN provision 2")]
+        //[DisplayName("Type of SEN provision 2")]
 
-        public int? SEN2Id { get; set; }
+        //public int? SEN2Id { get; set; }
 
-        [DisplayName("Type of SEN provision 3")]
+        //[DisplayName("Type of SEN provision 3")]
 
-        public int? SEN3Id { get; set; }
+        //public int? SEN3Id { get; set; }
 
-        [DisplayName("Type of SEN provision 4")]
+        //[DisplayName("Type of SEN provision 4")]
 
-        public int? SEN4Id { get; set; }
+        //public int? SEN4Id { get; set; }
 
         [DisplayName("Teenage mothers provision")]
         public int? TeenageMothersProvisionId { get; set; }
@@ -279,13 +177,13 @@ namespace Edubase.Services.Establishments.Models
         [DisplayName("Childcare facilities provision")]
         public int? ChildcareFacilitiesId { get; set; }
 
-        [DisplayName("SEN facilities")]
+        [DisplayName("SEN facilities"), JsonProperty("PRUSENId")]
         public int? PRUSENId { get; set; }
 
-        [DisplayName("Pupils with EBD")]
+        [DisplayName("Pupils with EBD"), JsonProperty("PRUEBDId")]
         public int? PRUEBDId { get; set; }
 
-        [DisplayName("Number of places")]
+        [DisplayName("Number of places"), JsonProperty("placesPRU")]
         public int? PlacesPRU { get; set; }
 
         [DisplayName("Full time provision")]
@@ -311,36 +209,45 @@ namespace Edubase.Services.Establishments.Models
         [DisplayName("Urban / Rural description")]
         public int? UrbanRuralId { get; set; }
 
-        [DisplayName("GSS LA code")]
+        [DisplayName("GSS LA code"), JsonProperty("GSSLAId")]
         public int? GSSLAId { get; set; }
 
-        [DisplayName("Census ward")]
+        [DisplayName("Census ward"), JsonProperty("casWardId")]
         public int? CASWardId { get; set; }
 
-        [DisplayName("Middle Super Output Area (MSOA)")]
+        [DisplayName("Middle Super Output Area (MSOA)"), JsonProperty("MSOAId")]
         public int? MSOAId { get; set; }
 
-        [DisplayName("Lower Super Output Area (LSOA)")]
+        [DisplayName("Lower Super Output Area (LSOA)"), JsonProperty("LSOAId")]
         public int? LSOAId { get; set; }
 
         public int? FurtherEducationTypeId { get; set; }
 
+        [JsonProperty("ccGovernanceId")]
         public int? CCGovernanceId { get; set; }
 
+        [JsonProperty("ccGovernanceDetail")]
         public string CCGovernanceDetail { get; set; }
 
+        [JsonProperty("ccOperationalHoursId")]
         public int? CCOperationalHoursId { get; set; }
 
+        [JsonProperty("ccPhaseTypeId")]
         public int? CCPhaseTypeId { get; set; }
 
+        [JsonProperty("ccGroupLeadId")]
         public int? CCGroupLeadId { get; set; }
 
+        [JsonProperty("ccDisadvantagedAreaId")]
         public int? CCDisadvantagedAreaId { get; set; }
 
+        [JsonProperty("ccDirectProvisionOfEarlyYearsId")]
         public int? CCDirectProvisionOfEarlyYearsId { get; set; }
 
+        [JsonProperty("ccDeliveryModelId")]
         public int? CCDeliveryModelId { get; set; }
 
+        [JsonProperty("ccUnder5YearsOfAgeCount")]
         public int? CCUnder5YearsOfAgeCount { get; set; }
 
         public int? SenUnitOnRoll { get; set; }
@@ -350,25 +257,27 @@ namespace Edubase.Services.Establishments.Models
         /// <summary>
         /// Local Authority Id
         /// </summary>
-        [DisplayName("RSC Region")]
+        [DisplayName("RSC Region"), JsonProperty("rscRegionId")]
         public int? RSCRegionId { get; set; }
 
+        [JsonProperty("bsoInspectorateId")]
         public int? BSOInspectorateId { get; set; }
 
+        [JsonProperty("bsoInspectorateReportUrl")]
         public string BSOInspectorateReportUrl { get; set; }
 
+        [JsonProperty("bsoDateOfLastInspectionVisit")]
         public DateTime? BSODateOfLastInspectionVisit { get; set; }
 
+        [JsonProperty("bsoDateOfNextInspectionVisit")]
         public DateTime? BSODateOfNextInspectionVisit { get; set; }
 
         public DateTime? CreatedUtc { get; set; }
 
         public DateTime? LastUpdatedUtc { get; set; }
-
-        public bool? IsDeleted { get; set; }
         
-        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Address_County, Address_PostCode);
-        public AddressDto GetAddressDto() => new AddressDto { Line1 = Address_Line1, Line2 = Address_Line2, Line3 = Address_Line3, CityOrTown = Address_CityOrTown, County = Address_County, PostCode = Address_PostCode, Country = Address_Country };
+        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Address_CountyId.ToString(), Address_PostCode);
+        public AddressDto GetAddressDto() => new AddressDto { Line1 = Address_Line1, Line2 = Address_Line2, Line3 = Address_Line3, CityOrTown = Address_CityOrTown, County = Address_CountyId.ToString(), PostCode = Address_PostCode, Country = Address_CountryId.ToString() };
         public string GetLAESTAB() => string.Concat(LocalAuthorityId, "/", EstablishmentNumber.GetValueOrDefault().ToString("D4"));
     }
 }

@@ -188,7 +188,7 @@
 
     @if (Model.DisplayPolicy.OfstedRatingDetails)
     {
-        <tr>
+        @* TODO TEXCHANGE: support the ofsted lookup <tr>
             <th scope="row">Ofsted rating:</th>
             <td>
                 @if (Model.Establishment.OfstedRating.HasValue)
@@ -210,7 +210,7 @@
                     <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report</a>
                 }
             </td>
-        </tr>
+        </tr>*@
     }
 
     @if (Model.DisplayPolicy.InspectorateId)

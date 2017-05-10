@@ -187,6 +187,7 @@
     <Compile Include="Enums\eLookupGroupType.cs" />
     <Compile Include="Enums\EnumSets.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
+    <Compile Include="Establishments\Models\IEBTModel.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />

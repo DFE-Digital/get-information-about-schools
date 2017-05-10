@@ -56,7 +56,7 @@ namespace Edubase.Web.UI.Models
 
         }
 
-        public string OfstedRatingReportUrl => (Establishment.OfstedRating.HasValue 
+        public string OfstedRatingReportUrl => (Establishment.OfstedRatingId.HasValue 
             ? new OfstedRatingUrl(Establishment.Urn).ToString() : null as string);
 
         public string GetGroupFieldLabel(GroupModel model) => _groupType2FieldLabelMappings[model.GroupTypeId.Value];

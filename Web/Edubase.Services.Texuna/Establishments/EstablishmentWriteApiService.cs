@@ -20,11 +20,11 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task SaveAsync(EstablishmentModel model, IPrincipal principal)
         {
-            throw new NotImplementedException("Awaiting the Create/Edit establishment APIs");
+            //throw new NotImplementedException("Awaiting the Create/Edit establishment APIs");
 
             if (model.Urn.HasValue)
             {
-                await _httpClient.PutAsync($"establishment/{model.Urn}", model, principal);
+                await _httpClient.PutAsync($"establishment", model, principal);
             }
             else
             {
