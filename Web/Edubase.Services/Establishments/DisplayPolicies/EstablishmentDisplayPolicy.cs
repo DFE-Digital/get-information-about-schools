@@ -1,6 +1,7 @@
 ﻿using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
+using Newtonsoft.Json;
 using System.Security.Principal;
 
 namespace Edubase.Services.Establishments.DisplayPolicies
@@ -16,45 +17,8 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         protected IPrincipal Principal { get; private set; }
         public bool IsUserLoggedIn { get; set; }
         public bool IsSchoolClosed { get; set; }
-        
-        public override bool Contact_TelephoneNumber { get; set; } = true;
-        public override bool LocalAuthorityId { get; set; } = true;
-        public override bool EducationPhaseId { get; set; } = true;
-        public override bool TypeId { get; set; } = true;
-        public override bool Urn { get; set; } = true;
-        public override bool UKPRN { get; set; } = true;
-        public override bool StatusId { get; set; } = true;
-        public override bool OpenDate { get; set; } = true;
-        public override bool ReasonEstablishmentOpenedId { get; set; } = true;
-        public override bool Name { get; set; } = true;
 
-        public EstablishmentDisplayPolicy()
-        {
-            Name = true;
-            SetLocationFields(true);
-            SetAddressFields(true);
-        }
-
-        internal bool IsMatch(EstablishmentModel establishment)
-            => establishment.TypeId.HasValue 
-            && establishment.EstablishmentTypeGroupId.HasValue 
-            && IsMatchInternal((eLookupEstablishmentType)establishment.TypeId, (eLookupEstablishmentTypeGroup)establishment.EstablishmentTypeGroupId);
-
-        internal EstablishmentDisplayPolicy Configure(IPrincipal principal, EstablishmentModel establishment)
-        {
-            Establishment = establishment;
-            Principal = principal;
-
-            IsUserLoggedIn = Principal.Identity.IsAuthenticated;
-            IsSchoolClosed = Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
-
-            ConfigureInternal();
-            return this;
-        }
-
-        protected virtual bool IsMatchInternal(eLookupEstablishmentType type, eLookupEstablishmentTypeGroup typeGroup) => false;
-        protected virtual void ConfigureInternal()
-        {
-        }
+        [JsonProperty("iebtDetail")]
+        public IEBTDetailDisplayPolicy IEBTDetail { get; set; }
     }
 }

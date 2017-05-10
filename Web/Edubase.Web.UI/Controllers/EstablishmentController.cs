@@ -92,7 +92,7 @@ namespace Edubase.Web.UI.Controllers
             var viewModel = _mapper.Map<ViewModel>(domainModel);
 
             viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel);
-            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.DisplayPolicy, User);
 
             await PopulateSelectLists(viewModel);
             return viewModel;
@@ -120,7 +120,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
             model.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel);
-            model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
+            model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, model.DisplayPolicy, User);
             await PopulateSelectLists(model);
 
             if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
@@ -236,7 +236,7 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, viewModel.Establishment);
 
             using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
-                viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, User);
+                viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, viewModel.DisplayPolicy, User);
 
             viewModel.UserCanEdit = await _establishmentReadService.CanEditAsync(viewModel.Establishment.Urn.Value, User);
 

@@ -656,13 +656,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (establishmentUrn.HasValue)
             {
                 var domainModel = (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
+                var displayPolicy = (await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel));
 
                 var vm = (IEstablishmentPageViewModel)viewModel;
                 vm.Layout = ESTAB_LAYOUT;
                 vm.Name = domainModel.Name;
                 vm.SelectedTab = "governance";
                 vm.Urn = domainModel.Urn;
-                vm.TabDisplayPolicy = new TabDisplayPolicy(domainModel, User);
+                vm.TabDisplayPolicy = new TabDisplayPolicy(domainModel, displayPolicy, User);
                 processEstablishment?.Invoke(domainModel);
             }
             else if (groupUId.HasValue)

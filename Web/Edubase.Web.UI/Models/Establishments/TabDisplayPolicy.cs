@@ -7,6 +7,7 @@ using System.Security.Principal;
 
 namespace Edubase.Web.UI.Models.Establishments
 {
+    using Services.Establishments.DisplayPolicies;
     using ET = eLookupEstablishmentType;
     using TG = eLookupEstablishmentTypeGroup;
 
@@ -19,10 +20,9 @@ namespace Edubase.Web.UI.Models.Establishments
         public bool Location { get; set; } = true;
         public bool ChangeHistory { get; set; } = true;
 
-        public TabDisplayPolicy(EstablishmentModel model, IPrincipal principal)
+        public TabDisplayPolicy(EstablishmentModel model, EstablishmentDisplayPolicy displayPolicy, IPrincipal principal)
         {
-            //IEBT = model.TypeId.OneOfThese(ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool)
-            //    && (new[] { EdubaseRoles.IEBT, EdubaseRoles.Admin }).Any(x => principal.IsInRole(x)); // TODO: TEXCHANGE
+            IEBT = displayPolicy.IEBTDetail.Any(); // TODO: TEXCHANGE
 
             Governance = model.TypeId.OneOfThese(
                     ET.Academy1619Converter, 

@@ -101,19 +101,16 @@
         </tr>
     }
 
-    @if (Model.DisplayPolicy.GroupDetails)
+    @foreach (var group in Model.Groups) // TODO: TEXCHANGE: need to get this bad-boy on the display policy.
     {
-        foreach (var group in Model.Groups)
-        {
-            <tr>
-                <th scope="row">@(Model.GetGroupFieldLabel(group)):</th>
-                <td>
-                    @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUID, area = "Groups" }, null)
-                </td>
-            </tr>
-        }
+        <tr>
+            <th scope="row">@(Model.GetGroupFieldLabel(group)):</th>
+            <td>
+                @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUID, area = "Groups" }, null)
+            </td>
+        </tr>
     }
-
+    
     @if (Model.DisplayPolicy.GenderId)
     {
         <tr>

@@ -186,6 +186,7 @@
     <Compile Include="Enums\eLookupGroupStatus.cs" />
     <Compile Include="Enums\eLookupGroupType.cs" />
     <Compile Include="Enums\EnumSets.cs" />
+    <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Models\IEBTModel.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
@@ -245,8 +246,6 @@
     <Compile Include="Domain\SearchDownloadGenerationProgressDto.cs" />
     <Compile Include="Domain\ServiceResultDto.cs" />
     <Compile Include="Establishments\DisplayPolicies\EstablishmentDisplayPolicy.cs" />
-    <Compile Include="Establishments\Downloads\EstablishmentDownloadFullFieldList.cs" />
-    <Compile Include="Establishments\Downloads\EstablishmentDownloadCoreFieldList.cs" />
     <Compile Include="Establishments\Downloads\IEstablishmentDownloadService.cs" />
     <Compile Include="Establishments\IEstablishmentWriteService.cs" />
     <Compile Include="Establishments\Models\EstablishmentFieldList.cs" />

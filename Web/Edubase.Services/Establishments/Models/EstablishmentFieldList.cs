@@ -38,12 +38,11 @@
             }
             set { SetLocationFields(value); }
         }
-
-        #region Related entities
+        
         public bool GroupDetails { get; set; }
-        public bool CCLAContactDetail { get; set; }
-        #endregion
 
+        public bool CCLAContactDetail { get; set; }
+        
         /// <summary>
         /// Alias for Group Details, but displayed in a different place under a different label
         /// </summary>

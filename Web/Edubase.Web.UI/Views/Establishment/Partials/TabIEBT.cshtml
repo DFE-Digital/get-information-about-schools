@@ -6,44 +6,43 @@
         <div class="button-row">
             @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null,new { @class = "button button-grey mobile-full-width" })
         </div>
-        
     }
     
     <div class="detail-summary">        
         <h2 class="heading-medium">Independent Education and Boarding Team</h2>
         <h2 class="heading-small">Notes</h2>
-        <div>@(Model.Establishment.Notes ?? "Not recorded")</div>
+        <div>@(Model.Establishment.IEBTModel.Notes ?? "Not recorded")</div>
 
         <dl>
             <dt>Date of the last Bridge visit:</dt>
-            <dd>@(Model.Establishment.DateOfTheLastBridgeVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.DateOfTheLastBridgeVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
             <dt>Date of last Ofsted visit:</dt>
             <dd>@(Model.Establishment.OfstedInspectionDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
             <dt>Date of last ISI visit:</dt>
-            <dd>@(Model.Establishment.DateOfTheLastISIVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.DateOfTheLastISIVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
             <dt>Date of last welfare visit:</dt>
-            <dd>@(Model.Establishment.DateOfTheLastWelfareVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.DateOfTheLastWelfareVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
             <dt>Date of last FP visit:</dt>
-            <dd>@(Model.Establishment.DateOfTheLastFPVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.DateOfTheLastFPVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
             <dt>Date of last SIS visit:</dt>
-            <dd>@(Model.Establishment.DateOfTheLastSISVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.DateOfTheLastSISVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
             <dt>Next Ofsted visit:</dt>
-            <dd>@(Model.Establishment.NextOfstedVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.NextOfstedVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
             <dt>Next general action required:</dt>
-            <dd>@(Model.Establishment.NextGeneralActionRequired?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.NextGeneralActionRequired?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
             <dt>Next action required by WEL:</dt>
-            <dd>@(Model.Establishment.NextActionRequiredByWEL?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.NextActionRequiredByWEL?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
             <dt>Next action required by FP:</dt>
-            <dd>@(Model.Establishment.NextActionRequiredByFP?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.NextActionRequiredByFP?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
 
         </dl>
@@ -56,97 +55,97 @@
             <dd>@Model.IndependentSchoolTypeName</dd>
 
             <dt>Charity organisation:</dt>
-            <dd>@(Model.Establishment.CharityOrganisation ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.CharityOrganisation ?? "Not recorded")</dd>
 
             <dt>Charity registration number:</dt>
-            <dd>@(Model.Establishment.CharityRegistrationNumber?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.CharityRegistrationNumber?.ToString() ?? "Not recorded")</dd>
 
         </dl>
 
         <dl>
             <dt>Total number of full time pupils:</dt>
-            <dd>@(Model.Establishment.TotalNumberOfFullTimePupils?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.TotalNumberOfFullTimePupils?.ToString() ?? "Not recorded")</dd>
 
             <dt>Total number of part time pupils:</dt>
-            <dd>@(Model.Establishment.TotalNumberOfPartTimePupils?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.TotalNumberOfPartTimePupils?.ToString() ?? "Not recorded")</dd>
 
             <dt>Total number of pupils of compulsory school age:</dt>
-            <dd>@(Model.Establishment.TotalNumberOfPupilsOfCompulsorySchoolAge?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.TotalNumberOfPupilsOfCompulsorySchoolAge?.ToString() ?? "Not recorded")</dd>
 
             <dt>Total number of special pupils under a SEN statement/ECHP:</dt>
-            <dd>@(Model.Establishment.NumberOfSpecialPupilsUnderASENStatementEHCP?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.NumberOfSpecialPupilsUnderASENStatementEHCP?.ToString() ?? "Not recorded")</dd>
 
             <dt>Number of special pupils not under a SEN statement/EHCP:</dt>
-            <dd>@(Model.Establishment.NumberOfSpecialPupilsNotUnderASENStatementEHCP?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.NumberOfSpecialPupilsNotUnderASENStatementEHCP?.ToString() ?? "Not recorded")</dd>
 
             <dt>Total number of pupils in public care:</dt>
-            <dd>@(Model.Establishment.TotalNumberOfPupilsInPublicCare?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.TotalNumberOfPupilsInPublicCare?.ToString() ?? "Not recorded")</dd>
 
         </dl>
 
         <dl>
             <dt>PT boys (aged 2 and under):</dt>
-            <dd>@(Model.Establishment.PTBoysAged2AndUnder?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTBoysAged2AndUnder?.ToString() ?? "Not recorded")</dd>
 
             <dt>PT boys (aged 3):</dt>
-            <dd>@(Model.Establishment.PTBoysAged3?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTBoysAged3?.ToString() ?? "Not recorded")</dd>
 
             <dt>PT boys (aged 4a):</dt>
-            <dd>@(Model.Establishment.PTBoysAged4A?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTBoysAged4A?.ToString() ?? "Not recorded")</dd>
 
             <dt>PT boys (aged 4b):</dt>
-            <dd>@(Model.Establishment.PTBoysAged4B?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTBoysAged4B?.ToString() ?? "Not recorded")</dd>
 
             <dt>PT boys (aged 4c):</dt>
-            <dd>@(Model.Establishment.PTBoysAged4C?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTBoysAged4C?.ToString() ?? "Not recorded")</dd>
 
             <dt>Total number of boys in boarding schools:</dt>
-            <dd> @(Model.Establishment.TotalNumberOfBoysInBoardingSchools?.ToString() ?? "Not recorded")</dd>
+            <dd> @(Model.Establishment.IEBTModel.TotalNumberOfBoysInBoardingSchools?.ToString() ?? "Not recorded")</dd>
         </dl>
 
         <dl>
             <dt>PT girls (aged 2 and under):</dt>
-            <dd>@(Model.Establishment.PTGirlsAged2AndUnder?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTGirlsAged2AndUnder?.ToString() ?? "Not recorded")</dd>
 
             <dt>PT girls (aged 3):</dt>
-            <dd>@(Model.Establishment.PTGirlsAged3?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTGirlsAged3?.ToString() ?? "Not recorded")</dd>
 
             <dt>PT girls (aged 4a):</dt>
-            <dd>@(Model.Establishment.PTGirlsAged4A?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTGirlsAged4A?.ToString() ?? "Not recorded")</dd>
 
             <dt>PT girls (aged 4b):</dt>
-            <dd>@(Model.Establishment.PTGirlsAged4B?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTGirlsAged4B?.ToString() ?? "Not recorded")</dd>
 
             <dt>PT girls (aged 4c):</dt>
-            <dd>@(Model.Establishment.PTGirlsAged4C?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.PTGirlsAged4C?.ToString() ?? "Not recorded")</dd>
 
             <dt>Total number of girls in boarding schools:</dt>
-            <dd>@(Model.Establishment.TotalNumberOfGirlsInBoardingSchools?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.TotalNumberOfGirlsInBoardingSchools?.ToString() ?? "Not recorded")</dd>
 
         </dl>
 
         <dl>
             <dt>Total number of full time staff:</dt>
-            <dd>@(Model.Establishment.TotalNumberOfFullTimeStaff?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.TotalNumberOfFullTimeStaff?.ToString() ?? "Not recorded")</dd>
 
             <dt>Total number of part time staff:</dt>
-            <dd>@(Model.Establishment.TotalNumberOfPartTimeStaff?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.TotalNumberOfPartTimeStaff?.ToString() ?? "Not recorded")</dd>
 
         </dl>
 
         <dl>
             <dt>Lowest annual rate for day pupils:</dt>
-            <dd>@(Model.Establishment.HighestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.HighestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
 
             <dt>Highest annual rate for day pupils:</dt>
-            <dd>@(Model.Establishment.LowestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.LowestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
 
             <dt>Lowest annual rate for boarding pupils:</dt>
-            <dd>@(Model.Establishment.HighestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.HighestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
 
             <dt>Highest annual rate for boarding pupils:</dt>
 
-            <dd>@(Model.Establishment.LowestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.LowestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
         </dl>
 
 
@@ -158,38 +157,40 @@
             <dd>@(Model.Establishment.ProprietorName ?? "Not recorded")</dd>
 
             <dt>Proprietor's address:</dt>
-            <dd>@Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.ProprietorsStreet, Model.Establishment.ProprietorsLocality, Model.Establishment.ProprietorsAddress3, Model.Establishment.ProprietorsTown, Model.Establishment.ProprietorsCounty, Model.Establishment.ProprietorsPostcode)</dd>
+            @* TODO: TEXCHANGE: support county and country lookups! *@
+            <dd>@Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.IEBTModel.ProprietorsStreet, Model.Establishment.IEBTModel.ProprietorsLocality, Model.Establishment.IEBTModel.ProprietorsAddress3, Model.Establishment.IEBTModel.ProprietorsTown, Model.Establishment.IEBTModel.ProprietorsCountyId?.ToString(), Model.Establishment.IEBTModel.ProprietorsPostcode)</dd>
 
             <dt>Proprietor's telephone:</dt>
-            <dd>@(Model.Establishment.ProprietorsTelephoneNumber ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.ProprietorsTelephoneNumber ?? "Not recorded")</dd>
 
             <dt>Proprietor's fax:</dt>
-            <dd>@(Model.Establishment.ProprietorsFaxNumber ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.ProprietorsFaxNumber ?? "Not recorded")</dd>
 
             <dt>Proprietor's email:</dt>
-            <dd>@(Model.Establishment.ProprietorsEmail ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.ProprietorsEmail ?? "Not recorded")</dd>
 
             <dt>Proprietor's preferred job title:</dt>
-            <dd>@(Model.Establishment.ProprietorsPreferredJobTitle ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.ProprietorsPreferredJobTitle ?? "Not recorded")</dd>
         </dl>
         <dl>
             <dt>Chair of proprietor's name:</dt>
-            <dd>@(Model.Establishment.ChairOfProprietorsBodyName ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.ChairOfProprietorsBodyName ?? "Not recorded")</dd>
 
+            @* TODO: TEXCHANGE: support county and country lookups! *@
             <dt>Chair of proprietor's address:</dt>
-            <dd>@Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.ChairOfProprietorsBodyStreet, Model.Establishment.ChairOfProprietorsBodyLocality, Model.Establishment.ChairOfProprietorsBodyAddress3, Model.Establishment.ChairOfProprietorsBodyTown, Model.Establishment.ChairOfProprietorsBodyCounty, Model.Establishment.ChairOfProprietorsBodyPostcode)</dd>
+            <dd>@Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.IEBTModel.ChairOfProprietorsBodyStreet, Model.Establishment.IEBTModel.ChairOfProprietorsBodyLocality, Model.Establishment.IEBTModel.ChairOfProprietorsBodyAddress3, Model.Establishment.IEBTModel.ChairOfProprietorsBodyTown, Model.Establishment.IEBTModel.ChairOfProprietorsBodyCountyId?.ToString(), Model.Establishment.IEBTModel.ChairOfProprietorsBodyPostcode)</dd>
 
             <dt>Chair of proprietor's telephone:</dt>
-            <dd>@(Model.Establishment.ChairOfProprietorsBodyTelephoneNumber ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.ChairOfProprietorsBodyTelephoneNumber ?? "Not recorded")</dd>
 
             <dt>Chair of proprietor's fax:</dt>
-            <dd>@(Model.Establishment.ChairOfProprietorsBodyFaxNumber ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.ChairOfProprietorsBodyFaxNumber ?? "Not recorded")</dd>
 
             <dt>Chair of proprietor's email:</dt>
-            <dd>@(Model.Establishment.ChairOfProprietorsBodyEmail ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.ChairOfProprietorsBodyEmail ?? "Not recorded")</dd>
 
             <dt>Chair of proprietor's preferred job title:</dt>
-            <dd>@(Model.Establishment.ChairOfProprietorsBodyPreferredJobTitle ?? "Not recorded")</dd>
+            <dd>@(Model.Establishment.IEBTModel.ChairOfProprietorsBodyPreferredJobTitle ?? "Not recorded")</dd>
         </dl>
 
     </div>
