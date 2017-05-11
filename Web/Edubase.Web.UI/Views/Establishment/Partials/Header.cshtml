@@ -35,7 +35,7 @@
             </td>
         </tr>
         @*<tr>
-            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th>
+            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th> // TODO TEXCHANGE
             <td>
                 @Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded"
             </td>
@@ -101,7 +101,7 @@
         </tr>
     }
 
-    @foreach (var group in Model.Groups) // TODO: TEXCHANGE: need to get this bad-boy on the display policy.
+    @foreach (var group in Model.Groups) 
     {
         <tr>
             <th scope="row">@(Model.GetGroupFieldLabel(group)):</th>
@@ -183,7 +183,7 @@
         <tr><th scope="row">Telephone:</th><td>@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</td></tr>
     }
 
-    @if (Model.DisplayPolicy.OfstedRatingDetails)
+    @if (Model.DisplayPolicy.OfstedRatingId)
     {
         @* TODO TEXCHANGE: support the ofsted lookup <tr>
             <th scope="row">Ofsted rating:</th>

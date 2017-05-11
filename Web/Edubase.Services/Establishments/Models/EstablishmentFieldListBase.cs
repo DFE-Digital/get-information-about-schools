@@ -100,7 +100,7 @@
 
         public virtual bool EstablishmentTypeGroupId { get; set; }
 
-        public virtual bool OfstedRating { get; set; }
+        public virtual bool OfstedRatingId { get; set; }
 
         public virtual bool OfstedInspectionDate { get; set; }
 
