@@ -260,7 +260,7 @@
                             @Html.LabelFor(x => x.OfstedRating, "Ofsted rating")
                             @Html.TextBoxFor(x => x.OfstedRating, new { @class = "form-control", type = "number", min = "0", max = "5" })
                         </div>
-                        @Html.EditorFor(x => x.OfstedInspectionDate)
+                        @Html.EditorFor(x => x.OfstedInspectionDate, new {title = "Ofsted last inspection" })
                         <div class="form-group">
                             <label for="ofsted-report" class="form-label">Ofsted report link</label>
                             <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
@@ -352,7 +352,7 @@
                         </div>
                     }
                     
-                    @Html.EditorFor(x => x.OpenDate)
+                    @Html.EditorFor(x => x.OpenDate, new {title = "Open date" })
 
                     <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
                         <label for="reason-establishment-opened">Reason establishment opened</label>
@@ -360,7 +360,7 @@
                         @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "form-control", id = "reason-establishment-opened" })
                     </div>
 
-                    @Html.EditorFor(x => x.CloseDate)
+                    @Html.EditorFor(x => x.CloseDate, new {title = "Close date"})
 
                     <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
                         <label for="reason-establishment-closed">Reason establishment closed</label>
@@ -546,12 +546,12 @@
 
                     @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
                     {
-                        @Html.EditorFor(x => x.BSODateOfLastInspectionVisit)
+                        @Html.EditorFor(x => x.BSODateOfLastInspectionVisit, new {title = "BSO: Date of last inspection" })
                     }
 
                     @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
                     {
-                        @Html.EditorFor(x => x.BSODateOfNextInspectionVisit)
+                        @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new {title = "BSO: Next inspection visit" })
                     }
 
 

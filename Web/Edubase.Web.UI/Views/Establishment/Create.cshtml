@@ -138,7 +138,7 @@
                 @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, dc.LookupReasonEstablishmentOpened.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }), "", new { id = "reason-establishment-opened", @class = "form-control" })
             </div>
             
-            @Html.EditorFor(x => x.OpenDate)
+            @Html.EditorFor(x => x.OpenDate, new {title = "Establishment open date" })
 
         </div>
     </div>

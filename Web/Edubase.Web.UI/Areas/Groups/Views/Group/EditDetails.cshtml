@@ -65,13 +65,13 @@
                 }
                 else
                 {
-                    @Html.EditorFor(x => x.OpenDate)
+                    @Html.EditorFor(x => x.OpenDate, new { title = @Model.OpenDateLabel })
                 }
 
 
                 @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                 {
-                    @Html.EditorFor(x => x.ClosedDate)
+                    @Html.EditorFor(x => x.ClosedDate, new { title = "Closed date" })
                 }
 
 
