@@ -19,8 +19,8 @@
 
         public bool OfstedRatingDetails
         {
-            get { return OfstedInspectionDate && OfstedRating; }
-            set { OfstedInspectionDate = OfstedRating = value; }
+            get { return OfstedInspectionDate && OfstedRatingId; }
+            set { OfstedInspectionDate = OfstedRatingId = value; }
         }
 
         public bool TypeOfSENProvisionList
