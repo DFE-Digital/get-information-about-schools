@@ -3,7 +3,9 @@
     ViewBag.Title = "Edubase: Manage academy openings";
     ViewBag.bodyClasses = "manage-academy-openings";
 }
-
+<div class="breadcrumbs">
+    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null) > @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+</div>
 
 <div id="academy-opening-app" v-cloak>
     <div class="grid-row" v-show="!editRecord">

@@ -103,6 +103,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     .Cast<int>());
             }
 
+            model.SearchQueryString = Request.QueryString.ToString();
             model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
             model.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
 

@@ -33,6 +33,23 @@ a.home-link
     }
 }
 
+div.breadcrumbs {
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    color: black;
+
+    @include media(mobile) {
+        margin-bottom: 2px;
+    }
+
+    a {
+        color: black;
+        &:hover{color: black;}
+    }
+}
+
 .pre-content
 {
     padding-bottom:20px;

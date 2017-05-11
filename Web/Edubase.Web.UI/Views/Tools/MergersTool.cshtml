@@ -2,6 +2,9 @@
     ViewBag.Title = "Edubase: Amalgamations and mergers tool";
     ViewBag.bodyClasses = "amalgamate";
 }
+<div class="breadcrumbs">
+    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null) > @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+</div>
 
 <div id="mergers-app" v-cloak>
     <div class="grid-row">

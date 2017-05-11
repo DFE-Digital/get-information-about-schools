@@ -12,51 +12,53 @@
 
 <div class="grid-row">
     <div class="column-full">
-        @Html.ActionLink("Go back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+        <div class="breadcrumbs">
+            @Html.ActionLink("« Back to find an establishment", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+        </div>
 
-        <h1 class="heading-xlarge">Search results</h1>
-        <p>
-            <!--  TODO: Jon; you can upload the span.heading-xlarge item with the correct count by using the x-count item in the http response of the partial request -->
-            @if (Model.SearchType == eSearchType.Text)
+            <h1 class="heading-xlarge">Search results</h1>
+            <p>
+                <!-- TODO: Jon; you can upload the span.heading-xlarge item with the correct count by using the x-count item in the http response of the partial request -->
+                @if (Model.SearchType == eSearchType.Text)
             {
                 if (Model.TextSearchType == M.eTextSearchType.EstablishmentName
                     || Model.TextSearchType == M.eTextSearchType.Unknown)
                 {
-                    <text>
-                        We found <span class="heading-xlarge count">@Model.Count</span> establishments
-                        @if (!Model.TextSearchModel.Text.IsEmpty())
-                        {
-                            <text>for the search term "@Model.TextSearchModel.Text".</text>
-                        }
+                        <text>
+                            We found <span class="heading-xlarge count">@Model.Count</span> establishments
+                            @if (!Model.TextSearchModel.Text.IsEmpty())
+                            {
+                                <text>for the search term "@Model.TextSearchModel.Text".</text>
+                            }
 
-                    </text>
+                        </text>
+                    }
+                    else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
+                    {
+                        <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
+                    }
+                    else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
+                    {
+                        <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
+                    }
+                    else if (Model.TextSearchType == M.eTextSearchType.URN)
+                    {
+                        <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
+                    }
                 }
-                else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
+                else if (Model.SearchType == eSearchType.ByLocalAuthority)
                 {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected local authorities</text>
                 }
-                else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
+                else if (Model.SearchType == eSearchType.Location)
                 {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected location</text>
                 }
-                else if (Model.TextSearchType == M.eTextSearchType.URN)
-                {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
-                }
-            }
-            else if (Model.SearchType == eSearchType.ByLocalAuthority)
-            {
-                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected local authorities</text>
-            }
-            else if (Model.SearchType == eSearchType.Location)
-            {
-                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected location</text>
-            }
 
-            <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
-            <a class="download-link" style="display:@(Html.Conditional(Model.Count == 0, "none"));" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new { area = "Establishments" })?@Url.CurrentQueryString()">Download these search results</a>
-        </p>
-    </div>
+                <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
+                <a class="download-link" style="display: @(Html.Conditional(Model.Count == 0, "none"));" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
+            </p>
+        </div>
 </div>
 
 

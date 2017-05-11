@@ -4,6 +4,7 @@ using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using static Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
 using MoreLinq;
 using System.Linq;
@@ -90,6 +91,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public int PageSize { get; set; } = 50;
         public int StartIndex { get; set; }
         public bool HasError => !Error.IsNullOrEmpty();
+
+        public string SearchQueryString { get; set; }
 
         public int[] GetRadiusOptions() => _radiuses;
 

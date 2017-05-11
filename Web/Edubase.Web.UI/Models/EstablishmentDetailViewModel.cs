@@ -51,6 +51,10 @@ namespace Edubase.Web.UI.Models
         
         public bool IsClosed => Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
 
+        public string SearchQueryString { get; set; }
+
+        public string SearchSource { get; set; }
+
         public EstablishmentDetailViewModel()
         {
 

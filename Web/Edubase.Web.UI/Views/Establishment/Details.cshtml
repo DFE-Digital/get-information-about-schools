@@ -3,12 +3,31 @@
 @using Edubase.Common
 @using Edubase.Services.Enums
 @using Edubase.Web.Resources
+@using Microsoft.Ajax.Utilities
 @model EstablishmentDetailViewModel
 @{
     ViewBag.Title = Model.Establishment.Name;
     ViewBag.PageClass = "school-details";
     ViewBag.HideLogo = true;
 }
+
+<div class="breadcrumbs">
+    @if (Model.SearchQueryString.IsNullOrWhiteSpace())
+    {
+        @Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+    }
+    else
+    {
+        if (Model.SearchSource == "Governors")
+        {
+            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+        }
+        else
+        {
+            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+        }
+    }
+</div>
 
 <h1 class="heading-large">@Model.Establishment.Name</h1>
 <p class="urn">URN: @Model.Establishment.Urn</p>
@@ -21,7 +40,7 @@
                 {
                     <li><a href="#school-dashboard" class="horizontal-tab">Details</a></li>
                 }
-                
+
                 @if (Model.TabDisplayPolicy.IEBT)
                 {
                     <li><a href="#school-iebt" class="horizontal-tab">IEBT</a></li>
@@ -41,7 +60,7 @@
                 {
                     <li><a href="#school-location" class="horizontal-tab">Location</a></li>
                 }
-                
+
                 @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
                 {
                     <li><a href="#school-change-history" class="horizontal-tab">Changes</a></li>
@@ -49,7 +68,7 @@
             </ul>
         </div>
         <div class="tab-content-wrapper horizontal-tabs-content">
-            @{ 
+            @{
                 if (Model.TabDisplayPolicy.Details)
                 {
                     Html.RenderPartial(@"Partials\TabDetails");

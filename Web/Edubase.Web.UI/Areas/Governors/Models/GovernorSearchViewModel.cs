@@ -37,6 +37,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public char? SortBy { get; set; }
 
+        public string SearchQueryString { get; set; }
+
         public eSortBy SortOption => SortBy == 'z' ? eSortBy.NameAlphabeticalZA : eSortBy.NameAlphabeticalAZ;
 
         [BindAlias(BIND_ALIAS_ROLE_ID)]
