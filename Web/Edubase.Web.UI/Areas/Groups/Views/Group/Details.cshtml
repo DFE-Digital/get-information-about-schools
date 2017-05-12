@@ -259,25 +259,25 @@
 
                             <table class="approval-items">
                                 <thead>
-                                    <tr>
-                                        <th>Updated field</th>
-                                        <th>Old value</th>
-                                        <th>New value</th>
-                                        <th>Date changed</th>
-                                        <th>Date requested</th>
-                                        <th>Suggested from</th>
-                                        <th>Approved by</th>
-                                        <th>Reason</th>
-                                    </tr>
+                                <tr>
+                                    <th>Date changed</th>
+                                    <th>Updated field</th>
+                                    <th>Old value</th>
+                                    <th>New value</th>
+                                    <th>Date requested</th>
+                                    <th>Suggested from</th>
+                                    <th>Approved by</th>
+                                    <th>Reason</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model.ChangeHistory)
                                     {
                                         <tr>
+                                            <td aria-label="Date changed">@item.EffectiveDateUtc</td>
                                             <td aria-label="updated field">@item.Name</td>
                                             <td aria-label="Old value">@item.OldValue</td>
                                             <td aria-label="New value">@item.NewValue</td>
-                                            <td aria-label="Date changed">@item.EffectiveDateUtc</td>
                                             <td aria-label="Date requested">@item.RequestedDateUtc</td>
                                             <td aria-label="Suggested from">@item.OriginatorUserName</td>
                                             <td aria-label="Approved by">@(item.ApproverUserName ?? "--")</td>
