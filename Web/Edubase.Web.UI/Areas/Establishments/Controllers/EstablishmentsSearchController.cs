@@ -24,6 +24,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     public class EstablishmentsSearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
+
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
         private readonly ICachedLookupService _lookupService;
 
@@ -160,15 +161,59 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return retVal.Set(payload);
         }
 
+        //
+        private ActionResult NoResults(EstablishmentSearchViewModel model)
+        {
+            var routeDictionary = new RouteValueDictionary
+            {
+                { "action", "Index" },
+                { "controller", "Search" },
+                { "area", string.Empty },
+                { "SearchType", model.SearchType }
+            };
+
+            switch (model.SearchType)
+            {
+                    case eSearchType.Text:
+                        routeDictionary.Add("TextSearchModel.Text", model.TextSearchModel.Text);
+                        routeDictionary.Add("NoResultsForName", true);
+                        break;
+                    case eSearchType.Location:
+                        routeDictionary.Add("LocationSearchModel.Text", model.LocationSearchModel.Text);
+                        routeDictionary.Add("NoResultsForLocation", true);
+                        break;
+                    case eSearchType.ByLocalAuthority:
+                        foreach (var id in model.SelectedLocalAuthorityIds)
+                        {
+                            routeDictionary.Add("SelectedLocalAuthorityIds", id);
+                        }
+                        routeDictionary.Add("NoResultsForLA", true);
+                        break;
+
+            }
+
+            return new RedirectToRouteResult(null, routeDictionary);
+        }
+
         private async Task<ActionResult> ProcessEstablishmentsSearch(EstablishmentSearchViewModel model, EstablishmentSearchPayload payload)
         {
-            if (!model.HasError)
+            if (model.HasError)
+            {
+                return NoResults(model);
+            }
+            else
             {
                 using (MiniProfiler.Current.Step("Invoking AZS search"))
                 {
                     try
                     {
                         var results = await _establishmentReadService.SearchAsync(payload, User);
+
+                        if (results.Count == 0)
+                        {
+                            return NoResults(model);
+                        }
+
                         if (payload.Skip == 0) model.Count = results.Count;
                         model.Results = results.Items;
                     }

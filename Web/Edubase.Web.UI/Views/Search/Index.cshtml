@@ -67,21 +67,141 @@
 
 @section ViewScripts{
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw"></script>
     <script type="text/javascript">
         var jScriptVersion;
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
-        /*@@cc_on
-        // only IE <= 10 enter this block
-            jScriptVersion = @@_jscript_version;
-        @@*/
-        if (typeof jScriptVersion === 'undefined' || jScriptVersion >= 9) {
-            window.setTimeout(function() {
-                var s = document.createElement("script");
-                s.src = "https://maps.googleapis.com/maps/api/js?libraries=places&callback=DfE.Views.GoogleLocationViewModel.Load&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw";
-                document.getElementsByTagName('body')[0].appendChild(s);
-            },0);
+        
+        (function ($) {
+            var defaults = {
+                suggestionTemplate: function (suggestion) {
+                    return '<div><a href="#">' + suggestion + '</a></div>';
+                },
+                logoUrl: 'https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3.png',
+                locationInput: 'LocationSearchModel_AutoSuggestValue',
+                minChars: 2
+            };
 
-        }
+            function Gplaces(el, options) {
+                this.el = el;
+                this.opts = $.extend({}, defaults, options);
+                this.init();
+            }
+
+            var autocompleteService = new google.maps.places.AutocompleteService();
+            var placesService = new google.maps.places.PlacesService($('<div />')[0]);
+            var predictionsOld;
+
+            Gplaces.prototype = {
+                init: function () {
+                    var $el = $(this.el),
+                        opts = this.opts,
+                        self = this;
+
+
+                    $el.typeahead({
+                            hint: false,
+                            highlight: true,
+                            highlightAliases: [
+                                ["st. ", "st ", "saint "]
+                            ],
+                            minLength: opts.minChars,
+                            classNames: {
+                                menu: 'tt-menu',
+                                highlight: 'suggestion-highlight'
+                            },
+                            ariaOwnsId: "arialist_" + DfE.Util.randomNumber()
+                        },
+                        {
+                            limit: 10,
+                            source: this.places,
+                            templates: {
+                                suggestion: opts.suggestionTemplate,
+                                footer: '<div class="places-footer"><img src="' + opts.logoUrl + '"></div>'
+                            }
+                        });
+
+                    $el.on('typeahead:selected', function (e, address) {
+                        self.itemSelect(e, address);
+                    });
+
+                    $el.on('typeahead:render', function (e) {
+                        $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
+                    });
+
+                    $el.on('keydown', function (e) {
+                        var $field = $(this);
+                        if (e.which === 13) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                
+                            if ($(this).nextAll('.tt-menu').find('.tt-suggestion').length > 0) {
+                                $(this).nextAll('.tt-menu').find('.tt-cursor').click();                       
+
+                            } else {
+                                $field.parents('form').find('.search-button').click();
+                            }
+                        }
+                    });
+                },
+                places: function (q, cb, fc) {
+                    var c = new Array();
+
+                    autocompleteService.getPlacePredictions(
+                        { input: q, types: ['geocode'], componentRestrictions: { country: 'GB' } },
+                        function (predictions, status) {
+                            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                                predictionsOld = predictions;
+                            }
+                            if (!predictions) {
+                                $(window).trigger({
+                                    type: 'noLocationMatch',
+                                    q: q
+                                });
+                                return;
+                            } else {
+                                $('#searchby-location-ref').find('.warning-message').remove();
+                                $.map(predictions,
+                                function (prediction) {
+                                    c.push(prediction.description);
+                                });
+                                fc(c);
+                            }
+                            
+                        });
+                },
+                itemSelect: function (e, address) {
+                    var self = this;
+                    var ref = $.grep(predictionsOld,
+                        function (prediction) {
+                            return prediction.description === address;
+                        })[0].reference;
+
+                    placesService.getDetails({ reference: ref },
+                        function (result, status) {
+                            self.detailCallback(result, status);
+                        });
+                },
+                detailCallback: function (result, status) {
+                    document.getElementById(this.opts.locationInput).value = result.geometry.location.lat() +
+                        ',' +
+                        result.geometry.location.lng();
+
+                }
+
+            };
+
+            $.fn.gPlaces = function (options) {
+                return this.each(function () {
+                    if (!$.data(this, 'gplaces')) {
+                        $.data(this, 'gplaces', new Gplaces(this, options));
+                    }
+
+                });
+            }
+        }($));
+
+        $('#LocationSearchModel_Text').gPlaces();
     </script>
    
 }
