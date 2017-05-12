@@ -24,10 +24,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     public class EstablishmentsSearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
-<<<<<<< HEAD
-=======
-        private readonly IGroupReadService _groupReadService;
->>>>>>> backend work for 8263
+//<<<<<<< HEAD
+//=======
+//        private readonly IGroupReadService _groupReadService;
+//>>>>>>> backend work for 8263
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
         private readonly ICachedLookupService _lookupService;
 
@@ -164,7 +164,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return retVal.Set(payload);
         }
 
-        //private async Task<ActionResult> ProcessEstablishmentsSearch(EstablishmentSearchViewModel model, EstablishmentSearchPayload payload)
+        //
         private ActionResult NoResults(EstablishmentSearchViewModel model)
         {
             var routeDictionary = new RouteValueDictionary
@@ -198,7 +198,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return new RedirectToRouteResult(null, routeDictionary);
         }
 
-        private async Task<ActionResult> ProcessEstablishmentsSearch(ViewModel model, EstablishmentSearchPayload payload)
+        private async Task<ActionResult> ProcessEstablishmentsSearch(EstablishmentSearchViewModel model, EstablishmentSearchPayload payload)
         {
             if (model.HasError)
             {
