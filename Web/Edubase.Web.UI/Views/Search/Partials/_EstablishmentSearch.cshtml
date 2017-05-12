@@ -22,10 +22,12 @@
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-name-ref">
-                        <div name="name-ref-not-found" class="panel-warning" style="@(Model.NoResultsForName ? "" : "display:none")">
-                            <div class="icon-important panel-icon"></div>
-                            <div class="panel-text">We couldn't find any establishments matching your search criteria</div>
-                        </div>
+                        @if (Model.NoResultsForName)
+                        {
+                            <div class="warning-message">
+                                <p>We couldn't find any establishments matching your search criteria</p>
+                            </div>
+                        }                        
                         <span class="search-hint">
                             Name, URN, LAESTAB or UKPRN
                             <a href="#name-reference-help" class="icon-help">
@@ -33,7 +35,7 @@
                             </a>
                         </span>
                         <div class="form-group">
-                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggest?text="})
+                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text="})
                         </div>
                         <div class="form-group">
                             <span class="checkbox-wrap">
@@ -44,7 +46,7 @@
                         </div>
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                         <div class="form-group">
-                            <button type="submit" class="button mobile-full-width search-button">Search</button>
+                            <button type="submit" class="button mobile-full-width search-button" id="name-search-submit">Search</button>
                             @*<button type="submit" class="button mobile-full-width search-button" name="searchtype" value="@eSearchType.Text">Search</button>*@
                         </div>
 
@@ -56,7 +58,7 @@
         </li>
 
         <li class="search-type-wrapper">
-            @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+            @using (Html.BeginForm("Index", "Search", FormMethod.Get, new { id = "location-search-form" }))
             {
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by location</legend>
@@ -68,11 +70,13 @@
                             Location
                         </label>
                     </span>
-                    <div class="expanding-search-field" id="searchby-location-ref">
-                        <div name="location-not-found" class="panel-warning" style="@(Model.NoResultsForLocation ? "" : "display:none")">
-                            <div class="icon-important panel-icon"></div>
-                            <div class="panel-text">We couldn't find any locations matching your search criteria</div>
-                        </div>
+                    <div class="expanding-search-field" id="searchby-location-ref">                        
+                        @if (Model.NoResultsForLocation)
+                        {
+                            <div class="warning-message">
+                                <p>We couldn't find any locations matching your search criteria</p>
+                            </div>
+                        }                        
                         <span class="search-hint">Postcode, town or city</span>
                         <div class="form-group">
                             @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "form-control location-search", autocomplete = "off"})
@@ -88,7 +92,7 @@
                         </div>
                         <div class="form-group">
                             @*<button type="submit" class="button mobile-full-width search-button" name="searchtype" value="@eSearchType.Location">Search</button>*@
-                            <button type="submit" class="button mobile-full-width search-button">Search</button>
+                            <button type="submit" class="button mobile-full-width search-button" id="location-search-submit">Search</button>
                         </div>
                     </div>
 
@@ -111,10 +115,13 @@
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-la-ref">
-                        <div name="la-not-found" class="panel-warning" style="@(Model.NoResultsForLA ? "" : "display:none")">
-                            <div class="icon-important panel-icon"></div>
-                            <div class="panel-text">We couldn't find any local authorities matching your search criteria</div>
-                        </div>
+                        @if (Model.NoResultsForLA)
+                        {
+                            <div class="warning-message">
+                                <p class="panel-text">We couldn't find any local authorities matching your search criteria</p>
+                            </div>
+                        }
+                        
                         <span class="search-hint">Enter one or more local authorities</span>
                         <div class="selected-las form-group">
                             <div id="la-id-target">
@@ -144,9 +151,9 @@
                         </div>
 
 
-                        @Html.HiddenFieldsFromQueryString(new[] { "NoResultsForName", "NoResultsForLocation", "NoResultsForLA" })
+                        @Html.HiddenFieldsFromQueryString(new[] {"NoResultsForName", "NoResultsForLocation", "NoResultsForLA"})
                         <div class="form-group">
-                            <button type="submit" class="button mobile-full-width button-below search-button">Search</button>
+                            <button type="submit" class="button mobile-full-width button-below search-button" id="la-search-submit">Search</button>
                             @*<button type="submit" class="button mobile-full-width button-below search-button" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>*@
                         </div>
                     </div>

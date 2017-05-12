@@ -117,6 +117,8 @@ $ie-version: 9;
 // clearing text fields
 @import 'elements/forms/clear-fields';
 
+
+@import "elements/autosuggest";
 @import "elements/tooltips";
 @import "elements/modal";
 @import "elements/forms/fileupload";

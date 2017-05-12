@@ -46,11 +46,6 @@ namespace Edubase.Web.UI.Controllers
                         viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
                 }
 
-                if(LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
-                {
-                    return await ProcessLocationDisambiguation(viewModel);
-                }
-
 
                 if (viewModel.SearchType.HasValue)
                 {
@@ -69,6 +64,11 @@ namespace Edubase.Web.UI.Controllers
                                 : $"{url}?{Request.QueryString}";
 
                             return Redirect(url);
+                        }
+
+                        if (LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
+                        {
+                            return await ProcessLocationDisambiguation(viewModel);
                         }
 
                         if (viewModel.SearchType == eSearchType.Group)
