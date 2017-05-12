@@ -24,10 +24,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     public class EstablishmentsSearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
-//<<<<<<< HEAD
-//=======
-//        private readonly IGroupReadService _groupReadService;
-//>>>>>>> backend work for 8263
+
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
         private readonly ICachedLookupService _lookupService;
 
