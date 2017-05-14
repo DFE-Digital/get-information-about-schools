@@ -10,9 +10,8 @@ namespace Edubase.Services.Governors
 {
     public interface IGovernorsWriteService
     {
-        Task<int> SaveAsync(GovernorModelBase model, IPrincipal principal);
+        Task<int> SaveAsync(GovernorModel model, IPrincipal principal);
         Task DeleteAsync(int id, IPrincipal principal);
-        Task AddUpdateEstablishmentToSharedGovernor(int governorId, int establishmentUrn, DateTime appointmentStartDate, DateTime appointmentEndDate);
-        Task DeleteSharedGovernorEstablishment(int governorId, int establishmentUrn);
+        Task UpdateDatesAsync(int governorId, DateTime appointmentStartDate, DateTime appointmentEndDate, IPrincipal principal);
     }
 }

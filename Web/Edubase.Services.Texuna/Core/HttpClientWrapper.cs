@@ -5,11 +5,14 @@
     using Newtonsoft.Json.Serialization;
     using StackExchange.Profiling;
     using System;
+    using System.Configuration;
     using System.Net.Http;
     using System.Net.Http.Formatting;
+    using System.Net.Http.Headers;
     using System.Security.Principal;
     using System.Threading.Tasks;
     using Texuna;
+    using Texuna.Core;
     using Texuna.Serialization;
 
     public class HttpClientWrapper
@@ -18,11 +21,14 @@
         private readonly JsonMediaTypeFormatter _formatter = new JsonMediaTypeFormatter();
         private const string HEADER_SA_USER_ID = "sa_user_id";
 
+        private string ApiUsername => ConfigurationManager.AppSettings["api:Username"];
+        private string ApiPassword => ConfigurationManager.AppSettings["api:Password"];
+
         public HttpClientWrapper(HttpClient httpClient)
         {
             _httpClient = httpClient;
             _httpClient.Timeout = TimeSpan.FromSeconds(20);
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", "cmVzdC1hcGktdXNlcjp6ITdrVSJYOyVmI0s+I2U7"); // TODO: remove this after auth is done!
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(ApiUsername, ApiPassword).ToString()); 
             _formatter.SerializerSettings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
@@ -75,6 +81,26 @@
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
+                var result = await _httpClient.SendAsync(requestMessage);
+                Validate(result);
+            }
+        }
+
+        public async Task PatchAsync(string uri, object data, IPrincipal principal)
+        {
+            using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
+            {
+                var requestMessage = CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
+                var result = await _httpClient.SendAsync(requestMessage);
+                Validate(result);
+            }
+        }
+
+        public async Task DeleteAsync(string uri, object data, IPrincipal principal)
+        {
+            using (MiniProfiler.Current.Step($"TEXAPI: DELETE {uri}"))
+            {
+                var requestMessage = CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
                 var result = await _httpClient.SendAsync(requestMessage);
                 Validate(result);
             }

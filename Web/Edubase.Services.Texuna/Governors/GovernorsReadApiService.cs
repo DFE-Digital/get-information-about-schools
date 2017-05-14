@@ -20,32 +20,18 @@ namespace Edubase.Services.Texuna.Governors
             _httpClient = httpClient;
         }
 
-        public GovernorDisplayPolicy GetEditorDisplayPolicy(eLookupGovernorRole role, bool isGroup, IPrincipal principal)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<GovernorDisplayPolicy> GetEditorDisplayPolicyAsync(eLookupGovernorRole role, bool isGroup, IPrincipal principal)
+            => await _httpClient.GetAsync<GovernorDisplayPolicy>($"/governor/{(int)role}/edit-policy?isForGroup={isGroup.ToString().ToLower()}", principal);
 
-        public Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal) => await _httpClient.GetAsync<GovernorModel>($"governor/{gid}", principal);
 
         public async Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null) 
             => await _httpClient.GetAsync<GovernorsDetailsTexunaDto>($"governors?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}", principal);
 
-        public async Task<ApiSearchResult<SearchGovernorDocument>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal)
-        {
-            return await _httpClient.PostAsync<ApiSearchResult<SearchGovernorDocument>>("governor/search", payload, principal);
-        }
-
-        public Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<GovernorModel> GetSharedGovernorAsync(int governorId, int establishmentUrn, IPrincipal principal)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<ApiSearchResult<GovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal) 
+            => await _httpClient.PostAsync<ApiSearchResult<GovernorModel>>("governor/search", payload, principal);
+        
+        public async Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal)
+            => await _httpClient.GetAsync<GovernorModel[]>($"/governors/shared/{establishmentUrn}", principal);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Core.Search;
+using Edubase.Services.Governors.Models;
 using Edubase.Services.Governors.Search;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Models;
@@ -15,13 +16,11 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public const string BIND_ALIAS_ROLE_ID = "t";
 
         public GovernorSearchPayloadViewModel GovernorSearchModel { get; set; } = new GovernorSearchPayloadViewModel();
-        public IList<SearchGovernorDocument> Results { get; set; } = new List<SearchGovernorDocument>();
+        public IList<GovernorModel> Results { get; set; } = new List<GovernorModel>();
         public List<LookupItemViewModel> AppointingBodies { get; internal set; }
         public List<LookupItemViewModel> GovernorRoles { get; internal set; }
         public List<LookupItemViewModel> EstablishmentGroupTypes { get; internal set; }
-        public Dictionary<SearchGovernorDocument, string> EstablishmentNames { get; internal set; } = new Dictionary<SearchGovernorDocument, string>();
-        public Dictionary<SearchGovernorDocument, string> GroupNames { get; internal set; } = new Dictionary<SearchGovernorDocument, string>();
-
+        
 
         public long Count { get; set; }
 

@@ -122,13 +122,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var row = grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
                                                    .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
                                                    .AddCell(governor.Id, displayPolicy.Id)
-                                                   .AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId)
+                                                   //.AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId) // todo: texchange: use lookup to get text label
                                                    .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
                                                    .AddCell(endDate?.ToString("dd/MM/yyyy"), includeEndDate)
                                                    .AddCell(governor.PostCode, displayPolicy.PostCode)
                                                    .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
                                                    .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
-                                                   .AddCell(governor.Nationality, displayPolicy.Nationality)
+                                                   //.AddCell(governor.Nationality, displayPolicy.Nationality) // todo: texchange: use lookup to get text label
                                                    .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
                                                    .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
                 }

@@ -175,6 +175,7 @@
     <Compile Include="BlobService.cs" />
     <Compile Include="Domain\AddressDto.cs" />
     <Compile Include="Domain\ApiSearchResult.cs" />
+    <Compile Include="Domain\NumericResultDto.cs" />
     <Compile Include="Downloads\IDownloadsService.cs" />
     <Compile Include="Downloads\Models\FileDownload.cs" />
     <Compile Include="Enums\eGovernanceMode.cs" />
@@ -189,11 +190,11 @@
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Models\IEBTModel.cs" />
+    <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorAppointment.cs" />
-    <Compile Include="Governors\Models\GovernorModelBase.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
     <Compile Include="Core\FileDownloadFactoryService.cs" />
     <Compile Include="Core\IFileDownloadFactoryService.cs" />
@@ -206,7 +207,6 @@
     <Compile Include="Governors\IGovernorsReadService.cs" />
     <Compile Include="Governors\Models\GovernorModel.cs" />
     <Compile Include="Governors\Search\GovernorSearchPayload.cs" />
-    <Compile Include="Governors\Search\SearchGovernorDocument.cs" />
     <Compile Include="Groups\Downloads\IGroupDownloadService.cs" />
     <Compile Include="Groups\Models\EstablishmentGroupModel.cs" />
     <Compile Include="Groups\Models\SaveGroupDto.cs" />
