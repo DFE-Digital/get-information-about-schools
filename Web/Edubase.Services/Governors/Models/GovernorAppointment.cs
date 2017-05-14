@@ -2,6 +2,9 @@
 
 namespace Edubase.Services.Governors.Models
 {
+    /// <summary>
+    /// TODO: TEXCHANGE; what is this.
+    /// </summary>
     public class GovernorAppointment
     {
         public DateTime? AppointmentStartDate { get; set; }

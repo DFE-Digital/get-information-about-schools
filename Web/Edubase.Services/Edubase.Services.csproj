@@ -206,6 +206,7 @@
     <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
     <Compile Include="Governors\IGovernorsReadService.cs" />
     <Compile Include="Governors\Models\GovernorModel.cs" />
+    <Compile Include="Governors\Models\SearchGovernorModel.cs" />
     <Compile Include="Governors\Search\GovernorSearchPayload.cs" />
     <Compile Include="Groups\Downloads\IGroupDownloadService.cs" />
     <Compile Include="Groups\Models\EstablishmentGroupModel.cs" />

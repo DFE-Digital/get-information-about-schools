@@ -52,10 +52,6 @@ namespace Edubase.Services.Governors.Models
         public string PostCode { get; set; }
 
         public int? GroupUID { get; set; }
-
-        //public DateTime CreatedUtc { get; set; }
-
-        //public DateTime LastUpdatedUtc { get; set; }
         
         public string GetFullName() => StringUtil.ConcatNonEmpties(" ", Person_FirstName, Person_MiddleName, Person_LastName);
 
@@ -66,6 +62,9 @@ namespace Edubase.Services.Governors.Models
         [JsonIgnore]
         public bool IsNewEntity => !Id.HasValue;
         
+        /// <summary>
+        /// TODO: TEXCHANGE; what is this?
+        /// </summary>
         public IEnumerable<GovernorAppointment> Appointments { get; set; }
     }
 }

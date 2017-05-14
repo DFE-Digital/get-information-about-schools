@@ -16,7 +16,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public const string BIND_ALIAS_ROLE_ID = "t";
 
         public GovernorSearchPayloadViewModel GovernorSearchModel { get; set; } = new GovernorSearchPayloadViewModel();
-        public IList<GovernorModel> Results { get; set; } = new List<GovernorModel>();
+        public IList<SearchGovernorModel> Results { get; set; } = new List<SearchGovernorModel>();
         public List<LookupItemViewModel> AppointingBodies { get; internal set; }
         public List<LookupItemViewModel> GovernorRoles { get; internal set; }
         public List<LookupItemViewModel> EstablishmentGroupTypes { get; internal set; }
