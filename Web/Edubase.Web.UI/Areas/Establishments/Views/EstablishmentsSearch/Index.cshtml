@@ -1,6 +1,7 @@
 ﻿@using Edubase.Web.UI.Models.Search
 @using Edubase.Web.UI.Helpers
 @using Edubase.Common
+@using Edubase.Services.Enums
 @using M = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
 @using P = Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
 @model M
@@ -243,7 +244,6 @@
     </div>
 }
 
-
 @helper SortBySelector(string label)
 {
     <div class="govuk-option-select js-collapsible"
@@ -255,17 +255,16 @@
         <select class="form-control trigger-result-update" name="@M.BIND_ALIAS_SORT_BY">
             @if (Model.SearchType == eSearchType.Location)
             {
-                <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.Distance, "selected")>distance</option>
+                <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>distance</option>
             }
-            <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
-            <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
+            <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
+            <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
         </select>
     </div>
 }
 
 @helper RadiusSelector(string label)
-{
-    
+{   
     <div class="govuk-option-select js-collapsible"
             id="option-select-@label.ToLower().Replace(" ", "-")">
         <div class="container-head js-container-head">

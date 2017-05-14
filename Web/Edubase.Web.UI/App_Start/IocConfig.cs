@@ -5,7 +5,6 @@ using Edubase.Common;
 using Edubase.Common.Cache;
 using Edubase.Data;
 using Edubase.Services;
-using Edubase.Services.Core;
 using Edubase.Services.Downloads;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
@@ -106,13 +105,11 @@ namespace Edubase.Web.UI
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
             builder.RegisterType<EstablishmentWriteApiService>().As<IEstablishmentWriteService>();
-            builder.RegisterType<FileDownloadFactoryApiService>().As<IFileDownloadFactoryService>();
             builder.RegisterType<GovernorsWriteApiService>().As<IGovernorsWriteService>();
             builder.RegisterType<SecurityApiService>().As<ISecurityService>();
             builder.RegisterType<GroupsWriteApiService>().As<IGroupsWriteService>();
             builder.RegisterType<DownloadsApiService>().As<IDownloadsService>();
-
-
+            
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();
             builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
         }

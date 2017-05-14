@@ -19,7 +19,7 @@
             <ul>
                 <li class="download-list-item">
                     <span class="icon-link-copy">
-                        <a href="@Model.Progress.FileLocation" target="_blank" rel="nofollow">Data in @(Model.Progress.FileExtension.RemoveSubstring(".").ToUpper()) format</a>
+                        <a href="@Model.Progress.FileLocationUri" target="_blank" rel="nofollow">Data in @(Model.FileFormat.ToString()) format</a>
                         (will download as a ZIP ﬁle: open the ZIP to access its content)
                     </span>
 

@@ -9,6 +9,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using Models.Search;
     using Services.Domain;
+    using Services.Enums;
     using Services.Establishments;
     using Services.Establishments.Downloads;
     using Services.Establishments.Search;
@@ -266,34 +267,25 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             else if (!viewModel.FileFormat.HasValue) return View("Downloads/SelectFormat", viewModel);
             else
             {
-                var progressId = await InvokeEstablishmentDownloadGenerationAsync(viewModel);
-                return RedirectToAction(nameof(Download), new { id = progressId });
+                var progressId = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(new EstablishmentSearchDownloadPayload
+                {
+                    SearchPayload = GetEstablishmentSearchPayload(viewModel).Object,
+                    DataSet = viewModel.Dataset.Value,
+                    FileFormat = viewModel.FileFormat.Value
+                }, User);
+                return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value });
             }
         }
 
         [HttpGet, Route("Download")]
-        public async Task<ActionResult> Download(Guid id)
+        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat)
         {
-            var model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id);
-            var viewModel = new EstablishmentSearchDownloadGenerationProgressViewModel(model, (model.IsComplete ? 4 : 3));
-            if (model.HasErrored) throw new Exception($"Download generation failed; Further details can be obtained from the logs using exception message id: {model.ExceptionMessageId}");
+            var model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            var viewModel = new EstablishmentSearchDownloadGenerationProgressViewModel(model, (model.IsComplete ? 4 : 3)) { FileFormat = fileFormat };
+            if (model.HasErrored) throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
             else if (!model.IsComplete) return View("Downloads/PreparingFilePleaseWait", viewModel);
             else return View("Downloads/ReadyToDownload", viewModel);
         }
-
-        private async Task<Guid> InvokeEstablishmentDownloadGenerationAsync(EstablishmentSearchDownloadViewModel viewModel)
-        {
-            var payload = GetEstablishmentSearchPayload(viewModel).Object;
-            var progress = await _establishmentDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
-            var principal = User;
-
-            // todo: remove post-texuna integration.
-            HostingEnvironment.QueueBackgroundWorkItem(async ct =>
-            {
-                await _establishmentDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.Dataset.Value, viewModel.FileFormat.Value);
-            });
-            return progress.Id;
-        }
-
+        
     }
 }

@@ -73,25 +73,27 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [HttpGet, Route("Download")]
         public async Task<ActionResult> Download(Guid id)
         {
-            var model = await _governorDownloadService.GetDownloadGenerationProgressAsync(id);
-            var viewModel = new GovernorSearchDownloadGenerationProgressViewModel(model, (model.IsComplete ? 3 : 2));
-            if (model.HasErrored) throw new Exception($"Download generation failed; Further details can be obtained from the logs using exception message id: {model.ExceptionMessageId}");
-            else if (!model.IsComplete) return View("Downloads/PreparingFilePleaseWait", viewModel);
-            else return View("Downloads/ReadyToDownload", viewModel);
+            throw new NotImplementedException();
+            //var model = await _governorDownloadService.GetDownloadGenerationProgressAsync(id);
+            //var viewModel = new GovernorSearchDownloadGenerationProgressViewModel(model, (model.IsComplete ? 3 : 2));
+            //if (model.HasErrored) throw new Exception($"Download generation failed; Further details can be obtained from the logs using exception message id: {model.ExceptionMessageId}");
+            //else if (!model.IsComplete) return View("Downloads/PreparingFilePleaseWait", viewModel);
+            //else return View("Downloads/ReadyToDownload", viewModel);
         }
 
         private async Task<Guid> InvokeGovernorSearchDownloadGenerationAsync(GovernorSearchDownloadViewModel viewModel)
         {
-            var payload = CreateSearchPayload(viewModel);
-            var progress = await _governorDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
-            var principal = User;
+            throw new NotImplementedException();
+            //var payload = CreateSearchPayload(viewModel);
+            //var progress = await _governorDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
+            //var principal = User;
 
-            // todo: TEXCHANGE: remove post-texuna integration.
-            HostingEnvironment.QueueBackgroundWorkItem(async ct =>
-            {
-                await _governorDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.FileFormat.Value);
-            });
-            return progress.Id;
+            //// todo: TEXCHANGE: remove post-texuna integration.
+            //HostingEnvironment.QueueBackgroundWorkItem(async ct =>
+            //{
+            //    await _governorDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.FileFormat.Value);
+            //});
+            //return progress.Id;
         }
 
         private async Task<ActionResult> SearchGovernors(GovernorSearchViewModel model)

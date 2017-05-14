@@ -1,18 +1,13 @@
 ﻿using Edubase.Common;
-using Edubase.Services.Establishments.Search;
-using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Helpers.ModelBinding;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using static Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
-using MoreLinq;
-using System.Linq;
 using Edubase.Common.Spatial;
+using Edubase.Services.Enums;
+using Edubase.Services.Establishments.Models;
+using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
-using Edubase.Services.Core.Search;
-using Edubase.Services.Establishments.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {

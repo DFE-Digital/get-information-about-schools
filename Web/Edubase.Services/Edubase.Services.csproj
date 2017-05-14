@@ -175,9 +175,11 @@
     <Compile Include="BlobService.cs" />
     <Compile Include="Domain\AddressDto.cs" />
     <Compile Include="Domain\ApiSearchResult.cs" />
+    <Compile Include="Domain\ApiResultDto.cs" />
     <Compile Include="Domain\NumericResultDto.cs" />
     <Compile Include="Downloads\IDownloadsService.cs" />
     <Compile Include="Downloads\Models\FileDownload.cs" />
+    <Compile Include="Enums\eFileFormat.cs" />
     <Compile Include="Enums\eGovernanceMode.cs" />
     <Compile Include="Enums\eLookupEstablishmentStatus.cs" />
     <Compile Include="Enums\eLookupEstablishmentType.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Enums\EnumSets.cs" />
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
+    <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
     <Compile Include="Establishments\Models\IEBTModel.cs" />
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
@@ -196,9 +199,7 @@
     <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorAppointment.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
-    <Compile Include="Core\FileDownloadFactoryService.cs" />
-    <Compile Include="Core\IFileDownloadFactoryService.cs" />
-    <Compile Include="Core\Search\eSortBy.cs" />
+    <Compile Include="Enums\eSortBy.cs" />
     <Compile Include="Domain\CompaniesHouseNumber.cs" />
     <Compile Include="Domain\OfstedRatingUrl.cs" />
     <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
@@ -311,7 +312,9 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\Search\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

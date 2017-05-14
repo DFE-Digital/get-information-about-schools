@@ -1,6 +1,7 @@
 ﻿using System;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Models.Search;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {
@@ -10,7 +11,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public int Step { get; private set; }
         public int TotalSteps => 4;
         public string DownloadName => "establishment";
-        
+
+        public eFileFormat FileFormat { get; set; }
+
 
         public EstablishmentSearchDownloadGenerationProgressViewModel(SearchDownloadGenerationProgressDto progressDto, int step)
         {

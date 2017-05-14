@@ -1,5 +1,5 @@
 ﻿using Edubase.Common;
-using Edubase.Services.Core.Search;
+using Edubase.Services.Enums;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Models;

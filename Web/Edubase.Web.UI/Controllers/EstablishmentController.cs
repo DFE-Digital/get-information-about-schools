@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Reflection;
-using Edubase.Services.Core;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
@@ -33,7 +32,6 @@ namespace Edubase.Web.UI.Controllers
         private readonly IEstablishmentWriteService _establishmentWriteService;
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGovernorsReadService _governorsReadService;
-        private readonly IFileDownloadFactoryService _downloadService;
         private readonly NomenclatureService _nomenclatureService;
         private readonly IResourcesHelper _resourcesHelper;
 
@@ -42,7 +40,6 @@ namespace Edubase.Web.UI.Controllers
             IEstablishmentWriteService establishmentWriteService,
             ICachedLookupService cachedLookupService,
             IGovernorsReadService governorsReadService,
-            IFileDownloadFactoryService downloadService,
             NomenclatureService nomenclatureService,
             IResourcesHelper resourcesHelper)
         {
@@ -52,7 +49,6 @@ namespace Edubase.Web.UI.Controllers
             _establishmentWriteService = establishmentWriteService;
             _cachedLookupService = cachedLookupService;
             _governorsReadService = governorsReadService;
-            _downloadService = downloadService;
             _nomenclatureService = nomenclatureService;
             _resourcesHelper = resourcesHelper;
         }

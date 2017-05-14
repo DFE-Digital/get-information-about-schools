@@ -18,7 +18,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Filters;
     using Models.CreateEdit;
     using Models.Validators;
-    using Services.Core;
     using Services.Domain;
     using Services.Governors;
     using Services.Groups.Models;
@@ -44,7 +43,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IGroupsWriteService _groupWriteService;
         private readonly ICompaniesHouseService _companiesHouseService;
-        private readonly IFileDownloadFactoryService _downloadService;
         private readonly NomenclatureService _nomenclatureService;
         
         public GroupController(
@@ -55,7 +53,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             IGovernorsReadService governorsReadService,
             IGroupsWriteService groupWriteService,
             ICompaniesHouseService companiesHouseService,
-            IFileDownloadFactoryService downloadService,
             NomenclatureService nomenclatureService)
         {
             _lookup = cachedLookupService;
@@ -65,7 +62,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _governorsReadService = governorsReadService;
             _groupWriteService = groupWriteService;
             _companiesHouseService = companiesHouseService;
-            _downloadService = downloadService;
             _nomenclatureService = nomenclatureService;
         }
 

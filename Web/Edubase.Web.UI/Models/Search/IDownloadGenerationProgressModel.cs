@@ -1,9 +1,5 @@
 ﻿using Edubase.Services.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Models.Search
 {
@@ -12,6 +8,7 @@ namespace Edubase.Web.UI.Models.Search
         int Step { get; }
         int TotalSteps { get; }
         string DownloadName { get; }
+        eFileFormat FileFormat { get; }
         SearchDownloadGenerationProgressDto Progress { get; }
     }
 }

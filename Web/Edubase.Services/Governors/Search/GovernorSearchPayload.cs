@@ -1,6 +1,5 @@
-﻿using Edubase.Services.Core.Search;
+﻿using Edubase.Services.Enums;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace Edubase.Services.Governors.Search
 {

@@ -1,7 +1,7 @@
 ﻿using Edubase.Services.Domain;
+using Edubase.Services.Enums;
 using Edubase.Web.UI.Models.Search;
 using System;
-using static Edubase.Services.Core.FileDownloadFactoryService;
 
 namespace Edubase.Web.UI.Areas.Groups.Models
 {
@@ -12,5 +12,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public int Step => 2;
         public int TotalSteps => 3;
         public string DownloadName => "group";
+        eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
     }
 }
