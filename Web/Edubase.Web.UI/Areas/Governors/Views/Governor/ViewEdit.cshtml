@@ -16,7 +16,6 @@
               : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "governance", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" }))
         </div>
         <div class="column-two-thirds">
-            <h2 class="heading-medium">Governance</h2>
             @if (Model.ShowDelegationInformation)
             {
                 @ShowDelegationInformation()

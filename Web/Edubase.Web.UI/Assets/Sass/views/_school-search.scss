@@ -18,46 +18,6 @@
         float: none;
     }
 
-    .twitter-typeahead {
-        width: 50%;
-
-        @include media(mobile) {
-            width: 100%;
-        }
-
-        .form-control {
-            width: 100%;
-        }
-    }
-
-
-
-    .tt-menu {
-        background-color: white;
-        z-index: 99 !important; // accessibility requirement
-        .tt-suggestion {
-            a {
-                display: block;
-                padding: $gutter-one-quarter;
-                text-decoration: none;
-            }
-
-            a strong {
-                text-decoration: underline;
-                font-size: 16px;
-            }
-
-            &:hover, a:hover {
-                background-color: $link-hover-colour;
-                color: white;
-                cursor: pointer;
-            }
-        }
-
-        .tt-cursor {
-            background-color: #f9f9f9;
-        }
-    }
 
     .user-selected-la {
         width: 50%;
@@ -157,7 +117,7 @@
 .floating-text-field-wrap {
     position: relative;
     float: left;
-    width: 98%;
+    width: 100%;
     min-width: 200px;
    
 
@@ -165,7 +125,8 @@
         width: 100%;
     }
     .tt-menu {
-        width: 100%;
+        width: 102%;
+        left: -6px !important;
     }
 
     input {

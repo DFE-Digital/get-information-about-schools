@@ -6,14 +6,23 @@ namespace Edubase.Web.UI.Models.Search
 {
     public class SearchViewModel
     {
-        public enum Tab { Establishments, Groups, Governors }
+        public enum Tab
+        {
+            Establishments,
+            Groups,
+            Governors
+        }
 
         private List<int> selectedLocalAuthorityIds = new List<int>();
 
-        public const string BIND_ALIAS_GOONERES = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_GOONERES;
-        public const string BIND_ALIAS_STATUSIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_STATUSIDS;
-        public const string BIND_ALIAS_LAIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel.BIND_ALIAS_LAIDS;
-        
+        public const string BIND_ALIAS_GOONERES = Areas.Establishments.Models.Search.EstablishmentSearchViewModel
+            .BIND_ALIAS_GOONERES;
+
+        public const string BIND_ALIAS_STATUSIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel
+            .BIND_ALIAS_STATUSIDS;
+
+        public const string BIND_ALIAS_LAIDS = Areas.Establishments.Models.Search.EstablishmentSearchViewModel
+            .BIND_ALIAS_LAIDS;
 
         public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }
 
@@ -56,9 +65,12 @@ namespace Edubase.Web.UI.Models.Search
             {
                 this.selectedLocalAuthorityIds.RemoveAll(la => la == id);
             }
-            
+
             return this;
         }
 
+        public bool NoResultsForName { get; set; }
+        public bool NoResultsForLocation { get; set; }
+        public bool NoResultsForLA { get; set; }
     }
 }

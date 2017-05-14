@@ -37,7 +37,7 @@
             <p class="bold-xsmall">Establishment found</p>
             <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
 
-            @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate)
+            @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date"})
 
             <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
             @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
@@ -88,7 +88,7 @@
 
                     @if (Model.LinkedEstablishments.Establishments[i].EditMode)
                     {
-                        @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable)
+                        @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new {title = "Joined date"})
                         
                     }
 

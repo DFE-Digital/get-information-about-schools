@@ -91,11 +91,18 @@ namespace Edubase.Web.UI.Helpers
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>
-        public static IHtmlString HiddenFieldsFromQueryString(this HtmlHelper html)
+        public static IHtmlString HiddenFieldsFromQueryString(this HtmlHelper html, string[] keysToExclude = null)
         {
             var sb = new StringBuilder();
             var query = html.ViewContext.HttpContext.Request.QueryString;
-            foreach (var item in query.AllKeys)
+            var keys = query.AllKeys;
+
+            if (keysToExclude != null)
+            {
+                keys = keys.Where(k => !keysToExclude.Contains(k)).ToArray();
+            }
+
+            foreach (var item in keys)
             {
                 var vals = query.GetValues(item);
                 foreach (var item2 in vals)

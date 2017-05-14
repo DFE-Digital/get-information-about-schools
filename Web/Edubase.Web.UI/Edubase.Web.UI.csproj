@@ -417,6 +417,7 @@
     <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\GroupEditDelegation.cshtml" />
     <Content Include="Assets\Sass\elements\forms\_fileupload.scss" />
+    <Content Include="Assets\Sass\elements\_autosuggest.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -447,7 +448,6 @@
     <Content Include="Assets\Scripts\tabs.js" />
     <Content Include="Assets\Scripts\Views\create-edit-school.js" />
     <Content Include="Assets\Scripts\Views\establishment-details.js" />
-    <Content Include="Assets\Scripts\Views\google-location.js" />
     <Content Include="Assets\Scripts\Views\school-search-form.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -934,6 +934,7 @@
     <Content Include="Views\Search\LocationDisambiguation.cshtml" />
     <Content Include="Views\Prototype\EstablishmentLinks.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\GovernorGridViewModel.cshtml" />
+    <Content Include="Views\Prototype\location-demo.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
