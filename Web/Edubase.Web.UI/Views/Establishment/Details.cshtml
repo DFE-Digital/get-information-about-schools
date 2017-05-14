@@ -56,7 +56,7 @@
                     <li><a href="#school-links" class="horizontal-tab">Links</a></li>
                 }
 
-                @if (Model.DisplayPolicy.LocationDetails && Model.TabDisplayPolicy.Location)
+                @if (Model.TabDisplayPolicy.Location)
                 {
                     <li><a href="#school-location" class="horizontal-tab">Location</a></li>
                 }
@@ -89,7 +89,7 @@
                     Html.RenderPartial(@"Partials\TabLinks");
                 }
 
-                if (Model.DisplayPolicy.LocationDetails && Model.TabDisplayPolicy.Location)
+                if (Model.TabDisplayPolicy.Location)
                 {
                     Html.RenderPartial(@"Partials\TabLocation");
                 }

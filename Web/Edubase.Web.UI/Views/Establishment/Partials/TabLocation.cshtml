@@ -6,6 +6,7 @@
         @Html.ActionLink("Edit location details", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey block-button mobile-full-width" })
     }
     <table class="borderless">
+        @* TODO: TEXCHANGE: use display policy for these fields?? *@
         <caption class="visually-hidden">Location information for @Model.Establishment.Name</caption>
         <tr>
             <th scope="row"><abbr title="Regional Schools Commissioner">RSC</abbr> Region:</th>

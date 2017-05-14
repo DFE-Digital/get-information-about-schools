@@ -77,7 +77,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 vm.NurseryProvisions = (await _lookupService.ProvisionNurseriesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
                 vm.ParliamentaryConstituencies = (await _lookupService.ParliamentaryConstituenciesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
                 vm.ReligiousEthoses = (await _lookupService.ReligiousEthosGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.RSCRegions = (await _lookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.RSCRegions = (await _lookupService.RscRegionsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
                 vm.Section41Designations = (await _lookupService.Section41ApprovedGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
                 vm.SixthFormProvisions = (await _lookupService.ProvisionOfficialSixthFormsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
                 vm.SpecialClassesProvisions = (await _lookupService.ProvisionSpecialClassesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
