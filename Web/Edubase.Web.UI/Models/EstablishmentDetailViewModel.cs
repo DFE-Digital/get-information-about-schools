@@ -43,8 +43,9 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<EstablishmentChangeDto> ChangeHistory { get; set; }
 
         public IEnumerable<LinkedEstabViewModel> LinkedEstablishments { get; set; }
-        
-        
+
+        public GroupModel LegalParentGroup { get; set; }
+
         public bool IsUserLoggedOn { get; set; }
 
         public bool UserCanEdit { get; set; }
