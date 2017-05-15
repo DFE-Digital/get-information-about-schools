@@ -85,27 +85,27 @@ namespace Edubase.Web.UI
 
         private static X509Certificate2 GetSPCertificate()
         {
-#if (DEBUG)
+//#if (DEBUG)
             return GetSPCertificateFromAppData();
-#else
-            return GetSPCertificateFromCertStore();
-#endif
+//#else
+//            return GetSPCertificateFromCertStore();
+//#endif
         }
 
-        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/edubase3.pfx"), "testtest");
+        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/edubase3.pfx"), "testtest", X509KeyStorageFlags.MachineKeySet);
 
-        private static X509Certificate2 GetSPCertificateFromCertStore()
-        {
-            using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-            {
-                var thumbprint = ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"];
-                store.Open(OpenFlags.ReadOnly);
-                var certCollection = store.Certificates.Find(X509FindType.FindByThumbprint, ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"], false);
-                var cert = certCollection.Cast<X509Certificate2>().FirstOrDefault();
-                Guard.IsNotNull(cert, () => new Exception($"Service provider certificate could not be found by thumbprint [{thumbprint}]"));
-                return cert;
-            }
-        }
+        //private static X509Certificate2 GetSPCertificateFromCertStore()
+        //{
+        //    using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+        //    {
+        //        var thumbprint = ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"];
+        //        store.Open(OpenFlags.ReadOnly);
+        //        var certCollection = store.Certificates.Find(X509FindType.FindByThumbprint, ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"], false);
+        //        var cert = certCollection.Cast<X509Certificate2>().FirstOrDefault();
+        //        Guard.IsNotNull(cert, () => new Exception($"Service provider certificate could not be found by thumbprint [{thumbprint}]"));
+        //        return cert;
+        //    }
+        //}
 
 
     }

@@ -56,6 +56,11 @@ namespace Edubase.Web.UI.Controllers
 
                     if (ModelState.IsValid)
                     {
+                        if (viewModel.SearchType == eSearchType.Location && LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
+                        {
+                            return await ProcessLocationDisambiguation(viewModel);
+                        }
+
                         if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text))
                         {
                             var url = Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"});
@@ -66,10 +71,7 @@ namespace Edubase.Web.UI.Controllers
                             return Redirect(url);
                         }
 
-                        if (LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
-                        {
-                            return await ProcessLocationDisambiguation(viewModel);
-                        }
+                        
 
                         if (viewModel.SearchType == eSearchType.Group)
                         {
