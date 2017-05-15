@@ -18,7 +18,7 @@
         if (Model.LegalParentGroup != null)
         {
             <text>&gt;</text>
-            @Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUID}, new { @class = "home-link" })
+            @Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUID, area = "Groups" }, new { @class = "home-link" })
         }
     }
     else

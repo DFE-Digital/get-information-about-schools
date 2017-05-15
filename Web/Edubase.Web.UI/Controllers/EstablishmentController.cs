@@ -206,11 +206,7 @@ namespace Edubase.Web.UI.Controllers
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 SearchQueryString = searchQueryString,
                 SearchSource = searchSource,
-                LegalParentGroup = new GroupModel
-                {
-                    GroupUID = parent.Id,
-                    Name = parent.Name
-                }
+                LegalParentGroup = parent
             };
 
             using (MiniProfiler.Current.Step("Retrieving establishment"))
@@ -321,53 +317,31 @@ namespace Edubase.Web.UI.Controllers
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
         }
 
-        private async Task<EstablishmentGroupModel> GetLegalParent(int establishmentUrn, IPrincipal principal)
+        private async Task<GroupModel> GetLegalParent(int establishmentUrn, IPrincipal principal)
         {
-            var exceptions = new List<Exception>();
-            var parentGroups = new List<EstablishmentGroupModel>();
-
             try
             {
-                var x = await _groupReadService.GetByEstablishmentUrnAsync(establishmentUrn, principal);
+                var parentGroups = await _groupReadService.GetAllByEstablishmentUrnAsync(establishmentUrn, principal);
+                var parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.SingleacademyTrust);
+                if (parentGroup != null)
+                {
+                    return parentGroup;
+                }
+
+                parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust);
+                if (parentGroup != null)
+                {
+                    return parentGroup;
+                }
+
+                parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.Trust);
+                return parentGroup ?? parentGroups.First();
             }
             catch (Exception e)
             {
-                exceptions.Add(e);
             }
 
-            try
-            {
-                var y = await _groupReadService.GetParentGroupIdsAsync(establishmentUrn, principal);
-            }
-            catch (Exception e)
-            {
-                exceptions.Add(e);
-            }
-
-            try
-            {
-                parentGroups = await _groupReadService.GetEstablishmentGroupsAsync(establishmentUrn, principal);
-            }
-            catch (Exception e)
-            {
-                exceptions.Add(e);
-            }
-
-            var parentGroup = parentGroups.FirstOrDefault(g => string.Equals(g.TypeName, eLookupGroupType.SingleacademyTrust.ToString(), StringComparison.OrdinalIgnoreCase));
-            if (parentGroup != null)
-            {
-                return parentGroup;
-            }
-
-            parentGroup = parentGroups.FirstOrDefault(g => string.Equals(g.TypeName, eLookupGroupType.MultiacademyTrust.ToString(), StringComparison.OrdinalIgnoreCase));
-            if (parentGroup != null)
-            {
-                return parentGroup;
-            }
-
-            parentGroup = parentGroups.FirstOrDefault(g => string.Equals(g.TypeName, eLookupGroupType.Trust.ToString(), StringComparison.OrdinalIgnoreCase));
-            return parentGroup ?? parentGroups.First();
-
+            return null;
         }
 
         private async Task PopulateLookupNames(EstablishmentDetailViewModel vm)
