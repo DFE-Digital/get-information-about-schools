@@ -310,6 +310,10 @@
             if (e.which === 13) {
                 e.preventDefault();
                 e.stopPropagation();
+                if ($.trim($(this).val()).length === 0) {
+                    return self.showWarning($('#searchby-la-ref'), 'Please enter a local authority to start a search');
+
+                }
                 if ($(this).nextAll('.tt-menu').find('.tt-suggestion').length > 0) {
                     $(this).nextAll('.tt-menu').find('.tt-cursor').click();
 
