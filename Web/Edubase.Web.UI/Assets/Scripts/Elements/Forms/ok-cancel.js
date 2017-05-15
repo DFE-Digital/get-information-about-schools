@@ -10,7 +10,8 @@
         title: 'Are you sure...',
         content: 'That you want to perform this action?',
         triggerEvent: 'change',
-        onPause: false
+        onPause: false,
+        immediate: false
     };
 
 
@@ -49,27 +50,37 @@
             var overlay = '<div id="modal-overlay" class="modal-overlay hidden"></div>' +
                 '<div id="modal-content" class="modal-content hidden" role="dialog"><a href="#" id="exit-overlay" class="modal-exit">Close</a><div id="modal-inner">' +
                 '<h3 class="heading-large" id="modal-title">'+ opts.title + '</h3><p id="modal-content-area">'+ opts.content + '</p></div> ' +
-                '<div class="button-row"><a href="#" class="button mobile-full-width" id="button-ok">OK</a><a href="#" class="button button-grey mobile-full-width" id="button-cancel">Cancel</a></div>' +
-                '</div>';
+                '<div class="button-row"><a href="#" class="button mobile-full-width" id="button-ok">OK</a>';
+            
+            if ($.isFunction(opts.cancel)) {
+                overlay += '<a href="#" class="button button-grey mobile-full-width" id="button-cancel">Cancel</a>';
+            } 
+            overlay += '</div></div>';
 
 
             if ($('#modal-overlay').length === 0) {
                 $('#full-content').append(overlay);
             }
             
-            
-            $el.on(opts.triggerEvent, function(e) {
+            function displayModal(e) {
                 e.preventDefault();
                 if (!opts.onPause) {
                     self.showModal();
-                }                
-            });
+                }
+            }
+            
+            $el.on(opts.triggerEvent, displayModal);
 
 
             $('#exit-overlay , #modal-overlay').on('click', function (e) {
                 e.preventDefault();
                 self.closeModal();
             });
+
+            if (opts.immediate) {
+                self.showModal();
+                $el.off(opts.triggerEvent, displayModal);
+            }
         },
         closeModal: function () {
             unbindEscapeKey();
