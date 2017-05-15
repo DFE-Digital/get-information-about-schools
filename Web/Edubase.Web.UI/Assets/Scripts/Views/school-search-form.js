@@ -329,7 +329,7 @@
 
         $(window).on('noLocationMatch', function(e) {
             self.showWarning($('#searchby-location-ref'),
-                'We couldn’t find any locations matching '+ e.q);
+                'We couldn’t find any locations matching your search criteria');
         });
     }
 
