@@ -13,7 +13,8 @@
 <div class="grid-row">
     <div class="column-full">
         <div class="breadcrumbs">
-            <a href="@Url.Action("Index", "Search", new { area = "" })?@Request.QueryString.ToString()">Back to find an establishment</a>
+            
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = @Model.SearchType})">Back to find an establishment</a>
         </div>
 
             <h1 class="heading-xlarge">Search results</h1>
