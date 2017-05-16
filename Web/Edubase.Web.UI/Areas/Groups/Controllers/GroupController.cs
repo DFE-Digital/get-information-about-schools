@@ -67,7 +67,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
 
         [Route(nameof(Details) + "/{id:int}"), HttpGet]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", string searchSource = "Groups")
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups)
         {
             var viewModel = new GroupDetailViewModel
             {

@@ -10,5 +10,7 @@ namespace Edubase.Web.UI.Models.Search
         string DownloadName { get; }
         eFileFormat FileFormat { get; }
         SearchDownloadGenerationProgressDto Progress { get; }
+        string SearchQueryString { get; set; }
+        eLookupSearchSource? SearchSource { get; set; }
     }
 }

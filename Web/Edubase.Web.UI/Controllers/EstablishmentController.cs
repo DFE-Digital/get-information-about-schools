@@ -198,7 +198,7 @@ namespace Edubase.Web.UI.Controllers
         
 
         [HttpGet, Route("Details/{id}")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", string searchSource = "Establishments")
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments)
         {
             var parent = await GetLegalParent(id, User);
             var viewModel = new EstablishmentDetailViewModel

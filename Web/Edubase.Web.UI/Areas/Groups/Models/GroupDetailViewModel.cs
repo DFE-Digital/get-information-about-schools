@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Areas.Groups.Models
 {
@@ -25,7 +26,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string GroupStatusName { get; set; }
         public string LocalAuthorityName { get; set; }
         public string SearchQueryString { get; set; }
-        public string SearchSource { get; set; }
+        public eLookupSearchSource? SearchSource { get; set; }
 
         public string OpenDateLabel => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on" : "Open date";
         public string EstablishmentsPluralName => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) ? "Academies" :

@@ -188,6 +188,7 @@
     <Compile Include="Enums\eLookupGovernorRole.cs" />
     <Compile Include="Enums\eLookupGroupStatus.cs" />
     <Compile Include="Enums\eLookupGroupType.cs" />
+    <Compile Include="Enums\eLookupSearchSource.cs" />
     <Compile Include="Enums\EnumSets.cs" />
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />

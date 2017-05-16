@@ -88,6 +88,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public bool HasError => !Error.IsNullOrEmpty();
 
         public string SearchQueryString { get; set; }
+        public eLookupSearchSource? SearchSource { get; set; }
 
         public int[] GetRadiusOptions() => _radiuses;
 

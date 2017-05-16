@@ -24,7 +24,7 @@
     }
     else
     {
-        if (Model.SearchSource == "Governors")
+        if (Model.SearchSource == eLookupSearchSource.Governors)
         {
             <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
         }

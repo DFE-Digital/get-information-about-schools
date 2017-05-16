@@ -19,6 +19,7 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Services.Governors.Search;
 
@@ -62,6 +63,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [HttpGet, Route("PrepareDownload")]
         public async Task<ActionResult> PrepareDownload(GovernorSearchDownloadViewModel viewModel)
         {
+            viewModel.SearchSource = eLookupSearchSource.Governors;
+            viewModel.SearchQueryString = Request.QueryString.ToString();
+
             if (!viewModel.FileFormat.HasValue) return View("Downloads/SelectFormat", viewModel);
             else
             {

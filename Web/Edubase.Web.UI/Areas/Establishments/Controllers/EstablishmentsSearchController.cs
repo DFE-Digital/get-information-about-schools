@@ -37,19 +37,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _establishmentDownloadService = establishmentDownloadService;
             _lookupService = lookupService;
         }
-        
+
 
         [HttpGet]
         public async Task<ActionResult> Index(EstablishmentSearchViewModel model)
         {
             model.SearchQueryString = Request.QueryString.ToString();
-            
+
             var retVal = await SearchByUrnAsync(model);
             if (retVal != null) return retVal;
 
             var payload = GetEstablishmentSearchPayload(model);
             if (!payload.Success) model.Error = payload.ErrorMessage;
-            return await ProcessEstablishmentsSearch(model, payload.Object);   
+            return await ProcessEstablishmentsSearch(model, payload.Object);
         }
 
         [HttpGet, Route("results-js")]
@@ -66,25 +66,48 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             using (MiniProfiler.Current.Step($"{GetType().Name}.{nameof(PopulateLookups)}"))
             {
-                vm.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.GovernorRoles = (await _lookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.AdmissionsPolicies = (await _lookupService.AdmissionsPoliciesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.BoardingProvisions = (await _lookupService.ProvisionBoardingGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.Dioceses = (await _lookupService.DiocesesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.Districts = (await _lookupService.AdministrativeDistrictsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.FurtherEducationTypes = (await _lookupService.FurtherEducationTypesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.Genders = (await _lookupService.GendersGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.GORs = (await _lookupService.GovernmentOfficeRegionsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.NurseryProvisions = (await _lookupService.ProvisionNurseriesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.ParliamentaryConstituencies = (await _lookupService.ParliamentaryConstituenciesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.ReligiousEthoses = (await _lookupService.ReligiousEthosGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.RSCRegions = (await _lookupService.RscRegionsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.Section41Designations = (await _lookupService.Section41ApprovedGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.SixthFormProvisions = (await _lookupService.ProvisionOfficialSixthFormsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.SpecialClassesProvisions = (await _lookupService.ProvisionSpecialClassesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.TypeOfSENProvisions = (await _lookupService.SpecialEducationNeedsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.UrbanRuralDesignations = (await _lookupService.UrbanRuralGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-                vm.Wards = (await _lookupService.AdministrativeWardsGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+                vm.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.GovernorRoles = (await _lookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.AdmissionsPolicies = (await _lookupService.AdmissionsPoliciesGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.BoardingProvisions = (await _lookupService.ProvisionBoardingGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.Dioceses = (await _lookupService.DiocesesGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.Districts = (await _lookupService.AdministrativeDistrictsGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.FurtherEducationTypes = (await _lookupService.FurtherEducationTypesGetAllAsync())
+                    .OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.Genders = (await _lookupService.GendersGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.GORs = (await _lookupService.GovernmentOfficeRegionsGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.NurseryProvisions = (await _lookupService.ProvisionNurseriesGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.ParliamentaryConstituencies = (await _lookupService.ParliamentaryConstituenciesGetAllAsync())
+                    .OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.ReligiousEthoses = (await _lookupService.ReligiousEthosGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.RSCRegions = (await _lookupService.RscRegionsGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.Section41Designations = (await _lookupService.Section41ApprovedGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.SixthFormProvisions = (await _lookupService.ProvisionOfficialSixthFormsGetAllAsync())
+                    .OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.SpecialClassesProvisions = (await _lookupService.ProvisionSpecialClassesGetAllAsync())
+                    .OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.TypeOfSENProvisions = (await _lookupService.SpecialEducationNeedsGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.UrbanRuralDesignations = (await _lookupService.UrbanRuralGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
+                vm.Wards = (await _lookupService.AdministrativeWardsGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
             }
             return vm;
         }
@@ -92,10 +115,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private ActionResult RedirectToEstabDetail(int urn)
             => new RedirectToRouteResult(null, new RouteValueDictionary
             {
-                { "action", "Details" },
-                { "controller", "Establishment" },
-                { "id", urn },
-                { "area", string.Empty }
+                {"action", "Details"},
+                {"controller", "Establishment"},
+                {"id", urn},
+                {"area", string.Empty}
             });
 
 
@@ -114,7 +137,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.LAESTAB)
                 {
                     var laestab = LAESTAB.TryParse(model.TextSearchModel.Text).Value;
-                    filters.LocalAuthorityIds = new int[] { laestab.LocalAuthorityId };
+                    filters.LocalAuthorityIds = new int[] {laestab.LocalAuthorityId};
                     filters.EstablishmentNumber = laestab.EstablishmentNumber;
                 }
                 else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName)
@@ -131,13 +154,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     payload.GeoSearchLocation = coord;
                     payload.RadiusInMiles = model.GetRadiusOption();
                 }
-                else retVal.ErrorMessage = "The co-ordinate could not be parsed."; // todo: need to support Location-disambiguation page and non-JS scenario.
+                else
+                    retVal.ErrorMessage =
+                        "The co-ordinate could not be parsed."; // todo: need to support Location-disambiguation page and non-JS scenario.
             }
 
             filters.EducationPhaseIds = model.SelectedEducationPhaseIds.ToArray();
             filters.StatusIds = model.SelectedEstablishmentStatusIds.ToArray();
             filters.TypeIds = model.SelectedEstablishmentTypeIds.ToArray();
-            if(!filters.LocalAuthorityIds.Any()) filters.LocalAuthorityIds = model.SelectedLocalAuthorityIds.ToArray();
+            if (!filters.LocalAuthorityIds.Any()) filters.LocalAuthorityIds = model.SelectedLocalAuthorityIds.ToArray();
             filters.ReligiousCharacterIds = model.SelectedReligiousCharacterIds.ToArray();
 
             filters.AdmissionsPolicyIds = model.SelectedAdmissionsPolicyIds.ToArray();
@@ -167,36 +192,37 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var routeDictionary = new RouteValueDictionary
             {
-                { "action", "Index" },
-                { "controller", "Search" },
-                { "area", string.Empty },
-                { "SearchType", model.SearchType }
+                {"action", "Index"},
+                {"controller", "Search"},
+                {"area", string.Empty},
+                {"SearchType", model.SearchType}
             };
 
             switch (model.SearchType)
             {
-                    case eSearchType.Text:
-                        routeDictionary.Add("TextSearchModel.Text", model.TextSearchModel.Text);
-                        routeDictionary.Add("NoResultsForName", true);
-                        break;
-                    case eSearchType.Location:
-                        routeDictionary.Add("LocationSearchModel.Text", model.LocationSearchModel.Text);
-                        routeDictionary.Add("NoResultsForLocation", true);
-                        break;
-                    case eSearchType.ByLocalAuthority:
-                        foreach (var id in model.SelectedLocalAuthorityIds)
-                        {
-                            routeDictionary.Add("SelectedLocalAuthorityIds", id);
-                        }
-                        routeDictionary.Add("NoResultsForLA", true);
-                        break;
+                case eSearchType.Text:
+                    routeDictionary.Add("TextSearchModel.Text", model.TextSearchModel.Text);
+                    routeDictionary.Add("NoResultsForName", true);
+                    break;
+                case eSearchType.Location:
+                    routeDictionary.Add("LocationSearchModel.Text", model.LocationSearchModel.Text);
+                    routeDictionary.Add("NoResultsForLocation", true);
+                    break;
+                case eSearchType.ByLocalAuthority:
+                    foreach (var id in model.SelectedLocalAuthorityIds)
+                    {
+                        routeDictionary.Add("SelectedLocalAuthorityIds", id);
+                    }
+                    routeDictionary.Add("NoResultsForLA", true);
+                    break;
 
             }
 
             return new RedirectToRouteResult(null, routeDictionary);
         }
 
-        private async Task<ActionResult> ProcessEstablishmentsSearch(EstablishmentSearchViewModel model, EstablishmentSearchPayload payload)
+        private async Task<ActionResult> ProcessEstablishmentsSearch(EstablishmentSearchViewModel model,
+            EstablishmentSearchPayload payload)
         {
             if (model.HasError)
             {
@@ -218,7 +244,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         if (payload.Skip == 0) model.Count = results.Count;
                         model.Results = results.Items;
                     }
-                    catch (Services.Exceptions.SearchQueryTooLargeException) // expected domain exception when over 800 filters are selected; very much an edge case.
+                    catch (Services.Exceptions.SearchQueryTooLargeException
+                    ) // expected domain exception when over 800 filters are selected; very much an edge case.
                     {
                         model.Error = "You have selected too many filters; please reduce the number of filters.";
                         model.Count = 0;
@@ -227,17 +254,23 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
-            if (model.Count == 1 && model.GoToDetailPageOnOneResult) return RedirectToEstabDetail(model.Results.First().Urn.GetValueOrDefault());
+            if (model.Count == 1 && model.GoToDetailPageOnOneResult)
+                return RedirectToEstabDetail(model.Results.First().Urn.GetValueOrDefault());
             else
             {
                 var permittedStatusIds = await _establishmentReadService.GetPermittedStatusIdsAsync(User);
 
                 using (MiniProfiler.Current.Step("Populate filter lookups from CachedLookupService"))
                 {
-                    model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                    model.EstablishmentStatuses = (await _lookupService.EstablishmentStatusesGetAllAsync()).Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id)).Select(x => new LookupItemViewModel(x));
-                    model.EducationPhases = (await _lookupService.EducationPhasesGetAllAsync()).Select(x => new LookupItemViewModel(x));
-                    model.ReligiousCharacters = (await _lookupService.ReligiousCharactersGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    model.EstablishmentTypes =
+                        (await _lookupService.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    model.EstablishmentStatuses = (await _lookupService.EstablishmentStatusesGetAllAsync())
+                        .Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id))
+                        .Select(x => new LookupItemViewModel(x));
+                    model.EducationPhases =
+                        (await _lookupService.EducationPhasesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    model.ReligiousCharacters =
+                        (await _lookupService.ReligiousCharactersGetAllAsync()).Select(x => new LookupItemViewModel(x));
                     await PopulateLookups(model);
                 }
 
@@ -248,8 +281,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private async Task<ActionResult> SearchByUrnAsync(EstablishmentSearchViewModel model)
         {
             var urn = model.TextSearchModel.AutoSuggestValueAsInt
-                ?? (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.URN
-                ? model.TextSearchModel.Text.ToInteger() : null);
+                      ?? (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.URN
+                          ? model.TextSearchModel.Text.ToInteger()
+                          : null);
 
             if (urn.HasValue)
             {
@@ -263,29 +297,44 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("PrepareDownload")]
         public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
         {
-            if (!viewModel.Dataset.HasValue) return View("Downloads/SelectDataset");
-            else if (!viewModel.FileFormat.HasValue) return View("Downloads/SelectFormat", viewModel);
-            else
-            {
-                var progressId = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(new EstablishmentSearchDownloadPayload
+            viewModel.SearchSource = eLookupSearchSource.Establishments;
+            viewModel.SearchQueryString = Request.QueryString.ToString();
+
+            if (!viewModel.Dataset.HasValue)
+                return View("Downloads/SelectDataset", viewModel);
+
+            if (!viewModel.FileFormat.HasValue)
+                return View("Downloads/SelectFormat", viewModel);
+
+            var progressId = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(
+                new EstablishmentSearchDownloadPayload
                 {
                     SearchPayload = GetEstablishmentSearchPayload(viewModel).Object,
                     DataSet = viewModel.Dataset.Value,
                     FileFormat = viewModel.FileFormat.Value
                 }, User);
-                return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value });
-            }
+            return RedirectToAction(nameof(Download), new {id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
         }
 
         [HttpGet, Route("Download")]
-        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat)
-        {
+        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        { 
+
             var model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id, User);
-            var viewModel = new EstablishmentSearchDownloadGenerationProgressViewModel(model, (model.IsComplete ? 4 : 3)) { FileFormat = fileFormat };
-            if (model.HasErrored) throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
-            else if (!model.IsComplete) return View("Downloads/PreparingFilePleaseWait", viewModel);
-            else return View("Downloads/ReadyToDownload", viewModel);
+            var viewModel = new EstablishmentSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 4 : 3)
+                {
+                    FileFormat = fileFormat,
+                    SearchSource = searchSource,
+                    SearchQueryString = searchQueryString
+                };
+
+            if (model.HasErrored)
+                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+
+            if (!model.IsComplete)
+                return View("Downloads/PreparingFilePleaseWait", viewModel);
+
+            return View("Downloads/ReadyToDownload", viewModel);
         }
-        
     }
 }

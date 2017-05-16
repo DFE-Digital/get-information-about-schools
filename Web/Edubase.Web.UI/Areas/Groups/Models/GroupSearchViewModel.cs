@@ -34,6 +34,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         public string SearchQueryString { get; set; }
 
+        public eLookupSearchSource? SearchSource { get; set; }
+
         public eSortBy SortOption => SortBy == 'z' ? eSortBy.NameAlphabeticalZA : eSortBy.NameAlphabeticalAZ;
 
         [BindAlias("t")]
