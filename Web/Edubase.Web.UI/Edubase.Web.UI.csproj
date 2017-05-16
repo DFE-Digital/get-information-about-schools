@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -418,6 +418,7 @@
     <Content Include="Areas\Governors\Views\Governor\GroupEditDelegation.cshtml" />
     <Content Include="Assets\Sass\elements\forms\_fileupload.scss" />
     <Content Include="Assets\Sass\elements\_autosuggest.scss" />
+    <Content Include="App_Data\wildcard-dfe.pfx" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -860,7 +861,9 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\DfE\Layouts\template.cshtml" />

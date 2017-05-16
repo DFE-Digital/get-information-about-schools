@@ -35,7 +35,7 @@ namespace Edubase.Web.UI.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             var id = loginInfo.ExternalIdentity;
 
-            if (ConfigurationManager.AppSettings["LoginProviderName"] == "SASimulator") id = new StubClaimsIdConverter().Convert(id);
+            if (ConfigurationManager.AppSettings["owin:appStartup"] == "SASimulatorConfiguration") id = new StubClaimsIdConverter().Convert(id);
             else id = new SecureAccessClaimsIdConverter().Convert(id);
             
             AuthenticationManager.SignIn(id);
