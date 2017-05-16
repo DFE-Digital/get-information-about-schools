@@ -3,10 +3,9 @@
 @using Edubase.Common
 @using Edubase.Services.Enums
 @using M = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
-@using P = Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
 @model M
 @{
-    ViewBag.Title = string.Format("Search results for '{0}'", Model.TextSearchModel.Text);
+    ViewBag.Title = $"Search results for '{Model.TextSearchModel.Text}'";
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 }
@@ -14,7 +13,8 @@
 <div class="grid-row">
     <div class="column-full">
         <div class="breadcrumbs">
-            @Html.ActionLink("« Back to find an establishment", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+            <a href="@Url.Action("Index", "Search", new { area = "" })?@Request.QueryString.ToString()" class="home-link">« Back to find an establishment</a>
+            @*@Html.ActionLink("« Back to find an establishment", "Index", "Search", new {area = ""}, new {@class = "home-link"})*@
         </div>
 
             <h1 class="heading-xlarge">Search results</h1>

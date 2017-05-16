@@ -60,31 +60,6 @@ namespace Edubase.Web.UI.Controllers
                         {
                             return await ProcessLocationDisambiguation(viewModel);
                         }
-
-                        if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text))
-                        {
-                            var url = Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"});
-                            url = viewModel.OpenOnly
-                                ? $"{url}?{Request.QueryString.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose)}"
-                                : $"{url}?{Request.QueryString}";
-
-                            return Redirect(url);
-                        }
-
-                        
-
-                        if (viewModel.SearchType == eSearchType.Group)
-                        {
-                            return Redirect(Url.Action("Index", "GroupSearch", new {area = "Groups"}) + "?" + Request.QueryString);
-                        }
-
-                        if (viewModel.SearchType == eSearchType.Governor)
-                        {
-                            return Redirect(Url.Action("Index", "GovernorSearch", new {area = "Governors"}) + "?" +
-                                            Request.QueryString + viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"));
-                        }
-
-                        throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
                     }
                 }
             }
@@ -93,6 +68,62 @@ namespace Edubase.Web.UI.Controllers
             viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
 
             return View(viewModel);
+        }
+
+        [HttpGet, Route("Search/Results", Name = "SearchResults")]
+        public async Task<ActionResult> IndexResults(SearchViewModel viewModel)
+        {
+            if (!viewModel.NoResultsForLocation && !viewModel.NoResultsForName && !viewModel.NoResultsForLA)
+            {
+
+                if (viewModel.LocalAuthorityToRemove.HasValue)
+                {
+                    return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
+                                        viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
+                }
+
+
+                if (viewModel.SearchType.HasValue)
+                {
+                    if (viewModel.SearchType == eSearchType.LocalAuthorityDisambiguation)
+                    {
+                        return await ProcessLocalAuthorityDisambiguation(viewModel);
+                    }
+
+                    if (ModelState.IsValid)
+                    {
+                        if (viewModel.SearchType == eSearchType.Location && LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
+                        {
+                            return await ProcessLocationDisambiguation(viewModel);
+                        }
+
+                        if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text))
+                        {
+                            var url = Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" });
+                            url = viewModel.OpenOnly
+                                ? $"{url}?{Request.QueryString.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eStatus.Open, (int)eStatus.OpenButProposedToClose)}"
+                                : $"{url}?{Request.QueryString.AddIfNonExistent("OpenOnly", "false")}";
+
+                            return Redirect(url);
+                        }
+
+                        if (viewModel.SearchType == eSearchType.Group)
+                        {
+                            return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
+                        }
+
+                        if (viewModel.SearchType == eSearchType.Governor)
+                        {
+                            return Redirect(Url.Action("Index", "GovernorSearch", new { area = "Governors" }) + "?" +
+                                            Request.QueryString + viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"));
+                        }
+
+                        throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
+                    }
+                }
+            }
+
+            return RedirectToAction("Index", viewModel);
         }
 
         [Route("Search/Suggest"), HttpGet]

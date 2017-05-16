@@ -5,7 +5,7 @@
 @model VM
 
 
-@using (Html.BeginForm("Index", "Search", FormMethod.Get))
+@using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
 {
     @Html.HiddenFor(m => m.SelectedTab)
     <fieldset>

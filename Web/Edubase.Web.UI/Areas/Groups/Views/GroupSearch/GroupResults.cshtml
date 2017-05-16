@@ -10,7 +10,7 @@
 <div class="grid-row">
     <div class="column-full">
         <div class="breadcrumbs">
-            @Html.ActionLink("« Back to find an establishment group", "Index", "Search", new { area = "", SelectedTab = "Groups" }, new { @class = "home-link" })
+            <a href="@Url.Action("Index", "Search", new {area = ""})?@Request.QueryString.ToString()" class="home-link">« Back to find an establishment group</a>
         </div>
             <h1 class="heading-xlarge">Search results</h1>
             <p>

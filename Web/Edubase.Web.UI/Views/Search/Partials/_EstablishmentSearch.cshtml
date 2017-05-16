@@ -1,5 +1,4 @@
-﻿@using Edubase.Web.UI.Models.Search;
-@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
+﻿@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
 @model VM
@@ -9,13 +8,13 @@
     
     <ul class="search-type-list has-typeahead">
         <li class="search-type-wrapper">
-            @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+            @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
             {
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by name of reference number</legend>
                     <span class="radio-button-wrap">
                         @Html.HiddenFor(m => m.SelectedTab)
-                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id= "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
+                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new {id = "searchtype-name", data_toggle_panel = "#searchby-name-ref"})
                         @*<input id="searchtype-name" name="search-by" value="establishment" type="radio" data-toggle-panel="#searchby-name-ref">*@
                         <label class="edubase-button-radio" for="searchtype-name">
                             Name or reference number
@@ -27,7 +26,7 @@
                             <div class="warning-message">
                                 <p>We couldn't find any establishments matching your search criteria</p>
                             </div>
-                        }                        
+                        }
                         <span class="search-hint">
                             Name, URN, LAESTAB or UKPRN
                             <a href="#name-reference-help" class="icon-help">
@@ -58,7 +57,7 @@
         </li>
 
         <li class="search-type-wrapper">
-            @using (Html.BeginForm("Index", "Search", FormMethod.Get, new { id = "location-search-form" }))
+            @using (Html.BeginRouteForm("SearchResults", FormMethod.Get, new { id = "location-search-form" }))
             {
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by location</legend>
@@ -103,7 +102,7 @@
         <li class="search-type-wrapper" id="la">
             <fieldset class="search-toggle-panel">
                 <legend class="visually-hidden">Search by local authority</legend>
-                @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+                @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
                 {
                     <span class="radio-button-wrap">
                         @Html.HiddenFor(m => m.SelectedTab)
