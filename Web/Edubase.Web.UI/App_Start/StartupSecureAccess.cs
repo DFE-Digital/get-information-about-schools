@@ -88,20 +88,32 @@ namespace Edubase.Web.UI
 //#if (DEBUG)
             return GetSPCertificateFromAppData();
 //#else
-//            return GetSPCertificateFromCertStore();
+            //return GetSPCertificateFromCertStore();
 //#endif
         }
 
-        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/edubase3.pfx"), "testtest", X509KeyStorageFlags.MachineKeySet);
+        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/wildcard-dfe.pfx"), "test", X509KeyStorageFlags.MachineKeySet);
 
+        // TODO: one day get rid of this
         //private static X509Certificate2 GetSPCertificateFromCertStore()
         //{
         //    using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
         //    {
-        //        var thumbprint = ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"];
+        //        var thumbprint = "‎979E6A59A91A08DC4F230E4091AEDBDAC64A8042";
         //        store.Open(OpenFlags.ReadOnly);
-        //        var certCollection = store.Certificates.Find(X509FindType.FindByThumbprint, ConfigurationManager.AppSettings["ServiceProvider.Certificate.Thumbprint"], false);
-        //        var cert = certCollection.Cast<X509Certificate2>().FirstOrDefault();
+        //        var list = store.Certificates.Cast<X509Certificate2>().ToList().OrderBy(x => x.Subject).ToList();
+
+        //        X509Certificate2 cert = null;
+        //        for (int i = 0; i < list.Count; i++)
+        //        {
+        //            var t = list[i];
+        //            if (t.Subject.Equals("CN=*.education.gov.uk, OU=Department for Education, O=Department for Education, L=London, S=London, C=GB", StringComparison.OrdinalIgnoreCase))
+        //            {
+        //                cert = t;
+        //            }
+        //        }
+
+        //        //var cert = list.FirstOrDefault(x => x.Thumbprint == thumbprint);
         //        Guard.IsNotNull(cert, () => new Exception($"Service provider certificate could not be found by thumbprint [{thumbprint}]"));
         //        return cert;
         //    }
