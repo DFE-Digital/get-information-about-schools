@@ -1,5 +1,12 @@
 ﻿<div class="breadcrumbs">
-    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null) > @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
 </div>
 
 @using (Html.BeginForm("EstablishmentBulkupdate", "Tools", FormMethod.Post, new {enctype = "multipart/form-data"}))

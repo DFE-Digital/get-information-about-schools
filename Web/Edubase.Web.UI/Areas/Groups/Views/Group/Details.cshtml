@@ -9,17 +9,22 @@
 <div class="breadcrumbs">
     @if (Model.SearchQueryString.IsNullOrWhiteSpace())
     {
-        @Html.ActionLink("Home", "Index", "Search", new { area = "", selectedTab = "Groups" }, new { @class = "home-link" })
+        <ul>
+            <li>
+                @Html.ActionLink("Home", "Index", "Search", new { area = "", selectedTab = "Groups" })
+            </li>
+        </ul>
+        
     }
     else
     {
         if (Model.SearchSource == "Governors")
         {
-            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
         else
         {
-            <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+            <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
     }
 </div>

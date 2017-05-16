@@ -10,10 +10,10 @@
             var label = $(this).parent().clone();
             label.find('span, input').remove();
             var text = label.text();
-            selectedLas.push('<span class="bold-small">&lsquo;' + $.trim(text) + '&rsquo;</span>');
+            selectedLas.push('&lsquo;<span class="bold-small">' + $.trim(text) + '</span>&rsquo;');
         });
         
-        selectedLas = selectedLas.join(',');
+        selectedLas = selectedLas.join(', ');
         var lastComma = selectedLas.lastIndexOf(',');
         selectedLas = selectedLas.substring(0, lastComma) +
             ' and ' +

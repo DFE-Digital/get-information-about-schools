@@ -4,12 +4,17 @@
 }
 
 <div class="breadcrumbs">
-    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null) > @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
 </div>
 
 <div id="create-establishment" v-cloak>
-
-
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-large">

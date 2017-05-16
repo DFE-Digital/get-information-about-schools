@@ -14,22 +14,23 @@
 <div class="breadcrumbs">
     @if (Model.SearchQueryString.IsNullOrWhiteSpace())
     {
-        @Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "home-link" })
-        if (Model.LegalParentGroup != null)
-        {
-            <text>&gt;</text>
-            @Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUID, area = "Groups" }, new { @class = "home-link" })
-        }
+        <ul>
+            <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" })</li>
+            @if (Model.LegalParentGroup != null)
+            {
+                <li>@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUID, area = "Groups" })</li>
+            }
+        </ul>
     }
     else
     {
         if (Model.SearchSource == "Governors")
         {
-            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
         else
         {
-            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}") class="home-link">« Back to search results</a>
+            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
         }
     }
 </div>

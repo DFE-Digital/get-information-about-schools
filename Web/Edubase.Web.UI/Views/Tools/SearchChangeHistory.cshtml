@@ -3,7 +3,14 @@
     ViewBag.bodyClasses = "search-changes";
 }
 <div class="breadcrumbs">
-    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null) > @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
 </div>
 
 <div class="grid-row" id="change-history-app" v-cloak>
