@@ -29,7 +29,7 @@
                             We found <span class="heading-xlarge count">@Model.Count</span> establishments
                             @if (!Model.TextSearchModel.Text.IsEmpty())
                             {
-                                <text>for the search term "@Model.TextSearchModel.Text".</text>
+                                <text>for the search term <span class="bold-small">&lsquo;@Model.TextSearchModel.Text &rsquo;</span>.</text>
                             }
 
                         </text>
@@ -49,7 +49,7 @@
                 }
                 else if (Model.SearchType == eSearchType.ByLocalAuthority)
                 {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected local authorities</text>
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in <span id="la-list">the selected local authorities</span></text>
                 }
                 else if (Model.SearchType == eSearchType.Location)
                 {
@@ -66,7 +66,7 @@
 <div class="grid-row">
 
     <div class="column-third">
-        <div class="filter-form">
+        <div class="filter-form" id="filter-form">
             
             <div id="EditSearchCollapsible"
                  class="button-as-link js-collapsible selected mbl js-track"

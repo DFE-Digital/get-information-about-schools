@@ -1,8 +1,32 @@
 ﻿(function () {
+    var filterLimit = 200;
+    var $filters = $('#filter-form').find(':checkbox, select > option');
+    var searchType = DfE.Util.QueryString.get('SearchType');
+    var selectedLas = [];
+
+    function updateSearchedLas() {
+        selectedLas = [];
+        $('#option-select-local-authority').find('.trigger-result-update').filter(':checked').each(function () {
+            var label = $(this).parent().clone();
+            label.find('span, input').remove();
+            var text = label.text();
+            selectedLas.push('<span class="bold-small">&lsquo;' + $.trim(text) + '&rsquo;</span>');
+        });
+        
+        selectedLas = selectedLas.join(',');
+        var lastComma = selectedLas.lastIndexOf(',');
+        selectedLas = selectedLas.substring(0, lastComma) +
+            ' and ' +
+            selectedLas.substring(lastComma + 1, selectedLas.length);
+        $('#la-list').html(selectedLas);
+    }
+    if (searchType === 'ByLocalAuthority') {
+        updateSearchedLas();
+    }
 
     function captureFormState() {
         var state = {};
-        $("input[type='checkbox'], select>option").each(function (i) {
+        $filters.each(function (i) {
             var $ele = $(this);
             var id = $ele.attr("id");
             if (id) {
@@ -14,7 +38,7 @@
     }
 
     function restoreFormState(state) {
-        $("input[type='checkbox'], select>option").each(function (i) {
+        $filters.each(function (i) {
             var $ele = $(this);
             if ($ele.is("input")) $ele.prop("checked", state[$ele.attr("id")]);
             else if ($ele.is("option")) $ele.prop("selected", state[$ele.attr("id")]);
@@ -68,10 +92,32 @@
                 $("a.download-link").attr("href", downloadUrl + queryString);
             });
         };
-
         $(document).on("change", ".trigger-result-update", function () {
-            if (ci) window.clearTimeout(ci);
-            ci = setTimeout(refreshResults, 200); // when the clear button is clicked on the filters, multiple events come through; so using timer to prevent extraneous requests
+            var filterCount = $filters.filter(':checked, :selected').length;
+            if (filterCount >= filterLimit) {
+                $(this).okCancel({
+                    cancel: null,
+                    ok: function () {
+                        return true;
+                    },
+                    immediate: true,
+                    title: 'Filter limit reached',
+                    content:
+                        'You\'ve selected too many filters. You can either reduce the number of filters, or download the data and filter it offline.'
+                });
+                $(this).removeData('okCancel');
+                $(this).prop('checked', false);
+
+            } else {
+                if (ci) window.clearTimeout(ci);
+                ci = setTimeout(refreshResults, 200); // when the clear button is clicked on the filters, multiple events come through; so using timer to prevent extraneous requests
+                if (searchType === 'ByLocalAuthority') {
+                    updateSearchedLas();
+                }
+
+            }
+           
+           
         });
 
         if (GOVUK.support.history()) {

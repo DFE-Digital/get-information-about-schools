@@ -15,10 +15,14 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
 using StackExchange.Profiling;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Groups.Models;
+using Edubase.Web.UI.Areas.Groups.Models;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
@@ -196,11 +200,13 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Details/{id}")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", string searchSource = "Establishments")
         {
-            var viewModel = new EstablishmentDetailViewModel()
+            var parent = await GetLegalParent(id, User);
+            var viewModel = new EstablishmentDetailViewModel
             {
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 SearchQueryString = searchQueryString,
-                SearchSource = searchSource
+                SearchSource = searchSource,
+                LegalParentGroup = parent
             };
 
             using (MiniProfiler.Current.Step("Retrieving establishment"))
@@ -210,7 +216,6 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.Establishment = result.ReturnValue;
             }
             
-
             using (MiniProfiler.Current.Step("Retrieving LinkedEstablishments"))
             {
                 viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id, User)).Select(x => new LinkedEstabViewModel(x));
@@ -219,7 +224,6 @@ namespace Edubase.Web.UI.Controllers
                     item.LinkTypeName = await _cachedLookupService.GetNameAsync(() => item.LinkTypeId);
                 }
             }
-            
 
             if (User.Identity.IsAuthenticated)
             {
@@ -311,6 +315,33 @@ namespace Edubase.Web.UI.Controllers
 
             if (viewModel.MSOAId.HasValue) viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.MSOAId.Value)?.Code;
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
+        }
+
+        private async Task<GroupModel> GetLegalParent(int establishmentUrn, IPrincipal principal)
+        {
+            try
+            {
+                var parentGroups = await _groupReadService.GetAllByEstablishmentUrnAsync(establishmentUrn, principal);
+                var parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.SingleacademyTrust);
+                if (parentGroup != null)
+                {
+                    return parentGroup;
+                }
+
+                parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust);
+                if (parentGroup != null)
+                {
+                    return parentGroup;
+                }
+
+                parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.Trust);
+                return parentGroup ?? parentGroups.First();
+            }
+            catch (Exception e)
+            {
+            }
+
+            return null;
         }
 
         private async Task PopulateLookupNames(EstablishmentDetailViewModel vm)

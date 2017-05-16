@@ -15,6 +15,11 @@
     @if (Model.SearchQueryString.IsNullOrWhiteSpace())
     {
         @Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+        if (Model.LegalParentGroup != null)
+        {
+            <text>&gt;</text>
+            @Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUID, area = "Groups" }, new { @class = "home-link" })
+        }
     }
     else
     {
