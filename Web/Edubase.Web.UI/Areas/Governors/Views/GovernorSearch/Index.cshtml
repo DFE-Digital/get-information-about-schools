@@ -60,8 +60,8 @@
                             <div class="js-selected-counter"></div>
                         </div>
                         <select class="form-control trigger-result-update" name="SortBy">
-                            <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
-                            <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
+                            <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
+                            <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
                         </select>
                     </div>
                     <div class="filter-divider"></div>
