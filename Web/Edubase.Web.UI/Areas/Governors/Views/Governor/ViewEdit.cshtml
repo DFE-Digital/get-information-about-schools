@@ -11,13 +11,15 @@
 
 @if (Model.EditMode)
 {
-    <div class="tab-content" blah="blah">
+    <div class="tab-content">
         <div class="column-half">
             @(Model.GroupUId.HasValue
               ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel" })
               : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "governance", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" }))
         </div>
         <div class="column-two-thirds">
+            @ShowLegalDuty()
+
             @if (Model.ShowDelegationInformation)
             {
                 @ShowDelegationInformation()
@@ -25,7 +27,7 @@
 
             @DisplayGovernanceMode()
         </div>
-
+        
         <div class="column-half">
             <h2 class="heading-small">Add person</h2>
 
@@ -51,6 +53,7 @@ else
     <div class="grid-row">
         <div class="column-half">
             <h2 class="heading-medium">Governance</h2>
+            @ShowLegalDuty()
             @DisplayGovernanceMode()
         </div>
     </div>
@@ -75,13 +78,16 @@ else
 }
 else
 {
-    <p>There is no governance information for this @Model.ParentEntityName</p>
+    <div class="tab-content">
+        <p>There is no governance information for this @Model.ParentEntityName</p>
+    </div>
+    
 }
 
 
 @helper ShowDelegationInformation()
         {
-    <h2 class="bold-small">Delgated authority of local governing body</h2>
+    <h2 class="bold-small">Delegated authority of local governing body</h2>
     <div class="expanding-content-wrapper">
         <a href="#" class="expanding-content-trigger">
             Show details
@@ -98,6 +104,35 @@ if (Model.EditMode)
             </div>
         </div>
 }
+
+}
+
+@helper ShowLegalDuty()
+        {
+    <h2 class="bold-small">Legal duty to provide governance information</h2>
+    <div class="expanding-content-wrapper" data-update-text="false">
+        <a href="#" class="expanding-content-trigger">
+            More details
+        </a>
+        <div class="expanding-content panel-indent">
+            <p>
+                All maintained school governing bodies and academy trusts have 
+                a legal duty to provide all of the governance information requested 
+                on this page in so far as it is available to them.
+                This will increase the transparency of governance arrangements. 
+                It will enable schools and the department to identify more quickly and
+                accurately individuals who are involved in governance, and who govern
+                in more than one context. The information requested says nothing in itself 
+                about a person’s suitability to govern. However, it is essential information 
+                for the department to be able to uniquely identify an individual and in a 
+                small number of cases conduct checks to confirm their suitability for this 
+                important and influential role. You should provide all of the information 
+                requested insofar as it is available to you. 
+                A minimum set of information needs to be provided before a record can be saved.
+            </p>
+        </div>
+    </div>
+
 
 }
 
