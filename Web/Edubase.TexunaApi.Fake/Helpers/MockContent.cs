@@ -30,7 +30,7 @@ namespace Edubase.TexunaApi.Fake.Helpers
                 writer.Flush();
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(0);
         }
 
         protected override bool TryComputeLength(out long length)
