@@ -733,7 +733,14 @@ table {
     }
 }
 
+.changes-summary {
+    tbody tr:last-child {
+        td {
+            border-bottom: 4px solid $black;
+        }
 
+    }
+}
 
 
 

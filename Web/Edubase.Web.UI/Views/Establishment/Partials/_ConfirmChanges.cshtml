@@ -3,60 +3,56 @@
 @model ViewModel
 
 <div class="grid-row">
-    <div class="column-full">
-
-        <h1 class="bold-large">Confirm updates to establishment</h1>
-
+    <div class="column-full edit-changes-summary">
         @if (Model.IsAcademy || Model.IsLAMaintained)
         {
-            <div class="error-summary">
-                @if (Model.IsAcademy)
-                {
-                    <p class="red-exclaim">
-                        I confirm that in making these changes the academy has followed the 
+            if (Model.IsAcademy)
+            {
+                <div class="warning-message">
+                    <p>
+                        I confirm that in making these changes the academy has followed the
                         <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
                         and have submitted a deed of variation to the funding agreement where required.
                     </p>
-                }
-                else if (Model.IsLAMaintained)
-                {
-                    <p class="red-exclaim">
-                        I confirm that in making prescribed alterations the governing body or local authority has followed and completed the 
+                </div>
+            }
+            else if (Model.IsLAMaintained)
+            {
+                <div class="warning-message">
+                    <p>
+                        I confirm that in making prescribed alterations the governing body or local authority has followed and completed the
                         <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process</a>.
                     </p>
-                }
-            </div>
-        }
-        <p>Please conﬁrm updates to the following items for the Establishment ‘@Model.OriginalEstablishmentName’. Select cancel to return to the establishment record.</p>
-        <hr />
-    </div>
-</div>
-
-    <div class="column-half">
-        <div class="change-list">
-            @foreach (var item in Model.ChangesSummary)
-            {
-                <dl class="@(item != Model.ChangesSummary.Last() ? "border" : "last"))">
-                    <dt>Field:</dt>
-                    <dd>@item.Name</dd>
-                    <dt>Old value:</dt>
-                    <dd>@(item.OldValue ?? "<empty>")</dd>
-                    <dt>New value:</dt>
-                    <dd>@(item.NewValue ?? "<empty>")</dd>
-                </dl>
+                </div>
             }
-        </div>
-        <br />
-    </div>
+        }
 
-<div class="grid-row">
-    <div class="column-full">
+        <h1 class="bold-large">Confirm updates to establishment</h1>
+        <p>Please conﬁrm updates to the following items for the Establishment @Model.OriginalEstablishmentName. URN: @Model.Urn.</p>
 
-        <hr />
-        <br />
-        
-        @Html.EditorFor(x => x.ChangeEffectiveDate, new {title = "Effective date (optional)" })
+        <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
+        <table class="edubase-table changes-summary">            
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Old value</th>
+                    <th>New value</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ChangesSummary)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@(item.OldValue ?? "<empty>")</td>
+                        <td>@(item.OldValue ?? "<empty>")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
 
+        @Html.EditorFor(x => x.ChangeEffectiveDate, new { title = "Effective date (optional)" })
     </div>
 </div>
 
