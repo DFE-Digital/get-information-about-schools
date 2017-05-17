@@ -2,17 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Edubase.TexunaApi.Fake.Controllers
 {
     public class FakeController : ApiController
     {
-        private static readonly Lazy<Dictionary<string, object>> LazyDictionary = new Lazy<Dictionary<string, object>>();
-        private static Dictionary<string, object> ConfiguredResponses => LazyDictionary.Value;
+        private static readonly Lazy<Dictionary<string, MockMessage>> LazyDictionary = new Lazy<Dictionary<string, MockMessage>>();
+        private static readonly Lazy<Dictionary<Guid, MockMessage>> LazyIncomingRequestPayloads = new Lazy<Dictionary<Guid, MockMessage>>();
 
-        private static readonly Lazy<Dictionary<string, object>> _incomingRequestPayloads = new Lazy<Dictionary<string, object>>();
-        private static Dictionary<string, object> IncomingRequestPayloads => _incomingRequestPayloads.Value;
+        private static Dictionary<string, MockMessage> ConfiguredResponses => LazyDictionary.Value;
+        private static Dictionary<Guid, MockMessage> IncomingRequestPayloads => LazyIncomingRequestPayloads.Value;
 
 
         [HttpGet]
@@ -21,21 +25,34 @@ namespace Edubase.TexunaApi.Fake.Controllers
             var key = $"get-{uri}";
             if (ConfiguredResponses.ContainsKey(key))
             {
-                return this.Ok(ConfiguredResponses[key]);
+                return ResponseMessage(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = ConfiguredResponses[key].ToHttpContent()
+                });
             }
 
             return this.NotFound();
         }
 
         [HttpPost]
-        public IHttpActionResult Post(string uri, object body)
+        public async Task<IHttpActionResult> Post(string uri)
         {
             var key = $"post-{uri}";
             if (ConfiguredResponses.ContainsKey(key))
             {
-                var retVal = Ok(ConfiguredResponses[key]).Mockify();
-                IncomingRequestPayloads.Add(retVal.Id, body);
-                return retVal;
+                var content = ConfiguredResponses[key].ToHttpContent();
+                IncomingRequestPayloads.Add(content.Id, new MockMessage
+                {
+                    Content = await Request.Content.ReadAsStringAsync(),
+                    ContentType = Request.Content.Headers.ContentType
+                });
+
+                return ResponseMessage(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = content
+                });
             }
 
             return this.NotFound();
@@ -60,7 +77,7 @@ namespace Edubase.TexunaApi.Fake.Controllers
         }
 
         [HttpGet, Route("_request-payload/{id}")]
-        public IHttpActionResult GetRequestPayload(string id)
+        public IHttpActionResult GetRequestPayload(Guid id)
         {
             if (IncomingRequestPayloads.ContainsKey(id)) return Ok(IncomingRequestPayloads[id]);
             else return NotFound();
@@ -68,11 +85,15 @@ namespace Edubase.TexunaApi.Fake.Controllers
 
 
         [HttpPut, Route("configure/{method}")]
-        public IHttpActionResult SetResponse(string uri, string method, [FromBody]object response)
+        public async Task<IHttpActionResult> SetResponse(string uri, string method)
         {
             if (uri.StartsWith("/")) throw new Exception("The URI cannot start with a slash");
 
-
+            var response = new MockMessage
+            {
+                Content = await Request.Content.ReadAsStringAsync(),
+                ContentType = Request.Content.Headers.ContentType
+            };
 
             var paramsStart = uri.IndexOf("?");
             if (paramsStart > -1)
@@ -87,7 +108,7 @@ namespace Edubase.TexunaApi.Fake.Controllers
             }
 
             ConfiguredResponses.Add(key, response);
-            return this.Ok();
+            return this.Ok($"Response configured as {response.ContentType}");
         }
 
         [HttpDelete, Route("configure/{method}")]
