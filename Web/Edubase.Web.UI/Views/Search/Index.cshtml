@@ -125,7 +125,7 @@
                         self.itemSelect(e, address);
                     });
 
-                    $el.on('typeahead:render', function (e) {
+                    $el.on('typeahead:render, typeahead:open', function (e) {
                         $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
                     });
 
@@ -146,14 +146,19 @@
                 },
                 places: function (q, cb, fc) {
                     var c = new Array();
-
+                    var filteredPredictions;
                     autocompleteService.getPlacePredictions(
                         { input: q, types: ['geocode'], componentRestrictions: { country: 'GB' } },
                         function (predictions, status) {
                             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                                predictionsOld = predictions;
+                                filteredPredictions =  predictions.filter(function(p) {
+                                   if ($.inArray('premise', p.types) === -1) {
+                                        return p;
+                                    }
+                                });
+                               predictionsOld = filteredPredictions;
                             }
-                            if (!predictions) {
+                            if (!filteredPredictions) {
                                 $(window).trigger({
                                     type: 'noLocationMatch',
                                     q: q
@@ -161,8 +166,8 @@
                                 return;
                             } else {
                                 $('#searchby-location-ref').find('.warning-message').remove();
-                                $.map(predictions,
-                                function (prediction) {
+                                $.map(filteredPredictions,
+                                function (prediction) {                                    
                                     c.push(prediction.description);
                                 });
                                 fc(c);
