@@ -305,6 +305,10 @@
             $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
         });
 
+        $('#LocalAuthorityToAdd').on('typeahead:open', function (e) {
+            $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
+        });
+
         $('#LocalAuthorityToAdd').on('keydown', function (e) {
             var $input = $(this);
             if (e.which === 13) {
