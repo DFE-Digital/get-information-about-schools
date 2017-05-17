@@ -72,3 +72,49 @@ Delete All Responses
 DELETE configure
 
 Deletes *all* configuration
+
+
+
+Throw Exception
+===============
+
+GET throwexception
+
+Throws an exception
+
+
+
+Get the request payload for a given Response-Id
+===============================================
+
+GET _request-payload/{id}
+
+Gets the body of the request that corresponds to a given response Id
+
+id - the id (obtained from the header of a response) to query against
+
+
+
+Get requests for a given URI
+============================
+
+GET query/{method}?uri={uri}
+
+Returns a list of all requests that have been made for a given URI, along with the full request query string (inluding path and parameters) and the ID of the associated response.
+
+method - the HTTP method to configure (current supported values are GET or POST)
+uri - the URI to configure (e.g. "group/search")
+
+
+
+Check if a given URI was called with specific parameters
+========================================================
+
+GET assert/{method}?uri={uri-with-parameters}
+GET assert/{method}?uri={uri-with-parameters}&times={times}
+
+Checks if the specified uri (including parameters) was called (optionally checks if it was called a given number of times). Parameters are important when specifying the uri in this method
+since it will only match calls that match your query *exactly*
+
+method - the HTTP method to configure (current supported values are GET or POST)
+uri-with-parameters - the URI to configure (e.g. "group/search?filter=foo&orderby=bar")

@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="Helpers\MockContent.cs" />
     <Compile Include="Helpers\MockMessage.cs" />
+    <Compile Include="Models\MockRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -115,7 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
