@@ -1,11 +1,13 @@
 ﻿namespace Edubase.Services
 {
+    using Common.IO;
     using Exceptions;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using StackExchange.Profiling;
     using System;
     using System.Configuration;
+    using System.IO;
     using System.Net.Http;
     using System.Net.Http.Formatting;
     using System.Net.Http.Headers;
@@ -103,6 +105,46 @@
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
                 var result = await _httpClient.SendAsync(requestMessage);
                 Validate(result);
+            }
+        }
+
+        /// <summary>
+        /// Posts a multipart request to the API
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uri"></param>
+        /// <param name="data"></param>
+        /// <param name="fileName"></param>
+        /// <param name="principal"></param>
+        /// <returns></returns>
+        /// <remarks>
+        ///     Note:  This method contains a few hacks as the API isn't great at supporting multipart at the point of writing.
+        /// </remarks>
+        public async Task<T> PostMultipartAsync<T>(string uri, object data, string fileName, IPrincipal principal)
+        {
+            using (MiniProfiler.Current.Step($"TEXAPI: POST (multipart) {uri}"))
+            {
+                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal);
+
+                var content = new MultipartContent("form-data", Guid.NewGuid().ToString());
+
+                var fileContent = new ByteArrayContent(File.ReadAllBytes(fileName));
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(new FileHelper().GetMimeType(fileName));
+                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                fileContent.Headers.ContentDisposition.Name = "bulkfile"; // shouldn't be necessary, but it is.
+                fileContent.Headers.ContentDisposition.FileName = Path.GetFileName(fileName); // shouldn't be necessary
+                content.Add(fileContent);
+
+                var jsonPayload = new ObjectContent<object>(data, _formatter);
+                jsonPayload.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                jsonPayload.Headers.ContentDisposition.Name = "payload"; // shouldn't be necessary, but it is.
+                jsonPayload.Headers.ContentType.MediaType = "text/plain"; // should be application/json, but for some reason we have to use text/plain
+                content.Add(jsonPayload);
+
+                requestMessage.Content = content;
+
+                var result = await _httpClient.SendAsync(requestMessage);
+                return await ParseHttpResponseMessageAsync<T>(result);
             }
         }
 

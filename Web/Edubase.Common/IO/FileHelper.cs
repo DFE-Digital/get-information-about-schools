@@ -121,7 +121,7 @@ namespace Edubase.Common.IO
             {"pgn", "application/x-chess-pgn"},
             {"pic", "image/pict"},
             {"pict", "image/pict"},
-            {"png", "image/png"}, 
+            {"png", "image/png"},
             {"pnm", "image/x-portable-anymap"},
             {"pnt", "image/x-macpaint"},
             {"pntg", "image/x-macpaint"},
@@ -193,7 +193,7 @@ namespace Edubase.Common.IO
             {"xbm", "image/x-xbitmap"},
             {"xht", "application/xhtml+xml"},
             {"xhtml", "application/xhtml+xml"},
-            {"xls", "application/vnd.ms-excel"},                        
+            {"xls", "application/vnd.ms-excel"},
             {"xml", "application/xml"},
             {"xpm", "image/x-xpixmap"},
             {"xsl", "application/xml"},
@@ -207,7 +207,8 @@ namespace Edubase.Common.IO
             {"xul", "application/vnd.mozilla.xul+xml"},
             {"xwd", "image/x-xwindowdump"},
             {"xyz", "chemical/x-xyz"},
-            {"zip", "application/zip"}
+            {"zip", "application/zip"},
+            {"csv", "text/csv"}
           };
 
 

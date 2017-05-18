@@ -176,6 +176,9 @@
     <Compile Include="Domain\AddressDto.cs" />
     <Compile Include="Domain\ApiSearchResult.cs" />
     <Compile Include="Domain\ApiResultDto.cs" />
+    <Compile Include="Domain\BulkUpdateProgressModel.cs" />
+    <Compile Include="Domain\ErrorDto.cs" />
+    <Compile Include="Domain\FileDownloadDto.cs" />
     <Compile Include="Domain\NumericResultDto.cs" />
     <Compile Include="Downloads\IDownloadsService.cs" />
     <Compile Include="Downloads\Models\FileDownload.cs" />
@@ -193,6 +196,7 @@
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
+    <Compile Include="Establishments\Models\BulkUpdateDto.cs" />
     <Compile Include="Establishments\Models\IEBTModel.cs" />
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />

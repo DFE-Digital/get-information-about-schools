@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Edubase.Services.Establishments.Models;
 using System.Security.Principal;
+using System.IO;
+using Edubase.Services.Domain;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -20,8 +22,6 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task SaveAsync(EstablishmentModel model, IPrincipal principal)
         {
-            //throw new NotImplementedException("Awaiting the Create/Edit establishment APIs");
-
             if (model.Urn.HasValue)
             {
                 await _httpClient.PutAsync($"establishment", model, principal);
@@ -30,6 +30,20 @@ namespace Edubase.Services.Texuna.Establishments
             {
 
             }
+
+            // todo: texchange: patch and post
         }
+
+        public async Task<BulkUpdateProgressModel> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)
+        {
+            return await _httpClient.PostMultipartAsync<BulkUpdateProgressModel>("establishment/bulk-update", bulkUpdateInfo, bulkUpdateInfo.FileName, principal);
+        }
+
+        public async Task<BulkUpdateProgressModel> BulkUpdateAsync_GetProgressAsync(Guid taskId, IPrincipal principal)
+        {
+            return await _httpClient.GetAsync<BulkUpdateProgressModel>($"bulk-update/progress/{taskId}", principal);
+        }
+
+
     }
 }

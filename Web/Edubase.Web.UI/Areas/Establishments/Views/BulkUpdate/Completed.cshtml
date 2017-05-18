@@ -1,19 +1,11 @@
 ﻿<div class="breadcrumbs">
-    <ul>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-    </ul>
+    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null) > @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
 </div>
 
 @using (Html.BeginForm("EstablishmentBulkupdate", "Tools", FormMethod.Post, new {enctype = "multipart/form-data"}))
 {
     <div class="grid-row spaced-groups">
         <div class="column-full">
-
             @if (ViewBag.success != null && ViewBag.success)
             {
                 <div class="pending-updates-message dismissable-message bulk-update-success">
@@ -22,9 +14,7 @@
                     <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
                 </div>
             }
-
             <h1 class="heading-xlarge">Establishment bulk update</h1>
-
             @if (ViewBag.globalError != null && ViewBag.globalError)
             {
                 <div class="error-summary">
@@ -40,6 +30,50 @@
                         </ul>
                     }
 
+                    @if (ViewBag.missingFileError != null && ViewBag.missingFileError)
+                    {
+                        <h2 class="heading-medium error-summary-heading">File missing</h2>
+                        <ul class="error-list">
+                            <li>
+                                You didn't upload a file
+                                <a href="#bulkfile">Please upload a CSV or XLSX file to continue</a>
+                            </li>
+                        </ul>
+                    }
+
+                    @if (ViewBag.invalidFileError != null && ViewBag.invalidFileError)
+                    {
+                        <h2 class="heading-medium error-summary-heading">Validation fail</h2>
+                        <ul class="error-list">
+                            <li>
+                                The data contained in the uploaded file was invalid.
+                                <a href="#file-type">Please download the error log to correct your data before resubmitting</a>
+                            </li>
+                        </ul>
+                    }
+                    
+                    @if (ViewBag.fileTypeUnselected != null && ViewBag.fileTypeUnselected && ViewBag.globalError == null)
+                    {
+                        <h2 class="heading-medium error-summary-heading">File type no specified</h2>
+                        <ul class="error-list">
+                            <li>
+                                Please select a file type to upload.
+                                <a href="#error-log">Please download the error log to correct your data before resubmitting</a>
+                            </li>
+                        </ul>
+                    }
+                    </div>
+            }
+            @if (ViewBag.fileTypeUnselected != null && ViewBag.fileTypeUnselected && ViewBag.globalError != null && !ViewBag.globalError)
+            {
+                <div class="error-summary">
+                    <h2 class="heading-medium error-summary-heading">File type no specified</h2>
+                    <ul class="error-list">
+                        <li>
+                            Please select a file type to upload.
+                            <a href="#error-log">Please download the error log to correct your data before resubmitting</a>
+                        </li>
+                    </ul>
                 </div>
             }
 

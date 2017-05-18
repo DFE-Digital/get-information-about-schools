@@ -3,7 +3,6 @@ using Edubase.Web.UI.Models;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-//using ViewModel = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {

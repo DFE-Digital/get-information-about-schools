@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Web.UI.Areas.Establishments.Models.Validators;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Models;
@@ -33,6 +35,10 @@ namespace Edubase.Web.UI.Validation
 
             builder.RegisterType<SelectSharedGovernorViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<SelectSharedGovernorViewModel>))
+                .As<IValidator>();
+
+            builder.RegisterType<BulkUpdateViewModelValidator>()
+                .Keyed<IValidator>(typeof(IValidator<BulkUpdateViewModel>))
                 .As<IValidator>();
         }
     }
