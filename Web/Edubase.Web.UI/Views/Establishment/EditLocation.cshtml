@@ -116,9 +116,6 @@
                 <script>
                     $('#cancel-edit').okCancel({
                         ok: function() {
-                            // return true;
-                            console.log(this);
-                            console.log($(this.el).attr('href'));
                             window.location = this.el.getAttribute('href');
                         },
                         title: 'Are you sure you want to leave this page?',
