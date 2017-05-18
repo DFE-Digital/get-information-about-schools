@@ -762,6 +762,10 @@ p.table-caption {
     @include media(mobile) {
         width: 100%;
     }
+
+    + .date-group {
+        margin: 30px 0 54px;
+    }
 }
 
 

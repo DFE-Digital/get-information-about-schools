@@ -3,6 +3,17 @@
 @model ViewModel
 
 <div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>@Html.ActionLink("Home", "Index", "Search")</li>
+                <li>@Model.Name</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="grid-row">
     <div class="column-full edit-changes-summary">
         @if (Model.IsAcademy || Model.IsLAMaintained)
         {
@@ -27,8 +38,9 @@
             }
         }
 
-        <h1 class="bold-large">Confirm updates to establishment</h1>
-        <p>Please conﬁrm updates to the following items for the Establishment @Model.OriginalEstablishmentName. URN: @Model.Urn.</p>
+        <h1 class="heading-large">Confirm updates to establishment</h1>
+
+        <p class="font-xsmall">Please conﬁrm updates to the following items for the Establishment @Model.OriginalEstablishmentName. URN: @Model.Urn.</p>
 
         <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
         <table class="edubase-table changes-summary">            
@@ -43,9 +55,9 @@
                 @foreach (var item in Model.ChangesSummary)
                 {
                     <tr>
-                        <td>@item.Name</td>
-                        <td>@(item.OldValue ?? "<empty>")</td>
-                        <td>@(item.OldValue ?? "<empty>")</td>
+                        <td aria-label="Field">@item.Name</td>
+                        <td aria-label="Old value">@(item.OldValue ?? "<empty>")</td>
+                        <td aria-label="New value">@(item.OldValue ?? "<empty>")</td>
                     </tr>
                 }
             </tbody>
