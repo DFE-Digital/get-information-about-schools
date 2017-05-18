@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Groups.Downloads;
 using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
@@ -43,6 +44,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IGroupsWriteService _groupWriteService;
         private readonly ICompaniesHouseService _companiesHouseService;
+        private readonly IGroupDownloadService _groupDownloadService;
         private readonly NomenclatureService _nomenclatureService;
         
         public GroupController(
@@ -53,6 +55,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             IGovernorsReadService governorsReadService,
             IGroupsWriteService groupWriteService,
             ICompaniesHouseService companiesHouseService,
+            IGroupDownloadService groupDownloadService,
             NomenclatureService nomenclatureService)
         {
             _lookup = cachedLookupService;
@@ -63,6 +66,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _groupWriteService = groupWriteService;
             _companiesHouseService = companiesHouseService;
             _nomenclatureService = nomenclatureService;
+            _groupDownloadService = groupDownloadService;
         }
 
 
@@ -448,19 +452,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
 
-        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/csv/{id}")]
-        public async Task<ActionResult> DownloadCsvChangeHistory(int id)
+        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/{downloadType}/{id}")]
+        public async Task<ActionResult> DownloadChangeHistory(int id, DownloadType downloadType)
         {
-            // todo: TEXCHANGE; wating for API: 
-            throw new NotImplementedException("Not done yet; requires API '/group/{urn}/changes/download'");
-        }
-
-
-        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/xlsx/{id}")]
-        public async Task<ActionResult> DownloadXlsxChangeHistory(int id)
-        {
-            // todo: TEXCHANGE; wating for API: 
-            throw new NotImplementedException("Not done yet; requires API '/group/{urn}/changes/download'");
+            var response = await _groupDownloadService.DownloadGroupHistory(id, downloadType, User);
+            return Redirect(response.Url);
         }
     }
 }

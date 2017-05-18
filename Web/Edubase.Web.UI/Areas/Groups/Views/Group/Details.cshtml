@@ -258,8 +258,8 @@
                         else
                         {
                             <p>
-                                @Html.ActionLink("Download data in CSV format", "DownloadCsvChangeHistory", new { id = Model.Group.GroupUID, area = "Groups" }, new { style = "margin-bottom:10px; display:block;" })
-                                @Html.ActionLink("Download data in XLSX format", "DownloadXlsxChangeHistory", new { id = Model.Group.GroupUID, area = "Groups" })
+                                @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", new { id = Model.Group.GroupUID, area = "Groups", downloadType = DownloadType.csv }, new { style = "margin-bottom:10px; display:block;" })
+                                @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", new { id = Model.Group.GroupUID, area = "Groups", downloadType = DownloadType.xlsx })
                                 <br />
                             </p>
 

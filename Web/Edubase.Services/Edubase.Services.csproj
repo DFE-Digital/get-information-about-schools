@@ -176,6 +176,7 @@
     <Compile Include="Domain\AddressDto.cs" />
     <Compile Include="Domain\ApiSearchResult.cs" />
     <Compile Include="Domain\ApiResultDto.cs" />
+    <Compile Include="Domain\DownloadDto.cs" />
     <Compile Include="Domain\GroupChangeDto.cs" />
     <Compile Include="Domain\NumericResultDto.cs" />
     <Compile Include="Downloads\IDownloadsService.cs" />
