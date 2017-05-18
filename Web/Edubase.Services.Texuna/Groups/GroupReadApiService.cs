@@ -44,11 +44,8 @@ namespace Edubase.Services.Texuna.Groups
             throw new NotImplementedException($"NOT REQUIRED; {nameof(GroupReadApiService)}::{nameof(GetByEstablishmentUrnAsync)}");
         }
 
-        public async Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal user)
-        {
-            // TODO TEXCHANGE: need to link this to the API when they've done it!
-            return Enumerable.Empty<GroupChangeDto>();
-        }
+        public async Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal principal) =>
+            await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal);
 
         public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal) => await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments", principal);
 

@@ -442,7 +442,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     TypeName = establishmentGroup.TypeName,
                     HeadTitleName = establishmentGroup.HeadTitle,
                     JoinedDate = establishmentGroup.JoinedDate,
-                    CCIsLeadCentre = establishmentGroup.CCIsLeadCentre
+                    CCIsLeadCentre = establishmentGroup.CCIsLeadCentre ?? false
                 });
             }
         }

@@ -6,11 +6,8 @@ namespace Edubase.Services.Domain
     public class EdubaseChangeDto : ChangeDescriptorDto
     {
         public int Id { get; set; }
-
-        public string OriginatorUserId { get; set; }
         public string OriginatorUserName { get; set; }
         public string ApproverUserName { get; set; }
-        public string ApproverUserId { get; set; }
 
         /// <summary>
         /// Date the change actually occurred
@@ -27,11 +24,5 @@ namespace Edubase.Services.Domain
     {
         public int Urn { get; set; }
         
-    }
-
-    public class GroupChangeDto : EdubaseChangeDto
-    {
-        public int GroupUId { get; set; }
-
     }
 }
