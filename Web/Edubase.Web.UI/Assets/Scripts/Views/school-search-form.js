@@ -270,9 +270,6 @@
                 if ($(this).nextAll('.tt-menu').find('.tt-suggestion').length > 0) {
                     $(this).nextAll('.tt-menu').find('.tt-cursor').click();
 
-                } else {
-                    return self.showWarning($('#searchby-la-ref'),
-                        'We don’t recognise this local authority. Amend it or clear it to continue searching.');
                 }
             }
         });
@@ -302,6 +299,10 @@
         });
 
         $('#LocalAuthorityToAdd').on('typeahead:render', function (e) {
+            $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
+        });
+
+        $('#LocalAuthorityToAdd').on('typeahead:open', function (e) {
             $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
         });
 
