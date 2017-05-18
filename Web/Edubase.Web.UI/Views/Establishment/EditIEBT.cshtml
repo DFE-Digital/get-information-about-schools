@@ -3,7 +3,10 @@
 @using System.Linq.Expressions
 @model ViewModel
 @{
-    Layout = "_EditLayoutPage.cshtml";
+    if (Model.ChangesSummary == null)
+    {
+        Layout = "_EditLayoutPage.cshtml";
+    }
 }
 
 @using (Html.BeginForm())
@@ -170,9 +173,29 @@
         {
             Html.RenderPartial("Partials/_ConfirmChanges");
             <div class="button-row">
-                <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
+                <button class="button-grey button mobile-full-width" name="action" type="submit" value="@ViewModel.eAction.CancelChanges">&laquo; Back</button>
                 <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
-            </div>            
+
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-grey mobile-full-width", id = "cancel-edit"})
+            </div>    
+            
+            @section ViewScripts {
+    
+                <script>
+                    $('#cancel-edit').okCancel({
+                        ok: function() {
+                            // return true;
+                            console.log(this);
+                            console.log($(this.el).attr('href'));
+                            window.location = this.el.getAttribute('href');
+                        },
+                        title: 'Are you sure you want to leave this page?',
+                        content: 'Any unsaved changes will be lost',
+                        triggerEvent: 'click'
+                    });
+                </script>
+
+            }    
         }
     
     </div>

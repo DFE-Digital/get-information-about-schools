@@ -733,7 +733,14 @@ table {
     }
 }
 
+.changes-summary {
+    tbody tr:last-child {
+        td {
+            border-bottom: 4px solid $black;
+        }
 
+    }
+}
 
 
 
@@ -754,6 +761,10 @@ p.table-caption {
     margin: 20px 0;
     @include media(mobile) {
         width: 100%;
+    }
+
+    + .date-group {
+        margin: 30px 0 54px;
     }
 }
 
