@@ -19,12 +19,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                 .Must(x => x.IsNotEmpty())
                 .WithSummaryMessage("Date of appointment is required")
                 .WithMessage("Required")
-                .When(x => x.AppointmentStartDate.IsEmpty()
-                           && !x.GovernorRole.OneOfThese(
-                               eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody,
-                               eLookupGovernorRole.Establishment_SharedLocalGovernor,
-                               eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody,
-                               eLookupGovernorRole.Group_SharedLocalGovernor), ApplyConditionTo.CurrentValidator)
 
                 .Must(x => x.ToDateTime().Value <= DateTime.Today)
                 .WithMessage("This cannot be a future date")
@@ -68,12 +62,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                 .NotEmpty()
                 .WithSummaryMessage("Email address is required")
                 .WithMessage("Required")
-                .When(x => x.GovernorRole.OneOfThese(
-                    eLookupGovernorRole.ChairOfGovernors,
-                    eLookupGovernorRole.ChairOfLocalGoverningBody,
-                    eLookupGovernorRole.ChairOfTrustees,
-                    eLookupGovernorRole.AccountingOfficer,
-                    eLookupGovernorRole.ChiefFinancialOfficer));
+                .When(x => !x.GovernorRole.OneOfThese(eLookupGovernorRole.Governor, eLookupGovernorRole.Trustee, eLookupGovernorRole.LocalGovernor, eLookupGovernorRole.Member));
 
             RuleFor(x => x.TelephoneNumber)
                 .NotEmpty()

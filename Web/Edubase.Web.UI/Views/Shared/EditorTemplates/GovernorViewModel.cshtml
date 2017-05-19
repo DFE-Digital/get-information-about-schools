@@ -8,7 +8,7 @@
 </div>
 
 <div class="form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-    @Html.LabelFor(x => x.FirstName)
+    @Html.LabelFor(x => x.FirstName, "First name (required to save record)")
     @Html.ValidationMessageFor(x => x.FirstName)
     @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
 </div>
@@ -20,7 +20,7 @@
 </div>
 
 <div class="form-group @Html.ValidationCssClassFor(x => x.LastName)">
-    @Html.LabelFor(x => x.LastName)
+    @Html.LabelFor(x => x.LastName, "Last name (required to save record)")
     @Html.ValidationMessageFor(x => x.LastName)
     @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
 </div>
@@ -36,7 +36,7 @@
 @if (Model.DisplayPolicy.AppointingBodyId)
 {
 <div class="form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
-    @Html.LabelFor(x => x.AppointingBodyId)
+    @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)")
     @Html.ValidationMessageFor(x => x.AppointingBodyId)
     @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "", new { @class = "form-control" })
 </div>
@@ -44,7 +44,7 @@
 
 @if (Model.DisplayPolicy.AppointmentStartDate)
 {
-    @Html.EditorFor(x => x.AppointmentStartDate)
+    @Html.EditorFor(x => x.AppointmentStartDate, new { title = "Date of appointment (required to save record)"})
 }
 
 @if (Model.DisplayPolicy.AppointmentEndDate)
@@ -55,7 +55,7 @@
 @if (Model.DisplayPolicy.EmailAddress)
 {
     <div class="form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
-        @Html.LabelFor(x => x.EmailAddress)
+        @Html.LabelFor(x => x.EmailAddress, "Email address (required to save record)")
         @Html.ValidationMessageFor(x => x.EmailAddress)
         @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control" })
     </div>
@@ -114,7 +114,7 @@
 @if (Model.DisplayPolicy.TelephoneNumber)
 {
     <div class="form-group @Html.ValidationCssClassFor(x => x.TelephoneNumber)">
-        @Html.LabelFor(x => x.TelephoneNumber)
+        @Html.LabelFor(x => x.TelephoneNumber, "Telephone (required to save record)")
         @Html.ValidationMessageFor(x => x.TelephoneNumber)
         @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = "form-control" })
     </div>
