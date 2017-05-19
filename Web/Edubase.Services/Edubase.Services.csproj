@@ -182,6 +182,7 @@
     <Compile Include="Domain\GroupChangeDto.cs" />
     <Compile Include="Domain\FileDownloadDto.cs" />
     <Compile Include="Domain\NumericResultDto.cs" />
+    <Compile Include="Domain\SearchDownloadDto.cs" />
     <Compile Include="Downloads\IDownloadsService.cs" />
     <Compile Include="Downloads\Models\FileDownload.cs" />
     <Compile Include="Enums\eFileFormat.cs" />

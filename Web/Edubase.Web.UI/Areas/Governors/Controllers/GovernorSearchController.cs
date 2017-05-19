@@ -59,45 +59,42 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return PartialView("Partials/_GovernorSearchResults", model);
         }
 
-
         [HttpGet, Route("PrepareDownload")]
         public async Task<ActionResult> PrepareDownload(GovernorSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Governors;
             viewModel.SearchQueryString = Request.QueryString.ToString();
 
-            if (!viewModel.FileFormat.HasValue) return View("Downloads/SelectFormat", viewModel);
-            else
-            {
-                var progressId = await InvokeGovernorSearchDownloadGenerationAsync(viewModel);
-                return RedirectToAction(nameof(Download), new { id = progressId });
-            }
+            if (!viewModel.FileFormat.HasValue)
+                return View("Downloads/SelectFormat", viewModel);
+
+            var progressId = await _governorDownloadService.SearchWithDownloadGenerationAsync(
+                new Services.Domain.SearchDownloadDto<GovernorSearchPayload>
+                {
+                    SearchPayload = CreateSearchPayload(viewModel),
+                    FileFormat = viewModel.FileFormat.Value
+                }, User);
+            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
         }
 
         [HttpGet, Route("Download")]
-        public async Task<ActionResult> Download(Guid id)
+        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
-            throw new NotImplementedException();
-            //var model = await _governorDownloadService.GetDownloadGenerationProgressAsync(id);
-            //var viewModel = new GovernorSearchDownloadGenerationProgressViewModel(model, (model.IsComplete ? 3 : 2));
-            //if (model.HasErrored) throw new Exception($"Download generation failed; Further details can be obtained from the logs using exception message id: {model.ExceptionMessageId}");
-            //else if (!model.IsComplete) return View("Downloads/PreparingFilePleaseWait", viewModel);
-            //else return View("Downloads/ReadyToDownload", viewModel);
-        }
+            var model = await _governorDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            var viewModel = new GroupSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 3 : 2)
+            {
+                FileFormat = fileFormat,
+                SearchSource = searchSource,
+                SearchQueryString = searchQueryString
+            };
 
-        private async Task<Guid> InvokeGovernorSearchDownloadGenerationAsync(GovernorSearchDownloadViewModel viewModel)
-        {
-            throw new NotImplementedException();
-            //var payload = CreateSearchPayload(viewModel);
-            //var progress = await _governorDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
-            //var principal = User;
+            if (model.HasErrored)
+                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
 
-            //// todo: TEXCHANGE: remove post-texuna integration.
-            //HostingEnvironment.QueueBackgroundWorkItem(async ct =>
-            //{
-            //    await _governorDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.FileFormat.Value);
-            //});
-            //return progress.Id;
+            if (!model.IsComplete)
+                return View("Downloads/PreparingFilePleaseWait", viewModel);
+
+            return View("Downloads/ReadyToDownload", viewModel);
         }
 
         private async Task<ActionResult> SearchGovernors(GovernorSearchViewModel model)

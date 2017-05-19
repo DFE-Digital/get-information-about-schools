@@ -50,46 +50,43 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return PartialView("Partials/_GroupSearchResults", model);
         }
 
-
         [HttpGet, Route("PrepareDownload")]
         public async Task<ActionResult> PrepareDownload(GroupSearchDownloadViewModel viewModel)
         {
-            viewModel.SearchSource = eLookupSearchSource.Governors;
+            viewModel.SearchSource = eLookupSearchSource.Groups;
             viewModel.SearchQueryString = Request.QueryString.ToString();
 
-            if (!viewModel.FileFormat.HasValue) return View("Downloads/SelectFormat", viewModel);
-            else
-            {
-                throw new NotImplementedException();
-                //var progressId = await InvokeGroupSearchDownloadGenerationAsync(viewModel);
-                //return RedirectToAction(nameof(Download), new { id = progressId });
-            }
+            if (!viewModel.FileFormat.HasValue)
+                return View("Downloads/SelectFormat", viewModel);
+
+            var progressId = await _groupDownloadService.SearchWithDownloadGenerationAsync(
+                new Services.Domain.SearchDownloadDto<GroupSearchPayload>
+                {
+                    SearchPayload = CreateSearchPayload(viewModel),
+                    FileFormat = viewModel.FileFormat.Value
+                }, User);
+            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
         }
 
         [HttpGet, Route("Download")]
-        public async Task<ActionResult> Download(Guid id)
+        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
-            throw new NotImplementedException();
-            //var model = await _groupDownloadService.GetDownloadGenerationProgressAsync(id);
-            //var viewModel = new GroupSearchDownloadGenerationProgressViewModel(model, (model.IsComplete ? 3 : 2));
-            //if (model.HasErrored) throw new Exception($"Download generation failed; Further details can be obtained from the logs using exception message id: {model.ExceptionMessageId}");
-            //else if (!model.IsComplete) return View("Downloads/PreparingFilePleaseWait", viewModel);
-            //else return View("Downloads/ReadyToDownload", viewModel);
+            var model = await _groupDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            var viewModel = new GroupSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 3 : 2)
+            {
+                FileFormat = fileFormat,
+                SearchSource = searchSource,
+                SearchQueryString = searchQueryString
+            };
+
+            if (model.HasErrored)
+                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+
+            if (!model.IsComplete)
+                return View("Downloads/PreparingFilePleaseWait", viewModel);
+
+            return View("Downloads/ReadyToDownload", viewModel);
         }
-
-        //private async Task<Guid> InvokeGroupSearchDownloadGenerationAsync(GroupSearchDownloadViewModel viewModel)
-        //{
-        //    var payload = CreateSearchPayload(viewModel);
-        //    var progress = await _groupDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
-        //    var principal = User;
-
-        //    // todo: remove post-texuna integration.
-        //    HostingEnvironment.QueueBackgroundWorkItem(async ct =>
-        //    {
-        //        await _groupDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.FileFormat.Value);
-        //    });
-        //    return progress.Id;
-        //}
 
         private async Task<ActionResult> SearchGroups(GroupSearchViewModel model)
         {
