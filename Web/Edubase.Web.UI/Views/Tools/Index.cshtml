@@ -59,7 +59,7 @@
     
     <div class="column-half">
         <h3>
-            @Html.ActionLink("Create a new establishment", "CreateEstablishment", "Tools")
+            @Html.RouteLink("Create a new establishment", "CreateEstablishment")
         </h3>
         <p>
             Set up a new establishment record.
@@ -86,15 +86,7 @@
         </p>
     </div>
     
-
-
-                @if (Model.UserCanCreateEstablishment)
-                {
-                    <li>@Html.RouteLink("Create a new establishment", "CreateEstablishment")</li>
-                }
-
-
-    
+   
 
     <div class="column-half">
         <h3>
