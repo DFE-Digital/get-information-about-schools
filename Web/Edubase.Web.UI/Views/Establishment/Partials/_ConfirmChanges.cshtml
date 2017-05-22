@@ -7,7 +7,7 @@
         <div class="breadcrumbs">
             <ul>
                 <li>@Html.ActionLink("Home", "Index", "Search")</li>
-                <li>@Model.Name</li>
+                <li>@Html.ActionLink(Model.Name, "Details", "Establishment", new {@class="requires-conf-to-leave"})</li>
             </ul>
         </div>
     </div>

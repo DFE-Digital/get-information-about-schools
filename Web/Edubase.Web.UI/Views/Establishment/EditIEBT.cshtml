@@ -182,7 +182,7 @@
             @section ViewScripts {
     
                 <script>
-                    $('#cancel-edit').okCancel({
+                    $('#cancel-edit, .requires-conf-to-leave').okCancel({
                         ok: function() {
                             window.location = this.el.getAttribute('href');
                         },
