@@ -21,9 +21,9 @@
             <h1 class="heading-large">
                 Create a school or college
             </h1>
-        </div>
 
-        @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+            @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+        </div>
 
         @using (Html.BeginForm())
         {
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="column-full">
-                <fieldset class="inline">
+                <fieldset class="inline" id="number-gen-options">
                     <legend class="heading-small">Establishment number</legend>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
                         @Html.ValidationMessageFor(x => x.GenerateEstabNumber)
@@ -81,7 +81,7 @@
             </div>
 
             <div class="column-half">
-                <div id="enter-number" class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                <div id="enter-number" class="form-group panel-border-narrow estab-number-wrap hidden @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
                     @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number")
                     @Html.ValidationMessageFor(x => x.EstablishmentNumber)
                     @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control" })
@@ -103,17 +103,18 @@
     <script type="text/javascript">
 
         $(function () {
-            var $enterNumberRadio = $("#enter-number-radio");
-            var $generateNumberRadio = $("#generate-number-radio");
+            var $radios = $('#number-gen-options').find(':radio');
             var $enterNumber = $("#enter-number");
-            
+
             var func = function () {
-                if ($enterNumberRadio.is(":checked")) $enterNumber.show();
-                else $enterNumber.hide();
+                if ($radios.filter(':checked').val() === 'False') {
+                    $enterNumber.removeClass('hidden');
+                } else {
+                    $enterNumber.addClass('hidden');
+                }
             };
 
-            $enterNumberRadio.change(func);
-            $generateNumberRadio.change(func);
+            $radios.on('change', func);
 
             func();
         });
