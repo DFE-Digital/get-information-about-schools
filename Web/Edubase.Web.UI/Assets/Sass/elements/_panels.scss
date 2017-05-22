@@ -104,4 +104,15 @@
 
 .section-break {
     border-top: $grey-3 2px solid;
+    margin-top: 20px;
+}
+
+.tools-landing {
+    h3 {
+        font-size: 21px;
+    }
+
+    .column-half:nth-child(odd) {
+        clear: left;
+    }
 }
