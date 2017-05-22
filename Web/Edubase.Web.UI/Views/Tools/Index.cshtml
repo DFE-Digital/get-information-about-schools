@@ -88,6 +88,12 @@
     
 
 
+                @if (Model.UserCanCreateEstablishment)
+                {
+                    <li>@Html.RouteLink("Create a new establishment", "CreateEstablishment")</li>
+                }
+
+
     
 
     <div class="column-half">

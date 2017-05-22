@@ -36,18 +36,11 @@ namespace Edubase.Services.Groups
         /// <returns></returns>
         Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal);
 
-        Task<bool> ExistsAsync(IPrincipal principal, string name, int? localAuthorityId = null, int? existingGroupUId = null);
-        Task<bool> ExistsAsync(CompaniesHouseNumber number, IPrincipal principal); // TODO: TEXCHANGE: add to the API spec
+        Task<bool> ExistsAsync(IPrincipal principal, CompaniesHouseNumber? companiesHouseNumber = null, string groupId = null, int? existingGroupUId = null, string name = null, int? localAuthorityId = null);
 
-        /// <summary>
-        /// Checks whether a groud id already exists within the database
-        /// </summary>
-        /// <param name="groupId">The Group ID to check</param>
-        /// <param name="existingGroupUId">The existing UID of the record, so it can be excluded from the check</param>
-        /// <returns></returns>
-        Task<bool> ExistsAsync(IPrincipal principal, string groupId, int? existingGroupUId = null); // TODO: TEXCHANGE: add to the API spec
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel original, GroupModel model);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model);
         Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal user);
+        Task<bool> CanEditAsync(int uid, IPrincipal principal);
     }
 }

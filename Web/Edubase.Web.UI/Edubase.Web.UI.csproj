@@ -332,7 +332,9 @@
     <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
     <Compile Include="Helpers\ValidationExtensions.cs" />
     <Compile Include="Helpers\WebHelpers.cs" />
+    <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
+    <Compile Include="Models\Establishments\Validators\CreateEstablishmentViewModelValidator.cs" />
     <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />

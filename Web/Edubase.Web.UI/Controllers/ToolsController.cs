@@ -10,6 +10,7 @@ using System.Web.Mvc;
 namespace Edubase.Web.UI.Controllers
 {
     using Filters;
+    using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
 
     [RoutePrefix("Tools"), Route("{action=index}")]
@@ -23,23 +24,20 @@ namespace Edubase.Web.UI.Controllers
         }
 
         // GET: Tools
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var viewModel = new ToolsViewModel();
-            // todo: TEXCHANGE: use new security API (not implemented by texuna yet)
-            //var permission = _securityService.GetCreateGroupPermission(User);
+            var createGroupPermission = await _securityService.GetCreateGroupPermissionAsync(User);
+            var createEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
 
-            //viewModel.UserCanCreateAcademyTrustGroup = permission.CanCreate((int)GT.MultiacademyTrust, permission.LocalAuthorityIds.FirstOrDefault()) 
-            //    || permission.CanCreate((int)GT.SingleacademyTrust, permission.LocalAuthorityIds.FirstOrDefault());
-
-            //viewModel.UserCanCreateChildrensCentreGroup = permission.CanCreate((int)GT.ChildrensCentresCollaboration, permission.LocalAuthorityIds.FirstOrDefault())
-            //    || permission.CanCreate((int)GT.ChildrensCentresGroup, permission.LocalAuthorityIds.FirstOrDefault());
-
-            //viewModel.UserCanCreateFederationGroup = permission.CanCreate((int)GT.Federation, permission.LocalAuthorityIds.FirstOrDefault());
-
-            //viewModel.UserCanCreateSchoolTrustGroup = permission.CanCreate((int)GT.Trust, permission.LocalAuthorityIds.FirstOrDefault());
-
-            //viewModel.UserCanCreateAcademySponsor = permission.CanCreate((int)GT.SchoolSponsor, permission.LocalAuthorityIds.FirstOrDefault());
+            var viewModel = new ToolsViewModel
+            {
+                UserCanCreateAcademyTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.MultiacademyTrust || x == GT.SingleacademyTrust),
+                UserCanCreateChildrensCentreGroup = createGroupPermission.GroupTypes.Any(x => x == GT.ChildrensCentresCollaboration || x == GT.ChildrensCentresGroup),
+                UserCanCreateFederationGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Federation),
+                UserCanCreateSchoolTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Trust),
+                UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
+                UserCanCreateEstablishment = createEstablishmentPermission.CanCreate
+            };
 
             return View(viewModel);
         }

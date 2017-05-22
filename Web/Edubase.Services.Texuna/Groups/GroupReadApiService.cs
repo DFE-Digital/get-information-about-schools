@@ -7,6 +7,8 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using System.Security.Principal;
 using System.Linq;
+using Edubase.Services.Texuna.Models;
+using System.Text;
 
 namespace Edubase.Services.Texuna.Groups
 {
@@ -20,19 +22,18 @@ namespace Edubase.Services.Texuna.Groups
             _httpClient = httpClient;
         }
 
-        public Task<bool> ExistsAsync(CompaniesHouseNumber number, IPrincipal principal)
+        public async Task<bool> ExistsAsync(IPrincipal principal, CompaniesHouseNumber? companiesHouseNumber = null, string groupId = null, int? existingGroupUId = null, string name = null, int? localAuthorityId = null)
         {
-            throw new NotImplementedException($"{nameof(GroupReadApiService)}::{nameof(ExistsAsync)}");
-        }
-
-        public Task<bool> ExistsAsync(IPrincipal principal, string groupId, int? existingGroupUId = default(int?))
-        {
-            throw new NotImplementedException($"{nameof(GroupReadApiService)}::{nameof(ExistsAsync)}");
-        }
-
-        public Task<bool> ExistsAsync(IPrincipal principal, string name, int? localAuthorityId = default(int?), int? existingGroupUId = default(int?))
-        {
-            throw new NotImplementedException($"{nameof(GroupReadApiService)}::{nameof(ExistsAsync)}");
+            var parameters = new Dictionary<string, string>
+            {
+                [nameof(groupId)] = groupId,
+                [nameof(companiesHouseNumber)] = companiesHouseNumber?.ToString(),
+                [nameof(existingGroupUId)] = existingGroupUId?.ToString(),
+                [nameof(name)] = name,
+                [nameof(localAuthorityId)] = localAuthorityId?.ToString()
+            };
+            var queryString = string.Join("&", parameters.Where(x => x.Value != null).Select(x => $"{x.Key}={x.Value}"));
+            return (await _httpClient.GetAsync<BoolResult>($"group/exists?{queryString}", principal)).Value;
         }
 
         public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal) => await _httpClient.GetAsync<List<GroupModel>>($"establishment/{urn}/groups", principal);
@@ -78,8 +79,9 @@ namespace Edubase.Services.Texuna.Groups
         }
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
-        {
-            return await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}", principal);
-        }
+            => await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}", principal);
+
+        public async Task<bool> CanEditAsync(int uid, IPrincipal principal)
+            => (await _httpClient.GetAsync<BoolResult>($"group/{uid}/canedit", principal)).Value;
     }
 }

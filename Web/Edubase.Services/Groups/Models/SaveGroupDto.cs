@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace Edubase.Services.Groups.Models
         public GroupModel Group { get; set; }
         public List<EstablishmentGroupModel> LinkedEstablishments { get; set; }
 
+        [JsonIgnore]
         public bool IsNewEntity => !GetGroupUId().HasValue;
 
         private int? _groupUId = null;

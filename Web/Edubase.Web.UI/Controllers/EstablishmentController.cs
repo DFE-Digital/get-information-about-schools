@@ -193,10 +193,6 @@ namespace Edubase.Web.UI.Controllers
             }
         }
         
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult Create() => RedirectToAction("Index", "Prototype", new { viewName = "Placeholder" });
-        
-
         [HttpGet, Route("Details/{id}")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments)
         {
@@ -317,6 +313,13 @@ namespace Edubase.Web.UI.Controllers
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
         }
 
+        private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
+        {
+            viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
+            viewModel.EstablishmentTypes = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).ToSelectList(viewModel.EstablishmentTypeId);
+            viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).ToSelectList(viewModel.EducationPhaseId);
+        }
+
         private async Task<GroupModel> GetLegalParent(int establishmentUrn, IPrincipal principal)
         {
             try
@@ -397,6 +400,29 @@ namespace Edubase.Web.UI.Controllers
             vm.StatusName = await c.GetNameAsync(() => vm.Establishment.StatusId);
             vm.AdmissionsPolicyName = await c.GetNameAsync(() => vm.Establishment.AdmissionsPolicyId);
         }
+
+
+
+        [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
+        public async Task<ActionResult> Create()
+        {
+            var viewModel = new CreateEstablishmentViewModel();
+            await PopulateSelectLists(viewModel); 
+            return View(viewModel);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
+        public async Task<ActionResult> Create(CreateEstablishmentViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+
+            }
+
+            await PopulateSelectLists(viewModel);
+            return View(viewModel);
+        }
+
 
     }
 }

@@ -1,19 +1,28 @@
-﻿using Edubase.Services.Groups;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Edubase.Services.Domain;
+using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace Edubase.Services.Texuna.Groups
 {
     public class GroupsWriteApiService : IGroupsWriteService
     {
-        public Task<int> SaveAsync(SaveGroupDto dto, IPrincipal principal)
+        private readonly HttpClientWrapper _httpClient;
+
+        public GroupsWriteApiService(HttpClientWrapper httpClient)
         {
-            throw new NotImplementedException($"{nameof(GroupsWriteApiService)}::{nameof(SaveAsync)}");
+            _httpClient = httpClient;
+        }
+
+        public async Task<int> SaveAsync(SaveGroupDto dto, IPrincipal principal)
+        {
+            if (dto.IsNewEntity) return (await _httpClient.PostAsync<NumericResultDto>($"group", dto, principal)).Value;
+            else
+            {
+                await _httpClient.PutAsync($"group", dto, principal);
+                return dto.Group.GroupUID.Value;
+            }
         }
     }
 }

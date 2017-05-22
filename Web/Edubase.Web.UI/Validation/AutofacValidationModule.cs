@@ -4,6 +4,8 @@ using Edubase.Web.UI.Areas.Establishments.Models.Validators;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models.Establishments;
+using Edubase.Web.UI.Models.Establishments.Validators;
 using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
 
@@ -39,6 +41,10 @@ namespace Edubase.Web.UI.Validation
 
             builder.RegisterType<BulkUpdateViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<BulkUpdateViewModel>))
+                .As<IValidator>();
+
+            builder.RegisterType<CreateEstablishmentViewModelValidator>()
+                .Keyed<IValidator>(typeof(IValidator<CreateEstablishmentViewModel>))
                 .As<IValidator>();
         }
     }

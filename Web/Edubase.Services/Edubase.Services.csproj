@@ -177,6 +177,8 @@
     <Compile Include="Domain\ApiSearchResult.cs" />
     <Compile Include="Domain\ApiResultDto.cs" />
     <Compile Include="Domain\BulkUpdateProgressModel.cs" />
+    <Compile Include="Domain\CreateEstablishmentPermissionDto.cs" />
+    <Compile Include="Domain\CreateGroupPermissionDto.cs" />
     <Compile Include="Domain\ErrorDto.cs" />
     <Compile Include="Domain\DownloadDto.cs" />
     <Compile Include="Domain\GroupChangeDto.cs" />
@@ -296,7 +298,6 @@
     <Compile Include="Nomenclature\NomenclatureService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\StubClaimsIdConverter.cs" />
-    <Compile Include="Security\ClaimsIdentityConverters\IClaimsIdConverter.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\SecureAccessClaimsIdConverter.cs" />
     <Compile Include="Security\EduClaimTypes.cs" />
     <Compile Include="Security\ISecurityService.cs" />

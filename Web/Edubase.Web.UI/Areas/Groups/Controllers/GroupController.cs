@@ -88,9 +88,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup)) viewModel.Address = model.Address.ToString();
 
-            // TODO: TEXCHANGE
-            // Use the new security API for this
-
+            viewModel.CanUserEdit = await _groupReadService.CanEditAsync(id, User);
             viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
             if (viewModel.IsUserLoggedOn)
@@ -121,31 +119,27 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else if (groupTypeMode == eGroupTypeMode.Federation) viewModel.GroupTypeId = (int)GT.Federation;
             else if (groupTypeMode == eGroupTypeMode.Trust) viewModel.GroupTypeId = (int)GT.Trust;
             else if (groupTypeMode == eGroupTypeMode.Sponsor) viewModel.GroupTypeId = (int)GT.SchoolSponsor;
-
-            await PopulateLocalAuthorityFields(viewModel);
-
-            // TODO TEXCHANGE: add support for new security api
-            //if (!_securityService.GetCreateGroupPermission(User).CanCreate(viewModel.GroupTypeId, viewModel.LocalAuthorityId))
+            
+            var permission = await _securityService.GetCreateGroupPermissionAsync(User);
+            if (!permission.GroupTypes.Any(x => x == viewModel.GroupType.Value))
+            {
                 throw new PermissionDeniedException("Current principal does not have permission to create a group of this type.");
+            }
+
+            if (viewModel.GroupTypeMode == eGroupTypeMode.ChildrensCentre)
+            {
+                if (permission.CCLocalAuthorityId.HasValue)
+                {
+                    viewModel.IsLocalAuthorityEditable = false;
+                    viewModel.LocalAuthorityId = permission.CCLocalAuthorityId;
+                    viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
+                }
+                else viewModel.IsLocalAuthorityEditable = true;
+            }
             
             return View("Create", viewModel);
         }
-
-        private async Task PopulateLocalAuthorityFields(GroupEditorViewModel viewModel)
-        {
-            // TODO: TEXTCHANGE; ADD SUPPORT FOR SECURITY API
-            //if (viewModel.GroupTypeMode == eGroupTypeMode.ChildrensCentre)
-            //{
-            //    var permission = _securityService.GetCreateGroupPermission(User);
-            //    if (permission.LocalAuthorityIds.Any())
-            //    {
-            //        viewModel.IsLocalAuthorityEditable = false;
-            //        viewModel.LocalAuthorityId = permission.LocalAuthorityIds[0];
-            //        viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
-            //    }
-            //    else viewModel.IsLocalAuthorityEditable = true;
-            //}
-        }
+        
 
         [HttpPost]
         [Route("Create")]
@@ -153,8 +147,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
-            //ViewBag.FVErrors = result;
-
+            
             await PopulateSelectLists(viewModel);
 
             if (ModelState.IsValid)
@@ -204,8 +197,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
-            //ViewBag.FVErrors = result;
-
+            
             await PopulateSelectLists(viewModel);
             if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
 
@@ -250,8 +242,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
-            //ViewBag.FVErrors = result;
-
+            
             if (ModelState.IsValid)
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
@@ -284,7 +275,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var groupTypes = await GetAcademyTrustGroupTypes();
 
             var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
-            vm.TrustExists = await _groupReadService.ExistsAsync(CompaniesHouseNumber.Parse(companiesHouseNumber), User);
+            vm.TrustExists = await _groupReadService.ExistsAsync(User, companiesHouseNumber: CompaniesHouseNumber.Parse(companiesHouseNumber));
             
             return View(vm);
         }
