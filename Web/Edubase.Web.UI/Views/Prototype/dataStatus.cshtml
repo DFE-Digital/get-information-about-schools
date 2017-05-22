@@ -1,0 +1,80 @@
+﻿
+@{
+    Layout = null;
+    ViewBag.itIsUrgent = Request["warning"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Prototype page</title>
+</head>
+<body>
+<div id="data-status-summary" class="data-status-summary">
+    <a href="#" id="data-status-close" class="modal-exit">Close</a>
+    <div class="overlay-padder">
+        <h1 class="heading-large">Data status</h1>
+        @if (ViewBag.itIsUrgent == "true")
+        {
+            <div class="warning-message">
+                <p>Please update your data status</p>
+            </div>
+        }
+        else
+        {
+            <p class="table-caption">These date show when each of our teams last updated their data.</p>
+        }
+       
+
+        <table class="edubase-table retain-columns">
+            <thead>
+                <tr>
+                    <th>Establishment type</th>
+                    <th>Last updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td aria-label="Establishment type">Acadmey openers</td>
+                    <td aria-label="Last updated">25/03/2017</td>
+                </tr>
+                <tr>
+                    <td aria-label="Establishment type">Free school openers</td>
+                    <td aria-label="Last updated">25/03/2017</td>
+                </tr>
+                <tr>
+                    <td aria-label="Establishment type">Open academies and free schools</td>
+                    <td aria-label="Last updated">25/03/2017</td>
+                </tr>
+                <tr>
+                    <td aria-label="Establishment type">LA maintained schools</td>
+                    <td aria-label="Last updated">25/03/2017</td>
+                </tr>
+                <tr>
+                    <td aria-label="Establishment type">Independent schools</td>
+                    <td aria-label="Last updated">25/03/2017</td>
+                </tr>
+                <tr>
+                    <td aria-label="Establishment type">Pupil referral units</td>
+                    <td aria-label="Last updated">25/03/2017</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="button-row">
+        @if (ViewBag.itIsUrgent == "true")
+        {
+            <a href="#" class="button mobile-full-width" id="data-status-update">Update</a>
+        }
+        else
+        {
+            <a href="#" class="button mobile-full-width" id="data-status-exit">Exit</a>
+        }
+            <a href="#" class="button button-grey mobile-full-width" id="data-status-info">More info</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Update data status";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-large">
+            Update data status
+        </h1>
+    </div>
+    <form action="ViewDataStatus" method="post">
+        <div class="column-half">
+
+            @DateGroup("Academy openers")
+
+            @DateGroup("Free school openers")
+
+            @DateGroup("Open academies and free schools")
+
+            @DateGroup("LA maintained schools")
+
+            @DateGroup("Independent schools")
+
+            @DateGroup("Pupil referral units")
+        </div>
+        
+        <div class="column-full">
+            <div class="button-row">
+                <input type="submit" class="button mobile-full-width" value="Save" id="save-data-status"/>
+                <a href="#" class="button button-grey mobile-full-width">Cancel</a>
+            </div>
+        </div>
+    </form>
+    
+</div>
+
+@helper  DateGroup(string establishmentType)
+{
+    var id = establishmentType.Replace(" ","").ToLower();
+    <div class="form-group data-status-group"> <!-- for error state add class `error`-->
+        <h2 class="heading-small">Establishment type</h2>
+        <h3>@establishmentType</h3>
+
+        <fieldset id="@id" class="range-group">
+            <legend>Last updated</legend>
+            <div class="form-hint">For example, 20 03 2003</div>
+            @*<span class="error-message">Please correct the date</span>*@
+            <span class="inline-form-control">
+                <label for="@id-day">Day</label>
+                <input class="form-control date-text-day" id="@id-day" type="text">
+            </span>
+            <span class="inline-form-control">
+                <label for="@id-month">Month</label>
+                <input class="form-control date-text-month" id="@id-month" type="text">
+            </span>
+            <span class="inline-form-contol">
+                <label for="@id-year">Year</label>
+                <input class="form-control date-text-year" id="@id-year" type="text">
+            </span>
+        </fieldset>
+
+    </div>
+
+}

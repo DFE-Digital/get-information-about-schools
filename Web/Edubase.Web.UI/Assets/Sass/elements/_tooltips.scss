@@ -80,3 +80,24 @@ $pointer-size: 15px;
         font-size: 14px;
     }
 }
+
+.truncated-content {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+.truncated-tooltip {
+    width: auto;
+    padding-right: 28px;
+    .pointer,
+    .pointer-shadow {
+       right: 15px;       
+       left: auto;
+    }
+
+    .tooltip-close {
+        width: 12px;
+        height: 12px;
+    }
+}

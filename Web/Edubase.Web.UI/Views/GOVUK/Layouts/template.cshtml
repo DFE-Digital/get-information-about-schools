@@ -218,6 +218,12 @@
         <script src="@(ViewBag.assetsPath)/javascripts/govuk-template.js?0.13.0" type="text/javascript"></script>
 
         @RenderSection("BodyEnd", required: false)
+        
+    @if (Request.IsAuthenticated)
+    {
+        @*<script type="text/javascript" src="/public/assets/scripts/standalone/data-status.js"></script>*@
+    }
+
     </div>
 </body>
 

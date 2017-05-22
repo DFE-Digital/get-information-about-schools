@@ -1,0 +1,98 @@
+﻿
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-large">Data status</h1>
+        
+        @if (Request.UrlReferrer.AbsolutePath == "/Prototype/EditDataStatus")
+        {
+            <div class="pending-updates-message dismissable-message">
+                <div class="tick"></div>
+                <p>Data status has been updated.</p>
+                <a href="#" class="cross"><span class="visually-hidden">Dismiss notification</span></a>
+            </div>
+        }
+        
+        
+        <p class="table-caption">These dates show each of our teams last updated their data.</p>
+        
+        <table class="edubase-table">
+            <thead>
+            <tr>
+                <th>Establishment type</th>
+                <th>Last updated</th>
+                <th>Data owner</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td aria-label="Establishment type">Academy openers</td>
+                <td aria-label="Last updated">25/03/2017</td>
+                <td aria-label="Data owner">Academies Operations and Strategy</td>
+                <td aria-label="Email">
+                    <span class="truncate">
+                        academies.data@education.gsi.gov.uk
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td aria-label="Establishment type">Free school openers</td>
+                <td aria-label="Last updated">25/03/2017</td>
+                <td aria-label="Data owner">Free Schools Delivery 1</td>
+                <td aria-label="Email">
+                    <span class="truncate">
+                        fsg.edubase@education.gsi.gov.uk
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td aria-label="Establishment type">Open academies and free schools</td>
+                <td aria-label="Last updated">25/03/2017</td>
+                <td aria-label="Data owner">EFA Academies Enquiries Team</td>
+                <td aria-label="Email">
+                    <span class="truncate">
+                        academy.questions@education.gsi.gov.uk
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td aria-label="Establishment type">LA maintained schools</td>
+                <td aria-label="Last updated">25/03/2017</td>
+                <td aria-label="Data owner">School Organisation Team</td>
+                <td aria-label="Email">
+                    <span class="truncate">
+                        schoolorganisation.notifications@education.gsi.gov.uk
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td aria-label="Establishment type">Independent schools</td>
+                <td aria-label="Last updated" aria-described-by="independent-pending">25/03/2017*</td>
+                <td aria-label="Data owner">Independent Education and Boarding Team</td>
+                <td aria-label="Email">
+                    <span class="truncate">
+                        registration.enquiries@education.gsi.gov.uk
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td aria-label="Establishment type">Pupil referral units</td>
+                <td aria-label="Last updated">25/03/2017</td>
+                <td aria-label="Data owner">Alternative Provision and Exclusions Team</td>
+                <td aria-label="Email">
+                    <span class="truncate">
+                        alternativeprovision.pru@education.gsi.gov.uk
+                    </span>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+        
+        <p id="independent-pending">* All approved changes to schools' registered details are recorded at this date. Changes still pending approval won't appear here yet.</p>
+        
+        <div class="button-row">
+            <a class="button button-grey" href="/Prototype/EditDataStatus">Update status</a>
+        </div>
+    </div>
+</div>

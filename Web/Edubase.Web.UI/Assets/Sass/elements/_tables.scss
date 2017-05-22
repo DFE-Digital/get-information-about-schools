@@ -733,6 +733,41 @@ table {
     }
 }
 
+.retain-columns { // only suitable for tables with 2 columns
+     @include media(mobile) {
+         thead {
+           display: table-header-group;
+           th:first-child {
+               width: 75%;
+           }
+        }
+
+         tr {
+            border-top: 1px solid $black;
+             &:first-child {
+                border: none;
+            }
+        }
+
+        td {
+            display: table-cell;
+            float: none;
+            padding-left: 6px;
+            width: auto !important;
+           
+            &:before {
+                content: "";
+                display: none;
+                
+            }
+
+            &:last-child {
+                border-bottom: $grey-3 1px solid;
+            }
+        }
+    }
+}
+
 .changes-summary {
     tbody tr:last-child {
         td {

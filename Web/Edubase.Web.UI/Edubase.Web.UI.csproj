@@ -429,6 +429,8 @@
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\expanding-content.js" />
+    <Content Include="Assets\Scripts\Elements\truncated-text.js" />
+    <Content Include="Assets\Scripts\standalone\data-status.js" />
     <Content Include="Assets\Scripts\Views\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
@@ -944,6 +946,9 @@
     <Content Include="Views\Prototype\EstablishmentLinks.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\GovernorGridViewModel.cshtml" />
     <Content Include="Views\Prototype\location-demo.cshtml" />
+    <Content Include="Views\Prototype\dataStatus.cshtml" />
+    <Content Include="Views\Prototype\EditDataStatus.cshtml" />
+    <Content Include="Views\Prototype\ViewDataStatus.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
