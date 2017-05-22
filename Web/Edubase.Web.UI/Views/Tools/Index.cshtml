@@ -46,8 +46,8 @@
         </p>
     </div>
 
-    @if (Model.UserCanCreateAcademyTrustGroup)
-    {
+    @*@if (Model.UserCanCreateAcademyTrustGroup)
+    {*@
     <div class="column-half">
         <h3>
             @Html.ActionLink("Create new academy trust", "SearchCompaniesHouse", "Group", new {area = "Groups"}, null)
@@ -56,10 +56,10 @@
             Set up a new record for your school trust.
         </p>
     </div>
-    }
+    @*}
     
     @if (Model.UserCanCreateSchoolTrustGroup)
-    {
+    {*@
     <div class="column-half">
         <h3>
             @Html.ActionLink("Create new school trust", "CreateNewGroup", "Group", new {area = "Groups", type = "Trust"}, null)
@@ -69,10 +69,10 @@
             date and status.
         </p>
     </div>
-    }
+    @*}
     
     @if (Model.UserCanCreateChildrensCentreGroup)
-    {
+    {*@
         <div class="column-half">
             <h3>
                 @Html.ActionLink("Create new children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)
@@ -83,9 +83,9 @@
                 local authority.
             </p>
         </div>
-    }
+    @*}
     @if (Model.UserCanCreateAcademySponsor)
-    {
+    {*@
         <div class="column-half">
             <h3>
                 @Html.ActionLink("Create new sponsor", "CreateNewGroup", "Group", new {area = "Groups", type = "Sponsor"}, null)
@@ -95,7 +95,7 @@
                 date and status.
             </p>
         </div>
-    }
+    @*}*@
     <div class="column-half">
         <h3>
             @Html.ActionLink("Create a new establishment", "CreateEstablishment", "Tools")
