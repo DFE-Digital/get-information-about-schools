@@ -104,14 +104,17 @@
 
         $(function () {
             var $enterNumberRadio = $("#enter-number-radio");
+            var $generateNumberRadio = $("#generate-number-radio");
             var $enterNumber = $("#enter-number");
-
+            
             var func = function () {
                 if ($enterNumberRadio.is(":checked")) $enterNumber.show();
                 else $enterNumber.hide();
             };
 
             $enterNumberRadio.change(func);
+            $generateNumberRadio.change(func);
+
             func();
         });
 
