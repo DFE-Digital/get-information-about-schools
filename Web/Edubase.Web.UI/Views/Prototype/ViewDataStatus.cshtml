@@ -3,7 +3,7 @@
     <div class="column-full">
         <h1 class="heading-large">Data status</h1>
         
-        @if (Request.UrlReferrer.AbsolutePath == "/Prototype/EditDataStatus")
+        @if (Request.UrlReferrer != null  && Request.UrlReferrer.AbsolutePath == "/Prototype/EditDataStatus")
         {
             <div class="pending-updates-message dismissable-message">
                 <div class="tick"></div>
