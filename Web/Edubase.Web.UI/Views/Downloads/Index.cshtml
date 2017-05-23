@@ -4,53 +4,143 @@
     ViewBag.Title = "Downloads";
     ViewBag.HideLogo = true;
 }
-<div class="breadcrumbs">
-    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Downloads", "Index", "Downloads")
+                </li>
+            </ul>
+
+        </div>
+        <h1 class="heading-large">Downloads</h1>
+    </div>
+    <div class="column-two-thirds">
+        <p>This data is updated daily. You can download any information you search for</p>
+    </div>   
 </div>
 
-<!-- add tab strip -->
+<div class="grid-row">
+    <div class="column-full">
+        <div class="horizontal-tabs-wrapper">
+            <div class="tab-wrap">
+                <ul class="horizontal-tabs">
+                    <li>
+                        <a href="#group-data" class="horizontal-tab">
+                            Establishment &amp; group data
+                        </a>
+                    </li>
+                    @if (Model.AreScheduledExtractsAvailable)
+                    {
+                        <li>
+                            <a href="#scheduled-extracts" class="horizontal-tab">
+                                Scheduled extracts
+                            </a>
+                        </li>
+                    }
+                    
+                </ul>
+            </div>
+            <div class="tab-content-wrapper horizontal-tabs-content">
+                <div id="group-data" class="tab-content">
+                    <div class="column-two-thirds">
+                        <p class="timestamp">Created at 00:00 on 01/06/2017</p>
 
-<!-- put the 'Downloads' section inside a tab if Model.AreScheduledExtractsAvailable==true -->
-<h1 class="heading-large">Downloads</h1>
-<p>Select a file to download</p>
+                        <h2 class="bold-medium">Establishments</h2>
+                        <p>
+                            You can download the complete record for the specified
+                            establishment types. There's a separate file with links to any
+                            predecessor or successor establishments.
+                        </p>
+                        <ul class="lis">
+                            @{ int i = 0; }
+                            @foreach (var item in Model.Downloads)
+                            {
+                                if (i % 2 == 0)
+                                {
+                                    <li class="download-list-heading">
+                                        Download heading
+                                    </li>
+                                }
+                                <li class="download-list-item">
+                                    <span class="icon-link-copy">
+                                        <a href="@item.Url" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Description)|download">@item.Description</a>
+                                        in ZIP format. @Html.FileSizeInMegabytes(item.FileSizeInBytes)
+                                    </span>
 
-<ul class="lis">
+                                </li>
+                                i++;
+                            }
+                        </ul>
+                    </div>
+                    
+                </div>
+                @if (Model.AreScheduledExtractsAvailable)
+                {
+                    <div id="scheduled-extracts" class="tab-content">
+                        <div class="column-two-thirds">
+                            <h2 class="bold-medium">Scheduled extracts</h2>
+                            <p>
+                                This is full data that can be found on the Register of educational establishments (Edubase).
+                                When you request a ﬁle the data will be generated and then ready for download a short time
+                                after the request.
+                            </p>
+                        </div>
+                        
+                        @*@if (Model.PageCount > 1)
+                        {
+                            <div class="top-pagination">
+                                @Html.Partial("_GenericPagination")
+                            </div>
+                        }*@
 
-    
-    @foreach (var item in Model.Downloads)
-    {
-        <li class="download-list-item">
-           <span class="icon-link-copy">
-                <a href="@item.Url" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Description)|download">@item.Description</a>
-                in ZIP format. @Html.FileSizeInMegabytes(item.FileSizeInBytes)
-            </span>
+                        <table class="edubase-table retain-columns">
+                            <thead>
+                            <tr>
+                                <th>File</th>
+                                <th class="download-id">ID</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-        </li>
-    }
-</ul>
+                            @foreach (var item in Model.ScheduledExtracts.Items)
+                            {
+                                <tr>
+                                    <td class="download-list-item">
+                                        @Html.RouteLink(item.Name, "RequestScheduledExtract", new {id = item.Id}, new {rel = "nofollow"})
+                                    </td>
+                                    <td>
+                                        @item.Id
+                                    </td>
+                                </tr>
+
+                            }</tbody>
+                        </table>
+                        @*@if (Model.PageCount > 1)
+                        {
+                        <div class="lower-pagination">
+                            @Html.Partial("_GenericPagination")
+                        </div>
+                        }*@
+                    </div>
+                }
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 @if (Model.AreScheduledExtractsAvailable)
 {
-    <!-- To be put in a tab, the tab (and tab strip) should only be visible should Model.AreScheduledExtractsAvailable==true -->
-    <h1>Scheduled extracts</h1>
-    <p>
-        This is full data that can be found on the Register of educational establishments (Edubase). 
-        When you request a ﬁle the data will be generated and then ready for download a short time 
-        after the request.
-    </p>
-    <ul class="lis">
-        @foreach (var item in Model.ScheduledExtracts.Items)
-        {
-            <li class="download-list-item">
-                <span class="icon-link-copy">
-                    @Html.RouteLink(item.Name, "RequestScheduledExtract", new { id = item.Id }, new { rel = "nofollow" })
-                </span>
-            </li>
-        }
-    </ul>
-
-    <!-- add pagination here -->
-
+   
     @*
         @Model.Skip - number of records to skip, so /?skip=10 in the qs
         @Model.Take - number of records to take, so /?skip=15&take=20 will skip the first 15 scheduled extract records and then take 20
