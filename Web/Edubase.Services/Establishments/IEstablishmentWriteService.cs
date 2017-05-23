@@ -13,5 +13,6 @@ namespace Edubase.Services.Establishments
         Task SaveAsync(EstablishmentModel model, IPrincipal principal);
         Task<BulkUpdateProgressModel> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal);
         Task<BulkUpdateProgressModel> BulkUpdateAsync_GetProgressAsync(Guid taskId, IPrincipal principal);
+        Task<int> CreateNewAsync(NewEstablishmentModel model, IPrincipal principal);
     }
 }

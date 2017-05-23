@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace Edubase.Services.Domain
     {
         public string FirstName { get; set; }
         public string Surname { get; set; }
+        [JsonIgnore]
         public string FullName => Common.StringUtil.ConcatNonEmpties(" ", FirstName, Surname);
         public string EmailAddress { get; set; }
         public string TelephoneNumber { get; set; }

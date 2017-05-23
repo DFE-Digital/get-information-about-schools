@@ -204,6 +204,7 @@
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
     <Compile Include="Establishments\Models\BulkUpdateDto.cs" />
+    <Compile Include="Establishments\Models\CreateNewEstablishment.cs" />
     <Compile Include="Establishments\Models\IEBTModel.cs" />
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />

@@ -416,7 +416,17 @@ namespace Edubase.Web.UI.Controllers
         {
             if (ModelState.IsValid)
             {
+                var urn = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
+                {
+                    EducationPhaseId = viewModel.EducationPhaseId.Value,
+                    EstablishmentNumber = viewModel.EstablishmentNumber,
+                    EstablishmentTypeId = viewModel.EstablishmentTypeId.Value,
+                    GenerateEstabNumber = viewModel.GenerateEstabNumber.Value,
+                    LocalAuthorityId = viewModel.LocalAuthorityId.Value,
+                    Name = viewModel.Name
+                }, User);
 
+                return RedirectToAction(nameof(Details), new { id = urn });
             }
 
             await PopulateSelectLists(viewModel);
