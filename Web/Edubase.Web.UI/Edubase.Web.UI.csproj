@@ -340,6 +340,7 @@
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
     <Compile Include="Models\Grid\GridViewModel.cs" />
+    <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />

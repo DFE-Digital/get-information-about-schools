@@ -19,5 +19,7 @@ namespace Edubase.Web.UI.Models
         public int ScheduledExtractsCount => (ScheduledExtracts?.Count).GetValueOrDefault();
 
         public bool AreScheduledExtractsAvailable => ScheduledExtractsCount > 0;
+
+        public PaginationViewModel Pagination => new PaginationViewModel(Skip, Take, ScheduledExtractsCount);
     }
 }

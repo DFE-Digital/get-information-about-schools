@@ -92,22 +92,21 @@
                             </p>
                         </div>
                         
-                        @*@if (Model.PageCount > 1)
+                        @if (Model.Pagination.PageCount > 1)
                         {
                             <div class="top-pagination">
-                                @Html.Partial("_GenericPagination")
+                                @Html.Partial("_GenericPagination", Model.Pagination)
                             </div>
-                        }*@
+                        }
 
                         <table class="edubase-table retain-columns">
                             <thead>
-                            <tr>
-                                <th>File</th>
-                                <th class="download-id">ID</th>
-                            </tr>
+                                <tr>
+                                    <th>File</th>
+                                    <th class="download-id">ID</th>
+                                </tr>
                             </thead>
                             <tbody>
-
                             @foreach (var item in Model.ScheduledExtracts.Items)
                             {
                                 <tr>
@@ -118,15 +117,15 @@
                                         @item.Id
                                     </td>
                                 </tr>
-
-                            }</tbody>
+                            }
+                            </tbody>
                         </table>
-                        @*@if (Model.PageCount > 1)
+                        @if (Model.Pagination.PageCount > 1)
                         {
-                        <div class="lower-pagination">
-                            @Html.Partial("_GenericPagination")
-                        </div>
-                        }*@
+                            <div class="lower-pagination">
+                                @Html.Partial("_GenericPagination", Model.Pagination)
+                            </div>
+                        }
                     </div>
                 }
                 
