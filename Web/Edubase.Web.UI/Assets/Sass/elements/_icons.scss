@@ -269,6 +269,7 @@
         height: 39px;
         background-image: file-url("icons/icon-file-download.png");
         background-size:30px 39px;
+        background-repeat: no-repeat;
         left: 0;
         top: 0;
 
@@ -283,6 +284,16 @@
         display: block;
     }
 }
+
+td.download-list-item {
+    &:before {
+        background-size: contain;
+        height: 24px;
+        top: 10px;
+        left: 6px;
+    }
+}
+
 .progress-indicator {
     min-width: 100%;
     min-height: 100px;
