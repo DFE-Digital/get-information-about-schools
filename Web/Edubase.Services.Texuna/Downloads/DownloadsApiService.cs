@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Edubase.Services.Downloads.Models;
 using System.Security.Principal;
 using Edubase.Services.Domain;
+using Edubase.Services.Exceptions;
 
 namespace Edubase.Services.Texuna.Downloads
 {
@@ -22,7 +23,17 @@ namespace Edubase.Services.Texuna.Downloads
         public async Task<FileDownload[]> GetListAsync(IPrincipal principal) => await _httpClient.GetAsync<FileDownload[]>($"downloads", principal);
 
         public async Task<ScheduledExtractsResult> GetScheduledExtractsAsync(int skip, int take, IPrincipal principal)
-            => await _httpClient.GetAsync<ScheduledExtractsResult>($"scheduled-extracts?skip={skip}&take={take}", principal);
+        {
+            try
+            {
+                return await _httpClient.GetAsync<ScheduledExtractsResult>($"scheduled-extracts?skip={skip}&take={take}", principal);
+            }
+            catch(EduSecurityException)
+            {
+                return new ScheduledExtractsResult();
+            }
+        }
+            
 
         public async Task<ApiResultDto<Guid>> GenerateScheduledExtractAsync(int id, IPrincipal principal) 
             => await _httpClient.GetAsync<ApiResultDto<Guid>>($"scheduled-extract/generate/{id}", principal);
