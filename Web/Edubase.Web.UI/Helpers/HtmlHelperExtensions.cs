@@ -175,14 +175,23 @@ namespace Edubase.Web.UI.Helpers
             return html.DisplayFor<TModel, TValue>(expression, templateName);
         }
 
-        //public static MvcHtmlString EdubaseValidationSummary(this HtmlHelper htmlHelper)
-        //{
-        //    return htmlHelper.EdubaseValidationSummary(false);
-        //}
-
-        //public static MvcHtmlString EdubaseValidationSummary(this HtmlHelper htmlHelper, bool excludePropertyErrors)
-        //{
-
-        //}
+        /// <summary>
+        /// Outputs the supplied file size in megabytes and appends 'MB', or if the supplied bytes value is null, a zero length string is returned.
+        /// </summary>
+        /// <param name="html"></param>
+        /// <param name="fileSizeInBytes"></param>
+        /// <param name="decimalPlaces"></param>
+        /// <param name="minimumValue"></param>
+        /// <returns></returns>
+        public static IHtmlString FileSizeInMegabytes(this HtmlHelper html, long? fileSizeInBytes, int decimalPlaces = 2, double minimumValue = 0)
+        {
+            if (fileSizeInBytes.HasValue)
+            {
+                var mb = Math.Round((double)fileSizeInBytes.Value / 1024 / 1024, decimalPlaces);
+                var result = mb > minimumValue ? mb : minimumValue;
+                return new MvcHtmlString(result.ToString() + " MB");
+            }
+            else return new MvcHtmlString(string.Empty);
+        }
     }
 }

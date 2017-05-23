@@ -332,6 +332,7 @@
     <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
     <Compile Include="Helpers\ValidationExtensions.cs" />
     <Compile Include="Helpers\WebHelpers.cs" />
+    <Compile Include="Models\DownloadsViewModel.cs" />
     <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
     <Compile Include="Models\Establishments\Validators\CreateEstablishmentViewModelValidator.cs" />
@@ -897,6 +898,8 @@
     <Content Include="Views\Admin\LogDetail.cshtml" />
     <Content Include="Views\Shared\Secure.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\Downloads\PreparingScheduledExtractPleaseWait.cshtml" />
+    <Content Include="Views\Downloads\ReadyToDownloadScheduledExtract.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />

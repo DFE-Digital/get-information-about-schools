@@ -187,6 +187,8 @@
     <Compile Include="Domain\SearchDownloadDto.cs" />
     <Compile Include="Downloads\IDownloadsService.cs" />
     <Compile Include="Downloads\Models\FileDownload.cs" />
+    <Compile Include="Downloads\Models\ScheduledExtract.cs" />
+    <Compile Include="Downloads\Models\ScheduledExtractsResult.cs" />
     <Compile Include="Enums\eFileFormat.cs" />
     <Compile Include="Enums\eGovernanceMode.cs" />
     <Compile Include="Enums\eLookupEstablishmentStatus.cs" />
@@ -255,7 +257,7 @@
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="Domain\ChangeDescriptorDto.cs" />
     <Compile Include="Domain\PersonDto.cs" />
-    <Compile Include="Domain\SearchDownloadGenerationProgressDto.cs" />
+    <Compile Include="Domain\ProgressDto.cs" />
     <Compile Include="Domain\ServiceResultDto.cs" />
     <Compile Include="Establishments\DisplayPolicies\EstablishmentDisplayPolicy.cs" />
     <Compile Include="Establishments\Downloads\IEstablishmentDownloadService.cs" />

@@ -1,5 +1,5 @@
 ﻿@using Edubase.Services.Downloads.Models;
-@model FileDownload[]
+@model DownloadsViewModel
 @{
     ViewBag.Title = "Downloads";
     ViewBag.HideLogo = true;
@@ -8,28 +8,53 @@
     @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
 </div>
 
+<!-- add tab strip -->
+
+<!-- put the 'Downloads' section inside a tab if Model.AreScheduledExtractsAvailable==true -->
 <h1 class="heading-large">Downloads</h1>
 <p>Select a file to download</p>
 
 <ul class="lis">
-    @foreach (var item in Model)
+
+    
+    @foreach (var item in Model.Downloads)
     {
         <li class="download-list-item">
            <span class="icon-link-copy">
                 <a href="@item.Url" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Description)|download">@item.Description</a>
-                in ZIP format. @ConvertBytesToMegabytes(item.FileSizeInBytes) MB
+                in ZIP format. @Html.FileSizeInMegabytes(item.FileSizeInBytes)
             </span>
 
         </li>
     }
-
 </ul>
 
-@functions {
+@if (Model.AreScheduledExtractsAvailable)
+{
+    <!-- To be put in a tab, the tab (and tab strip) should only be visible should Model.AreScheduledExtractsAvailable==true -->
+    <h1>Scheduled extracts</h1>
+    <p>
+        This is full data that can be found on the Register of educational establishments (Edubase). 
+        When you request a ﬁle the data will be generated and then ready for download a short time 
+        after the request.
+    </p>
+    <ul class="lis">
+        @foreach (var item in Model.ScheduledExtracts.Items)
+        {
+            <li class="download-list-item">
+                <span class="icon-link-copy">
+                    @Html.RouteLink(item.Name, "RequestScheduledExtract", new { id = item.Id }, new { rel = "nofollow" })
+                </span>
+            </li>
+        }
+    </ul>
 
-    double ConvertBytesToMegabytes(long bytes, int decimalPlaces = 2, double minimumValue = 0)
-    {
-        var mb = Math.Round((double)bytes / 1024 / 1024, decimalPlaces);
-        return mb > minimumValue ? mb : minimumValue;
-    }
+    <!-- add pagination here -->
+
+    @*
+        @Model.Skip - number of records to skip, so /?skip=10 in the qs
+        @Model.Take - number of records to take, so /?skip=15&take=20 will skip the first 15 scheduled extract records and then take 20
+        @Model.ScheduledExtractsCount - the total number of records in the entire data set.
+    *@
 }
+

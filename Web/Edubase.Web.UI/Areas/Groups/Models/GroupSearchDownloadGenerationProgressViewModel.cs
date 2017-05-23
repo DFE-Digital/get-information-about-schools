@@ -8,7 +8,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
     public class GroupSearchDownloadGenerationProgressViewModel : IDownloadGenerationProgressModel
     {
         public eFileFormat? FileFormat { get; set; }
-        public SearchDownloadGenerationProgressDto Progress { get; set; }
+        public ProgressDto Progress { get; set; }
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
         public int Step { get; private set; }
@@ -16,7 +16,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string DownloadName => "group";
         eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
 
-        public GroupSearchDownloadGenerationProgressViewModel(SearchDownloadGenerationProgressDto progressDto, int step)
+        public GroupSearchDownloadGenerationProgressViewModel(ProgressDto progressDto, int step)
         {
             Progress = progressDto;
             Step = step;
