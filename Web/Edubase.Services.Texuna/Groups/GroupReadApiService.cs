@@ -6,6 +6,7 @@ using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using System.Security.Principal;
+using Edubase.Services.Texuna.Models;
 using System.Linq;
 using Edubase.Services.Texuna.Models;
 using System.Text;
@@ -36,9 +37,11 @@ namespace Edubase.Services.Texuna.Groups
             return (await _httpClient.GetAsync<BoolResult>($"group/exists?{queryString}", principal)).Value;
         }
 
-        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal) => await _httpClient.GetAsync<List<GroupModel>>($"establishment/{urn}/groups", principal);
+        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal) => (await _httpClient.GetAsync<List<GroupModel>>($"establishment/{urn}/groups", principal)).Response;
 
-        public async Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal) => new ServiceResultDto<GroupModel>(await _httpClient.GetAsync<GroupModel>($"group/{uid}", principal));
+        public async Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal) => new ServiceResultDto<GroupModel>((await _httpClient.GetAsync<GroupModel>($"group/{uid}", principal)).Response);
+
+        public async Task<bool> CanEditAsync(int uid, IPrincipal principal) => (await _httpClient.GetAsync<BoolResult>($"group/{uid}/canedit", principal)).Response.Value;
 
         public Task<GroupModel> GetByEstablishmentUrnAsync(int urn, IPrincipal principal)
         {
@@ -46,9 +49,9 @@ namespace Edubase.Services.Texuna.Groups
         }
 
         public async Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal principal) =>
-            await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal);
+            (await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal)).Response;
 
-        public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal) => await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments", principal);
+        public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal) => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments", principal)).Response;
 
         public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model)
         {
@@ -67,15 +70,15 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<ApiSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {
-            return await _httpClient.PostAsync<ApiSearchResult<SearchGroupDocument>>("group/search", payload, principal);
+            return (await _httpClient.PostAsync<ApiSearchResult<SearchGroupDocument>>("group/search", payload, principal)).Response;
         }
 
         public async Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
         {
-            return await _httpClient.GetAsync<ApiSearchResult<SearchGroupDocument>>(string.Concat("group/searchbyids?",
+            return (await _httpClient.GetAsync<ApiSearchResult<SearchGroupDocument>>(string.Concat("group/searchbyids?",
                 groupId.UrlTokenize("groupId"), 
                 groupUId.UrlTokenize("groupUId"), 
-                companiesHouseNumber.UrlTokenize("companiesHouseNumber")), principal);
+                companiesHouseNumber.UrlTokenize("companiesHouseNumber")), principal)).Response;
         }
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)

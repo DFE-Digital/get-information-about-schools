@@ -1,9 +1,10 @@
-﻿namespace Edubase.Services
+﻿using Edubase.Services.Domain;
+
+namespace Edubase.Services
 {
     using Common.IO;
     using Exceptions;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
     using StackExchange.Profiling;
     using System;
     using System.Configuration;
@@ -38,17 +39,17 @@
             };
         }
 
-        public async Task<T> GetAsync<T>(string uri, IPrincipal principal)
+        public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: GET {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
                 var result = await _httpClient.SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync<T>(result);
+                return await ParseHttpResponseMessageAsync<TResponse>(result);
             }
         }
         
-        public async Task<T> PostAsync<T>(string uri, object data, IPrincipal principal)
+        public async Task<ApiResponse<T>> PostAsync<T>(string uri, object data, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
@@ -68,7 +69,7 @@
             }
         }
 
-        public async Task<T> PutAsync<T>(string uri, object data, IPrincipal principal)
+        public async Task<ApiResponse<T>> PutAsync<T>(string uri, object data, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
@@ -120,7 +121,7 @@
         /// <remarks>
         ///     Note:  This method contains a few hacks as the API isn't great at supporting multipart at the point of writing.
         /// </remarks>
-        public async Task<T> PostMultipartAsync<T>(string uri, object data, string fileName, IPrincipal principal)
+        public async Task<ApiResponse<T>> PostMultipartAsync<T>(string uri, object data, string fileName, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST (multipart) {uri}"))
             {
@@ -130,14 +131,21 @@
 
                 var fileContent = new ByteArrayContent(File.ReadAllBytes(fileName));
                 fileContent.Headers.ContentType = new MediaTypeHeaderValue(new FileHelper().GetMimeType(fileName));
-                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                fileContent.Headers.ContentDisposition.Name = "bulkfile"; // shouldn't be necessary, but it is.
-                fileContent.Headers.ContentDisposition.FileName = Path.GetFileName(fileName); // shouldn't be necessary
+                fileContent.Headers.ContentDisposition =
+                    new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = "bulkfile", // shouldn't be necessary, but it is.
+                        FileName = Path.GetFileName(fileName) // shouldn't be necessary
+                    };
+               
                 content.Add(fileContent);
 
                 var jsonPayload = new ObjectContent<object>(data, _formatter);
-                jsonPayload.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                jsonPayload.Headers.ContentDisposition.Name = "payload"; // shouldn't be necessary, but it is.
+                jsonPayload.Headers.ContentDisposition =
+                    new ContentDispositionHeaderValue("form-data") {
+                        Name = "payload" // shouldn't be necessary, but it is.
+                    };
+                
                 jsonPayload.Headers.ContentType.MediaType = "text/plain"; // should be application/json, but for some reason we have to use text/plain
                 content.Add(jsonPayload);
 
@@ -156,16 +164,37 @@
             return requestMessage;
         }
 
-        private async Task<T> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message)
+        private async Task<ApiResponse<T>> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message)
         {
+            var response = new ApiResponse<T>
+            {
+                Success = message.IsSuccessStatusCode
+            };
+
             if (message.IsSuccessStatusCode)
             {
                 if (!message.Content.Headers.ContentType.MediaType.Equals("application/json"))
-                    throw new TexunaApiSystemException($"The TEX-API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
-                return await message.Content.ReadAsAsync<T>(new[] { _formatter });
+                    throw new TexunaApiSystemException(
+                        $"The TEX-API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+                response.Response = await message.Content.ReadAsAsync<T>(new[] {_formatter});
+                return response;
             }
-            else if (message.StatusCode == System.Net.HttpStatusCode.Forbidden) throw new EduSecurityException("The current principal does not have permission to call this API");
-            else throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+            else
+            {
+                if (message.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                    throw new EduSecurityException("The current principal does not have permission to call this API");
+
+                try
+                {
+                    response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
+                    return response;
+                }
+                catch (Exception e)
+                {
+                    throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
+                }
+                    
+            }
         }
 
         private void Validate(HttpResponseMessage message)

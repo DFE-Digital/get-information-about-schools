@@ -73,23 +73,24 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [Route(nameof(Details) + "/{id:int}"), HttpGet]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups)
         {
+            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
+
             var viewModel = new GroupDetailViewModel
             {
                 SearchQueryString = searchQueryString,
-                SearchSource = searchSource
+                SearchSource = searchSource,
+                CanUserEdit = await _groupReadService.CanEditAsync(id, User),
+                Group = model,
+                GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
+                LocalAuthorityName = model.LocalAuthorityId.HasValue ? await _lookup.GetNameAsync(() => model.LocalAuthorityId) : null,
+                GroupStatusName = model.StatusId.HasValue ? await _lookup.GetNameAsync(() => model.StatusId, "Group") : null,
+                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup) ? model.Address.ToString() : null,
+                CanUserEdit = await _groupReadService.CanEditAsync(id, User),
+                
+                // TODO: TEXCHANGE
+                // Use the new security API for this
+                IsUserLoggedOn = User.Identity.IsAuthenticated
             };
-            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
-            
-            viewModel.Group = model;
-
-            if (model.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => model.GroupTypeId));
-            if (model.LocalAuthorityId.HasValue) viewModel.LocalAuthorityName = (await _lookup.GetNameAsync(() => model.LocalAuthorityId));
-            if (model.StatusId.HasValue) viewModel.GroupStatusName = (await _lookup.GetNameAsync(() => model.StatusId, "Group"));
-
-            if (model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup)) viewModel.Address = model.Address.ToString();
-
-            viewModel.CanUserEdit = await _groupReadService.CanEditAsync(id, User);
-            viewModel.IsUserLoggedOn = User.Identity.IsAuthenticated;
 
             if (viewModel.IsUserLoggedOn)
             {

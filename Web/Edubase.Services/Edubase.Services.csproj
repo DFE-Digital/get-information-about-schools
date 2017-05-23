@@ -174,17 +174,20 @@
   <ItemGroup>
     <Compile Include="BlobService.cs" />
     <Compile Include="Domain\AddressDto.cs" />
+    <Compile Include="Domain\ApiResponse.cs" />
     <Compile Include="Domain\ApiSearchResult.cs" />
     <Compile Include="Domain\ApiResultDto.cs" />
     <Compile Include="Domain\BulkUpdateProgressModel.cs" />
     <Compile Include="Domain\CreateEstablishmentPermissionDto.cs" />
     <Compile Include="Domain\CreateGroupPermissionDto.cs" />
-    <Compile Include="Domain\ErrorDto.cs" />
+    <Compile Include="Domain\ApiError.cs" />
     <Compile Include="Domain\DownloadDto.cs" />
     <Compile Include="Domain\GroupChangeDto.cs" />
     <Compile Include="Domain\FileDownloadDto.cs" />
     <Compile Include="Domain\NumericResultDto.cs" />
     <Compile Include="Domain\SearchDownloadDto.cs" />
+    <Compile Include="Domain\ValidationEnvelopeDto.cs" />
+    <Compile Include="Domain\ApiWarning.cs" />
     <Compile Include="Downloads\IDownloadsService.cs" />
     <Compile Include="Downloads\Models\FileDownload.cs" />
     <Compile Include="Downloads\Models\ScheduledExtract.cs" />

@@ -15,13 +15,17 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
 using StackExchange.Profiling;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Castle.Core.Internal;
+using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Helpers;
 using FluentValidation.Mvc;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -349,8 +353,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     governorBeingReplaced.AppointmentEndDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime();
                     await _governorsWriteService.SaveAsync(governorBeingReplaced, User);
                 }
-
-                viewModel.GID = await _governorsWriteService.SaveAsync(new GovernorModel
+                
+                var response = await _governorsWriteService.SaveAsync(new GovernorModel
                 {
                     AppointingBodyId = viewModel.AppointingBodyId,
                     AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
@@ -374,16 +378,44 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     TelephoneNumber = viewModel.TelephoneNumber
                 }, User);
 
-                ModelState.Clear();
-                
+                if (response.Success)
+                {
+                    viewModel.GID = response.Response;
+                    ModelState.Clear();
 
-                return RedirectToRoute(viewModel.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", 
-                    new { establishmentUrn = viewModel.EstablishmentUrn, groupUId = viewModel.GroupUId });
+                    return RedirectToRoute(viewModel.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
+                        new { establishmentUrn = viewModel.EstablishmentUrn, groupUId = viewModel.GroupUId });
+                }
+
+                ErrorsToModelState<GovernorModel>(response.Errors);
             }
 
             await PopulateLayoutProperties(viewModel, viewModel.EstablishmentUrn, viewModel.GroupUId);
             
             return View(viewModel);
+        }
+
+        private void ErrorsToModelState<TModel>(IEnumerable<ApiError> errors)
+        {
+            var type = typeof(TModel);
+            var properties = type.GetProperties();
+            foreach (var error in errors)
+            {
+                foreach (var property in properties)
+                {
+                    JsonPropertyAttribute attribute = null;
+                    if (property.HasAttribute<JsonPropertyAttribute>())
+                    {
+                        attribute = property.GetAttribute<JsonPropertyAttribute>();
+                    }
+
+                    if (string.Equals(error.Fields, property.Name, StringComparison.OrdinalIgnoreCase) ||
+                        (attribute != null && string.Equals(error.Fields, attribute.PropertyName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        ModelState.AddModelError(property.Name, error.Message);
+                    }
+                }
+            }
         }
 
         [HttpGet, Route(ESTAB_SELECT_SHARED_GOVERNOR, Name = "SelectSharedGovernor")]

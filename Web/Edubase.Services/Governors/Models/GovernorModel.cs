@@ -12,7 +12,8 @@ namespace Edubase.Services.Governors.Models
     {
         public int? Id { get; set; }
         public int? EstablishmentUrn { get; set; }
-
+        public int? GroupUID { get; set; }
+        
         [JsonProperty("titleId")]
         public int? Person_TitleId { get; set; }
 
@@ -28,10 +29,13 @@ namespace Edubase.Services.Governors.Models
         [JsonProperty("previousTitleId")]
         public string PreviousPerson_TitleId { get; set; }
 
+        [JsonProperty("previousFirstName")]
         public string PreviousPerson_FirstName { get; set; }
 
+        [JsonProperty("previousMiddleName")]
         public string PreviousPerson_MiddleName { get; set; }
 
+        [JsonProperty("previousLastName")]
         public string PreviousPerson_LastName { get; set; }
         
         public DateTime? AppointmentStartDate { get; set; }
@@ -51,13 +55,13 @@ namespace Edubase.Services.Governors.Models
 
         public string PostCode { get; set; }
 
+        public string TelephoneNumber { get; set; }
+
         public int? GroupUId { get; set; }
         
         public string GetFullName() => StringUtil.ConcatNonEmpties(" ", Person_FirstName, Person_MiddleName, Person_LastName);
 
         public string GetPreviousFullName() => StringUtil.ConcatNonEmpties(" ", PreviousPerson_FirstName, PreviousPerson_MiddleName, PreviousPerson_LastName);
-
-        public string TelephoneNumber { get; set; }
 
         [JsonIgnore]
         public bool IsNewEntity => !Id.HasValue;
@@ -65,6 +69,7 @@ namespace Edubase.Services.Governors.Models
         /// <summary>
         /// TODO: TEXCHANGE; what is this?
         /// </summary>
+        [JsonIgnore] //Ignore for the purposes of Texuna API while we work out how this will work
         public IEnumerable<GovernorAppointment> Appointments { get; set; }
     }
 }

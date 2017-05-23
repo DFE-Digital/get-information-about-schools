@@ -23,7 +23,7 @@ namespace Edubase.Services.Texuna.Governors
 
         public async Task<Guid> SearchWithDownloadGenerationAsync(SearchDownloadDto<GovernorSearchPayload> payload, IPrincipal principal)
         {
-            return (await _httpClient.PostAsync<ApiResultDto<Guid>>("governor/search/download/generate", payload, principal)).Value;
+            return (await _httpClient.PostAsync<ApiResultDto<Guid>>("governor/search/download/generate", payload, principal)).Response.Value;
         }
     }
 }

@@ -18,23 +18,42 @@ namespace Edubase.Services.Texuna.Governors
 
         public async Task DeleteAsync(int id, IPrincipal principal)
         {
-            await _httpClient.DeleteAsync($"/governor/{id}", null, principal);
+            await _httpClient.DeleteAsync($"governor/{id}", null, principal);
         }
 
         public async Task UpdateDatesAsync(int governorId, DateTime appointmentStartDate, DateTime appointmentEndDate, IPrincipal principal)
         {
-            await _httpClient.PatchAsync($"/governor/{governorId}", new
+            await _httpClient.PatchAsync($"governor/{governorId}", new
             {
                 AppointmentStartDate = appointmentStartDate,
                 AppointmentEndDate = appointmentEndDate
             }, principal);
         }
         
-        public async Task<int> SaveAsync(GovernorModel model, IPrincipal principal)
+        public async Task<ApiResponse<int>> SaveAsync(GovernorModel model, IPrincipal principal)
         {
-            if(model.IsNewEntity) return (await _httpClient.PostAsync<NumericResultDto>($"/governor", model, principal)).Value;
-            else await _httpClient.PostAsync($"/governor", model, principal);
-            return model.Id.Value;
+            if (model.IsNewEntity)
+            {
+                var response = await _httpClient.PostAsync<NumericResultDto>("governor", model, principal);
+                return new ApiResponse<int>
+                {
+                    Success = response.Success,
+                    Response = response.Response?.Value ?? 0,
+                    Errors = response.Errors
+                };
+            }
+
+            await _httpClient.PostAsync("governor", model, principal);
+            return new ApiResponse<int>
+            {
+                Success = true,
+                Response = model.Id.Value
+            };
+        }
+
+        public async Task<ValidationEnvelopeDto> ValidateAsync(GovernorModel model, IPrincipal principal)
+        {
+            return (await _httpClient.PostAsync<ValidationEnvelopeDto>("governor/validate", model, principal)).Response;
         }
     }
 }

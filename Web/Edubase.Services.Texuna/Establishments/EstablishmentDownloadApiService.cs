@@ -22,7 +22,7 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<Guid> SearchWithDownloadGenerationAsync(EstablishmentSearchDownloadPayload payload, IPrincipal principal)
         {
-            return (await _httpClient.PostAsync<ApiResultDto<Guid>>("establishment/search/download/generate", payload, principal)).Value;
+            return (await _httpClient.PostAsync<ApiResultDto<Guid>>("establishment/search/download/generate", payload, principal)).Response.Value;
         }
         
     }
