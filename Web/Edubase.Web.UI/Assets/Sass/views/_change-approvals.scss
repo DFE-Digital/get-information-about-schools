@@ -116,6 +116,15 @@
     }
 }
 
+.stacked-controls {
+    .radio-button-wrap,
+    .checkbox-wrap {
+        display: block;
+        margin-left: 0;
+        margin-bottom: 30px;
+    }
+}
+
 @if ($is-ie and $ie-version < 9) {
     .radio-button-wrap,
     .checkbox-wrap {

@@ -191,7 +191,8 @@ select#headtitleid {
     }
 
     .button-find-inline {
-        font-size: 18px;
+        font-size: 16px;
+        padding: .526315em 1.5em .263157em;
     }
 
     .change-list {
@@ -365,5 +366,50 @@ div.shared-governor-list {
     .table-caption {
         font-size: 14px;
         margin: 12px 4px;
+    }
+}
+
+.radio-wrap {
+    legend {
+        font-weight: bold;
+        font-size: 24px;
+    }
+}
+
+.childrens-centre-listing {
+    td {
+        padding-top: 12px;
+
+        &.highlight {
+            background-color: $grey-4;
+        }
+
+        &.radio-cell {
+            padding-top: 6px;
+        }
+    }
+     @include media(mobile) {
+        .radio-cell:before {
+            padding-top: 8px;
+        }
+    }
+
+    .radio-button-wrap {
+        margin: 4px 0;
+    }
+    .edubase-button-radio {
+        position: relative;
+        top: 4px;
+        margin: 0;
+        &:before {
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+        }
+        &:after {
+            top: 6px;
+            left: 6px;
+            border-width: 8px;
+        }
     }
 }
