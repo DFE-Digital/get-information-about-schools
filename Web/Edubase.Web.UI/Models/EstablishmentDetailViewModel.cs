@@ -16,7 +16,11 @@ namespace Edubase.Web.UI.Models
             [(int)eLookupGroupType.MultiacademyTrust] = "Academy trust",
             [(int)eLookupGroupType.SchoolSponsor] = "Academy sponsor",
             [(int)eLookupGroupType.Trust] = "Trust",
-            [(int)eLookupGroupType.Federation] = "Federation"
+            [(int)eLookupGroupType.Federation] = "Federation",
+
+            [(int)eLookupGroupType.UmbrellaTrust] = "Umbrella trust",
+            [(int)eLookupGroupType.ChildrensCentresCollaboration] = "Childrens' centres collaboration",
+            [(int)eLookupGroupType.ChildrensCentresGroup] = "Childrens' centre group"
         };
 
         public EstablishmentDisplayPolicy DisplayPolicy { get; set; }
