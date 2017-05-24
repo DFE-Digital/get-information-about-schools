@@ -17,7 +17,7 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<int> SaveAsync(SaveGroupDto dto, IPrincipal principal)
         {
-            if (dto.IsNewEntity) return (await _httpClient.PostAsync<NumericResultDto>($"group", dto, principal)).Value;
+            if (dto.IsNewEntity) return (await _httpClient.PostAsync<NumericResultDto>($"group", dto, principal)).Response.Value;
             else
             {
                 await _httpClient.PutAsync($"group", dto, principal);

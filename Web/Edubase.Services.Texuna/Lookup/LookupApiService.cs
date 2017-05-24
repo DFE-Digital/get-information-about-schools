@@ -80,7 +80,7 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> CountiesGetAllAsync() => await GetData("counties");
         public async Task<IEnumerable<LookupDto>> OfstedRatingsGetAllAsync() => await GetData("ofsted-ratings");
         public async Task<IEnumerable<LookupDto>> RscRegionsGetAllAsync() => await GetData("rsc-regions");
-        private async Task<IEnumerable<LookupDto>> GetData(string name) => await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + name, _securityService.CreateAnonymousPrincipal());
+        private async Task<IEnumerable<LookupDto>> GetData(string name) => (await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + name, _securityService.CreateAnonymousPrincipal())).Response;
 
         #region Synchronous methods (deprecating)
 

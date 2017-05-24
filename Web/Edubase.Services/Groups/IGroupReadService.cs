@@ -43,6 +43,5 @@ namespace Edubase.Services.Groups
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel original, GroupModel model);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model);
         Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal user);
-        Task<bool> CanEditAsync(int uid, IPrincipal principal);
     }
 }

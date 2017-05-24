@@ -51,7 +51,7 @@ namespace Edubase.Services.Texuna.Establishments
             apiModel.CCLAContactDetail = new ChildrensCentreLocalAuthorityDto();
             apiModel.IEBTModel = new IEBTModel();
             apiModel.StatusId = (int)eLookupEstablishmentStatus.ProposedToOpen;
-            return (await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={model.GenerateEstabNumber.ToString().ToLower()}", apiModel, principal)).Value;
+            return (await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={model.GenerateEstabNumber.ToString().ToLower()}", apiModel, principal)).Response.Value;
         }
 
         public async Task<BulkUpdateProgressModel> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)

@@ -14,11 +14,11 @@ namespace Edubase.Services.Texuna.Security
         public IPrincipal CreateAnonymousPrincipal() => new GenericPrincipal(new GenericIdentity("ANON"), new string[0]);
         
         public async Task<CreateGroupPermissionDto> GetCreateGroupPermissionAsync(IPrincipal principal)
-            => await _httpClient.GetAsync<CreateGroupPermissionDto>($"security/group/create-permission", principal);
+            => (await _httpClient.GetAsync<CreateGroupPermissionDto>($"security/group/create-permission", principal)).Response;
         
         public async Task<CreateEstablishmentPermissionDto> GetCreateEstablishmentPermissionAsync(IPrincipal principal)
-            => await _httpClient.GetAsync<CreateEstablishmentPermissionDto>($"establishment/cancreate", principal);
+            => (await _httpClient.GetAsync<CreateEstablishmentPermissionDto>($"establishment/cancreate", principal)).Response;
 
-        public async Task<string[]> GetRolesAsync(IPrincipal principal) => await _httpClient.GetAsync<string[]>($"security/role-names", principal);
+        public async Task<string[]> GetRolesAsync(IPrincipal principal) => (await _httpClient.GetAsync<string[]>($"security/role-names", principal)).Response;
     }
 }

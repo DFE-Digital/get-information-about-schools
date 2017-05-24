@@ -34,7 +34,7 @@ namespace Edubase.Services.Texuna.Groups
                 [nameof(localAuthorityId)] = localAuthorityId?.ToString()
             };
             var queryString = string.Join("&", parameters.Where(x => x.Value != null).Select(x => $"{x.Key}={x.Value}"));
-            return (await _httpClient.GetAsync<BoolResult>($"group/exists?{queryString}", principal)).Value;
+            return (await _httpClient.GetAsync<BoolResult>($"group/exists?{queryString}", principal)).Response.Value;
         }
 
         public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal) => (await _httpClient.GetAsync<List<GroupModel>>($"establishment/{urn}/groups", principal)).Response;
@@ -82,9 +82,6 @@ namespace Edubase.Services.Texuna.Groups
         }
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
-            => await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}", principal);
-
-        public async Task<bool> CanEditAsync(int uid, IPrincipal principal)
-            => (await _httpClient.GetAsync<BoolResult>($"group/{uid}/canedit", principal)).Value;
+            => (await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}", principal)).Response;
     }
 }

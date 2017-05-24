@@ -18,7 +18,7 @@ namespace Edubase.Services.Texuna.Governors
 
         public async Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal)
         {
-            return await _httpClient.GetAsync<ProgressDto>("governor/search/download/progress?id=" + taskId, principal);
+            return (await _httpClient.GetAsync<ProgressDto>("governor/search/download/progress?id=" + taskId, principal)).Response;
         }
 
         public async Task<Guid> SearchWithDownloadGenerationAsync(SearchDownloadDto<GovernorSearchPayload> payload, IPrincipal principal)

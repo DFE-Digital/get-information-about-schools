@@ -20,7 +20,7 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal)
         {
-            return await _httpClient.GetAsync<ProgressDto>("group/search/download/progress?id=" + taskId, principal);
+            return (await _httpClient.GetAsync<ProgressDto>("group/search/download/progress?id=" + taskId, principal)).Response;
         }
 
         public async Task<Guid> SearchWithDownloadGenerationAsync(SearchDownloadDto<GroupSearchPayload> payload, IPrincipal principal)

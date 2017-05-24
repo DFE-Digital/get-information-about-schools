@@ -85,7 +85,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 LocalAuthorityName = model.LocalAuthorityId.HasValue ? await _lookup.GetNameAsync(() => model.LocalAuthorityId) : null,
                 GroupStatusName = model.StatusId.HasValue ? await _lookup.GetNameAsync(() => model.StatusId, "Group") : null,
                 Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup) ? model.Address.ToString() : null,
-                CanUserEdit = await _groupReadService.CanEditAsync(id, User),
                 
                 // TODO: TEXCHANGE
                 // Use the new security API for this
