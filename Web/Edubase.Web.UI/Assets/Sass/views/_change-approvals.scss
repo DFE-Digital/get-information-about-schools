@@ -96,7 +96,7 @@
 .checkbox-wrap {
     display: inline-block;
     position: relative;
-    margin: 0 8px 20px;
+    margin: 0 8px 20px 0;
 
    
     input {
@@ -113,6 +113,15 @@
                 border-color: $grey-1;
             }
         }
+    }
+}
+
+.stacked-controls {
+    .radio-button-wrap,
+    .checkbox-wrap {
+        display: block;
+        margin-left: 0;
+        margin-bottom: 30px;
     }
 }
 

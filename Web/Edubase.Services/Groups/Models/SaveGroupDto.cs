@@ -17,7 +17,7 @@ namespace Edubase.Services.Groups.Models
 
         private int? _groupUId = null;
 
-        public int? GetGroupUId() => _groupUId ?? Group?.GroupUID;
+        public int? GetGroupUId() => _groupUId ?? Group?.GroupUId;
 
         public SaveGroupDto()
         {

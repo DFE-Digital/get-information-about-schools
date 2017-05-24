@@ -164,6 +164,7 @@
                     throw new TexunaApiSystemException($"The TEX-API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
                 return await message.Content.ReadAsAsync<T>(new[] { _formatter });
             }
+            else if (message.StatusCode == System.Net.HttpStatusCode.Forbidden) throw new EduSecurityException("The current principal does not have permission to call this API");
             else throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
         }
 

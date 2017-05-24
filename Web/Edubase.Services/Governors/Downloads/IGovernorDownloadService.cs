@@ -8,7 +8,7 @@ namespace Edubase.Services.Governors.Downloads
 {
     public interface IGovernorDownloadService
     {
-        Task<SearchDownloadGenerationProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal);
+        Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal);
         
         Task<Guid> SearchWithDownloadGenerationAsync(SearchDownloadDto<GovernorSearchPayload> payload, IPrincipal principal);
         

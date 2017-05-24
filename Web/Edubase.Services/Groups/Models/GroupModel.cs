@@ -9,7 +9,7 @@ namespace Edubase.Services.Groups.Models
 
     public class GroupModel
     {
-        public int? GroupUID { get; set; }
+        public int? GroupUId { get; set; }
         public string Name { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public int? GroupTypeId { get; set; }

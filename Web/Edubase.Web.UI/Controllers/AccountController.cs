@@ -19,6 +19,13 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("Account")]
     public class AccountController : Controller
     {
+        private readonly ISecurityService _securityService;
+
+        public AccountController(ISecurityService securityService)
+        {
+            _securityService = securityService;
+        }
+
         //
         // GET: /Account/Login
         [Route(nameof(Login)), AllowAnonymous]
@@ -37,6 +44,9 @@ namespace Edubase.Web.UI.Controllers
 
             if (ConfigurationManager.AppSettings["owin:appStartup"] == "SASimulatorConfiguration") id = new StubClaimsIdConverter().Convert(id);
             else id = new SecureAccessClaimsIdConverter().Convert(id);
+
+            var roles = await _securityService.GetRolesAsync(new ClaimsPrincipal(id));
+            id.AddClaims(roles.Select(x => new Claim(ClaimTypes.Role, x)));
             
             AuthenticationManager.SignIn(id);
 

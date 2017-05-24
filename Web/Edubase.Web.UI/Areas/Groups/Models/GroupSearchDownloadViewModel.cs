@@ -8,7 +8,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
     public class GroupSearchDownloadViewModel : GroupSearchViewModel, IDownloadGenerationProgressModel
     {
         public eFileFormat? FileFormat { get; set; }
-        public SearchDownloadGenerationProgressDto Progress { get { throw new Exception("Progress object not available"); } }
+        public ProgressDto Progress { get { throw new Exception("Progress object not available"); } }
         public int Step => 2;
         public int TotalSteps => 3;
         public string DownloadName => "group";

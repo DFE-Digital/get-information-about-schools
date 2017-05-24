@@ -116,17 +116,17 @@
                         </div>
                     }*@
 
-                    @if (Model.DisplayPolicy.HeadteacherDetails)
+                    @if (Model.EditPolicy.HeadteacherDetails)
                     {
                         <div class="form-group">
                             <label class="form-label">
-                                @(Model.DisplayPolicy.HeadteacherLabel) title
+                                @(Model.EditPolicy.HeadteacherLabel) title
                             </label>
                             @Html.DropDownListFor(x => x.HeadTitleId, Model.HeadTitles, "", new { @class = "form-control" })
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="headfirstname">
-                                @(Model.DisplayPolicy.HeadteacherLabel) first name
+                                @(Model.EditPolicy.HeadteacherLabel) first name
                             </label>
                             @Html.TextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", placeholder = "First name" })
                             @Html.HiddenFor(x => x.OldHeadFirstName)
@@ -134,24 +134,24 @@
 
                         <div class="form-group">
                             <label class="form-label">
-                                @(Model.DisplayPolicy.HeadteacherLabel) last name
+                                @(Model.EditPolicy.HeadteacherLabel) last name
                             </label>
                             @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
                             @Html.HiddenFor(x => x.OldHeadLastName)
                         </div>
 
-                        if (Model.DisplayPolicy.HeadEmailAddress)
+                        if (Model.EditPolicy.HeadEmailAddress)
                         {
                             <div class="form-group">
                                 <label class="form-label">
-                                    @(Model.DisplayPolicy.HeadteacherLabel) email address
+                                    @(Model.EditPolicy.HeadteacherLabel) email address
                                 </label>
                                 @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address"})
                             </div>
                         }
                     }
 
-                    @if (Model.DisplayPolicy.AgeRange)
+                    @if (Model.EditPolicy.AgeRange)
                     {
                         <div class="form-group range-group">
                             <fieldset>
@@ -176,7 +176,7 @@
                         @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "", new { @class = "form-control" })
                     </div>
 
-                    @if (Model.DisplayPolicy.TypeId)
+                    @if (Model.EditPolicy.TypeId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
                             <label class="form-label" for="TypeId">Establishment type</label>
@@ -184,7 +184,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.FurtherEducationTypeId)
+                    @if (Model.EditPolicy.FurtherEducationTypeId)
                     {
                         <div class="form-group">
                             <label class="form-label" for="FurtherEducationTypeId">Further education type</label>
@@ -192,7 +192,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.GenderId)
+                    @if (Model.EditPolicy.GenderId)
                     {
                         <div class="form-group">
                             <label class="form-label" for="GenderId">Gender of entry</label>
@@ -206,7 +206,7 @@
                     </div>
 
 
-                    @if (Model.DisplayPolicy.EstablishmentNumber)
+                    @if (Model.EditPolicy.EstablishmentNumber)
                     {
                         <div class="form-group">
                             <fieldset class="inline-fields">
@@ -232,7 +232,7 @@
                         @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "form-control" })
                     </div>
 
-                    @if (Model.DisplayPolicy.AdmissionsPolicyId)
+                    @if (Model.EditPolicy.AdmissionsPolicyId)
                     {
                         <div class="form-group">
                             <label for="admissionspolicyid" class="form-label">Admissions policy</label>
@@ -240,7 +240,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Contact_WebsiteAddress)
+                    @if (Model.EditPolicy.Contact_WebsiteAddress)
                     {
                         <div class="form-group">
                             <label for="Contact_WebsiteAddress" class="form-label">Website</label>
@@ -248,7 +248,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Contact_TelephoneNumber)
+                    @if (Model.EditPolicy.Contact_TelephoneNumber)
                     {
                         <div class="form-group">
                             <label for="Contact_TelephoneNumber" class="form-label">Telephone</label>
@@ -256,7 +256,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.OfstedRatingDetails)
+                    @if (Model.EditPolicy.OfstedRatingDetails)
                     {
 
                         <div class="form-group @Html.ValidationCssClassFor(x => x.OfstedRating)">
@@ -270,7 +270,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.InspectorateId)
+                    @if (Model.EditPolicy.InspectorateId)
                     {
                         <div class="form-group">
                             <label for="InspectorateId">Inspectorate</label>
@@ -278,7 +278,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ProprietorName)
+                    @if (Model.EditPolicy.ProprietorName)
                     {
                         <div class="form-group">
                             <label for="proprietor" class="form-label">Proprietor's name</label>
@@ -290,7 +290,7 @@
                 <h2 class="heading-medium create-edit-section-break">Details</h2>
                 <div class="column-half">
 
-                    @if (Model.DisplayPolicy.ReligiousCharacterId)
+                    @if (Model.EditPolicy.ReligiousCharacterId)
                     {
                         <div class="form-group">
                             <label for="religious-character">Religious character</label>
@@ -298,7 +298,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.DioceseId)
+                    @if (Model.EditPolicy.DioceseId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
                             <label for="diocese">Diocese</label>
@@ -306,7 +306,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ReligiousEthosId)
+                    @if (Model.EditPolicy.ReligiousEthosId)
                     {
                         <div class="form-group">
                             <label for="religious-ethos">Religious ethos</label>
@@ -314,7 +314,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ProvisionBoardingId)
+                    @if (Model.EditPolicy.ProvisionBoardingId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
                             <label for="boarders">Boarders</label>
@@ -323,7 +323,7 @@
 
                     }
 
-                    @if (Model.DisplayPolicy.ProvisionNurseryId)
+                    @if (Model.EditPolicy.ProvisionNurseryId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
                             <label for="nursery">Nursery provision</label>
@@ -331,7 +331,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
+                    @if (Model.EditPolicy.ProvisionOfficialSixthFormId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
                             <label for="sixthform">Official sixth form</label>
@@ -339,7 +339,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Capacity)
+                    @if (Model.EditPolicy.Capacity)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.Capacity)">
                             <label for="school-capacity">School capacity</label>
@@ -347,7 +347,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Section41ApprovedId)
+                    @if (Model.EditPolicy.Section41ApprovedId)
                     {
                         <div class="form-group">
                             <label for="section-41">Section 41 approved</label>
@@ -370,7 +370,7 @@
                         @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control", id = "reason-establishment-closed" })
                     </div>
 
-                    @if (Model.DisplayPolicy.ProvisionSpecialClassesId)
+                    @if (Model.EditPolicy.ProvisionSpecialClassesId)
                     {
                         <div class="form-group">
                             <label class="form-label" for="special-classes">
@@ -380,7 +380,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.SENStat)
+                    @if (Model.EditPolicy.SENStat)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.SENStat)
@@ -388,7 +388,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.SENNoStat)
+                    @if (Model.EditPolicy.SENNoStat)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.SENNoStat)
@@ -396,7 +396,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Contact_EmailAddress)
+                    @if (Model.EditPolicy.Contact_EmailAddress)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.Contact_EmailAddress, "Email address")
@@ -404,7 +404,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
+                    @if (Model.EditPolicy.ContactAlt_EmailAddress)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.ContactAlt_EmailAddress, "Alternative email address")
@@ -413,7 +413,7 @@
                     }
 
 
-                    @if (Model.DisplayPolicy.SEN1Id)
+                    @if (Model.EditPolicy.SEN1Id)
                     {
                         <div class="form-group grouped-controls">
                             <label>Type of SEN provision</label>
@@ -424,7 +424,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.TeenageMothersProvisionId)
+                    @if (Model.EditPolicy.TeenageMothersProvisionId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.TeenageMothersProvisionId)
@@ -432,7 +432,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.TeenageMothersCapacity)
+                    @if (Model.EditPolicy.TeenageMothersCapacity)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.TeenageMothersCapacity)
@@ -440,7 +440,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ChildcareFacilitiesId)
+                    @if (Model.EditPolicy.ChildcareFacilitiesId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.ChildcareFacilitiesId)
@@ -448,7 +448,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PRUSENId)
+                    @if (Model.EditPolicy.PRUSENId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PRUSENId)
@@ -456,7 +456,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PRUEBDId)
+                    @if (Model.EditPolicy.PRUEBDId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PRUEBDId)
@@ -464,7 +464,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PlacesPRU)
+                    @if (Model.EditPolicy.PlacesPRU)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PlacesPRU)
@@ -472,7 +472,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PruFulltimeProvisionId)
+                    @if (Model.EditPolicy.PruFulltimeProvisionId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PruFulltimeProvisionId)
@@ -480,7 +480,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PruEducatedByOthersId)
+                    @if (Model.EditPolicy.PruEducatedByOthersId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PruEducatedByOthersId)
@@ -489,7 +489,7 @@
                     }
 
 
-                    @if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
+                    @if (Model.EditPolicy.TypeOfResourcedProvisionId)
                     {
                         <div class="form-group">
                             <label for="resourced-provision-type">
@@ -499,7 +499,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
+                    @if (Model.EditPolicy.ResourcedProvisionOnRoll)
                     {
                         <div class="form-group">
                             <label for="resourced-provision-headcount">Resourced provision number on roll</label>
@@ -507,7 +507,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
+                    @if (Model.EditPolicy.ResourcedProvisionCapacity)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.ResourcedProvisionCapacity, "Resourced provision capacity")
@@ -515,7 +515,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.SenUnitOnRoll)
+                    @if (Model.EditPolicy.SenUnitOnRoll)
                     {
                         <div class="form-group">
                             <label for="sen-unit-number">SEN unit number on roll</label>
@@ -523,7 +523,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.SenUnitCapacity)
+                    @if (Model.EditPolicy.SenUnitCapacity)
                     {
                         <div class="form-group">
                             <label for="sen-unit-capacity">SEN unit capacity</label>
@@ -531,7 +531,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.BSOInspectorateId)
+                    @if (Model.EditPolicy.BSOInspectorateId)
                     {
                         <div class="form-group">
                             <label for="bso-inspectorate">BSO: Inspectorate name</label>
@@ -539,7 +539,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
+                    @if (Model.EditPolicy.BSOInspectorateReportUrl)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.BSOInspectorateReportUrl, "Inspectorate report")
@@ -547,12 +547,12 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
+                    @if (Model.EditPolicy.BSODateOfLastInspectionVisit)
                     {
                         @Html.EditorFor(x => x.BSODateOfLastInspectionVisit, new {title = "BSO: Date of last inspection" })
                     }
 
-                    @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
+                    @if (Model.EditPolicy.BSODateOfNextInspectionVisit)
                     {
                         @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new {title = "BSO: Next inspection visit" })
                     }

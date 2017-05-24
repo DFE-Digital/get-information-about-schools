@@ -2,8 +2,8 @@
 {
     public class GroupSuggestionItem
     {
-        public string Id => GroupUID.ToString();
-        public int GroupUID { get; set; }
+        public string Id => GroupUId.ToString();
+        public int GroupUId { get; set; }
         public string Name { get; set; }
         public string Text => Name;
     }

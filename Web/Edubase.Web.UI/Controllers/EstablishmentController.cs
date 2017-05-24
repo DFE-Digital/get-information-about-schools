@@ -91,8 +91,9 @@ namespace Edubase.Web.UI.Controllers
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
             var viewModel = _mapper.Map<ViewModel>(domainModel);
 
-            viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel);
-            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.DisplayPolicy, User);
+            viewModel.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
+            viewModel.CanOverrideCRProcess = User.IsInRole(Services.Security.EdubaseRoles.ROLE_BACKOFFICE);
 
             await PopulateSelectLists(viewModel);
             return viewModel;
@@ -119,8 +120,9 @@ namespace Edubase.Web.UI.Controllers
         private async Task<ActionResult> SaveEstablishment(ViewModel model)
         {
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
-            model.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel);
-            model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, model.DisplayPolicy, User);
+            model.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
+            model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, model.EditPolicy, User);
+            model.CanOverrideCRProcess = User.IsInRole(Services.Security.EdubaseRoles.ROLE_BACKOFFICE);
             await PopulateSelectLists(model);
 
             if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
@@ -135,7 +137,7 @@ namespace Edubase.Web.UI.Controllers
                     if (model.RequireConfirmationOfChanges && changes.Any()) model.ChangesSummary = changes;
                     else
                     {
-                        await _establishmentWriteService.SaveAsync(domainModel, User);
+                        await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
                         return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                     }
                 }
@@ -145,7 +147,7 @@ namespace Edubase.Web.UI.Controllers
                 if (ModelState.IsValid)
                 {
                     await PrepareModels(model, domainModel);
-                    await _establishmentWriteService.SaveAsync(domainModel, User);
+                    await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
                     return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
                 }
             }
@@ -231,7 +233,7 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id, User);
             
             using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
-                viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(User, viewModel.Establishment);
+                viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(viewModel.Establishment, User);
 
             using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
                 viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, viewModel.DisplayPolicy, User);
@@ -416,7 +418,17 @@ namespace Edubase.Web.UI.Controllers
         {
             if (ModelState.IsValid)
             {
+                var urn = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
+                {
+                    EducationPhaseId = viewModel.EducationPhaseId.Value,
+                    EstablishmentNumber = viewModel.EstablishmentNumber,
+                    EstablishmentTypeId = viewModel.EstablishmentTypeId.Value,
+                    GenerateEstabNumber = viewModel.GenerateEstabNumber.Value,
+                    LocalAuthorityId = viewModel.LocalAuthorityId.Value,
+                    Name = viewModel.Name
+                }, User);
 
+                return RedirectToAction(nameof(Details), new { id = urn });
             }
 
             await PopulateSelectLists(viewModel);

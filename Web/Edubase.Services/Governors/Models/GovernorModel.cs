@@ -51,7 +51,7 @@ namespace Edubase.Services.Governors.Models
 
         public string PostCode { get; set; }
 
-        public int? GroupUID { get; set; }
+        public int? GroupUId { get; set; }
         
         public string GetFullName() => StringUtil.ConcatNonEmpties(" ", Person_FirstName, Person_MiddleName, Person_LastName);
 

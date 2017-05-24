@@ -8,7 +8,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     public class GovernorSearchDownloadGenerationProgressViewModel : IDownloadGenerationProgressModel
     {
         public eFileFormat? FileFormat { get; set; }
-        public SearchDownloadGenerationProgressDto Progress { get; set; }
+        public ProgressDto Progress { get; set; }
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
         public int Step { get; private set; }
@@ -17,7 +17,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
 
-        public GovernorSearchDownloadGenerationProgressViewModel(SearchDownloadGenerationProgressDto progressDto, int step)
+        public GovernorSearchDownloadGenerationProgressViewModel(ProgressDto progressDto, int step)
         {
             Progress = progressDto;
             Step = step;

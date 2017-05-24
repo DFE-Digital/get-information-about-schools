@@ -6,7 +6,7 @@ namespace Edubase.Services.Groups.Models
 {
     public class SearchGroupDocument
     {
-        public int GroupUID { get; set; }
+        public int GroupUId { get; set; }
         public string Name { get; set; }
         public string NameDistilled { get; set; }
         public string CompaniesHouseNumber { get; set; }

@@ -9,6 +9,6 @@ namespace Edubase.Services.Establishments.Downloads
     public interface IEstablishmentDownloadService
     {
         Task<Guid> SearchWithDownloadGenerationAsync(EstablishmentSearchDownloadPayload payload, IPrincipal principal);
-        Task<SearchDownloadGenerationProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal);
+        Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal);
     }
 }

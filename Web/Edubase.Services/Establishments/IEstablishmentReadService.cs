@@ -24,7 +24,8 @@ namespace Edubase.Services.Establishments
         /// <returns></returns>
         /// <remarks>NON-BESPOKE BE</remarks>
         Task<bool> CanEditAsync(int urn, IPrincipal user);
-        Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModel establishment);
+        Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user);
+        Task<EstablishmentDisplayEditPolicy> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user);
         Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn, IPrincipal principal);
         Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10);
 

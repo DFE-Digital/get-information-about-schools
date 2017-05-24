@@ -86,13 +86,28 @@ namespace Edubase.Services.Establishments.Models
         public string Address_CityOrTown { get; set; }
 
         public int? Address_CountyId { get; set; }
-
-        [JsonIgnore] // todo: TEXCHANGE: the api doesn't seem to recognise this
+        
         public int? Address_CountryId { get; set; }
 
         public string Address_Locality { get; set; }
 
         public string Address_PostCode { get; set; }
+
+
+        #region Alt Address
+
+        public string AltSiteName { get; set; }
+        public int? AltCountryId { get; set; }
+        public string AltUPRN { get; set; }
+        public string AltStreet { get; set; }
+        public string AltLocality { get; set; }
+        public string AltAddress3 { get; set; }
+        public string AltTown { get; set; }
+        public int? AltCountyId { get; set; }
+        public string AltPostCode { get; set; }
+
+        #endregion
+
 
         [DisplayName("Headteacher/Principal first name")]
         public string HeadFirstName { get; set; }
@@ -279,5 +294,11 @@ namespace Edubase.Services.Establishments.Models
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Address_CountyId.ToString(), Address_PostCode);
         public AddressDto GetAddressDto() => new AddressDto { Line1 = Address_Line1, Line2 = Address_Line2, Line3 = Address_Line3, CityOrTown = Address_CityOrTown, County = Address_CountyId.ToString(), PostCode = Address_PostCode, Country = Address_CountryId.ToString() };
         public string GetLAESTAB() => string.Concat(LocalAuthorityId, "/", EstablishmentNumber.GetValueOrDefault().ToString("D4"));
+
+        public string HelpdeskNotes { get; set; }
+        public DateTime? HelpdeskLastUpdate { get; set; }
+        public string HelpdeskTrigger1 { get; set; }
+        public int? HelpdeskPreviousLocalAuthorityId { get; set; }
+        public string HelpdeskPreviousEstablishmentNumber { get; set; }
     }
 }
