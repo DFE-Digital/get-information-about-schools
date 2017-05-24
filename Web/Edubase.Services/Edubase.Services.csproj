@@ -200,7 +200,7 @@
     <Compile Include="Enums\eLookupGroupType.cs" />
     <Compile Include="Enums\eLookupSearchSource.cs" />
     <Compile Include="Enums\EnumSets.cs" />
-    <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayEditPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
     <Compile Include="Establishments\Models\BulkUpdateDto.cs" />
@@ -260,7 +260,7 @@
     <Compile Include="Domain\PersonDto.cs" />
     <Compile Include="Domain\ProgressDto.cs" />
     <Compile Include="Domain\ServiceResultDto.cs" />
-    <Compile Include="Establishments\DisplayPolicies\EstablishmentDisplayPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\EstablishmentDisplayEditPolicy.cs" />
     <Compile Include="Establishments\Downloads\IEstablishmentDownloadService.cs" />
     <Compile Include="Establishments\IEstablishmentWriteService.cs" />
     <Compile Include="Establishments\Models\EstablishmentFieldList.cs" />
@@ -302,6 +302,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\StubClaimsIdConverter.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\SecureAccessClaimsIdConverter.cs" />
+    <Compile Include="Security\EdubaseRoles.cs" />
     <Compile Include="Security\EduClaimTypes.cs" />
     <Compile Include="Security\ISecurityService.cs" />
     <Compile Include="Security\SecurityExtensionMethods.cs" />

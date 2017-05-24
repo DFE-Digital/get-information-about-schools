@@ -1,6 +1,5 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Establishments.DisplayPolicies;
-using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Models.Establishments;
 using System;
 using System.Collections.Generic;
@@ -44,7 +43,7 @@ namespace Edubase.Web.UI.Models
             Predecessor
         }
         
-        public EstablishmentDisplayPolicy DisplayPolicy { get; set; }
+        public EstablishmentDisplayEditPolicy EditPolicy { get; set; }
 
         public int? Urn { get; set; }
         public int? LocalAuthorityId { get; set; }
@@ -332,6 +331,11 @@ namespace Edubase.Web.UI.Models
 
 
         #endregion
+
+        public bool CanOverrideCRProcess { get; set; }
+
+        public bool OverrideCRProcess { get; set; }
+
 
         public EditEstablishmentModel()
         {

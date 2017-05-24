@@ -23,7 +23,7 @@ namespace Edubase.Web.UI.Models
             [(int)eLookupGroupType.ChildrensCentresGroup] = "Childrens' centre group"
         };
 
-        public EstablishmentDisplayPolicy DisplayPolicy { get; set; }
+        public EstablishmentDisplayEditPolicy DisplayPolicy { get; set; }
 
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
 

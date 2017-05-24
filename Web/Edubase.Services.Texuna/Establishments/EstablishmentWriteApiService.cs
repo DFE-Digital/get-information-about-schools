@@ -9,6 +9,7 @@ using System.Security.Principal;
 using System.IO;
 using Edubase.Services.Domain;
 using Edubase.Common;
+using Edubase.Services.Security;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -21,17 +22,15 @@ namespace Edubase.Services.Texuna.Establishments
             _httpClient = httpClient;
         }
 
-        public async Task SaveAsync(EstablishmentModel model, IPrincipal principal)
+        public async Task SaveAsync(EstablishmentModel model, bool overrideCR, DateTime? effectiveDate, IPrincipal principal)
         {
-            if (model.Urn.HasValue)
+            var parameters = new Dictionary<string, string>
             {
-                await _httpClient.PutAsync($"establishment", model, principal);
-            }
-            else
-            {
-
-            }
-            
+                [nameof(overrideCR).ToLower()] = (principal.IsInRole(EdubaseRoles.ROLE_BACKOFFICE) && overrideCR).ToString().ToLower(),
+                [nameof(effectiveDate)] = effectiveDate?.ToString("yyyy-MM-dd")
+            };
+            var queryString = string.Join("&", parameters.Where(x => x.Value != null).Select(x => $"{x.Key}={x.Value}"));
+            await _httpClient.PutAsync($"establishment?{queryString}", model, principal);
         }
 
         /// <summary>

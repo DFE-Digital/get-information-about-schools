@@ -107,7 +107,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             var domainModel = (await _establishmentReadService.GetAsync(viewModel.Urn.Value, User)).GetResult();
             domainModel.GovernanceMode = viewModel.GovernanceMode;
-            await _establishmentWriteService.SaveAsync(domainModel, User);
+            await _establishmentWriteService.SaveAsync(domainModel, false, null, User);
             return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = viewModel.Urn });
         }
 
@@ -655,7 +655,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (establishmentUrn.HasValue)
             {
                 var domainModel = (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
-                var displayPolicy = (await _establishmentReadService.GetDisplayPolicyAsync(User, domainModel));
+                var displayPolicy = (await _establishmentReadService.GetDisplayPolicyAsync(domainModel, User));
 
                 var vm = (IEstablishmentPageViewModel)viewModel;
                 vm.Layout = ESTAB_LAYOUT;

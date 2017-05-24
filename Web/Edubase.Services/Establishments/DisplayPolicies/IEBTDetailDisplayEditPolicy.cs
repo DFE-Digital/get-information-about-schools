@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.Establishments.DisplayPolicies
 {
-    public class IEBTDetailDisplayPolicy
+    public class IEBTDetailDisplayEditPolicy
     {
         [JsonProperty("notes")]
         public bool Notes { get; set; }

@@ -57,7 +57,7 @@
                     <tr>
                         <td aria-label="Field">@item.Name</td>
                         <td aria-label="Old value">@(item.OldValue ?? "<empty>")</td>
-                        <td aria-label="New value">@(item.OldValue ?? "<empty>")</td>
+                        <td aria-label="New value">@(item.NewValue ?? "<empty>")</td>
                     </tr>
                 }
             </tbody>
@@ -65,6 +65,12 @@
         <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
 
         @Html.EditorFor(x => x.ChangeEffectiveDate, new { title = "Effective date (optional)" })
+
+        @if (Model.CanOverrideCRProcess)
+        {
+            @Html.CheckBoxFor(x => x.OverrideCRProcess)
+            @Html.LabelFor(x => x.OverrideCRProcess, "Override CR")
+        }
     </div>
 </div>
 
