@@ -268,10 +268,11 @@
                                 <tr>
                                     <!-- We have 2 different fields, but the UED calls for one. Also, Date changed seems to be null most of the time -->
                                     <th>Date changed</th>
+                                    <th>Request type</th>
                                     @*<th>Date requested</th>*@
                                     @*<th>Group UID</th>
                                     <th>Group name</th>*@
-                                    <th>Suggested change</th>
+                                    <th>Change</th>
                                     <th>Suggested by</th>
                                 </tr>
                                 </thead>
@@ -279,18 +280,19 @@
                                     @foreach (var item in Model.ChangeHistory)
                                     {
                                         <tr>
-                                            <td aria-label="Date changed">@(item.EffectiveDateUtc ?? item.RequestedDateUtc)</td>
-                                            <td aria-label="Suggested change">
+                                            <td aria-label="Date changed">@(item.RequestedDateUtc.Value.ToString("dd/MM/yyyy"))</td>
+                                            <td aria-label="Request type">@item.RequestType.GetEnumMember()</td>
+                                            <td aria-label="Change">
                                                 <dl>
                                                     @if (item.RequestType == GroupChangeDto.GroupChangeRequestType.GroupChange)
                                                     {
-                                                    <dt>Field Name</dt><dd>@item.Name</dd>
-                                                    <dt>Old Value</dt><dd>@item.OldValue</dd>
-                                                    <dt>New Value</dt><dd>@item.NewValue</dd>
+                                                        <dt>Field</dt><dd>@item.Name</dd>
+                                                        <dt>Old value</dt><dd>@item.OldValue</dd>
+                                                        <dt>New value</dt><dd>@item.NewValue</dd>
                                                     } else {
-                                                    <dt>Establishment</dt><dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
-                                                    <dt>Link Date</dt><dd>@item.LinkDateUtc.Value.ToString("dd/MM/yyyy")</dd>
-                                                    <dt>Link Type</dt><dd>@item.LinkType.ToString()</dd>
+                                                        <dt>Establishment</dt><dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
+                                                        <dt>Link date</dt><dd>@item.LinkDateUtc.Value.ToString("dd/MM/yyyy")</dd>
+                                                        <dt>Type</dt><dd>@(item.LinkType?.ToString() ?? "not recorded")</dd>
                                                     }
                                                     
                                                 </dl>

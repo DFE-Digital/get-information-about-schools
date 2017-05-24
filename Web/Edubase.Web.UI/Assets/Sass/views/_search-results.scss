@@ -174,20 +174,36 @@ div.approval-data
 table.approval-items {
     display: table;
     font-size: 14px;
-    
+
     th {
-        font-weight:bold;
-        text-align:left;
+        font-weight: bold;
+        text-align: left;
     }
 
     td, th {
         font-size: 13px;
-        padding:5px 3px 5px 3px;
-        border-bottom:2px solid #eee;
+        padding: 5px 3px 5px 3px;
+        border-bottom: 2px solid #eee;
         width: 12.5%;
-     }
 
-    
+        dl {
+            margin-bottom: 20px;
+            overflow: hidden;
+            font-size: 13px;
+
+            dt, dd {
+                float: left;
+            }
+
+            dt {
+                clear: left;
+                margin-right: 12px;
+                font-weight: bold;
+            }
+        }
+    }
+
+
     td.bb {
         -ms-word-break: break-all;
         word-break: break-all;
@@ -197,13 +213,16 @@ table.approval-items {
 
     @include media(mobile) {
         border-bottom: 1px solid #eee;
+
         thead {
             display: none;
         }
+
         tr {
-            border-top: 3px solid #eee;            
+            border-top: 3px solid #eee;
         }
-        td  {
+
+        td {
             clear: left;
             display: block;
             float: left;
@@ -211,14 +230,16 @@ table.approval-items {
             font-size: 14px;
             padding: 0.5em 0;
             border-bottom: 1px solid #eee;
+
             &:before {
                 content: attr(aria-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em
             }
+
             &:last-child {
-                border:0;
+                border: 0;
             }
         }
     }
