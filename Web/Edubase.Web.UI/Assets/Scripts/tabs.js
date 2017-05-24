@@ -24,8 +24,8 @@
                 validHashes = $.map($tabs, function(elem) {
                     return $(elem).attr('href').split('#')[1];
                 }),
-                intialTabSelection = $.inArray(window.location.hash, validHashes);
-
+                intialTabSelection = $.inArray(window.location.hash.replace('#', ''), validHashes);
+            
             
             function setTabHeight() {
                 var maxHeight = 0;
@@ -49,6 +49,18 @@
             $tabbedContent.attr('tab-index', 0);
             $tabbedContent.addClass('hidden-tab-content').attr('aria-hidden', true);
 
+            $tabbedContent.each(function (n) {
+                var $tabContent = $(this);
+                var hasPagination = $tabContent.find('.pagination').length > 0;
+                
+                if (hasPagination) {
+                    $tabContent.find('.pagination-links a').each(function () {
+                        var linkHref = $(this).prop('href');
+                        $(this).prop('href', linkHref + '#' + validHashes[n]);
+                    });
+                }
+            });
+
             $('.tab-manipulator').on('click', function (e) {
                 e.preventDefault();
                 var hash = $(this).attr('href'),
@@ -59,19 +71,16 @@
                 }
             });
 
-            $tabs.on('click', function (e) {
-                
+            $tabs.on('click', function (e) {                
                 e.preventDefault();
                 var targetContent = $(this).attr('href');
                 location.replace(targetContent);
                 
-                // undo previous selection
                 $tabs.removeClass(opts.selectedTabClass);
 
                 $tabbedContent.addClass('hidden-tab-content')
                     .attr('aria-hidden', true);                
 
-                // new selection
                 $(this).addClass(opts.selectedTabClass);
 
                 $(targetContent).removeClass('hidden-tab-content')
