@@ -10,6 +10,7 @@ using System.IO;
 using Edubase.Services.Domain;
 using Edubase.Common;
 using Edubase.Services.Security;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -49,6 +50,7 @@ namespace Edubase.Services.Texuna.Establishments
             apiModel.LocalAuthorityId = model.LocalAuthorityId;
             apiModel.CCLAContactDetail = new ChildrensCentreLocalAuthorityDto();
             apiModel.IEBTModel = new IEBTModel();
+            apiModel.StatusId = (int)eLookupEstablishmentStatus.ProposedToOpen;
             return (await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={model.GenerateEstabNumber.ToString().ToLower()}", apiModel, principal)).Value;
         }
 

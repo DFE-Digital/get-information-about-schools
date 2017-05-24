@@ -60,7 +60,7 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
         }
 
         ///// <summary>
-        ///// Creates a trust purely from companies house number and then returns the GroupUID of the new Trust
+        ///// Creates a trust purely from companies house number and then returns the GroupUId of the new Trust
         ///// </summary>
         ///// <param name="currentUser"></param>
         ///// <param name="companiesHouseNumber"></param>
@@ -86,7 +86,7 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
         //            };
         //            dc.Groups.Add(model);
         //            await dc.SaveChangesAsync();
-        //            return model.GroupUID;
+        //            return model.GroupUId;
         //        }
         //    }
         //    else throw new Exception("Company not found");

@@ -97,7 +97,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, 20, User);
             }
 
-            await PopulateEstablishmentList(viewModel.Establishments, model.GroupUID.Value);
+            await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value);
             
             return View(viewModel);
         }
@@ -175,7 +175,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.GroupManagerEmailAddress = domainModel.ManagerEmailAddress;
             viewModel.GroupName = domainModel.Name;
             viewModel.CompaniesHouseNumber = domainModel.CompaniesHouseNumber;
-            viewModel.GroupUId = domainModel.GroupUID;
+            viewModel.GroupUId = domainModel.GroupUId;
             viewModel.GroupId = domainModel.GroupId;
             viewModel.SelectedTabName = "details";
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
@@ -221,7 +221,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 SaveMode = eSaveMode.Links,
                 GroupName = domainModel.Name,
-                GroupUId = domainModel.GroupUID,
+                GroupUId = domainModel.GroupUId,
                 GroupTypeId = domainModel.GroupTypeId
             };
             
@@ -359,7 +359,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
                 GroupId = viewModel.GroupId,
                 GroupTypeId = viewModel.GroupTypeId,
-                GroupUID = viewModel.GroupUId,
+                GroupUId = viewModel.GroupUId,
                 LocalAuthorityId = viewModel.LocalAuthorityId,
                 ManagerEmailAddress = viewModel.GroupManagerEmailAddress,
                 Name = viewModel.GroupName,

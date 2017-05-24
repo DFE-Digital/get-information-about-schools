@@ -120,7 +120,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     }
                 }
 
-                if (model.Count == 1)  return RedirectToDetailPage(model.Results.Single().GroupUID);
+                if (model.Count == 1)  return RedirectToDetailPage(model.Results.Single().GroupUId);
 
                 return View("GroupResults", model);
 

@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public GroupEditorViewModelBase(GroupModel domainModel)
         {
-            GroupUId = domainModel.GroupUID;
+            GroupUId = domainModel.GroupUId;
             GroupName = domainModel.Name;
             GroupTypeId = domainModel.GroupTypeId;
         }

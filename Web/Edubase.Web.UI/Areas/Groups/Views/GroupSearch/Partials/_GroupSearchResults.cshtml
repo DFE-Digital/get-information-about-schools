@@ -22,7 +22,7 @@ else if (Model.Results.Count > 0)
             @foreach (var result in Model.Results)
                 {
                 <li>
-                    <h2>@Html.ActionLink(result.Name, "Details", "Group", new { id = result.GroupUID, area = "groups", searchQueryString = Model.SearchQueryString }, new { @class = "bold-small" })</h2>
+                    <h2>@Html.ActionLink(result.Name, "Details", "Group", new { id = result.GroupUId, area = "groups", searchQueryString = Model.SearchQueryString }, new { @class = "bold-small" })</h2>
                     <dl>
                         <dt>Type:</dt>
                         <dd>@(Model.GroupTypes.FirstOrDefault(x => x.Id == result.GroupTypeId)?.Name)</dd>
@@ -32,7 +32,7 @@ else if (Model.Results.Count > 0)
                             <dd><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.CompaniesHouseNumber">@result.CompaniesHouseNumber</a></dd>
                         }
                         <dt>Group UID:</dt>
-                        <dd>@result.GroupUID</dd>
+                        <dd>@result.GroupUId</dd>
                         <dt>Group ID:</dt>
                         <dd>@(result.GroupId ?? "Not recorded")</dd>
                     </dl>

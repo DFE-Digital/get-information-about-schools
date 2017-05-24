@@ -301,7 +301,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.PostCode = model.PostCode;
 
                     viewModel.EstablishmentUrn = model.EstablishmentUrn;
-                    viewModel.GroupUId = model.GroupUID;
+                    viewModel.GroupUId = model.GroupUId;
                 }
             }
 
@@ -357,7 +357,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     AppointmentStartDate = viewModel.AppointmentStartDate.ToDateTime(),
                     DOB = viewModel.DOB.ToDateTime(),
                     EmailAddress = viewModel.EmailAddress,
-                    GroupUID = viewModel.GroupUId,
+                    GroupUId = viewModel.GroupUId,
                     EstablishmentUrn = viewModel.EstablishmentUrn,
                     NationalityId = viewModel.NationalityId,
                     Id = viewModel.GID,
