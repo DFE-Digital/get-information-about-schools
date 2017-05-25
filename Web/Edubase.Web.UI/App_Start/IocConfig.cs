@@ -33,7 +33,6 @@ using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
 using System;
 using System.Configuration;
-using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
@@ -99,7 +98,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
             builder.RegisterType<GroupDownloadApiService>().As<IGroupDownloadService>();
             builder.RegisterType<LookupApiService>().As<ILookupService>();
-            builder.RegisterInstance(new HttpClient(new HttpClientHandler { Proxy = new WebProxy(new Uri("http://127.0.0.1:8888"))}) { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) }).SingleInstance().AsSelf();
+            builder.RegisterInstance(new HttpClient { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) }).SingleInstance().AsSelf();
             builder.RegisterType<HttpClientWrapper>().SingleInstance().AsSelf();
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
