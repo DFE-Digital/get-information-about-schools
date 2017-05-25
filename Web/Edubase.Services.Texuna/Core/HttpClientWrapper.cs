@@ -173,7 +173,7 @@ namespace Edubase.Services
 
         private async Task<ApiResponse> ParseHttpResponseMessageAsync(HttpResponseMessage message)
         {
-            var response = new ApiResponse(message.IsSuccessStatusCode);
+            var response = new ApiResponse(message.IsSuccessStatusCode && !message.Content.Headers.ContentType.MediaType.Equals("text/html"));
             if (message.IsSuccessStatusCode) return response;
             else return await ProcessApiErrorAsync(message, response);
         }

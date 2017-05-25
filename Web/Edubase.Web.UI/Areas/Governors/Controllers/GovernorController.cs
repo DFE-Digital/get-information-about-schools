@@ -183,7 +183,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     {
                         var domainModel = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value, User);
                         domainModel.AppointmentEndDate = viewModel.RemovalAppointmentEndDate.ToDateTime().Value;
-                        await _governorsWriteService.SaveAsync(domainModel, User);
+                        var response = await _governorsWriteService.SaveAsync(domainModel, User);
+                        if (!response.Success && response.Errors.Length == 0)
+                        {
+                            throw new TexunaApiSystemException($"The TEX-API said no (but gave no details!)...");
+                        }
                     }
                 }
                 else if (viewModel.Action == "Remove") // mark the governor record as deleted
