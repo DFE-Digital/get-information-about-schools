@@ -149,13 +149,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             grid.AddHeaderCell("Name", displayPolicy.FullName)
                 .AddHeaderCell("Shared with", role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
                 .AddHeaderCell("GID", displayPolicy.Id)
-                .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
+                //.AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
                 .AddHeaderCell("From", displayPolicy.AppointmentStartDate)
                 .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate)
                 .AddHeaderCell("Postcode", displayPolicy.PostCode)
                 .AddHeaderCell("Date of birth", displayPolicy.DOB)
                 .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
-                .AddHeaderCell("Nationality", displayPolicy.Nationality)
+                //.AddHeaderCell("Nationality", displayPolicy.Nationality)
                 .AddHeaderCell("Email address", displayPolicy.EmailAddress)
                 .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber);
         }
