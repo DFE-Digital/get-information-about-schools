@@ -59,13 +59,13 @@ namespace Edubase.Services
             }
         }
         
-        public async Task PostAsync(string uri, object data, IPrincipal principal)
+        public async Task<ApiResponse> PostAsync(string uri, object data, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
                 var result = await _httpClient.SendAsync(requestMessage);
-                Validate(result);
+                return await ParseHttpResponseMessageAsync(result);
             }
         }
 
@@ -176,24 +176,50 @@ namespace Edubase.Services
                 if (!message.Content.Headers.ContentType.MediaType.Equals("application/json"))
                     throw new TexunaApiSystemException(
                         $"The TEX-API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
-                response.Response = await message.Content.ReadAsAsync<T>(new[] {_formatter});
-                return response;
-            }
-            else
-            {
-                if (message.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                    throw new EduSecurityException("The current principal does not have permission to call this API");
-
                 try
                 {
-                    response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
-                    return response;
+                    response.Response = await message.Content.ReadAsAsync<T>(new[] { _formatter });
                 }
                 catch (Exception e)
                 {
-                    throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
+                    //TODO: get rid of this, just here to make it easier to work around TEXAPI bugs
+                    response.Response = default(T);
                 }
-                    
+                
+                return response;
+            }
+            
+            response.Errors = await ParseErrors(message);
+            return response;
+        }
+
+        private async Task<ApiResponse> ParseHttpResponseMessageAsync(HttpResponseMessage message)
+        {
+            var response = new ApiResponse
+            {
+                Success = message.IsSuccessStatusCode
+            };
+
+            if (!message.IsSuccessStatusCode)
+            {
+                response.Errors = await ParseErrors(message);
+            }
+
+            return response;
+        }
+
+        private async Task<ApiError[]> ParseErrors(HttpResponseMessage message)
+        {
+            if (message.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                throw new EduSecurityException("The current principal does not have permission to call this API");
+
+            try
+            {
+                return await message.Content.ReadAsAsync<ApiError[]>();
+            }
+            catch (Exception e)
+            {
+                throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
             }
         }
 

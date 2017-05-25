@@ -331,6 +331,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (ModelState.IsValid)
             {
+                ApiResponse<int> response;
                 if (!viewModel.EstablishmentUrn.HasValue &&
                     (viewModel.GovernorRole == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
                     viewModel.GovernorRole == eLookupGovernorRole.Establishment_SharedLocalGovernor))
@@ -351,33 +352,35 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     var governorBeingReplaced = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value, User);
                     governorBeingReplaced.AppointmentEndDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime();
-                    await _governorsWriteService.SaveAsync(governorBeingReplaced, User);
+                    response = await _governorsWriteService.SaveAsync(governorBeingReplaced, User);
+                }
+                else
+                {
+                    response = await _governorsWriteService.SaveAsync(new GovernorModel
+                    {
+                        AppointingBodyId = viewModel.AppointingBodyId,
+                        AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
+                        AppointmentStartDate = viewModel.AppointmentStartDate.ToDateTime(),
+                        DOB = viewModel.DOB.ToDateTime(),
+                        EmailAddress = viewModel.EmailAddress,
+                        GroupUId = viewModel.GroupUId,
+                        EstablishmentUrn = viewModel.EstablishmentUrn,
+                        NationalityId = viewModel.NationalityId,
+                        Id = viewModel.GID,
+                        Person_FirstName = viewModel.FirstName,
+                        Person_MiddleName = viewModel.MiddleName,
+                        Person_LastName = viewModel.LastName,
+                        //Person_TitleId = viewModel.GovernorTitle,//todo: textchange
+                        PreviousPerson_FirstName = viewModel.PreviousFirstName,
+                        PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
+                        PreviousPerson_LastName = viewModel.PreviousLastName,
+                        //PreviousPerson_TitleId = viewModel.PreviousTitle,//todo: textchange
+                        PostCode = viewModel.PostCode,
+                        RoleId = (int)viewModel.GovernorRole,
+                        TelephoneNumber = viewModel.TelephoneNumber
+                    }, User);
                 }
                 
-                var response = await _governorsWriteService.SaveAsync(new GovernorModel
-                {
-                    AppointingBodyId = viewModel.AppointingBodyId,
-                    AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
-                    AppointmentStartDate = viewModel.AppointmentStartDate.ToDateTime(),
-                    DOB = viewModel.DOB.ToDateTime(),
-                    EmailAddress = viewModel.EmailAddress,
-                    GroupUId = viewModel.GroupUId,
-                    EstablishmentUrn = viewModel.EstablishmentUrn,
-                    NationalityId = viewModel.NationalityId,
-                    Id = viewModel.GID,
-                    Person_FirstName = viewModel.FirstName,
-                    Person_MiddleName = viewModel.MiddleName,
-                    Person_LastName = viewModel.LastName,
-                    //Person_TitleId = viewModel.GovernorTitle,//todo: textchange
-                    PreviousPerson_FirstName = viewModel.PreviousFirstName,
-                    PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
-                    PreviousPerson_LastName = viewModel.PreviousLastName,
-                    //PreviousPerson_TitleId = viewModel.PreviousTitle,//todo: textchange
-                    PostCode = viewModel.PostCode,
-                    RoleId = (int)viewModel.GovernorRole,
-                    TelephoneNumber = viewModel.TelephoneNumber
-                }, User);
-
                 if (response.Success)
                 {
                     viewModel.GID = response.Response;
