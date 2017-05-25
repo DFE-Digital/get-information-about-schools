@@ -12,7 +12,6 @@ namespace Edubase.Services.Governors.Models
     {
         public int? Id { get; set; }
         public int? EstablishmentUrn { get; set; }
-        public int? GroupUID { get; set; }
         
         [JsonProperty("titleId")]
         public int? Person_TitleId { get; set; }
@@ -57,6 +56,7 @@ namespace Edubase.Services.Governors.Models
 
         public string TelephoneNumber { get; set; }
 
+        [JsonProperty("groupUID")]
         public int? GroupUId { get; set; }
         
         public string GetFullName() => StringUtil.ConcatNonEmpties(" ", Person_FirstName, Person_MiddleName, Person_LastName);
