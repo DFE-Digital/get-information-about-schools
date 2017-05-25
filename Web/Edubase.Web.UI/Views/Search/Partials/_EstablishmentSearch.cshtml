@@ -161,7 +161,38 @@
             </fieldset>
 
         </li>
+        
+    </ul>
+    <p>or</p>
+    <ul>
+        <li class="search-type-wrapper">
+        @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
+        {
+            <fieldset class="search-toggle-panel">
+                <span class="radio-button-wrap">                  
+                    <input id="searchtype-all" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-all-ref">
+                    <label class="edubase-button-radio" for="searchtype-all">
+                        All establishments
+                    </label>
+                </span>
+                <div class="expanding-search-field" id="searchby-all-ref">                    
+                    
+                    <div class="form-group">
+                        <span class="checkbox-wrap">
+                            <input id="include-open-establishments-all" type="checkbox" checked="checked" name="OpenOnly" value="true"/>
+                            <label for="include-open-establishments-all" class="edubase-button-checkbox">Include open schools only</label>
+                        </span>
 
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="button mobile-full-width search-button" id="name-search-submit">Search</button>
+                    </div>
+
+                    <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true"/>
+                </div>
+            </fieldset>
+        }
+        </li>
     </ul>
     <p class="search-all-shortcut">
         <a href="@Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all establishments</a>

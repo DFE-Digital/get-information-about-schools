@@ -22,21 +22,27 @@
         init: function () {
             var $el = $(this.el),
                 opts = this.opts,
-                $radios = $el.find(':radio, :checkbox'),
+                $radios = $el.find(':radio, :checkbox').filter('[data-toggle-panel]'),
                 $panels = [],
                 self = this;
 
+            console.log($radios);
             $radios.each(function (n) {
-                if ($(this).data().hasOwnProperty(opts.panelDataKey)) {
-                    $panels.push($(this).data()[opts.panelDataKey]);
+                if ($(this).data() && $(this).data().hasOwnProperty(opts.panelDataKey)) {
+                   $panels.push($(this).data()[opts.panelDataKey]);
                 } else {
                     $radios.splice(n, 1);
                 }
             });
+            console.log($radios);
+
 
             $panels = $($panels.join(','));
 
             $panels.addClass('hidden');
+
+           // console.log($panels);
+
 
             if ($radios.filter(':checked').length > 0) {
                 $($radios.filter(':checked').data()[opts.panelDataKey]).removeClass('hidden');

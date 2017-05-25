@@ -5,31 +5,73 @@
 @model VM
 
 
-<p>You can search for academy trusts and sponsors, local authority maintained school
-federations and trusts as well as childrens centre groups and collaborations.</p>
+<p>
+    You can search for academy trusts and sponsors, local authority maintained school
+    federations and trusts as well as childrens centre groups and collaborations.
+</p>
 
 @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
 {
     @Html.HiddenFor(m => m.SelectedTab)
     <fieldset>
         <legend>Search by:</legend>
+        <ul>
+            <li class="search-type-wrapper">
+                <fieldset class="search-toggle-panel">
+                    <span class="radio-button-wrap">
+                        <input id="searchtype-name-group" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-group-ref">
+                        <label class="edubase-button-radio" for="searchtype-name-group">
+                            Name or reference number
+                        </label>
+                    </span>
 
-        <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
-            <label class="form-label">
-                Name or reference number
-                <a href="#group-reference" class="icon-help">
-                    <span class="visuallyhidden">About reference numbers</span>
-                </a>
-            </label>
-            <div class="form-group">
-                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=" })
-            </div>
+                    <div class="expanding-search-field" id="searchby-group-ref">
+                        <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
+                            <label class="form-label">
+                                Name, Companies House number, Group UID or ID
+                                <a href="#group-reference" class="icon-help">
+                                    <span class="visuallyhidden">About reference numbers</span>
+                                </a>
+                            </label>
+                            <div class="form-group">
+                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control auto-clear", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=" })
+                            </div>
 
-            @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
-            <input type="hidden" name="g" value="true" />
+                            @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
+                            <input type="hidden" name="g" value="true" />
 
-        </div>
-        <button type="submit" id="group-search-submit" class="button mobile-full-width  search-button" name="searchtype" value="@eSearchType.Group">Search</button>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" id="group-search-submit" class="button mobile-full-width  search-button" name="searchtype" value="@eSearchType.Group">Search</button>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </li>
+        </ul>
+
+        <p>or</p>
+        <ul>
+            <li class="search-type-wrapper">
+                
+                    <fieldset class="search-toggle-panel">
+                        <span class="radio-button-wrap">
+                            <input id="searchtype-all-groups" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-allgroups-ref">
+                            <label class="edubase-button-radio" for="searchtype-all-groups">
+                                All establishment groups
+                            </label>
+                        </span>
+                        <div class="expanding-search-field" id="searchby-allgroups-ref">
+                            <div class="form-group">
+                                <a href="@Url.Action("Index", "GroupSearch", new { area = "Groups" })?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))" class="button mobile-full-width search-button">Search</a>
+                            </div>
+
+                            <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
+                        </div>
+                    </fieldset>
+            </li>
+        </ul>
+
         <p class="search-all-shortcut">
             <a href="@Url.Action("Index", "GroupSearch", new { area = "Groups" })?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all Groups</a>
         </p>
