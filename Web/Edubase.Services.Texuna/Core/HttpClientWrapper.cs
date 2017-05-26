@@ -59,13 +59,13 @@ namespace Edubase.Services
             }
         }
         
-        public async Task PostAsync(string uri, object data, IPrincipal principal)
+        public async Task<ApiResponse> PostAsync(string uri, object data, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
                 var result = await _httpClient.SendAsync(requestMessage);
-                Validate(result);
+                return await ParseHttpResponseMessageAsync(result);
             }
         }
 
@@ -85,7 +85,7 @@ namespace Edubase.Services
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
                 var result = await _httpClient.SendAsync(requestMessage);
-                Validate(result);
+                await ParseHttpResponseMessageAsync(result);
             }
         }
 
@@ -95,7 +95,7 @@ namespace Edubase.Services
             {
                 var requestMessage = CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
                 var result = await _httpClient.SendAsync(requestMessage);
-                Validate(result);
+                await ParseHttpResponseMessageAsync(result);
             }
         }
 
@@ -105,7 +105,7 @@ namespace Edubase.Services
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
                 var result = await _httpClient.SendAsync(requestMessage);
-                Validate(result);
+                await ParseHttpResponseMessageAsync(result);
             }
         }
 
@@ -166,40 +166,43 @@ namespace Edubase.Services
 
         private async Task<ApiResponse<T>> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message)
         {
-            var response = new ApiResponse<T>
-            {
-                Success = message.IsSuccessStatusCode
-            };
+            var response = new ApiResponse<T>(message.IsSuccessStatusCode);
+            if (message.IsSuccessStatusCode) return await DeserializeResponseAsync(message, response);
+            else return await ProcessApiErrorAsync(message, response);
+        }
 
-            if (message.IsSuccessStatusCode)
+        private async Task<ApiResponse> ParseHttpResponseMessageAsync(HttpResponseMessage message)
+        {
+            var response = new ApiResponse(message.IsSuccessStatusCode);
+            if (message.IsSuccessStatusCode) return response;
+            else return await ProcessApiErrorAsync(message, response);
+        }
+
+        private static async Task<T> ProcessApiErrorAsync<T>(HttpResponseMessage message, T response) where T : ApiResponse
+        {
+            if (message.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                throw new EduSecurityException("The current principal does not have permission to call this API");
+
+            try
             {
-                if (!message.Content.Headers.ContentType.MediaType.Equals("application/json"))
-                    throw new TexunaApiSystemException(
-                        $"The TEX-API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
-                response.Response = await message.Content.ReadAsAsync<T>(new[] {_formatter});
+                response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
                 return response;
             }
-            else
+            catch (Exception e)
             {
-                if (message.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                    throw new EduSecurityException("The current principal does not have permission to call this API");
-
-                try
-                {
-                    response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
-                    return response;
-                }
-                catch (Exception e)
-                {
-                    throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
-                }
-                    
+                throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
             }
         }
 
-        private void Validate(HttpResponseMessage message)
+        private async Task<ApiResponse<T>> DeserializeResponseAsync<T>(HttpResponseMessage message, ApiResponse<T> response)
         {
-            if (!message.IsSuccessStatusCode) throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+            if (!message.Content.Headers.ContentType.MediaType.Equals("application/json"))
+            {
+                throw new TexunaApiSystemException(
+                    $"The TEX-API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+            }
+            response.Response = await message.Content.ReadAsAsync<T>(new[] { _formatter });
+            return response;
         }
     }
 }

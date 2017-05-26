@@ -53,12 +53,6 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, EdubaseAuthorize]
-        public ActionResult ChangeApprovals()
-        {
-            return View();
-        }
-
-        [HttpGet, EdubaseAuthorize]
         public ActionResult CreateEstablishment()
         {
             return View();

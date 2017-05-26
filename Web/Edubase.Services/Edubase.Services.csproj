@@ -172,6 +172,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Approvals\IApprovalService.cs" />
+    <Compile Include="Approvals\Models\ePendingChangeRequestAction.cs" />
+    <Compile Include="Approvals\Models\PendingApprovalItem.cs" />
+    <Compile Include="Approvals\Models\PendingApprovalsResult.cs" />
+    <Compile Include="Approvals\Models\PendingChangeRequestAction.cs" />
     <Compile Include="BlobService.cs" />
     <Compile Include="Domain\AddressDto.cs" />
     <Compile Include="Domain\ApiResponse.cs" />

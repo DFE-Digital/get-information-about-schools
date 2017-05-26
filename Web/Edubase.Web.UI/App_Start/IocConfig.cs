@@ -1,10 +1,12 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
+using Autofac.Integration.WebApi;
 using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Cache;
 using Edubase.Data;
 using Edubase.Services;
+using Edubase.Services.Approvals;
 using Edubase.Services.Downloads;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
@@ -18,6 +20,7 @@ using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
+using Edubase.Services.Texuna.Approvals;
 using Edubase.Services.Texuna.Core;
 using Edubase.Services.Texuna.Downloads;
 using Edubase.Services.Texuna.Establishments;
@@ -33,6 +36,7 @@ using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Web.Http;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI
@@ -42,33 +46,28 @@ namespace Edubase.Web.UI
         private static IContainer _container;
         public static IContainer Container => _container;
 
-        public static void Register()
+        public static void Register(HttpConfiguration config)
         {
             var builder = new ContainerBuilder();
 
-            // Register your MVC controllers.
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder.RegisterApiControllers(typeof(MvcApplication).Assembly);
 
-            // OPTIONAL: Register model binders that require DI.
             builder.RegisterModelBinders(Assembly.GetExecutingAssembly());
             builder.RegisterModelBinderProvider();
 
-            // OPTIONAL: Register web abstractions like HttpContextBase.
             builder.RegisterModule<AutofacWebTypesModule>();
-
             builder.RegisterModule<ValidationModule>();
 
-            // OPTIONAL: Enable property injection in view pages.
             builder.RegisterSource(new ViewRegistrationSource());
-
-            // OPTIONAL: Enable property injection into action filters.
             builder.RegisterFilterProvider();
 
             RegisterTypes(builder);
 
-            // Set the dependency resolver to be Autofac.
             _container = builder.Build();
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(_container));
+            var resolver = new AutofacDependencyResolver(_container);
+            DependencyResolver.SetResolver(resolver);
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(_container);
         }
 
         private static void RegisterTypes(ContainerBuilder builder)
@@ -110,6 +109,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<SecurityApiService>().As<ISecurityService>();
             builder.RegisterType<GroupsWriteApiService>().As<IGroupsWriteService>();
             builder.RegisterType<DownloadsApiService>().As<IDownloadsService>();
+            builder.RegisterType<ApprovalService>().As<IApprovalService>();
             
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();
             builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();

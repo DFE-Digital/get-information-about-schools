@@ -11,6 +11,8 @@ using System.Runtime.Caching;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Http;
+using Newtonsoft.Json.Serialization;
 
 namespace Edubase.Web.UI
 {
@@ -18,10 +20,16 @@ namespace Edubase.Web.UI
     {
         protected void Application_Start()
         {
-            SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            IocConfig.Register();
+            
+            GlobalConfiguration.Configure(x => 
+            {
+                x.MapHttpAttributeRoutes();
+                IocConfig.Register(x);
+                x.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                x.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;
+            });
 
             using (var scope = IocConfig.Container.BeginLifetimeScope())
             {

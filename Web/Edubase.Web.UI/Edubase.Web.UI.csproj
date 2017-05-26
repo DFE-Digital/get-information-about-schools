@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -56,6 +56,10 @@
     </Reference>
     <Reference Include="Autofac.Integration.Mvc">
       <HintPath>..\packages\Autofac.Mvc5.4.0.0\lib\net451\Autofac.Integration.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.WebApi2.4.0.1\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -307,6 +311,8 @@
     <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
     <Compile Include="Areas\Groups\Models\Validators\GroupEditorViewModelValidator.cs" />
+    <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
+    <Compile Include="Controllers\ApprovalsController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EduBaseController.cs" />
     <Compile Include="Controllers\EstablishmentController.cs" />
@@ -893,7 +899,6 @@
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
     <Content Include="Views\Establishment\EditDetails.cshtml" />
     <Content Include="Views\Prototype\Placeholder.cshtml" />
-    <Content Include="Views\Approval\Index.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
     <Content Include="Views\Establishment\Create.cshtml" />
     <Content Include="Views\Admin\Logs.cshtml" />
@@ -933,7 +938,7 @@
     <Content Include="Views\Establishment\EditLocation.cshtml" />
     <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
-    <Content Include="Views\Tools\ChangeApprovals.cshtml" />
+    <Content Include="Views\Approvals\Index.cshtml" />
     <Content Include="Views\Tools\CreateEstablishment.cshtml" />
     <Content Include="Views\Tools\SearchChangeHistory.cshtml" />
     <Content Include="Views\Tools\ManageAcademyOpenings.cshtml" />

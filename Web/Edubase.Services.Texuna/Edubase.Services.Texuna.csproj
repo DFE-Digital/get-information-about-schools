@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Approvals\ApprovalService.cs" />
     <Compile Include="Core\BasicAuthCredentials.cs" />
     <Compile Include="Core\HttpClientWrapper.cs" />
     <Compile Include="Downloads\DownloadsApiService.cs" />
