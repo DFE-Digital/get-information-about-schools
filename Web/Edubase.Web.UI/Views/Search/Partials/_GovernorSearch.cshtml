@@ -28,12 +28,14 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <span class="form-hint">For example, trustee</span>
                         <div class="scroll-wrapper">
                             <div class="scroll-content" id="governor-roles">
                                 @foreach (var governorRole in Model.GovernorRoles)
                                 {
                                     <label>
-                                        <input name="GovernorSearchModel.RoleId" value="@governorRole.Id.ToString()" type="checkbox" />
+                                        <input name="GovernorSearchModel.RoleId" value="@governorRole.Id.ToString()" type="checkbox"/>
                                         @FormatHelpers.FirstCharToUpper(@governorRole.Name.ToLower())
                                     </label>
                                 }
