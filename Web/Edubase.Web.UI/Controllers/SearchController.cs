@@ -97,7 +97,7 @@ namespace Edubase.Web.UI.Controllers
                             return await ProcessLocationDisambiguation(viewModel);
                         }
 
-                        if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text))
+                        if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text, eSearchType.EstablishmentAll))
                         {
                             var url = Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" });
                             url = viewModel.OpenOnly
@@ -114,8 +114,8 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType == eSearchType.Governor)
                         {
-                            return Redirect(Url.Action("Index", "GovernorSearch", new { area = "Governors" }) + "?" +
-                                            Request.QueryString + viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"));
+                            return Redirect(
+                                $"{Url.Action("Index", "GovernorSearch", new { area = "Governors" })}?{Request.QueryString}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}");
                         }
 
                         throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");
