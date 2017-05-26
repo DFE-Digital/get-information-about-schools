@@ -39,7 +39,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> RequestScheduledExtract(int id)
         {
             var requestId = await _downloadsService.GenerateScheduledExtractAsync(id, User);
-            return RedirectToAction(nameof(Download), new { id = requestId });
+            return RedirectToAction(nameof(Download), new { id = requestId.Value });
         }
 
         [Route("Download/{id}", Name = "DownloadScheduledExtract")]

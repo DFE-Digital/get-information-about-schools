@@ -36,7 +36,7 @@ namespace Edubase.Services.Texuna.Downloads
             
 
         public async Task<ApiResultDto<Guid>> GenerateScheduledExtractAsync(int id, IPrincipal principal) 
-            => (await _httpClient.GetAsync<ApiResultDto<Guid>>($"scheduled-extract/generate/{id}", principal)).Response;
+            => (await _httpClient.PostAsync<ApiResultDto<Guid>>($"scheduled-extract/generate/{id}", null, principal)).Response;
 
         public async Task<ProgressDto> GetProgressOfScheduledExtractGenerationAsync(Guid id, IPrincipal principal)
             => (await _httpClient.GetAsync<ProgressDto>($"scheduled-extract/progress/{id}", principal)).Response;
