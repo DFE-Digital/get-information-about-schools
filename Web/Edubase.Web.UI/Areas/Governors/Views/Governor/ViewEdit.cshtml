@@ -147,11 +147,15 @@ if (Model.EditMode)
             // Render lists
             foreach (var grid in Model.Grids)
             {
-                ShowGovernorEditor(grid);
+                <text>
+                    @ShowGovernorEditor(grid)
+                </text>
             }
             foreach (var grid in Model.HistoricGrids)
             {
-                ShowGovernorEditor(grid);
+                <text>
+                    @ShowGovernorEditor(grid)
+                </text>
             }
 
         }

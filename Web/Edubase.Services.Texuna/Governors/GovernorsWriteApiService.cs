@@ -43,11 +43,12 @@ namespace Edubase.Services.Texuna.Governors
                 };
             }
 
-            await _httpClient.PostAsync("governor", model, principal);
+            var postResponse = await _httpClient.PostAsync("governor", model, principal);
             return new ApiResponse<int>
             {
-                Success = true,
-                Response = model.Id.Value
+                Success = postResponse.Success,
+                Response = model.Id.Value,
+                Errors = postResponse.Errors
             };
         }
 
