@@ -71,9 +71,5 @@
                     </fieldset>
             </li>
         </ul>
-
-        <p class="search-all-shortcut">
-            <a href="@Url.Action("Index", "GroupSearch", new { area = "Groups" })?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))">Show all Groups</a>
-        </p>
     </fieldset>
 }

@@ -127,7 +127,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var payload = new EstablishmentSearchPayload(model.StartIndex, model.PageSize);
             var filters = payload.Filters;
 
-            if (model.SearchType == eSearchType.Text)
+            if (model.SearchType == eSearchType.Text || model.SearchType == eSearchType.EstablishmentAll)
             {
                 if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.UKPRN)
                 {

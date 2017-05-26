@@ -26,7 +26,6 @@
                 $panels = [],
                 self = this;
 
-            console.log($radios);
             $radios.each(function (n) {
                 if ($(this).data() && $(this).data().hasOwnProperty(opts.panelDataKey)) {
                    $panels.push($(this).data()[opts.panelDataKey]);
@@ -34,16 +33,12 @@
                     $radios.splice(n, 1);
                 }
             });
-            console.log($radios);
-
 
             $panels = $($panels.join(','));
 
             $panels.addClass('hidden');
 
-           // console.log($panels);
-
-
+            
             if ($radios.filter(':checked').length > 0) {
                 $($radios.filter(':checked').data()[opts.panelDataKey]).removeClass('hidden');
                
