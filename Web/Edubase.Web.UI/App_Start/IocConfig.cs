@@ -33,7 +33,6 @@ using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
 using System;
 using System.Configuration;
-using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
