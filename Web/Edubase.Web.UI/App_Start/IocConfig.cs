@@ -21,6 +21,7 @@ using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Services.Texuna.Approvals;
+using Edubase.Services.Texuna.ChangeHistory;
 using Edubase.Services.Texuna.Core;
 using Edubase.Services.Texuna.Downloads;
 using Edubase.Services.Texuna.Establishments;
@@ -109,7 +110,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<GroupsWriteApiService>().As<IGroupsWriteService>();
             builder.RegisterType<DownloadsApiService>().As<IDownloadsService>();
             builder.RegisterType<ApprovalService>().As<IApprovalService>();
-            
+            builder.RegisterType<ChangeHistoryService>().As<IChangeHistoryService>();
+
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();
             builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
         }
