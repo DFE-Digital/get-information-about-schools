@@ -26,7 +26,7 @@ namespace Edubase.Services.Governors.Models
         public string Person_LastName { get; set; }
 
         [JsonProperty("previousTitleId")]
-        public string PreviousPerson_TitleId { get; set; }
+        public int? PreviousPerson_TitleId { get; set; }
 
         [JsonProperty("previousFirstName")]
         public string PreviousPerson_FirstName { get; set; }

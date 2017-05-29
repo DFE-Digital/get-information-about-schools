@@ -293,12 +293,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.DOB = new DateTimeViewModel(model.DOB);
                     viewModel.EmailAddress = model.EmailAddress;
 
-                    viewModel.GovernorTitle = model.Person_TitleId.ToString(); //todo: textchange
+                    viewModel.GovernorTitleId = model.Person_TitleId;
                     viewModel.FirstName = model.Person_FirstName;
                     viewModel.MiddleName = model.Person_MiddleName;
                     viewModel.LastName = model.Person_LastName;
 
-                    viewModel.PreviousTitle = model.PreviousPerson_TitleId.ToString();
+                    viewModel.PreviousTitleId = model.PreviousPerson_TitleId;
                     viewModel.PreviousFirstName = model.PreviousPerson_FirstName;
                     viewModel.PreviousMiddleName = model.PreviousPerson_MiddleName;
                     viewModel.PreviousLastName = model.PreviousPerson_LastName;
@@ -343,7 +343,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     var existingGovernors = await _governorsReadService.GetGovernorListAsync(null, viewModel.GroupUId, User);
                     var duplicates = existingGovernors.CurrentGovernors.Where(g => g.RoleId == (int) viewModel.GovernorRole
                                                                                 && string.Equals($"{g.Person_TitleId} {g.Person_FirstName} {g.Person_MiddleName} {g.Person_LastName}", 
-                                                                                                 $"{viewModel.GovernorTitle} {viewModel.FirstName} {viewModel.MiddleName} {viewModel.LastName}", 
+                                                                                                 $"{viewModel.GovernorTitleId} {viewModel.FirstName} {viewModel.MiddleName} {viewModel.LastName}", 
                                                                                                  StringComparison.OrdinalIgnoreCase));
                     if (duplicates.Any())
                     {
@@ -374,11 +374,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         Person_FirstName = viewModel.FirstName,
                         Person_MiddleName = viewModel.MiddleName,
                         Person_LastName = viewModel.LastName,
-                        //Person_TitleId = viewModel.GovernorTitle,//todo: textchange
+                        Person_TitleId = viewModel.GovernorTitleId,
                         PreviousPerson_FirstName = viewModel.PreviousFirstName,
                         PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
                         PreviousPerson_LastName = viewModel.PreviousLastName,
-                        //PreviousPerson_TitleId = viewModel.PreviousTitle,//todo: textchange
+                        PreviousPerson_TitleId = viewModel.PreviousTitleId,
                         PostCode = viewModel.PostCode,
                         RoleId = (int)viewModel.GovernorRole,
                         TelephoneNumber = viewModel.TelephoneNumber
@@ -680,8 +680,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             viewModel.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).ToSelectList(viewModel.AppointingBodyId);
             viewModel.Nationalities = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(viewModel.NationalityId);
-            viewModel.Titles = viewModel.GetTitles();
-            viewModel.PreviousTitles = viewModel.GetTitles();
+            viewModel.Titles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.GovernorTitleId);
+            viewModel.PreviousTitles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.PreviousTitleId);
         }
         
         private async Task PopulateLayoutProperties(object viewModel, int? establishmentUrn, int? groupUId, Action<EstablishmentModel> processEstablishment = null)

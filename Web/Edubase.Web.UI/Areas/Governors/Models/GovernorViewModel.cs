@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
@@ -15,7 +16,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public eLookupGovernorRole GovernorRole { get; set; }
 
         [DisplayName("Title")]
-        public string GovernorTitle { get; set; }
+        public int? GovernorTitleId { get; set; }
 
         [DisplayName("First name")]
         public string FirstName { get; set; }
@@ -52,7 +53,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
 
         [DisplayName("Previous title")]
-        public string PreviousTitle { get; set; }
+        public int? PreviousTitleId { get; set; }
 
         [DisplayName("Previous first name")]
         public string PreviousFirstName { get; set; }
@@ -69,6 +70,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public IEnumerable<SelectListItem> PreviousTitles { get; set; }
         public IEnumerable<SelectListItem> AppointingBodies { get; set; }
         public IEnumerable<SelectListItem> Nationalities { get; set; }
-        public IEnumerable<SelectListItem> GetTitles() => new[] { "Mr", "Mrs", "Ms", "Miss", "Dr", "Prof", "Rev", "Sir" }.Select(x => new SelectListItem { Text = x, Value = x });
+        //public async Task<IEnumerable<SelectListItem>> GetTitles() => (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.HeadTitleId);
     }
 }

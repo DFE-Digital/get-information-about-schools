@@ -1,10 +1,10 @@
 ﻿@using Edubase.Services.Enums
 @model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
     
-<div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitle)">
-    @Html.LabelFor(x => x.GovernorTitle)
-    @Html.ValidationMessageFor(x => x.GovernorTitle)
-    @Html.DropDownListFor(x => x.GovernorTitle, Model.Titles, "", new { @class = "form-control" })
+<div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
+    @Html.LabelFor(x => x.GovernorTitleId)
+    @Html.ValidationMessageFor(x => x.GovernorTitleId)
+    @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new { @class = "form-control" })
 </div>
 
 <div class="form-group @Html.ValidationCssClassFor(x => x.FirstName)">
@@ -77,10 +77,10 @@
 
 @if (Model.DisplayPolicy.PreviousFullName)
 {
-    <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousTitle)">
-        @Html.LabelFor(x => x.PreviousTitle)
-        @Html.ValidationMessageFor(x => x.PreviousTitle)
-        @Html.DropDownListFor(x => x.PreviousTitle, Model.PreviousTitles, "", new { @class = "form-control" })
+    <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousTitleId)">
+        @Html.LabelFor(x => x.PreviousTitleId)
+        @Html.ValidationMessageFor(x => x.PreviousTitleId)
+        @Html.DropDownListFor(x => x.PreviousTitleId, Model.PreviousTitles, "", new { @class = "form-control" })
     </div>
 
     <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">
