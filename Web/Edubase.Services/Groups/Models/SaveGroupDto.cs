@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Edubase.Services.Groups.Models
 {
@@ -18,6 +14,19 @@ namespace Edubase.Services.Groups.Models
         private int? _groupUId = null;
 
         public int? GetGroupUId() => _groupUId ?? Group?.GroupUId;
+
+        public int? GroupUId
+        {
+            get
+            {
+                return GetGroupUId();
+            }
+            set
+            {
+                _groupUId = value;
+                if (Group != null) Group.GroupUId = value;
+            }
+        }
 
         public SaveGroupDto()
         {

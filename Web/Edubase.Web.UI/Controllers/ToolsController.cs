@@ -51,13 +51,7 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
-
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult CreateEstablishment()
-        {
-            return View();
-        }
-
+        
         [HttpGet, EdubaseAuthorize]
         public ActionResult ManageAcademyOpenings()
         {
@@ -69,45 +63,6 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
-
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult EstablishmentBulkUpdate()
-        {
-            return View();
-        }
-
-        [HttpPost, EdubaseAuthorize]
-        public ActionResult EstablishmentBulkUpdate(
-            HttpPostedFileBase bulkfile,
-            string fileType,
-            string effectiveddateDay,
-            string effectiveddateMonth,
-            string effectiveddateYear)
-        {
-            ViewBag.globalError = false;
-            ViewBag.invalidFileError = false;
-            ViewBag.fileTypeError = false;
-            ViewBag.missingFileError = false;
-
-            ViewBag.fileTypeUnselected = fileType == "";
-
-            if (bulkfile != null && bulkfile.ContentLength > 0)
-            {
-                ViewBag.fileName = Path.GetFileName(bulkfile.FileName);
-                ViewBag.fileExtension = Path.GetExtension(bulkfile.FileName);
-                ViewBag.invalidFileError = ViewBag.fileName == "invalid.csv";
-                ViewBag.fileTypeError = !(ViewBag.fileExtension == ".csv" || ViewBag.fileExtension == ".xlsx");
-            }
-            else
-            {
-                ViewBag.missingFileError = true;
-            }
-
-            ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
-            ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
-
-            ViewBag.success = !(ViewBag.globalError || ViewBag.fileTypeUnselected);
-            return View();
-        }
+        
     }
 }

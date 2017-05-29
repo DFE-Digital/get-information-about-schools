@@ -312,6 +312,7 @@
     <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
     <Compile Include="Areas\Groups\Models\Validators\GroupEditorViewModelValidator.cs" />
     <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
+    <Compile Include="Controllers\ChangeHistoryController.cs" />
     <Compile Include="Controllers\ApprovalsController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EduBaseController.cs" />
@@ -907,6 +908,7 @@
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\Downloads\PreparingScheduledExtractPleaseWait.cshtml" />
     <Content Include="Views\Downloads\ReadyToDownloadScheduledExtract.cshtml" />
+    <Content Include="Views\ChangeHistory\Index.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
@@ -939,7 +941,6 @@
     <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
     <Content Include="Views\Approvals\Index.cshtml" />
-    <Content Include="Views\Tools\CreateEstablishment.cshtml" />
     <Content Include="Views\Tools\SearchChangeHistory.cshtml" />
     <Content Include="Views\Tools\ManageAcademyOpenings.cshtml" />
     <Content Include="Views\Prototype\AddressLookup.cshtml" />

@@ -77,6 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Approvals\ApprovalService.cs" />
+    <Compile Include="ChangeHistory\ChangeHistoryService.cs" />
+    <Compile Include="ChangeHistory\Models\ChangeHistorySearchItem.cs" />
+    <Compile Include="ChangeHistory\Models\SearchChangeHistoryBrowsePayload.cs" />
+    <Compile Include="ChangeHistory\Models\SearchChangeHistoryDownloadPayload.cs" />
+    <Compile Include="ChangeHistory\Models\SearchChangeHistoryPayload.cs" />
     <Compile Include="Core\BasicAuthCredentials.cs" />
     <Compile Include="Core\HttpClientWrapper.cs" />
     <Compile Include="Downloads\DownloadsApiService.cs" />
