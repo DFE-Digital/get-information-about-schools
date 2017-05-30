@@ -173,7 +173,10 @@ if (Model.EditMode)
                 <div class="expanding-content panel-indent">
                     @for (var index = 0; index < Model.HistoricGrids.Count; index++)
                     {
-                        @Html.DisplayFor(m => m.HistoricGrids[index])
+                        if (Model.HistoricGrids[index].Rows.Any())
+                        {
+                            @Html.DisplayFor(m => m.HistoricGrids[index])
+                        }
                     }
                 </div>
             </div>
