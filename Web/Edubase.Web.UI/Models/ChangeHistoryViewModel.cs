@@ -3,12 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Edubase.Services.Domain;
 using Edubase.Services.Texuna.ChangeHistory.Models;
+using Edubase.Web.UI.Helpers.ModelBinding;
 
 namespace Edubase.Web.UI.Models
 {
     public class ChangeHistoryViewModel
     {
+        public const string BIND_ALIAS_ESTABTYPEIDS = "e";
+        public const string BIND_ALIAS_FIELDS = "f";
+        public const string BIND_ALIAS_GROUPTYPEIDS = "g";
+
         public List<EstablishmentField> EstablishmentFields { get; internal set; }
+
+        [BindAlias(BIND_ALIAS_FIELDS)]
+        public string[] SelectedEstablishmentFields { get; set; } = new string[0];
+
+        public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
+
+        [BindAlias(BIND_ALIAS_ESTABTYPEIDS)]
+        public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();
+
+        public IEnumerable<LookupItemViewModel> GroupTypes { get; set; }
+
+        [BindAlias(BIND_ALIAS_GROUPTYPEIDS)]
+        public List<int> SelectedGroupTypeIds { get; set; } = new List<int>();
+
+        public string SearchType { get; set; }
+
+        public bool IsGroupSearch => SearchType == "group";
+        public bool IsEstablishmentSearch => SearchType == "establishment";
+
+        public ApiSearchResult<ChangeHistorySearchItem> Results { get; internal set; }
+
+        public long Count => (Results?.Count).GetValueOrDefault();
+        public int PageSize { get; set; } = 50;
+        public int StartIndex { get; set; }
+        public int PageCount => (int)Math.Ceiling(Count / (double)PageSize);
+
+        public bool ClearResults { get; set; }
+
     }
 }

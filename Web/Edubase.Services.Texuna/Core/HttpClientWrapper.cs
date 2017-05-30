@@ -44,17 +44,17 @@ namespace Edubase.Services
             using (MiniProfiler.Current.Step($"TEXAPI: GET {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
-                var result = await _httpClient.SendAsync(requestMessage);
+                var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync<TResponse>(result);
             }
         }
-        
+
         public async Task<ApiResponse<T>> PostAsync<T>(string uri, object data, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
-                var result = await _httpClient.SendAsync(requestMessage);
+                var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync<T>(result);
             }
         }
@@ -64,7 +64,7 @@ namespace Edubase.Services
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
-                var result = await _httpClient.SendAsync(requestMessage);
+                var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync(result);
             }
         }
@@ -74,7 +74,7 @@ namespace Edubase.Services
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
-                var result = await _httpClient.SendAsync(requestMessage);
+                var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync<T>(result);
             }
         }
@@ -84,7 +84,7 @@ namespace Edubase.Services
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
-                var result = await _httpClient.SendAsync(requestMessage);
+                var result = await SendAsync(requestMessage);
                 await ParseHttpResponseMessageAsync(result);
             }
         }
@@ -94,7 +94,7 @@ namespace Edubase.Services
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
-                var result = await _httpClient.SendAsync(requestMessage);
+                var result = await SendAsync(requestMessage);
                 await ParseHttpResponseMessageAsync(result);
             }
         }
@@ -104,7 +104,7 @@ namespace Edubase.Services
             using (MiniProfiler.Current.Step($"TEXAPI: DELETE {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
-                var result = await _httpClient.SendAsync(requestMessage);
+                var result = await SendAsync(requestMessage);
                 await ParseHttpResponseMessageAsync(result);
             }
         }
@@ -185,7 +185,14 @@ namespace Edubase.Services
 
             try
             {
-                response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
+                try
+                {
+                    response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
+                }
+                catch (JsonSerializationException)
+                {
+                    response.Errors = new[] { await message.Content.ReadAsAsync<ApiError>() };
+                }
                 return response;
             }
             catch (Exception e)
@@ -193,6 +200,7 @@ namespace Edubase.Services
                 throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
             }
         }
+
 
         private async Task<ApiResponse<T>> DeserializeResponseAsync<T>(HttpResponseMessage message, ApiResponse<T> response)
         {
@@ -203,6 +211,19 @@ namespace Edubase.Services
             }
             response.Response = await message.Content.ReadAsAsync<T>(new[] { _formatter });
             return response;
+        }
+
+        private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
+        {
+            try
+            {
+                return await _httpClient.SendAsync(requestMessage);
+            }
+            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
+            {
+                throw new TexunaApiSystemException(
+                    $"The TEX-API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})");
+            }
         }
     }
 }

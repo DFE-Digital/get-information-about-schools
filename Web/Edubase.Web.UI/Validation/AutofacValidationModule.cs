@@ -46,6 +46,10 @@ namespace Edubase.Web.UI.Validation
             builder.RegisterType<CreateEstablishmentViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<CreateEstablishmentViewModel>))
                 .As<IValidator>();
+
+            builder.RegisterType<ChangeHistoryViewModelValidator>()
+                .Keyed<IValidator>(typeof(IValidator<ChangeHistoryViewModel>))
+                .As<IValidator>();
         }
     }
 }
