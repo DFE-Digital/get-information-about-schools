@@ -185,7 +185,14 @@ namespace Edubase.Services
 
             try
             {
-                response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
+                try
+                {
+                    response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
+                }
+                catch (JsonSerializationException)
+                {
+                    response.Errors = new[] { await message.Content.ReadAsAsync<ApiError>() };
+                }
                 return response;
             }
             catch (Exception e)
@@ -193,6 +200,7 @@ namespace Edubase.Services
                 throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
             }
         }
+
 
         private async Task<ApiResponse<T>> DeserializeResponseAsync<T>(HttpResponseMessage message, ApiResponse<T> response)
         {
