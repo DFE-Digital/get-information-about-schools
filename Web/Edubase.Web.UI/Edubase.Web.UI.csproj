@@ -351,6 +351,7 @@
     <Compile Include="Models\Grid\GridViewModel.cs" />
     <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
+    <Compile Include="Models\Validators\ChangeHistoryViewModelValidator.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />
     <Compile Include="Validation\AutofacValidatorFactory.cs" />

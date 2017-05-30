@@ -263,13 +263,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     model.EstablishmentTypes =
                         (await _lookupService.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+
                     model.EstablishmentStatuses = (await _lookupService.EstablishmentStatusesGetAllAsync())
                         .Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id))
                         .Select(x => new LookupItemViewModel(x));
+
                     model.EducationPhases =
                         (await _lookupService.EducationPhasesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+
                     model.ReligiousCharacters =
                         (await _lookupService.ReligiousCharactersGetAllAsync()).Select(x => new LookupItemViewModel(x));
+
                     await PopulateLookups(model);
                 }
 

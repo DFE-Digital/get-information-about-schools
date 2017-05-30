@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Linq;
+using MoreLinq;
 
 namespace Edubase.Services.Texuna.ChangeHistory
 {
@@ -19,16 +20,26 @@ namespace Edubase.Services.Texuna.ChangeHistory
 
         public async Task<List<EstablishmentField>> GetEstablishmentFieldsAsync(IPrincipal principal)
         {
-            var fieldList = (await _httpClient.GetAsync<string[]>("establishment/change-history/fields", principal)).GetResponse();
+            var fieldList = (await _httpClient.GetAsync<string[]>("establishment/change-history/fields", principal)).GetResponse().AsEnumerable();
             var baseFieldList = GetEstablishmentFieldDescriptors();
-            var fieldList2 = baseFieldList.Select(x => x.Key).ToArray();
-            var intersection = fieldList.Intersect(fieldList2);
+            var fields = baseFieldList.Select(x => x.Key);
+            var intersection = fieldList.Intersect(fields);
 
-            return baseFieldList.Where(x => intersection.Contains(x.Key)).ToList();
+            // Order the intersection based on the descriptors' order and append any undefined establishment fields that we have from the API that don't map onto our list of fields.
+            var retVal = intersection.OrderBy(x => baseFieldList.IndexOf(baseFieldList.FirstOrDefault(f => f.Key == x))).Select(x => baseFieldList.FirstOrDefault(f => f.Key == x))
+                .Concat(fieldList.Where(x => !intersection.Contains(x)).Select(x => new EstablishmentField(x, x)));
+
+            return retVal.ToList();
         }
 
         public async Task<ApiSearchResult<ChangeHistorySearchItem>> SearchAsync(SearchChangeHistoryBrowsePayload payload, IPrincipal principal)
             => (await _httpClient.PostAsync<ApiSearchResult<ChangeHistorySearchItem>>("change-history", payload, principal)).GetResponse();
+
+        public async Task<List<UserGroupModel>> GetSuggesterGroupsAsync(IPrincipal principal)
+            => (await _httpClient.GetAsync<List<UserGroupModel>>("suggesters", principal)).GetResponse();
+
+        public async Task<List<UserGroupModel>> GetApproversGroupsAsync(IPrincipal principal)
+            => (await _httpClient.GetAsync<List<UserGroupModel>>("approvers", principal)).GetResponse();
 
         public async Task<ProgressDto> SearchWithDownloadGenerationAsync(SearchChangeHistoryDownloadPayload payload, IPrincipal principal)
             => (await _httpClient.PostAsync<ProgressDto>("change-history/download", payload, principal)).GetResponse();

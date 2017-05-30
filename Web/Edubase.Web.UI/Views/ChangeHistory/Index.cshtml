@@ -14,37 +14,30 @@
     </ul>
 </div>
 
-<div class="grid-row" id="change-history-app" v-cloak>
+<div class="grid-row" id="change-history-app">
     <div class="column-full">
         <h1 class="heading-large">Change history</h1>
-        <div class="error-summary" v-show="globalError">
-            <p class="error-message" v-show="ajaxError">Sorry, something went wrong. Please try again.</p>
-            <p class="error-message" v-show="filterTypeSelectedError">Please select establishment or group.</p>
-        </div>
-        <div class="wait-spinner" v-show="fakeWait">
-            <p v-show="preparingDownload">Preparing your requested data. Large files may take some time to download.</p>
-
-        </div>
     </div>
-    <div class="column-full" v-show="filterView">
-        <form>
+    @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
+    {
+        <div class="column-full" style="display:@(Model.Results == null ? "" : "none");">
+            
             <div class="button-row">
-                <input type="submit" class="button" value="Apply filters" v-on:click.prevent="getResults" />
-                <input type="reset" class="button button-grey" value="Clear filters" v-on:click.prevent="resetForm" />
+                <input type="submit" class="button" value="Apply filters" />
+                @Html.RouteLink("Clear filters", "ChangeHistoryCriteria", null, new { @class = "button button-grey" })
             </div>
 
             <fieldset class="inline">
                 <legend class="heading-small">Filter by establishment or group</legend>
-                <div v-bind:class="['form-group', (filterTypeSelectedError) ? 'error' : '']">
-                    <span class="error-message" v-show="filterTypeSelectedError">Please select a filter</span>
+                <div class="form-group">
                     <span class="radio-button-wrap">
-                        <input id="searchtype-establishment" name="change-history-search-type" value="establishment" type="radio" v-model="searchType">
+                        <input id="searchtype-establishment" name="@nameof(Model.SearchType)" value="establishment" type="radio" @Html.Conditional(Model.SearchType == "establishment", "checked")>
                         <label class="edubase-button-radio" for="searchtype-establishment">
                             Establishment
                         </label>
                     </span>
                     <span class="radio-button-wrap">
-                        <input id="searchtype-group" name="change-history-search-type" value="group" type="radio" v-model="searchType">
+                        <input id="searchtype-group" name="@nameof(Model.SearchType)" value="group" type="radio" @Html.Conditional(Model.SearchType == "group", "checked")>
                         <label class="edubase-button-radio" for="searchtype-group">
                             Group
                         </label>
@@ -52,7 +45,9 @@
                 </div>
             </fieldset>
 
-            <div id="establishment-search-filters" v-show="searchType !==''" class="panel-indent" v-cloak>
+            <input type="submit" class="button" value="Update" id="update-search-type-selection" />
+
+            <div id="establishment-search-filters" class="panel-indent" style="display:@(Model.SearchType != null ? "" : "none");">
                 <div class="expander-panel open-expander">
                     <a href="#" class="panel-trigger heading-small">Date</a>
                     <div class="expander-panel-content">
@@ -113,124 +108,48 @@
                     </div>
 
                 </div>
-                <div class="expander-panel" v-show="searchType =='establishment'">
+                <div class="expander-panel for-search-type-establishment" style="display:@(Model.SearchType == "establishment" ? "" : "none");">
                     <a href="#" class="panel-trigger heading-small">Establishment type</a>
                     <div class="expander-panel-content">
-                        <span class="checkbox-wrap">
-                            <input id="et-academies" type="checkbox" value="academies" v-model="establishmentTypes"
-                                   v-on:change.once="selectSingle('establishmentTypes', 'academies')" />
-                            <label for="et-academies" class="edubase-button-checkbox">Academies</label>
-                        </span>
 
-                        <span class="checkbox-wrap">
-                            <input id="et-childrencentres" type="checkbox" value="children-centres" v-model="establishmentTypes"
-                                   v-on:change.once="selectSingle('establishmentTypes', 'children-centres')" />
-                            <label for="et-childrencentres" class="edubase-button-checkbox">Children centres</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="et-freeschools" type="checkbox" value="free-schools" v-model="establishmentTypes"
-                                   v-on:change.once="selectSingle('establishmentTypes', 'free-schools')" />
-                            <label for="et-freeschools" class="edubase-button-checkbox">Free schools</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="et-higher-further" type="checkbox" value="higher-education" v-model="establishmentTypes"
-                                   v-on:change.once="selectSingle('establishmentTypes', 'higher-education')" />
-                            <label for="et-higher-further" class="edubase-button-checkbox">Higher and further education</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="et-independent" type="checkbox" value="independent" v-model="establishmentTypes"
-                                   v-on:change.once="selectSingle('establishmentTypes', 'independent')" />
-                            <label for="et-independent" class="edubase-button-checkbox">Independent schools</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="et-la-maintained" type="checkbox" value="la-maintained" v-model="establishmentTypes"
-                                   v-on:change.once="selectSingle('establishmentTypes', 'la-maintained')" />
-                            <label for="et-la-maintained" class="edubase-button-checkbox">LA maintained schools</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="et-non-maintained" type="checkbox" value="non-maintained" v-model="establishmentTypes"
-                                   v-on:change.once="selectSingle('establishmentTypes', 'non-maintained')" />
-                            <label for="et-non-maintained" class="edubase-button-checkbox">Non maintained schools</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="et-other" type="checkbox" value="other" v-model="establishmentTypes"
-                                   v-on:change.once="selectSingle('establishmentTypes', 'other')" />
-                            <label for="et-other" class="edubase-button-checkbox">Other</label>
-                        </span>
-
-                    </div>
-
-                </div>
-                <div class="expander-panel" v-show="searchType =='establishment'">
-                    <a href="#" class="panel-trigger heading-small">Establishment fields</a>
-
-                    <div class="expander-panel-content">
-
-                        @foreach (var item in Model.EstablishmentFields)
+                        @foreach (var item in Model.EstablishmentTypes)
                         {
+                            var name = ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS;
                             <span class="checkbox-wrap">
-                                <input type="checkbox" value="@item.Key" />
-                                <label class="edubase-button-checkbox">@item.Text</label>
+                                <input id="@(name + "_" + item.Id)" name="@name" value="@item.Id" type="checkbox" @Html.Conditional(Model.SelectedEstablishmentTypeIds.Contains(item.Id), "checked") />
+                                <label for="@(name + "_" + item.Id)" class="edubase-button-checkbox">@item.Name</label>
                             </span>
                         }
-                        
 
+                    </div>
 
-
+                </div>
+                <div class="expander-panel for-search-type-establishment" style="display:@(Model.SearchType == "establishment" ? "" : "none");">
+                    <a href="#" class="panel-trigger heading-small">Establishment fields</a>
+                    <div class="expander-panel-content">
+                        @foreach (var item in Model.EstablishmentFields)
+                        {
+                            var name = ChangeHistoryViewModel.BIND_ALIAS_FIELDS;
+                            <span class="checkbox-wrap">
+                                <input id="@(name + "_" + item.Key)" name="@name" value="@item.Key" type="checkbox" @Html.Conditional(Model.SelectedEstablishmentFields.Contains(item.Key), "checked") />
+                                <label for="@(name + "_" + item.Key)" class="edubase-button-checkbox">@item.Text</label>
+                            </span>
+                        }
                     </div>
                 </div>
 
-                <div class="expander-panel" v-show="searchType =='group'">
+                <div class="expander-panel for-search-type-group" style="display:@(Model.SearchType == "group" ? "" : "none");">
                     <a href="#" class="panel-trigger heading-small">Group type</a>
                     <div class="expander-panel-content">
-                        <span class="checkbox-wrap">
-                            <input id="gt-academies" type="checkbox" value="academies" v-model="groupTypes"
-                                   v-on:change.once="selectSingle('groupTypes', 'academies')" />
-                            <label for="gt-academies" class="edubase-button-checkbox">Multi academy trust</label>
-                        </span>
 
-                        <span class="checkbox-wrap">
-                            <input id="gt-academy" type="checkbox" value="academy" v-model="groupTypes"
-                                   v-on:change.once="selectSingle('groupTypes', 'academy')" />
-                            <label for="gt-academy" class="edubase-button-checkbox">Single academy trust</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="gt-sponsor" type="checkbox" value="sponsor" v-model="groupTypes"
-                                   v-on:change.once="selectSingle('groupTypes', 'sponsor')" />
-                            <label for="gt-sponsor" class="edubase-button-checkbox">Sponsor</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="gt-trust" type="checkbox" value="trust" v-model="groupTypes"
-                                   v-on:change.once="selectSingle('groupTypes', 'trust')" />
-                            <label for="gt-trust" class="edubase-button-checkbox">Trust</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="gt-federation" type="checkbox" value="federation" v-model="groupTypes"
-                                   v-on:change.once="selectSingle('groupTypes', 'federation')" />
-                            <label for="gt-federation" class="edubase-button-checkbox">Federation</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="gt-childrens-group" type="checkbox" value="childrens-group" v-model="groupTypes"
-                                   v-on:change.once="selectSingle('groupTypes', 'childrens-group')" />
-                            <label for="gt-childrens-group" class="edubase-button-checkbox">Childrens centre group</label>
-                        </span>
-
-                        <span class="checkbox-wrap">
-                            <input id="gt-childrens-collaboration" type="checkbox" value="childrens-collaboration" v-model="groupTypes"
-                                   v-on:change.once="selectSingle('groupTypes', 'childrens-collaboration')" />
-                            <label for="gt-childrens-collaboration" class="edubase-button-checkbox">Childrens centre collaboration</label>
-                        </span>
-
+                        @foreach (var item in Model.GroupTypes)
+                        {
+                            var name = ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS;
+                            <span class="checkbox-wrap">
+                                <input id="@(name + "_" + item.Id)" name="@name" value="@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
+                                <label for="@(name + "_" + item.Id)" class="edubase-button-checkbox">@item.Name</label>
+                            </span>
+                        }
 
                     </div>
                 </div>
@@ -242,36 +161,13 @@
                                 <label class="form-label">Change suggested by</label>
                                 <select id="change-suggested" class="form-control" v-model="changeSuggestedBy">
                                     <option value="0">Select user group</option>
-                                    <option value="establishment">Estab user (urn:100053)</option>
-                                    <option value="mat">MAT user (uid:1578)</option>
-                                    <option value="la">Local authority (Westminster) (code:213)</option>
-                                    <option value="la-cc">Local authority CC (Kent) (code:886)</option>
-                                    <option value="efa">Education Funding Agency</option>
-                                    <option value="aos">AOS - Data owner</option>
-                                    <option value="fsg">Free Schools Group</option>
-                                    <option value="independent">Independent Education and Boarding Schools Team user</option>
-                                    <option value="schoolorg">School Organisation</option>
-                                    <option value="pru">Pupil Referral Unit (PRU)/Alternative Provision (AP) Team</option>
-                                    <option value="cc">Children's centre</option>
-                                    <option value="backoffice">Backoffice</option>
+                                    
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Change approved by</label>
                                 <select id="change-approved" class="form-control" v-model="changeApprovedBy">
                                     <option value="0">Select user group</option>
-                                    <option value="establishment">Estab user (urn:100053)</option>
-                                    <option value="mat">MAT user (uid:1578)</option>
-                                    <option value="la">Local authority (Westminster) (code:213)</option>
-                                    <option value="la-cc">Local authority CC (Kent) (code:886)</option>
-                                    <option value="efa">Education Funding Agency</option>
-                                    <option value="aos">AOS - Data owner</option>
-                                    <option value="fsg">Free Schools Group</option>
-                                    <option value="independent">Independent Education and Boarding Schools Team user</option>
-                                    <option value="schoolorg">School Organisation</option>
-                                    <option value="pru">Pupil Referral Unit (PRU)/Alternative Provision (AP) Team</option>
-                                    <option value="cc">Children's centre</option>
-                                    <option value="backoffice">Backoffice</option>
                                 </select>
                             </div>
                         </div>
@@ -280,122 +176,164 @@
 
 
             </div>
+
             <div class="button-row">
-                <input type="submit" class="button" value="Apply filters" v-on:click.prevent="getResults" />
-                <input type="reset" class="button button-grey" value="Clear filters" v-on:click.prevent="resetForm" />
+                <input type="submit" class="button" value="Apply filters" />
+                @Html.RouteLink("Clear filters", "ChangeHistoryCriteria", null, new { @class = "button button-grey" })
             </div>
-        </form>
-    </div>
-    <div class="column-full" v-cloak v-show="resultsView">
-        <h2 class="heading-small">Download change history</h2>
-        <form>
-            <div class="form-group padded-group">
-                <span class="radio-button-wrap">
-                    <input id="download-csv" name="change-history-search-type" value="csv" type="radio" v-model="downloadType">
-                    <label class="edubase-button-radio" for="download-csv">
-                        Data in CSV format
-                    </label>
-                </span>
-                <span class="radio-button-wrap">
-                    <input id="download-xlsx" name="change-history-search-type" value="xlxs" type="radio" v-model="downloadType">
-                    <label class="edubase-button-radio" for="download-xlsx">
-                        Data in XLSX format
-                    </label>
-                </span>
-            </div>
-            <input type="submit" class="button" value="Continue" v-on:click.prevent="prepareDownload" />
-        </form>
-
-        <div>
-            <p><a href="#" v-on:click.prevent="resultsView = false, filterView = true">Show filters</a></p>
-            <div class="pagination">
-                <p class="pagination-info">
-                    Showing
-                    <span class="pagination-range">
-                        {{ paginationDescription }}
+        </div>
+        
+        if (Model.Results != null)
+        {
+            <div class="column-full">
+                <h2 class="heading-small">Download change history</h2>
+                
+                <div class="form-group padded-group">
+                    <span class="radio-button-wrap">
+                        <input id="download-csv" name="change-history-search-type" value="csv" type="radio" v-model="downloadType">
+                        <label class="edubase-button-radio" for="download-csv">
+                            Data in CSV format
+                        </label>
                     </span>
-                    of
-                    <span class="result-count">{{currentCount}}</span>
-                </p>
-                <ul class="pagination-links">
-                    <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                    <li v-for="(page, index) in pages">
-                        <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
-                        <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
-                    </li>
-                    <li v-if="currentPage < pages.length -1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
-                </ul>
+                    <span class="radio-button-wrap">
+                        <input id="download-xlsx" name="change-history-search-type" value="xlxs" type="radio" v-model="downloadType">
+                        <label class="edubase-button-radio" for="download-xlsx">
+                            Data in XLSX format
+                        </label>
+                    </span>
+                </div>
+                <input type="submit" class="button" value="Continue" />
+            
+                <div>
+                    <p><button type="submit" name="@nameof(Model.ClearResults)" class="button-as-link" value="true">Show filters</button></p>
+                    @Html.Partial("_GenericPagination", Model)
+                </div>
+
+                <div class="changes-list-wrapper">
+                    <table class="edubase-table approval-changes" id="changes-table">
+                        <thead>
+                            <tr>
+                                @if (Model.IsEstablishmentSearch)
+                                {
+                                    <th scope="col" class="cell-urn">
+                                        <abbr title="Unique reference number">
+                                            URN
+                                        </abbr>
+                                    </th>
+                                    <th scope="col" class="cell-estab">Establishment</th>
+                                }
+                                else
+                                {
+                                    <th scope="col" class="cell-urn">
+                                        <abbr title="Unique identifier">
+                                            UId
+                                        </abbr>
+                                    </th>
+                                    <th scope="col" class="cell-estab">Group</th>
+                                }
+                                <th scope="col" class="cell-edate">Date changed</th>
+                                <th scope="col" class="cell-updatedfield">Updated field</th>
+                                <th scope="col" class="cell-oldvalue">Old value</th>
+                                <th scope="col" class="cell-newvalue">New value</th>
+                                <th scope="col" class="cell-suggested">Suggested by</th>
+                                <th scope="col" class="cell-edate">Approved by</th>
+                            </tr>
+                        </thead>
+                        @if (Model.Results.Items.Any())
+                        {
+                            <tbody>
+                                @foreach (var item in Model.Results.Items)
+                                {
+                                    <tr>
+                                        @if (Model.IsEstablishmentSearch)
+                                        {
+                                            <td aria-label="URN"><a href="/establishment/details/@(item.EstablishmentUrn)">@(item.EstablishmentUrn)</a></td>
+                                            <td aria-label="Establishment"><a href="/establishment/details/@(item.EstablishmentUrn)">@(item.EstablishmentName)</a></td>
+                                        }
+                                        else
+                                        {
+                                            <td aria-label="URN"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupUId)</a></td>
+                                            <td aria-label="Group"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupName)</a></td>
+                                        }
+                                        <td aria-label="Date changed">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
+                                        <td aria-label="Updated field">@item.FieldName</td>
+                                        <td aria-label="Old value">@item.OldValue</td>
+                                        <td aria-label="New value">@item.NewValue</td>
+                                        <td aria-label="Suggested by">@item.SuggesterName</td>
+                                        <td aria-label="Approved by">@item.ApproverName</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                        else
+                        {
+                            <tbody>
+                                <tr>
+                                    <td colspan="9">
+                                        <p> No items</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                </div>
+
             </div>
-        </div>
+        }
 
-        <div class="changes-list-wrapper">
-            <changes-table :pages="pages" :current-page="currentPage"></changes-table>
-        </div>
-
-    </div>
-    <div class="column-full" v-cloak v-show="availableDownload">
-        <p>Your requested file is ready to download.</p>
-        <ul>
-            <li class="download-list-item">
-                <span class="icon-link-copy">
-                    <a href="#"
-                       target="_blank" rel="nofollow">{{downloadLinkText}}</a>
-                </span>
-                <span class="alternative-file-directions">
-                    (Will download as a ZIP file. Open the ZIP to access its contents)
-                </span>
-            </li>
-        </ul>
-        <button class="button button-grey" v-on:click="resultsView=true, availableDownload=false">Search results</button>
-    </div>
+        @*<div class="column-full" v-cloak v-show="availableDownload">
+            <p>Your requested file is ready to download.</p>
+            <ul>
+                <li class="download-list-item">
+                    <span class="icon-link-copy">
+                        <a href="#"
+                           target="_blank" rel="nofollow">{{downloadLinkText}}</a>
+                    </span>
+                    <span class="alternative-file-directions">
+                        (Will download as a ZIP file. Open the ZIP to access its contents)
+                    </span>
+                </li>
+            </ul>
+            <button class="button button-grey" v-on:click="resultsView=true, availableDownload=false">Search results</button>
+        </div>*@
+    }
 </div>
 
 
 @section ViewScripts {
 
-    <script type="text/x-template" id="table-template">
-        <table class="edubase-table approval-changes" id="changes-table">
-            <thead>
-                <tr>
-                    <th scope="col" class="cell-urn">
-                        <abbr title="Unique reference number">
-                            URN
-                        </abbr>
-                    </th>
-                    <th scope="col" class="cell-estab">Establishment</th>
-                    <th scope="col" class="cell-edate">Date changed</th>
-                    <th scope="col" class="cell-updatedfield">Updated field</th>
-                    <th scope="col" class="cell-oldvalue">Old value</th>
-                    <th scope="col" class="cell-newvalue">New value</th>
-                    <th scope="col" class="cell-suggested">Suggested by</th>
-                    <th scope="col" class="cell-edate">Approved by</th>
-                </tr>
-            </thead>
-            <tbody v-if="pages.length > 0">
-                <tr v-for="(entry, index) in page">
-                    <td aria-label="URN">
-                        <a v-bind:href="detailUrl(entry.URN)">{{entry.URN}}</a>
-                    </td>
-                    <td aria-label="Establishment"><a v-bind:href="detailUrl(entry.URN)">{{entry.establishment}}</a></td>
-                    <td aria-label="Date changed">{{entry.effectiveDate}}</td>
-                    <td aria-label="Updated field">{{entry.changeType}}</td>
-                    <td aria-label="Old value">{{entry.oldValue}}</td>
-                    <td aria-label="New value">{{entry.newValue}}</td>
-                    <td aria-label="Suggested by">{{entry.suggested}}</td>
-                    <td aria-label="Approved by">Administrator</td>
-                </tr>
-            </tbody>
-            <tbody v-else>
-                <tr>
-                    <td colspan="9">
-                        <p> No items</p>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
 
+    <script>
+        (function () {
+            var panels = document.querySelectorAll('.expander-panel');
+
+            Array.prototype.forEach.call(panels, function (el) {
+                var trigger = el.querySelectorAll('.panel-trigger')[0];
+
+                trigger.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    el.classList.toggle('open-expander');
+                });
+            });
+
+            $("#update-search-type-selection").hide();
+
+            $("#searchtype-establishment,#searchtype-group").change(function () {
+                $("#establishment-search-filters").show();
+            });
+
+            $("#searchtype-establishment").change(function () {
+                $(".for-search-type-group").hide();
+                $(".for-search-type-establishment").show();
+            });
+
+            $("#searchtype-group").change(function () {
+                $(".for-search-type-establishment").hide();
+                $(".for-search-type-group").show();
+            });
+
+        }());
     </script>
-
-    <script src="/public/assets/scripts/standalone/search-change-history.js"></script>
+    
 
 }
