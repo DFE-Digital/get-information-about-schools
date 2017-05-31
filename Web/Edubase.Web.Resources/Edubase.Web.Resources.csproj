@@ -46,6 +46,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Academy.resx</DependentUpon>
     </Compile>
+    <Compile Include="FileDownloadNames.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FileDownloadNames.resx</DependentUpon>
+    </Compile>
     <Compile Include="IResourcesHelper.cs" />
     <Compile Include="ResourcesHelper.cs" />
     <Compile Include="LocalAuthority.Designer.cs">
@@ -64,6 +69,10 @@
     <EmbeddedResource Include="Academy.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Academy.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileDownloadNames.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>FileDownloadNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="LocalAuthority.resx">
       <Generator>ResXFileCodeGenerator</Generator>

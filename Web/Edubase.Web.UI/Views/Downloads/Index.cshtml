@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Downloads";
     ViewBag.HideLogo = true;
+    var downloadGroups = Model.GetFileDownloadGroups();
 }
 
 <div class="grid-row">
@@ -50,30 +51,26 @@
                 <div id="group-data" class="tab-content">
                     <div class="column-two-thirds">
                         <p class="timestamp">Created at 00:00 on 01/06/2017</p>
-                        <h2 class="bold-medium">Establishments</h2>
-                        <p>
-                            You can download the complete record for the specified establishment types. There's a separate file with links to any predecessor or successor establishments.
-                        </p>
-                        <ul class="lis">
-                            @{ int i = 0; }
-                            @foreach (var item in Model.Downloads)
-                            {
-                                if (i % 2 == 0)
-                                {
-                                    <li class="download-list-heading">
-                                        Download heading
-                                    </li>
-                                }
-                                <li class="download-list-item">
-                                    <span class="icon-link-copy">
-                                        <a href="@item.Url" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Description)|download">@item.Description</a>
-                                        in ZIP format. @Html.FileSizeInMegabytes(item.FileSizeInBytes)
-                                    </span>
 
-                                </li>
-                                i++;
-                            }
-                        </ul>
+                        @foreach (var group in downloadGroups)
+                        {
+                            <h2 class="bold-medium" style="margin-top:35px;">@group.Heading</h2>
+                            <p>@group.Paragraph</p>
+                            <ul class="lis">
+                                @foreach (var item in group.SubSections)
+                                {
+                                    <li style="margin-top:35px;" class="download-list-heading">@item.Heading</li>
+                                    foreach (var file in item.Files)
+                                    {
+                                        <li class="download-list-item">
+                                            <span class="icon-link-copy">
+                                                <a href="@file.Item2.Url" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">@file.Item1, @Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)</a>
+                                            </span>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        }
                     </div>
                     
                 </div>
