@@ -40,8 +40,8 @@ namespace Edubase.Common
             stringsToRemove.ForEach(x => data = data.Replace(x, string.Empty));
             return data;
         }
-
         
+
 
         public static int? ToInteger(this string text)
         {

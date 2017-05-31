@@ -444,6 +444,7 @@
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\expanding-content.js" />
     <Content Include="Assets\Scripts\Elements\truncated-text.js" />
+    <Content Include="Assets\Scripts\standalone\approvals.js" />
     <Content Include="Assets\Scripts\standalone\data-status.js" />
     <Content Include="Assets\Scripts\Views\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
