@@ -23,7 +23,6 @@
             computed: {
                 page: function () {
                     return this.pages;
-                    //return this.pages[this.currentPage];
                 }
             },
             methods: {
