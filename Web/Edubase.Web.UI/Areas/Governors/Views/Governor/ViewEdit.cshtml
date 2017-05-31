@@ -151,13 +151,26 @@ if (Model.EditMode)
                     @ShowGovernorEditor(grid)
                 </text>
             }
-            foreach (var grid in Model.HistoricGrids)
+            if (Model.HistoricGrids.Any(h => h.Rows.Any()))
             {
-                <text>
-                    @ShowGovernorEditor(grid)
-                </text>
+                <h2 class="bold-small">Historic (left within last 12 months)</h2>
+                <div class="expanding-content-wrapper" data-opened-text="Less details" data-closed-text="More details">
+                    <a href="#" class="expanding-content-trigger">
+                        More details
+                    </a>
+                    <div class="expanding-content panel-indent">
+                        @foreach (var grid in Model.HistoricGrids)
+                        {
+                            if (grid.Rows.Any())
+                            {
+                                <text>
+                                    @ShowGovernorEditor(grid)
+                                </text>
+                            }
+                        }
+                    </div>
+                </div>
             }
-
         }
         else
         {
@@ -165,21 +178,24 @@ if (Model.EditMode)
             {
                 @Html.DisplayFor(m => m.Grids[index])
             }
-            <h2 class="bold-small">Historic (left within last 12 months)</h2>
-            <div class="expanding-content-wrapper" data-opened-text="Less details" data-closed-text="More details">
-                <a href="#" class="expanding-content-trigger">
-                    More details
-                </a>
-                <div class="expanding-content panel-indent">
-                    @for (var index = 0; index < Model.HistoricGrids.Count; index++)
-                    {
-                        if (Model.HistoricGrids[index].Rows.Any())
+            if (Model.HistoricGrids.Any(h => h.Rows.Any()))
+            {
+                <h2 class="bold-small">Historic (left within last 12 months)</h2>
+                <div class="expanding-content-wrapper" data-opened-text="Less details" data-closed-text="More details">
+                    <a href="#" class="expanding-content-trigger">
+                        More details
+                    </a>
+                    <div class="expanding-content panel-indent">
+                        @for (var index = 0; index < Model.HistoricGrids.Count; index++)
                         {
-                            @Html.DisplayFor(m => m.HistoricGrids[index])
+                            if (Model.HistoricGrids[index].Rows.Any())
+                            {
+                                @Html.DisplayFor(m => m.HistoricGrids[index])
+                            }
                         }
-                    }
+                    </div>
                 </div>
-            </div>
+            }
         }
     </div>
 }

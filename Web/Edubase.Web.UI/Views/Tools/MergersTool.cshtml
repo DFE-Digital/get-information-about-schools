@@ -49,7 +49,7 @@
             <div class="column-full top-button-panel">
                 <div class="submit-cancel-panel">
                     <button type="submit" name="action" value="" class="button" id="go-create" v-on:click.prevent="checkMergeType">Continue</button>
-                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-grey cancel mobile-full-width" })
                 </div>
             </div>
             <div class="column-two-thirds">
@@ -1392,7 +1392,11 @@
                     }
                 }
             },
-            restart: function() {
+            restart: function () {
+                if (!this.mergerTypeConfirmed) {
+                    window.location = '/Tools';
+                    return;
+                }
                 window.location = '/Tools/MergersTool';
             }
         }

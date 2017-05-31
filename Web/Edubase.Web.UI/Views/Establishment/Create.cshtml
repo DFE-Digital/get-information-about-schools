@@ -91,7 +91,7 @@
             <div class="column-full">
                 <div class="submit-cancel-panel">
                     <button type="submit" name="action" value="" class="button">Create establishment</button>
-                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width">Cancel</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-grey cancel mobile-full-width" })
                 </div>
             </div>
         }
