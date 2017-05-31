@@ -12,7 +12,6 @@
     },
     init: function () {
         'use strict';
-        console.log("INIT");
 
         var self = this,
            jScriptVersion;
