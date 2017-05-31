@@ -125,8 +125,12 @@
                         self.itemSelect(e, address);
                     });
 
-                    $el.on('typeahead:render, typeahead:open', function (e) {
-                        $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
+                    $el.on('typeahead:open', function (e) {
+                            $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');                       
+                    });
+
+                    $el.on('typeahead:render', function() {
+                        $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
                     });
 
                     $el.on('keydown', function (e) {
