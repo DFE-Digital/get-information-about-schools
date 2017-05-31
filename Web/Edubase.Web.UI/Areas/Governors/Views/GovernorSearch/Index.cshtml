@@ -90,7 +90,7 @@
                     </div>
                     <div class="filter-divider"></div>
                     
-                    @*<div class="govuk-option-select js-collapsible" id="option-select-group-type">
+                    <div class="govuk-option-select js-collapsible" id="option-select-group-type">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Establishment/group type</div>
                             <div class="js-selected-counter"></div>
@@ -100,10 +100,10 @@
                             <div class="js-auto-height-inner">
                                 <fieldset>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
-                                    @foreach (var item in Model.EstablishmentGroupTypes)
+                                    @foreach (var item in Model.GovernorTypeFlags)
                                     {
                                         <label for="group-type_@item.Id">
-                                            <input name="g" class="trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupIds.Contains(item.Id), "checked") />
+                                            <input name="g" class="trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked") />
                                             @item
                                             <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                         </label>
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="filter-divider"></div>*@
+                    <div class="filter-divider"></div>
 
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
                     @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)

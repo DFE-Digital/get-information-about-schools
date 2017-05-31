@@ -18,6 +18,12 @@ namespace Edubase.Web.UI.Models
             Name = item.Name;
         }
 
+        public LookupItemViewModel(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
         
         public override string ToString() => Name;
     }

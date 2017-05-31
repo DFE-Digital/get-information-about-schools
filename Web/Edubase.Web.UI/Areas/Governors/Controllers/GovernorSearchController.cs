@@ -131,7 +131,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             LastName = model.GovernorSearchModel.Surname.Clean(),
             RoleIds = model.SelectedRoleIds.ToArray(),
             SortBy = model.SortOption,
-            IncludeHistoric = model.GovernorSearchModel.IncludeHistoric
+            IncludeHistoric = model.GovernorSearchModel.IncludeHistoric,
+            GovernorTypesFlags = model.SelectedGovernorTypeFlagIds.Select(x => (eGovernorTypesFlag)x).ToArray()
         };
 
     }

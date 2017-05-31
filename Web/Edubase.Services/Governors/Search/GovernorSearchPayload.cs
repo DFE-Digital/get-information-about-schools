@@ -1,6 +1,7 @@
 ﻿using Edubase.Services.Enums;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Edubase.Services.Governors.Search
 {
@@ -35,9 +36,9 @@ namespace Edubase.Services.Governors.Search
         public int Take { get; set; } = 10;
 
         [JsonIgnore]
-        public eGovernorTypesFlag? GovernorTypesFlag { get; set; }
+        public eGovernorTypesFlag[] GovernorTypesFlags { get; set; }
 
-        public string GovernorTypes => GovernorTypesFlag.HasValue ? _govTypesMap[GovernorTypesFlag.Value] : null;
+        public string[] GovernorTypes => GovernorTypesFlags.Select(x => _govTypesMap[x]).ToArray();
 
         [JsonIgnore]
         public eSortBy SortBy { get; set; }
