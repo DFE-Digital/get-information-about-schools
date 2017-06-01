@@ -8,13 +8,14 @@
 DfE.Util.showUnload = function (message, permitedExits) {
     permitedExits = permitedExits || [];
     message = message || 'Are you sure you want to leave this page';
-    permitedExits.push('input[type="submit"]');
+    permitedExits.push('input[type="submit"]', 'button[type="submit"]');
     
-    var  exitUrl = '';
+    var exitUrl = '';
+    var exitElem;
     
     var $contentArea = $('#full-content'),
             youMayLeave = false,
-            $permittedEscapes = $contentArea.find('input[type="submit"]'),
+            $permittedEscapes = $contentArea.find('input[type="submit"], button[type="submit"]'),
 
             overlay = '<div id="modal-overlay" class="modal-overlay hidden"></div>' +
             	'<div id="modal-content" class="modal-content hidden" role="dialog"><a href="#" id="exit-overlay" class="modal-exit">Close</a><div id="modal-inner">' +
@@ -94,14 +95,24 @@ DfE.Util.showUnload = function (message, permitedExits) {
     
 
     $contentArea.on('click', 'a, button', function (e) {
-        e.preventDefault();
-        exitUrl = $(this).attr('href');
-        showModal();
+        if (!youMayLeave) {
+            e.preventDefault();
+            exitUrl = $(this).attr('href');
+            exitElem = $(this);
+            showModal();
+        }
+        
     });
 
     $('body').on('click', '#button-ok', function () {
         youMayLeave = true;
-        window.location = exitUrl;
+        console.log(exitElem);
+        if (typeof exitUrl !== 'undefined') {
+            window.location = exitUrl;
+        } else {
+            exitElem.click();
+        }
+        
     });
 
     $(window).on('beforeunload', function (e) {
