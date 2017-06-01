@@ -51,6 +51,7 @@
                 pageSize: defaults.pageSize,
                 invalidReason: false,
                 approvalError: false,
+                reasonLength: false,
                 noneSelectedError: false,
                 pendingRejection: false,
                 itemsConfirmedRemoved: false,
@@ -121,13 +122,14 @@
                 confirmRejection: function () {
                     var self = this;
                     this.invalidReason = $('#reason').val().length < 1;
+                    this.reasonLength = $('#reason').val().length > 1000;
 
                     var selectedItems = $('#changes-table').find('.boldened-checkbox')
                         .filter(':checked');
 
                     this.noneSelectedError = selectedItems.length === 0;
 
-                    if (this.invalidReason || this.noneSelectedError) {
+                    if (this.invalidReason || this.noneSelectedError || this.reasonLength) {
                         return;
                     } else {
                         this.isProcessing = true;
