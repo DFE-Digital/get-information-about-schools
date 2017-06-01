@@ -1,4 +1,5 @@
-﻿
+﻿@model Edubase.Web.UI.Models.DataQuality.DataQualityStatusViewModel
+
 @{
     Layout = null;
     ViewBag.itIsUrgent = Request["warning"];
@@ -36,30 +37,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td aria-label="Establishment type">Acadmey openers</td>
-                    <td aria-label="Last updated">25/03/2017</td>
-                </tr>
-                <tr>
-                    <td aria-label="Establishment type">Free school openers</td>
-                    <td aria-label="Last updated">25/03/2017</td>
-                </tr>
-                <tr>
-                    <td aria-label="Establishment type">Open academies and free schools</td>
-                    <td aria-label="Last updated">25/03/2017</td>
-                </tr>
-                <tr>
-                    <td aria-label="Establishment type">LA maintained schools</td>
-                    <td aria-label="Last updated">25/03/2017</td>
-                </tr>
-                <tr>
-                    <td aria-label="Establishment type">Independent schools</td>
-                    <td aria-label="Last updated">25/03/2017</td>
-                </tr>
-                <tr>
-                    <td aria-label="Establishment type">Pupil referral units</td>
-                    <td aria-label="Last updated">25/03/2017</td>
-                </tr>
+                @foreach (var data in Model.Items)
+                {
+                    <tr>
+                        <td aria-label="Establishment type">@data.EstablishmentType</td>
+                        <td aria-label="Last updated">@data.LastUpdated.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
             </tbody>
         </table>
 

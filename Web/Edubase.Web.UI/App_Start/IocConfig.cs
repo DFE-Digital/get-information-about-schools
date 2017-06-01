@@ -38,6 +38,8 @@ using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
+using Edubase.Data.Repositories;
+using Edubase.Services.DataQuality;
 
 namespace Edubase.Web.UI
 {
@@ -114,6 +116,10 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();
             builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
+
+            builder.RegisterType<DataQualityWriteService>().As<IDataQualityWriteService>();
+            builder.RegisterType<DataQualityReadService>().As<IDataQualityReadService>();
+            builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
         }
     }
 }
