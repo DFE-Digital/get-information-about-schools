@@ -6,13 +6,17 @@
         @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
     }
     
-    <div class="map-container">       
-        <div id="map" class="school-detail-map"
-             data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
-             data-school-name="@Model.Establishment.Name"
-             data-school-address="@Model.Establishment.GetAddress()"></div>
-        <a href="#map" id="map-toggle" class="map-toggle">Show map</a>
-    </div>
+    @if (Model.Establishment.Location != null)
+    {
+        <div class="map-container">
+            <div id="map" class="school-detail-map"
+                 data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
+                 data-school-name="@Model.Establishment.Name"
+                 data-school-address="@Model.Establishment.GetAddress()"></div>
+            <a href="#map" id="map-toggle" class="map-toggle">Show map</a>
+        </div>
+    }
+    
 
     <table class="borderless">
         <caption class="visually-hidden">@Model.Establishment.Name details</caption>

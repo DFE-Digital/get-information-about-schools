@@ -37,39 +37,62 @@
 
 <h1 class="heading-large">@Model.Establishment.Name</h1>
 <p class="urn">URN: @Model.Establishment.Urn</p>
+@if (Model.IsClosed)
+{
+    if (Model.Establishment.CloseDate != null)
+    {
+        <div class="grey-warning dismissable-message">
+            <p>
+                This establishment closed on @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy")).
+                View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>                
+            </p>
+            <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
+        </div>
+    }
+    else
+    {
+        <div class="grey-warning dismissable-message">
+            <p>
+                This establishment is closed.
+                View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
+            </p>
+            <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
+        </div>
+    }
 
+}
 <div class="column-full">
     <div class="grid-row horizontal-tabs-wrapper">
         <div class="tab-wrap">
             <ul class="horizontal-tabs">
                 @if (Model.TabDisplayPolicy.Details)
                 {
-                    <li><a href="#school-dashboard" class="horizontal-tab">Details</a></li>
+                    <li><a href = "#school-dashboard" class="horizontal-tab">Details</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.IEBT)
                 {
-                    <li><a href="#school-iebt" class="horizontal-tab">IEBT</a></li>
+                    <li><a href = "#school-iebt" class="horizontal-tab">IEBT</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Governance)
                 {
-                    <li><a href="#school-governance" class="horizontal-tab">Governance</a></li>
+                    <li><a href = "#school-governance" class="horizontal-tab">Governance</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Links)
                 {
-                    <li><a href="#school-links" class="horizontal-tab">Links</a></li>
+                    <li><a href = "#school-links" class="horizontal-tab">Links</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Location)
                 {
-                    <li><a href="#school-location" class="horizontal-tab">Location</a></li>
+                    <li><a href = "#school-location" class="horizontal-tab">Location</a></li>
                 }
 
                 @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
                 {
-                    <li><a href="#school-change-history" class="horizontal-tab">Changes</a></li>
+                    <li><a href = "#school-change-history" class="horizontal-tab">Changes</a></li>
                 }
             </ul>
         </div>

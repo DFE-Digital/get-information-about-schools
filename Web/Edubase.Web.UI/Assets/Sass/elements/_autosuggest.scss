@@ -38,13 +38,22 @@
             color: $black;
         }
 
-       
-
         &:hover, a:hover {
             background-color: $light-blue-25;
-            //color: white;
             cursor: pointer;
         }
+    }
+
+    .estab-name {
+        width: 80%;
+        display: inline-block;
+    }
+
+    .estab-status {
+        position: absolute;
+        right: 8px;
+        font-size: 14px;
+        display: inline-block;
     }
 }
 
