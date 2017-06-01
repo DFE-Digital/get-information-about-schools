@@ -36,7 +36,7 @@
                 You have <span class="heading-xlarge count">{{currentCount}}</span> items that require your approval.
             </p>
 
-            <div class="approve-reject"  v-show="!isProcessing">
+            <div class="approve-reject" v-show="!isProcessing">
                 <form>
                     <div class="error-summary" v-show="approvalError || noneSelectedError">
                         <p class="error-message" v-show="approvalError">Please select some changes to approve</p>
@@ -80,7 +80,7 @@
                                 <span v-if="item === currentPage + 1" class="numeric-pagination go-nowhere">{{ item }}</span>
                                 <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(item -1)">{{ item }}</a>
                             </li>
-                            <li v-if="currentPage < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                            <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
                         </ul>                       
                     </div>
                 </div>
