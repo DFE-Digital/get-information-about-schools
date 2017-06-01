@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace Edubase.Services.Establishments.Search
 {
     public class EstablishmentSearchFilters : EstablishmentSearchFiltersLookups
     {
-        [JsonIgnore, JsonProperty("UKPRN")]
-        public int? UKPRN { get; set; }
-
-        [JsonIgnore]
+        [JsonProperty("UKPRN")]
+        public string UKPRN { get; set; }
         public int? EstablishmentNumber { get; set; }
-
+        public DateTime? OpenDateMin { get; set; }
+        public DateTime? OpenDateMax { get; set; }
     }
 }

@@ -131,7 +131,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.UKPRN)
                 {
-                    filters.UKPRN = model.TextSearchModel.Text.ToInteger();
+                    filters.UKPRN = model.TextSearchModel.Text;
                 }
                 else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.LAESTAB)
                 {

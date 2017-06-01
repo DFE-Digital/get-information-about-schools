@@ -89,13 +89,13 @@ namespace Edubase.Services
             }
         }
 
-        public async Task PatchAsync(string uri, object data, IPrincipal principal)
+        public async Task<ApiResponse> PatchAsync(string uri, object data, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
                 var result = await SendAsync(requestMessage);
-                await ParseHttpResponseMessageAsync(result);
+                return await ParseHttpResponseMessageAsync(result);
             }
         }
 

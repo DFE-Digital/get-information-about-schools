@@ -148,8 +148,7 @@ namespace Edubase.Services.Establishments.Models
         public int? Northing { get; set; }
         
         public int? EstablishmentTypeGroupId { get; set; }
-
-        //[JsonIgnore] // todo: TEXCHANGE: need to support this
+        
         public int? OfstedRatingId { get; set; }
 
         public DateTime? OfstedInspectionDate { get; set; }

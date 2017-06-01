@@ -271,6 +271,7 @@
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\StartupSASimulator.cs" />
     <Compile Include="App_Start\StartupSecureAccess.cs" />
+    <Compile Include="Areas\Establishments\Controllers\AcademyOpeningsController.cs" />
     <Compile Include="Areas\Establishments\Controllers\BulkUpdateController.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
     <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
@@ -311,6 +312,7 @@
     <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
     <Compile Include="Areas\Groups\Models\Validators\GroupEditorViewModelValidator.cs" />
+    <Compile Include="Controllers\Api\AcademyOpeningsApiController.cs" />
     <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
     <Compile Include="Controllers\ChangeHistoryController.cs" />
     <Compile Include="Controllers\ApprovalsController.cs" />
@@ -439,6 +441,7 @@
     <Content Include="Areas\Establishments\Views\BulkUpdate\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\InProgress.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\Completed.cshtml" />
+    <Content Include="Areas\Establishments\Views\AcademyOpenings\Index.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />

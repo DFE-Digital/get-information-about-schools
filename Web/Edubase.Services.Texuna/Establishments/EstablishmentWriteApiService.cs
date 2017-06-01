@@ -11,6 +11,7 @@ using Edubase.Services.Domain;
 using Edubase.Common;
 using Edubase.Services.Security;
 using Edubase.Services.Enums;
+using Edubase.Common.Reflection;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -64,6 +65,17 @@ namespace Edubase.Services.Texuna.Establishments
             return (await _httpClient.GetAsync<BulkUpdateProgressModel>($"bulk-update/progress/{taskId}", principal)).Response;
         }
 
+        public async Task<ApiResponse> PartialUpdateAsync(EstablishmentModel model, EstablishmentFieldList fieldsToUpdate, IPrincipal principal)
+        {
+            Guard.IsNotNull(model.Urn, () => new Exception("Urn on the model parameter cannot be null for a partial update"));
 
+            var propertiesToUpdate = ReflectionHelper.GetProperties(fieldsToUpdate)
+                .Where(x => (bool)ReflectionHelper.GetPropertyValue(fieldsToUpdate, x) == true)
+                .Select(x => new { Key = x, Value = ReflectionHelper.GetPropertyValue(model, x) });
+
+            var payload = propertiesToUpdate.ToDictionary(x => x.Key, x => x.Value);
+
+            return await _httpClient.PatchAsync($"establishment/{model.Urn}", payload, principal);
+        }
     }
 }
