@@ -131,4 +131,23 @@
         </div>
 }
 
+@if (Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+{
 
+@section ViewScripts
+{
+    <script>
+        var $fields = $('#content').find('.form-control');
+        var exitAttached = false;
+        $fields.on('change',
+            function() {
+                if (!exitAttached) {
+                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                    exitAttached = true;
+                }
+
+            });
+
+    </script>
+}
+}
