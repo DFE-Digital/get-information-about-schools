@@ -39,29 +39,29 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .Must(x => x.IsInteger())
                     .WithMessage("Please specify a valid URN")
                     .WithSummaryMessage("The supplied URN is not valid")
-                    
+
                     .Must((model, x) => !model.LinkedEstablishments.Establishments.Select(e => e.Urn).Contains(x.ToInteger().Value))
                     .WithMessage("Link to establishment already exists")
-                    .WithSummaryMessage("Link to establishment already exists")
+                    .WithSummaryMessage("Link to establishment already exists");
                     
-                    .MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false)).Success)
-                    .WithMessage("The establishment was not found")
-                    .WithSummaryMessage("The establishment was not found")
+                    //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false)).Success)
+                    //.WithMessage("The establishment was not found")
+                    //.WithSummaryMessage("The establishment was not found")
 
-                    .MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
-                        .GetResult().EstablishmentTypeGroupId == (int)EG.LAMaintainedSchools)
-                    .WithMessage("Establishment is not LA maintained, please select another one.")
-                    .When(m => m.GroupType == GT.Federation || m.GroupType == GT.Trust, ApplyConditionTo.CurrentValidator)
+                    //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
+                    //    .GetResult().EstablishmentTypeGroupId == (int)EG.LAMaintainedSchools)
+                    //.WithMessage("Establishment is not LA maintained, please select another one.")
+                    //.When(m => m.GroupType == GT.Federation || m.GroupType == GT.Trust, ApplyConditionTo.CurrentValidator)
 
-                    .MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
-                        .GetResult().EstablishmentTypeGroupId == (int)EG.Academies)
-                    .WithMessage("Establishment is not an academy, please select another one.")
-                    .When(m => m.GroupType == GT.SchoolSponsor, ApplyConditionTo.CurrentValidator)
+                    //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
+                    //    .GetResult().EstablishmentTypeGroupId == (int)EG.Academies)
+                    //.WithMessage("Establishment is not an academy, please select another one.")
+                    //.When(m => m.GroupType == GT.SchoolSponsor, ApplyConditionTo.CurrentValidator)
 
-                    .MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
-                        .GetResult().EstablishmentTypeGroupId.Equals((int)EG.ChildrensCentres))
-                    .WithMessage("Establishment is not a children's centre, please select another one.")
-                    .When(m => m.GroupType == GT.ChildrensCentresCollaboration || m.GroupType == GT.ChildrensCentresGroup, ApplyConditionTo.CurrentValidator);
+                    //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
+                    //    .GetResult().EstablishmentTypeGroupId.Equals((int)EG.ChildrensCentres))
+                    //.WithMessage("Establishment is not a children's centre, please select another one.")
+                    //.When(m => m.GroupType == GT.ChildrensCentresCollaboration || m.GroupType == GT.ChildrensCentresGroup, ApplyConditionTo.CurrentValidator);
             });
 
             // Having found an establishment to link, validate the joined date if supplied...

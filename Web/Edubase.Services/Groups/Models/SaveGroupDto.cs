@@ -6,7 +6,7 @@ namespace Edubase.Services.Groups.Models
     public class SaveGroupDto
     {
         public GroupModel Group { get; set; }
-        public List<EstablishmentGroupModel> LinkedEstablishments { get; set; }
+        public List<LinkedEstablishmentGroup> LinkedEstablishments { get; set; }
 
         [JsonIgnore]
         public bool IsNewEntity => !GetGroupUId().HasValue;
@@ -38,13 +38,13 @@ namespace Edubase.Services.Groups.Models
         {
         }
 
-        public SaveGroupDto(GroupModel group, List<EstablishmentGroupModel> linkedEstablishments)
+        public SaveGroupDto(GroupModel group, List<LinkedEstablishmentGroup> linkedEstablishments)
         {
             Group = group;
             LinkedEstablishments = linkedEstablishments;
         }
 
-        public SaveGroupDto(int groupUId, List<EstablishmentGroupModel> linkedEstablishments)
+        public SaveGroupDto(int groupUId, List<LinkedEstablishmentGroup> linkedEstablishments)
         {
             _groupUId = groupUId;
             LinkedEstablishments = linkedEstablishments;

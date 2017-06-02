@@ -197,9 +197,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
-            
+
             await PopulateSelectLists(viewModel);
             if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+
+            await Validate(viewModel);
 
             if (ModelState.IsValid)
             {
@@ -210,6 +212,22 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             return View("EditDetails", viewModel);
+        }
+
+        /// <summary>
+        /// Does 2nd-level validation
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        private async Task Validate(GroupEditorViewModel viewModel)
+        {
+            if (viewModel.Action == ActionSave && ModelState.IsValid)
+            {
+                var dto = CreateSaveDto(viewModel);
+                var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
+                validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Code, x.Message));
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Code, x.Message));
+            }
         }
 
         [HttpGet]
@@ -242,7 +260,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
-            
+
+            await Validate(viewModel);
+
             if (ModelState.IsValid)
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
@@ -352,6 +372,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private async Task SaveGroup(GroupEditorViewModel viewModel)
         {
+            SaveGroupDto dto = CreateSaveDto(viewModel);
+            viewModel.GroupUId = await _groupWriteService.SaveAsync(dto, User);
+        }
+
+        private static SaveGroupDto CreateSaveDto(GroupEditorViewModel viewModel)
+        {
             viewModel.SetCCLeadCentreUrn();
 
             Func<GroupModel> createDomainModel = () => new GroupModel
@@ -368,9 +394,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 ClosedDate = viewModel.ClosedDate.ToDateTime()
             };
 
-            Func<List<EstablishmentGroupModel>> createLinksDomainModel = () => viewModel.LinkedEstablishments.Establishments.Select(x => new EstablishmentGroupModel
+            Func<List<LinkedEstablishmentGroup>> createLinksDomainModel = 
+                () => viewModel.LinkedEstablishments.Establishments.Select(x => new LinkedEstablishmentGroup
             {
-                EstablishmentUrn = x.Urn,
+                Urn = x.Urn,
                 Id = x.Id,
                 JoinedDate = x.JoinedDate,
                 CCIsLeadCentre = x.CCIsLeadCentre
@@ -381,8 +408,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else if (viewModel.SaveMode == eSaveMode.DetailsAndLinks) dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
             else if (viewModel.SaveMode == eSaveMode.Links) dto = new SaveGroupDto(viewModel.GroupUId.Value, createLinksDomainModel());
             else throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
-            
-            viewModel.GroupUId = await _groupWriteService.SaveAsync(dto, User);
+            return dto;
         }
 
         private async Task AddLinkedEstablishment(GroupEditorViewModel viewModel)
