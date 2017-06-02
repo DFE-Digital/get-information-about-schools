@@ -34,8 +34,14 @@ namespace Edubase.Data.Entity
 
         public DataQualityEstablishmentType EstablishmentType
         {
-            get => (DataQualityEstablishmentType) int.Parse(RowKey);
-            set => RowKey = ((int)value).ToString();
+            get
+            {
+                return (DataQualityEstablishmentType)int.Parse(RowKey);
+            }
+            set
+            {
+                RowKey = ((int)value).ToString();
+            } 
         }
 
         public DateTime LastUpdated { get; set; }
