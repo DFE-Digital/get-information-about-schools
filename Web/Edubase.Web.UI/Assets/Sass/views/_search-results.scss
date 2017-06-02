@@ -40,9 +40,20 @@
         clear: both;
         margin-bottom: 20px;
         border-bottom: 1px solid #bfc1c3;
+        position: relative;
 
         &:last-child {
             border-bottom:0; 
+        }
+        .additional-closed {
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size:12px;
+            color: $grey-1;
+            @media (min-width: 640px) {
+                font-size: 14px;
+            }
         }
     }
     dl {

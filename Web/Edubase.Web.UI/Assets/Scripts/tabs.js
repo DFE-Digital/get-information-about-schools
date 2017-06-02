@@ -63,8 +63,10 @@
 
             $('.tab-manipulator').on('click', function (e) {
                 e.preventDefault();
-                var hash = $(this).attr('href'),
+                var hash = $(this).attr('href').replace('#', ''),
                     hasTab = $.inArray(hash, validHashes);
+                console.log()
+                console.log('hasTab ' + hasTab);
                 if (hasTab > -1) {
                     $tabs.eq(hasTab).click();
                     $(window).scrollTop($tabs.offset().top);

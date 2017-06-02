@@ -133,6 +133,14 @@
     getSchoolsSuggestionHandler: function (keywords, callback) {
         var dataSuggestionUrl = $("#TextSearchModel_Text").attr("data-suggestion-url");
         return $.get(encodeURI(dataSuggestionUrl + keywords), function (response) {
+            if (document.getElementById('include-open-establishments-name').checked) {
+                var openOnly = response.filter(function(suggestion) {
+                    if (!suggestion.closed) {
+                        return suggestion;
+                    }
+                });
+                return callback(openOnly);
+            }
             return callback(response);
         });
     },
@@ -235,7 +243,15 @@
             return;
         }
 
-        var templateHandler = function (suggestion) { return '<div><a href="javascript:">' + suggestion[field] + '</a></div>'; };
+        var templateHandler = function (suggestion) {
+            var tmpl = '<div><a href="javascript:">' + suggestion[field] + '</span></a></div>';
+
+            if (suggestion.hasOwnProperty('closed') && suggestion.closed) {
+                tmpl = '<div><a href="javascript:"><span class="estab-name">' + suggestion[field] + '</span><span class="estab-status">Closed</span></a></div>';
+            }
+
+            return tmpl;
+        };
 
         $(targetInputElementName).typeahead({
             hint: false,
