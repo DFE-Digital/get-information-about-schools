@@ -49,5 +49,10 @@ namespace Edubase.Web.UI.Models
         public bool IsEmpty() => !Day.HasValue && !Month.HasValue && !Year.HasValue;
 
         public bool IsNotEmpty() => !IsEmpty();
+
+        public override string ToString()
+        {
+            return $"{Day}/{Month}/{Year}";
+        }
     }
 }

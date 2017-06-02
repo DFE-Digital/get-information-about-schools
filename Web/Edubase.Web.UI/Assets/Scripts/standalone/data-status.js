@@ -1,8 +1,8 @@
 ﻿DfE.Views.dataStatus = {
     options: {
-        statusUrl: '/Prototype/DataStatus',
-        editStatusUrl: '/Prototype/EditDataStatus',
-        viewStatusUrl: '/Prototype/ViewDataStatus',
+        statusUrl: '/DataQuality/Status',
+        editStatusUrl: '/DataQuality/Edit',
+        viewStatusUrl: '/DataQuality',
         params: {},
         cookieExpiresIn: 1
     },

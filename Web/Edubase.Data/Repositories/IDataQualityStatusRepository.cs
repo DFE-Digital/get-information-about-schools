@@ -8,6 +8,6 @@ namespace Edubase.Data.Repositories
     public interface IDataQualityStatusRepository
     {
         Task<List<DataQualityStatus>> GetAllAsync();
-        Task UpdateDataQuality(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated);
+        Task UpdateDataQualityAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated);
     }
 }

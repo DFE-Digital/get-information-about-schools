@@ -14,7 +14,7 @@ namespace Edubase.Services.DataQuality
         public async Task UpdateDataQualityDate(DataQualityStatus.DataQualityEstablishmentType establishmentType,
             DateTime updateTime)
         {
-            await Repository.UpdateDataQuality(establishmentType, updateTime);
+            await Repository.UpdateDataQualityAsync(establishmentType, updateTime);
         }
     }
 }

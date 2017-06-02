@@ -22,7 +22,6 @@ using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Services.Texuna.Approvals;
 using Edubase.Services.Texuna.ChangeHistory;
-using Edubase.Services.Texuna.Core;
 using Edubase.Services.Texuna.Downloads;
 using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Governors;

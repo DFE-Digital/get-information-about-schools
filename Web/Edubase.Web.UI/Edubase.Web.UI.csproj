@@ -347,6 +347,8 @@
     <Compile Include="Models\DataQuality\DataQualityStatusItem.cs" />
     <Compile Include="Models\DataQuality\DataQualityStatusViewModel.cs" />
     <Compile Include="Models\DataQuality\EditDataQualityStatusViewModel.cs" />
+    <Compile Include="Models\DataQuality\FullDataQualityStatusItem.cs" />
+    <Compile Include="Models\DataQuality\FullDataQualityStatusViewModel.cs" />
     <Compile Include="Models\DownloadsViewModel.cs" />
     <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
@@ -972,7 +974,7 @@
     <Content Include="Views\Prototype\location-demo.cshtml" />
     <Content Include="Views\DataQuality\Status.cshtml" />
     <Content Include="Views\DataQuality\EditStatus.cshtml" />
-    <Content Include="Views\Prototype\ViewDataStatus.cshtml" />
+    <Content Include="Views\DataQuality\ViewStatus.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

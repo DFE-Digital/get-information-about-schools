@@ -2,7 +2,6 @@
 
 @{
     Layout = null;
-    ViewBag.itIsUrgent = Request["warning"];
 }
 
 <!DOCTYPE html>
@@ -17,7 +16,7 @@
     <a href="#" id="data-status-close" class="modal-exit">Close</a>
     <div class="overlay-padder">
         <h1 class="heading-large">Data status</h1>
-        @if (ViewBag.itIsUrgent == "true")
+        @if (Model.Urgent)
         {
             <div class="warning-message">
                 <p>Please update your data status</p>
@@ -40,15 +39,15 @@
                 @foreach (var data in Model.Items)
                 {
                     <tr>
-                        <td aria-label="Establishment type">@data.EstablishmentType</td>
-                        <td aria-label="Last updated">@data.LastUpdated.ToString("dd/MM/yyyy")</td>
+                        <td aria-label="Establishment type">@data.EstablishmentType.GetEnumMember()</td>
+                        <td aria-label="Last updated">@data.LastUpdated.ToString()</td>
                     </tr>
                 }
             </tbody>
         </table>
 
         <div class="button-row">
-        @if (ViewBag.itIsUrgent == "true")
+        @if (Model.Urgent)
         {
             <a href="#" class="button mobile-full-width" id="data-status-update">Update</a>
         }

@@ -27,9 +27,9 @@ namespace Edubase.Data.Repositories
         }
 
 
-        public async Task UpdateDataQuality(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated)
+        public async Task UpdateDataQualityAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated)
         {
-            var query = Table.CreateQuery<DataQualityStatus>().Where(d => d.EstablishmentType == establishmentType).AsTableQuery();
+            var query = Table.CreateQuery<DataQualityStatus>().Where(d => d.RowKey == ((int)establishmentType).ToString()).AsTableQuery();
             var results = await query.ExecuteSegmentedAsync(null);
             var dataQualityRecord = results.FirstOrDefault();
             if (dataQualityRecord != null)
