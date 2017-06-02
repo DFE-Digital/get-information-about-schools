@@ -133,6 +133,14 @@
     getSchoolsSuggestionHandler: function (keywords, callback) {
         var dataSuggestionUrl = $("#TextSearchModel_Text").attr("data-suggestion-url");
         return $.get(encodeURI(dataSuggestionUrl + keywords), function (response) {
+            if (document.getElementById('include-open-establishments-name').checked) {
+                var openOnly = response.filter(function(suggestion) {
+                    if (!suggestion.closed) {
+                        return suggestion;
+                    }
+                });
+                return callback(openOnly);
+            }
             return callback(response);
         });
     },
