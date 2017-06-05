@@ -16,20 +16,25 @@
         init :function() {
             var $el = $(this.el),
                 opts = this.opts,
-                tooltip = '<div id="edubase-tooltip" class="edubase-tooltip truncated-tooltip" aria-hidden="true">' +
+                self = this,
+                tooltip = '<div id="edubase-tooltip" class="edubase-tooltip truncated-tooltip hidden" aria-hidden="true">' +
                     '<span class="pointer-shadow"></span><span class="pointer"></span>' +
-                    '<a href="#" class="tooltip-close" title="close tool tip"><span class="visuallyhidden">Close</span></a>' +
                     '<div id="tooltip-content" class="tooltip-content" tab-index="-1"></div></div>',
                 
                 showTooltip = function (text) {
-                    
-                    $('#tooltip-content').text(text);
-                    $('#edubase-tooltip').css({
-                        display: 'block',
-                        left: '-1000em'
-                    });
+                    if (!$('#edubase-tooltip').hasClass('hidden')) {
+                        $(window).trigger('tooltipShift');
+                    }
 
-                    var width = $('#edubase-tooltip').width() + 20;
+                    $('#tooltip-content').text(text);
+                    $('#edubase-tooltip')
+                        .removeClass('hidden')
+                        .css({
+                            display: 'block',
+                            left: '-1000em'
+                        });
+
+                    var width = $('#edubase-tooltip').width() + 40;
 
 
                     $('#edubase-tooltip').css({
@@ -41,10 +46,12 @@
 
                 },
                 hideTooltip = function () {
-                    $('#edubase-tooltip').css({ display: 'none' });
+                    $('#edubase-tooltip').addClass('hidden');
                 },
 
                 originalText = $.trim($el.text());
+
+            this.clicks = 0;
 
             if ($(window).width() < opts.minScreenWidth) {
                 return;
@@ -62,17 +69,27 @@
                 $el.text(originalText.substring(0, opts.maxCharacters) + '...');
             }
 
+            $(window).on('tooltipShift', function() {
+                self.clicks = 0;
+            });
 
             $el.on('click', function () {
-                showTooltip($el.originalText);
+                if (self.clicks % 2 === 0) {
+                    showTooltip($el.originalText);
+                    self.clicks ++;
+                } else {
+                    hideTooltip();
+                    self.clicks = 0;
+                }                
             });
 
             $('.tooltip-close').on('click', function() {
                 hideTooltip();
             });
-
+        },
+        resetClickCount: function() {
+            this.clicks = 0;
         }
-
     };
 
     $.fn.truncate = function(options) {
@@ -82,7 +99,6 @@
             }
         });
     }
-
 
 }($));
 

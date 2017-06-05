@@ -24,7 +24,7 @@
         }
         else
         {
-            <p class="table-caption">These date show when each of our teams last updated their data.</p>
+            <p class="table-caption">These dates show when each of our teams last updated their data.</p>
         }
        
 
@@ -50,12 +50,15 @@
         @if (Model.Urgent)
         {
             <a href="#" class="button mobile-full-width" id="data-status-update">Update</a>
+            <a href="#" class="button button-grey mobile-full-width" id="data-status-info">Exit</a>
         }
         else
         {
-            <a href="#" class="button mobile-full-width" id="data-status-exit">Exit</a>
+            <a href="#" class="button mobile-full-width" id="data-status-update">More info</a>
+            <a href="#" class="button button-grey mobile-full-width" id="data-status-info">Exit</a>
+
         }
-            <a href="#" class="button button-grey mobile-full-width" id="data-status-info">More info</a>
+            
         </div>
     </div>
 </div>

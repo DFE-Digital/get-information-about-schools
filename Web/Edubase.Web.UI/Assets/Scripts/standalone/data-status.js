@@ -4,7 +4,7 @@
         editStatusUrl: '/DataQuality/Edit',
         viewStatusUrl: '/DataQuality',
         params: {},
-        cookieExpiresIn: 1
+        cookieExpiresIn: 0.08
     },
     exitOverlay: function (e) {
         e.preventDefault();
@@ -41,10 +41,6 @@
         mask.classList.add('modal-overlay');
         document.body.appendChild(mask);
 
-        if (DfE.Util.QueryString.get('warning') === 'true') {
-            self.options.params.warning = true;
-        }
-        
         $.ajax({
             url: self.options.statusUrl,
             data: self.options.params,
@@ -65,4 +61,6 @@
 
 if (GOVUK.cookie('dataStatusViewed') !== 'true') {
     DfE.Views.dataStatus.init();
+
+    $('#logout-link').on('click', DfE.Views.dataStatus.clearCookie);
 }
