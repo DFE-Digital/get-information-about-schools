@@ -183,21 +183,32 @@ namespace Edubase.Services
             if (message.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 throw new EduSecurityException("The current principal does not have permission to call this API");
 
-            try
+            if (message.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 try
                 {
-                    response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
+                    try
+                    {
+                        response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
+                    }
+                    catch (JsonSerializationException)
+                    {
+                        response.Errors = new[] { await message.Content.ReadAsAsync<ApiError>() };
+                    }
+                    return response;
                 }
-                catch (JsonSerializationException)
+                catch (Exception e)
                 {
-                    response.Errors = new[] { await message.Content.ReadAsAsync<ApiError>() };
+                    throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
                 }
-                return response;
             }
-            catch (Exception e)
+            else if(message.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {
-                throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
+                throw new TexunaApiSystemException($"The TEX-API returned an 'Internal Server Error'. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+            }
+            else
+            {
+                throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
             }
         }
 

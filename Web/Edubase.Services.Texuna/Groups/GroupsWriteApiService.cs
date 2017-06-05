@@ -22,7 +22,7 @@ namespace Edubase.Services.Texuna.Groups
             else
             {
                 await _httpClient.PutAsync($"group", dto, principal);
-                return dto.Group.GroupUId.Value;
+                return dto.GetGroupUId().Value;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Lookup;
+﻿using Edubase.Common;
+using Edubase.Services.Lookup;
 using Edubase.Services.Texuna.ChangeHistory;
 using Edubase.Web.Resources;
 using Edubase.Web.UI.Filters;
@@ -48,7 +49,9 @@ namespace Edubase.Web.UI.Controllers
                     GroupTypeIds = vm.IsGroupSearch && vm.SelectedGroupTypeIds.Any() ? vm.SelectedGroupTypeIds.ToArray() : null,
                     Skip = 0,
                     Take = 10,
-                    EntityName = vm.IsGroupSearch ? "groups" : "establishments"
+                    EntityName = vm.IsGroupSearch ? "groups" : "establishments",
+                    ApproverUserGroupCode = vm.SelectedApproverId.Clean(),
+                    SuggesterUserGroupCode = vm.SelectedSuggesterId.Clean()
                 }, User);
             }
 
@@ -60,6 +63,10 @@ namespace Edubase.Web.UI.Controllers
             vm.EstablishmentFields = await _svc.GetEstablishmentFieldsAsync(User);
             vm.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
             vm.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+
+            var userGroups = (await _svc.GetSuggesterGroupsAsync(User));
+            vm.Suggesters = userGroups.ToSelectList(vm.SelectedSuggesterId);
+            vm.Approvers = userGroups.ToSelectList(vm.SelectedApproverId);
         }
     }
 }

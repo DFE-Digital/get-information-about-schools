@@ -5,8 +5,8 @@ namespace Edubase.Services.Texuna.ChangeHistory.Models
     public abstract class SearchChangeHistoryPayload
     {
         public string EntityName { get; set; }
-        public int? SuggesterUserId { get; set; }
-        public int? ApproverUserId { get; set; }
+        public string SuggesterUserGroupCode { get; set; }
+        public string ApproverUserGroupCode { get; set; }
         public int[] EstablishmentTypeIds { get; set; }
         public int[] GroupTypeIds { get; set; }
         public string[] EstablishmentFieldIds { get; set; }

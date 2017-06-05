@@ -53,17 +53,17 @@
                     <div class="expander-panel-content">
                         <div class="form-group inline">
                             <span class="radio-button-wrap">
-                                <input id="date-applied" name="date-search-type" value="applied" type="radio" v-model="dateType">
+                                <input id="date-applied" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, "checked")>
                                 <label class="edubase-button-radio" for="date-applied">Applied</label>
                             </span>
 
                             <span class="radio-button-wrap">
-                                <input id="date-approved" name="date-search-type" value="approved" type="radio" v-model="dateType">
+                                <input id="date-approved" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, "checked")>
                                 <label class="edubase-button-radio" for="date-approved">Approved</label>
                             </span>
 
                             <span class="radio-button-wrap">
-                                <input id="date-effective" name="date-search-type" value="effective" type="radio" v-model="dateType">
+                                <input id="date-effective" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, "checked")>
                                 <label class="edubase-button-radio" for="date-effective">Effective</label>
                             </span>
 
@@ -71,37 +71,37 @@
 
                         <div class="form-group panel-indent">
                             <fieldset id="date-from" class="range-group">
-                                <span v-bind:class="['error-message']" v-show="errorFromDate">Please enter the establishment opening date</span>
+                                @*<span>Please enter the establishment opening date</span>*@
                                 <legend>Changed date from</legend>
                                 <span class="inline-form-control">
                                     <label for="fromdate-day">Day</label>
-                                    <input class="form-control date-text-day" id="fromdate-day" type="text" v-model="fromDateDay">
+                                    <input class="form-control date-text-day" id="fromdate-day" type="text" />
                                 </span>
                                 <span class="inline-form-control">
                                     <label for="fromdate-month">Month</label>
-                                    <input class="form-control date-text-month" id="fromdate-month" type="text" v-model="fromDateMonth">
+                                    <input class="form-control date-text-month" id="fromdate-month" type="text" />
                                 </span>
                                 <span class="inline-form-contol">
                                     <label for="fromdate-year">Year</label>
-                                    <input class="form-control date-text-year" id="fromdate-year" type="text" v-model="fromDateYear">
+                                    <input class="form-control date-text-year" id="fromdate-year" type="text" />
                                 </span>
                             </fieldset>
                             <fieldset id="date-to" class="range-group  range-group-to">
-                                <span v-bind:class="['error-message']" v-show="errorToDate">Please enter the establishment opening date</span>
+                                @*<span>Please enter the establishment opening date</span>*@
                                 <legend>Changed date to</legend>
                                 <span class="inline-form-control">
                                     <label for="todate-day">Day</label>
-                                    <input class="form-control date-text-day" id="todate-day" type="text" v-model="toDateDay">
+                                    <input class="form-control date-text-day" id="todate-day" type="text" />
 
                                 </span>
                                 <span class="inline-form-control">
                                     <label for="todate-month">Month</label>
-                                    <input class="form-control date-text-month" id="todate-month" type="text" v-model="toDateMonth">
+                                    <input class="form-control date-text-month" id="todate-month" type="text" />
 
                                 </span>
                                 <span class="inline-form-contol">
                                     <label for="todate-year">Year</label>
-                                    <input class="form-control date-text-year" id="todate-year" type="text" v-model="toDateYear">
+                                    <input class="form-control date-text-year" id="todate-year" type="text" />
                                 </span>
                             </fieldset>
                         </div>
@@ -158,17 +158,13 @@
                     <div class="expander-panel-content">
                         <div class="column-third">
                             <div class="form-group">
-                                <label class="form-label">Change suggested by</label>
-                                <select id="change-suggested" class="form-control" v-model="changeSuggestedBy">
-                                    <option value="0">Select user group</option>
-                                    
-                                </select>
+                                @Html.LabelFor(x => x.SelectedSuggesterId, "Change suggested by", new { @class = "form-label" })
+                                @Html.DropDownListFor(x => x.SelectedSuggesterId, Model.Suggesters, "Select user group", new { @class = "form-control" })
                             </div>
+
                             <div class="form-group">
-                                <label class="form-label">Change approved by</label>
-                                <select id="change-approved" class="form-control" v-model="changeApprovedBy">
-                                    <option value="0">Select user group</option>
-                                </select>
+                                @Html.LabelFor(x => x.SelectedApproverId, "Change approved by", new { @class = "form-label" })
+                                @Html.DropDownListFor(x => x.SelectedApproverId, Model.Approvers, "Select user group", new { @class = "form-control" })
                             </div>
                         </div>
                     </div>

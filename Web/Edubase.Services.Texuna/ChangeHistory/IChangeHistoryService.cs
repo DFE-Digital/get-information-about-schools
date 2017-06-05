@@ -13,5 +13,7 @@ namespace Edubase.Services.Texuna.ChangeHistory
         Task<List<EstablishmentField>> GetEstablishmentFieldsAsync(IPrincipal principal);
         Task<ApiSearchResult<ChangeHistorySearchItem>> SearchAsync(SearchChangeHistoryBrowsePayload payload, IPrincipal principal);
         Task<ProgressDto> SearchWithDownloadGenerationAsync(SearchChangeHistoryDownloadPayload payload, IPrincipal principal);
+        Task<List<UserGroupModel>> GetSuggesterGroupsAsync(IPrincipal principal);
+        Task<List<UserGroupModel>> GetApproversGroupsAsync(IPrincipal principal);
     }
 }
