@@ -81,7 +81,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
             var model = await _governorDownloadService.GetDownloadGenerationProgressAsync(id, User);
-            var viewModel = new GroupSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 3 : 2)
+            var viewModel = new GovernorSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 3 : 2)
             {
                 FileFormat = fileFormat,
                 SearchSource = searchSource,
