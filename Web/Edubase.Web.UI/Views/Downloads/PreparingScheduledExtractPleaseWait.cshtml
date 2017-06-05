@@ -8,12 +8,18 @@
     <meta http-equiv="refresh" content="2">
 }
 
-<div class="breadcrumbs">
-    @Html.ActionLink("Home", "Index", "Search", new { area = "" })
-</div>
-
 <div class="grid-row">
     <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Downloads", "Index", "Downloads")
+                </li>
+            </ul>
+        </div>
         <h1 class="heading-xlarge">Extract generation</h1>
     </div>
     <div class="download-step">        
