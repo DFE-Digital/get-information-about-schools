@@ -54,7 +54,7 @@ namespace Edubase.Web.UI.Controllers.Api
                     OpenDateMax = to
                 }
             }, User));
-            
+
             return new
             {
                 Items = apiResult.Items.Select(x => new
@@ -66,7 +66,7 @@ namespace Edubase.Web.UI.Controllers.Api
                     DisplayDate = x.OpenDate?.ToString("dd/MM/yyyy"),
                     PredecessorName = "Bob",
                     PredecessorUrn = "123445"
-                }),
+                }).OrderBy(x=> x.OpeningDate),
                 Count = apiResult.Count
             };
         }

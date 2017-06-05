@@ -18,6 +18,7 @@
     <div class="grid-row" v-show="!editRecord">
         <div class="column-full">
             <h1 class="heading-large">Manage academy openings</h1>
+            <div aria-live="polite" class="wait-spinner" v-show="isProcessing"><p class="visually-hidden">Please wait</p></div>
             <div class="error-summary" v-show="searchError" v-cloak>
                 <h2 class="heading-medium error-summary-heading" v-show="searchError">No matching establishment</h2>
                 <div v-show="searchError">
@@ -31,7 +32,7 @@
 
             </div>
         </div>
-        <div class="column-full">
+        <div class="column-full" v-show="!isProcessing">
             <div class="horizontal-tabs-wrapper">
                 <div class="tab-wrap">
                     <ul class="horizontal-tabs">
@@ -118,7 +119,7 @@
                                     <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
                                     <dl>
                                         <dt>URN:</dt>
-                                        <dd><a href="#">{{ od.Urn }}</a></dd>
+                                        <dd><a href="#">{{ od.urn }}</a></dd>
                                         <dt>Establishment name:</dt>
                                         <dd>{{updateName}}</dd>
                                         <dt>Establishment type:</dt>
@@ -128,7 +129,7 @@
                                         <dt>Predecessor name:</dt>
                                         <dd>{{ od.predecessorName }}</dd>
                                     </dl>
-                                    <a href="#" class="button button-grey" v-on:click.prevent="editEstab(od.Urn)">Edit</a>
+                                    <a href="#" class="button button-grey" v-on:click.prevent="editEstab(od.urn)">Edit</a>
                                 </div>
                             </div>
                         </div>
@@ -148,7 +149,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">URN</label>
-                <input class="form-control" type="text" :value="od.Urn" disabled="disabled" />
+                <input class="form-control" type="text" :value="od.urn" disabled="disabled" />
             </div>
 
             <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
@@ -222,12 +223,12 @@
             <tbody v-if="pages.length > 0">
                 <tr v-for="(entry, index) in page">
                     <td aria-label="Opening date:" class="cell-openingdate"> {{entry.displayDate}} </td>
-                    <td aria-label="URN:"><a v-bind:href="detailUrl(entry.Urn)">{{entry.Urn}}</a></td>
+                    <td aria-label="URN:"><a v-bind:href="detailUrl(entry.urn)">{{entry.urn}}</a></td>
                     <td aria-label="Establishment name:">{{entry.name}}</td>
                     <td aria-label="Establishment type:">{{entry.establishmentType}}</td>
                     <td aria-label="Predecessor URN:"><a v-bind:href="detailUrl(entry.predecessorUrn)">{{entry.predecessorUrn}}</a></td>
                     <td aria-label="Predecessor name:">{{entry.predecessorName}}</td>
-                    <td class="cell-edit"><a href="#" v-on:click.prevent="editEstab(entry.Urn)">Edit</a></td>
+                    <td class="cell-edit"><a href="#" v-on:click.prevent="editEstab(entry.urn)">Edit</a></td>
                 </tr>
             </tbody>
             <tbody v-else>
@@ -242,4 +243,5 @@
     </script>
 
     <script src="/public/assets/scripts/standalone/manage-academy-openings.js"></script>
+    @*<script src="/Assets/scripts/standalone/manage-academy-openings.js"></script>*@
 }
