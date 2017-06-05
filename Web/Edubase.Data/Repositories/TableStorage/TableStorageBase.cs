@@ -11,13 +11,16 @@
 
     public class TableStorageBase<T> where T : class
     {
-        private readonly CloudTable _table;
-
         public TableStorageBase(string connectionStringName, string tableName = "")
         {
-            if (connectionStringName.Clean() == null) throw new ArgumentNullException(nameof(connectionStringName));
+            if (connectionStringName.Clean() == null)
+                throw new ArgumentNullException(nameof(connectionStringName));
+
             var connString = ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
-            if (connString.Clean() == null) throw new Exception($"The connection string for '{connectionStringName}' is empty"); 
+
+            if (connString.Clean() == null)
+                throw new Exception($"The connection string for '{connectionStringName}' is empty");
+
             var cloudStorageAccount = CloudStorageAccount.Parse(connString);
             var tableClient = cloudStorageAccount.CreateCloudTableClient();
 
@@ -27,18 +30,15 @@
             };
 
             var pluralizationService = PluralizationService.CreateService(new CultureInfo("en-GB"));
-            var tsTableName = (string.IsNullOrEmpty(tableName))
+            var tsTableName = string.IsNullOrEmpty(tableName)
                 ? pluralizationService.Pluralize(typeof(T).Name)
                 : tableName;
 
-            _table = tableClient.GetTableReference(tsTableName);
-            _table.CreateIfNotExists();
+            Table = tableClient.GetTableReference(tsTableName);
+            Table.CreateIfNotExists();
 
         }
 
-        public CloudTable Table
-        {
-            get { return _table; }
-        }
+        public CloudTable Table { get; }
     }
 }

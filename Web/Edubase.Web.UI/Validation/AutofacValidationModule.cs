@@ -50,6 +50,10 @@ namespace Edubase.Web.UI.Validation
             builder.RegisterType<ChangeHistoryViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<ChangeHistoryViewModel>))
                 .As<IValidator>();
+
+            builder.RegisterType<DateTimeViewModelValidator>()
+                .Keyed<IValidator>(typeof(IValidator<DateTimeViewModel>))
+                .As<IValidator>();
         }
     }
 }

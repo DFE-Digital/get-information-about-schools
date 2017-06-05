@@ -22,7 +22,6 @@ using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Services.Texuna.Approvals;
 using Edubase.Services.Texuna.ChangeHistory;
-using Edubase.Services.Texuna.Core;
 using Edubase.Services.Texuna.Downloads;
 using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Governors;
@@ -38,6 +37,8 @@ using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
+using Edubase.Data.Repositories;
+using Edubase.Services.DataQuality;
 
 namespace Edubase.Web.UI
 {
@@ -114,6 +115,10 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<ResourcesHelper>().As<IResourcesHelper>();
             builder.RegisterType<CompaniesHouseService>().As<ICompaniesHouseService>();
+
+            builder.RegisterType<DataQualityWriteService>().As<IDataQualityWriteService>();
+            builder.RegisterType<DataQualityReadService>().As<IDataQualityReadService>();
+            builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
         }
     }
 }

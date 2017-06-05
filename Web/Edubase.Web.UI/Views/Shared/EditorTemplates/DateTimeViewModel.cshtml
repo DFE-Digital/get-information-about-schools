@@ -1,7 +1,7 @@
 ﻿@using System.Web.UI.WebControls
 @model DateTimeViewModel
 
-<div class="form-group create-edit-form-group date-group @Html.ValidationCssClassFor(x => x)">
+<div class="form-group create-edit-form-group date-group @Html.ValidationCssClassFor(x => x) @Html.ValidationCssClassFor(x => x.Day) @Html.ValidationCssClassFor(x => x.Month) @Html.ValidationCssClassFor(x => x.Year)">
     <fieldset class="range-group">
         <legend class="bold-xsmall" style="font-weight: bold;">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
         <div class="form-hint">For example, 20 03 2003</div>
