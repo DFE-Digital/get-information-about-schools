@@ -7,6 +7,8 @@ using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -51,10 +53,23 @@ namespace Edubase.Web.UI.Controllers.Api
                 Filters = new EstablishmentSearchFilters
                 {
                     OpenDateMin = from,
-                    OpenDateMax = to
+                    OpenDateMax = to,
+                    EstablishmentTypeGroupIds = new[] { (int)eLookupEstablishmentTypeGroup.Academies }
                 }
             }, User));
 
+            // NOTE: One day, we should have an API call created that gets everything all in one go.
+            var linkTypes = await _lookupService.EstablishmentLinkTypesGetAllAsync();
+            var map = new ConcurrentDictionary<int, LinkedEstablishmentModel>();
+            
+            var tasks = apiResult.Items.Select(async x =>
+            {
+                var model = await _establishmentReadService.GetLinkedEstablishmentsAsync(x.Urn.Value, User);
+                map.TryAdd(x.Urn.Value, model.FirstOrDefault(e => e.LinkTypeId == (int)eLookupEstablishmentLinkType.ParentOrPredecessor));
+            });
+
+            await Task.WhenAll(tasks);
+            
             return new
             {
                 Items = apiResult.Items.Select(x => new
@@ -64,8 +79,8 @@ namespace Edubase.Web.UI.Controllers.Api
                     EstablishmentType = x.TypeId.HasValue ? estabTypes.FirstOrDefault(t => t.Id == x.TypeId)?.Name : null,
                     OpeningDate = x.OpenDate,
                     DisplayDate = x.OpenDate?.ToString("dd/MM/yyyy"),
-                    PredecessorName = "Bob",
-                    PredecessorUrn = "123445"
+                    PredecessorName = map[x.Urn.Value]?.EstablishmentName,
+                    PredecessorUrn = map[x.Urn.Value]?.Urn,
                 }).OrderBy(x=> x.OpeningDate),
                 Count = apiResult.Count
             };

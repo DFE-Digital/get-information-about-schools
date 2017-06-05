@@ -216,7 +216,7 @@ namespace Edubase.Web.UI.Controllers
             
             using (MiniProfiler.Current.Step("Retrieving LinkedEstablishments"))
             {
-                viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id, User)).Select(x => new LinkedEstabViewModel(x));
+                viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id, User)).Select(x => new LinkedEstabViewModel(x)).ToList();
                 foreach (var item in viewModel.LinkedEstablishments)
 	            {
                     item.LinkTypeName = await _cachedLookupService.GetNameAsync(() => item.LinkTypeId);
@@ -324,29 +324,21 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<GroupModel> GetLegalParent(int establishmentUrn, IPrincipal principal)
         {
-            try
+            var parentGroups = await _groupReadService.GetAllByEstablishmentUrnAsync(establishmentUrn, principal);
+            var parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.SingleacademyTrust);
+            if (parentGroup != null)
             {
-                var parentGroups = await _groupReadService.GetAllByEstablishmentUrnAsync(establishmentUrn, principal);
-                var parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.SingleacademyTrust);
-                if (parentGroup != null)
-                {
-                    return parentGroup;
-                }
-
-                parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust);
-                if (parentGroup != null)
-                {
-                    return parentGroup;
-                }
-
-                parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.Trust);
-                return parentGroup ?? parentGroups.First();
-            }
-            catch (Exception e)
-            {
+                return parentGroup;
             }
 
-            return null;
+            parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust);
+            if (parentGroup != null)
+            {
+                return parentGroup;
+            }
+
+            parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.Trust);
+            return parentGroup ?? parentGroups.FirstOrDefault();    
         }
 
         private async Task PopulateLookupNames(EstablishmentDetailViewModel vm)
