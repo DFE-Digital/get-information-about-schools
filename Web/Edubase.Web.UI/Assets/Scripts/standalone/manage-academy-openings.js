@@ -235,7 +235,7 @@
                     year = parseInt(dateParts[1], 10);
 
                 if (isNaN(month) || isNaN(year)) { // user selected all
-                    this.pages = buildPages(this.openingAcademies, this.pageSize);
+                    this.buildPages(this.openingAcademies, this.pageSize);
                     this.currentCount = this.openingAcademies.length;
                     return;
                 }
@@ -251,7 +251,7 @@
                     return false;
                 });
 
-                this.pages = buildPages(datePages, this.pageSize);
+                this.buildPages(datePages, this.pageSize);
                 this.currentCount = datePages.length;
                 this.currentPage = 0;
             },
