@@ -220,7 +220,16 @@ namespace Edubase.Services
                 throw new TexunaApiSystemException(
                     $"The TEX-API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
             }
-            response.Response = await message.Content.ReadAsAsync<T>(new[] { _formatter });
+
+            if (typeof(T) == typeof(string))
+            {
+                response.Response = (T)(object)await message.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                response.Response = await message.Content.ReadAsAsync<T>(new[] { _formatter });
+            }
+
             return response;
         }
 

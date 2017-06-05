@@ -10,7 +10,7 @@ namespace Edubase.Services.Downloads
     {
         Task<FileDownload[]> GetListAsync(IPrincipal principal);
         Task<ScheduledExtractsResult> GetScheduledExtractsAsync(int skip, int take, IPrincipal principal);
-        Task<ApiResultDto<Guid>> GenerateScheduledExtractAsync(int id, IPrincipal principal);
+        Task<string> GenerateScheduledExtractAsync(int id, IPrincipal principal);
         Task<ProgressDto> GetProgressOfScheduledExtractGenerationAsync(Guid id, IPrincipal principal);
     }
 }

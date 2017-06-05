@@ -5,9 +5,9 @@ namespace Edubase.Services.Domain
 {
     public class ProgressDto
     {
-        public Guid Id { get; set; }
-        public long TotalRecordsCount { get; set; }
-        public int ProcessedCount { get; set; }
+        public Guid? Id { get; set; }
+        public long? TotalRecordsCount { get; set; }
+        public int? ProcessedCount { get; set; }
         public string Status { get; set; }
         public bool IsComplete { get; set; }
         public string FileLocationUri { get; set; }

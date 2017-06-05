@@ -9,6 +9,8 @@ using System.Configuration;
 using Edubase.Services.Downloads;
 using System.Threading.Tasks;
 using Edubase.Web.UI.Models;
+using Newtonsoft.Json;
+using Edubase.Services.Domain;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -38,8 +40,16 @@ namespace Edubase.Web.UI.Controllers
         [Route("RequestScheduledExtract/{id}", Name = "RequestScheduledExtract")]
         public async Task<ActionResult> RequestScheduledExtract(int id)
         {
-            var requestId = await _downloadsService.GenerateScheduledExtractAsync(id, User);
-            return RedirectToAction(nameof(Download), new { id = requestId.Value });
+            var response = await _downloadsService.GenerateScheduledExtractAsync(id, User);
+
+            if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
+            {
+                return View("ReadyToDownloadScheduledExtract", JsonConvert.DeserializeObject<ProgressDto>(response));
+            }
+            else
+            {
+                return RedirectToAction(nameof(Download), new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
+            }
         }
 
         [Route("Download/{id}", Name = "DownloadScheduledExtract")]
