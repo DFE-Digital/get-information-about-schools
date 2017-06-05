@@ -14,8 +14,8 @@
 
     },
     clearCookie: function() {
-        // for testing/ dev only
         GOVUK.setCookie('dataStatusViewed', '', { days: -1 });
+        return true;
     },
     attachEvents: function() {
         var self = this;
@@ -60,7 +60,11 @@
 };
 
 if (GOVUK.cookie('dataStatusViewed') !== 'true') {
-    DfE.Views.dataStatus.init();
-
-    $('#logout-link').on('click', DfE.Views.dataStatus.clearCookie);
+    DfE.Views.dataStatus.init();    
 }
+$('#logout-link').on('click', function (e) {
+    e.preventDefault();
+    var href = $(this).attr('href');
+    DfE.Views.dataStatus.clearCookie();
+    window.location = href;
+});
