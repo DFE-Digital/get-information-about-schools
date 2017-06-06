@@ -46,10 +46,24 @@ namespace Edubase.Web.UI.Controllers
                 LastUpdated = new DateTimeViewModel(d.LastUpdated)
             }).ToList();
 
+            var urgent = false;
+            foreach (var kvp in _roleToDataSetMappings)
+            {
+                if (User.InRole(kvp.Key, EdubaseRoles.ROLE_BACKOFFICE))
+                {
+                    var lastUpdated = items.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.LastUpdated;
+                    if (lastUpdated?.ToDateTime() == null || 
+                        lastUpdated.ToDateTime().Value.AddDays(dataQualityUpdatePeriod) < DateTime.Now.Date)
+                    {
+                        urgent = true;
+                    }
+                }
+            }
+
             var data = new DataQualityStatusViewModel
             {
                 Items = items,
-                Urgent = items.Any(i => i.LastUpdated.ToDateTime().Value.AddDays(dataQualityUpdatePeriod) < DateTime.Now.Date)
+                Urgent = urgent
             };
 
             return View(data);
