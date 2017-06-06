@@ -26,12 +26,13 @@ namespace Edubase.Web.UI.Controllers
         
         public async Task<ActionResult> Index(int? startIndex)
         {
+            const int PAGE_SIZE = 100;
             var viewModel = new DownloadsViewModel
             {
                 Downloads = await _downloadsService.GetListAsync(User),
-                ScheduledExtracts = await _downloadsService.GetScheduledExtractsAsync((startIndex.GetValueOrDefault() / 10), 10, User),
-                Skip = startIndex.GetValueOrDefault() / 10,
-                Take = 10
+                ScheduledExtracts = await _downloadsService.GetScheduledExtractsAsync((startIndex.GetValueOrDefault() / PAGE_SIZE), PAGE_SIZE, User),
+                Skip = startIndex.GetValueOrDefault() / PAGE_SIZE,
+                Take = PAGE_SIZE
             };
 
             return View(viewModel);
