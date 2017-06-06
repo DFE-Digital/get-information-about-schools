@@ -1,6 +1,7 @@
 ﻿@model Edubase.Web.UI.Models.DataQuality.EditDataQualityStatusViewModel
 @{
     ViewBag.Title = "Update data status";
+    ViewBag.bodyClasses = "data-quality";
 }
 
 <div class="grid-row">
@@ -19,7 +20,7 @@
             </ul>
         </div>
         @Html.ValidationSummary("Invalid date", new {@class = "error-summary"})
-        <h1 class="heading-large">
+        <h1 class="heading-intro">
             Update data status
         </h1>
 

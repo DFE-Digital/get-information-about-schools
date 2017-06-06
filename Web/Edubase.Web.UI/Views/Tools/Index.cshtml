@@ -175,26 +175,24 @@
 
     
     
+    
     <div class="column-half">
         <h3>
-            @Html.ActionLink("Data Quality", "ViewStatus", "DataQuality")
+            @Html.RouteLink("Manage academy openings", "ManageAcademyOpenings")
         </h3>
         <p>
-            See when each team’s data was last updated. 
-            You can also confirm that your team's data is up to date.
+            View details of proposed-to-open academies.
+            Edit academy names and opening dates.
         </p>
     </div>
     <div class="column-half">
-        @if (Model.UserCanManageAcademyOpenings)
-        {
-            <h3>
-                @Html.RouteLink("Manage academy openings", "ManageAcademyOpenings")
-            </h3>
-            <p>
-                View details of proposed-to-open academies.
-                Edit academy names and opening dates.
-            </p>
-        }
+        <h3>
+            @Html.ActionLink("View data status", "ViewStatus", "DataQuality")
+        </h3>
+        <p>
+            See when each team’s data was last updated.
+            You can also confirm that your team's data is up to date.
+        </p>
     </div>
 </div>
 

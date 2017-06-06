@@ -5,11 +5,21 @@
 
     label {
         margin-bottom: 2px;
+        font-size: 16px;
+    }
+
+    .data-quality & {
+        margin-top: 24px;
     }
 }
 
 select#headtitleid {
     width: 120px;
+}
+
+.data-quality .heading-small {
+    margin-bottom: 12px;
+    padding-top: 20px;
 }
 
 .create-edit-section-break {
@@ -411,5 +421,11 @@ div.shared-governor-list {
             left: 6px;
             border-width: 8px;
         }
+    }
+}
+
+.data-status-group {
+    h3 {
+        font-size: 16px;
     }
 }
