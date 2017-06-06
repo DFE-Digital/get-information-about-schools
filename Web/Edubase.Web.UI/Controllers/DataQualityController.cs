@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Controllers
                 data.Items.Add(datasets.SingleOrDefault(d => d.EstablishmentType == DataQualityStatus.DataQualityEstablishmentType.OpenAcademiesAndFreeSchools));
             }
 
-            if (User.InRole(EdubaseRoles.AP, EdubaseRoles.ROLE_BACKOFFICE))
+            if (User.InRole(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE))
             {
                 data.Items.Add(datasets.SingleOrDefault(d => d.EstablishmentType == DataQualityStatus.DataQualityEstablishmentType.AcademyOpeners));
             }

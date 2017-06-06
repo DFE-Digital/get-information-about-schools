@@ -4,7 +4,7 @@
     {
         public const string EDUBASE_CMT = "edubase_cmt";
         public const string ROLE_BACKOFFICE = "ROLE_BACKOFFICE";
-        public const string AP = "AP";
+        public const string AP_AOS = "AP";
         public const string APT = "APT";
         public const string ROLE_PRISM = "ROLE_PRISM";
         public const string EDUBASE_CHILDRENS_CENTRE_POLICY = "edubase_childrens_centre_policy";

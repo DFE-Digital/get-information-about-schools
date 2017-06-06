@@ -16,5 +16,7 @@ namespace Edubase.Web.UI.Models
 
 
         public bool UserCanCreateEstablishment { get; set; }
+
+        public bool UserCanManageAcademyOpenings { get; set; }
     }
 }

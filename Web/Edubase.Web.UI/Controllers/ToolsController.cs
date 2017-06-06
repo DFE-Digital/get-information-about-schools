@@ -36,7 +36,8 @@ namespace Edubase.Web.UI.Controllers
                 UserCanCreateFederationGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Federation),
                 UserCanCreateSchoolTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Trust),
                 UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
-                UserCanCreateEstablishment = createEstablishmentPermission.CanCreate
+                UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
+                UserCanManageAcademyOpenings = User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.AP_AOS)
             };
 
             return View(viewModel);

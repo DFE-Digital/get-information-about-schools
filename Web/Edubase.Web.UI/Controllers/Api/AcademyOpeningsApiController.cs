@@ -6,6 +6,8 @@ using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
+using Edubase.Services.Security;
+using Edubase.Web.UI.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -40,7 +42,7 @@ namespace Edubase.Web.UI.Controllers.Api
         /// <param name="skip"></param>
         /// <param name="take"></param>
         /// <returns></returns>
-        [Route("api/academy-openings/list/{from:datetime}/{to:datetime}/{skip:int}/{take:int}"), HttpGet]
+        [Route("api/academy-openings/list/{from:datetime}/{to:datetime}/{skip:int}/{take:int}"), HttpGet, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
         public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take)
         {
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
@@ -54,7 +56,8 @@ namespace Edubase.Web.UI.Controllers.Api
                 {
                     OpenDateMin = from,
                     OpenDateMax = to,
-                    EstablishmentTypeGroupIds = new[] { (int)eLookupEstablishmentTypeGroup.Academies }
+                    EstablishmentTypeGroupIds = new[] { (int)eLookupEstablishmentTypeGroup.Academies },
+                    StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
                 }
             }, User));
 
@@ -93,7 +96,7 @@ namespace Edubase.Web.UI.Controllers.Api
         /// <param name="urn"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
-        [Route("api/academy/{urn:int}"), HttpPatch]
+        [Route("api/academy/{urn:int}"), HttpPatch, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
         public async Task<ApiResponse> SaveAsync(int urn, [FromBody] dynamic payload)
         {
             DateTime openingDate = payload.openDate;

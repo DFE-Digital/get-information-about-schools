@@ -1,4 +1,6 @@
 ﻿using Edubase.Services.Establishments;
+using Edubase.Services.Security;
+using Edubase.Web.UI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _establishmentWriteService = establishmentWriteService;
         }
 
-        [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
+        [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings"), MvcAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
         public ActionResult Index() => View();
 
 
