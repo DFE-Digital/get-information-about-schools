@@ -4,6 +4,8 @@ using Edubase.Web.UI.Areas.Establishments.Models.Validators;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models.DataQuality;
+using Edubase.Web.UI.Models.DataQuality.Validators;
 using Edubase.Web.UI.Models.Establishments;
 using Edubase.Web.UI.Models.Establishments.Validators;
 using Edubase.Web.UI.Models.Validators;
@@ -53,6 +55,10 @@ namespace Edubase.Web.UI.Validation
 
             builder.RegisterType<DateTimeViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<DateTimeViewModel>))
+                .As<IValidator>();
+
+            builder.RegisterType<DataQualityStatusItemValidator>()
+                .Keyed<IValidator>(typeof(IValidator<DataQualityStatusItem>))
                 .As<IValidator>();
         }
     }

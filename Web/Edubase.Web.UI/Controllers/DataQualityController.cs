@@ -18,6 +18,15 @@ namespace Edubase.Web.UI.Controllers
     {
         private readonly IDataQualityWriteService dataQualityWriteService;
         private readonly int dataQualityUpdatePeriod;
+        private readonly Dictionary<string, DataQualityStatus.DataQualityEstablishmentType> _roleToDataSetMappings = new Dictionary<string, DataQualityStatus.DataQualityEstablishmentType>
+        {
+            { EdubaseRoles.EFADO,  DataQualityStatus.DataQualityEstablishmentType.OpenAcademiesAndFreeSchools},
+            { EdubaseRoles.AP_AOS,  DataQualityStatus.DataQualityEstablishmentType.AcademyOpeners},
+            { EdubaseRoles.IEBT,  DataQualityStatus.DataQualityEstablishmentType.IndependentSchools},
+            { EdubaseRoles.APT,  DataQualityStatus.DataQualityEstablishmentType.PupilReferralUnits},
+            { EdubaseRoles.SOU,  DataQualityStatus.DataQualityEstablishmentType.LaMaintainedSchools},
+            { EdubaseRoles.FST,  DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners}
+        };
 
         public DataQualityController(IDataQualityWriteService dataQualityWriteService)
         {
@@ -37,10 +46,24 @@ namespace Edubase.Web.UI.Controllers
                 LastUpdated = new DateTimeViewModel(d.LastUpdated)
             }).ToList();
 
+            var urgent = false;
+            foreach (var kvp in _roleToDataSetMappings)
+            {
+                if (User.InRole(kvp.Key, EdubaseRoles.ROLE_BACKOFFICE))
+                {
+                    var lastUpdated = items.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.LastUpdated;
+                    if (lastUpdated?.ToDateTime() == null || 
+                        lastUpdated.ToDateTime().Value.AddDays(dataQualityUpdatePeriod) < DateTime.Now.Date)
+                    {
+                        urgent = true;
+                    }
+                }
+            }
+
             var data = new DataQualityStatusViewModel
             {
                 Items = items,
-                Urgent = items.Any(i => i.LastUpdated.ToDateTime().Value.AddDays(dataQualityUpdatePeriod) < DateTime.Now.Date)
+                Urgent = urgent
             };
 
             return View(data);
@@ -61,36 +84,19 @@ namespace Edubase.Web.UI.Controllers
                 Items = new List<DataQualityStatusItem>()
             };
 
-
-            // I feel dirty for writing the following...
-            if (User.InRole(EdubaseRoles.EFADO, EdubaseRoles.ROLE_BACKOFFICE))
+            foreach (var kvp in _roleToDataSetMappings)
             {
-                data.Items.Add(datasets.SingleOrDefault(d => d.EstablishmentType == DataQualityStatus.DataQualityEstablishmentType.OpenAcademiesAndFreeSchools));
-            }
+                if (User.InRole(kvp.Key, EdubaseRoles.ROLE_BACKOFFICE))
+                {
+                    var item = new DataQualityStatusItem {EstablishmentType = kvp.Value};
 
-            if (User.InRole(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE))
-            {
-                data.Items.Add(datasets.SingleOrDefault(d => d.EstablishmentType == DataQualityStatus.DataQualityEstablishmentType.AcademyOpeners));
-            }
+                    if (User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE))
+                    {
+                        item.LastUpdated = datasets.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.LastUpdated;
+                    }
 
-            if (User.InRole(EdubaseRoles.IEBT, EdubaseRoles.ROLE_BACKOFFICE))
-            {
-                data.Items.Add(datasets.SingleOrDefault(d => d.EstablishmentType == DataQualityStatus.DataQualityEstablishmentType.IndependentSchools));
-            }
-
-            if (User.InRole(EdubaseRoles.APT, EdubaseRoles.ROLE_BACKOFFICE))
-            {
-                data.Items.Add(datasets.SingleOrDefault(d => d.EstablishmentType == DataQualityStatus.DataQualityEstablishmentType.PupilReferralUnits));
-            }
-
-            if (User.InRole(EdubaseRoles.SOU, EdubaseRoles.ROLE_BACKOFFICE))
-            {
-                data.Items.Add(datasets.SingleOrDefault(d => d.EstablishmentType == DataQualityStatus.DataQualityEstablishmentType.LaMaintainedSchools));
-            }
-
-            if (User.InRole(EdubaseRoles.FST, EdubaseRoles.ROLE_BACKOFFICE))
-            {
-                data.Items.Add(datasets.SingleOrDefault(d => d.EstablishmentType == DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners));
+                    data.Items.Add(item);
+                }
             }
 
             return View(data);
