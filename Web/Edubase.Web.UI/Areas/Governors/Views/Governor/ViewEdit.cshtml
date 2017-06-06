@@ -52,8 +52,9 @@ else
 {
     <div class="grid-row">
         <div class="column-two-thirds">
-            <h2 class="heading-medium">Establishment governance</h2>
+            
             @ShowLegalDuty()
+            <h2 class="bold-small">Establishment governance</h2>
             @DisplayGovernanceMode()
         </div>
     </div>
@@ -334,14 +335,14 @@ if (Model.EstablishmentUrn.HasValue)
     {
             <p>This establishment has local governors, not shared governors.</p>
     }
-    else if (Model.GovernanceMode == eGovernanceMode.LocalAndSharedGovernors)
+    @*else if (Model.GovernanceMode == eGovernanceMode.LocalAndSharedGovernors)
     {
             <p>This establishment has local governors and also shares governors with other academies in the trust.</p>
     }
     else if (Model.GovernanceMode == eGovernanceMode.NoLocalGovernors)
     {
             <p>This establishment is part of a multi academy trust and does not have local governors.</p>
-    }
+    }*@
     else if (Model.GovernanceMode == eGovernanceMode.SharesLocalGovernors)
     {
             <p>This establishment shares local governors with other academies in the trust.</p>
