@@ -58,6 +58,13 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("DataQuality/Edit")]
         public async Task<ActionResult> EditStatus()
         {
+            var datasets = (await dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityStatusItem
+                {
+                    EstablishmentType = d.EstablishmentType,
+                    LastUpdated = new DateTimeViewModel(d.LastUpdated)
+                })
+                .ToList();
+
             var data = new EditDataQualityStatusViewModel
             {
                 Items = new List<DataQualityStatusItem>()
@@ -67,7 +74,14 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (User.InRole(kvp.Key, EdubaseRoles.ROLE_BACKOFFICE))
                 {
-                    data.Items.Add(new DataQualityStatusItem { EstablishmentType = kvp.Value });
+                    var item = new DataQualityStatusItem {EstablishmentType = kvp.Value};
+
+                    if (User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE))
+                    {
+                        item.LastUpdated = datasets.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.LastUpdated;
+                    }
+
+                    data.Items.Add(item);
                 }
             }
 
