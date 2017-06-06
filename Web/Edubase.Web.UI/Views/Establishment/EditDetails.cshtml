@@ -58,8 +58,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="school-county" class="form-label">County</label>
-                        @Html.TextBoxFor(x => x.Address_County, new { maxlength = 120, id = "school-county", @class = "form-control" })
+                        <label for="Address_CountyId" class="form-label">County</label>
+                        @Html.DropDownListFor(x => x.Address_CountyId, Model.Counties, "", new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Address_CountryId" class="form-label">Country</label>
+                        @Html.DropDownListFor(x => x.Address_CountryId, Model.Countries, "", new { @class = "form-control" })
                     </div>
                 
                     @if (ViewBag.postcodeDemo == "1")
@@ -258,12 +263,13 @@
 
                     @if (Model.EditPolicy.OfstedRatingDetails)
                     {
-
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.OfstedRating)">
-                            @Html.LabelFor(x => x.OfstedRating, "Ofsted rating")
-                            @Html.TextBoxFor(x => x.OfstedRating, new { @class = "form-control", type = "number", min = "0", max = "5" })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.OfstedRatingId)">
+                            @Html.LabelFor(x => x.OfstedRatingId, "Ofsted rating", new { @class = "form-label" })
+                            @Html.DropDownListFor(x => x.OfstedRatingId, Model.OfstedRatings, "", new { @class = "form-control" })
                         </div>
+
                         @Html.EditorFor(x => x.OfstedInspectionDate, new {title = "Ofsted last inspection" })
+
                         <div class="form-group">
                             <label for="ofsted-report" class="form-label">Ofsted report link</label>
                             <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
@@ -413,14 +419,18 @@
                     }
 
 
-                    @if (Model.EditPolicy.SEN1Id)
+                    @if (Model.EditPolicy.SENIds)
                     {
-                        <div class="form-group grouped-controls">
-                            <label>Type of SEN provision</label>
-                            @Html.DropDownListFor(x => x.SEN1Id, Model.SENProvisions1, "", new { @class = "form-control", id = "sen-provision0" })
-                            @Html.DropDownListFor(x => x.SEN2Id, Model.SENProvisions2, "", new { @class = "form-control", id = "sen-provision1" })
-                            @Html.DropDownListFor(x => x.SEN3Id, Model.SENProvisions3, "", new { @class = "form-control", id = "sen-provision2" })
-                            @Html.DropDownListFor(x => x.SEN4Id, Model.SENProvisions4, "", new { @class = "form-control", id = "sen-provision3" })
+                        <div class="form-group">
+                            <label class="form-label" style="margin-bottom:5px;">Type of SEN provision</label>
+                            @foreach (var item in Model.SENProvisions)
+                            {
+                                <label style="margin-bottom:10px;" class="block-label" 
+                                       for="@nameof(Model.SENProvisions)_@item.Id">@item.Name
+                                    <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)" 
+                                        value="@item.Id" @Html.Conditional(Model.SENIds.Contains(item.Id), "checked") />
+                                </label>
+                            }
                         </div>
                     }
 
@@ -501,16 +511,18 @@
 
                     @if (Model.EditPolicy.ResourcedProvisionOnRoll)
                     {
-                        <div class="form-group">
-                            <label for="resourced-provision-headcount">Resourced provision number on roll</label>
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ResourcedProvisionOnRoll)">
+                            <label for="@nameof(Model.ResourcedProvisionOnRoll)">Resourced provision number on roll</label>
+                            @Html.ValidationMessageFor(x => x.ResourcedProvisionOnRoll)
                             @Html.TextBoxFor(x => x.ResourcedProvisionOnRoll, new { @class = "form-control", id = "resourced-provision-headcount", type = "number" })
                         </div>
                     }
 
                     @if (Model.EditPolicy.ResourcedProvisionCapacity)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ResourcedProvisionCapacity)">
                             @Html.LabelFor(x => x.ResourcedProvisionCapacity, "Resourced provision capacity")
+                            @Html.ValidationMessageFor(x => x.ResourcedProvisionCapacity)
                             @Html.TextBoxFor(x => x.ResourcedProvisionCapacity, new { @class = "form-control", type = "number" })
                         </div>
                     }

@@ -164,24 +164,10 @@ namespace Edubase.Services.Establishments.Models
 
         [DisplayName("Number of special pupils not under a SEN statement/EHCP"), JsonProperty("SENNoStat")]
         public int? SENNoStat { get; set; }
-
-        // todo: TEXCHANGE: support new combined SENIds property
-        //[DisplayName("Type of SEN provision 1")]
-
-        //public int? SEN1Id { get; set; }
-
-        //[DisplayName("Type of SEN provision 2")]
-
-        //public int? SEN2Id { get; set; }
-
-        //[DisplayName("Type of SEN provision 3")]
-
-        //public int? SEN3Id { get; set; }
-
-        //[DisplayName("Type of SEN provision 4")]
-
-        //public int? SEN4Id { get; set; }
-
+        
+        [JsonProperty("SEN1Ids")]
+        public int[] SENIds { get; set; }
+        
         [DisplayName("Teenage mothers provision")]
         public int? TeenageMothersProvisionId { get; set; }
 

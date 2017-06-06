@@ -94,10 +94,7 @@ namespace Edubase.Web.UI.Models
         public string CCDisadvantagedAreaName { get; set; }
         public string CCDirectProvisionOfEarlyYearsName { get; set; }
         public string ProvisionSpecialClassesName { get; set; }
-        public string SEN1Name { get; set; }
-        public string SEN2Name { get; set; }
-        public string SEN3Name { get; set; }
-        public string SEN4Name { get; set; }
+        public string SENNames { get; set; }
         public string TeenageMothersProvisionName { get; set; }
         public string ChildcareFacilitiesName { get; set; }
         public string PRUSENName { get; set; }

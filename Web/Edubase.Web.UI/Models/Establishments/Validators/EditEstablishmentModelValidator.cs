@@ -7,11 +7,11 @@ using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Models.Validators
 {
-    public class CreateEditEstablishmentModelValidator : EdubaseAbstractValidator<EditEstablishmentModel>
+    public class EditEstablishmentModelValidator : EdubaseAbstractValidator<EditEstablishmentModel>
     {
         private ICachedLookupService _lookupService;
 
-        public CreateEditEstablishmentModelValidator(ICachedLookupService lookupService)
+        public EditEstablishmentModelValidator(ICachedLookupService lookupService)
         {
             _lookupService = lookupService;
 

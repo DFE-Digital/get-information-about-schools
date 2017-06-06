@@ -1,4 +1,6 @@
-﻿namespace Edubase.Services.Establishments.Models
+﻿using Newtonsoft.Json;
+
+namespace Edubase.Services.Establishments.Models
 {
     /// <summary>
     /// Represents the list of fields within an Establishment.
@@ -114,13 +116,8 @@
 
         public virtual bool SENNoStat { get; set; }
 
-        public virtual bool SEN1Id { get; set; }
-
-        public virtual bool SEN2Id { get; set; }
-
-        public virtual bool SEN3Id { get; set; }
-
-        public virtual bool SEN4Id { get; set; }
+        [JsonProperty("SEN1Ids")]
+        public virtual bool SENIds { get; set; }
 
         public virtual bool TeenageMothersProvisionId { get; set; }
 

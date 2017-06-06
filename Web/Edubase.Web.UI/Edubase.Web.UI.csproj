@@ -397,7 +397,7 @@
     <Compile Include="Models\Search\SearchPayloadViewModel.cs" />
     <Compile Include="Models\Search\SearchViewModel.cs" />
     <Compile Include="Models\ToolsViewModel.cs" />
-    <Compile Include="Models\Validators\CreateEditEstablishmentModelValidator.cs" />
+    <Compile Include="Models\Establishments\Validators\EditEstablishmentModelValidator.cs" />
     <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
     <Compile Include="MvcResult\ChallengeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

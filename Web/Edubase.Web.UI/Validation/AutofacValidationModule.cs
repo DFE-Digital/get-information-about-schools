@@ -15,7 +15,7 @@ namespace Edubase.Web.UI.Validation
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<CreateEditEstablishmentModelValidator>()
+            builder.RegisterType<EditEstablishmentModelValidator>()
                     .Keyed<IValidator>(typeof(IValidator<EditEstablishmentModel>))
                     .As<IValidator>();
 

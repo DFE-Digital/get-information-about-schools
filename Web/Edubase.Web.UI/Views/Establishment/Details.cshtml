@@ -34,6 +34,7 @@
         }
     }
 </div>
+
 @if (Model.IsClosed)
 {
     if (Model.Establishment.CloseDate != null)
@@ -56,7 +57,6 @@
             <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
         </div>
     }
-
 }
 
 <h1 class="heading-large">@Model.Establishment.Name</h1>

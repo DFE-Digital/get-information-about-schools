@@ -284,30 +284,15 @@
             </tr>
         }
 
-        @* TODO: TEXCHANGE: migrate to single SEN list  @if (Model.DisplayPolicy.TypeOfSENProvisionList)
+        @if (Model.DisplayPolicy.SENIds)
         {
             <tr>
                 <th scope="row">Type of SEN provision:</th>
                 <td>
-                    @if (Model.Establishment.SEN1Id.HasValue)
-                    {
-                        <text>@Model.SEN1Name<br /></text>
-                    }
-                    @if (Model.Establishment.SEN2Id.HasValue)
-                    {
-                        <text>@Model.SEN2Name<br /></text>
-                    }
-                    @if (Model.Establishment.SEN3Id.HasValue)
-                    {
-                        <text>@Model.SEN3Name<br /></text>
-                    }
-                    @if (Model.Establishment.SEN4Id.HasValue)
-                    {
-                        <text>@Model.SEN4Name<br /></text>
-                    }
+                    @Model.SENNames
                 </td>
             </tr>
-        }*@
+        }
 
         @if (Model.DisplayPolicy.TeenageMothersProvisionId)
         {

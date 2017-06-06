@@ -10,20 +10,11 @@ namespace Edubase.Web.UI.Models
 {
     using Services.Domain;
     using System.ComponentModel;
+    using System.Linq;
     using ET = Services.Enums.eLookupEstablishmentType;
 
     public class EditEstablishmentModel : IEstablishmentPageViewModel
     {
-        private static readonly IDictionary<byte?, string> _ofstedRatingsLookup =
-            new Dictionary<byte?, string>
-            {
-                [0] = "No Ofsted assessment published",
-                [1] = "Outstanding",
-                [2] = "Good",
-                [3] = "Requires Improvement",
-                [4] = "Inadequate"
-            };
-
         public enum eAction
         {
             Edit,
@@ -76,9 +67,9 @@ namespace Edubase.Web.UI.Models
 
         public string Address_CityOrTown { get; set; }
 
-        public string Address_County { get; set; }
+        public int? Address_CountyId { get; set; }
 
-        public string Address_Country { get; set; }
+        public int? Address_CountryId { get; set; }
 
         public string Address_Locality { get; set; }
 
@@ -113,28 +104,21 @@ namespace Edubase.Web.UI.Models
         public int? LinkedItemPositionToRemove { get; set; }
         public List<LinkedEstabViewModel> Links { get; internal set; } = new List<LinkedEstabViewModel>();
         public bool ScrollToLinksSection { get; set; }
-
-        public Dictionary<string, string> SimplifiedLAESTABRules { get; set; }
-
-        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Address_County, Address_PostCode);
-
-
+        
+        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Counties.FirstOrDefault(x=>x.Value == Address_CountyId?.ToString())?.Text, Address_PostCode);
+        
         public int? FurtherEducationTypeId { get; set; }
         public string Contact_WebsiteAddress { get; set; }
         public string Contact_TelephoneNumber { get; set; }
-        public byte? OfstedRating { get; set; }
-        public string OfstedRatingText => _ofstedRatingsLookup.Get(OfstedRating);
-
+        public int? OfstedRatingId { get; set; }
+        
         [Display(Name = "Ofsted last inspection")]
         public DateTimeViewModel OfstedInspectionDate { get; set; } = new DateTimeViewModel();
 
         public int? InspectorateId { get; set; }
         public string ProprietorName { get; set; }
         public int? Section41ApprovedId { get; set; }
-        public int? SEN1Id { get; set; }
-        public int? SEN2Id { get; set; }
-        public int? SEN3Id { get; set; }
-        public int? SEN4Id { get; set; }
+        public int[] SENIds { get; set; }
         public int? TypeOfResourcedProvisionId { get; set; }
         public int? ResourcedProvisionOnRoll { get; set; }
         public int? ResourcedProvisionCapacity { get; set; }
@@ -186,14 +170,11 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> ReasonsEstablishmentOpened { get; set; }
         public IEnumerable<SelectListItem> ReasonsEstablishmentClosed { get; set; }
         public IEnumerable<SelectListItem> SpecialClassesProvisions { get; set; }
-        public IEnumerable<SelectListItem> SENProvisions1 { get; set; }
-        public IEnumerable<SelectListItem> SENProvisions2 { get; set; }
-        public IEnumerable<SelectListItem> SENProvisions3 { get; set; }
-        public IEnumerable<SelectListItem> SENProvisions4 { get; set; }
+        
         public IEnumerable<SelectListItem> TypeOfResourcedProvisions { get; set; }
         public IEnumerable<SelectListItem> TeenageMothersProvisions { get; set; }
         public IEnumerable<SelectListItem> ChildcareFacilitiesProvisions { get; set; }
-        public IEnumerable<SelectListItem> RSCRegionLocalAuthorites { get; internal set; }
+        public IEnumerable<SelectListItem> RSCRegions { get; internal set; }
         public IEnumerable<SelectListItem> GovernmentOfficeRegions { get; internal set; }
         public IEnumerable<SelectListItem> AdministrativeDistricts { get; internal set; }
         public IEnumerable<SelectListItem> AdministrativeWards { get; internal set; }
@@ -335,7 +316,10 @@ namespace Edubase.Web.UI.Models
         public bool CanOverrideCRProcess { get; set; }
 
         public bool OverrideCRProcess { get; set; }
-
+        public IEnumerable<SelectListItem> Counties { get; internal set; }
+        public IEnumerable<SelectListItem> Countries { get; internal set; }
+        public IEnumerable<SelectListItem> OfstedRatings { get; internal set; }
+        public List<LookupDto> SENProvisions { get; internal set; }
 
         public EditEstablishmentModel()
         {

@@ -35,6 +35,8 @@ namespace Edubase.Services.Texuna.Establishments
             await _httpClient.PutAsync($"establishment?{queryString}", model, principal);
         }
 
+        public async Task<ValidationEnvelopeDto> ValidateAsync(EstablishmentModel model, IPrincipal principal) => (await _httpClient.PutAsync<ValidationEnvelopeDto>($"establishment/validate", model, principal)).Response;
+        
         /// <summary>
         /// Creates a new establishment and returns its URN
         /// </summary>

@@ -7,6 +7,7 @@ using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Groups;
+using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Web.Resources;
@@ -15,14 +16,11 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
 using StackExchange.Profiling;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Edubase.Services.Groups.Models;
-using Edubase.Web.UI.Areas.Groups.Models;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
@@ -94,6 +92,7 @@ namespace Edubase.Web.UI.Controllers
             viewModel.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
             viewModel.CanOverrideCRProcess = User.IsInRole(Services.Security.EdubaseRoles.ROLE_BACKOFFICE);
+            viewModel.SENIds = viewModel.SENIds ?? new int[0];
 
             await PopulateSelectLists(viewModel);
             return viewModel;
@@ -127,6 +126,8 @@ namespace Edubase.Web.UI.Controllers
 
             if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
             {
+                await ValidateAsync(model, domainModel);
+
                 if (ModelState.IsValid)
                 {
                     model.OriginalEstablishmentName = domainModel.Name;
@@ -153,6 +154,22 @@ namespace Edubase.Web.UI.Controllers
             }
 
             return View(model);
+        }
+
+        /// <summary>
+        /// Does 2nd-level validation
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        private async Task ValidateAsync(ViewModel viewModel, EstablishmentModel existingDomainModel)
+        {
+            if (ModelState.IsValid)
+            {
+                await PrepareModels(viewModel, existingDomainModel);
+                var validationEnvelope = await _establishmentWriteService.ValidateAsync(existingDomainModel, User);
+                validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.Message));
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.Message));
+            }
         }
 
         private async Task PrepareModels(ViewModel model, EstablishmentModel domainModel)
@@ -291,14 +308,13 @@ namespace Edubase.Web.UI.Controllers
             viewModel.ReasonsEstablishmentOpened = (await _cachedLookupService.ReasonEstablishmentOpenedGetAllAsync()).ToSelectList(viewModel.ReasonEstablishmentOpenedId);
             viewModel.ReasonsEstablishmentClosed = (await _cachedLookupService.ReasonEstablishmentClosedGetAllAsync()).ToSelectList(viewModel.ReasonEstablishmentClosedId);
             viewModel.SpecialClassesProvisions = (await _cachedLookupService.ProvisionSpecialClassesGetAllAsync()).ToSelectList(viewModel.ProvisionSpecialClassesId);
-            viewModel.SENProvisions1 = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToSelectList(viewModel.SEN1Id);
-            viewModel.SENProvisions2 = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToSelectList(viewModel.SEN2Id);
-            viewModel.SENProvisions3 = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToSelectList(viewModel.SEN3Id);
-            viewModel.SENProvisions4 = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToSelectList(viewModel.SEN4Id);
+
+            viewModel.SENProvisions = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToList();
+
             viewModel.TypeOfResourcedProvisions = (await _cachedLookupService.TypeOfResourcedProvisionsGetAllAsync()).ToSelectList(viewModel.TypeOfResourcedProvisionId);
             viewModel.TeenageMothersProvisions = (await _cachedLookupService.TeenageMothersProvisionsGetAllAsync()).ToSelectList(viewModel.TeenageMothersProvisionId);
             viewModel.ChildcareFacilitiesProvisions = (await _cachedLookupService.ChildcareFacilitiesGetAllAsync()).ToSelectList(viewModel.ChildcareFacilitiesId);
-            viewModel.RSCRegionLocalAuthorites = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.RSCRegionId);
+            viewModel.RSCRegions = (await _cachedLookupService.RscRegionsGetAllAsync()).ToSelectList(viewModel.RSCRegionId);
             viewModel.GovernmentOfficeRegions = (await _cachedLookupService.GovernmentOfficeRegionsGetAllAsync()).ToSelectList(viewModel.GovernmentOfficeRegionId);
             viewModel.AdministrativeDistricts = (await _cachedLookupService.AdministrativeDistrictsGetAllAsync()).ToSelectList(viewModel.AdministrativeDistrictId);
             viewModel.AdministrativeWards = (await _cachedLookupService.AdministrativeWardsGetAllAsync()).ToSelectList(viewModel.AdministrativeWardId);
@@ -311,6 +327,10 @@ namespace Edubase.Web.UI.Controllers
             viewModel.PRUEBDOptions = (await _cachedLookupService.PRUEBDsGetAllAsync()).ToSelectList(viewModel.PRUEBDId);
             viewModel.PRUSENOptions = (await _cachedLookupService.PRUSENsGetAllAsync()).ToSelectList(viewModel.PRUSENId);
 
+            viewModel.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModel.Address_CountyId);
+            viewModel.Countries = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(viewModel.Address_CountryId);
+            viewModel.OfstedRatings = (await _cachedLookupService.OfstedRatingsGetAllAsync()).ToSelectList(viewModel.OfstedRatingId);
+            
             if (viewModel.MSOAId.HasValue) viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.MSOAId.Value)?.Code;
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
         }
@@ -361,10 +381,6 @@ namespace Edubase.Web.UI.Controllers
             vm.CCDisadvantagedAreaName = await c.GetNameAsync(() => vm.Establishment.CCDisadvantagedAreaId);
             vm.CCDirectProvisionOfEarlyYearsName = await c.GetNameAsync(() => vm.Establishment.CCDirectProvisionOfEarlyYearsId);
             vm.ProvisionSpecialClassesName = await c.GetNameAsync(() => vm.Establishment.ProvisionSpecialClassesId);
-            //vm.SEN1Name = await c.GetNameAsync(() => vm.Establishment.SEN1Id); // TODO: TEXCHANGE: SUPPORT COMBINED PROPERTY
-            //vm.SEN2Name = await c.GetNameAsync(() => vm.Establishment.SEN2Id);
-            //vm.SEN3Name = await c.GetNameAsync(() => vm.Establishment.SEN3Id);
-            //vm.SEN4Name = await c.GetNameAsync(() => vm.Establishment.SEN4Id);
             vm.TeenageMothersProvisionName = await c.GetNameAsync(() => vm.Establishment.TeenageMothersProvisionId);
             vm.ChildcareFacilitiesName = await c.GetNameAsync(() => vm.Establishment.ChildcareFacilitiesId);
             vm.PRUSENName = await c.GetNameAsync(() => vm.Establishment.PRUSENId);
@@ -393,6 +409,9 @@ namespace Edubase.Web.UI.Controllers
             vm.GenderName = await c.GetNameAsync(() => vm.Establishment.GenderId);
             vm.StatusName = await c.GetNameAsync(() => vm.Establishment.StatusId);
             vm.AdmissionsPolicyName = await c.GetNameAsync(() => vm.Establishment.AdmissionsPolicyId);
+
+            var sens = await c.SpecialEducationNeedsGetAllAsync();
+            vm.SENNames = StringUtil.Sentenceify((vm.Establishment.SENIds ?? new int[0]).Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
         }
 
 
