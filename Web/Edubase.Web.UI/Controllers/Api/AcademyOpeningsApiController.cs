@@ -96,9 +96,25 @@ namespace Edubase.Web.UI.Controllers.Api
         [Route("api/academy/{urn:int}"), HttpPatch]
         public async Task<ApiResponse> SaveAsync(int urn, [FromBody] dynamic payload)
         {
+            DateTime openingDate = payload.openDate;
+            var links = await _establishmentReadService.GetLinkedEstablishmentsAsync(urn, User);
+            var link = links.FirstOrDefault(e => e.LinkTypeId == (int)eLookupEstablishmentLinkType.ParentOrPredecessor);
+
+            if (link != null)
+            {
+                await _establishmentWriteService.PartialUpdateAsync(new EstablishmentModel
+                {
+                    CloseDate = openingDate.AddDays(-1),
+                    Urn = link.Urn
+                }, new EstablishmentFieldList
+                {
+                    CloseDate = true
+                }, User);
+            }
+            
             return await _establishmentWriteService.PartialUpdateAsync(new EstablishmentModel
             {
-                OpenDate = payload.openDate,
+                OpenDate = openingDate,
                 Name = payload.name,
                 Urn = urn
             }, new EstablishmentFieldList
