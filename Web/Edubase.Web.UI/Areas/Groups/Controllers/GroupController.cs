@@ -180,7 +180,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.SelectedTabName = "details";
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
-            await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id);
+            await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
             await PopulateSelectLists(viewModel);
 
             viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
@@ -243,7 +243,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 GroupTypeId = domainModel.GroupTypeId
             };
             
-            await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id);
+            await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
             viewModel.SelectedTabName = "links";
 
@@ -447,9 +447,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return viewModel;
         }
 
-        private async Task PopulateEstablishmentList(List<EstablishmentGroupViewModel> list, int groupUId)
+        private async Task PopulateEstablishmentList(List<EstablishmentGroupViewModel> list, int groupUId, bool includeFutureDated = false)
         {
-            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(groupUId, User);
+            var establishmentGroups = await _groupReadService.GetEstablishmentGroupsAsync(groupUId, User, includeFutureDated);
             foreach (var establishmentGroup in establishmentGroups)
             {
                 list.Add(new EstablishmentGroupViewModel

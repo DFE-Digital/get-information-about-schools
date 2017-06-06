@@ -51,7 +51,8 @@ namespace Edubase.Services.Texuna.Groups
         public async Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal principal) =>
             (await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal)).Response;
 
-        public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal) => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments", principal)).Response;
+        public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal, bool includeFutureDated = false) 
+            => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments?editMode={includeFutureDated}", principal)).Response;
 
         public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model)
         {
