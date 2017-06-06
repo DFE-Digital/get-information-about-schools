@@ -180,7 +180,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.ProvisionSpecialClassesIds = model.SelectedSpecialClassesProvisionIds.ToArray();
             filters.SENIds = model.SelectedTypeOfSENProvisionIds.ToArray();
             filters.UrbanRuralIds = model.SelectedUrbanRuralIds.ToArray();
-            
+
+            filters.AdministrativeWardIds = model.SelectedWardIds.ToArray();
+
+            filters.CloseDateMin = model.CloseDateFrom;
+            filters.CloseDateMax = model.CloseDateTo;
+            filters.StatutoryLowAgeMin = model.AgeRangeLowFrom;
+            filters.StatutoryLowAgeMax = model.AgeRangeLowTo;
+            filters.StatutoryHighAgeMin = model.AgeRangeHighFrom;
+            filters.StatutoryHighAgeMax = model.AgeRangeHighTo;
+
+
             payload.SortBy = model.GetSortOption();
 
             return retVal.Set(payload);

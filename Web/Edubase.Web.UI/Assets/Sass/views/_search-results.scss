@@ -364,8 +364,13 @@ ul.approval-items{
 
 }
 
+.add-clear-filters {
+    font-size: 14px;
+}
+
 .add-filters-link {
     display: none;
+
     .js-enabled & {
         display: block;
         margin-bottom: 2em

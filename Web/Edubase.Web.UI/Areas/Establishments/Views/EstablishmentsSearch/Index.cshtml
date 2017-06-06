@@ -167,7 +167,17 @@
                     @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
                     
-                    <a href="#" class="add-filters-link">Add more filters</a>
+                    @CloseDateFilter()
+                    <div class="filter-divider"></div>
+                    
+                    @AgeRangeFilter("Age range low", "AgeRangeLow")
+                    <div class="filter-divider"></div>
+                    
+                    @AgeRangeFilter("Age range high", "AgeRangeHigh")
+                    <div class="filter-divider"></div>
+
+                    <a href="#" class="add-clear-filters">Clear all filters</a>
+                    <a href="#" class="add-filters-link add-clear-filters">+ Add more filters</a>
 
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
 
@@ -246,6 +256,103 @@
                         </label>
                     }
                 </fieldset>
+            </div>
+        </div>
+    </div>
+}
+
+@helper CloseDateFilter()
+{
+    <div class="govuk-option-select js-collapsible" data-closed-on-load="true" id="option-select-close-date">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">Close date</div>
+            <div class="js-selected-counter">Date applied</div>
+        </div>
+        <a href="#" class="clear-selections">Clear</a>
+        <div class="options-container" id="">
+            <div class="js-auto-height-inner">
+                <div class="form-group date-group">
+                    <fieldset class="range-group">
+                        <span class="inline-form-control" style="margin-right: 10px;">
+                            <legend class="bold-xsmall inline-form-control" style="font-weight: bold;margin-top: 40px;margin-left: 8px;">From</legend>
+                        </span>
+                        <span class="inline-form-control" style="width: 70px; margin-right: 0;">
+                            @*<label style="padding-left: 0; border-bottom-width: 0">Day</label>*@
+                            @*<input type="text" class="form-control" maxlength="2" style="margin-left: 0;">*@
+                            @Html.LabelFor(m => m.CloseDateFrom.Day, "Day", new {style = "padding-left: 0; border-bottom-width: 0"})
+                            @Html.EditorFor(m => m.CloseDateFrom.Day, new {@class = "form-control", maxlength = 2, style = "margin-left: 0;"})
+                        </span>
+                        <span class="inline-form-control" style="width: 70px;margin-right: 0;">
+                            @*<label style="padding-left: 0; border-bottom-width: 0">Month</label>
+                            <input type="text" class="form-control" maxlength="2" style="margin-left: 0;">*@
+                            @Html.LabelFor(m => m.CloseDateFrom.Month, "Month", new { style = "padding-left: 0; border-bottom-width: 0" })
+                            @Html.EditorFor(m => m.CloseDateFrom.Month, new { @class = "form-control", maxlength = 2, style = "margin-left: 0;" })
+                        </span>
+                        <span class="inline-form-control" style="margin-right: 0;width: 70px;">
+                            @*<label style="padding-left: 0; border-bottom-width: 0">Year</label>
+                            <input type="text" class="form-control" maxlength="4" style="margin-left: 0;">*@
+                            @Html.LabelFor(m => m.CloseDateFrom.Year, "Year", new { style = "padding-left: 0; border-bottom-width: 0" })
+                            @Html.EditorFor(m => m.CloseDateFrom.Year, new { @class = "form-control", maxlength = 4, style = "margin-left: 0;" })
+                        </span>
+                    </fieldset>
+                </div>
+                <div class="form-group date-group">
+                    <fieldset class="range-group">
+                        <span class="inline-form-control" style="margin-right: 10px;">
+                            <legend class="bold-xsmall inline-form-control" style="font-weight: bold;margin-top: 40px;margin-left: 8px; margin-right:35px">To</legend>
+                        </span>
+                        <span class="inline-form-control" style="width: 70px; margin-right: 0;">
+                            @*<label style="padding-left: 0; border-bottom-width: 0">Day</label>
+                            <input type="text" class="form-control" maxlength="2" style="margin-left: 0;">*@
+                            @Html.LabelFor(m => m.CloseDateTo.Day, "Day", new { style = "padding-left: 0; border-bottom-width: 0" })
+                            @Html.EditorFor(m => m.CloseDateTo.Day, new { @class = "form-control", maxlength = 2, style = "margin-left: 0;" })
+                        </span>
+                        <span class="inline-form-control" style="width: 70px;margin-right: 0;">
+                            @*<label style="padding-left: 0; border-bottom-width: 0">Month</label>
+                            <input type="text" class="form-control" maxlength="2" style="margin-left: 0;">*@
+                            @Html.LabelFor(m => m.CloseDateTo.Month, "Month", new { style = "padding-left: 0; border-bottom-width: 0" })
+                            @Html.EditorFor(m => m.CloseDateTo.Month, new { @class = "form-control", maxlength = 2, style = "margin-left: 0;" })
+                        </span>
+                        <span class="inline-form-control" style="margin-right: 0;width: 70px;">
+                            @*<label style="padding-left: 0; border-bottom-width: 0">Year</label>
+                            <input type="text" class="form-control" maxlength="4" style="margin-left: 0;">*@
+                            @Html.LabelFor(m => m.CloseDateTo.Year, "Year", new { style = "padding-left: 0; border-bottom-width: 0" })
+                            @Html.EditorFor(m => m.CloseDateTo.Year, new { @class = "form-control", maxlength = 4, style = "margin-left: 0;" })
+                        </span>
+                    </fieldset>
+                </div>
+                <div class="form-group" style="margin-left:70px">
+                    <a href="#" class="button button-grey" style="width: 162px">Apply</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper AgeRangeFilter(string label, string name)
+{
+    <div class="govuk-option-select js-collapsible" data-closed-on-load="true" id="option-select-close-date">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">@label</div>
+            <div class="js-selected-counter">Age selected</div>
+        </div>
+        <a href="#" class="clear-selections">Clear</a>
+        <div class="options-container" id="">
+            <div class="js-auto-height-inner">
+                <div class="form-group date-group">
+                    <fieldset class="range-group">
+                        <span class="inline-form-control" style="width: 135px;margin-right: 0;margin-left: 10px;">
+                            <label style="padding-left: 0; border-bottom-width: 0">From</label>
+                            <input type="text" class="form-control" maxlength="2" style="margin-left: 0;width: 107px;">
+                        </span>
+                        <span class="inline-form-control" style="width: 135px;margin-right: 0;">
+                            <label style="padding-left: 0; border-bottom-width: 0">To</label>
+                            <input type="text" class="form-control" maxlength="2" style="margin-left: 0;width: 107px;">
+                        </span>
+                    </fieldset>
+                </div>
+                <div class="form-group" style="margin-left: 10px;"><a href="#" class="button button-grey" style="width: 205px;">Apply</a>
+                </div>
             </div>
         </div>
     </div>
