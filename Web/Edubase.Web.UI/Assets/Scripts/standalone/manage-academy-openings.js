@@ -1,8 +1,7 @@
 ﻿(function () {
 
 
-    var academyOpeningsJson,
-        uniqueDates = [],
+    var uniqueDates = [],
         academyOpenings,
         i,
         len,
@@ -120,6 +119,7 @@
                 }
 
                 document.getElementById('opening-date-filter').appendChild(frag);
+                this.selectedDate = 0;
             },
             buildPages: function (changes, pageSize) {
                 var count = 0,
@@ -215,7 +215,7 @@
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'json',
                         data: JSON.stringify({
-                            openDate: [this.updateDateYear, this.updateDateMonth - 1, this.updateDateDay].join('-'),
+                            openDate: [this.updateDateYear, this.updateDateMonth , this.updateDateDay].join('-'),
                             name: this.updateName
                         }),
                         success: function (data) {
