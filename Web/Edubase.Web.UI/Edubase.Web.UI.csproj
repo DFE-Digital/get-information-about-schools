@@ -350,6 +350,7 @@
     <Compile Include="Models\DataQuality\EditDataQualityStatusViewModel.cs" />
     <Compile Include="Models\DataQuality\FullDataQualityStatusItem.cs" />
     <Compile Include="Models\DataQuality\FullDataQualityStatusViewModel.cs" />
+    <Compile Include="Models\DataQuality\Validators\DataQualityStatusItemValidator.cs" />
     <Compile Include="Models\DownloadsViewModel.cs" />
     <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
