@@ -1,4 +1,7 @@
 ﻿@model Edubase.Web.UI.Models.DataQuality.FullDataQualityStatusViewModel
+    @{
+        ViewBag.bodyClasses = "data-quality";
+    }
 <div class="grid-row">
     <div class="column-full">
         <div class="breadcrumbs">
@@ -11,7 +14,7 @@
                 </li>
             </ul>
         </div>
-        <h1 class="heading-large">Data status</h1>
+        
 
         @if (Model.DataUpdated)
         {
@@ -21,7 +24,7 @@
                 <a href="#" class="cross"><span class="visually-hidden">Dismiss notification</span></a>
             </div>
         }
-
+        <h1 class="heading-intro">Data status</h1>
 
         <p class="table-caption">These dates show when each of our teams last updated their data.</p>
 
@@ -57,7 +60,7 @@
             </tbody>
         </table>
 
-        <p id="independent-pending" class="font-xsmall">* All approved changes to schools' registered details are recorded at this date. Changes still pending approval won't appear here yet.</p>
+        <p id="independent-pending" class="table-footnote">* All approved changes to schools' registered details are recorded at this date. Changes still pending approval won't appear here yet.</p>
 
         <div class="button-row">
             <a class="button button-grey" href="/DataQuality/Edit">Update status</a>
