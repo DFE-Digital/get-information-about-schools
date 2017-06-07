@@ -34,7 +34,7 @@
     checkPromptRequired: function () {
         var self = this;
         $.ajax({
-            url: '/Api/user-roles',
+            url: '/Api/should-show-data-status',
             dataType: 'json',
             success: function(data) {
                 if (data.UserRequiresDataPrompt) {

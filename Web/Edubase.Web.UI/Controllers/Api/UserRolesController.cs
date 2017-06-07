@@ -11,8 +11,8 @@ namespace Edubase.Web.UI.Controllers.Api
   
     public class UserRolesController : Controller
     {
-        // GET: UserRoles
-        [Route("api/user-roles"), HttpGet]
+        
+        [Route("api/should-show-data-status"), HttpGet]
         public JsonResult Index()
         {
             var model = new UserRolesViewModel
