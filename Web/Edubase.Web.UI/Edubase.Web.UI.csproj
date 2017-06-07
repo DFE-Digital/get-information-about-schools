@@ -476,6 +476,7 @@
     <Content Include="Assets\Scripts\Views\bulk-academies.js" />
     <Content Include="Assets\Scripts\Views\edit-governors.js" />
     <Content Include="Assets\Scripts\Views\edit-iebt.js" />
+    <Content Include="Assets\Scripts\Views\governor-search.js" />
     <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
     <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
