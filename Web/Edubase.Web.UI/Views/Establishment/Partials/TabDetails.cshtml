@@ -12,7 +12,7 @@
             <div id="map" class="school-detail-map"
                  data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
                  data-school-name="@Model.Establishment.Name"
-                 data-school-address="@Model.Establishment.GetAddress()"></div>
+                 data-school-address="@Model.GetAddress()"></div>
             <a href="#map" id="map-toggle" class="map-toggle">Show map</a>
         </div>
     }

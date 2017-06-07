@@ -4,7 +4,7 @@
 
     <tr>
         <th scope="row">Address:</th>
-        <td>@Model.Establishment.GetAddress()</td>
+        <td>@Model.GetAddress()</td>
     </tr>
     @* TODO TEXCHANGE: use alt address see story 10909
     {
@@ -129,7 +129,10 @@
             {
                 <text>DfE number: @Model.Establishment.GetLAESTAB()<br /></text>
             }
-            <abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN
+            @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
+            { 
+                <text><abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN</text>
+            }
         </td>
     </tr>
 

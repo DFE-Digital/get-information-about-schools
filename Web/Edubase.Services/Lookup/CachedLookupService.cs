@@ -52,9 +52,6 @@ namespace Edubase.Services.Lookup
                 { "InspectorateId", async id => (await InspectoratesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "Section41ApprovedId", async id => (await Section41ApprovedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "SEN1Id", async id => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN2Id", async id => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN3Id", async id => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN4Id", async id => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "TeenageMothersProvisionId", async id => (await TeenageMothersProvisionsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ChildcareFacilitiesId", async id => (await ChildcareFacilitiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "PRUSENId", async id => (await PRUSENsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -82,6 +79,8 @@ namespace Edubase.Services.Lookup
                 { "CCDeliveryModelId", async id => (await CCDeliveryModelsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CCGroupLeadId", async id => (await CCGroupLeadsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "LinkTypeId", async id => (await EstablishmentLinkTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CountryId", async id => (await NationalitiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CountyId", async id => (await CountiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
             };
 
             _mapping = new Dictionary<string, Func<int, string>>()
@@ -110,9 +109,6 @@ namespace Edubase.Services.Lookup
                 { "InspectorateId",  id => InspectoratesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "Section41ApprovedId",  id => Section41ApprovedGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "SEN1Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
-                { "SEN2Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
-                { "SEN3Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
-                { "SEN4Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "TeenageMothersProvisionId",  id => TeenageMothersProvisionsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "ChildcareFacilitiesId",  id => ChildcareFacilitiesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "PRUSENId",  id => PRUSENsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
@@ -138,7 +134,7 @@ namespace Edubase.Services.Lookup
                 { "CCDisadvantagedAreaId",  id => CCDisadvantagedAreasGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "CCDirectProvisionOfEarlyYearsId",  id => DirectProvisionOfEarlyYearsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "CCDeliveryModelId",  id => CCDeliveryModelsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
-                { "CCGroupLeadId",  id => CCGroupLeadsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CCGroupLeadId",  id => CCGroupLeadsGetAll().FirstOrDefault(x => x.Id == id)?.Name }
             };
         }
 

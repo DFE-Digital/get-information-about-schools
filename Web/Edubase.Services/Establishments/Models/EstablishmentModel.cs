@@ -2,10 +2,12 @@
 using Edubase.Common.Spatial;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
+using Edubase.Services.Lookup;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Edubase.Services.Establishments.Models
 {
@@ -273,13 +275,9 @@ namespace Edubase.Services.Establishments.Models
         public DateTime? BSODateOfNextInspectionVisit { get; set; }
 
         public DateTime? CreatedUtc { get; set; }
-
         public DateTime? LastUpdatedUtc { get; set; }
-        
-        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Address_CountyId.ToString(), Address_PostCode);
-        public AddressDto GetAddressDto() => new AddressDto { Line1 = Address_Line1, Line2 = Address_Line2, Line3 = Address_Line3, CityOrTown = Address_CityOrTown, County = Address_CountyId.ToString(), PostCode = Address_PostCode, Country = Address_CountryId.ToString() };
+        public async Task<string> GetAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, await lookup.GetNameAsync("CountyId", Address_CountyId), Address_PostCode);
         public string GetLAESTAB() => string.Concat(LocalAuthorityId, "/", EstablishmentNumber.GetValueOrDefault().ToString("D4"));
-
         public string HelpdeskNotes { get; set; }
         public DateTime? HelpdeskLastUpdate { get; set; }
         public string HelpdeskTrigger1 { get; set; }

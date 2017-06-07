@@ -416,7 +416,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var model = (await _establishmentReadService.GetAsync(viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn.Value, User)).GetResult();
             viewModel.LinkedEstablishments.Establishments.Add(new EstablishmentGroupViewModel
             {
-                Address = model.GetAddress(),
+                Address = await model.GetAddressAsync(_lookup),
                 HeadFirstName = model.HeadFirstName,
                 HeadLastName = model.HeadLastName,
                 HeadTitleName = await _lookup.GetNameAsync(() => model.HeadTitleId),
