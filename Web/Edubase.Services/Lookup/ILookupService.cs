@@ -45,8 +45,8 @@ namespace Edubase.Services.Lookup
         Task<IEnumerable<LookupDto>> EstablishmentStatusesGetAllAsync();
         IEnumerable<LookupDto> EstablishmentTypeGroupsGetAll();
         Task<IEnumerable<LookupDto>> EstablishmentTypeGroupsGetAllAsync();
-        IEnumerable<LookupDto> EstablishmentTypesGetAll();
-        Task<IEnumerable<LookupDto>> EstablishmentTypesGetAllAsync();
+        IEnumerable<EstablishmentLookupDto> EstablishmentTypesGetAll();
+        Task<IEnumerable<EstablishmentLookupDto>> EstablishmentTypesGetAllAsync();
         IEnumerable<LookupDto> FurtherEducationTypesGetAll();
         Task<IEnumerable<LookupDto>> FurtherEducationTypesGetAllAsync();
         IEnumerable<LookupDto> GendersGetAll();
