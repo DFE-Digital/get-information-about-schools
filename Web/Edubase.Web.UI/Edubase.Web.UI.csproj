@@ -314,6 +314,7 @@
     <Compile Include="Areas\Groups\Models\Validators\GroupEditorViewModelValidator.cs" />
     <Compile Include="Controllers\Api\AcademyOpeningsApiController.cs" />
     <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
+    <Compile Include="Controllers\Api\UserRolesController.cs" />
     <Compile Include="Controllers\ChangeHistoryController.cs" />
     <Compile Include="Controllers\ApprovalsController.cs" />
     <Compile Include="Controllers\DataQualityController.cs" />
@@ -361,6 +362,7 @@
     <Compile Include="Models\Grid\GridViewModel.cs" />
     <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
+    <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="Models\Validators\ChangeHistoryViewModelValidator.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />
@@ -983,6 +985,7 @@
     <Folder Include="Areas\Governors\Views\Search\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
+    <Folder Include="Views\UserRoles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
