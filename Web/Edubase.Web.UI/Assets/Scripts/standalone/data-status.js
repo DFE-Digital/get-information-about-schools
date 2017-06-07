@@ -31,6 +31,22 @@
         });
         
     },
+    checkPromptRequired: function () {
+        var self = this;
+        $.ajax({
+            url: '/Api/should-show-data-status',
+            dataType: 'json',
+            success: function(data) {
+                if (data.UserRequiresDataPrompt) {
+                    self.init();
+                }
+            },
+            error: function() {
+                console.log('Error retrieving users data prompt status');
+            }
+        });
+        
+    },
     init: function() {
         var self = this;
         var mask = document.createElement('div');
@@ -60,7 +76,7 @@
 };
 
 if (GOVUK.cookie('dataStatusViewed') !== 'true') {
-    DfE.Views.dataStatus.init();    
+    DfE.Views.dataStatus.checkPromptRequired();
 }
 $('#logout-link').on('click', function (e) {
     e.preventDefault();

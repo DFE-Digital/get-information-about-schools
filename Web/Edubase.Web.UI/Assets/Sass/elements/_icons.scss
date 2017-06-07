@@ -298,6 +298,10 @@ td.download-list-item {
     min-width: 100%;
     min-height: 100px;
     background: transparent url(/public/assets/images/icons/icon-loading.gif) no-repeat center;
+
+    &.padded-indicator {
+        padding-top: 80px;
+    }
 }
 
 .red-exclaim {
