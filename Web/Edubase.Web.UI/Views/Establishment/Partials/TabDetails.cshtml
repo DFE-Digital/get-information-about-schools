@@ -4,6 +4,10 @@
     @if (Model.UserCanEdit)
     {
         @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
+
+        <!-- JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON JON  -->
+        @Html.ActionLink("Download establishment data", "DownloadCsv", new { id = Model.Establishment.Urn, area = "" }, new { style = "margin-bottom:10px; display:block;" })
+
     }
     
     @if (Model.Establishment.Location != null)

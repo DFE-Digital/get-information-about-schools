@@ -100,5 +100,8 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, eFileFormat format, IPrincipal principal) 
             => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/changes/download?format={format.ToString().ToLower()}", principal)).GetResponse();
+
+        public async Task<FileDownloadDto> GetDownloadAsync(int urn, eFileFormat format, IPrincipal principal)
+            => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/download?format={format.ToString().ToLower()}", principal)).GetResponse();
     }
 }

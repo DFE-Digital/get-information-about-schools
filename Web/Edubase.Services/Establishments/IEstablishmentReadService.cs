@@ -45,7 +45,7 @@ namespace Edubase.Services.Establishments
 
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model);
-
         Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, eFileFormat format, IPrincipal principal);
+        Task<FileDownloadDto> GetDownloadAsync(int urn, eFileFormat format, IPrincipal principal);
     }
 }
