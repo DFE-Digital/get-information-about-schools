@@ -120,7 +120,12 @@
                         @RenderTextBox("Locality", x => x.ProprietorsLocality, "cloneable")
                         @RenderTextBox("Address 3", x => x.ProprietorsAddress3, "cloneable")
                         @RenderTextBox("Town", x => x.ProprietorsTown, "cloneable")
-                        @RenderTextBox("County", x => x.ProprietorsCounty, "cloneable")
+                        
+                        <div class="form-group cloneable">
+                            <label for="ProprietorsCountyId" class="form-label">County</label>
+                            @Html.DropDownListFor(x => x.ProprietorsCountyId, Model.Counties, "", new { @class = "form-control" })
+                        </div>
+
                         @RenderTextBox("Postcode", x => x.ProprietorsPostcode, "cloneable",  "postcode-field")
                         @RenderTextBox("Telephone number", x => x.ProprietorsTelephoneNumber, "cloneable")
                         @RenderTextBox("Fax number", x => x.ProprietorsFaxNumber, "cloneable")
@@ -144,7 +149,12 @@
                     @RenderTextBox("Locality", x => x.ChairOfProprietorsBodyLocality)
                     @RenderTextBox("Address 3", x => x.ChairOfProprietorsBodyAddress3)
                     @RenderTextBox("Town", x => x.ChairOfProprietorsBodyTown)
-                    @RenderTextBox("County", x => x.ChairOfProprietorsBodyCounty)
+                    
+                    <div class="form-group cloneable">
+                        <label for="ChairOfProprietorsBodyCountyId" class="form-label">County</label>
+                        @Html.DropDownListFor(x => x.ChairOfProprietorsBodyCountyId, Model.Counties, "", new { @class = "form-control" })
+                    </div>
+
                     @RenderTextBox("Postcode", x => x.ChairOfProprietorsBodyPostcode, null, "postcode-field")
                     @RenderTextBox("Telephone number", x => x.ChairOfProprietorsBodyTelephoneNumber)
                     @RenderTextBox("Fax number", x => x.ChairOfProprietorsBodyFaxNumber)

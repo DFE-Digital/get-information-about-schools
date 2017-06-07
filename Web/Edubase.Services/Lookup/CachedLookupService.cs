@@ -271,6 +271,7 @@ namespace Edubase.Services.Lookup
 
         public async Task<string> GetNameAsync(string lookupName, int? id, string domain = null)
         {
+            lookupName = ProcessLookupName(lookupName);
             if (id.HasValue)
             {
                 var key = StringUtil.ConcatNonEmpties(".", domain, lookupName);
@@ -284,9 +285,9 @@ namespace Edubase.Services.Lookup
             => await GetNameAsync(((MemberExpression)expression.Body).Member.Name, expression.Compile()(), domain);
 
         public string GetName(string lookupName, int? id) 
-            => id.HasValue ? _mapping.Get(lookupName)?.Invoke(id.Value) : null;
+            => id.HasValue ? _mapping.Get(ProcessLookupName(lookupName))?.Invoke(id.Value) : null;
 
-        public bool IsLookupField(string name) => _mapping.ContainsKey(name);
+        public bool IsLookupField(string name) => _mappingAsync.ContainsKey(ProcessLookupName(name)) || _mapping.ContainsKey(ProcessLookupName(name));
 
         private async Task<T> AutoAsync<T>(Func<Task<T>> asyncFactory, [CallerMemberName] string callerName = null)
         {
@@ -301,6 +302,13 @@ namespace Edubase.Services.Lookup
         private T Auto<T>(Func<T> factory, [CallerMemberName] string callerName = null)
         {
             return _cacheAccessor.Auto(factory, string.Empty, GetType().Name, callerFuncName: callerName);
+        }
+
+        private string ProcessLookupName(string name)
+        {
+            if (name.EndsWith("CountryId")) name = "CountryId";
+            else if (name.EndsWith("CountyId")) name = "CountyId";
+            return name;
         }
 
         public void Dispose() => _lookupService.Dispose();

@@ -285,7 +285,7 @@ namespace Edubase.Web.UI.Models
         public string ProprietorsLocality { get; set; }
         public string ProprietorsAddress3 { get; set; }
         public string ProprietorsTown { get; set; }
-        public string ProprietorsCounty { get; set; }
+        public int? ProprietorsCountyId { get; set; }
         public string ProprietorsPostcode { get; set; }
         public string ProprietorsTelephoneNumber { get; set; }
         public string ProprietorsFaxNumber { get; set; }
@@ -296,7 +296,7 @@ namespace Edubase.Web.UI.Models
         public string ChairOfProprietorsBodyLocality { get; set; }
         public string ChairOfProprietorsBodyAddress3 { get; set; }
         public string ChairOfProprietorsBodyTown { get; set; }
-        public string ChairOfProprietorsBodyCounty { get; set; }
+        public int? ChairOfProprietorsBodyCountyId { get; set; }
         public string ChairOfProprietorsBodyPostcode { get; set; }
         public string ChairOfProprietorsBodyTelephoneNumber { get; set; }
         public string ChairOfProprietorsBodyFaxNumber { get; set; }
