@@ -270,20 +270,14 @@ namespace Edubase.Web.UI.Controllers
 
 
         [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/csv/{id}")]
-        public async Task<ActionResult> DownloadCsvChangeHistory(int id)
-        {
-            // todo: TEXCHANGE; wating for API: 
-            throw new NotImplementedException("Not done yet; requires API '/establishment/{urn}/changes/download'");
-        }
-
+        public async Task<ActionResult> DownloadCsvChangeHistory(int id) 
+            => Redirect((await _establishmentReadService.GetChangeHistoryDownloadAsync(id, eFileFormat.CSV, User)).Url);
+        
         
         [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/xlsx/{id}")]
         public async Task<ActionResult> DownloadXlsxChangeHistory(int id)
-        {
-            // todo: TEXCHANGE; wating for API
-            throw new NotImplementedException("Not done yet; requires API '/establishment/{urn}/changes/download'");
-        }
-        
+            => Redirect((await _establishmentReadService.GetChangeHistoryDownloadAsync(id, eFileFormat.XLSX, User)).Url);
+
         private async Task PopulateSelectLists(ViewModel viewModel)
         {
             viewModel.AccommodationChanges = (await _cachedLookupService.AccommodationChangedGetAllAsync()).ToSelectList(viewModel.AccommodationChangedId);

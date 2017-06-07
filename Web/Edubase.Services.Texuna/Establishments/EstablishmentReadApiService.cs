@@ -13,6 +13,7 @@ using Edubase.Services.Texuna.Models;
 using Edubase.Common.Reflection;
 using Edubase.Services.Lookup;
 using Edubase.Common;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -96,5 +97,8 @@ namespace Edubase.Services.Texuna.Establishments
 
             return retVal;
         }
+
+        public async Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, eFileFormat format, IPrincipal principal) 
+            => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/changes/download?format={format.ToString().ToLower()}", principal)).GetResponse();
     }
 }

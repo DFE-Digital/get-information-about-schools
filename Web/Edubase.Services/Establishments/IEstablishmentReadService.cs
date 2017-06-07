@@ -7,6 +7,7 @@ using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Establishments.Search;
 using System;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Establishments
 {
@@ -44,5 +45,7 @@ namespace Edubase.Services.Establishments
 
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model);
+
+        Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, eFileFormat format, IPrincipal principal);
     }
 }
