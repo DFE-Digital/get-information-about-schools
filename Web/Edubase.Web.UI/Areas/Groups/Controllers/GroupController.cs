@@ -297,6 +297,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
             vm.TrustExists = await _groupReadService.ExistsAsync(User, companiesHouseNumber: CompaniesHouseNumber.Parse(companiesHouseNumber));
             
+            if (vm.Address == null) ModelState.AddModelError("", "This company record doesn't have an address");
+            if (!vm.OpenDate.HasValue) ModelState.AddModelError("", "This company record doesn't have an incorporation date");
+
+            vm.AllowSave = !vm.TrustExists && ModelState.IsValid;
+
             return View(vm);
         }
 

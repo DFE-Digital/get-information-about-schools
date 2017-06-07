@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Edubase.Services.Domain
+namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse.Models
 {
-    public class CompanyProfileDto
+    public class CompanyProfile
     {
         public string Name { get; set; }
         public string Number { get; set; }
         public DateTime? IncorporationDate { get; set; }
-        public AddressDto Address { get; set; }
+        public CompanyAddress Address { get; set; }
     }
 }

@@ -242,6 +242,9 @@
     <Compile Include="Groups\Models\SaveGroupDto.cs" />
     <Compile Include="Groups\Validation\SaveGroupDtoValidator.cs" />
     <Compile Include="IntegrationEndPoints\CompaniesHouse\ICompaniesHouseService.cs" />
+    <Compile Include="IntegrationEndPoints\CompaniesHouse\Models\CompanyAddress.cs" />
+    <Compile Include="IntegrationEndPoints\CompaniesHouse\Models\CompanyProfile.cs" />
+    <Compile Include="IntegrationEndPoints\CompaniesHouse\Models\CompanySearchModel.cs" />
     <Compile Include="IntegrationEndPoints\Google\GooglePlacesService.cs" />
     <Compile Include="IntegrationEndPoints\Google\IGooglePlacesService.cs" />
     <Compile Include="IntegrationEndPoints\Google\Models\AddressComponent.cs" />
@@ -262,8 +265,6 @@
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
     <Compile Include="Domain\ChildrensCentreLocalAuthorityDto.cs" />
-    <Compile Include="Domain\CompanyProfileDto.cs" />
-    <Compile Include="Domain\CompanySearchDto.cs" />
     <Compile Include="Domain\ContactDetailDto.cs" />
     <Compile Include="Domain\EstablishmentChangeDto.cs" />
     <Compile Include="Domain\EstablishmentDto.cs" />

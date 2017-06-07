@@ -10,6 +10,7 @@ using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
+using Edubase.Services.Security;
 using Edubase.Web.Resources;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
@@ -36,14 +37,17 @@ namespace Edubase.Web.UI.Controllers
         private readonly IGovernorsReadService _governorsReadService;
         private readonly NomenclatureService _nomenclatureService;
         private readonly IResourcesHelper _resourcesHelper;
+        private readonly ISecurityService _securityService;
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
-            IGroupReadService groupReadService, IMapper mapper, 
+            IGroupReadService groupReadService, 
+            IMapper mapper, 
             IEstablishmentWriteService establishmentWriteService,
             ICachedLookupService cachedLookupService,
             IGovernorsReadService governorsReadService,
             NomenclatureService nomenclatureService,
-            IResourcesHelper resourcesHelper)
+            IResourcesHelper resourcesHelper,
+            ISecurityService securityService)
         {
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
@@ -53,6 +57,7 @@ namespace Edubase.Web.UI.Controllers
             _governorsReadService = governorsReadService;
             _nomenclatureService = nomenclatureService;
             _resourcesHelper = resourcesHelper;
+            _securityService = securityService;
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
@@ -337,12 +342,7 @@ namespace Edubase.Web.UI.Controllers
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
         }
 
-        private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
-        {
-            viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
-            viewModel.EstablishmentTypes = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).ToSelectList(viewModel.EstablishmentTypeId);
-            viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).ToSelectList(viewModel.EducationPhaseId);
-        }
+        
 
         private async Task<GroupModel> GetLegalParent(int establishmentUrn, IPrincipal principal)
         {
@@ -423,7 +423,10 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
         public async Task<ActionResult> Create()
         {
-            var viewModel = new CreateEstablishmentViewModel();
+            var viewModel = new CreateEstablishmentViewModel
+            {
+                CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User)
+            };
             await PopulateSelectLists(viewModel); 
             return View(viewModel);
         }
@@ -431,6 +434,8 @@ namespace Edubase.Web.UI.Controllers
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
         public async Task<ActionResult> Create(CreateEstablishmentViewModel viewModel)
         {
+            viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
+
             if (ModelState.IsValid)
             {
                 var urn = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
@@ -448,6 +453,13 @@ namespace Edubase.Web.UI.Controllers
 
             await PopulateSelectLists(viewModel);
             return View(viewModel);
+        }
+
+        private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
+        {
+            viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
+            viewModel.EstablishmentTypes = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).Where(x=> viewModel.CreateEstablishmentPermission.Types.Cast<int>().Contains(x.Id)).ToSelectList(viewModel.EstablishmentTypeId);
+            viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).ToSelectList(viewModel.EducationPhaseId);
         }
 
 

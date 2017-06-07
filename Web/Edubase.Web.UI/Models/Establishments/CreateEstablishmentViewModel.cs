@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Edubase.Services.Domain;
 
 namespace Edubase.Web.UI.Models.Establishments
 {
@@ -18,5 +19,6 @@ namespace Edubase.Web.UI.Models.Establishments
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
         public IEnumerable<SelectListItem> EstablishmentTypes { get; set; }
         public IEnumerable<SelectListItem> EducationPhases { get; set; }
+        public CreateEstablishmentPermissionDto CreateEstablishmentPermission { get; internal set; }
     }
 }

@@ -81,7 +81,7 @@
     <div class="grid-row">
         <div class="column-full">
             @Html.ActionLink("Cancel", "SearchCompaniesHouse", "Group", new { area = "Groups" }, new { @class = "button button-grey mobile-full-width cancel" })
-            @if (!Model.TrustExists)
+            @if (!Model.TrustExists && Model.AllowSave)
             {
                 <button type="submit" class="button submit mobile-full-width">Submit</button>
             }
