@@ -816,3 +816,14 @@ p.table-caption {
     font-size: 14px;
     margin-top: 10px;
 }
+
+.data-description {
+    font-size: 16px;
+    @include media(tablet){
+        width: 75%;
+    }
+}
+
+.timestamp {
+    font-size: 16px;
+}

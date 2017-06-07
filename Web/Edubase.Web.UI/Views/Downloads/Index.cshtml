@@ -12,17 +12,14 @@
             <ul>
                 <li>
                     @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Downloads", "Index", "Downloads")
-                </li>
+                </li>                
             </ul>
 
         </div>
-        <h1 class="heading-large">Downloads</h1>
+        <h1 class="heading-xlarge">Downloads</h1>
     </div>
     <div class="column-two-thirds">
-        <p>This data is updated daily. You can download any information you search for</p>
+        <p>This data is updated daily. You can download any information you search for.</p>
     </div>   
 </div>
 
@@ -77,14 +74,12 @@
                 @if (Model.AreScheduledExtractsAvailable)
                 {
                     <div id="scheduled-extracts" class="tab-content">
-                        <div class="column-two-thirds">
-                            <h2 class="bold-medium">Scheduled extracts</h2>
-                            <p>
-                                This is full data that can be found on the Register of educational establishments (Edubase).
-                                When you request a ﬁle the data will be generated and then ready for download a short time
-                                after the request.
-                            </p>
-                        </div>
+                        
+                        <p class="data-description">
+                            This is full data that can be found on the Register of educational establishments (Edubase).
+                            When you request a ﬁle the data will be generated and then ready for download a short time
+                            after the request.
+                        </p>
                         
                         @if (Model.Pagination.PageCount > 1)
                         {
@@ -93,7 +88,7 @@
                             </div>
                         }
 
-                        <table class="edubase-table retain-columns">
+                        <table class="edubase-table retain-columns @(Model.Pagination.PageCount > 1 ? "" : "no-pagination")">
                             <thead>
                                 <tr>
                                     <th>File</th>
