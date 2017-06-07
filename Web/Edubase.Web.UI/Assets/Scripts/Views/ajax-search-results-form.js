@@ -71,6 +71,11 @@
             queryString = queryString ? queryString : $("form").serialize();
             $.get("Search/results-js?" + queryString, function (html, textStatus, jqXHR) {
                 var count = jqXHR.getResponseHeader("x-count");
+                $(window).trigger({
+                    type: 'ajaxResultLoad',
+                    count: count
+                });
+
                 $("span.count").html(count);
                 if (parseInt(count, 10) === 0) {
                     $("a.download-link").addClass('hidden');

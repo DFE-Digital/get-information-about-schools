@@ -43,6 +43,10 @@
         pause: function (pausedState) {
             this.opts.onPause = pausedState || false;
         },
+        unbind: function() {
+            $(this.el).off(this.opts.triggerEvent);
+            $(this.el).removeData('okCancel');
+        },
         init: function () {
             var opts = this.opts;
             var $el = $(this.el);
@@ -95,7 +99,7 @@
                $('#modal-title').text(title); 
             }
             if (content) {
-                $('#modal-content-area').text(content);
+                $('#modal-content-area').html(content);
             }
         },
         showModal: function () {
