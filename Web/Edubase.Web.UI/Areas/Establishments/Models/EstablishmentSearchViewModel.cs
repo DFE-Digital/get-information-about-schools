@@ -253,5 +253,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public bool GoToDetailPageOnOneResult { get; set; }
 
         #endregion
+
+        public Dictionary<EstablishmentModel, string> Addresses { get; private set; } = new Dictionary<EstablishmentModel, string>();
+
     }
 }

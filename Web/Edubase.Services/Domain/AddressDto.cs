@@ -12,10 +12,10 @@ namespace Edubase.Services.Domain
         public string Line2 { get; set; }
         public string Line3 { get; set; }
         public string CityOrTown { get; set; }
-        public string County { get; set; }
-        public string Country { get; set; }
+        public int? CountyId { get; set; }
+        public int? CountryId { get; set; }
         public string PostCode { get; set; }
 
-        public override string ToString() => Common.StringUtil.ConcatNonEmpties(", ", Line1, Line2, Line3, CityOrTown, County, PostCode, Country);
+        public override string ToString() => Common.StringUtil.ConcatNonEmpties(", ", Line1, Line2, Line3, CityOrTown, PostCode);
     }
 }

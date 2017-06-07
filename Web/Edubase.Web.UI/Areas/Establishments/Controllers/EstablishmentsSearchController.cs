@@ -242,6 +242,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                         if (payload.Skip == 0) model.Count = results.Count;
                         model.Results = results.Items;
+
+                        foreach (var item in model.Results)
+	                    {
+                            model.Addresses.Add(item, await item.GetAddressAsync(_lookupService));
+                        }
+
                     }
                     catch (Services.Exceptions.SearchQueryTooLargeException
                     ) // expected domain exception when over 800 filters are selected; very much an edge case.

@@ -29,7 +29,7 @@ else if (Model.Results.Count > 0)
                 
                 <dl>
                     <dt>Address:</dt>
-                    <dd>@result.GetAddress()</dd>
+                    <dd>@Model.Addresses[result]</dd>
                     <dt>Phase / type:</dt>
                     <dd>
                         @(Model.EducationPhases.FirstOrDefault(x => x.Id == result.EducationPhaseId)?.Name ?? "Not recorded"),
