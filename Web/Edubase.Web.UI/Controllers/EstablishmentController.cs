@@ -283,11 +283,11 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> DownloadXlsxChangeHistory(int id)
             => Redirect((await _establishmentReadService.GetChangeHistoryDownloadAsync(id, eFileFormat.XLSX, User)).Url);
 
-        [HttpGet, EdubaseAuthorize, Route("Download/xlsx/{id}")]
+        [HttpGet, Route("Download/xlsx/{id}")]
         public async Task<ActionResult> DownloadXlsx(int id)
             => Redirect((await _establishmentReadService.GetDownloadAsync(id, eFileFormat.XLSX, User)).Url);
 
-        [HttpGet, EdubaseAuthorize, Route("Download/csv/{id}")]
+        [HttpGet, Route("Download/csv/{id}")]
         public async Task<ActionResult> DownloadCsv(int id)
             => Redirect((await _establishmentReadService.GetDownloadAsync(id, eFileFormat.CSV, User)).Url);
 
