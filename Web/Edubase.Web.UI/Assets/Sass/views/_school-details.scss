@@ -7,7 +7,22 @@
         font-size:14px;
         color:$grey-1;
         font-weight:bold;
-        margin-bottom:24px;
+        margin: 8px 0;
+
+        @include media (tablet) {
+            float: left;
+        }
+    }
+    .establishment-data-download {
+        margin: 4px 0 12px;
+        @include media(tablet) {
+            overflow: hidden;
+            float: right;
+            margin-bottom: 24px;
+            a {                
+                font-size: 16px;
+            }
+        }
     }
 
     .horizontal-tabs-content .tab-content { padding-top:16px; }
