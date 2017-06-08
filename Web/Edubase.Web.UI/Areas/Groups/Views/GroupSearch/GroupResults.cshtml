@@ -15,13 +15,13 @@
             <h1 class="heading-xlarge">Search results</h1>
             <p>
                 @if (Model.GroupSearchModel.Text.IsInteger())
-            {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> groups with Companies House Number '@Model.GroupSearchModel.Text'.</text>
+                {
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishment groups with Companies House Number '@Model.GroupSearchModel.Text'.</text>
                 }
                 else
                 {
                     <text>
-                        We found <span class="heading-xlarge count">@Model.Count</span> groups
+                        We found <span class="heading-xlarge count">@Model.Count</span> establishment groups
                         @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
                         {
                             <text>matching "@Model.GroupSearchModel.Text".</text>
