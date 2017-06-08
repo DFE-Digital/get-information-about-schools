@@ -3,6 +3,8 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Establishments.Models.Validators;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
+using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
+using Edubase.Web.UI.Areas.Groups.Models.Validators;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.DataQuality;
 using Edubase.Web.UI.Models.DataQuality.Validators;
@@ -64,6 +66,10 @@ namespace Edubase.Web.UI.Validation
 
             builder.RegisterType<DataQualityStatusItemValidator>()
                 .Keyed<IValidator>(typeof(IValidator<DataQualityStatusItem>))
+                .As<IValidator>();
+
+            builder.RegisterType<ValidateChildrensCentreStep2Validator>()
+                .Keyed<IValidator>(typeof(IValidator<ValidateChildrensCentreStep2>))
                 .As<IValidator>();
         }
     }

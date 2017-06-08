@@ -300,6 +300,7 @@
     <Compile Include="Areas\Governors\Models\Validators\GovernorViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\ReplaceChairViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\Validators\SelectSharedGovernorViewModelValidator.cs" />
+    <Compile Include="Areas\Groups\Controllers\GroupApiController.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupController.cs" />
     <Compile Include="Areas\Groups\Controllers\GroupSearchController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\CreateAcademyTrustViewModel.cs" />
@@ -307,6 +308,8 @@
     <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditorViewModelBase.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\IGroupPageViewModel.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\LinkedEstablishmentSearchViewModel.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\ValidateChildrensCentreStep2.cs" />
+    <Compile Include="Areas\Groups\Models\Validators\ValidateChildrensCentreStep2Validator.cs" />
     <Compile Include="Areas\Groups\Models\EstablishmentGroupViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupDetailViewModel.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\GroupEditorViewModel.cs" />
