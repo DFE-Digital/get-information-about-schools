@@ -133,6 +133,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
                 }
                 else viewModel.IsLocalAuthorityEditable = true;
+
+                return View("CreateChildrensCentre", viewModel);
             }
             
             return View("Create", viewModel);

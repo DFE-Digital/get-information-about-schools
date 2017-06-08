@@ -1,0 +1,179 @@
+﻿@model GroupEditorViewModel
+@{
+    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.hideLogo = true;
+    ViewBag.Title = Model.PageTitle;
+}
+
+@using (Html.BeginForm("Create", "Group", new {area = "Groups"}, FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.GroupUId)
+    @Html.HiddenFor(x => x.GroupTypeMode)
+    @Html.HiddenFor(x => x.SaveMode)
+
+    <div class="grid-row">
+        <div id="step1">
+            <div class="column-full">
+                <div class="breadcrumbs">
+                    <ul>
+                        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+                    </ul>
+                </div>
+
+                <h1 class="heading-xlarge">@Model.PageTitle</h1>
+                @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+            </div>
+
+            <div class="column-two-thirds">
+                <div>You can use this to create children's centre groups or collaborations of existing establishments.</div>
+                <fieldset class="radio-wrap stacked-controls">
+                    <legend class="bold-medium">Select the process that you are interested in</legend>
+                    <div class="form-group">
+                        @foreach (var groupType in Model.CCGroupTypes)
+                        {
+                            var inputId = "grouptypeid-" + groupType.Value;
+                            <span class="radio-button-wrap">
+                                @Html.RadioButtonFor(x => x.GroupTypeId, groupType.Value, new { id = inputId })
+                                <label class="edubase-button-radio" for="@inputId">
+                                    @groupType.Text
+                                </label>
+                            </span>
+                        }
+                    </div>
+                </fieldset>
+
+            </div>
+        </div>
+        <div id="step2">
+            <div class="column-full">
+                <hr />
+                <div class="breadcrumbs">
+                    <ul>
+                        <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
+                        <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
+                        <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
+                    </ul>
+                </div>
+
+                <h1 class="heading-xlarge">Enter the children's centre group details</h1>
+                @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
+            </div>
+            <div class="column-half">
+                <div>Add the details of the children's centre group you'd like to create.</div>
+            
+                <h2 class="bold-medium">Children's centre group details</h2>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.GroupName)">
+                    <label for="name" class="form-label">Group name</label>
+                    @Html.ValidationMessageFor(x => x.GroupName)
+                    @Html.TextBoxFor(x => x.GroupName, new {@class = "form-control"})
+                </div>
+
+                @Html.HiddenFor(x => x.GroupTypeId)
+
+                @Html.EditorFor(x => x.OpenDate, new {title = Model.OpenDateLabel})
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                    <label for="name" class="form-label">Local authority</label>
+                    @Html.ValidationMessageFor(x => x.LocalAuthorityId)
+                    @if (Model.IsLocalAuthorityEditable)
+                    {
+                        @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "form-control"})
+                    }
+                    else
+                    {
+                        <input value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control"/>
+                        @Html.HiddenFor(x => x.LocalAuthorityName)
+                        @Html.HiddenFor(x => x.LocalAuthorityId)
+                    }
+                    @Html.HiddenFor(x => x.IsLocalAuthorityEditable)
+                </div>
+            </div>
+        </div>
+        <div id="step3">
+            <div class="column-full">
+                <hr />
+                <div class="breadcrumbs">
+                    <ul>
+                        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
+                    </ul>
+                </div>
+
+                <h1 class="heading-xlarge">Add children's centres</h1>
+                @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+            </div>
+            <div class="column-full">
+                <div>Add two or more children's centres to create a children's centre group and choose which one you would like as the lead centre.</div>
+
+                <h2 class="bold-medium">New children's centre group details</h2>
+                <dl>
+                    <dt>Group Name:</dt><dd id="group-name">to be filled by js</dd>
+                    <dt>Open date:</dt><dd id="group-open-date">to be filled by js</dd>
+                    <dt>Group status:</dt><dd id="group-status">to be filled by js</dd>
+                    <dt>Local authority</dt><dd id="group-la">to be filled by js</dd>
+                </dl>
+
+                <h2 class="bold-medium">Add children's centres</h2>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
+                    @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+                    <label class="form-label">
+                        Establishment <abbr title="Unique Reference Number">URN</abbr>
+                    </label>
+                    @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 search-box"})
+                    <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button button-find-inline">Find</button>
+                </div>
+                <!-- JB: list of "added" centres here -->
+
+            </div>
+        </div>
+        <div id="children-centre-details">
+            <div class="column-full">
+                <hr />
+                <div class="breadcrumbs">
+                    <ul>
+                        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
+                    </ul>
+                </div>
+
+                <h1 class="heading-xlarge">Enter the children's centre details</h1>
+                @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+            </div>
+            <div class="column-full">
+                <div>Ensure this is the right children's centre and add a joined date.</div>
+                <h2 class="bold-medium">Childrens centre</h2>
+                <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
+                @* TO DO childrens centre address*@
+                <p>URN: @Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</p>
+                @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new {title = "Joined date"})
+
+
+                @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-full">
+            
+                <!--JB: show the below from step 3 onwards-->
+                @*<a href="#" class="button button-grey cancel mobile-full-width">Go back</a>*@
+            
+                <!--JB: button for childnre-centre-details-->
+                @*<button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentAdd" class="button">Add</button>*@
+
+                @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                {
+                    <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
+                    <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave">@(Model.InEditMode ? "Submit" : "Continue")</button>
+                }
+
+                @(Model.InEditMode 
+                      ? Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-grey cancel mobile-full-width"}) 
+                      : Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-grey cancel mobile-full-width"}))
+            </div>
+        </div>
+    </div>
+}

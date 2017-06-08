@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -463,6 +463,7 @@
     <Content Include="Areas\Governors\Views\GovernorsBulkUpdate\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\Completed.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\InProgress.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
