@@ -19,31 +19,30 @@
         <h1 class="heading-xlarge">Downloads</h1>
     </div>
     <div class="column-two-thirds">
-        <p>This data is updated daily. You can download any information you search for.</p>
+        <p class="@(Model.AreScheduledExtractsAvailable ? "": "no-bottom-margin")">This data is updated daily. You can download any information you search for.</p>
     </div>   
 </div>
 
 <div class="grid-row">
     <div class="column-full">
         <div class="horizontal-tabs-wrapper">
-            <div class="tab-wrap">
-                <ul class="horizontal-tabs">
-                    <li>
-                        <a href="#group-data" class="horizontal-tab">
-                            Establishment &amp; group data
-                        </a>
-                    </li>
-                    @if (Model.AreScheduledExtractsAvailable)
-                    {
+            @if (Model.AreScheduledExtractsAvailable)
+            {
+                <div class="tab-wrap">
+                    <ul class="horizontal-tabs">
+                        <li>
+                            <a href="#group-data" class="horizontal-tab">
+                                Establishment &amp; group data
+                            </a>
+                        </li>                   
                         <li>
                             <a href="#scheduled-extracts" class="horizontal-tab">
                                 Scheduled extracts
                             </a>
-                        </li>
-                    }
-                    
-                </ul>
-            </div>
+                        </li>                                        
+                    </ul>
+                </div>
+            }
             <div class="tab-content-wrapper horizontal-tabs-content">
                 <div id="group-data" class="tab-content">
                     <div class="column-two-thirds">
@@ -51,7 +50,7 @@
 
                         @foreach (var group in downloadGroups)
                         {
-                            <h2 class="bold-medium" style="margin-top:35px;">@group.Heading</h2>
+                            <h2 class="heading-medium">@group.Heading</h2>
                             <p>@group.Paragraph</p>
                             <ul class="lis">
                                 @foreach (var item in group.SubSections)
@@ -75,7 +74,7 @@
                 {
                     <div id="scheduled-extracts" class="tab-content">
                         
-                        <p class="data-description">
+                        <p>
                             This is full data that can be found on the Register of educational establishments (Edubase).
                             When you request a ﬁle the data will be generated and then ready for download a short time
                             after the request.
