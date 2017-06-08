@@ -54,68 +54,72 @@
             <ul class="school-results-listing establishment-list">
                 @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
                 {
-                <li>
-                    <h2>@Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn }, new { @class = "bold-small", target = "_blank" })</h2>
-                    <dl>
-                        <dt>Address:</dt>
-                        <dd>@Model.LinkedEstablishments.Establishments[i].Address</dd>
-                        <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                        <dd>@Model.LinkedEstablishments.Establishments[i].Urn</dd>
-                        <dt>School type:</dt>
-                        <dd>@Model.LinkedEstablishments.Establishments[i].TypeName</dd>
-                        <dt>Headteacher name:</dt>
-                        <dd>@Model.LinkedEstablishments.Establishments[i].HeadFullName</dd>
+                    <li>
+                        <h2>@Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn }, new { @class = "bold-small", target = "_blank" })</h2>
+                        @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
+                        {
+                            <div class="error">@Html.ValidationMessage("linkedEstablishments[" + i + "].id")</div>
+                        }
+                        <dl>
+                            <dt>Address:</dt>
+                            <dd>@Model.LinkedEstablishments.Establishments[i].Address</dd>
+                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
+                            <dd>@Model.LinkedEstablishments.Establishments[i].Urn</dd>
+                            <dt>School type:</dt>
+                            <dd>@Model.LinkedEstablishments.Establishments[i].TypeName</dd>
+                            <dt>Headteacher name:</dt>
+                            <dd>@Model.LinkedEstablishments.Establishments[i].HeadFullName</dd>
 
-                        @if (!Model.LinkedEstablishments.Establishments[i].EditMode)
+                            @if (!Model.LinkedEstablishments.Establishments[i].EditMode)
+                                {
+                                <dt>Joined date:</dt>
+                                <dd>@(Model.LinkedEstablishments.Establishments[i].JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                                @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
+                                }
+
+                        </dl>
+
+                        @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
                             {
-                            <dt>Joined date:</dt>
-                            <dd>@(Model.LinkedEstablishments.Establishments[i].JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
-                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
+                            <div class="form-radio cc-lead-centre">
+                                <label>
+                                    @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { @class = "" })
+                                    Make this children's centre a lead centre
+                                </label>
+                            </div>
+
                             }
 
-                    </dl>
-
-                    @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
+                        @if (Model.LinkedEstablishments.Establishments[i].EditMode)
                         {
-                        <div class="form-radio cc-lead-centre">
-                            <label>
-                                @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { @class = "" })
-                                Make this children's centre a lead centre
-                            </label>
-                        </div>
-
-                        }
-
-                    @if (Model.LinkedEstablishments.Establishments[i].EditMode)
-                    {
-                        @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new {title = "Joined date"})
+                            @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new {title = "Joined date"})
                         
-                    }
-
-                    @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                        {
-                        <div class="button-row">
-                            <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
-                            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-grey">Edit</button>
-                        </div>
-                        }
-                        else if (Model.LinkedEstablishments.Establishments[i].EditMode)
-                        {
-                        <div class="form-group">
-                            <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit">Cancel</button>
-                            <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
-                        </div>
                         }
 
+                        @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                            {
+                            <div class="button-row">
+                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
+                                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-grey">Edit</button>
+                            </div>
+                            }
+                            else if (Model.LinkedEstablishments.Establishments[i].EditMode)
+                            {
+                            <div class="form-group">
+                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit">Cancel</button>
+                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
+                            </div>
+                            }
 
-                    @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
-                    @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Name)
-                    @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Urn)
-                    @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Address)
-                    @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].TypeName)
-                    @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].HeadFullName)
-                    @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].EditMode)
-                </li>
+
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Name)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Urn)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Address)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].TypeName)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].HeadFullName)
+                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].EditMode)
+                    </li>
                 }
             </ul>
         </div>

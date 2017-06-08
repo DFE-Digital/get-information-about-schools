@@ -20,7 +20,7 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
                 return PagedDto<CompanyProfile>.One(new CompanyProfile
                 {
                     Name = result.Data.CompanyName,
-                    Address = new CompanyAddress { Line1 = a.AddressLine1, Line2 = a.AddressLine2, Line3 = a.Locality, CityOrTown = a.Region, PostCode = a.PostalCode },
+                    Address = new CompanyAddress { Line1 = a.AddressLine1, Line2 = a.AddressLine2, CityOrTown = a.Locality, PostCode = a.PostalCode },
                     IncorporationDate = result.Data.DateOfCreation,
                     Number = result.Data.CompanyNumber
                 });
@@ -43,7 +43,7 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
                 return new PagedDto<CompanyProfile>(skip, take, result.Data.Companies.Select(x => new CompanyProfile
                 {
                     Name = x.Title,
-                    Address = new CompanyAddress { Line1 = x.Address?.AddressLine1, Line2 = x.Address?.AddressLine2, Line3 = x.Address?.Locality, CityOrTown = x.Address?.Region, PostCode = x.Address?.PostalCode },
+                    Address = new CompanyAddress { Line1 = x.Address?.AddressLine1, Line2 = x.Address?.AddressLine2, CityOrTown = x.Address?.Locality, PostCode = x.Address?.PostalCode },
                     IncorporationDate = x.DateOfCreation,
                     Number = x.CompanyNumber
                 }).ToList(), result.Data.TotalResults.GetValueOrDefault());

@@ -85,9 +85,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 LocalAuthorityName = model.LocalAuthorityId.HasValue ? await _lookup.GetNameAsync(() => model.LocalAuthorityId) : null,
                 GroupStatusName = model.StatusId.HasValue ? await _lookup.GetNameAsync(() => model.StatusId, "Group") : null,
                 Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup) ? model.Address.ToString() : null,
-                
-                // TODO: TEXCHANGE
-                // Use the new security API for this
                 IsUserLoggedOn = User.Identity.IsAuthenticated
             };
 
@@ -201,7 +198,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             await PopulateSelectLists(viewModel);
             if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
 
-            await Validate(viewModel);
+            await ValidateAsync(viewModel);
 
             if (ModelState.IsValid)
             {
@@ -219,14 +216,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        private async Task Validate(GroupEditorViewModel viewModel)
+        private async Task ValidateAsync(GroupEditorViewModel viewModel)
         {
             if (viewModel.Action == ActionSave && ModelState.IsValid)
             {
                 var dto = CreateSaveDto(viewModel);
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
-                validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Code, x.Message));
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Code, x.Message));
+                validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
             }
         }
 
@@ -261,7 +258,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
 
-            await Validate(viewModel);
+            await ValidateAsync(viewModel);
 
             if (ModelState.IsValid)
             {
@@ -308,23 +305,28 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
         public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel)
         {
+            var dto = new SaveGroupDto(new GroupModel
+            {
+                Address = UriHelper.DeserializeUrlToken<AddressDto>(viewModel.CompaniesHouseAddressToken),
+                CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
+                GroupTypeId = viewModel.TypeId,
+                Name = viewModel.Name,
+                OpenDate = viewModel.OpenDate,
+                StatusId = (int)eLookupGroupStatus.Open,
+                GroupId = viewModel.GroupId
+            });
+            
+            var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
+            validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+            validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+
             if (ModelState.IsValid)
             {
-                var dto = new SaveGroupDto(new GroupModel
-                {
-                    Address = UriHelper.DeserializeUrlToken<AddressDto>(viewModel.CompaniesHouseAddressToken),
-                    CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
-                    GroupTypeId = viewModel.TypeId,
-                    Name = viewModel.Name,
-                    OpenDate = viewModel.OpenDate,
-                    StatusId = (int)eLookupGroupStatus.Open,
-                    GroupId = viewModel.GroupId
-                });
-
                 var groupUId = await _groupWriteService.SaveAsync(dto, User);
                 return RedirectToAction(nameof(Details), new { id = groupUId });
             }
             else viewModel.GroupTypes = await GetAcademyTrustGroupTypes(viewModel.TypeId);
+
             return View("CreateAcademyTrust", viewModel);
         }
 
