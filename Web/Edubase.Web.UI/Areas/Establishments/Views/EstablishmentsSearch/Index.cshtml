@@ -21,17 +21,16 @@
             <p>
                 <!-- TODO: Jon; you can upload the span.heading-xlarge item with the correct count by using the x-count item in the http response of the partial request -->
                 @if (Model.SearchType == eSearchType.Text)
-            {
-                if (Model.TextSearchType == M.eTextSearchType.EstablishmentName
-                    || Model.TextSearchType == M.eTextSearchType.Unknown)
                 {
+                    if (Model.TextSearchType == M.eTextSearchType.EstablishmentName || 
+                        Model.TextSearchType == M.eTextSearchType.Unknown)
+                    {
                         <text>
                             We found <span class="heading-xlarge count">@Model.Count</span> establishments
                             @if (!Model.TextSearchModel.Text.IsEmpty())
                             {
                                 <text>for the search term <span class="bold-small">&lsquo;@Model.TextSearchModel.Text &rsquo;</span>.</text>
                             }
-
                         </text>
                     }
                     else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
@@ -55,6 +54,10 @@
                 {
                     <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected location</text>
                 }
+                else
+                {
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
+}
 
                 <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
                 <a class="download-link" style="display: @(Html.Conditional(Model.Count == 0, "none"));" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
