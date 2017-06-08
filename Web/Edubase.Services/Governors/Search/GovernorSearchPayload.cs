@@ -25,8 +25,8 @@ namespace Edubase.Services.Governors.Search
             Skip = skip;
             Take = take;
         }
-
-        [JsonIgnore] // TODO: TEXCHANGE:  support Gid search
+        
+        [JsonProperty("governorId")]
         public string Gid { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

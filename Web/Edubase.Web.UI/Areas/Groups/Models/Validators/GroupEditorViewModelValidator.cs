@@ -67,7 +67,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             // Having found an establishment to link, validate the joined date if supplied...
             When(x => x.Action == ActionLinkedEstablishmentAdd, () =>
             {
-                RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate).Must(x => x.IsEmpty() || x.IsValid())
+                RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate).Must(x => x.IsValid())
                     .WithMessage("This is not a valid date")
                     .WithSummaryMessage("The Joined Date specified is not valid");
             });
@@ -75,7 +75,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             // Having edited a joined date, validate the date...
             When(x => x.Action == ActionLinkedEstablishmentSave, () =>
             {
-                RuleFor(x => x.LinkedEstablishments.Establishments.Single(e => e.EditMode).JoinedDateEditable).Must(x => x.IsEmpty() || x.IsValid())
+                RuleFor(x => x.LinkedEstablishments.Establishments.Single(e => e.EditMode).JoinedDateEditable).Must(x => x.IsValid())
                     .WithMessage("This is not a valid date")
                     .WithSummaryMessage("The Joined Date specified is not valid");
             });
@@ -90,15 +90,16 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                         .WithSummaryMessage("Please select a local authority for the group")
                         .When(x => x.SaveGroupDetail);
 
-                    RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                        .Must((model, x) => model.LinkedEstablishments.Establishments.Count >= 2)
-                        .WithMessage("This group requires two or more centres, please add at least two centres")
-                        .When(x => x.SaveEstabLinks);
+                    // DISABLED RULE: See: https://trello.com/c/dritr0Yx/38-edit-group-childrens-centre-or-collaboration
+                    //RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+                    //    .Must((model, x) => model.LinkedEstablishments.Establishments.Count >= 2)
+                    //    .WithMessage("This group requires two or more centres, please add at least two centres")
+                    //    .When(x => x.SaveEstabLinks);
 
-                    RuleFor(x => x)
-                        .Must(x => x.CCLeadCentreUrn.HasValue)
-                        .WithMessage("Please select one children's centre to be a group lead")
-                        .When(x => x.LinkedEstablishments.Establishments.Count > 0 && x.SaveEstabLinks);
+                    //RuleFor(x => x)
+                    //    .Must(x => x.CCLeadCentreUrn.HasValue)
+                    //    .WithMessage("Please select one children's centre to be a group lead")
+                    //    .When(x => x.LinkedEstablishments.Establishments.Count > 0 && x.SaveEstabLinks);
                 });
 
                 RuleFor(x => x.GroupTypeId).NotNull().WithMessage("Group Type must be supplied");
