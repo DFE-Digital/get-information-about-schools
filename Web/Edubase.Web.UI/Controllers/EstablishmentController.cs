@@ -93,10 +93,11 @@ namespace Edubase.Web.UI.Controllers
         {
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
             var viewModel = _mapper.Map<ViewModel>(domainModel);
+            _mapper.Map(domainModel.IEBTModel, viewModel);
 
             viewModel.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
-            viewModel.CanOverrideCRProcess = User.IsInRole(Services.Security.EdubaseRoles.ROLE_BACKOFFICE);
+            viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
 
             await PopulateSelectLists(viewModel);
@@ -126,7 +127,7 @@ namespace Edubase.Web.UI.Controllers
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
             model.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
             model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, model.EditPolicy, User);
-            model.CanOverrideCRProcess = User.IsInRole(Services.Security.EdubaseRoles.ROLE_BACKOFFICE);
+            model.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             await PopulateSelectLists(model);
 
             if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
@@ -136,8 +137,7 @@ namespace Edubase.Web.UI.Controllers
                 if (ModelState.IsValid)
                 {
                     model.OriginalEstablishmentName = domainModel.Name;
-                    await PrepareModels(model, domainModel);
-
+                    
                     var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, User);
 
                     if (model.RequireConfirmationOfChanges && changes.Any()) model.ChangesSummary = changes;
@@ -183,6 +183,7 @@ namespace Edubase.Web.UI.Controllers
             model.MSOAId = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.MSOACode)?.Id;
 
             MapToDomainModel(model, domainModel, Request.Form);
+            MapToDomainModelIEBT(model, domainModel, Request.Form);
         }
 
         /// <summary>
@@ -216,7 +217,32 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
         }
-        
+
+        private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)
+        {
+            var keys = form.AllKeys.Select(x => x.GetPart(".")).Distinct();
+
+            var properties = ReflectionHelper.GetProperties(domainModel.IEBTModel, writeableOnly: true);
+            properties = properties.Where(x => keys.Contains(x)).ToList();
+
+            var viewModelProperties = ReflectionHelper.GetProperties(viewModel);
+
+            foreach (var item in properties.Intersect(viewModelProperties))
+            {
+                var info = ReflectionHelper.GetPropertyInfo(viewModel, item);
+                if (info.Type == typeof(DateTimeViewModel))
+                {
+                    var value = (ReflectionHelper.GetPropertyValue(viewModel, item) as DateTimeViewModel).ToDateTime()?.Date;
+                    ReflectionHelper.SetProperty(domainModel.IEBTModel, item, value);
+                }
+                else
+                {
+                    var value = ReflectionHelper.GetPropertyValue(viewModel, item);
+                    ReflectionHelper.SetProperty(domainModel.IEBTModel, item, value);
+                }
+            }
+        }
+
         [HttpGet, Route("Details/{id}")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments)
         {

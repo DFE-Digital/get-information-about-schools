@@ -428,7 +428,7 @@
                                 <label style="margin-bottom:10px;" class="block-label" 
                                        for="@nameof(Model.SENProvisions)_@item.Id">@item.Name
                                     <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)" 
-                                        value="@item.Id" @Html.Conditional(Model.SENIds.Contains(item.Id), "checked") />
+                                        value="@item.Id" @Html.Conditional(Model.SENIds !=null && Model.SENIds.Contains(item.Id), "checked") />
                                 </label>
                             }
                         </div>

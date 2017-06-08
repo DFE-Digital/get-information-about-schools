@@ -10,9 +10,12 @@ namespace Edubase.Web.UI
         public AutoMapperWebProfile()
         {
             CreateMap<EditEstablishmentModel, EstablishmentModel>();
+            CreateMap<IEBTModel, EditEstablishmentModel>();
+
             CreateMap<EstablishmentModel, EditEstablishmentModel>()
                 .ForMember(dst => dst.OldHeadFirstName, mapping => mapping.MapFrom(src => src.HeadFirstName))
                 .ForMember(dst => dst.OldHeadLastName, mapping => mapping.MapFrom(src => src.HeadLastName));
+                
             CreateMap<DateTimeViewModel, DateTime?>().ConvertUsing<DateTimeTypeConverter>();
             CreateMap<DateTime?, DateTimeViewModel>().ConvertUsing<DateTimeViewModelTypeConverter>();
         }
