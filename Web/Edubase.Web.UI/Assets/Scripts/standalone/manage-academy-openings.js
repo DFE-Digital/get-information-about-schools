@@ -119,7 +119,7 @@
                 }
 
                 document.getElementById('opening-date-filter').appendChild(frag);
-                this.selectedDate = 0;
+               // this.selectedDate = 0;
             },
             buildPages: function (changes, pageSize) {
                 var count = 0,
