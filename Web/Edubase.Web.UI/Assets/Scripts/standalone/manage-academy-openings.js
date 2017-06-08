@@ -86,6 +86,8 @@
                 var i;
                 var self = this;
 
+                document.getElementById('opening-date-filter').innerHTML = '';
+
                 for (i = 0, len = self.currentCount; i < len; i++) {
                     var openingDate = new Date(self.openingAcademies[i].openingDate);
                     var tempObj = {},
@@ -106,7 +108,10 @@
                 });
 
                 var frag = document.createDocumentFragment();
-
+                var opt = document.createElement('option');
+                opt.value = 0;
+                opt.innerHTML = 'All months';
+                frag.appendChild(opt);
 
                 for (i = 0, len = uniqueDates.length; i < len; i++) {
                     var option = document.createElement('option'),
@@ -118,8 +123,9 @@
                     frag.appendChild(option);
                 }
 
+                
                 document.getElementById('opening-date-filter').appendChild(frag);
-               // this.selectedDate = 0;
+                this.selectedDate = 0;
             },
             buildPages: function (changes, pageSize) {
                 var count = 0,
@@ -132,7 +138,7 @@
                 }
 
                 this.pages = changesPages;
-                this.buildDateDropDown();
+                
                 this.isProcessing = false;
                 $('#content').find('.horizontal-tab').slice(0, 1).click();
             },
@@ -157,6 +163,7 @@
                             function (data) {
                                 self.openingAcademies = data.items;
                                 self.buildPages(data.items, self.pageSize);
+                                self.buildDateDropDown();
                             }
                         );
                     }
@@ -199,9 +206,9 @@
                 this.updateNameError = this.updateName.length < 1;
 
                 this.openDateError = (
-                    d < 1 || d > 31 || this.updateDateDay === '' ||
-                    m < 1 || m > 12 || this.updateDateMonth === '' ||
-                    y < 2000 || y > 2100 || this.updateDateYear === '');
+                    isNaN(d)|| d < 1 || d > 31 || this.updateDateDay === '' ||
+                    isNaN(m) || m < 1 || m > 12 || this.updateDateMonth === '' ||
+                    isNaN(y) || y < 2000 || y > 2100 || this.updateDateYear === '');
 
                 if (!this.updateNameError && !this.openDateError) {
                     var urn = this.searchUrn;
@@ -218,9 +225,7 @@
                             openDate: [this.updateDateYear, this.updateDateMonth , this.updateDateDay].join('-'),
                             name: this.updateName
                         }),
-                        success: function (data) {
-                            console.log('update success');
-                            console.log(data);
+                        success: function (data) {                            
                             self.loadData();
                         },
                         error: function () {
