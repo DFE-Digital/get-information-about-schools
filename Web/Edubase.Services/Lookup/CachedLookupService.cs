@@ -81,6 +81,7 @@ namespace Edubase.Services.Lookup
                 { "LinkTypeId", async id => (await EstablishmentLinkTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CountryId", async id => (await NationalitiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CountyId", async id => (await CountiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "OfstedRatingId", async id => (await OfstedRatingsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
             };
 
             _mapping = new Dictionary<string, Func<int, string>>()

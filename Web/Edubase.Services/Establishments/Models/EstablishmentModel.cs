@@ -282,6 +282,6 @@ namespace Edubase.Services.Establishments.Models
         public DateTime? HelpdeskLastUpdate { get; set; }
         public string HelpdeskTrigger1 { get; set; }
         public int? HelpdeskPreviousLocalAuthorityId { get; set; }
-        public string HelpdeskPreviousEstablishmentNumber { get; set; }
+        public int? HelpdeskPreviousEstablishmentNumber { get; set; }
     }
 }

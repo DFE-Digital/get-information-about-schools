@@ -437,6 +437,7 @@ namespace Edubase.Web.UI.Controllers
             vm.GenderName = await c.GetNameAsync(() => vm.Establishment.GenderId);
             vm.StatusName = await c.GetNameAsync(() => vm.Establishment.StatusId);
             vm.AdmissionsPolicyName = await c.GetNameAsync(() => vm.Establishment.AdmissionsPolicyId);
+            vm.OfstedRatingName = await c.GetNameAsync(() => vm.Establishment.OfstedRatingId);
 
             var sens = await c.SpecialEducationNeedsGetAllAsync();
             vm.SENNames = StringUtil.Sentenceify((vm.Establishment.SENIds ?? new int[0]).Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
