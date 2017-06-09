@@ -1,0 +1,40 @@
+﻿@model Edubase.Services.Domain.ProgressDto
+@{
+    ViewBag.bodyClasses = "schools-search-page search-page";
+    ViewBag.hideLogo = true;
+}
+
+@section Head {
+    <meta http-equiv="refresh" content="2">
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+                </li>
+                <li>
+                    Change history
+                </li>
+            </ul>
+        </div>
+
+        <h1 class="heading-large">Change history</h1>
+    </div>
+    <div class="download-step">        
+        <div class="column-full">
+            <h2 class="heading-small">Download change history</h2>
+            <p>Preparing your requested data. Large files may take some time to generate.</p>
+        
+            <div class="progress-indicator padded-indicator">
+                <span class="visually-hidden">Please wait. Your file is being prepared</span>
+            </div>
+        </div>
+    </div>
+</div>
+

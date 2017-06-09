@@ -11,13 +11,17 @@
         <li>
             @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
         </li>
+        <li>
+            Change history
+        </li>
     </ul>
 </div>
 
+<h1 class="heading-large">Change history</h1>
+
+@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+
 <div class="grid-row" id="change-history-app">
-    <div class="column-full">
-        <h1 class="heading-large">Change history</h1>
-    </div>
     @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
     {
         <div class="column-full" style="display:@(Model.Results == null ? "" : "none");">
@@ -31,13 +35,13 @@
                 <legend class="heading-small">Filter by establishment or group</legend>
                 <div class="form-group">
                     <span class="radio-button-wrap">
-                        <input id="searchtype-establishment" name="@nameof(Model.SearchType)" value="establishment" type="radio" @Html.Conditional(Model.SearchType == "establishment", "checked")>
+                        <input id="searchtype-establishment" name="@nameof(Model.SearchType)" value="establishment" type="radio" @Html.Conditional(Model.SearchType == "establishment", "checked") />
                         <label class="edubase-button-radio" for="searchtype-establishment">
                             Establishment
                         </label>
                     </span>
                     <span class="radio-button-wrap">
-                        <input id="searchtype-group" name="@nameof(Model.SearchType)" value="group" type="radio" @Html.Conditional(Model.SearchType == "group", "checked")>
+                        <input id="searchtype-group" name="@nameof(Model.SearchType)" value="group" type="radio" @Html.Conditional(Model.SearchType == "group", "checked") />
                         <label class="edubase-button-radio" for="searchtype-group">
                             Group
                         </label>
@@ -66,44 +70,11 @@
                                 <input id="date-effective" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, "checked")>
                                 <label class="edubase-button-radio" for="date-effective">Effective</label>
                             </span>
-
                         </div>
 
                         <div class="form-group panel-indent">
-                            <fieldset id="date-from" class="range-group">
-                                @*<span>Please enter the establishment opening date</span>*@
-                                <legend>Changed date from</legend>
-                                <span class="inline-form-control">
-                                    <label for="fromdate-day">Day</label>
-                                    <input class="form-control date-text-day" id="fromdate-day" type="text" />
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="fromdate-month">Month</label>
-                                    <input class="form-control date-text-month" id="fromdate-month" type="text" />
-                                </span>
-                                <span class="inline-form-contol">
-                                    <label for="fromdate-year">Year</label>
-                                    <input class="form-control date-text-year" id="fromdate-year" type="text" />
-                                </span>
-                            </fieldset>
-                            <fieldset id="date-to" class="range-group  range-group-to">
-                                @*<span>Please enter the establishment opening date</span>*@
-                                <legend>Changed date to</legend>
-                                <span class="inline-form-control">
-                                    <label for="todate-day">Day</label>
-                                    <input class="form-control date-text-day" id="todate-day" type="text" />
-
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="todate-month">Month</label>
-                                    <input class="form-control date-text-month" id="todate-month" type="text" />
-
-                                </span>
-                                <span class="inline-form-contol">
-                                    <label for="todate-year">Year</label>
-                                    <input class="form-control date-text-year" id="todate-year" type="text" />
-                                </span>
-                            </fieldset>
+                            @Html.EditorFor(x => x.DateFilterFrom, new { title = "Changed date from", disableHint = true })
+                            @Html.EditorFor(x => x.DateFilterTo, new { title = "Changed date to", disableHint = true })
                         </div>
                     </div>
 
@@ -186,20 +157,21 @@
                 
                 <div class="form-group padded-group">
                     <span class="radio-button-wrap">
-                        <input id="download-csv" name="change-history-search-type" value="csv" type="radio" v-model="downloadType">
+                        <input id="download-csv" name="@nameof(Model.DownloadFormat)" value="csv" type="radio" @Html.Conditional(Model.DownloadFormat == Edubase.Services.Enums.eFileFormat.CSV, "checked") />
                         <label class="edubase-button-radio" for="download-csv">
                             Data in CSV format
                         </label>
                     </span>
                     <span class="radio-button-wrap">
-                        <input id="download-xlsx" name="change-history-search-type" value="xlxs" type="radio" v-model="downloadType">
+                        <input id="download-xlsx" name="@nameof(Model.DownloadFormat)" value="xlsx" type="radio" @Html.Conditional(Model.DownloadFormat == Edubase.Services.Enums.eFileFormat.XLSX, "checked") />
                         <label class="edubase-button-radio" for="download-xlsx">
                             Data in XLSX format
                         </label>
                     </span>
                 </div>
-                <input type="submit" class="button" value="Continue" />
-            
+
+                <button type="submit" name="@nameof(Model.StartDownload)" class="button" value="true">Continue</button>
+                
                 <div>
                     <p><button type="submit" name="@nameof(Model.ClearResults)" class="button-as-link" value="true">Show filters</button></p>
                     @Html.Partial("_GenericPagination", Model)
@@ -276,22 +248,6 @@
 
             </div>
         }
-
-        @*<div class="column-full" v-cloak v-show="availableDownload">
-            <p>Your requested file is ready to download.</p>
-            <ul>
-                <li class="download-list-item">
-                    <span class="icon-link-copy">
-                        <a href="#"
-                           target="_blank" rel="nofollow">{{downloadLinkText}}</a>
-                    </span>
-                    <span class="alternative-file-directions">
-                        (Will download as a ZIP file. Open the ZIP to access its contents)
-                    </span>
-                </li>
-            </ul>
-            <button class="button button-grey" v-on:click="resultsView=true, availableDownload=false">Search results</button>
-        </div>*@
     }
 </div>
 

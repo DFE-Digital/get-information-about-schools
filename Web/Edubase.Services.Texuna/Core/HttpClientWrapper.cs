@@ -30,7 +30,7 @@ namespace Edubase.Services
         public HttpClientWrapper(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.Timeout = TimeSpan.FromSeconds(20);
+            _httpClient.Timeout = TimeSpan.FromSeconds(180); // API is slooooow
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(ApiUsername, ApiPassword).ToString()); 
             _formatter.SerializerSettings = new JsonSerializerSettings
             {
