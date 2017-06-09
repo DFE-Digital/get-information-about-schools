@@ -16,6 +16,7 @@
         padding: 3px;
         @include media(desktop){
             float:right;
+            margin-right: 0;
         }
     }
 }

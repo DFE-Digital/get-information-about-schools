@@ -199,16 +199,16 @@ namespace Edubase.Services
                 }
                 catch (Exception e)
                 {
-                    throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
+                    throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
                 }
             }
             else if(message.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {
-                throw new TexunaApiSystemException($"The TEX-API returned an 'Internal Server Error'. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+                throw new TexunaApiSystemException($"The API returned an 'Internal Server Error'. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
             }
             else
             {
-                throw new TexunaApiSystemException($"The TEX-API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+                throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
             }
         }
 
@@ -218,7 +218,7 @@ namespace Edubase.Services
             if (!message.Content.Headers.ContentType.MediaType.Equals("application/json"))
             {
                 throw new TexunaApiSystemException(
-                    $"The TEX-API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+                    $"The API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
             }
 
             if (typeof(T) == typeof(string))
@@ -242,7 +242,7 @@ namespace Edubase.Services
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
             {
                 throw new TexunaApiSystemException(
-                    $"The TEX-API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})");
+                    $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})");
             }
         }
     }

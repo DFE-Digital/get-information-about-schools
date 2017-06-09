@@ -203,6 +203,7 @@
     <Compile Include="Downloads\Models\ScheduledExtractsResult.cs" />
     <Compile Include="Enums\eFileFormat.cs" />
     <Compile Include="Enums\eGovernanceMode.cs" />
+    <Compile Include="Enums\eLookupEducationPhase.cs" />
     <Compile Include="Enums\eLookupEstablishmentLinkType.cs" />
     <Compile Include="Enums\eLookupEstablishmentStatus.cs" />
     <Compile Include="Enums\eLookupEstablishmentType.cs" />

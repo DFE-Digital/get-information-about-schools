@@ -20,5 +20,7 @@ namespace Edubase.Web.UI.Models.Establishments
         public IEnumerable<SelectListItem> EstablishmentTypes { get; set; }
         public IEnumerable<SelectListItem> EducationPhases { get; set; }
         public CreateEstablishmentPermissionDto CreateEstablishmentPermission { get; internal set; }
+
+        public Dictionary<int, int[]> Type2PhaseMap { get; set; }
     }
 }

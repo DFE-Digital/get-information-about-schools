@@ -1,5 +1,4 @@
 ﻿@using System.Linq
-@using Edubase.Services.Enums
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 @{
@@ -609,16 +608,44 @@
 @section ViewScripts
 {
     <script>
+        var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
+        var phases = @Html.Json(Model.EducationPhases);
+
         var $fields = $('#content').find('.form-control');
         var exitAttached = false;
-       
+
         $fields.on('change', function () {
             if (!exitAttached) {
                 DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                 exitAttached = true;
             }
-
         });
+
+        $(function() {
+            filterEstablishmentPhaseList();
+            $("select#TypeId").on("change keyup", filterEstablishmentPhaseList);
+        });
+
+        function filterEstablishmentPhaseList() {
+            var $typeSelector = $("select#TypeId");
+            var $phaseSelector = $("select#EducationPhaseId");
+            var optionList = '<option value="">Please select</option>';
+            var typeId = $typeSelector.val();
+            var previousSelValue = $phaseSelector.val(); 
+            if(!isNaN(typeId)) {
+                var applicablePhases = type2PhaseMap[typeId];
+                if(applicablePhases && applicablePhases.length > 0) {
+                    for (var i = 0; i < applicablePhases.length; i++) {
+                        var filtered = $.grep(phases, function(ele, y) { return parseInt(ele.value, 10) == applicablePhases[i]; });
+                        if(filtered != null && filtered.length > 0) {
+                            optionList += '<option value="' + filtered[0].value + '" '+ (previousSelValue == filtered[0].value ? "selected" : "") +'>' + filtered[0].text + '</option>';
+                        }
+                    }
+                }
+            }
+            $phaseSelector.html(optionList);
+        }
+
 
     </script>
 }

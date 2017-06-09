@@ -24,7 +24,7 @@
                         We found <span class="heading-xlarge count">@Model.Count</span> establishment groups
                         @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
                         {
-                            <text>matching "@Model.GroupSearchModel.Text".</text>
+                            <text>matching &lsquo;<span class="bold-small">@Model.GroupSearchModel.Text</span>&rsquo;.</text>
                         }
                     </text>
                 }

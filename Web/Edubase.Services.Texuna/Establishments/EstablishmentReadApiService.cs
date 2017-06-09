@@ -17,6 +17,8 @@ using Edubase.Services.Enums;
 
 namespace Edubase.Services.Texuna.Establishments
 {
+    using ET = eLookupEstablishmentType;
+    using EP = eLookupEducationPhase;
 
     /// <summary>
     /// Implementation of IEstablishmentReadService that will gradually be changed to call the API rather than custom backend
@@ -103,5 +105,62 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<FileDownloadDto> GetDownloadAsync(int urn, eFileFormat format, IPrincipal principal)
             => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/download?format={format.ToString().ToLower()}", principal)).GetResponse();
+
+        public Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap()
+        {
+            var retVal = new Dictionary<ET, EP[]>();
+            retVal.Add(ET.CommunitySchool, new[] { EP.Nursery, EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough });
+            retVal.Add(ET.VoluntaryAidedSchool, new[] { EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough });
+            retVal.Add(ET.VoluntaryControlledSchool, new[] { EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough });
+            retVal.Add(ET.FoundationSchool, new[] { EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough });
+
+            retVal.Add(ET.CityTechnologyCollege, new[] { EP.NotApplicable });
+            retVal.Add(ET.CommunitySpecialSchool, new[] { EP.NotApplicable });
+            retVal.Add(ET.NonmaintainedSpecialSchool, new[] { EP.NotApplicable });
+            retVal.Add(ET.OtherIndependentSpecialSchool, new[] { EP.NotApplicable });
+            retVal.Add(ET.OtherIndependentSchool, new[] { EP.NotApplicable });
+            retVal.Add(ET.FoundationSpecialSchool, new[] { EP.NotApplicable });
+            retVal.Add(ET.PupilReferralUnit, new[] { EP.NotApplicable });
+
+            retVal.Add(ET.LANurserySchool, new[] { EP.Nursery });
+            retVal.Add(ET.FurtherEducation, new[] { EP._16Plus });
+
+            retVal.Add(ET.SecureUnits, new[] { EP.NotApplicable });
+            retVal.Add(ET.OffshoreSchools, new[] { EP.NotApplicable });
+            retVal.Add(ET.ServiceChildrensEducation, new[] { EP.NotApplicable });
+            retVal.Add(ET.Miscellaneous, new[] { EP.NotApplicable });
+
+            retVal.Add(ET.AcademySponsorLed, new[] { EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough });
+
+            retVal.Add(ET.HigherEducationInstitutions, new[] { EP.NotApplicable });
+            retVal.Add(ET.WelshEstablishment, new[] { EP.NotApplicable });
+            retVal.Add(ET.SixthFormCentres, new[] { EP.NotApplicable });
+            retVal.Add(ET.SpecialPost16Institution, new[] { EP.NotApplicable });
+            retVal.Add(ET.AcademySpecialSponsorLed, new[] { EP.NotApplicable });
+
+            retVal.Add(ET.AcademyConverter, new[] { EP.Nursery, EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough });
+            retVal.Add(ET.FreeSchools, new[] { EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP.AllThrough });
+
+            retVal.Add(ET.FreeSchoolsSpecial, new[] { EP.NotApplicable });
+            retVal.Add(ET.BritishSchoolsOverseas, new[] { EP.NotApplicable });
+            retVal.Add(ET.FreeSchoolsAlternativeProvision, new[] { EP.NotApplicable });
+
+            retVal.Add(ET.FreeSchools1619, new[] { EP._16Plus });
+            retVal.Add(ET.UniversityTechnicalCollege, new[] { EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough });
+            retVal.Add(ET.StudioSchools, new[] { EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough });
+            
+            retVal.Add(ET.AcademyAlternativeProvisionConverter, new[] { EP.NotApplicable });
+            retVal.Add(ET.AcademyAlternativeProvisionSponsorLed, new[] { EP.NotApplicable });
+            retVal.Add(ET.AcademySpecialConverter, new[] { EP.NotApplicable });
+
+            retVal.Add(ET.Academy1619Converter, new[] { EP._16Plus });
+            retVal.Add(ET.Academy1619SponsorLed, new[] { EP._16Plus });
+
+            retVal.Add(ET.ChildrensCentre, new[] { EP.NotApplicable });
+            retVal.Add(ET.ChildrensCentreLinkedSite, new[] { EP.NotApplicable });
+            retVal.Add(ET.InstitutionFundedByOtherGovernmentDepartment, new[] { EP.NotApplicable });
+
+            return retVal;
+        }
     }
 }
