@@ -144,7 +144,7 @@ namespace Edubase.Web.UI.Controllers
                     else
                     {
                         await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                        return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
+                        return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value, approved = model.OverrideCRProcess });
                     }
                 }
             }
@@ -154,7 +154,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     await PrepareModels(model, domainModel);
                     await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                    return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value });
+                    return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value, approved = model.OverrideCRProcess });
                 }
             }
 
@@ -244,8 +244,9 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Route("Details/{id}")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false)
         {
+            ViewBag.ShowApproved = approved;
             var parent = await GetLegalParent(id, User);
             var viewModel = new EstablishmentDetailViewModel
             {
