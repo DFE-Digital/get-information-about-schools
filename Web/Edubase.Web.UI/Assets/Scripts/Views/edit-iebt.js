@@ -82,7 +82,8 @@
                 overlayAttached = true;                
                 self.radios.okCancel({
                     ok: self.okClick,
-                    cancel: self.cancelClick
+                    cancel: self.cancelClick,
+                    idPrefix: 'iebt-'
                 });
 
             }
