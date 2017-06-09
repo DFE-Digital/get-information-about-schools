@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
 {

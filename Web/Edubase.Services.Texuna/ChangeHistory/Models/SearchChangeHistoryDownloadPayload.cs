@@ -10,5 +10,15 @@ namespace Edubase.Services.Texuna.ChangeHistory.Models
 
         [JsonProperty("fileFormat")]
         public string FileFormatString => FileFormat.ToString().ToLower();
+
+        public SearchChangeHistoryDownloadPayload()
+        {
+
+        }
+
+        public SearchChangeHistoryDownloadPayload(eFileFormat fileFormat)
+        {
+            FileFormat = fileFormat;
+        }
     }
 }

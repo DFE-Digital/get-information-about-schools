@@ -18,8 +18,7 @@
     @Html.Partial("_DuplicateGovernor", ViewData["DuplicateGovernor"])
 }
 
-@*@Html.Partial("_ValidationSummary", ViewData.ModelState)*@
-    @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 <div class="grid-row">
     <div class="column-full">

@@ -1,12 +1,24 @@
-﻿@using System.Web.UI.WebControls
-@model DateTimeViewModel
-
+﻿@model DateTimeViewModel
+@{ 
+    bool disableHint = false;
+    bool.TryParse(ViewData["disableHint"]?.ToString(), out disableHint);
+}
 <div class="form-group create-edit-form-group date-group
-      @Html.ValidationCssClassFor(x => x) @Html.ValidationCssClassFor(x => x.Day) @Html.ValidationCssClassFor(x => x.Month) @Html.ValidationCssClassFor(x => x.Year)">
+    @Html.ValidationCssClassFor(x => x)
+    @Html.ValidationCssClassFor(x => x.Day) 
+    @Html.ValidationCssClassFor(x => x.Month) 
+    @Html.ValidationCssClassFor(x => x.Year)">
     <fieldset class="range-group">
         <legend class="bold-xsmall">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
-        <div class="form-hint">For example, 20 03 2003</div>
+        @if (!disableHint)
+        {
+            <div class="form-hint">For example, 20 03 2003</div>
+        }
         @Html.ValidationMessageFor(x => x)
+        @Html.ValidationMessageFor(x => x.Day)  
+        @Html.ValidationMessageFor(x => x.Month)
+        @Html.ValidationMessageFor(x => x.Year)
+        
         <span class="inline-form-control">
             @Html.LabelFor(x => x.Day)
             @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2))
