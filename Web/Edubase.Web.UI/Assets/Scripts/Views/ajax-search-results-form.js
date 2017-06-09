@@ -1,7 +1,7 @@
 ﻿(function () {
     var filterLimit = 200;
     var $filters = $('#filter-form').find(':checkbox, select > option');
-    var searchType = DfE.Util.QueryString.get('SearchType');
+    var searchType = DfE.Util.QueryString.get('searchtype');
     var selectedLas = [];
 
     function updateSearchedLas() {
@@ -22,6 +22,22 @@
     }
     if (searchType === 'ByLocalAuthority') {
         updateSearchedLas();
+    }
+
+    function updateGovernorRoles() {
+        var selectedGovRoles = [];
+        $('#option-select-role-type').find('.trigger-result-update').filter(':checked').each(function() {
+            var label = $(this).parent().clone();
+            label.find('span, input').remove();
+            var text = label.text();
+            selectedGovRoles.push('&lsquo;<span class="bold-small">' + $.trim(text) + '</span>&rsquo;');
+        });
+        selectedGovRoles = selectedGovRoles.join(', ');
+        var lastComma = selectedGovRoles.lastIndexOf(',');
+        selectedGovRoles = selectedGovRoles.substring(0, lastComma) +
+            ' and ' +
+            selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length);
+        $('.governor-roles').html(selectedGovRoles);
     }
 
     function captureFormState() {
@@ -118,6 +134,9 @@
                 ci = setTimeout(refreshResults, 200); // when the clear button is clicked on the filters, multiple events come through; so using timer to prevent extraneous requests
                 if (searchType === 'ByLocalAuthority') {
                     updateSearchedLas();
+                }
+                if (searchType === 'Governor') {
+                    updateGovernorRoles();
                 }
 
             }
