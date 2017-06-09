@@ -321,6 +321,8 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> OfstedRatings { get; internal set; }
         public List<LookupDto> SENProvisions { get; internal set; }
 
+        public Dictionary<int, int[]> Type2PhaseMap { get; set; }
+
         public EditEstablishmentModel()
         {
 

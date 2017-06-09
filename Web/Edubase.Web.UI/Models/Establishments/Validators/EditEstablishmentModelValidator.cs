@@ -4,6 +4,8 @@ using Edubase.Web.UI.Validation;
 using FluentValidation;
 using System.Linq;
 using Edubase.Services.Enums;
+using Edubase.Services.Establishments;
+using Edubase.Services;
 
 namespace Edubase.Web.UI.Models.Validators
 {
@@ -11,7 +13,7 @@ namespace Edubase.Web.UI.Models.Validators
     {
         private ICachedLookupService _lookupService;
 
-        public EditEstablishmentModelValidator(ICachedLookupService lookupService)
+        public EditEstablishmentModelValidator(ICachedLookupService lookupService, IEstablishmentReadService establishmentReadService)
         {
             _lookupService = lookupService;
 
@@ -19,13 +21,11 @@ namespace Edubase.Web.UI.Models.Validators
             {
                 ConfigureRules();
 
-                RuleSet("oncreate", () =>
-                {
-                    ConfigureRules();
-                    RuleFor(x => x.OpenDate).Must(x => x.IsNotEmpty()).WithMessage("Please specify an Open Date");
-                    RuleFor(x => x.ReasonEstablishmentOpenedId).NotEmpty().WithMessage("Reason opened should be specified");
-                    RuleFor(x => x.EducationPhaseId).NotEmpty().WithMessage("Phase should be set");
-                });
+                RuleFor(x => x.EducationPhaseId)
+                    .Cascade(CascadeMode.StopOnFirstFailure)
+                    .NotEmpty().WithMessage("Please select a a phase of education")
+                    .Must((m, x) => (establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.TypeId.Value]).Contains(x.Value))
+                    .WithMessage("Education phase is not valid for the selected type of establishment");
             });
 
             When(x => x.Action == EditEstablishmentModel.eAction.SaveLocation, () =>
@@ -35,13 +35,6 @@ namespace Edubase.Web.UI.Models.Validators
 
                 RuleFor(x => x.MSOACode).MustAsync(async (x, ct) => (await _lookupService.MSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
                     .When(x => !x.MSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithSummaryMessage("Area not found for Lower Super Output Area (LSOA)");
-            });
-
-            When(x => x.Action == EditEstablishmentModel.eAction.AddLinkedSchool, () =>
-            {
-                RuleFor(x => x.LinkedDateToAdd).Must(x => x.IsValid()).When(x => x.LinkedDateToAdd.IsNotEmpty()).WithMessage("Linked date is invalid");
-                RuleFor(x => x.LinkedDateToAdd).Must(x => x.IsNotEmpty()).WithMessage("Please specify a Linked date");
-                RuleFor(x => x.LinkTypeToAdd).NotNull().WithMessage("Please specify a Link Type");
             });
         }
 

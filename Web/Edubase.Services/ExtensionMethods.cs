@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using System.Data.Entity;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services
 {
@@ -40,7 +41,14 @@ namespace Edubase.Services
             if (retVal == null) throw exceptionFactory();
             return retVal;
         }
-        
+    
+        /// <summary>
+        /// Casts the map to one of integers, rather than enums.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <returns></returns>
+        public static Dictionary<int, int[]> AsInts(this Dictionary<eLookupEstablishmentType, eLookupEducationPhase[]> dict) 
+            => dict.Select(x => new { key = (int)x.Key, val = x.Value.Select(v => (int)v).ToArray() }).ToDictionary(x => x.key, x => x.val);
 
     }
 }

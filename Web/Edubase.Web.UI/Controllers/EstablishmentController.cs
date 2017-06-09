@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Reflection;
+using Edubase.Services;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
@@ -366,6 +367,8 @@ namespace Edubase.Web.UI.Controllers
             
             if (viewModel.MSOAId.HasValue) viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.MSOAId.Value)?.Code;
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
+
+            viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
         }
 
         
@@ -452,7 +455,8 @@ namespace Edubase.Web.UI.Controllers
         {
             var viewModel = new CreateEstablishmentViewModel
             {
-                CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User)
+                CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
+                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()
             };
             await PopulateSelectLists(viewModel); 
             return View(viewModel);
@@ -462,6 +466,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Create(CreateEstablishmentViewModel viewModel)
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
+            viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
 
             if (ModelState.IsValid)
             {

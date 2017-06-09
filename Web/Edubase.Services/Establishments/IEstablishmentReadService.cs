@@ -4,13 +4,15 @@ using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
-using Edubase.Services.Groups.Models;
 using Edubase.Services.Establishments.Search;
 using System;
 using Edubase.Services.Enums;
 
 namespace Edubase.Services.Establishments
 {
+    using ET = eLookupEstablishmentType;
+    using EP = eLookupEducationPhase;
+
     public interface IEstablishmentReadService
     {
         Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal);
@@ -47,5 +49,6 @@ namespace Edubase.Services.Establishments
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model);
         Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, eFileFormat format, IPrincipal principal);
         Task<FileDownloadDto> GetDownloadAsync(int urn, eFileFormat format, IPrincipal principal);
+        Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap();
     }
 }
