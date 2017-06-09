@@ -144,8 +144,8 @@
         </div>
         <div class="column-half">
             <div class="button-row">
-                <input type="submit" class="button" value="Save" v-on:click.prevent="updateRecord" />
-                <a href="#" class="button button-grey" v-on:click="editRecord=false, searchUrn='', presentDetail=false">Cancel</a>
+                <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
+                <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
             </div>
             <div class="form-group">
                 <label class="form-label">URN</label>
@@ -155,7 +155,7 @@
             <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
                 <label class="form-label">Establishment name </label>
                 <span class="error-message" v-show="updateNameError">Please check the new establishment name</span>
-                <input class="form-control" type="text" v-model="updateName" />
+                <input class="form-control" type="text" v-model="updateName" v-on:change="userHasEdited = true" />
             </div>
 
             <div class="form-group">
@@ -171,17 +171,17 @@
 
                     <span class="inline-form-control">
                         <label for="opendate-day">Day</label>
-                        <input class="form-control date-text-day" id="opendate-day" name="OpenDate.Day" type="text" v-model="updateDateDay">
+                        <input class="form-control date-text-day" id="opendate-day" name="OpenDate.Day" type="text" v-model="updateDateDay"  v-on:change="userHasEdited = true">
 
                     </span>
                     <span class="inline-form-control">
                         <label for="opendate-month">Month</label>
-                        <input class="form-control date-text-month" id="opendate-month" name="OpenDate.Month" type="text" v-model="updateDateMonth">
+                        <input class="form-control date-text-month" id="opendate-month" name="OpenDate.Month" type="text" v-model="updateDateMonth" v-on:change="userHasEdited = true">
 
                     </span>
                     <span class="inline-form-contol">
                         <label for="opendate-year">Year</label>
-                        <input class="form-control date-text-year" id="opendate-year" name="OpenDate.Year" type="text" v-model="updateDateYear">
+                        <input class="form-control date-text-year" id="opendate-year" name="OpenDate.Year" type="text" v-model="updateDateYear" v-on:change="userHasEdited = true">
                     </span>
                 </fieldset>
             </div>
@@ -197,12 +197,24 @@
             </div>
 
             <div class="button-row lower">
-                <input type="submit" class="button" value="Save" v-on:click.prevent="updateRecord" />
-                <a href="#" class="button button-grey" v-on:click="editRecord=false, searchUrn='',presentDetail=false">Cancel</a>
+                <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
+                <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
             </div>
         </div>
     </div>
 
+    <div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div>
+    <div id="modal-content" class="modal-content" role="dialog" v-show="presentExitWarning">
+        <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a>
+        <div id="modal-inner">
+            <h3 class="heading-large">Are you sure you want to leave this page?</h3>
+            <p>Any unsaved changes will be lost.</p>
+        </div>
+        <div class="button-row">
+            <a href="#" class="button mobile-full-width" id="button-ok" v-on:click.prevent="presentExitWarning=false, editRecord=false, searchUrn='', presentDetail=false">OK</a>
+            <a href="#" class="button button-grey mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
+        </div>
+    </div>
 </div>
 
 @section ViewScripts {
