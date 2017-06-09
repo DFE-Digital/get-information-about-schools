@@ -471,7 +471,7 @@ namespace Edubase.Web.UI.Controllers
 
             if (ModelState.IsValid)
             {
-                var urn = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
+                var response = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
                 {
                     EducationPhaseId = viewModel.EducationPhaseId.Value,
                     EstablishmentNumber = viewModel.EstablishmentNumber,
@@ -481,7 +481,17 @@ namespace Edubase.Web.UI.Controllers
                     Name = viewModel.Name
                 }, User);
 
-                return RedirectToAction(nameof(Details), new { id = urn });
+                if (response.Success)
+                {
+                    return RedirectToAction(nameof(Details), new {id = response.Response});
+                }
+                else
+                {
+                    foreach (var error in response.Errors)
+                    {
+                        ModelState.AddModelError(error.Fields, error.Message);
+                    }
+                }
             }
 
             await PopulateSelectLists(viewModel);

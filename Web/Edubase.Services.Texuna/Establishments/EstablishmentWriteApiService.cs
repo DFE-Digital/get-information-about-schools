@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Edubase.Services.Establishments.Models;
 using System.Security.Principal;
-using System.IO;
 using Edubase.Services.Domain;
 using Edubase.Common;
 using Edubase.Services.Security;
@@ -43,18 +42,21 @@ namespace Edubase.Services.Texuna.Establishments
         /// <param name="model"></param>
         /// <param name="principal"></param>
         /// <returns></returns>
-        public async Task<int> CreateNewAsync(NewEstablishmentModel model, IPrincipal principal)
+        public async Task<ApiResponse<int>> CreateNewAsync(NewEstablishmentModel model, IPrincipal principal)
         {
-            var apiModel = new EstablishmentModel();
-            apiModel.Name = model.Name;
-            apiModel.EstablishmentNumber = model.EstablishmentNumber.ToInteger();
-            apiModel.EducationPhaseId = model.EducationPhaseId;
-            apiModel.TypeId = model.EstablishmentTypeId;
-            apiModel.LocalAuthorityId = model.LocalAuthorityId;
-            apiModel.CCLAContactDetail = new ChildrensCentreLocalAuthorityDto();
-            apiModel.IEBTModel = new IEBTModel();
-            apiModel.StatusId = (int)eLookupEstablishmentStatus.ProposedToOpen;
-            return (await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={model.GenerateEstabNumber.ToString().ToLower()}", apiModel, principal)).Response.Value;
+            var apiModel = new EstablishmentModel
+            {
+                Name = model.Name,
+                EstablishmentNumber = model.EstablishmentNumber.ToInteger(),
+                EducationPhaseId = model.EducationPhaseId,
+                TypeId = model.EstablishmentTypeId,
+                LocalAuthorityId = model.LocalAuthorityId,
+                CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(),
+                IEBTModel = new IEBTModel(),
+                StatusId = (int) eLookupEstablishmentStatus.ProposedToOpen
+            };
+
+            return Unwrap(await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={model.GenerateEstabNumber.ToString().ToLower()}", apiModel, principal));
         }
 
         public async Task<BulkUpdateProgressModel> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)
@@ -78,6 +80,16 @@ namespace Edubase.Services.Texuna.Establishments
             var payload = propertiesToUpdate.ToDictionary(x => x.Key, x => x.Value);
 
             return await _httpClient.PatchAsync($"establishment/{model.Urn}", payload, principal);
+        }
+
+        private ApiResponse<T> Unwrap<T>(ApiResponse<ApiResultDto<T>> response)
+        {
+            return new ApiResponse<T>
+            {
+                Success = response.Success,
+                Errors = response.Errors,
+                Response = response.Response != null ? response.Response.Value : default(T)
+            };
         }
     }
 }
