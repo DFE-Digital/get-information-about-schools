@@ -1,6 +1,5 @@
 ﻿(function () {
 
-
     var uniqueDates = [],
         academyOpenings,
         i,
@@ -61,11 +60,14 @@
             updateDateYear: '',
             od: {},
             presentDetail: false,
-            isProcessing: true
+            isProcessing: true,
+            userHasEdited: false,
+            presentExitWarning: false
 
         },
         created: function () {
             this.loadData();
+           
         },
         methods: {
             formatDate: function (date, separator) {
@@ -203,6 +205,7 @@
                     y = parseInt(this.updateDateYear, 10),
                     self = this;
 
+
                 this.updateNameError = this.updateName.length < 1;
 
                 this.openDateError = (
@@ -216,6 +219,7 @@
                     this.presentDetail = false;
                     this.editRecord = false;
                     this.isProcessing = true;
+                    this.userHadEdited = false;
                     $.ajax({
                         url: '/api/academy/' + urn,
                         type: 'patch',
@@ -277,8 +281,17 @@
 
                 this.od = academy[0];
                 return this.od;
+            },
+            cancelEditClick: function () {
+                if (this.userHasEdited) {
+                    return this.presentExitWarning = true;
+                }
+                this.editRecord = false;
+                this.searchUrn = '';
+                this.presentDetail = false;
             }
         },
+        
         computed: {
             paginationDescription: function () {
                 var starting = this.currentPage * this.pageSize + 1,
@@ -291,9 +304,12 @@
         }
 
     });
+
+
     $(window).on('tabChange', function () {
         academyOpenings.searchError = false;
     });
-}());
+    $('.horizontal-tabs-wrapper').tabs();
 
-$('.horizontal-tabs-wrapper').tabs();
+
+}());
