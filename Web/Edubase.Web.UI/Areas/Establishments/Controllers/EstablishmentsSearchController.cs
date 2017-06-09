@@ -307,10 +307,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Establishments;
-            viewModel.SearchQueryString = Request.QueryString.ToString();
 
             if (!viewModel.Dataset.HasValue)
+            {
+                viewModel.SearchQueryString = Request.QueryString.ToString();
                 return View("Downloads/SelectDataset", viewModel);
+            }
 
             if (!viewModel.FileFormat.HasValue)
                 return View("Downloads/SelectFormat", viewModel);
