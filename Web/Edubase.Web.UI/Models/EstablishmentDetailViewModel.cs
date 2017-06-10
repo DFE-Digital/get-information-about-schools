@@ -126,6 +126,7 @@ namespace Edubase.Web.UI.Models
         public string AdmissionsPolicyName { get; set; }
         public string AddressCountryName { get; set; }
         public string AddressCountyName { get; set; }
+        public string AltAddressCountyName { get; set; }
         public string OfstedRatingName { get; set; }
         public string HelpdeskPreviousLocalAuthorityName { get; set; }
         #endregion
@@ -137,6 +138,14 @@ namespace Edubase.Web.UI.Models
             Establishment.Address_Locality, 
             Establishment.Address_CityOrTown, 
             AddressCountyName);
+
+        public string GetAltAddress() => StringUtil.ConcatNonEmpties(", ",
+            Establishment.AltStreet,
+            Establishment.AltAddress3,
+            Establishment.AltLocality,
+            Establishment.AltTown,
+            AltAddressCountyName,
+            Establishment.AltPostCode);
 
     }
 }

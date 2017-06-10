@@ -277,6 +277,7 @@ namespace Edubase.Services.Establishments.Models
         public DateTime? CreatedUtc { get; set; }
         public DateTime? LastUpdatedUtc { get; set; }
         public async Task<string> GetAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, await lookup.GetNameAsync("CountyId", Address_CountyId), Address_PostCode);
+        public async Task<string> GetAltAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", AltStreet, AltAddress3, AltLocality, AltTown, await lookup.GetNameAsync("CountyId", AltCountyId), AltPostCode);
         public string GetLAESTAB() => string.Concat(LocalAuthorityId, "/", EstablishmentNumber.GetValueOrDefault().ToString("D4"));
         public string HelpdeskNotes { get; set; }
         public DateTime? HelpdeskLastUpdate { get; set; }

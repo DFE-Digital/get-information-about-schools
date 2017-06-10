@@ -467,6 +467,7 @@ namespace Edubase.Web.UI.Controllers
 
             vm.AddressCountryName = await c.GetNameAsync("CountryId", vm.Establishment.Address_CountryId);
             vm.AddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.Address_CountyId);
+            vm.AltAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.AltCountyId);
 
         }
 

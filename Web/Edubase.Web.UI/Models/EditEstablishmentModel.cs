@@ -59,21 +59,30 @@ namespace Edubase.Web.UI.Models
         public int? EstablishmentTypeGroupId { get; set; }
 
 
+
         public string Address_Line1 { get; set; }
-
         public string Address_Line2 { get; set; }
-
         public string Address_Line3 { get; set; }
-
         public string Address_CityOrTown { get; set; }
-
         public int? Address_CountyId { get; set; }
-
         public int? Address_CountryId { get; set; }
-
         public string Address_Locality { get; set; }
-
         public string Address_PostCode { get; set; }
+        
+
+
+        public string AltSiteName { get; set; }
+        public int? AltCountryId { get; set; }
+        public string AltUPRN { get; set; }
+        public string AltStreet { get; set; }
+        public string AltLocality { get; set; }
+        public string AltAddress3 { get; set; }
+        public string AltTown { get; set; }
+        public int? AltCountyId { get; set; }
+        public string AltPostCode { get; set; }
+        public bool IsAltAddressSet => AltSiteName.Clean() != null || AltStreet.Clean() != null;
+
+
 
         public string OldHeadFirstName { get; set; }
         public string HeadFirstName { get; set; }
