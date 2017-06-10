@@ -188,5 +188,11 @@ namespace Edubase.Services.Establishments.Models
         public virtual bool BSODateOfNextInspectionVisit { get; set; }
 
         public virtual bool HeadPreferredJobTitle { get; set; }
+
+        public bool HelpdeskNotes { get; set; }
+        public bool HelpdeskLastUpdate { get; set; }
+        public bool HelpdeskTrigger1 { get; set; }
+        public bool HelpdeskPreviousLocalAuthorityId { get; set; }
+        public bool HelpdeskPreviousEstablishmentNumber { get; set; }
     }
 }

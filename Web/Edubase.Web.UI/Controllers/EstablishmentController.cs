@@ -70,6 +70,30 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
+        public async Task<ActionResult> EditDetails(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
+
+
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Helpdesk")]
+        public async Task<ActionResult> EditHelpdesk(int? id)
+        {
+            if (!id.HasValue) return HttpNotFound();
+            var viewModel = await CreateEditViewModel(id);
+            if (!viewModel.TabDisplayPolicy.Helpdesk) throw new PermissionDeniedException();
+            viewModel.SelectedTab = "helpdesk";
+            return View(viewModel);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Helpdesk")]
+        public async Task<ActionResult> EditHelpdesk(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
+
+        
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
         public async Task<ActionResult> EditLocation(int? id)
         {
@@ -80,6 +104,12 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
+        public async Task<ActionResult> EditLocation(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
+
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
         public async Task<ActionResult> EditIEBT(int? id)
         {
@@ -88,33 +118,6 @@ namespace Edubase.Web.UI.Controllers
             if (!viewModel.TabDisplayPolicy.IEBT) throw new PermissionDeniedException();
             viewModel.SelectedTab = "iebt";
             return View("EditIEBT", viewModel);
-        }
-        
-        private async Task<ViewModel> CreateEditViewModel(int? id)
-        {
-            var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
-            var viewModel = _mapper.Map<ViewModel>(domainModel);
-            _mapper.Map(domainModel.IEBTModel, viewModel);
-
-            viewModel.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
-            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
-            viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
-            viewModel.SENIds = viewModel.SENIds ?? new int[0];
-
-            await PopulateSelectLists(viewModel);
-            return viewModel;
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
-        public async Task<ActionResult> EditDetails(ViewModel model)
-        {
-            return await SaveEstablishment(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
-        public async Task<ActionResult> EditLocation(ViewModel model)
-        {
-            return await SaveEstablishment(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
@@ -242,6 +245,21 @@ namespace Edubase.Web.UI.Controllers
                     ReflectionHelper.SetProperty(domainModel.IEBTModel, item, value);
                 }
             }
+        }
+
+        private async Task<ViewModel> CreateEditViewModel(int? id)
+        {
+            var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
+            var viewModel = _mapper.Map<ViewModel>(domainModel);
+            _mapper.Map(domainModel.IEBTModel, viewModel);
+
+            viewModel.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
+            viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
+            viewModel.SENIds = viewModel.SENIds ?? new int[0];
+
+            await PopulateSelectLists(viewModel);
+            return viewModel;
         }
 
         [HttpGet, Route("Details/{id}")]
@@ -442,6 +460,7 @@ namespace Edubase.Web.UI.Controllers
             vm.StatusName = await c.GetNameAsync(() => vm.Establishment.StatusId);
             vm.AdmissionsPolicyName = await c.GetNameAsync(() => vm.Establishment.AdmissionsPolicyId);
             vm.OfstedRatingName = await c.GetNameAsync(() => vm.Establishment.OfstedRatingId);
+            vm.HelpdeskPreviousLocalAuthorityName = await c.GetNameAsync("LocalAuthorityId", vm.Establishment.HelpdeskPreviousLocalAuthorityId);
 
             var sens = await c.SpecialEducationNeedsGetAllAsync();
             vm.SENNames = StringUtil.Sentenceify((vm.Establishment.SENIds ?? new int[0]).Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());

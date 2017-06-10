@@ -981,6 +981,8 @@
     <Content Include="Views\DataQuality\Status.cshtml" />
     <Content Include="Views\DataQuality\EditStatus.cshtml" />
     <Content Include="Views\DataQuality\ViewStatus.cshtml" />
+    <Content Include="Views\Establishment\Partials\TabHelpdesk.cshtml" />
+    <Content Include="Views\Establishment\EditHelpdesk.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

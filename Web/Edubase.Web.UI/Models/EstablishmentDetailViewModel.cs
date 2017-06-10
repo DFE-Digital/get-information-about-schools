@@ -127,6 +127,7 @@ namespace Edubase.Web.UI.Models
         public string AddressCountryName { get; set; }
         public string AddressCountyName { get; set; }
         public string OfstedRatingName { get; set; }
+        public string HelpdeskPreviousLocalAuthorityName { get; set; }
         #endregion
 
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ", 

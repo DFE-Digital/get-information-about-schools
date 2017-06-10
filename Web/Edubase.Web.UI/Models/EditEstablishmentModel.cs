@@ -81,10 +81,8 @@ namespace Edubase.Web.UI.Models
         public string HeadLastName { get; set; }
         public int? HeadTitleId { get; set; }
         public string HeadEmailAddress { get; set; }
-        //public DateTimeViewModel HeadAppointmentDate { get; set; }
         public ContactDetailsViewModel Contact { get; set; } = new ContactDetailsViewModel();
         public ContactDetailsViewModel ContactAlt { get; set; } = new ContactDetailsViewModel();
-        //public int? LAESTAB { get; set; }
         public int? EstablishmentNumber { get; set; }
 
         public int? TypeId { get; set; }
@@ -96,13 +94,13 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel CloseDate { get; set; } = new DateTimeViewModel();
         public eAction Action { get; set; }
 
-        public int? LinkedSearchUrn { get; set; }
-        public int? LinkedUrnToAdd { get; set; }
-        public string LinkedEstabNameToAdd { get; set; }
-        public eLinkType? LinkTypeToAdd { get; set; }
-        public DateTimeViewModel LinkedDateToAdd { get; set; }
-        public int? LinkedItemPositionToRemove { get; set; }
-        public List<LinkedEstabViewModel> Links { get; internal set; } = new List<LinkedEstabViewModel>();
+        //public int? LinkedSearchUrn { get; set; }
+        //public int? LinkedUrnToAdd { get; set; }
+        //public string LinkedEstabNameToAdd { get; set; }
+        //public eLinkType? LinkTypeToAdd { get; set; }
+        //public DateTimeViewModel LinkedDateToAdd { get; set; }
+        //public int? LinkedItemPositionToRemove { get; set; }
+        //public List<LinkedEstabViewModel> Links { get; internal set; } = new List<LinkedEstabViewModel>();
         public bool ScrollToLinksSection { get; set; }
         
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Counties.FirstOrDefault(x=>x.Value == Address_CountyId?.ToString())?.Text, Address_PostCode);
@@ -279,8 +277,6 @@ namespace Edubase.Web.UI.Models
         public int? HighestAnnualRateForDayPupils { get; set; }
         public int? LowestAnnualRateForBoardingPupils { get; set; }
         public int? HighestAnnualRateForBoardingPupils { get; set; }
-        //public Lookup BoardingEstablishment { get; set; } //ProvisionBoardingId
-        //public string ProprietorsName { get; set; } //ProprietorName
         public string ProprietorsStreet { get; set; }
         public string ProprietorsLocality { get; set; }
         public string ProprietorsAddress3 { get; set; }
@@ -320,6 +316,11 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> Countries { get; internal set; }
         public IEnumerable<SelectListItem> OfstedRatings { get; internal set; }
         public List<LookupDto> SENProvisions { get; internal set; }
+
+        public string HelpdeskNotes { get; set; }
+        public DateTimeViewModel HelpdeskLastUpdate { get; set; } = new DateTimeViewModel();
+        public int? HelpdeskPreviousLocalAuthorityId { get; set; }
+        public int? HelpdeskPreviousEstablishmentNumber { get; set; }
 
         public Dictionary<int, int[]> Type2PhaseMap { get; set; }
 
