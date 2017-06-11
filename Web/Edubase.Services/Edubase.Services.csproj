@@ -217,6 +217,7 @@
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayEditPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
+    <Compile Include="Establishments\Models\AmalgamateMergeRequest.cs" />
     <Compile Include="Establishments\Models\BulkUpdateDto.cs" />
     <Compile Include="Establishments\Models\CreateNewEstablishment.cs" />
     <Compile Include="Establishments\Models\IEBTModel.cs" />

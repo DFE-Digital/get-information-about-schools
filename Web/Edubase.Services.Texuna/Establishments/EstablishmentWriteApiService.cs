@@ -91,5 +91,8 @@ namespace Edubase.Services.Texuna.Establishments
                 Response = response.Response != null ? response.Response.Value : default(T)
             };
         }
+
+        public async Task<ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]>> AmalgamateOrMergeAsync(AmalgamateMergeRequest request, IPrincipal principal)
+            => await _httpClient.PostAsync<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]>("establishment/amalgamate-merge", request, principal);
     }
 }

@@ -14,5 +14,6 @@ namespace Edubase.Services.Establishments
         Task<ApiResponse<int>> CreateNewAsync(NewEstablishmentModel model, IPrincipal principal);
         Task<ValidationEnvelopeDto> ValidateAsync(EstablishmentModel model, IPrincipal principal);
         Task<ApiResponse> PartialUpdateAsync(EstablishmentModel model, EstablishmentFieldList fieldsToUpdate, IPrincipal principal);
+        Task<ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]>> AmalgamateOrMergeAsync(AmalgamateMergeRequest request, IPrincipal principal);
     }
 }
