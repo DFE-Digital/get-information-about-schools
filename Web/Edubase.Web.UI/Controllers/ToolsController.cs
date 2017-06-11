@@ -10,6 +10,7 @@ using System.Web.Mvc;
 namespace Edubase.Web.UI.Controllers
 {
     using Filters;
+    using Helpers;
     using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
 
@@ -37,33 +38,16 @@ namespace Edubase.Web.UI.Controllers
                 UserCanCreateSchoolTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Trust),
                 UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
                 UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
-                UserCanManageAcademyOpenings = User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.AP_AOS)
+                UserCanManageAcademyOpenings = User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.AP_AOS),
+                UserCanMergeOrAmalgamateEstablishments = User.InRole(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.SOU, EdubaseRoles.IEBT)
             };
 
             return View(viewModel);
         }
         [HttpGet, EdubaseAuthorize]
-        public ActionResult BulkAcademies()
-        {
-            return View();
-        }
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult MergersTool()
-        {
-            return View();
-        }
-        
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult ManageAcademyOpenings()
-        {
-            return View();
-        }
+        public ActionResult BulkAcademies() => View();
 
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult SearchChangeHistory()
-        {
-            return View();
-        }
-        
+        [HttpGet, MvcAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.SOU, EdubaseRoles.IEBT)]
+        public ActionResult MergersTool() => View();
     }
 }

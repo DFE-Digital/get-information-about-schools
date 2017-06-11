@@ -114,15 +114,18 @@
         </div>
     }
 
-    <div class="column-half">
-        <h3>
-            @Html.ActionLink(HttpUtility.HtmlDecode("Merge &amp; amalgamate establishments"), "MergersTool", "Tools")
-        </h3>
-        <p>
-            Carry out mergers and amalgamations using
-            this wizard.
-        </p>
-    </div>
+    @if (Model.UserCanMergeOrAmalgamateEstablishments)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.ActionLink(HttpUtility.HtmlDecode("Merge &amp; amalgamate establishments"), "MergersTool", "Tools")
+            </h3>
+            <p>
+                Carry out mergers and amalgamations using
+                this wizard.
+            </p>
+        </div>
+    }
 </div>
 
 <div class="grid-row">
