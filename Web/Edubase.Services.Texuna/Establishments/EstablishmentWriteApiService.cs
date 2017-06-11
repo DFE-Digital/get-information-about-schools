@@ -94,5 +94,15 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]>> AmalgamateOrMergeAsync(AmalgamateMergeRequest request, IPrincipal principal)
             => await _httpClient.PostAsync<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]>("establishment/amalgamate-merge", request, principal);
+
+        public async Task<ApiResponse<BulkCreateAcademiesProgress, NewAcademyRequestValidationEnvelope[]>> BulkCreateAcademies(NewAcademyRequest[] newAcademyRequests, IPrincipal principal)
+            => await _httpClient.PostAsync<BulkCreateAcademiesProgress, NewAcademyRequestValidationEnvelope[]>("establishment/bulk-create-academies", newAcademyRequests, principal);
+
+        public async Task<ApiResponse<NewAcademyRequestValidationEnvelope[]>> ValidateBulkCreateAcademies(NewAcademyRequest[] newAcademyRequests, IPrincipal principal)
+            => await _httpClient.PostAsync<NewAcademyRequestValidationEnvelope[]>("establishment/bulk-create-academies/validate", newAcademyRequests, principal);
+
+        public async Task<ApiResponse<BulkCreateAcademiesProgress>> GetBulkCreateAcademiesProgress(Guid id, IPrincipal principal)
+            => await _httpClient.GetAsync<BulkCreateAcademiesProgress>($"establishment/bulk-create-academies/progress/{id}", principal);
+
     }
 }
