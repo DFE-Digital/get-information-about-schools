@@ -9,7 +9,6 @@ namespace Edubase.Web.UI.Models.Establishments
 {
     using Services.Establishments.DisplayPolicies;
     using ET = eLookupEstablishmentType;
-    using TG = eLookupEstablishmentTypeGroup;
 
     public class TabDisplayPolicy
     {
