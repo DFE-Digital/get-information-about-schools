@@ -26,16 +26,19 @@
 </div>
 
 <div class="grid-row">
-    <div class="column-half">
-        <h3>
-            @Html.ActionLink("Bulk create new academies", "BulkAcademies", "Tools")
-        </h3>
-        <p>
-            Create records for multi-academy and single-academy
-            trusts using information from
-            companies house.
-        </p>
-    </div>
+    @if (Model.UserCanBulkCreateAcademies)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.ActionLink("Bulk create new academies", "BulkAcademies", "Tools")
+            </h3>
+            <p>
+                Create records for multi-academy and single-academy
+                trusts using information from
+                companies house.
+            </p>
+        </div>
+    }
 
     @if (Model.UserCanCreateAcademyTrustGroup)
     {
@@ -118,7 +121,7 @@
     {
         <div class="column-half">
             <h3>
-                @Html.ActionLink(HttpUtility.HtmlDecode("Merge &amp; amalgamate establishments"), "MergersTool", "Tools")
+                @Html.ActionLink("Merge & amalgamate establishments", "MergersTool", "Tools")
             </h3>
             <p>
                 Carry out mergers and amalgamations using

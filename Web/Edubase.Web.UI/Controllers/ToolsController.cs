@@ -14,7 +14,7 @@ namespace Edubase.Web.UI.Controllers
     using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
 
-    [RoutePrefix("Tools"), Route("{action=index}")]
+    [RoutePrefix("Tools"), Route("{action=index}"), EdubaseAuthorize]
     public class ToolsController : Controller
     {
         private readonly ISecurityService _securityService;
@@ -39,12 +39,13 @@ namespace Edubase.Web.UI.Controllers
                 UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
                 UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
                 UserCanManageAcademyOpenings = User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.AP_AOS),
+                UserCanBulkCreateAcademies = User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.AP_AOS),
                 UserCanMergeOrAmalgamateEstablishments = User.InRole(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.SOU, EdubaseRoles.IEBT)
             };
 
             return View(viewModel);
         }
-        [HttpGet, EdubaseAuthorize]
+        [HttpGet, MvcAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
         public ActionResult BulkAcademies() => View();
 
         [HttpGet, MvcAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.SOU, EdubaseRoles.IEBT)]

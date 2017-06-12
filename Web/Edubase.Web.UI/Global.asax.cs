@@ -34,7 +34,6 @@ namespace Edubase.Web.UI
             using (var scope = IocConfig.Container.BeginLifetimeScope())
             {
                 scope.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
-                scope.Resolve<IBlobService>().Initialise("downloads");
             }
 
             var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.Container));

@@ -89,7 +89,6 @@ namespace Edubase.Web.UI
             builder.RegisterInstance(Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(
                 ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString));
 
-            builder.RegisterType<BlobService>().As<IBlobService>();
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
             builder.RegisterType<GooglePlacesService>().As<IGooglePlacesService>();
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
