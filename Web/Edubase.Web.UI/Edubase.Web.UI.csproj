@@ -312,6 +312,10 @@
     <Compile Include="Areas\Groups\Models\GroupSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupSearchViewModel.cs" />
     <Compile Include="Areas\Groups\Models\Validators\GroupEditorViewModelValidator.cs" />
+    <Compile Include="Controllers\Api\BulkCreateAcademiesApiController.cs" />
+    <Compile Include="Controllers\Api\EstablishmentApiController.cs" />
+    <Compile Include="Controllers\Api\SearchApiController.cs" />
+    <Compile Include="Controllers\Api\AmalgamateMergeApiController.cs" />
     <Compile Include="Controllers\Api\AcademyOpeningsApiController.cs" />
     <Compile Include="Controllers\Api\ApprovalsApiController.cs" />
     <Compile Include="Controllers\Api\UserRolesController.cs" />
@@ -961,7 +965,6 @@
     <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
     <Content Include="Views\Approvals\Index.cshtml" />
-    <Content Include="Views\Tools\SearchChangeHistory.cshtml" />
     <Content Include="Views\Prototype\AddressLookup.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTimeViewModel.cshtml" />
     <Content Include="Views\Prototype\HelpIcon.cshtml" />
@@ -981,6 +984,8 @@
     <Content Include="Views\DataQuality\Status.cshtml" />
     <Content Include="Views\DataQuality\EditStatus.cshtml" />
     <Content Include="Views\DataQuality\ViewStatus.cshtml" />
+    <Content Include="Views\Establishment\Partials\TabHelpdesk.cshtml" />
+    <Content Include="Views\Establishment\EditHelpdesk.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

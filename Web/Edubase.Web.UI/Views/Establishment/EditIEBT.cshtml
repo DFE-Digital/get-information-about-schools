@@ -187,24 +187,41 @@
                 <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
 
                 @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-grey mobile-full-width", id = "cancel-edit"})
-            </div>    
-            
-            @section ViewScripts {
-    
-                <script>
-                    $('#cancel-edit, .requires-conf-to-leave').okCancel({
-                        ok: function() {
-                            window.location = this.el.getAttribute('href');
-                        },
-                        title: 'Are you sure you want to leave this page?',
-                        content: 'Any unsaved changes will be lost',
-                        triggerEvent: 'click'
-                    });
-                </script>
+            </div>
 
-            }    
+                @section ViewScripts {
+
+                    <script>
+                        $('#cancel-edit, .requires-conf-to-leave').okCancel({
+                            ok: function() {
+                                window.location = this.el.getAttribute('href');
+                            },
+                            title: 'Are you sure you want to leave this page?',
+                            content: 'Any unsaved changes will be lost',
+                            triggerEvent: 'click'
+                        });
+                    </script>
+                }
         }
-    
+        else
+        {
+            @section ViewScripts {
+                <script>
+                    var $fields = $('#content').find('.form-control');
+                    var exitAttached = false;
+
+                    $fields.on('change', function () {
+                        if (!exitAttached) {
+                            DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                            exitAttached = true;
+                        }
+                    });
+
+                </script>
+                
+            }
+        }
+
     </div>
 }
 

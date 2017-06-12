@@ -229,7 +229,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
             else
             {
-                using (MiniProfiler.Current.Step("Invoking AZS search"))
+                using (MiniProfiler.Current.Step("Invoking search"))
                 {
                     try
                     {

@@ -1,5 +1,4 @@
-﻿using Edubase.Services.Domain;
-
+﻿
 namespace Edubase.Services
 {
     using Common.IO;
@@ -9,6 +8,7 @@ namespace Edubase.Services
     using System;
     using System.Configuration;
     using System.IO;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Formatting;
     using System.Net.Http.Headers;
@@ -17,6 +17,7 @@ namespace Edubase.Services
     using Texuna;
     using Texuna.Core;
     using Texuna.Serialization;
+    using Domain;
 
     public class HttpClientWrapper
     {
@@ -49,25 +50,27 @@ namespace Edubase.Services
             }
         }
 
-        public async Task<ApiResponse<T>> PostAsync<T>(string uri, object data, IPrincipal principal)
+        public async Task<ApiResponse> PatchAsync(string uri, object data, IPrincipal principal)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
+            using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
-                var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync<T>(result);
-            }
-        }
-        
-        public async Task<ApiResponse> PostAsync(string uri, object data, IPrincipal principal)
-        {
-            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
-            {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
+                var requestMessage = CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync(result);
             }
         }
+
+        public async Task DeleteAsync(string uri, object data, IPrincipal principal)
+        {
+            using (MiniProfiler.Current.Step($"TEXAPI: DELETE {uri}"))
+            {
+                var requestMessage = CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
+                var result = await SendAsync(requestMessage);
+                await ParseHttpResponseMessageAsync(result);
+            }
+        }
+
+        #region PUT methods
 
         public async Task<ApiResponse<T>> PutAsync<T>(string uri, object data, IPrincipal principal)
         {
@@ -89,26 +92,41 @@ namespace Edubase.Services
             }
         }
 
-        public async Task<ApiResponse> PatchAsync(string uri, object data, IPrincipal principal)
+        #endregion
+
+        #region POST methods
+
+        public async Task<ApiResponse<T>> PostAsync<T>(string uri, object data, IPrincipal principal)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
+            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
+                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
+                var result = await SendAsync(requestMessage);
+                return await ParseHttpResponseMessageAsync<T>(result);
+            }
+        }
+
+        public async Task<ApiResponse> PostAsync(string uri, object data, IPrincipal principal)
+        {
+            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
+            {
+                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync(result);
             }
         }
 
-        public async Task DeleteAsync(string uri, object data, IPrincipal principal)
+        public async Task<ApiResponse<TSuccess, TValidationEnvelope>> PostAsync<TSuccess, TValidationEnvelope>(string uri, object payload, IPrincipal principal) 
+            where TValidationEnvelope : class
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: DELETE {uri}"))
+            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
+                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, payload);
                 var result = await SendAsync(requestMessage);
-                await ParseHttpResponseMessageAsync(result);
+                return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
             }
         }
-
+        
         /// <summary>
         /// Posts a multipart request to the API
         /// </summary>
@@ -155,82 +173,122 @@ namespace Edubase.Services
                 return await ParseHttpResponseMessageAsync<T>(result);
             }
         }
+        
+        #endregion
 
-        private HttpRequestMessage CreateHttpRequestMessage(HttpMethod method, string uri, IPrincipal principal, object requestBodyData = null)
-        {
-            var requestMessage = new HttpRequestMessage(method, uri);
-            requestMessage.Headers.Add(HEADER_SA_USER_ID, principal.GetUserId() ?? string.Empty);
-            if (requestBodyData != null) requestMessage.Content = new ObjectContent<object>(requestBodyData, _formatter);
-            return requestMessage;
-        }
+        #region ParseHttpResponseMessageAsync
 
         private async Task<ApiResponse<T>> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message)
         {
+            AssertJsonContentOrEmpty(message);
             var response = new ApiResponse<T>(message.IsSuccessStatusCode);
-            if (message.IsSuccessStatusCode) return await DeserializeResponseAsync(message, response);
+            if (message.IsSuccessStatusCode) return response.OK(await DeserializeResponseAsync<T>(message));
             else return await ProcessApiErrorAsync(message, response);
         }
 
         private async Task<ApiResponse> ParseHttpResponseMessageAsync(HttpResponseMessage message)
         {
-            var response = new ApiResponse(message.IsSuccessStatusCode && !(message?.Content?.Headers?.ContentType?.MediaType?.Equals("text/html")).GetValueOrDefault());
+            AssertJsonContentOrEmpty(message);
+            var response = new ApiResponse(message.IsSuccessStatusCode);
             if (message.IsSuccessStatusCode) return response;
             else return await ProcessApiErrorAsync(message, response);
         }
-
-        private static async Task<T> ProcessApiErrorAsync<T>(HttpResponseMessage message, T response) where T : ApiResponse
+        
+        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message)
+            where TValidationEnvelope : class
         {
-            if (message.StatusCode == System.Net.HttpStatusCode.Forbidden)
-                throw new EduSecurityException("The current principal does not have permission to call this API");
-
-            if (message.StatusCode == System.Net.HttpStatusCode.BadRequest)
-            {
-                try
-                {
-                    try
-                    {
-                        response.Errors = await message.Content.ReadAsAsync<ApiError[]>();
-                    }
-                    catch (JsonSerializationException)
-                    {
-                        response.Errors = new[] { await message.Content.ReadAsAsync<ApiError>() };
-                    }
-                    return response;
-                }
-                catch (Exception e)
-                {
-                    throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})", e);
-                }
-            }
-            else if(message.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-            {
-                throw new TexunaApiSystemException($"The API returned an 'Internal Server Error'. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
-            }
-            else
-            {
-                throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
-            }
+            AssertJsonContentOrEmpty(message);
+            var response = new ApiResponse<TSuccess, TValidationEnvelope>();
+            if (message.IsSuccessStatusCode) return response.Success(await DeserializeResponseAsync<TSuccess>(message));
+            else return await ProcessApiErrorAsync(message, response);
         }
 
+        #endregion
 
-        private async Task<ApiResponse<T>> DeserializeResponseAsync<T>(HttpResponseMessage message, ApiResponse<T> response)
+        #region Error handling
+
+        private async Task<T> ProcessApiErrorAsync<T>(HttpResponseMessage message, T response) where T : ApiResponse
         {
-            if (!message.Content.Headers.ContentType.MediaType.Equals("application/json"))
+            ValidateGenericHttpErrors(message);
+            if (message.StatusCode == HttpStatusCode.BadRequest)
             {
-                throw new TexunaApiSystemException(
-                    $"The API returned an invalid content type: '{message.Content.Headers.ContentType.MediaType}' (Request URI: {message.RequestMessage.RequestUri.PathAndQuery})");
+                var json = await message.Content.ReadAsStringAsync();
+                var error = TryDeserializeAsync<ApiError>(json);
+                var errors = TryDeserializeAsync<ApiError[]>(json);
+                response.Fail(error, errors);
             }
+            return response;
+        }
 
-            if (typeof(T) == typeof(string))
+        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ProcessApiErrorAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message, ApiResponse<TSuccess, TValidationEnvelope> response) 
+            where TValidationEnvelope : class
+        {
+            ValidateGenericHttpErrors(message);
+
+            if (message.StatusCode == HttpStatusCode.BadRequest)
             {
-                response.Response = (T)(object)await message.Content.ReadAsStringAsync();
-            }
-            else
-            {
-                response.Response = await message.Content.ReadAsAsync<T>(new[] { _formatter });
+                var json = await message.Content.ReadAsStringAsync();
+                response.ValidationEnvelope = TryDeserializeAsync<TValidationEnvelope>(json);
+                if (response.ValidationEnvelope != null) response.Successful = false;
+                else response.Fail(TryDeserializeAsync<ApiError>(json), TryDeserializeAsync<ApiError[]>(json));
             }
 
             return response;
+        }
+
+        private void ValidateGenericHttpErrors(HttpResponseMessage message)
+        {
+            if (!message.IsSuccessStatusCode)
+            {
+                switch (message.StatusCode)
+                {
+                    case HttpStatusCode.BadRequest:
+                        AssertJsonContent(message);
+                        break;
+                    case HttpStatusCode.InternalServerError:
+                        throw new TexunaApiSystemException($"The API returned an 'Internal Server Error'. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+                    case HttpStatusCode.Forbidden:
+                        throw new EduSecurityException("The current principal does not have permission to call this API");
+                    default:
+                        throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+                }
+            }
+        }
+        
+        private void AssertJsonContent(HttpResponseMessage message)
+        {
+            if (message?.Content?.Headers?.ContentType?.MediaType != "application/json")
+            {
+                throw new TexunaApiSystemException(
+                    $"The API returned an invalid content type: '{message?.Content?.Headers?.ContentType?.MediaType}' (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+            }
+        }
+
+        /// <summary>
+        /// Validates that the response message is empty or contains JSON
+        /// </summary>
+        /// <param name="message"></param>
+        private void AssertJsonContentOrEmpty(HttpResponseMessage message)
+        {
+            var type = message?.Content?.Headers?.ContentType?.MediaType;
+            if (type != null) AssertJsonContent(message);
+        }
+
+        #endregion
+
+        #region Helper methods
+
+        private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage message)
+        {
+            AssertJsonContent(message);
+            if (typeof(T) == typeof(string)) return (T)(object)await message.Content.ReadAsStringAsync();
+            else return await message.Content.ReadAsAsync<T>(new[] { _formatter });
+        }
+        
+        private T TryDeserializeAsync<T>(string json) where T : class
+        {
+            try { return JsonConvert.DeserializeObject<T>(json); }
+            catch { return null; }
         }
 
         private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
@@ -245,5 +303,15 @@ namespace Edubase.Services
                     $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})");
             }
         }
+
+        private HttpRequestMessage CreateHttpRequestMessage(HttpMethod method, string uri, IPrincipal principal, object requestBodyData = null)
+        {
+            var requestMessage = new HttpRequestMessage(method, uri);
+            requestMessage.Headers.Add(HEADER_SA_USER_ID, principal.GetUserId() ?? string.Empty);
+            if (requestBodyData != null) requestMessage.Content = new ObjectContent<object>(requestBodyData, _formatter);
+            return requestMessage;
+        }
+
+        #endregion
     }
 }

@@ -217,9 +217,14 @@
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayEditPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
+    <Compile Include="Establishments\Models\AmalgamateMergeRequest.cs" />
+    <Compile Include="Establishments\Models\BulkCreateAcademiesProgress.cs" />
     <Compile Include="Establishments\Models\BulkUpdateDto.cs" />
     <Compile Include="Establishments\Models\CreateNewEstablishment.cs" />
     <Compile Include="Establishments\Models\IEBTModel.cs" />
+    <Compile Include="Establishments\Models\NewAcademyRequest.cs" />
+    <Compile Include="Establishments\Models\NewAcademyRequestValidationEnvelope.cs" />
+    <Compile Include="Establishments\Models\NewAcademyResult.cs" />
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />

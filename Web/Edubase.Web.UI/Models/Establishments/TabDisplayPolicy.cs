@@ -20,9 +20,13 @@ namespace Edubase.Web.UI.Models.Establishments
         public bool Location { get; set; } = true;
         public bool ChangeHistory { get; set; } = true;
 
+        public bool Helpdesk { get; set; }
+
         public TabDisplayPolicy(EstablishmentModel model, EstablishmentDisplayEditPolicy displayPolicy, IPrincipal principal)
         {
-            IEBT = displayPolicy.IEBTDetail.Any(); // TODO: TEXCHANGE
+            IEBT = displayPolicy.IEBTDetail.Any();
+
+            Helpdesk = displayPolicy.HelpdeskNotes;
 
             Governance = model.TypeId.OneOfThese(
                     ET.Academy1619Converter, 

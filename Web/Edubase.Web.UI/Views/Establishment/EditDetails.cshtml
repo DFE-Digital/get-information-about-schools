@@ -3,9 +3,9 @@
 @model ViewModel
 @{
     if (Model.ChangesSummary == null)
-     {
-         Layout = "_EditLayoutPage.cshtml";
-     }
+    {
+        Layout = "_EditLayoutPage.cshtml";
+    }
     ViewBag.postcodeDemo = Request["postcodeDemo"];
 }
 
@@ -19,10 +19,10 @@
             <div class="grid-row">
 
                 <div class="column-half">
-            
+
                     <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
-                
+
 
                     <div class="form-group first">
                         <label class="form-label" for="school-name">
@@ -65,7 +65,7 @@
                         <label for="Address_CountryId" class="form-label">Country</label>
                         @Html.DropDownListFor(x => x.Address_CountryId, Model.Countries, "", new { @class = "form-control" })
                     </div>
-                
+
                     @if (ViewBag.postcodeDemo == "1")
                     {
                         <div class="form-group">
@@ -81,44 +81,51 @@
                             @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control" })
                         </div>
                     }
-                    
-                    @* TODO TEXCHANGE: use alt address 
+
+                    @if (Model.EditPolicy.AltSiteName.GetValueOrDefault(true))
                     {
-                        var siteNumber = i + 2;
-                        <div class="grey-bar"></div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.[i].SiteName, $"Site {siteNumber} name")
-                            @Html.TextBoxFor(x => x.[i].SiteName, new { @class = "form-control" })
+                        if (!Model.IsAltAddressSet)
+                        {
+                            <div class="form-group">
+                                <a href="javascript:" id="add-alt-address" onclick="$('div.alt-address').show();$(this).hide();">Add another address</a>
+                            </div>
+                        }
+
+                        <div class="alt-address" style="display:@(Model.IsAltAddressSet ? "" : "none");">
+                            <div class="grey-bar"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltSiteName, $"Site name")
+                                @Html.TextBoxFor(x => x.AltSiteName, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltStreet, "Street")
+                                @Html.TextBoxFor(x => x.AltStreet, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltLocality, "Locality")
+                                @Html.TextBoxFor(x => x.AltLocality, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltAddress3, "Address 3")
+                                @Html.TextBoxFor(x => x.AltAddress3, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltTown, "Town")
+                                @Html.TextBoxFor(x => x.AltTown, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                <label for="Address_CountyId" class="form-label">County</label>
+                                @Html.DropDownListFor(x => x.AltCountyId, Model.Counties, "", new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltPostCode, "Postcode")
+                                @Html.TextBoxFor(x => x.AltPostCode, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                <a href="javascript:" onclick="$('div.alt-address').hide();$('#add-alt-address').show();$('.form-control.alt-address').val('');">Remove address</a>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.[i].Line1, "Street")
-                            @Html.TextBoxFor(x => x.[i].Line1, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.[i].Locality, "Locality")
-                            @Html.TextBoxFor(x => x.[i].Locality, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.[i].Line3, "Address 3")
-                            @Html.TextBoxFor(x => x.[i].Line3, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.[i].CityOrTown, "Town")
-                            @Html.TextBoxFor(x => x.[i].CityOrTown, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.[i].County, "County")
-                            @Html.TextBoxFor(x => x.[i].County, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.[i].PostCode, "Postcode")
-                            @Html.TextBoxFor(x => x.[i].PostCode, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.[i].TelephoneNumber, "Telephone")
-                            @Html.TextBoxFor(x => x.[i].TelephoneNumber, new { @class = "form-control" })
-                        </div>
-                    }*@
+                    }
 
                     @if (Model.EditPolicy.HeadteacherDetails)
                     {
@@ -150,7 +157,7 @@
                                 <label class="form-label">
                                     @(Model.EditPolicy.HeadteacherLabel) email address
                                 </label>
-                                @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address"})
+                                @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address" })
                             </div>
                         }
                     }
@@ -267,12 +274,12 @@
                             @Html.DropDownListFor(x => x.OfstedRatingId, Model.OfstedRatings, "", new { @class = "form-control" })
                         </div>
 
-                        @Html.EditorFor(x => x.OfstedInspectionDate, new {title = "Ofsted last inspection" })
+                            @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Ofsted last inspection" })
 
-                        <div class="form-group">
-                            <label for="ofsted-report" class="form-label">Ofsted report link</label>
-                            <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
-                        </div>
+                            <div class="form-group">
+                                <label for="ofsted-report" class="form-label">Ofsted report link</label>
+                                <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
+                            </div>
                     }
 
                     @if (Model.EditPolicy.InspectorateId)
@@ -359,8 +366,8 @@
                             @Html.DropDownListFor(x => x.Section41ApprovedId, Model.Section41ApprovedItems, "", new { @class = "form-control", id = "section-41" })
                         </div>
                     }
-                    
-                    @Html.EditorFor(x => x.OpenDate, new {title = "Open date" })
+
+                    @Html.EditorFor(x => x.OpenDate, new { title = "Open date" })
 
                     <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
                         <label for="reason-establishment-opened">Reason establishment opened</label>
@@ -368,7 +375,7 @@
                         @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "form-control", id = "reason-establishment-opened" })
                     </div>
 
-                    @Html.EditorFor(x => x.CloseDate, new {title = "Close date"})
+                    @Html.EditorFor(x => x.CloseDate, new { title = "Close date" })
 
                     <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
                         <label for="reason-establishment-closed">Reason establishment closed</label>
@@ -424,10 +431,11 @@
                             <label class="form-label" style="margin-bottom:5px;">Type of SEN provision</label>
                             @foreach (var item in Model.SENProvisions)
                             {
-                                <label style="margin-bottom:10px;" class="block-label" 
-                                       for="@nameof(Model.SENProvisions)_@item.Id">@item.Name
-                                    <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)" 
-                                        value="@item.Id" @Html.Conditional(Model.SENIds !=null && Model.SENIds.Contains(item.Id), "checked") />
+                                <label style="margin-bottom:10px;" class="block-label"
+                                       for="@nameof(Model.SENProvisions)_@item.Id">
+                                    @item.Name
+                                    <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)"
+                                           value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked") />
                                 </label>
                             }
                         </div>
@@ -560,18 +568,18 @@
 
                     @if (Model.EditPolicy.BSODateOfLastInspectionVisit)
                     {
-                        @Html.EditorFor(x => x.BSODateOfLastInspectionVisit, new {title = "BSO: Date of last inspection" })
+                        @Html.EditorFor(x => x.BSODateOfLastInspectionVisit, new { title = "BSO: Date of last inspection" })
                     }
 
                     @if (Model.EditPolicy.BSODateOfNextInspectionVisit)
                     {
-                        @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new {title = "BSO: Next inspection visit" })
+                        @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new { title = "BSO: Next inspection visit" })
                     }
 
-                    
+
                     <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
-                
+
                 </div>
             </div>
         </div>
@@ -584,71 +592,71 @@
                 <button class="button-grey button mobile-full-width" name="action" type="submit" value="@ViewModel.eAction.CancelChanges">&laquo; Back</button>
                 <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
 
-                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-grey mobile-full-width", id = "cancel-edit"})
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey mobile-full-width", id = "cancel-edit" })
             </div>
 
-@section ViewScripts {
+            @section ViewScripts {
 
-    <script>
-        $('#cancel-edit, .requires-conf-to-leave').okCancel({
-            ok: function() {
-                window.location = this.el.getAttribute('href');
-            },
-            title: 'Are you sure you want to leave this page?',
-            content: 'Any unsaved changes will be lost',
-            triggerEvent: 'click'
-        });
-    </script>
+                <script>
+                    $('#cancel-edit, .requires-conf-to-leave').okCancel({
+                        ok: function() {
+                            window.location = this.el.getAttribute('href');
+                        },
+                        title: 'Are you sure you want to leave this page?',
+                        content: 'Any unsaved changes will be lost',
+                        triggerEvent: 'click'
+                    });
+                </script>
 
-}
+            }
 
         }
         else
         {
-@section ViewScripts
+            @section ViewScripts
 {
-    <script>
-        var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
-        var phases = @Html.Json(Model.EducationPhases);
+                <script>
+                    var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
+                    var phases = @Html.Json(Model.EducationPhases);
 
-        var $fields = $('#content').find('.form-control');
-        var exitAttached = false;
+                    var $fields = $('#content').find('.form-control');
+                    var exitAttached = false;
 
-        $fields.on('change', function () {
-            if (!exitAttached) {
-                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                exitAttached = true;
-            }
-        });
-
-        $(function() {
-            filterEstablishmentPhaseList();
-            $("select#TypeId").on("change keyup", filterEstablishmentPhaseList);
-        });
-
-        function filterEstablishmentPhaseList() {
-            var $typeSelector = $("select#TypeId");
-            var $phaseSelector = $("select#EducationPhaseId");
-            var optionList = '<option value="">Please select</option>';
-            var typeId = $typeSelector.val();
-            var previousSelValue = $phaseSelector.val(); 
-            if(!isNaN(typeId)) {
-                var applicablePhases = type2PhaseMap[typeId];
-                if(applicablePhases && applicablePhases.length > 0) {
-                    for (var i = 0; i < applicablePhases.length; i++) {
-                        var filtered = $.grep(phases, function(ele, y) { return parseInt(ele.value, 10) == applicablePhases[i]; });
-                        if(filtered != null && filtered.length > 0) {
-                            optionList += '<option value="' + filtered[0].value + '" '+ (previousSelValue == filtered[0].value ? "selected" : "") +'>' + filtered[0].text + '</option>';
+                    $fields.on('change', function () {
+                        if (!exitAttached) {
+                            DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                            exitAttached = true;
                         }
+                    });
+
+                    $(function() {
+                        filterEstablishmentPhaseList();
+                        $("select#TypeId").on("change keyup", filterEstablishmentPhaseList);
+                    });
+
+                    function filterEstablishmentPhaseList() {
+                        var $typeSelector = $("select#TypeId");
+                        var $phaseSelector = $("select#EducationPhaseId");
+                        var optionList = '<option value="">Please select</option>';
+                        var typeId = $typeSelector.val();
+                        var previousSelValue = $phaseSelector.val();
+                        if(!isNaN(typeId)) {
+                            var applicablePhases = type2PhaseMap[typeId];
+                            if(applicablePhases && applicablePhases.length > 0) {
+                                for (var i = 0; i < applicablePhases.length; i++) {
+                                    var filtered = $.grep(phases, function(ele, y) { return parseInt(ele.value, 10) == applicablePhases[i]; });
+                                    if(filtered != null && filtered.length > 0) {
+                                        optionList += '<option value="' + filtered[0].value + '" '+ (previousSelValue == filtered[0].value ? "selected" : "") +'>' + filtered[0].text + '</option>';
+                                    }
+                                }
+                            }
+                        }
+                        $phaseSelector.html(optionList);
                     }
-                }
+
+
+                </script>
             }
-            $phaseSelector.html(optionList);
-        }
-
-
-    </script>
-}
         }
 
     </div>
