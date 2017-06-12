@@ -211,7 +211,7 @@ namespace Edubase.Web.UI.Controllers
                 var info = ReflectionHelper.GetPropertyInfo(viewModel, item);
                 if(info.Type == typeof(DateTimeViewModel))
                 {
-                    var value = (ReflectionHelper.GetPropertyValue(viewModel, item) as DateTimeViewModel).ToDateTime()?.Date;
+                    var value = ReflectionHelper.GetPropertyValue<DateTimeViewModel>(viewModel, item).ToDateTime()?.Date;
                     ReflectionHelper.SetProperty(domainModel, item, value);
                 }
                 else
@@ -236,7 +236,7 @@ namespace Edubase.Web.UI.Controllers
                 var info = ReflectionHelper.GetPropertyInfo(viewModel, item);
                 if (info.Type == typeof(DateTimeViewModel))
                 {
-                    var value = (ReflectionHelper.GetPropertyValue(viewModel, item) as DateTimeViewModel).ToDateTime()?.Date;
+                    var value = ReflectionHelper.GetPropertyValue<DateTimeViewModel>(viewModel, item).ToDateTime()?.Date;
                     ReflectionHelper.SetProperty(domainModel.IEBTModel, item, value);
                 }
                 else
@@ -451,7 +451,6 @@ namespace Edubase.Web.UI.Controllers
             vm.CASWardName = await c.GetNameAsync(() => vm.Establishment.CASWardId);
             vm.MSOAName = await c.GetNameAsync(() => vm.Establishment.MSOAId);
             vm.LSOAName = await c.GetNameAsync(() => vm.Establishment.LSOAId);
-            vm.LocalAuthorityName = await c.GetNameAsync(() => vm.Establishment.LocalAuthorityId);
             vm.HeadTitleName = await c.GetNameAsync(() => vm.Establishment.HeadTitleId);
             vm.EducationPhaseName = await c.GetNameAsync(() => vm.Establishment.EducationPhaseId);
             vm.TypeName = await c.GetNameAsync(() => vm.Establishment.TypeId);
@@ -469,6 +468,13 @@ namespace Edubase.Web.UI.Controllers
             vm.AddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.Address_CountyId);
             vm.AltAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.AltCountyId);
 
+            if (vm.Establishment.LocalAuthorityId.HasValue)
+            {
+                var las = await c.LocalAuthorityGetAllAsync();
+                var la = las.FirstOrDefault(x => x.Id == vm.Establishment.LocalAuthorityId);
+                vm.LocalAuthorityName = la?.Name;
+                vm.LocalAuthorityCode = la?.Code;
+            }
         }
 
         [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]

@@ -14,8 +14,8 @@ namespace Edubase.Services.Establishments.Models
             var props = ReflectionHelper.GetProperties(this, writeableOnly: true);
             foreach (var prop in props)
             {
-                var value1 = (bool) ReflectionHelper.GetPropertyValue(list1, prop);
-                var value2 = (bool) ReflectionHelper.GetPropertyValue(list2, prop);
+                var value1 = ReflectionHelper.GetPropertyValue<bool>(list1, prop);
+                var value2 = ReflectionHelper.GetPropertyValue<bool>(list2, prop);
                 if(value1 && value2) ReflectionHelper.SetProperty(this, prop, true);
             }
         }

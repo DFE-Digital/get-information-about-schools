@@ -243,9 +243,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         if (payload.Skip == 0) model.Count = results.Count;
                         model.Results = results.Items;
 
+                        var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
+
                         foreach (var item in model.Results)
 	                    {
                             model.Addresses.Add(item, await item.GetAddressAsync(_lookupService));
+                            var laEstab = string.Empty;
+                            if (item.LocalAuthorityId.HasValue && item.EstablishmentNumber.HasValue)
+                            {
+                                var code = localAuthorities.FirstOrDefault(x => x.Id == item.LocalAuthorityId)?.Code;
+                                if (code != null) laEstab = string.Concat(code, "/", item.EstablishmentNumber?.ToString("D4"));
+                            }
+                            model.LAESTABs.Add(item, laEstab);
                         }
 
                     }
