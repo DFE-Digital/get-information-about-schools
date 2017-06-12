@@ -255,6 +255,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         #endregion
 
         public Dictionary<EstablishmentModel, string> Addresses { get; private set; } = new Dictionary<EstablishmentModel, string>();
+        public Dictionary<EstablishmentModel, string> LAESTABs { get; private set; } = new Dictionary<EstablishmentModel, string>();
+
 
     }
 }

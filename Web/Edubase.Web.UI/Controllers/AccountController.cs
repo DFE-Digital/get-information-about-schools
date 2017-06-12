@@ -58,8 +58,8 @@ namespace Edubase.Web.UI.Controllers
         [Route(nameof(LogOff)), HttpGet]
         public ActionResult LogOff(string returnUrl)
         {
-            AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = returnUrl.Clean() ?? "/Search" });
-            return Url.IsLocalUrl(returnUrl) ? (ActionResult) Redirect(returnUrl) : RedirectToAction("Index", "Search");
+            AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = "/" });
+            return Redirect("/");
         }
         
         private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;

@@ -182,10 +182,13 @@
                         </div>
                     }
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
-                        <label for="EducationPhaseId" class="form-label">Phase of education</label>
-                        @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "", new { @class = "form-control" })
-                    </div>
+                    @if (Model.EditPolicy.EducationPhaseId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                            <label for="EducationPhaseId" class="form-label">Phase of education</label>
+                            @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "", new { @class = "form-control" })
+                        </div>
+                    }
 
                     @if (Model.EditPolicy.TypeId)
                     {
@@ -211,11 +214,13 @@
                         </div>
                     }
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-                        <label for="LocalAuthorityId" class="form-label">Local authority</label>
-                        @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
-                    </div>
-
+                    @if (Model.EditPolicy.LocalAuthorityId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                            <label for="LocalAuthorityId" class="form-label">Local authority</label>
+                            @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
+                        </div>
+                    }
 
                     @if (Model.EditPolicy.EstablishmentNumber)
                     {
@@ -231,17 +236,22 @@
                         </div>
                     }
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
-                        <label class="form-label" for="ukprn">UK provider reference number (UKPRN)</label>
-                        @Html.ValidationMessageFor(x => x.UKPRN)
-                        @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", type = "text" })
-                    </div>
+                    @if (Model.EditPolicy.UKPRN)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
+                            <label class="form-label" for="ukprn">UK provider reference number (UKPRN)</label>
+                            @Html.ValidationMessageFor(x => x.UKPRN)
+                            @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", type = "text" })
+                        </div>
+                    }
 
-
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
-                        <label for="status">Establishment status</label>
-                        @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "form-control" })
-                    </div>
+                    @if (Model.EditPolicy.StatusId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
+                            <label for="status">Establishment status</label>
+                            @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "form-control" })
+                        </div>
+                    }
 
                     @if (Model.EditPolicy.AdmissionsPolicyId)
                     {
@@ -367,20 +377,32 @@
                         </div>
                     }
 
-                    @Html.EditorFor(x => x.OpenDate, new { title = "Open date" })
+                    @if (Model.EditPolicy.OpenDate)
+                    {
+                        @Html.EditorFor(x => x.OpenDate, new { title = "Open date" })
+                    }
+                    
+                    @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
+                            <label for="reason-establishment-opened">Reason establishment opened</label>
+                            @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "form-control", id = "reason-establishment-opened" })
+                        </div>
+                    }
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
-                        <label for="reason-establishment-opened">Reason establishment opened</label>
-                        @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
-                        @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "form-control", id = "reason-establishment-opened" })
-                    </div>
+                    @if (Model.EditPolicy.CloseDate)
+                    {
+                        @Html.EditorFor(x => x.CloseDate, new { title = "Close date" })
+                    }
 
-                    @Html.EditorFor(x => x.CloseDate, new { title = "Close date" })
-
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
-                        <label for="reason-establishment-closed">Reason establishment closed</label>
-                        @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control", id = "reason-establishment-closed" })
-                    </div>
+                    @if (Model.EditPolicy.ReasonEstablishmentClosedId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
+                            <label for="reason-establishment-closed">Reason establishment closed</label>
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control", id = "reason-establishment-closed" })
+                        </div>
+                    }
 
                     @if (Model.EditPolicy.ProvisionSpecialClassesId)
                     {

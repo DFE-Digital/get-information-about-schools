@@ -6,13 +6,6 @@
         <th scope="row">Address:</th>
         <td>@Model.GetAddress()</td>
     </tr>
-    @* TODO TEXCHANGE: use alt address see story 10909
-    {
-        <tr>
-            <td>&nbsp;</td>
-            <td><a href="#school-location" class="tab-manipulator">View other sites</a></td>
-        </tr>
-    }*@
     <tr>
         <th scope="row">Local authority:</th>
         <td>
@@ -127,7 +120,7 @@
             <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
             @if (Model.DisplayPolicy.EstablishmentNumber)
             {
-                <text>DfE number: @Model.Establishment.GetLAESTAB()<br /></text>
+                <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br /></text>
             }
             @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
             { 

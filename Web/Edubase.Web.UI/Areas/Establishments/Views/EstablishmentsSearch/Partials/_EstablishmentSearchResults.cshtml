@@ -40,7 +40,7 @@ else if (Model.Results.Count > 0)
                     <dt class="inline-details">
                         <abbr title="Local authority - Establishment number">LAESTAB</abbr>:
                     </dt>
-                    <dd>@result.GetLAESTAB()</dd>
+                    <dd>@Model.LAESTABs[result]</dd>
                     <dt>Status:</dt>
                     <dd>@(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "Not recorded")</dd>
                     <dt>Local authority name:</dt>

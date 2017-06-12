@@ -117,6 +117,7 @@ namespace Edubase.Web.UI.Models
         public string MSOAName { get; set; }
         public string LSOAName { get; set; }
         public string LocalAuthorityName { get; set; }
+        public string LocalAuthorityCode { get; set; }
         public string HeadTitleName { get; set; }
         public string EducationPhaseName { get; set; }
         public string TypeName { get; set; }
