@@ -54,13 +54,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public async Task<ActionResult> PrepareDownload(GroupSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Groups;
-            viewModel.SearchQueryString = Request.QueryString.ToString();
 
             if (!viewModel.FileFormat.HasValue)
+            {
+                viewModel.SearchQueryString = Request.QueryString.ToString();
                 return View("Downloads/SelectFormat", viewModel);
+            }
 
             var progressId = await _groupDownloadService.SearchWithDownloadGenerationAsync(
-                new Services.Domain.SearchDownloadDto<GroupSearchPayload>
+                new SearchDownloadDto<GroupSearchPayload>
                 {
                     SearchPayload = CreateSearchPayload(viewModel),
                     FileFormat = viewModel.FileFormat.Value

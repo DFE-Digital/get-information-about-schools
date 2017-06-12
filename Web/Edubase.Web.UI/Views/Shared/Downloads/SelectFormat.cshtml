@@ -45,6 +45,7 @@
 
             @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
             {
+                @Html.HiddenFor(x => x.SearchQueryString)
                 <div class="download-step">
                     <div class="form-group">
                         <fieldset>
