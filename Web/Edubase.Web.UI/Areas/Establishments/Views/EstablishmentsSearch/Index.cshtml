@@ -11,13 +11,17 @@
 }
 
 <div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            
+    <div class="column-full results-heading">
+        <div class="breadcrumbs">            
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = @Model.SearchType})">Back to find an establishment</a>
         </div>
 
-            <h1 class="heading-xlarge">Search results</h1>
+        <h1 class="heading-xlarge">Search results</h1>
+        @if (Model.Count > 0)
+        {
+            <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
+            <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
+        }
             <p>
                 <!-- TODO: Jon; you can upload the span.heading-xlarge item with the correct count by using the x-count item in the http response of the partial request -->
                 @if (Model.SearchType == eSearchType.Text)
@@ -29,7 +33,7 @@
                             We found <span class="heading-xlarge count">@Model.Count</span> establishments
                             @if (!Model.TextSearchModel.Text.IsEmpty())
                             {
-                                <text>for the search term <span class="bold-small">&lsquo;@Model.TextSearchModel.Text &rsquo;</span>.</text>
+                                <text>for the search term &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
                             }
                         </text>
                     }
@@ -58,19 +62,12 @@
                     {
                         displayLocation = displayLocation.Substring(0, lastIndex);
                     }
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments matching &lsquo;</text> <span class="bold-small">@displayLocation</span><text>&rsquo;</text>
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
                 }
                 else
                 {
                     <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
                 }
-
-                @if (Model.Count > 0)
-                {
-                      <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
-                    <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
-                }
-              
             </p>
         </div>
 </div>

@@ -28,9 +28,11 @@ namespace Edubase.Common
         {
             items = items.Select(x => x.Clean()).Where(x => x != null).ToArray();
             if (items.Length == 0) return null;
-            else if (items.Length == 1) return items[0];
-            else if (items.Length == 2) return string.Join(string.Concat(SPACE, option.ToString().ToLower(), SPACE), items);
-            else return string.Concat(string.Join(", ", items.Take(items.Length - 1)), SPACE, option.ToString().ToLower(), SPACE, items.Last());
+            else if (items.Length == 1) return string.Concat("&lsquo;<span class=\"bold-small\">", items[0], "</span>&rsquo;");
+            else return string.Concat("&lsquo;<span class=\"bold-small\">", 
+                string.Join("</span>&rsquo;, &lsquo;<span class=\"bold-small\">",
+                items.Take(items.Length - 1)),"</span>&rsquo;", SPACE,  option.ToString().ToLower(), SPACE, 
+                "&lsquo;<span class=\"bold-small\">", items.Last(),"</span>&rsquo;");
         }
 
         public static bool Boolify(string data, bool defaultValue = false)

@@ -8,11 +8,12 @@
 }
 
 <div class="grid-row">
-    <div class="column-full">
+    <div class="column-full results-heading">
         <div class="breadcrumbs">
             @Html.ActionLink("Back to find an establishment group", "Index", "Search", new { area = "", SelectedTab = "Groups" }, new { @class = "home-link" })
         </div>
-            <h1 class="heading-xlarge">Search results</h1>
+        <h1 class="heading-xlarge">Search results</h1>
+        <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
             <p>
                 @if (Model.GroupSearchModel.Text.IsInteger())
                 {
@@ -28,7 +29,7 @@
                         }
                     </text>
                 }
-                <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
+                
             </p>
         </div>
 </div>

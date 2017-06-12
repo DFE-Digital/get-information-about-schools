@@ -8,17 +8,23 @@
     }
 
     a.download-link {
-        float:none; 
+        
         display:block; 
         margin-top:10px;
         margin-right:10px;
         outline: none;
         padding: 3px;
         @include media(desktop){
-            float:right;
             margin-right: 0;
+            position: absolute;
+            right: 15px;
+            top: 92px;
         }
     }
+}
+
+.results-heading {
+    position: relative;
 }
 
 .result-info {

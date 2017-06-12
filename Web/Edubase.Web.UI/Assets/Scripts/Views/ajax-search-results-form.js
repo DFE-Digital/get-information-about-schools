@@ -3,6 +3,7 @@
     var $filters = $('#filter-form').find(':checkbox, select > option');
     var searchType = DfE.Util.QueryString.get('searchtype');
     var selectedLas = [];
+   
 
     function updateSearchedLas() {
         selectedLas = [];
