@@ -211,7 +211,7 @@ namespace Edubase.Web.UI.Controllers
                 var info = ReflectionHelper.GetPropertyInfo(viewModel, item);
                 if(info.Type == typeof(DateTimeViewModel))
                 {
-                    var value = (ReflectionHelper.GetPropertyValue(viewModel, item) as DateTimeViewModel).ToDateTime()?.Date;
+                    var value = ReflectionHelper.GetPropertyValue<DateTimeViewModel>(viewModel, item).ToDateTime()?.Date;
                     ReflectionHelper.SetProperty(domainModel, item, value);
                 }
                 else
@@ -236,7 +236,7 @@ namespace Edubase.Web.UI.Controllers
                 var info = ReflectionHelper.GetPropertyInfo(viewModel, item);
                 if (info.Type == typeof(DateTimeViewModel))
                 {
-                    var value = (ReflectionHelper.GetPropertyValue(viewModel, item) as DateTimeViewModel).ToDateTime()?.Date;
+                    var value = ReflectionHelper.GetPropertyValue<DateTimeViewModel>(viewModel, item).ToDateTime()?.Date;
                     ReflectionHelper.SetProperty(domainModel.IEBTModel, item, value);
                 }
                 else
