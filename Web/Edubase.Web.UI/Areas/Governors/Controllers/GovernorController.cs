@@ -24,6 +24,7 @@ using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using Newtonsoft.Json;
 
@@ -333,6 +334,33 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await PopulateSelectLists(viewModel);
             viewModel.DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync(viewModel.GovernorRole, viewModel.GroupUId.HasValue, User);
 
+            var governorModel = new GovernorModel
+            {
+                AppointingBodyId = viewModel.AppointingBodyId,
+                AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
+                AppointmentStartDate = viewModel.AppointmentStartDate.ToDateTime(),
+                DOB = viewModel.DOB.ToDateTime(),
+                EmailAddress = viewModel.EmailAddress,
+                GroupUId = viewModel.GroupUId,
+                EstablishmentUrn = viewModel.EstablishmentUrn,
+                NationalityId = viewModel.NationalityId,
+                Id = viewModel.GID,
+                Person_FirstName = viewModel.FirstName,
+                Person_MiddleName = viewModel.MiddleName,
+                Person_LastName = viewModel.LastName,
+                Person_TitleId = viewModel.GovernorTitleId,
+                PreviousPerson_FirstName = viewModel.PreviousFirstName,
+                PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
+                PreviousPerson_LastName = viewModel.PreviousLastName,
+                PreviousPerson_TitleId = viewModel.PreviousTitleId,
+                PostCode = viewModel.PostCode,
+                RoleId = (int) viewModel.GovernorRole,
+                TelephoneNumber = viewModel.TelephoneNumber
+            };
+
+            var validationResults = await _governorsWriteService.ValidateAsync(governorModel, User);
+            validationResults.ApplyToModelState(ControllerContext);
+
             if (ModelState.IsValid)
             {
                 ApiResponse<int> response;
@@ -360,29 +388,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 }
                 else
                 {
-                    response = await _governorsWriteService.SaveAsync(new GovernorModel
-                    {
-                        AppointingBodyId = viewModel.AppointingBodyId,
-                        AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
-                        AppointmentStartDate = viewModel.AppointmentStartDate.ToDateTime(),
-                        DOB = viewModel.DOB.ToDateTime(),
-                        EmailAddress = viewModel.EmailAddress,
-                        GroupUId = viewModel.GroupUId,
-                        EstablishmentUrn = viewModel.EstablishmentUrn,
-                        NationalityId = viewModel.NationalityId,
-                        Id = viewModel.GID,
-                        Person_FirstName = viewModel.FirstName,
-                        Person_MiddleName = viewModel.MiddleName,
-                        Person_LastName = viewModel.LastName,
-                        Person_TitleId = viewModel.GovernorTitleId,
-                        PreviousPerson_FirstName = viewModel.PreviousFirstName,
-                        PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
-                        PreviousPerson_LastName = viewModel.PreviousLastName,
-                        PreviousPerson_TitleId = viewModel.PreviousTitleId,
-                        PostCode = viewModel.PostCode,
-                        RoleId = (int)viewModel.GovernorRole,
-                        TelephoneNumber = viewModel.TelephoneNumber
-                    }, User);
+                    response = await _governorsWriteService.SaveAsync(governorModel, User);
                 }
                 
                 if (response.Success)
