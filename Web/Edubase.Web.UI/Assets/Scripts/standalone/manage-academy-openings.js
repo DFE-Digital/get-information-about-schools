@@ -67,7 +67,7 @@
         },
         created: function () {
             this.loadData();
-           
+            blockExits();
         },
         methods: {
             formatDate: function (date, separator) {
@@ -219,7 +219,10 @@
                     this.presentDetail = false;
                     this.editRecord = false;
                     this.isProcessing = true;
-                    this.userHadEdited = false;
+                    this.userHasEdited = false;
+
+                    $(window).off('beforeunload');
+
                     $.ajax({
                         url: '/api/academy/' + urn,
                         type: 'patch',
@@ -289,6 +292,16 @@
                 this.editRecord = false;
                 this.searchUrn = '';
                 this.presentDetail = false;
+            },
+            isUserEditing: function() {
+                return this.userHasEdited;
+
+            },
+            attachUnload: function() {
+                this.userHasEdited = true;
+                $(window).on('beforeunload', function (e) {
+                        return 'Any unsaved changes will be lost';
+                });
             }
         },
         
@@ -310,6 +323,15 @@
         academyOpenings.searchError = false;
     });
     $('.horizontal-tabs-wrapper').tabs();
+    function blockExits() {
+         $('a').on('click', function (e) {
 
+            if (academyOpenings.isUserEditing()) {
+               e.preventDefault();
+               academyOpenings.presentExitWarning = true;
+            }
+        });
+    }
+   
 
 }());
