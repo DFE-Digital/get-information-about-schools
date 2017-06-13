@@ -28,6 +28,11 @@ namespace Edubase.Common.Reflection
             return val;
         }
 
+        public static T GetPropertyValue<T>(object item, string propertyName)
+        {
+            return (T)(GetPropertyValue(item, propertyName) ?? default(T));
+        }
+
         public static PropInfo GetPropertyInfo(object item, string propertyName)
         {
             Type type = null;

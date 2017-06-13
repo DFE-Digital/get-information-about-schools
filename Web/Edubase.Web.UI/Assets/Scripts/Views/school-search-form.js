@@ -51,7 +51,7 @@
 
         $('#name-search-submit').on('click', function (e) {
             var suggestionCount = $('#TextSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
-            var numericValue = !isNaN ($('#TextSearchModel_Text').val());
+            var numericValue = !isNaN ($('#TextSearchModel_Text').val()).slice(0,1);
 
             if ($.trim($('#TextSearchModel_Text').val()) === '') {
                 e.preventDefault();
@@ -90,8 +90,9 @@
 
         $('#group-search-submit').on('click', function (e) {
             var suggestionCount = $('#GroupSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
-            var numericValue = !isNaN($('#GroupSearchModel_Text').val());
+            var numericValue = !isNaN($('#TextSearchModel_Text').val().replace(/\D/g, ""));
 
+            console.log(numericValue);
             if ($.trim($('#GroupSearchModel_Text').val()) === '') {
                 e.preventDefault();
                 return self.showWarning($('#group-search-container'),

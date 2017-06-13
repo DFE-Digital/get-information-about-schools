@@ -83,8 +83,8 @@ namespace Edubase.Services.Texuna.Establishments
             Guard.IsNotNull(model.Urn, () => new Exception("Urn on the model parameter cannot be null for a partial update"));
 
             var propertiesToUpdate = ReflectionHelper.GetProperties(fieldsToUpdate)
-                .Where(x => (bool)ReflectionHelper.GetPropertyValue(fieldsToUpdate, x) == true)
-                .Select(x => new { Key = x, Value = ReflectionHelper.GetPropertyValue(model, x) });
+                .Where(property => ReflectionHelper.GetPropertyValue<bool>(fieldsToUpdate, property))
+                .Select(x => new {Key = x, Value = ReflectionHelper.GetPropertyValue(model, x)});
 
             var payload = propertiesToUpdate.ToDictionary(x => x.Key, x => x.Value);
 
