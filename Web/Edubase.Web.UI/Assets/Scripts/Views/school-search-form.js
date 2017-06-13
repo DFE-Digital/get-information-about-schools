@@ -1,7 +1,6 @@
 ﻿DfE.Views.schoolSearch = {
     showWarning: function ($panel, message) {
         var warningTemplate = '<div class="warning-message"><p>{0}</p></div>';
-
         if ($panel.find('.warning-message').length > 0) {
             $panel.find('.warning-message p').html(message);
 
@@ -92,7 +91,6 @@
             var suggestionCount = $('#GroupSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
             var numericValue = !isNaN($('#TextSearchModel_Text').val().replace(/\D/g, ""));
 
-            console.log(numericValue);
             if ($.trim($('#GroupSearchModel_Text').val()) === '') {
                 e.preventDefault();
                 return self.showWarning($('#group-search-container'),
@@ -111,21 +109,21 @@
             var roles = $('#governor-roles').find(':checkbox').filter(':checked');
             var gId = $.trim($('#GovernorSearchModel_Gid').val());
 
-            // logged in user has additional GID field
-            if (document.getElementById('GovernorSearchModel_Gid')) {
-                if (fName === '' && sName === '' && gId === '' && roles.length === 0) {
+           if (fName === '' && sName === '' && roles.length === 0) {
                     e.preventDefault();
-                    return self.showWarning($('#governor-search-wrapper'),
+                    return self.showWarning($('#searchtype-gov-namerole-ref'),
                         'Please enter a governor to start a search');
-                }
-            } else {
-                if (fName === '' && sName === '' && roles.length === 0) {
-                    e.preventDefault();
-                    return self.showWarning($('#governor-search-wrapper'),
-                        'Please enter a governor to start a search');
-                }
-            }
-            
+                }                       
+        });
+
+        $('#governor-search-submit-1').on('click', function (e) {
+            var gId = $.trim($('#GovernorSearchModel_Gid').val());
+
+           if (gId === '') {
+                e.preventDefault();
+                return self.showWarning($('#searchtype-gov-refno-ref'),
+                    'Please enter a governor ID to start a search');
+            }                       
         });
 
 
