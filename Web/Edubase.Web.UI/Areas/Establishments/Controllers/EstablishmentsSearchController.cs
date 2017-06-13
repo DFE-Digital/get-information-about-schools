@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var retVal = await SearchByUrnAsync(model);
             if (retVal != null) return retVal;
 
-            var payload = GetEstablishmentSearchPayload(model);
+            var payload = await GetEstablishmentSearchPayload(model);
             if (!payload.Success) model.Error = payload.ErrorMessage;
             return await ProcessEstablishmentsSearch(model, payload.Object);
         }
@@ -54,7 +54,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("results-js")]
         public async Task<PartialViewResult> ResultsPartial(EstablishmentSearchViewModel model)
         {
-            var payload = GetEstablishmentSearchPayload(model);
+            var payload = await GetEstablishmentSearchPayload(model);
             if (!payload.Success) model.Error = payload.ErrorMessage;
             await ProcessEstablishmentsSearch(model, payload.Object);
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
@@ -121,7 +121,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             });
 
 
-        private Returns<EstablishmentSearchPayload> GetEstablishmentSearchPayload(EstablishmentSearchViewModel model)
+        private async Task<Returns<EstablishmentSearchPayload>> GetEstablishmentSearchPayload(EstablishmentSearchViewModel model)
         {
             var retVal = new Returns<EstablishmentSearchPayload>();
             var payload = new EstablishmentSearchPayload(model.StartIndex, model.PageSize);
@@ -136,7 +136,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.LAESTAB)
                 {
                     var laestab = LAESTAB.TryParse(model.TextSearchModel.Text).Value;
-                    filters.LocalAuthorityIds = new int[] {laestab.LocalAuthorityId};
+                    var localAuthorityId = (await _lookupService.LocalAuthorityGetAllAsync()).FirstOrDefault(x => x.Code == laestab.LocalAuthorityCode)?.Id;
+                    if (localAuthorityId.HasValue) filters.LocalAuthorityIds = new int[] { localAuthorityId.Value };
                     filters.EstablishmentNumber = laestab.EstablishmentNumber;
                 }
                 else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName)
@@ -329,7 +330,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var progressId = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(
                 new EstablishmentSearchDownloadPayload
                 {
-                    SearchPayload = GetEstablishmentSearchPayload(viewModel).Object,
+                    SearchPayload = (await GetEstablishmentSearchPayload(viewModel)).Object,
                     DataSet = viewModel.Dataset.Value,
                     FileFormat = viewModel.FileFormat.Value
                 }, User);

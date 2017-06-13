@@ -104,13 +104,10 @@
                 $blanket.hide();
                 $resultsElement.html(html);
 
-                if (!suppressPushState) {
-                    var parser = document.createElement('a');
-                    parser.href = window.location.href;
-                    if (GOVUK.support.history()) {
-                        window.history.pushState({ queryString: queryString, formState: captureFormState() }, null, parser.pathname + "?" + queryString);
-                    }
+                if (!suppressPushState && GOVUK.support.history()) {
+                        window.history.pushState({ queryString: queryString, formState: captureFormState() }, null, window.location.href + "?" + queryString);
                 }
+                
                 $("a.download-link").attr("href", downloadUrl + queryString);
             });
         };
