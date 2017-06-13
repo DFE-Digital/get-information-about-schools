@@ -155,7 +155,7 @@
             <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
                 <label class="form-label">Establishment name </label>
                 <span class="error-message" v-show="updateNameError">Please check the new establishment name</span>
-                <input class="form-control" type="text" v-model="updateName" v-on:change="userHasEdited = true" />
+                <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" />
             </div>
 
             <div class="form-group">
@@ -171,17 +171,17 @@
 
                     <span class="inline-form-control">
                         <label for="opendate-day">Day</label>
-                        <input class="form-control date-text-day" id="opendate-day" name="OpenDate.Day" type="text" v-model="updateDateDay"  v-on:change="userHasEdited = true">
+                        <input class="form-control date-text-day" id="opendate-day" name="OpenDate.Day" type="text" v-model="updateDateDay"  v-on:change="attachUnload">
 
                     </span>
                     <span class="inline-form-control">
                         <label for="opendate-month">Month</label>
-                        <input class="form-control date-text-month" id="opendate-month" name="OpenDate.Month" type="text" v-model="updateDateMonth" v-on:change="userHasEdited = true">
+                        <input class="form-control date-text-month" id="opendate-month" name="OpenDate.Month" type="text" v-model="updateDateMonth" v-on:change="attachUnload">
 
                     </span>
                     <span class="inline-form-contol">
                         <label for="opendate-year">Year</label>
-                        <input class="form-control date-text-year" id="opendate-year" name="OpenDate.Year" type="text" v-model="updateDateYear" v-on:change="userHasEdited = true">
+                        <input class="form-control date-text-year" id="opendate-year" name="OpenDate.Year" type="text" v-model="updateDateYear" v-on:change="attachUnload">
                     </span>
                 </fieldset>
             </div>
