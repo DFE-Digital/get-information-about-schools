@@ -21,9 +21,10 @@ namespace Edubase.Web.UI.Validation
                     .Keyed<IValidator>(typeof(IValidator<EditEstablishmentModel>))
                     .As<IValidator>();
 
-            builder.RegisterType<CreateEditGovernorViewModelValidator>()
-                    .Keyed<IValidator>(typeof(IValidator<CreateEditGovernorViewModel>))
-                    .As<IValidator>();
+            // temporarily disable local validation while it conflicts with the edit policies coming from Texuna
+            //builder.RegisterType<CreateEditGovernorViewModelValidator>()
+            //        .Keyed<IValidator>(typeof(IValidator<CreateEditGovernorViewModel>))
+            //        .As<IValidator>();
 
             builder.RegisterType<GovernorsGridViewModelValidator>()
                     .Keyed<IValidator>(typeof(IValidator<GovernorsGridViewModel>))
