@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Edubase.Common;
 using Edubase.Common.Text;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
@@ -89,8 +90,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric, int? groupUid, int? establishmentUrn)
         {
-            foreach (var role in dto.ApplicableRoles)
+            foreach (var role in dto.ApplicableRoles.Where(role => !EnumSets.eSharedGovernorRoles.Contains(role)))
             {
+                var equivalantRoles = SharedLocalRoleEquivalence.GetEquivalentLocalRole(role).Cast<int>().ToList();
+
                 var grid = new GovernorGridViewModel($"{_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                 {
                     Tag = isHistoric ? "historic" : "current",
@@ -103,12 +106,12 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
                 Guard.IsNotNull(displayPolicy, () => new Exception($"The display policy should not be null for the role '{role}'"));
-                bool includeEndDate = ((isHistoric && role == GR.Member || role != GR.Member) 
-                    && displayPolicy.AppointmentEndDate) || (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
+                bool includeEndDate = ((isHistoric && role == GR.Member || role != GR.Member) && displayPolicy.AppointmentEndDate) || 
+                                       (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
 
                 SetupHeader(role, grid, displayPolicy, includeEndDate);
                 
-                var list = governors.Where(x => x.RoleId == (int)role);
+                var list = governors.Where(x => x.RoleId.HasValue && equivalantRoles.Contains(x.RoleId.Value));
                 foreach (var governor in list)
                 {
                     var isShared = governor.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value);

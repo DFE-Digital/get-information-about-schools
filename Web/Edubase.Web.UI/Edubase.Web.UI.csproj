@@ -347,6 +347,7 @@
     <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
     <Compile Include="Helpers\AuthorizeRolesAttribute.cs" />
     <Compile Include="Helpers\EnumExtensions.cs" />
+    <Compile Include="Helpers\SharedLocalRoleEquivalence.cs" />
     <Compile Include="Helpers\ValidationExtensions.cs" />
     <Compile Include="Helpers\WebHelpers.cs" />
     <Compile Include="Models\ChangeHistoryViewModel.cs" />
