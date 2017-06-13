@@ -91,6 +91,7 @@
                 float: left;
                 width: 100% !important;
                 max-width: 100%;
+                border: 0;
                 font-size: 16px;
                 padding: 4px;
 
@@ -103,7 +104,9 @@
 
             .cell-edit {
                 text-align: left;
-                padding-bottom: 44px;
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+                border-bottom: $grey-2 1px solid;
 
                 a {
                     display: block;
