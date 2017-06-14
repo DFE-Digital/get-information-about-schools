@@ -67,7 +67,7 @@ namespace Edubase.Web.UI.Controllers
             viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
             viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
 
-            return View(viewModel);
+            return View("Index", viewModel);
         }
 
         [HttpGet, Route("Search/Results", Name = "SearchResults")]
@@ -123,7 +123,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            return RedirectToAction("Index", viewModel);
+            return await Index(viewModel);
         }
 
         [Route("Search/Suggest"), HttpGet]
