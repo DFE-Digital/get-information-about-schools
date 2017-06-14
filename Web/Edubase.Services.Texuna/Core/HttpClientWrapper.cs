@@ -247,6 +247,8 @@ namespace Edubase.Services
                         break;
                     case HttpStatusCode.InternalServerError:
                         throw new TexunaApiSystemException($"The API returned an 'Internal Server Error'. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+                    case HttpStatusCode.NotFound:
+                        throw new TexunaApiNotFoundException($"The API returned 404 Not Found. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
                     case HttpStatusCode.Forbidden:
                         throw new EduSecurityException("The current principal does not have permission to call this API");
                     default:

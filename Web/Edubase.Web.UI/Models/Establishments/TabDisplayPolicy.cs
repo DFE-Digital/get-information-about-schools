@@ -21,11 +21,11 @@ namespace Edubase.Web.UI.Models.Establishments
 
         public bool Helpdesk { get; set; }
 
-        public TabDisplayPolicy(EstablishmentModel model, EstablishmentDisplayEditPolicy displayPolicy, IPrincipal principal)
+        public TabDisplayPolicy(EstablishmentModel model, EstablishmentDisplayEditPolicy policy, IPrincipal principal)
         {
-            IEBT = displayPolicy.IEBTDetail.Any();
+            IEBT = policy.IEBTDetail.Any();
 
-            Helpdesk = displayPolicy.HelpdeskNotes;
+            Helpdesk = policy.HelpdeskNotes;
 
             Governance = model.TypeId.OneOfThese(
                     ET.Academy1619Converter, 
@@ -52,7 +52,11 @@ namespace Edubase.Web.UI.Models.Establishments
                     ET.VoluntaryAidedSchool,
                     ET.VoluntaryControlledSchool);
 
-            Location = !model.TypeId.OneOfThese(ET.BritishSchoolsOverseas);
+            Location = new[]
+            {
+                policy.RSCRegionId, policy.GovernmentOfficeRegionId, policy.AdministrativeDistrictId, policy.AdministrativeWardId, policy.ParliamentaryConstituencyId,
+                policy.UrbanRuralId, policy.GSSLAId, policy.Easting, policy.Northing, policy.CASWardId, policy.MSOAId, policy.LSOAId
+            }.Any(x => x == true);
         }
     }
 }

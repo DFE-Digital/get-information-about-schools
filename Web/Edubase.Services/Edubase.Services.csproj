@@ -225,6 +225,7 @@
     <Compile Include="Establishments\Models\NewAcademyRequest.cs" />
     <Compile Include="Establishments\Models\NewAcademyRequestValidationEnvelope.cs" />
     <Compile Include="Establishments\Models\NewAcademyResult.cs" />
+    <Compile Include="Exceptions\TexunaApiNotFoundException.cs" />
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
