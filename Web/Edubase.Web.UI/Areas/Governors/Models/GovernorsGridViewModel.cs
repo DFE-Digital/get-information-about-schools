@@ -19,6 +19,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     public class GovernorsGridViewModel : Groups.Models.CreateEdit.IGroupPageViewModel, IEstablishmentPageViewModel
     {
         private readonly NomenclatureService _nomenclatureService;
+        private readonly Dictionary<int, string> _appointingBodies;
 
         public List<GovernorGridViewModel> Grids { get; set; } = new List<GovernorGridViewModel>();
         public List<GovernorGridViewModel> HistoricGrids { get; set; } = new List<GovernorGridViewModel>();
@@ -70,9 +71,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public eGovernanceMode? GovernanceMode { get; set; }
 
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService)
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, Dictionary<int, string> appointingBodies)
         {
             _nomenclatureService = nomenclatureService;
+            _appointingBodies = appointingBodies;
             DelegationInformation = dto.GroupDelegationInformation;
             ShowDelegationInformation = dto.ShowDelegationInformation;
             DomainModel = dto;
@@ -110,7 +112,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                                        (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
 
                 SetupHeader(role, grid, displayPolicy, includeEndDate);
-                
+
                 var list = governors.Where(x => x.RoleId.HasValue && equivalantRoles.Contains(x.RoleId.Value));
                 foreach (var governor in list)
                 {
@@ -125,7 +127,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var row = grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
                                                    .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
                                                    .AddCell(governor.Id, displayPolicy.Id)
-                                                   //.AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId) // todo: texchange: use lookup to get text label
+                                                   .AddCell((governor.AppointingBodyId.HasValue && _appointingBodies.ContainsKey(governor.AppointingBodyId.Value)) ? _appointingBodies[governor.AppointingBodyId.Value] : null, displayPolicy.AppointingBodyId)
                                                    .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
                                                    .AddCell(endDate?.ToString("dd/MM/yyyy"), includeEndDate)
                                                    .AddCell(governor.PostCode, displayPolicy.PostCode)
@@ -152,7 +154,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             grid.AddHeaderCell("Name", displayPolicy.FullName)
                 .AddHeaderCell("Shared with", role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
                 .AddHeaderCell("GID", displayPolicy.Id)
-                //.AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
+                .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
                 .AddHeaderCell("From", displayPolicy.AppointmentStartDate)
                 .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate)
                 .AddHeaderCell("Postcode", displayPolicy.PostCode)

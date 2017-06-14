@@ -133,7 +133,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             using (MiniProfiler.Current.Step("Retrieving Governors Details"))
             {
                 var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
-                var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService);
+                var appointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync())
+                    .ToDictionary(x => x.Id, x => x.Name);
+                var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService, appointingBodies);
 
                 var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
                 viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
@@ -222,7 +224,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 using (MiniProfiler.Current.Step("Retrieving Governors Details"))
                 {
                     var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
-                    var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService);
+                    var appointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync())
+                        .ToDictionary(x => x.Id, x => x.Name);
+                    var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService, appointingBodies);
 
                     if (establishmentUrn.HasValue)
                     {
