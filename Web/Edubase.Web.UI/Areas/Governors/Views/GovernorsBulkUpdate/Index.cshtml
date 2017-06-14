@@ -1,0 +1,75 @@
+﻿@model GovernorsBulkUpdateViewModel
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+@Html.ValidationSummary()
+
+@using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="grid-row spaced-groups">
+        <div class="column-full">
+            @if (Model.WasSuccessful)
+            {
+                <div class="pending-updates-message dismissable-message bulk-update-success">
+                    <div class="tick"></div>
+                    <p>Your bulk update was successful.</p>
+                    <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+                </div>
+            }
+            <h1 class="heading-xlarge">Governors bulk update</h1>
+            
+            <p>Update governor records by uploading a CSV or XLSX file.</p>
+        </div>
+        <div class="column-full">
+
+            <div class="expanding-content-wrapper" data-update-text="false">
+                <a href="#" class="expanding-content-trigger">
+                    Help with preparing files
+                    @* TODO: REF ACTUAL HELP FILE HERE *@
+                </a>
+                <div class="expanding-content panel-indent">
+                    <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
+                </div>
+            </div>
+
+            @if (Model.ErrorLogDownload != null)
+            {
+                <div class="form-group error" id="error-log">
+                    <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                    <p class="download-list-item">
+                        <a href="@Model.ErrorLogDownload.Url">@Model.ErrorLogDownload.Name</a>
+                    </p>
+                </div>
+            }
+
+        </div>
+        <div class="column-half">
+            <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="bulkfile" class="form-label">Upload a file</label>      
+                @Html.ValidationMessageFor(x => x.BulkFile)  
+                <div class="upload-control-wrapper">
+                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "file-input" });
+                    <button class="button button-grey file-selector">Choose file</button>
+                    <div class="text-field-wrapper">
+                        <input type="text" class="file-name" readonly="readonly" value="No file chosen" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="column-full">
+            <input type="submit" class="button mobile-full-width" value="Submit"/>           
+            <a href="/Tools" class="button button-grey cancel mobile-full-width">Cancel</a>
+        </div>
+       
+</div>
+}

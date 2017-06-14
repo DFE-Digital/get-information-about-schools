@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -278,11 +278,14 @@
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkUpdateViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorController.cs" />
+    <Compile Include="Areas\Governors\Controllers\GovernorsBulkUpdateController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernorSearchController.cs" />
     <Compile Include="Areas\Governors\Models\CreateEditGovernorViewModel.cs" />
     <Compile Include="Areas\Governors\Models\EditGovernanceModeViewModel.cs" />
     <Compile Include="Areas\Governors\Models\EditGroupDelegationInformationViewModel.cs" />
     <Compile Include="Areas\Governors\Models\EditSharedGovernorViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\GovernorsBulkUpdateViewModel.cs" />
+    <Compile Include="Areas\Governors\Models\Validators\GovernorsBulkUpdateViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Governors\Models\GovernorSearchViewModel.cs" />
@@ -455,9 +458,10 @@
     <Content Include="Assets\Sass\elements\_autosuggest.scss" />
     <Content Include="App_Data\wildcard-dfe.pfx" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\Index.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkUpdate\InProgress.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkUpdate\Completed.cshtml" />
     <Content Include="Areas\Establishments\Views\AcademyOpenings\Index.cshtml" />
+    <Content Include="Areas\Governors\Views\GovernorsBulkUpdate\Index.cshtml" />
+    <Content Include="Areas\Establishments\Views\BulkUpdate\Completed.cshtml" />
+    <Content Include="Areas\Establishments\Views\BulkUpdate\InProgress.cshtml" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -978,7 +982,6 @@
     <Content Include="Views\Search\Partials\_GroupSearch.cshtml" />
     <Content Include="Views\Search\Partials\_HelpText.cshtml" />
     <Content Include="Views\Search\Partials\_SearchHeader.cshtml" />
-    <Content Include="Views\Tools\EstablishmentBulkUpdate.cshtml" />
     <Content Include="Views\Search\LocationDisambiguation.cshtml" />
     <Content Include="Views\Prototype\EstablishmentLinks.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\GovernorGridViewModel.cshtml" />

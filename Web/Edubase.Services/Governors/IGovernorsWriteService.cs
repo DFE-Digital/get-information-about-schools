@@ -12,5 +12,21 @@ namespace Edubase.Services.Governors
         Task DeleteAsync(int id, IPrincipal principal);
         Task UpdateDatesAsync(int governorId, DateTime appointmentStartDate, DateTime appointmentEndDate, IPrincipal principal);
         Task<ValidationEnvelopeDto> ValidateAsync(GovernorModel model, IPrincipal principal);
+
+        /// <summary>
+        /// Supplies the file and validates it's correct
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="principal"></param>
+        /// <returns></returns>
+        Task<GovernorBulkUpdateValidationResult> BulkUpdateValidateAsync(string fileName, IPrincipal principal);
+        
+        /// <summary>
+        /// Processes a previously uploaded file
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="principal"></param>
+        /// <returns></returns>
+        Task<GovernorBulkUpdateValidationResult> BulkUpdateProcessRequestAsync(Guid id, IPrincipal principal);
     }
 }
