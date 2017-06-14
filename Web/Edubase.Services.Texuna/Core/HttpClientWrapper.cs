@@ -158,14 +158,18 @@ namespace Edubase.Services
                
                 content.Add(fileContent);
 
-                var jsonPayload = new ObjectContent<object>(data, _formatter);
-                jsonPayload.Headers.ContentDisposition =
-                    new ContentDispositionHeaderValue("form-data") {
-                        Name = "payload" // shouldn't be necessary, but it is.
+                if (data != null)
+                {
+                    var jsonPayload = new ObjectContent<object>(data, _formatter);
+                    jsonPayload.Headers.ContentDisposition =
+                        new ContentDispositionHeaderValue("form-data")
+                        {
+                            Name = "payload" // shouldn't be necessary, but it is.
                     };
-                
-                jsonPayload.Headers.ContentType.MediaType = "text/plain"; // should be application/json, but for some reason we have to use text/plain
-                content.Add(jsonPayload);
+
+                    jsonPayload.Headers.ContentType.MediaType = "text/plain"; // should be application/json, but for some reason we have to use text/plain
+                    content.Add(jsonPayload);
+                }
 
                 requestMessage.Content = content;
 
