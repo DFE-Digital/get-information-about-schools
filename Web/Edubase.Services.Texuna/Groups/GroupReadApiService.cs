@@ -8,8 +8,6 @@ using Edubase.Services.Groups.Search;
 using System.Security.Principal;
 using Edubase.Services.Texuna.Models;
 using System.Linq;
-using Edubase.Services.Texuna.Models;
-using System.Text;
 
 namespace Edubase.Services.Texuna.Groups
 {
@@ -37,11 +35,21 @@ namespace Edubase.Services.Texuna.Groups
             return (await _httpClient.GetAsync<BoolResult>($"group/exists?{queryString}", principal)).Response.Value;
         }
 
-        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal) => (await _httpClient.GetAsync<List<GroupModel>>($"establishment/{urn}/groups", principal)).Response;
+        public async Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal)
+        {
+            try
+            {
+                return (await _httpClient.GetAsync<List<GroupModel>>($"establishment/{urn}/groups", principal)).GetResponse();
+            }
+            catch (Exceptions.TexunaApiNotFoundException)
+            {
+                return Enumerable.Empty<GroupModel>();
+            }
+        }
 
-        public async Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal) => new ServiceResultDto<GroupModel>((await _httpClient.GetAsync<GroupModel>($"group/{uid}", principal)).Response);
+        public async Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal) => new ServiceResultDto<GroupModel>((await _httpClient.GetAsync<GroupModel>($"group/{uid}", principal)).GetResponse());
 
-        public async Task<bool> CanEditAsync(int uid, IPrincipal principal) => (await _httpClient.GetAsync<BoolResult>($"group/{uid}/canedit", principal)).Response.Value;
+        public async Task<bool> CanEditAsync(int uid, IPrincipal principal) => (await _httpClient.GetAsync<BoolResult>($"group/{uid}/canedit", principal)).GetResponse().Value;
 
         public Task<GroupModel> GetByEstablishmentUrnAsync(int urn, IPrincipal principal)
         {
@@ -52,7 +60,7 @@ namespace Edubase.Services.Texuna.Groups
             (await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal)).Response;
 
         public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal, bool includeFutureDated = false) 
-            => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments?editMode={includeFutureDated}", principal)).Response;
+            => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments?editMode={includeFutureDated}", principal)).GetResponse();
 
         public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model)
         {
@@ -83,6 +91,6 @@ namespace Edubase.Services.Texuna.Groups
         }
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
-            => (await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}", principal)).Response;
+            => (await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}", principal)).GetResponse();
     }
 }
