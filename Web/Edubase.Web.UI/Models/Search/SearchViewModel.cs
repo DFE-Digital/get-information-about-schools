@@ -27,9 +27,9 @@ namespace Edubase.Web.UI.Models.Search
         public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }
 
         [BindAlias(BIND_ALIAS_LAIDS)]
-        public List<int> SelectedLocalAuthorityIds
+        public LocalAuthorityIdList SelectedLocalAuthorityIds
         {
-            get { return this.selectedLocalAuthorityIds.Distinct().ToList(); }
+            get { return new LocalAuthorityIdList(this.selectedLocalAuthorityIds.Distinct()); }
             set { this.selectedLocalAuthorityIds = value; }
         }
 
@@ -72,5 +72,22 @@ namespace Edubase.Web.UI.Models.Search
         public bool NoResultsForName { get; set; }
         public bool NoResultsForLocation { get; set; }
         public bool NoResultsForLA { get; set; }
+    }
+
+    public class LocalAuthorityIdList : List<int>
+    {
+        public LocalAuthorityIdList()
+        {    
+        }
+
+        public LocalAuthorityIdList(IEnumerable<int> ids)
+        {
+            this.AddRange(ids);
+        }
+
+        public override string ToString()
+        {
+            return $"d={string.Join("&d=", this)}";
+        }
     }
 }
