@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -473,6 +473,7 @@
     <Content Include="Assets\Scripts\Elements\expanding-content.js" />
     <Content Include="Assets\Scripts\Elements\truncated-text.js" />
     <Content Include="Assets\Scripts\standalone\approvals.js" />
+    <Content Include="Assets\Scripts\standalone\create-childrens-centre.js" />
     <Content Include="Assets\Scripts\standalone\data-status.js" />
     <Content Include="Assets\Scripts\Views\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
