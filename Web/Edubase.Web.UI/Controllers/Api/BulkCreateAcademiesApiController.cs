@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Controllers.Api
         public async Task<IHttpActionResult> ProcessValidateRequestAsync(NewAcademyRequest[] payload)
         {
             var result = await _establishmentWriteService.ValidateBulkCreateAcademies(payload, User);
-            if (!result.Success) return Ok(result.Response);
+            if (!result.Success) return Ok(result.GetResponse());
             else return Content(HttpStatusCode.BadRequest, result.Errors);
         }
 
@@ -54,7 +54,7 @@ namespace Edubase.Web.UI.Controllers.Api
         public async Task<IHttpActionResult> ProcessValidateRequestAsync(Guid id)
         {
             var result = await _establishmentWriteService.GetBulkCreateAcademiesProgress(id, User);
-            if (!result.Success) return Ok(result.Response);
+            if (!result.Success) return Ok(result.GetResponse());
             else return Content(HttpStatusCode.BadRequest, result.Errors);
         }
     }
