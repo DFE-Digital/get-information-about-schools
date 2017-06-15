@@ -2,6 +2,7 @@
 using CompaniesHouse.Request;
 using Edubase.Services.Domain;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse.Models;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
 {
     public class CompaniesHouseService : ICompaniesHouseService
     {
+        private const int COMPANIES_HOUSE_SIZE_LIMIT = 400;
+
         public async Task<PagedDto<CompanyProfile>> SearchByCompaniesHouseNumber(string number)
         {
             var result = await GetCompaniesHouseClient().GetCompanyProfileAsync(number);
@@ -46,7 +49,7 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
                     Address = new CompanyAddress { Line1 = x.Address?.AddressLine1, Line2 = x.Address?.AddressLine2, CityOrTown = x.Address?.Locality, PostCode = x.Address?.PostalCode },
                     IncorporationDate = x.DateOfCreation,
                     Number = x.CompanyNumber
-                }).ToList(), result.Data.TotalResults.GetValueOrDefault());
+                }).ToList(), Math.Min(result.Data.TotalResults.GetValueOrDefault(), COMPANIES_HOUSE_SIZE_LIMIT));
             }
             else return PagedDto<CompanyProfile>.Empty;
         }
