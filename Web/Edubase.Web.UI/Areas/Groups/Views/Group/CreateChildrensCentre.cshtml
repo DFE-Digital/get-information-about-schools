@@ -4,7 +4,7 @@
     ViewBag.Title = Model.PageTitle;
 }
 
-<div id="create-childrens-centre">
+<div id="create-childrens-centre" v-cloak>
 
     @using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post))
     {
@@ -13,7 +13,7 @@
         @Html.HiddenFor(x => x.SaveMode)
 
         <div class="grid-row">
-            <div id="step1" v-show="!step0Complete">
+            <div id="step1" v-show="appState === 'initial'">
                 <div class="column-full">
                     <div class="breadcrumbs">
                         <ul>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="column-full">
                     <div class="button-row">
-                        <a href="#" class="button mobile-full-width" v-on:click.prevent="stepOContinue">
+                        <a href="#" class="button mobile-full-width" v-on:click.prevent="step0Continue">
                             Continue
                         </a>
                         @Html.ActionLink("Cancel", "Index", "Tools",new { area=""}, new {@class= "button button-grey mobile-full-width" })
@@ -55,9 +55,8 @@
                     </div>
                 </div>
             </div>
-            <div id="step2">
+            <div id="step2"v-show="appState==='groupDetail'">
                 <div class="column-full">
-                    <hr />
                     <div class="breadcrumbs">
                         <ul>
                             <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
@@ -73,9 +72,10 @@
                     <div>Add the details of the children's centre group you'd like to create.</div>
 
                     <h2 class="bold-medium">Children's centre group details</h2>
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.GroupName)">
+                    <div v-bind:class="['form-group', groupNameError? 'error' : '']">
                         <label for="name" class="form-label">Group name</label>
                         @Html.ValidationMessageFor(x => x.GroupName)
+                        <span class="error-message" v-show="groupNameError">Please check the group name</span>
                         @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control", v_model="groupName" })
                     </div>
 
@@ -83,9 +83,10 @@
 
                     @Html.EditorFor(x => x.OpenDate, new { title = Model.OpenDateLabel, vueModel= "openDate" })
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                    <div v-bind:class="['form-group', laError? 'error' : '']">
                         <label for="name" class="form-label">Local authority</label>
                         @Html.ValidationMessageFor(x => x.LocalAuthorityId)
+                        <span class="error-message" v-show="laError">Please select a local authority</span>
                         @if (Model.IsLocalAuthorityEditable)
                         {
                             @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" , v_model="la"})
@@ -111,51 +112,108 @@
                     </div>
                 </div>
             </div>
-            <div id="step3">
-                <div class="column-full">
-                    <hr />
-                    <div class="breadcrumbs">
-                        <ul>
-                            <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-                            <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
-                        </ul>
-                    </div>
-
-                    <h1 class="heading-xlarge">Add children's centres</h1>
-                    @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+        <div id="step3" v-show="appState==='addCentre'">
+            <div class="column-full">
+                <div class="breadcrumbs">
+                    <ul>
+                        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
+                    </ul>
                 </div>
-                <div class="column-full">
-                    <div>Add two or more children's centres to create a children's centre group and choose which one you would like as the lead centre.</div>
 
-                    <h2 class="bold-medium">New children's centre group details</h2>
-                    <dl>
-                        <dt>Group Name:</dt>
-                        <dd id="group-name">{{groupName}}</dd>
-                        <dt>Open date:</dt>
-                        <dd id="group-open-date">{{openDate}}</dd>
-                        <dt>Group status:</dt>
-                        <dd id="group-status">{{groupStatus}}</dd>
-                        <dt>Local authority</dt>
-                        <dd id="group-la">{{laName}}</dd>
-                    </dl>
-
-                    <h2 class="bold-medium">Add children's centres</h2>
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
-                        @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                        <label class="form-label">
-                            Establishment <abbr title="Unique Reference Number">URN</abbr>
-                        </label>
-                        @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box" })
-                        <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button button-find-inline">Find</button>
-                    </div>
-                    <!-- JB: list of "added" centres here -->
-
-                </div>
+                <h1 class="heading-xlarge">Add children's centres</h1>
+                @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
             </div>
-            <div id="children-centre-details">
+            <div class="column-full">
+                <div>Add two or more children's centres to create a children's centre group and choose which one you would like as the lead centre.</div>
+
+                <h2 class="bold-medium">New children's centre group details</h2>
+                <dl class="key-value-list">
+                    <dt>Group Name:</dt>
+                    <dd id="group-name">{{groupName}}</dd>
+                    <dt>Open date:</dt>
+                    <dd id="group-open-date">{{openDate}}</dd>
+                    <dt>Group status:</dt>
+                    <dd id="group-status">{{groupStatus}}</dd>
+                    <dt>Local authority</dt>
+                    <dd id="group-la">{{laName}}</dd>
+                </dl>
+
+                <h2 class="bold-medium">Add children's centres</h2>
+                <div v-bind:class="['form-group', urnError? 'error' : '']">
+                    @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+                    <label class="form-label">
+                        Establishment <abbr title="Unique Reference Number">URN</abbr>
+                    </label>
+                    <span class="error-message" v-show="urnError">Please check the URN</span>
+                    @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box", v_model= "searchUrn" })
+                    <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn">Find</button>
+                </div>
+                <!-- JB: list of "added" centres here -->
+                <div v-show="centresInGroup.length > 0">
+                    <p class="table-caption">{{ tableCount }}</p>
+                    <table class="edubase-table childrens-centre-listing">
+                        <thead>
+                            <tr>
+                                <th v-if="groupType === '9'">Lead centre</th>
+                                <th>URN</th>
+                                <th>Name</th>
+                                <th>Join date</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(estab, index) in centresInGroup">
+                                <td aria-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '9'">
+                                    <span class="radio-button-wrap">
+                                        <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked ="estab.urn == groupLead" v-model="groupLead"/>                                        
+                                        @*@Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new {id = "lead-" + Model.LinkedEstablishments.Establishments[i].Urn})*@
+                                        <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
+                                            <span class="visuallyhidden">Set as lead establishment</span>
+                                        </label>
+                                    </span>
+                                </td>
+
+                                <td aria-label="URN" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">
+                                    <input type="hidden" :value="estab.urn" name="estab-in-group" /> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!!  -->
+                                    {{estab.urn}}
+                                </td>
+
+                                <td aria-label="Name" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
+                                <td aria-label="Join date" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
+                                <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn)">Edit</a></td>
+                                <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)">Remove</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="table-caption">{{tableCount}}</p>
+                    
+                    <div>
+
+                        <!--JB: show the below from step 3 onwards-->
+                        @*<a href="#" class="button button-grey cancel mobile-full-width">Go back</a>*@
+
+                        <!--JB: button for childnre-centre-details-->
+                        @*<button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentAdd" class="button">Add</button>*@
+
+                        @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                        {
+                            <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
+                            <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave">@(Model.InEditMode ? "Submit" : "Continue")</button>
+                        }
+
+                        @(Model.InEditMode
+                              ? Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+                              : Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" }))
+                    </div>
+                </div>                
+            </div>
+        </div>
+                     
+            <div id="children-centre-details" v-show="appState==='detail'">
                 <div class="column-full">
-                    <hr />
                     <div class="breadcrumbs">
                         <ul>
                             <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
@@ -170,40 +228,32 @@
                 <div class="column-full">
                     <div>Ensure this is the right children's centre and add a joined date.</div>
                     <h2 class="bold-medium">Childrens centre</h2>
-                    <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
-                    @* TO DO childrens centre address*@
-                    <p>URN: @Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</p>
-                    @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date" })
+                    <p>
+                        {{pendingEstab.name}}
+                        <br/>
+                        {{pendingEstabAddress}}
+                        <br/>
+                        URN: {{pendingEstab.urn}}
+                    </p>
+                    
+                    @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", vueModel="joinDate" })
 
 
                     @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+                    
+                    <div class="button-row">
+                        <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup">Add</a>
+                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="">Cancel</a>
+                    </div>
 
                 </div>
             </div>
-            <div class="grid-row">
-                <div class="column-full">
-
-                    <!--JB: show the below from step 3 onwards-->
-                    @*<a href="#" class="button button-grey cancel mobile-full-width">Go back</a>*@
-
-                    <!--JB: button for childnre-centre-details-->
-                    @*<button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentAdd" class="button">Add</button>*@
-
-                    @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                {
-                    <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
-                        <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave">@(Model.InEditMode ? "Submit" : "Continue")</button>
-                    }
-
-                    @(Model.InEditMode
-                      ? Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
-                      : Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" }))
-                </div>
-            </div>
+            
         </div>        
     }
 </div>
 @section ViewScripts
 {
-    <script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>
+    @*<script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>*@
+    <script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>
 }
