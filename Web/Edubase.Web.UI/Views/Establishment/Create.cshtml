@@ -18,7 +18,7 @@
 <div id="create-establishment">
     <div class="grid-row">
         <div class="column-full">
-            <h1 class="heading-large">
+            <h1 class="heading-intro">
                 Create a school or college
             </h1>
 
@@ -30,7 +30,7 @@
             @Html.AntiForgeryToken()
             <div class="column-full top-button-panel">
                 <div class="submit-cancel-panel">
-                    <button type="submit" name="action" value="" class="button">Create establishment</button>
+                    <button type="submit" name="action" value="" class="button mobile-full-width">Create</button>
                     <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width">Cancel</button>
                 </div>
             </div>
@@ -50,21 +50,22 @@
                     @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "form-control" })
                 </div>
 
+                <div class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
+                    @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "form-label" })
+                    @Html.ValidationMessageFor(x => x.EstablishmentTypeId)
+                    @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
+                </div>
+
                 <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
                     @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "form-label" })
                     @Html.ValidationMessageFor(x => x.EducationPhaseId)
                     @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "form-control" })
                 </div>
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
-                    @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "form-label" })
-                    @Html.ValidationMessageFor(x => x.EstablishmentTypeId)
-                    @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
-                </div>
             </div>
             <div class="column-full">
-                <fieldset class="inline" id="number-gen-options">
-                    <legend class="heading-small">Establishment number</legend>
+                <fieldset class="inline create-estab-number-gen" id="number-gen-options">
+                    <legend class="bold-small">Establishment number</legend>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
                         @Html.ValidationMessageFor(x => x.GenerateEstabNumber)
                         <label class="block-label selection-button-radio" for="generate-number-radio">
@@ -90,7 +91,7 @@
 
             <div class="column-full">
                 <div class="submit-cancel-panel">
-                    <button type="submit" name="action" value="" class="button">Create establishment</button>
+                    <button type="submit" name="action" value="" class="button mobile-full-width">Create</button>
                     @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-grey cancel mobile-full-width" })
                 </div>
             </div>
@@ -104,6 +105,8 @@
 
         var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
         var phases = @Html.Json(Model.EducationPhases);
+        var $typeSelector = $("#EstablishmentTypeId");
+        var $phaseSelector = $("#EducationPhaseId");
 
         $(function () {
             var $radios = $('#number-gen-options').find(':radio');
@@ -136,9 +139,13 @@
             }
         });
 
+        $phaseSelector.prop('disabled', 'disabled');
+        $typeSelector.on('change', function() {
+            $phaseSelector.removeAttr('disabled');
+        });
+
         function filterEstablishmentPhaseList() {
-            var $typeSelector = $("select#EstablishmentTypeId");
-            var $phaseSelector = $("select#EducationPhaseId");
+            
             var optionList = '<option value="">Please select</option>';
             var typeId = $typeSelector.val();
             var previousSelValue = $phaseSelector.val(); 
