@@ -1,10 +1,6 @@
 ﻿using Edubase.Services.Security;
 using Edubase.Web.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
@@ -13,6 +9,7 @@ namespace Edubase.Web.UI.Controllers
     using Helpers;
     using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
+    using R = EdubaseRoles;
 
     [RoutePrefix("Tools"), Route("{action=index}"), EdubaseAuthorize]
     public class ToolsController : Controller
@@ -23,8 +20,7 @@ namespace Edubase.Web.UI.Controllers
         {
             _securityService = securityService;
         }
-
-        // GET: Tools
+        
         public async Task<ActionResult> Index()
         {
             var createGroupPermission = await _securityService.GetCreateGroupPermissionAsync(User);
@@ -38,17 +34,18 @@ namespace Edubase.Web.UI.Controllers
                 UserCanCreateSchoolTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Trust),
                 UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
                 UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
-                UserCanManageAcademyOpenings = User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.AP_AOS),
-                UserCanBulkCreateAcademies = User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.AP_AOS),
-                UserCanMergeOrAmalgamateEstablishments = User.InRole(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.SOU, EdubaseRoles.IEBT)
+                UserCanManageAcademyOpenings = User.InRole(R.ROLE_BACKOFFICE, R.EFADO, R.AP_AOS),
+                UserCanBulkCreateAcademies = User.InRole(R.ROLE_BACKOFFICE, R.EFADO, R.AP_AOS),
+                UserCanMergeOrAmalgamateEstablishments = User.InRole(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO, R.SOU, R.IEBT),
+                UserCanBulkUpdateGovernors = User.InRole(R.EDUBASE_GROUP_MAT, R.ESTABLISHMENT, R.EFADO, R.ROLE_BACKOFFICE)
             };
 
             return View(viewModel);
         }
-        [HttpGet, MvcAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
+        [HttpGet, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO)]
         public ActionResult BulkAcademies() => View();
 
-        [HttpGet, MvcAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO, EdubaseRoles.SOU, EdubaseRoles.IEBT)]
+        [HttpGet, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO, R.SOU, R.IEBT)]
         public ActionResult MergersTool() => View();
     }
 }

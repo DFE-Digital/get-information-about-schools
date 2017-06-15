@@ -1,6 +1,7 @@
 ﻿using Edubase.Common.IO;
 using Edubase.Services.Governors;
 using Edubase.Web.UI.Areas.Governors.Models;
+using Edubase.Web.UI.Helpers;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +9,9 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("BulkUpdate"), Route("{action=index}")]
+    using R = Services.Security.EdubaseRoles;
+
+    [RouteArea("Governors"), RoutePrefix("BulkUpdate"), Route("{action=index}"), MvcAuthorizeRoles(R.EDUBASE_GROUP_MAT, R.ESTABLISHMENT, R.EFADO, R.ROLE_BACKOFFICE)]
     public class GovernorsBulkUpdateController : Controller
     {
         readonly IGovernorsWriteService _governorsWriteService;

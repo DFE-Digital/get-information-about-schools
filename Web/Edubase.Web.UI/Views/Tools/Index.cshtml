@@ -148,17 +148,19 @@
         </p>
     </div>
 
+    @if (Model.UserCanBulkUpdateGovernors)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.RouteLink("Bulk update governance", "GovernorsBulkUpdate")
+            </h3>
+            <p>
+                Update your governance data as a collection,
+                rather than by individual entries.
+            </p>
+        </div>
+    }
 
-    <div class="column-half">
-        <h3>
-            @Html.RouteLink("Bulk update governance", "GovernorsBulkUpdate")
-        </h3>
-        <p>
-            Update your governance data as a collection,
-            rather than by individual entries.
-        </p>
-    </div>
-    
     @* This is NON-MVP <div class="column-half">
         <h3>
             <a href="#">Bulk update groups</a>
