@@ -2,6 +2,7 @@
 using Edubase.Services.Governors;
 using Edubase.Web.UI.Areas.Governors.Models;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -28,21 +29,24 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
                 viewModel.BulkFile.SaveAs(fileName);
-                
+
                 var result = await _governorsWriteService.BulkUpdateValidateAsync(fileName, User);
                 if (result.Success.GetValueOrDefault())
                 {
-                    await _governorsWriteService.BulkUpdateProcessRequestAsync(result.Id.GetValueOrDefault(), User);
-                    viewModel.WasSuccessful = true;
+                    var apiResponse = await _governorsWriteService.BulkUpdateProcessRequestAsync(result.Id, User);
+                    viewModel.WasSuccessful = apiResponse.Success;
+                    if(apiResponse.HasErrors) ModelState.AddModelError("", apiResponse.Errors[0].Message);
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Errors were returned, please check the log file");
+                    if (result.Errors != null && result.Errors.Any()) ModelState.AddModelError("", result.Errors[0].Message);
+                    else ModelState.AddModelError("", "Please download the error log to correct your data before resubmitting");
                     viewModel.ErrorLogDownload = result.ErrorLogFile;
                 }
 
                 System.IO.File.Delete(fileName);
             }
+            else viewModel.BadFileType = true;
 
             return View("Index", viewModel);
         }

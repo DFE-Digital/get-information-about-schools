@@ -11,7 +11,28 @@
     </ul>
 </div>
 
-@Html.ValidationSummary()
+<!-- You might have to remind them again about the idea of a _generic_ approach to errors. -->
+@if (Model.BadFileType)
+{
+    <div class="validation-summary-errors">
+        <span>Incorrect file type</span>
+        <p>You have uploaded an incorrect file type </p>
+        <p class="error-message">Please upload a XLSX file</p>
+    </div>
+}
+else if (Model.ErrorLogDownload != null)
+{
+    <div class="validation-summary-errors">
+        <span>Validation fail</span>
+        <p>The data contained in the XLSX was invalid</p>
+        <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+    </div>
+}
+else
+{
+    @Html.ValidationSummary("Incorrect or missing details")
+}
+
 
 @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -25,12 +46,11 @@
                     <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
                 </div>
             }
-            <h1 class="heading-xlarge">Governors bulk update</h1>
+            <h1 class="heading-xlarge">Governance bulk update</h1>
             
-            <p>Update governor records by uploading a CSV or XLSX file.</p>
+            <p>Follow these steps to bulk update governance data.</p>
         </div>
         <div class="column-full">
-
             <div class="expanding-content-wrapper" data-update-text="false">
                 <a href="#" class="expanding-content-trigger">
                     Help with preparing files
@@ -50,9 +70,18 @@
                     </p>
                 </div>
             }
-
         </div>
+
+        <div class="column-full">
+            <h2 class="bold-medium">Download template</h2>
+            <p>Please download the template using the link below. Then, provide or update your governance information in the template. Finally, upload the completed template using the 'Choose file' button below.</p>
+            <a href="/public/downloads/GovernorsBulkUpdateTemplate.xlsx">GovernanceTemplate.xlsx, 18KB</a>
+            <br /><br /><br />
+        </div>
+
         <div class="column-half">
+            <h2 class="bold-medium">Submit completed template</h2>
+            <br />
             <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="bulkfile" class="form-label">Upload a file</label>      
                 @Html.ValidationMessageFor(x => x.BulkFile)  

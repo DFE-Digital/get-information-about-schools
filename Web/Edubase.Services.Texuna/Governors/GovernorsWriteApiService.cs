@@ -59,22 +59,14 @@ namespace Edubase.Services.Texuna.Governors
 
         public async Task<GovernorBulkUpdateValidationResult> BulkUpdateValidateAsync(string fileName, IPrincipal principal)
         {
-            var retVal = new GovernorBulkUpdateValidationResult();
-            var json = (await _httpClient.PostMultipartAsync<string>("governor/bulk-update", null, fileName, principal)).GetResponse(); 
-
-            // Had to hack this as the API peeps didn't conform to the YAML spec.
-            if (json.IndexOf(nameof(FileDownloadDto.FileSizeInBytes), StringComparison.OrdinalIgnoreCase) > -1)
-            {
-                retVal.Success = false;
-                retVal.ErrorLogFile = Newtonsoft.Json.JsonConvert.DeserializeObject<FileDownloadDto>(json);
-            }
-            else retVal = Newtonsoft.Json.JsonConvert.DeserializeObject<GovernorBulkUpdateValidationResult>(json);
-            return retVal;
+            var apiResponse = (await _httpClient.PostMultipartAsync<GovernorBulkUpdateValidationResult>("governor/bulk-update", null, fileName, principal));
+            if (apiResponse.Success) return apiResponse.GetResponse();
+            else return new GovernorBulkUpdateValidationResult { Errors = apiResponse.Errors };
         }
 
-        public async Task<GovernorBulkUpdateValidationResult> BulkUpdateProcessRequestAsync(Guid id, IPrincipal principal)
+        public async Task<ApiResponse> BulkUpdateProcessRequestAsync(string id, IPrincipal principal)
         {
-            return (await _httpClient.PostAsync<GovernorBulkUpdateValidationResult>($"governor/bulk-update/{id}", null, principal)).GetResponse();
+            return (await _httpClient.PostAsync($"governor/bulk-update/{id}", null, principal));
         }
     }
 }

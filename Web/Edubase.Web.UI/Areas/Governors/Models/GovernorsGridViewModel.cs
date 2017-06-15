@@ -15,6 +15,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     using UI.Models;
     using GR = Services.Enums.eLookupGovernorRole;
     using Services.Enums;
+    using Edubase.Services.Domain;
 
     public class GovernorsGridViewModel : Groups.Models.CreateEdit.IGroupPageViewModel, IEstablishmentPageViewModel
     {
@@ -70,7 +71,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public eGovernanceMode? GovernanceMode { get; set; }
 
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService)
+        public IEnumerable<LookupDto> Nationalities { get; private set; }
+        public IEnumerable<LookupDto> AppointingBodies { get; private set; }
+
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies)
         {
             _nomenclatureService = nomenclatureService;
             DelegationInformation = dto.GroupDelegationInformation;
@@ -78,6 +82,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             DomainModel = dto;
             EditMode = editMode;
             GroupUId = groupUId;
+            Nationalities = nationalities;
+            AppointingBodies = appointingBodies;
             EstablishmentUrn = establishmentUrn;
             CreateGrids(dto, dto.CurrentGovernors, false, groupUId, establishmentUrn);
             CreateGrids(dto, dto.HistoricalGovernors, true, groupUId, establishmentUrn);
@@ -125,13 +131,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var row = grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
                                                    .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
                                                    .AddCell(governor.Id, displayPolicy.Id)
-                                                   //.AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId) // todo: texchange: use lookup to get text label
+                                                   .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name, displayPolicy.AppointingBodyId)
                                                    .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
                                                    .AddCell(endDate?.ToString("dd/MM/yyyy"), includeEndDate)
                                                    .AddCell(governor.PostCode, displayPolicy.PostCode)
                                                    .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
                                                    .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
-                                                   //.AddCell(governor.Nationality, displayPolicy.Nationality) // todo: texchange: use lookup to get text label
+                                                   .AddCell(Nationalities.FirstOrDefault(x => x.Id == governor.NationalityId)?.Name, displayPolicy.Nationality)
                                                    .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
                                                    .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
                 }
@@ -152,13 +158,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             grid.AddHeaderCell("Name", displayPolicy.FullName)
                 .AddHeaderCell("Shared with", role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
                 .AddHeaderCell("GID", displayPolicy.Id)
-                //.AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
+                .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
                 .AddHeaderCell("From", displayPolicy.AppointmentStartDate)
                 .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate)
                 .AddHeaderCell("Postcode", displayPolicy.PostCode)
                 .AddHeaderCell("Date of birth", displayPolicy.DOB)
                 .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
-                //.AddHeaderCell("Nationality", displayPolicy.Nationality)
+                .AddHeaderCell("Nationality", displayPolicy.Nationality)
                 .AddHeaderCell("Email address", displayPolicy.EmailAddress)
                 .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber);
         }

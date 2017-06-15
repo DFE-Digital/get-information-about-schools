@@ -76,6 +76,8 @@ namespace Edubase.Services.Domain
             else if (errors != null && errors.Any()) Fail(errors);
             return this;
         }
+
+        public bool HasErrors => (Errors != null && Errors.Any());
     }
 
 

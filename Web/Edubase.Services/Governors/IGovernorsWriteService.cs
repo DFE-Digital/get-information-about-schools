@@ -27,6 +27,6 @@ namespace Edubase.Services.Governors
         /// <param name="taskId"></param>
         /// <param name="principal"></param>
         /// <returns></returns>
-        Task<GovernorBulkUpdateValidationResult> BulkUpdateProcessRequestAsync(Guid id, IPrincipal principal);
+        Task<ApiResponse> BulkUpdateProcessRequestAsync(string id, IPrincipal principal);
     }
 }
