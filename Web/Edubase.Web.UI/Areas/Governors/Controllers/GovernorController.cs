@@ -134,11 +134,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
                 var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService, 
-                    (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
-                var appointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync())
-                    .ToDictionary(x => x.Id, x => x.Name);
-                var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService, appointingBodies);
-
+                    (await _cachedLookupService.NationalitiesGetAllAsync()), 
+                    (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
+                
                 var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
                 viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
 
@@ -228,10 +226,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
                     var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService,
                         (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
-                    var appointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync())
-                        .ToDictionary(x => x.Id, x => x.Name);
-                    var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService, appointingBodies);
-
+                    
                     if (establishmentUrn.HasValue)
                     {
                         var estabDomainModel = await _establishmentReadService.GetAsync(establishmentUrn.Value, User);
