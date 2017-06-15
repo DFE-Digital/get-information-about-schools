@@ -138,15 +138,19 @@
 </div>
 
 <div class="grid-row">
-    <div class="column-half">
-        <h3>
-            @Html.RouteLink("Bulk update establishments", "EstabBulkUpdate")
-        </h3>
-        <p>
-            Update establishment data as a collection,
-            rather than by individual entries.
-        </p>
-    </div>
+
+    @if (Model.UserCanBulkUpdateEstablishments)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.RouteLink("Bulk update establishments", "EstabBulkUpdate")
+            </h3>
+            <p>
+                Update establishment data as a collection,
+                rather than by individual entries.
+            </p>
+        </div>
+    }
 
     @if (Model.UserCanBulkUpdateGovernors)
     {

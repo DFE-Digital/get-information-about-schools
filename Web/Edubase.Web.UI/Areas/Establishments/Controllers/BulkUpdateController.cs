@@ -3,17 +3,17 @@ using Edubase.Common.IO;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Web.UI.Helpers;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [RouteArea("Establishments"), RoutePrefix("BulkUpdate"), Route("{action=index}")]
+    using R = Services.Security.EdubaseRoles;
+
+    [RouteArea("Establishments"), RoutePrefix("BulkUpdate"), Route("{action=index}"), MvcAuthorizeRoles(R.ROLE_PRISM, R.ROLE_STAKEHOLDER, R.ROLE_BACKOFFICE)]
     public class BulkUpdateController : Controller
     {
         readonly IEstablishmentWriteService _establishmentWriteService;

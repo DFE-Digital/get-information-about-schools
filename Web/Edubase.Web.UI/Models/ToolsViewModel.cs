@@ -21,5 +21,6 @@ namespace Edubase.Web.UI.Models
         public bool UserCanMergeOrAmalgamateEstablishments { get; internal set; }
         public bool UserCanBulkCreateAcademies { get; internal set; }
         public bool UserCanBulkUpdateGovernors { get; internal set; }
+        public bool UserCanBulkUpdateEstablishments { get; internal set; }
     }
 }

@@ -37,7 +37,8 @@ namespace Edubase.Web.UI.Controllers
                 UserCanManageAcademyOpenings = User.InRole(R.ROLE_BACKOFFICE, R.EFADO, R.AP_AOS),
                 UserCanBulkCreateAcademies = User.InRole(R.ROLE_BACKOFFICE, R.EFADO, R.AP_AOS),
                 UserCanMergeOrAmalgamateEstablishments = User.InRole(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO, R.SOU, R.IEBT),
-                UserCanBulkUpdateGovernors = User.InRole(R.EDUBASE_GROUP_MAT, R.ESTABLISHMENT, R.EFADO, R.ROLE_BACKOFFICE)
+                UserCanBulkUpdateGovernors = User.InRole(R.EDUBASE_GROUP_MAT, R.ESTABLISHMENT, R.EFADO, R.ROLE_BACKOFFICE),
+                UserCanBulkUpdateEstablishments = User.InRole(R.ROLE_PRISM, R.ROLE_STAKEHOLDER, R.ROLE_BACKOFFICE)
             };
 
             return View(viewModel);
