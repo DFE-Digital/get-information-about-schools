@@ -106,5 +106,11 @@ namespace Edubase.Web.UI
 
         public static IRuleBuilderOptions<T, TProperty> WithSummaryMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> messageProvider) => rule.WithState(messageProvider);
 
+        public static List<T> Append<T>(this List<T> list, T item)
+        {
+            list.Add(item);
+            return list;
+        }
+
     }
 }

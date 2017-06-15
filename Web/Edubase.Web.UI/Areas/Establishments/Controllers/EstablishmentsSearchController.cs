@@ -6,6 +6,7 @@ using System.Web.Routing;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
+    using Edubase.Services.Establishments.Models;
     using Models.Search;
     using Services.Domain;
     using Services.Enums;
@@ -19,12 +20,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     using System.Web.Hosting;
     using UI.Controllers;
     using UI.Models.Search;
+    using EM = Services.Establishments.Models.EstablishmentModel;
 
     [RouteArea("Establishments"), RoutePrefix("Search"), Route("{action=index}")]
     public class EstablishmentsSearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
-
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
         private readonly ICachedLookupService _lookupService;
 
@@ -234,6 +235,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     try
                     {
+                        PopulateSelectList(payload); // select only fields we use in this context
+
                         var results = await _establishmentReadService.SearchAsync(payload, User);
 
                         if (results.Count == 0)
@@ -295,6 +298,26 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                 return View("Index", model);
             }
+        }
+
+        private void PopulateSelectList(EstablishmentSearchPayload payload)
+        {
+            payload.Select.Append(nameof(EM.Name))
+                .Append(nameof(EM.Address_Line1))
+                .Append(nameof(EM.Address_Line2))
+                .Append(nameof(EM.Address_Line3))
+                .Append(nameof(EM.Address_Locality))
+                .Append(nameof(EM.Address_PostCode))
+                .Append(nameof(EM.Address_CountryId))
+                .Append(nameof(EM.Address_CountyId))
+                .Append(nameof(EM.Address_CityOrTown))
+                .Append(nameof(EM.Location))
+                .Append(nameof(EM.EducationPhaseId))
+                .Append(nameof(EM.TypeId))
+                .Append(nameof(EM.Urn))
+                .Append(nameof(EM.LocalAuthorityId))
+                .Append(nameof(EM.EstablishmentNumber))
+                .Append(nameof(EM.StatusId));
         }
 
         private async Task<ActionResult> SearchByUrnAsync(EstablishmentSearchViewModel model)

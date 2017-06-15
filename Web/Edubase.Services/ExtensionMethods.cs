@@ -41,6 +41,7 @@ namespace Edubase.Services
             if (retVal == null) throw exceptionFactory();
             return retVal;
         }
+
     
         /// <summary>
         /// Casts the map to one of integers, rather than enums.
