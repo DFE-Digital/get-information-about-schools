@@ -20,6 +20,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     public class GovernorsGridViewModel : Groups.Models.CreateEdit.IGroupPageViewModel, IEstablishmentPageViewModel
     {
         private readonly NomenclatureService _nomenclatureService;
+        private readonly Dictionary<int, string> _appointingBodies;
 
         public List<GovernorGridViewModel> Grids { get; set; } = new List<GovernorGridViewModel>();
         public List<GovernorGridViewModel> HistoricGrids { get; set; } = new List<GovernorGridViewModel>();
@@ -77,6 +78,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies)
         {
             _nomenclatureService = nomenclatureService;
+            _appointingBodies = appointingBodies;
             DelegationInformation = dto.GroupDelegationInformation;
             ShowDelegationInformation = dto.ShowDelegationInformation;
             DomainModel = dto;
@@ -116,7 +118,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                                        (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
 
                 SetupHeader(role, grid, displayPolicy, includeEndDate);
-                
+
                 var list = governors.Where(x => x.RoleId.HasValue && equivalantRoles.Contains(x.RoleId.Value));
                 foreach (var governor in list)
                 {
