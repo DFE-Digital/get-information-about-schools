@@ -167,7 +167,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.ClosedDate = new DateTimeViewModel(domainModel.ClosedDate);
             viewModel.OpenDate = new DateTimeViewModel(domainModel.OpenDate);
             viewModel.LocalAuthorityId = domainModel.LocalAuthorityId;
-            viewModel.GroupStatusId = domainModel.StatusId;
             viewModel.GroupTypeId = domainModel.GroupTypeId;
             viewModel.GroupManagerEmailAddress = domainModel.ManagerEmailAddress;
             viewModel.GroupName = domainModel.Name;
@@ -397,7 +396,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 ManagerEmailAddress = viewModel.GroupManagerEmailAddress,
                 Name = viewModel.GroupName,
                 OpenDate = viewModel.OpenDate.ToDateTime(),
-                StatusId = viewModel.GroupStatusId,
                 ClosedDate = viewModel.ClosedDate.ToDateTime()
             };
 
@@ -450,7 +448,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
             viewModel.CCGroupTypes = (await _lookup.GroupTypesGetAllAsync())
                     .Where(x => x.Id.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)).ToSelectList(viewModel.GroupTypeId);
-            viewModel.Statuses = (await _lookup.GroupStatusesGetAllAsync()).ToSelectList(viewModel.GroupStatusId);
             return viewModel;
         }
 

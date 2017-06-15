@@ -43,7 +43,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public eSaveMode SaveMode { get; set; }
         public string FieldNamePrefix => _fieldNamePrefixers.Get(GroupTypeMode);
         public bool InEditMode => GroupUId.HasValue;
-        public int? GroupStatusId { get; set; }
         public string GroupManagerEmailAddress { get; set; }
         public int? LocalAuthorityId { get; set; }
         public bool IsLocalAuthorityEditable { get; set; }
@@ -95,8 +94,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         /// Children's centre group types
         /// </summary>
         public IEnumerable<SelectListItem> CCGroupTypes { get; set; }
-
-        public IEnumerable<SelectListItem> Statuses { get; set; }
+        
 
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
 

@@ -74,13 +74,6 @@
                     @Html.EditorFor(x => x.ClosedDate, new { title = "Closed date" })
                 }
 
-
-                <div class="form-group @Html.ValidationCssClassFor(x => x.GroupStatusId)">
-                    <label for="name">@Model.FieldNamePrefix status</label>
-                    @Html.ValidationMessageFor(x => x.GroupStatusId)
-                    @Html.DropDownListFor(x => x.GroupStatusId, Model.Statuses, "", new { @class = "form-control" })
-                </div>
-
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
                 {
                     <div class="form-group">

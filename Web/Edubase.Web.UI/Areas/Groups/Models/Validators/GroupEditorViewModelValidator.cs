@@ -104,11 +104,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
                 RuleFor(x => x.GroupTypeId).NotNull().WithMessage("Group Type must be supplied");
 
-                RuleFor(x => x.GroupStatusId)
-                    .NotNull()
-                    .WithMessage("Select the {0} status", x => x.FieldNamePrefix.ToLower())
-                    .When(x => x.SaveGroupDetail);
-
                 RuleFor(x => x.OpenDate)
                     .Must(x => !x.IsEmpty())
                     .WithMessage("{0} missing. Please enter the date", x => x.OpenDateLabel)
