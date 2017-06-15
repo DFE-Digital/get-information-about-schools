@@ -2,6 +2,8 @@
 using Edubase.Common;
 using Edubase.Common.Cache;
 using Edubase.Services;
+using Edubase.Services.Security;
+using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.Admin;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,7 +12,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Admin"), Route("{action=dashboard}")]
+    [RoutePrefix("Admin"), Route("{action=dashboard}"), MvcAuthorizeRoles(EdubaseRoles.ROLE_BACKOFFICE)]
     public class AdminController : EduBaseController
     {
 

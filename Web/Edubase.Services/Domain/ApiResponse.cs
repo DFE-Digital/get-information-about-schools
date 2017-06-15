@@ -74,6 +74,7 @@ namespace Edubase.Services.Domain
             Guard.IsTrue(error != null || (errors != null && errors.Any()), () => new Exception("The supplied API error(s) parameter was null"));
             if (error != null) Fail(error);
             else if (errors != null && errors.Any()) Fail(errors);
+            else Success = false;
             return this;
         }
 

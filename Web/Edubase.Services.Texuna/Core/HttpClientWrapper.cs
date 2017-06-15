@@ -18,6 +18,8 @@ namespace Edubase.Services
     using Texuna.Core;
     using Texuna.Serialization;
     using Domain;
+    using System.Linq;
+    using Edubase.Common;
 
     public class HttpClientWrapper
     {
@@ -217,9 +219,9 @@ namespace Edubase.Services
             if (message.StatusCode == HttpStatusCode.BadRequest)
             {
                 var json = await message.Content.ReadAsStringAsync();
-                var error = TryDeserializeAsync<ApiError>(json);
-                var errors = TryDeserializeAsync<ApiError[]>(json);
-                response.Fail(error, errors);
+                var errors = ParseApiErrors(json);
+                Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException("The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. " + json));
+                response.Fail(errors);
             }
             return response;
         }
@@ -231,13 +233,29 @@ namespace Edubase.Services
 
             if (message.StatusCode == HttpStatusCode.BadRequest)
             {
+                response.Successful = false;
                 var json = await message.Content.ReadAsStringAsync();
                 response.ValidationEnvelope = TryDeserializeAsync<TValidationEnvelope>(json);
-                if (response.ValidationEnvelope != null) response.Successful = false;
-                else response.Fail(TryDeserializeAsync<ApiError>(json), TryDeserializeAsync<ApiError[]>(json));
+                if (response.ValidationEnvelope == null)
+                {
+                    var errors = ParseApiErrors(json);
+                    Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException("The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. " + json));
+                    response.Fail(errors);
+                }
             }
 
             return response;
+        }
+
+        private ApiError[] ParseApiErrors(string json)
+        {
+            var error = TryDeserializeAsync<ApiError>(json);
+            if (error != null && !error.IsEmpty) return new[] { error };
+            
+            var errors = TryDeserializeAsync<ApiError[]>(json);
+            if (errors != null) errors = errors.Where(x => !x.IsEmpty).ToArray();
+
+            return new ApiError[0];
         }
 
         private void ValidateGenericHttpErrors(HttpResponseMessage message)

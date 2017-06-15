@@ -316,8 +316,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             });
             
             var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
-            validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
-            validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+            //if(validationEnvelope.HasWarnings) validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+            if(validationEnvelope.HasErrors) validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
 
             if (ModelState.IsValid)
             {

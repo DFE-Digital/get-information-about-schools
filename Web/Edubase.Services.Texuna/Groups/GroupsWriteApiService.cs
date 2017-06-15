@@ -18,7 +18,7 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<int> SaveAsync(SaveGroupDto dto, IPrincipal principal)
         {
-            if (dto.IsNewEntity) return (await _httpClient.PostAsync<NumericResultDto>($"group", dto, principal)).Response.Value;
+            if (dto.IsNewEntity) return (await _httpClient.PostAsync<NumericResultDto>($"group", dto, principal)).GetResponse().Value;
             else
             {
                 await _httpClient.PutAsync($"group", dto, principal);
@@ -28,7 +28,7 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<ValidationEnvelopeDto> ValidateAsync(SaveGroupDto dto, IPrincipal principal)
         {
-            if (dto.IsNewEntity) return (await _httpClient.PostAsync<ValidationEnvelopeDto>($"group/validate", dto, principal)).Response;
+            if (dto.IsNewEntity) return (await _httpClient.PostAsync<ValidationEnvelopeDto>($"group/validate", dto, principal)).GetResponse();
             else return (await _httpClient.PutAsync<ValidationEnvelopeDto>($"group/validate", dto, principal)).Response;
         }
     }
