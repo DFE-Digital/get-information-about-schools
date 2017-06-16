@@ -29,6 +29,7 @@ namespace Edubase.Web.UI
                 IocConfig.Register(x);
                 x.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 x.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;
+                x.Filters.Add(new ApiExceptionFilter());
             });
 
             using (var scope = IocConfig.Container.BeginLifetimeScope())

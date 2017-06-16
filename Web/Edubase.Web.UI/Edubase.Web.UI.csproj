@@ -340,6 +340,7 @@
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\UnauthorizedController.cs" />
     <Compile Include="Exceptions\InvalidParameterException.cs" />
+    <Compile Include="Filters\ApiExceptionFilter.cs" />
     <Compile Include="Filters\EdubaseAuthorizeAttribute.cs" />
     <Compile Include="Filters\ExceptionFilter.cs" />
     <Compile Include="Filters\PendingApprovalsFilter.cs" />
