@@ -43,7 +43,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public eSaveMode SaveMode { get; set; }
         public string FieldNamePrefix => _fieldNamePrefixers.Get(GroupTypeMode);
         public bool InEditMode => GroupUId.HasValue;
-        public string GroupManagerEmailAddress { get; set; }
+        public string ManagerEmailAddress { get; set; }
         public int? LocalAuthorityId { get; set; }
         public bool IsLocalAuthorityEditable { get; set; }
         public string LocalAuthorityName { get; set; }

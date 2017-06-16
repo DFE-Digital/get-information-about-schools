@@ -85,9 +85,10 @@
 
                 @if (Model.GroupType == L.ChildrensCentresGroup)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.ManagerEmailAddress)">
                         <label for="name">Group manager email</label>
-                        @Html.TextBoxFor(x => x.GroupManagerEmailAddress, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.ManagerEmailAddress)
+                        @Html.TextBoxFor(x => x.ManagerEmailAddress, new { @class = "form-control" })
                     </div>
                 }
 
