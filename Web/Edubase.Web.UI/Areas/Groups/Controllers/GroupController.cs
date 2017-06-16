@@ -171,7 +171,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.OpenDate = new DateTimeViewModel(domainModel.OpenDate);
             viewModel.LocalAuthorityId = domainModel.LocalAuthorityId;
             viewModel.GroupTypeId = domainModel.GroupTypeId;
-            viewModel.GroupManagerEmailAddress = domainModel.ManagerEmailAddress;
+            viewModel.ManagerEmailAddress = domainModel.ManagerEmailAddress;
             viewModel.GroupName = domainModel.Name;
             viewModel.CompaniesHouseNumber = domainModel.CompaniesHouseNumber;
             viewModel.GroupUId = domainModel.GroupUId;
@@ -225,7 +225,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var dto = CreateSaveDto(viewModel);
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
                 //validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.Message));
             }
         }
 
@@ -403,7 +403,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 GroupTypeId = viewModel.GroupTypeId,
                 GroupUId = viewModel.GroupUId,
                 LocalAuthorityId = viewModel.LocalAuthorityId,
-                ManagerEmailAddress = viewModel.GroupManagerEmailAddress,
+                ManagerEmailAddress = viewModel.ManagerEmailAddress,
                 Name = viewModel.GroupName,
                 OpenDate = viewModel.OpenDate.ToDateTime(),
                 ClosedDate = viewModel.ClosedDate.ToDateTime()
