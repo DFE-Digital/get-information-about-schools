@@ -449,8 +449,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var urn = viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Urn;
             var result = await _establishmentReadService.GetAsync(urn.ToInteger().Value, User);
             var model = result.GetResult();
-            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Name = model.Name;
-            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn = model.Urn;
+            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Name = model?.Name;
+            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn = model?.Urn;
         }
 
         private async Task<GroupEditorViewModel> PopulateSelectLists(GroupEditorViewModel viewModel)

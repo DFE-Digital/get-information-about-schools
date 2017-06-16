@@ -42,13 +42,14 @@ namespace Edubase.Services
             };
         }
 
-        public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal)
+        //TODO: tidy up the "throwOnNotFound" stuff
+        public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal, bool throwOnNotFound = true)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: GET {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
                 var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync<TResponse>(result);
+                return await ParseHttpResponseMessageAsync<TResponse>(result, throwOnNotFound);
             }
         }
 
@@ -184,12 +185,12 @@ namespace Edubase.Services
 
         #region ParseHttpResponseMessageAsync
 
-        private async Task<ApiResponse<T>> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message)
+        private async Task<ApiResponse<T>> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message, bool throwOnNotFound = true)
         {
             AssertJsonContentOrEmpty(message);
             var response = new ApiResponse<T>(message.IsSuccessStatusCode);
             if (message.IsSuccessStatusCode) return response.OK(await DeserializeResponseAsync<T>(message));
-            else return await ProcessApiErrorAsync(message, response);
+            else return await ProcessApiErrorAsync(message, response, throwOnNotFound);
         }
 
         private async Task<ApiResponse> ParseHttpResponseMessageAsync(HttpResponseMessage message)
@@ -213,9 +214,9 @@ namespace Edubase.Services
 
         #region Error handling
 
-        private async Task<T> ProcessApiErrorAsync<T>(HttpResponseMessage message, T response) where T : ApiResponse
+        private async Task<T> ProcessApiErrorAsync<T>(HttpResponseMessage message, T response, bool throwOnNotFound = true) where T : ApiResponse
         {
-            ValidateGenericHttpErrors(message);
+            ValidateGenericHttpErrors(message, throwOnNotFound);
             if (message.StatusCode == HttpStatusCode.BadRequest)
             {
                 var json = await message.Content.ReadAsStringAsync();
@@ -223,10 +224,16 @@ namespace Edubase.Services
                 Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException("The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. " + json));
                 response.Fail(errors);
             }
+
+            if (message.StatusCode == HttpStatusCode.NotFound)
+            {
+                response.Success = false;
+            }
+
             return response;
         }
 
-        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ProcessApiErrorAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message, ApiResponse<TSuccess, TValidationEnvelope> response) 
+        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ProcessApiErrorAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message, ApiResponse<TSuccess, TValidationEnvelope> response, bool throwOnNotFound = true) 
             where TValidationEnvelope : class
         {
             ValidateGenericHttpErrors(message);
@@ -244,6 +251,12 @@ namespace Edubase.Services
                 }
             }
 
+            if (message.StatusCode == HttpStatusCode.NotFound)
+            {
+                response.Successful = false;
+                response.Response = default(TSuccess);
+            }
+
             return response;
         }
 
@@ -258,7 +271,7 @@ namespace Edubase.Services
             return new ApiError[0];
         }
 
-        private void ValidateGenericHttpErrors(HttpResponseMessage message)
+        private void ValidateGenericHttpErrors(HttpResponseMessage message, bool throwOnNotFound = true)
         {
             if (!message.IsSuccessStatusCode)
             {
@@ -270,7 +283,9 @@ namespace Edubase.Services
                     case HttpStatusCode.InternalServerError:
                         throw new TexunaApiSystemException($"The API returned an 'Internal Server Error'. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
                     case HttpStatusCode.NotFound:
-                        throw new TexunaApiNotFoundException($"The API returned 404 Not Found. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+                        if (throwOnNotFound)
+                            throw new TexunaApiNotFoundException($"The API returned 404 Not Found. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+                        break;
                     case HttpStatusCode.Forbidden:
                         throw new EduSecurityException("The current principal does not have permission to call this API");
                     default:

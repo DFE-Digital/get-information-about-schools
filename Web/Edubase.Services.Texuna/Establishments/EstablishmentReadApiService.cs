@@ -43,7 +43,7 @@ namespace Edubase.Services.Texuna.Establishments
             =>  (await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canedit", principal)).Response.Value;
 
         public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
-            => new ServiceResultDto<EstablishmentModel>((await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}", principal)).Response);
+            => new ServiceResultDto<EstablishmentModel>((await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}", principal, false)).Response);
 
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
             => (await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes?take={take}", user)).Response;
