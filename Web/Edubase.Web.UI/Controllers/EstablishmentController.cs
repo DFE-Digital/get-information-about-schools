@@ -301,8 +301,14 @@ namespace Edubase.Web.UI.Controllers
 
         private static async Task PopulateGovernors(EstablishmentDetailViewModel viewModel)
         {
-            var governorsController = DependencyResolver.Current.GetService<GovernorController>();
-            viewModel.GovernorsGridViewModel = await governorsController.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment);
+            try
+            {
+                var governorsController = DependencyResolver.Current.GetService<GovernorController>();
+                viewModel.GovernorsGridViewModel = await governorsController.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)
