@@ -215,27 +215,39 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
         [Route]
-        public ActionResult View(int? groupUId, int? establishmentUrn)
+        public ActionResult View(int? groupUId, int? establishmentUrn, GovernorsGridViewModel viewModel = null)
         {
-            // KHD Hack: Async child actions are not supported; but we have an async stack, so we have to wrap the async calls in an sync wrapper.  Hopefully won't deadlock.
-            // Need to use ASP.NET Core really now; that supports ViewComponents which are apparently the solution.
-            return Task.Run(async () =>
+            if (viewModel != null) return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
+            else
             {
-                using (MiniProfiler.Current.Step("Retrieving Governors Details"))
+                // KHD Hack: Async child actions are not supported; but we have an async stack, so we have to wrap the async calls in an sync wrapper.  Hopefully won't deadlock.
+                // Need to use ASP.NET Core really now; that supports ViewComponents which are apparently the solution.
+                return Task.Run(async () =>
                 {
-                    var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
-                    var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService,
-                        (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
-                    
-                    if (establishmentUrn.HasValue)
+                    using (MiniProfiler.Current.Step("Retrieving Governors Details"))
                     {
-                        var estabDomainModel = await _establishmentReadService.GetAsync(establishmentUrn.Value, User);
-                        viewModel.GovernanceMode = estabDomainModel.GetResult().GovernanceMode ?? eGovernanceMode.LocalGovernors;
+                        viewModel = await CreateGovernorsViewModel(groupUId, establishmentUrn);
+                        return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
                     }
+                }).Result;
+            }
+        }
 
-                    return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
-                }
-            }).Result;
+        internal async Task<GovernorsGridViewModel> CreateGovernorsViewModel(int? groupUId = null, int? establishmentUrn = null, EstablishmentModel establishmentModel = null)
+        {
+            establishmentUrn = establishmentUrn ?? establishmentModel?.Urn;
+
+            var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
+            var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService,
+                (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
+
+            if (establishmentUrn.HasValue || establishmentModel != null)
+            {
+                var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
+                viewModel.GovernanceMode = estabDomainModel.GovernanceMode ?? eGovernanceMode.LocalGovernors;
+            }
+
+            return viewModel;
         }
 
         /// <summary>

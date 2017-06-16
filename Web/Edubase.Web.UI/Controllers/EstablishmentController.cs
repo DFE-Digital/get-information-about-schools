@@ -13,11 +13,13 @@ using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Web.Resources;
+using Edubase.Web.UI.Areas.Governors.Controllers;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
 using StackExchange.Profiling;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Principal;
@@ -266,13 +268,11 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false)
         {
             ViewBag.ShowApproved = approved;
-            var parent = await GetLegalParent(id, User);
             var viewModel = new EstablishmentDetailViewModel
             {
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 SearchQueryString = searchQueryString,
-                SearchSource = searchSource,
-                LegalParentGroup = parent
+                SearchSource = searchSource
             };
 
             using (MiniProfiler.Current.Step("Retrieving establishment"))
@@ -281,37 +281,17 @@ namespace Edubase.Web.UI.Controllers
                 if (!result.Success) return HttpNotFound();
                 viewModel.Establishment = result.ReturnValue;
             }
-            
-            using (MiniProfiler.Current.Step("Retrieving LinkedEstablishments"))
-            {
-                viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id, User)).Select(x => new LinkedEstabViewModel(x)).ToList();
-                foreach (var item in viewModel.LinkedEstablishments)
-	            {
-                    item.LinkTypeName = await _cachedLookupService.GetNameAsync(() => item.LinkTypeId);
-                }
-            }
 
-            if (User.Identity.IsAuthenticated)
-            {
-                using (MiniProfiler.Current.Step("Retrieving ChangeHistory"))
-                    viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 20, User);
-            }
+            await Task.WhenAll(
+                PopulateLinkedEstablishments(id, viewModel),
+                PopulateChangeHistory(id, viewModel),
+                PopulateGroups(id, viewModel),
+                PopulateDisplayPolicies(viewModel),
+                PopulateEditPermissions(viewModel),
+                PopulateLookupNames(viewModel),
+                PopulateGovernors(viewModel));
 
-            using (MiniProfiler.Current.Step("Retrieving parent group records"))
-                viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id, User);
-            
-            using (MiniProfiler.Current.Step("Retrieving DisplayPolicy"))
-                viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(viewModel.Establishment, User);
-
-            using (MiniProfiler.Current.Step("Retrieving TabDisplayPolicy"))
-                viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, viewModel.DisplayPolicy, User);
-
-            viewModel.UserCanEdit = await _establishmentReadService.CanEditAsync(viewModel.Establishment.Urn.Value, User);
-
-            // Retrieve the lookup name values
-            await PopulateLookupNames(viewModel);
-
-            viewModel.AgeRangeToolTip = _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.AgeRangeToolTip = _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
             viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
             viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
             viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
@@ -319,6 +299,39 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
+        private static async Task PopulateGovernors(EstablishmentDetailViewModel viewModel)
+        {
+            var governorsController = DependencyResolver.Current.GetService<GovernorController>();
+            viewModel.GovernorsGridViewModel = await governorsController.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment);
+        }
+
+        private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)
+        {
+            viewModel.UserCanEdit = await _establishmentReadService.CanEditAsync(viewModel.Establishment.Urn.Value, User);
+        }
+
+        private async Task PopulateDisplayPolicies(EstablishmentDetailViewModel viewModel)
+        {
+            viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(viewModel.Establishment, User);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, viewModel.DisplayPolicy, User);
+        }
+
+        private async Task PopulateGroups(int id, EstablishmentDetailViewModel viewModel)
+        {
+            viewModel.Groups = await _groupReadService.GetAllByEstablishmentUrnAsync(id, User);
+            viewModel.LegalParentGroup = GetLegalParent(id, viewModel.Groups, User);
+        }
+
+        private async Task PopulateChangeHistory(int id, EstablishmentDetailViewModel viewModel)
+        {
+            if (User.Identity.IsAuthenticated) viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 1000, User);
+        }
+
+        private async Task PopulateLinkedEstablishments(int id, EstablishmentDetailViewModel viewModel)
+        {
+            viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id, User)).Select(x => new LinkedEstabViewModel(x)).ToList();
+            await Task.WhenAll(viewModel.LinkedEstablishments.Select(async x => x.LinkTypeName = await _cachedLookupService.GetNameAsync(() => x.LinkTypeId)));
+        }
 
         [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/csv/{id}")]
         public async Task<ActionResult> DownloadCsvChangeHistory(int id) 
@@ -392,9 +405,8 @@ namespace Edubase.Web.UI.Controllers
 
         
 
-        private async Task<GroupModel> GetLegalParent(int establishmentUrn, IPrincipal principal)
+        private GroupModel GetLegalParent(int establishmentUrn, IEnumerable<GroupModel> parentGroups, IPrincipal principal)
         {
-            var parentGroups = await _groupReadService.GetAllByEstablishmentUrnAsync(establishmentUrn, principal);
             var parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.SingleacademyTrust);
             if (parentGroup != null)
             {

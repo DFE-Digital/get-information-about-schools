@@ -4,6 +4,7 @@ using Edubase.Services.Enums;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
+using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Models.Establishments;
 using System.Collections.Generic;
 
@@ -147,6 +148,8 @@ namespace Edubase.Web.UI.Models
             Establishment.AltTown,
             AltAddressCountyName,
             Establishment.AltPostCode);
+
+        public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
 
     }
 }
