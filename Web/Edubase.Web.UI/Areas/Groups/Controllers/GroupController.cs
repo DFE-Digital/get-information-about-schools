@@ -225,7 +225,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var dto = CreateSaveDto(viewModel);
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
                 //validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.Message));
             }
         }
 
