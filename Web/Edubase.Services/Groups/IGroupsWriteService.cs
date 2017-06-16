@@ -15,7 +15,9 @@ namespace Edubase.Services.Groups
         /// <param name="linkedEstablishments"></param>
         /// <param name="principal"></param>
         /// <returns>The UID of the group</returns>
-        Task<int> SaveAsync(SaveGroupDto dto, IPrincipal principal);
+        Task<ApiResponse> SaveAsync(SaveGroupDto dto, IPrincipal principal);
+
+        Task<ApiResponse<NumericResultDto>> SaveNewAsync(SaveGroupDto dto, IPrincipal principal);
 
         Task<ValidationEnvelopeDto> ValidateAsync(SaveGroupDto dto, IPrincipal principal);
     }

@@ -33,6 +33,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Governors.Models;
     using Services.Nomenclature;
     using Services.Governors.Models;
+    using MoreLinq;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -147,6 +148,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             
             await PopulateSelectLists(viewModel);
 
+            await ValidateAsync(viewModel);
+
             if (ModelState.IsValid)
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
@@ -221,7 +224,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var dto = CreateSaveDto(viewModel);
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
-                validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+                //validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
                 validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
             }
         }
@@ -366,8 +369,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else if (viewModel.Action == ActionSave)
             {
                 suppressClearModelState = true;
-                await SaveGroup(viewModel);
-                return RedirectToAction(nameof(Details), new { id = viewModel.GroupUId.Value });
+                var apiResponse = await SaveGroup(viewModel);
+                if (apiResponse.HasErrors) apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+                else return RedirectToAction(nameof(Details), new { id = viewModel.GroupUId.Value });
             }
             else throw new InvalidParameterException("The action parameter is invalid");
             
@@ -376,10 +380,16 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return null;
         }
 
-        private async Task SaveGroup(GroupEditorViewModel viewModel)
+        private async Task<ApiResponse> SaveGroup(GroupEditorViewModel viewModel)
         {
-            SaveGroupDto dto = CreateSaveDto(viewModel);
-            viewModel.GroupUId = await _groupWriteService.SaveAsync(dto, User);
+            var dto = CreateSaveDto(viewModel);
+            if (dto.IsNewEntity)
+            {
+                var resp = await _groupWriteService.SaveNewAsync(dto, User);
+                if (!resp.HasErrors) viewModel.GroupUId = resp.GetResponse().Value;
+                return resp;
+            }
+            else return await _groupWriteService.SaveAsync(dto, User);
         }
 
         private static SaveGroupDto CreateSaveDto(GroupEditorViewModel viewModel)

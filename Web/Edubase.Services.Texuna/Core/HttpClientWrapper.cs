@@ -84,13 +84,13 @@ namespace Edubase.Services
             }
         }
 
-        public async Task PutAsync(string uri, object data, IPrincipal principal)
+        public async Task<ApiResponse> PutAsync(string uri, object data, IPrincipal principal)
         {
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
                 var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
                 var result = await SendAsync(requestMessage);
-                await ParseHttpResponseMessageAsync(result);
+                return await ParseHttpResponseMessageAsync(result);
             }
         }
 
@@ -253,7 +253,7 @@ namespace Edubase.Services
             if (error != null && !error.IsEmpty) return new[] { error };
             
             var errors = TryDeserializeAsync<ApiError[]>(json);
-            if (errors != null) errors = errors.Where(x => !x.IsEmpty).ToArray();
+            if (errors != null) return errors.Where(x => !x.IsEmpty).ToArray();
 
             return new ApiError[0];
         }
