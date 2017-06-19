@@ -113,5 +113,7 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<ApiResponse<BulkCreateAcademiesProgress>> GetBulkCreateAcademiesProgress(Guid id, IPrincipal principal)
             => await _httpClient.GetAsync<BulkCreateAcademiesProgress>($"establishment/bulk-create-academies/progress/{id}", principal);
 
+        public async Task<ApiResponse> UpdateGovernanceModeAsync(int urn, eGovernanceMode mode, IPrincipal principal) 
+            => await _httpClient.PutAsync($"establishment/{urn}/governancemode?governanceModeId={(int)mode}", null, principal);
     }
 }

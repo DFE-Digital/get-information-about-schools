@@ -19,8 +19,10 @@ namespace Edubase.Services.Establishments.Models
         [JsonProperty("latLon")]
         public LatLon Location { get; set; }
         
-        [JsonIgnore] // TODO: texchange: NOT DEFINED in YAML
-        public eGovernanceMode? GovernanceMode { get; set; }
+        public int? GovernanceModeId { get; set; }
+
+        [JsonIgnore]
+        public eGovernanceMode? GovernanceMode => GovernanceModeId.HasValue ? (eGovernanceMode) GovernanceModeId.Value : null as eGovernanceMode?;
 
         [JsonProperty("iebtDetail")]
         public IEBTModel IEBTModel { get; set; }
