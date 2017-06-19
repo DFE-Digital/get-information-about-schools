@@ -227,7 +227,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var dto = CreateSaveDto(viewModel);
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
                 //validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.Message));
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
             }
         }
 
@@ -322,7 +322,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             
             var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
             //if(validationEnvelope.HasWarnings) validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
-            if(validationEnvelope.HasErrors) validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+            if(validationEnvelope.HasErrors) validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
 
             if (ModelState.IsValid)
             {
@@ -372,7 +372,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 suppressClearModelState = true;
                 var apiResponse = await SaveGroup(viewModel);
-                if (apiResponse.HasErrors) apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+                if (apiResponse.HasErrors) apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
                 else return RedirectToAction(nameof(Details), new { id = viewModel.GroupUId.Value });
             }
             else throw new InvalidParameterException("The action parameter is invalid");

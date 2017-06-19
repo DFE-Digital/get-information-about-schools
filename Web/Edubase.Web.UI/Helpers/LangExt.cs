@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI
 {
+    using Edubase.Web.Resources;
     using FluentValidation.Internal;
     using FluentValidation.Resources;
     using FluentValidation.Validators;
@@ -110,6 +111,16 @@ namespace Edubase.Web.UI
         {
             list.Add(item);
             return list;
+        }
+
+        public static string GetMessage(this ApiError error)
+        {
+            return ApiMessagesHelper.Get(error.Code, error.Message);
+        }
+
+        public static string GetMessage(this ApiWarning warning)
+        {
+            return ApiMessagesHelper.Get(warning.Code, warning.Message);
         }
 
     }
