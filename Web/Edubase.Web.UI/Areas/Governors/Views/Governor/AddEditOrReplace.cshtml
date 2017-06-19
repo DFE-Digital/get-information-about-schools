@@ -43,7 +43,7 @@
         <br />
         <p  class="bold-small">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</p>
             
-        @Html.EditorFor(m => m)
+        @Html.EditorFor(m => m, new { disableStartDate = Model.ReplaceGovernorViewModel.GID.HasValue })
 
         <div class="button-row">
             @Buttons()
@@ -88,5 +88,22 @@
 
         });
 
+        $day = $('#ReplaceGovernorViewModel_AppointmentEndDate_Day');
+        $month = $('#ReplaceGovernorViewModel_AppointmentEndDate_Month');
+        $year = $('#ReplaceGovernorViewModel_AppointmentEndDate_Year');
+
+        function checkAndUpdateDate() {
+            if (Number($day.val()) > 0 && Number($month.val()) > 0 && Number($year.val()) > 0) {
+                var date = new Date($year.val(), $month.val(), $day.val(), 0, 0, 0, 0);
+                date.setDate(date.getDate() + 1);
+                $('#AppointmentStartDate_Day').val(date.getDate());
+                $('#AppointmentStartDate_Month').val(date.getMonth());
+                $('#AppointmentStartDate_Year').val(date.getFullYear());
+            }
+        }
+
+        $day.blur(checkAndUpdateDate);
+        $month.blur(checkAndUpdateDate);
+        $year.blur(checkAndUpdateDate);
     </script>
 }
