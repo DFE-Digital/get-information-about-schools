@@ -1,6 +1,14 @@
 ﻿@using Edubase.Services.Enums
 @model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
     
+@{
+    bool disableStartDate;
+    if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out disableStartDate))
+    {
+        disableStartDate = false;
+    }
+}
+    
 <div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
     @Html.LabelFor(x => x.GovernorTitleId)
     @Html.ValidationMessageFor(x => x.GovernorTitleId)
@@ -44,7 +52,7 @@
 
 @if (Model.DisplayPolicy.AppointmentStartDate)
 {
-    @Html.EditorFor(x => x.AppointmentStartDate, new { title = "Date of appointment (required to save record)"})
+    @Html.EditorFor(x => x.AppointmentStartDate, new { title = "Date of appointment (required to save record)", @readonly = disableStartDate })
 }
 
 @if (Model.DisplayPolicy.AppointmentEndDate)

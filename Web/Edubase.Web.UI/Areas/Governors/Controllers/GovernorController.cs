@@ -360,7 +360,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 AppointingBodyId = viewModel.AppointingBodyId,
                 AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
-                AppointmentStartDate = viewModel.AppointmentStartDate.ToDateTime(),
+                AppointmentStartDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime()?.AddDays(1),
                 DOB = viewModel.DOB.ToDateTime(),
                 EmailAddress = viewModel.EmailAddress,
                 GroupUId = viewModel.GroupUId,
@@ -402,16 +402,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     }
                 }
 
-                if (viewModel.ReplaceGovernorViewModel.GID.HasValue)
-                {
-                    var governorBeingReplaced = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value, User);
-                    governorBeingReplaced.AppointmentEndDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime();
-                    response = await _governorsWriteService.SaveAsync(governorBeingReplaced, User);
-                }
-                else
-                {
-                    response = await _governorsWriteService.SaveAsync(governorModel, User);
-                }
+                response = await _governorsWriteService.SaveAsync(governorModel, User);
                 
                 if (response.Success)
                 {
