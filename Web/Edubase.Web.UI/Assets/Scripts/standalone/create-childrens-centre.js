@@ -115,6 +115,7 @@
             },
             lookupUrn: function () {
                 var self = this;
+                this.urnError = false;
                 if (isNaN(this.searchUrn) || this.searchUrn === '') {
                     this.urnError = true;
                     return;
