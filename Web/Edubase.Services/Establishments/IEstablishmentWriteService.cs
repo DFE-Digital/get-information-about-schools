@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Domain;
 using System;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Establishments
 {
@@ -18,5 +19,6 @@ namespace Edubase.Services.Establishments
         Task<ApiResponse<BulkCreateAcademiesProgress, NewAcademyRequestValidationEnvelope[]>> BulkCreateAcademies(NewAcademyRequest[] newAcademyRequests, IPrincipal principal);
         Task<ApiResponse<BulkCreateAcademiesProgress>> GetBulkCreateAcademiesProgress(Guid id, IPrincipal principal);
         Task<ApiResponse<NewAcademyRequestValidationEnvelope[]>> ValidateBulkCreateAcademies(NewAcademyRequest[] newAcademyRequests, IPrincipal principal);
+        Task<ApiResponse> UpdateGovernanceModeAsync(int urn, eGovernanceMode mode, IPrincipal principal);
     }
 }

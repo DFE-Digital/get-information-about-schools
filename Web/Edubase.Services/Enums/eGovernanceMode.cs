@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Edubase.Services.Enums
+﻿namespace Edubase.Services.Enums
 {
     public enum eGovernanceMode
     {
-        LocalGovernors,
-        NoLocalGovernors,
-        SharesLocalGovernors,
-        LocalAndSharedGovernors
+        LocalGovernors = 1,
+        LocalAndSharedGovernors = 2,
+        SharesLocalGovernors = 3,
+        NoLocalGovernors = 4
     }
 }

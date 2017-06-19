@@ -10,7 +10,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                 .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotNull().WithMessage("Please upload a file.")
                 .Must(x => x.ContentLength > 0).WithMessage("Please upload a file.")
-                .Must(x => x.FileName.EndsWith("xlsx")).WithMessage("Please upload a XLSX file");
+                .Must(x => x.FileName.EndsWith("xlsx")).WithMessage("Please upload an XLSX file");
         }
     }
 }

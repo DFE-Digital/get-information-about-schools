@@ -91,12 +91,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// <param name="establishmentUrn"></param>
         /// <returns></returns>
         [Route(ESTAB_EDIT_GOVERNANCE_MODE, Name = "EstabEditGovernanceMode"), HttpGet]
-        public async Task<ActionResult> EditGovernanceMode(int? establishmentUrn)
+        public async Task<ActionResult> EditGovernanceMode(int? establishmentUrn, bool failed = false)
         {
             Guard.IsTrue(establishmentUrn.HasValue, () => new InvalidParameterException($"Parameter '{nameof(establishmentUrn)}' is null."));
 
             using (MiniProfiler.Current.Step("Retrieving Governors Details"))
             {
+                if (failed) ModelState.AddModelError("", "Unable to update Governance");
+                
                 var viewModel = new EditGovernanceModeViewModel { Urn = establishmentUrn.Value };
                 await PopulateLayoutProperties(viewModel, establishmentUrn, null, x => viewModel.GovernanceMode = x.GovernanceMode ?? eGovernanceMode.LocalGovernors);
                 return View(viewModel);
@@ -110,10 +112,15 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [Route(ESTAB_EDIT_GOVERNANCE_MODE), HttpPost]
         public async Task<ActionResult> EditGovernanceMode(EditGovernanceModeViewModel viewModel)
         {
-            var domainModel = (await _establishmentReadService.GetAsync(viewModel.Urn.Value, User)).GetResult();
-            domainModel.GovernanceMode = viewModel.GovernanceMode;
-            await _establishmentWriteService.SaveAsync(domainModel, false, null, User);
-            return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = viewModel.Urn });
+            try
+            {
+                await _establishmentWriteService.UpdateGovernanceModeAsync(viewModel.Urn.Value, viewModel.GovernanceMode.Value, User);
+                return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = viewModel.Urn });
+            }
+            catch (EduSecurityException) // for some reason the API responds with a 403 for this one, even though it's nothing to do with authentication/authorization.
+            {
+                return RedirectToRoute("EstabEditGovernanceMode", new { establishmentUrn = viewModel.Urn, failed = true });
+            }
         }
 
         /// <summary>

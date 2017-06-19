@@ -93,9 +93,9 @@
                         }
                         else
                         {
-                            <input value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" v-model="la" />
-                            @Html.HiddenFor(x => x.LocalAuthorityName)
-                            @Html.HiddenFor(x => x.LocalAuthorityId)
+                            <input type="text" value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" v-model="laName" id="uneditable-la" />
+                            @Html.HiddenFor(x => x.LocalAuthorityName, new { id="uneditable-la-name"})
+                            @Html.HiddenFor(x => x.LocalAuthorityId, new { id="la-code"})
                         }
                         @Html.HiddenFor(x => x.IsLocalAuthorityEditable)
                     </div>

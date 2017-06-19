@@ -306,7 +306,7 @@ namespace Edubase.Web.UI.Controllers
                 var governorsController = DependencyResolver.Current.GetService<GovernorController>();
                 viewModel.GovernorsGridViewModel = await governorsController.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment);
             }
-            catch (Exception)
+            catch (Exception) // todo: tech debt, need to more gracefully handle 404 in this instance.
             {
             }
         }
