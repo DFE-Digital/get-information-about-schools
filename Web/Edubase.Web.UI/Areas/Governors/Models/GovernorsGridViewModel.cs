@@ -96,9 +96,21 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric, int? groupUid, int? establishmentUrn)
         {
-            foreach (var role in dto.ApplicableRoles.Where(role => !EnumSets.eSharedGovernorRoles.Contains(role)))
+            var sharedRoles = dto.ApplicableRoles.Where(role => EnumSets.eSharedGovernorRoles.Contains(role));
+            var localEquivs = sharedRoles.Select(SharedLocalRoleEquivalence.GetLocalEquivalentToSharedRole);
+            var allowedSharedRoles =
+                dto.ApplicableRoles.Where(x => sharedRoles.Contains(x) &&
+                                               !dto.ApplicableRoles.Contains(SharedLocalRoleEquivalence
+                                                   .GetLocalEquivalentToSharedRole(x)
+                                                   .Value));
+
+            var roles = dto.ApplicableRoles.Where(role => !EnumSets.eSharedGovernorRoles.Contains(role)
+                                                          ||
+                                                          (SharedLocalRoleEquivalence.GetLocalEquivalentToSharedRole(role) != null
+                                                           && !dto.ApplicableRoles.Contains(SharedLocalRoleEquivalence.GetLocalEquivalentToSharedRole(role).Value)));
+            foreach (var role in roles)
             {
-                var equivalantRoles = SharedLocalRoleEquivalence.GetEquivalentLocalRole(role).Cast<int>().ToList();
+                var equivalantRoles = SharedLocalRoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
 
                 var grid = new GovernorGridViewModel($"{_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                 {
