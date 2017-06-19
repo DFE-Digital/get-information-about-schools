@@ -52,7 +52,10 @@
 
 @if (Model.DisplayPolicy.AppointmentStartDate)
 {
-    @Html.EditorFor(x => x.AppointmentStartDate, new { title = "Date of appointment (required to save record)", @readonly = disableStartDate })
+    var detail = disableStartDate ? @"based on current governor's end date" : @"required to save record";
+    var title = $"Date of appointment ({detail})";
+
+    @Html.EditorFor(x => x.AppointmentStartDate, new { title, @readonly = disableStartDate })
 }
 
 @if (Model.DisplayPolicy.AppointmentEndDate)

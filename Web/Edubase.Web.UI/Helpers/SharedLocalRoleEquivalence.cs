@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Helpers
@@ -11,9 +12,19 @@ namespace Edubase.Web.UI.Helpers
             { eLookupGovernorRole.ChairOfLocalGoverningBody, new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody, eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody }}
         };
 
-        public static List<eLookupGovernorRole> GetEquivalentLocalRole(eLookupGovernorRole role)
+        public static List<eLookupGovernorRole> GetEquivalentToLocalRole(eLookupGovernorRole role)
         {
             return equivalentRoles.ContainsKey(role) ? equivalentRoles[role] : new List<eLookupGovernorRole> { role };
+        }
+
+        public static eLookupGovernorRole? GetLocalEquivalentToSharedRole(eLookupGovernorRole role)
+        {
+           if (equivalentRoles.Any(x => x.Value.Contains(role)))
+           {
+               return equivalentRoles.Single(x => x.Value.Contains(role)).Key;
+           }
+
+            return null;
         }
     }
 }
