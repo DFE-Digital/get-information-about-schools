@@ -94,10 +94,10 @@
 
         function checkAndUpdateDate() {
             if (Number($day.val()) > 0 && Number($month.val()) > 0 && Number($year.val()) > 0) {
-                var date = new Date($year.val(), $month.val(), $day.val(), 0, 0, 0, 0);
+                var date = new Date($year.val(), $month.val()-1, $day.val(), 0, 0, 0, 0);
                 date.setDate(date.getDate() + 1);
                 $('#AppointmentStartDate_Day').val(date.getDate());
-                $('#AppointmentStartDate_Month').val(date.getMonth());
+                $('#AppointmentStartDate_Month').val(date.getMonth()+1);
                 $('#AppointmentStartDate_Year').val(date.getFullYear());
             }
         }
