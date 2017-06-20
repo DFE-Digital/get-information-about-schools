@@ -10,7 +10,13 @@
             leadEstablishmentUrn: '',
             leadEstablishmentName: '',
             linkedEstablishments: [],
+            linkedEstab0: '',
+            linkedEstab1: '',
+            linkedEstab2: '',
+            linkedEstabsValid: [],
+           
             amalgamatedEstablishments: [],
+            validatedAmalgamatedEstablishments: [],
             establishmentsSelected: false,
             mergerTypeError: false,
             leadEstablishmentError: false,
@@ -120,7 +126,10 @@
             addEstablishment: function (urn, pos) {
                 var estabDetails;
                 var self = this;
-                this.linkedEstablishmentError = false;
+                
+                if (urn === '') {
+                    return true;
+                }               
 
                 $.ajax({
                     url: self.estabLookup.replace('{0}', urn),
@@ -128,59 +137,21 @@
                     method: 'get',
                     success: function (data) {
                         self.linkedEstablishmentError = data.notFound;
+                        self.linkedEstabsValid[pos] = data.notFound;
                         if (!self.linkedEstablishmentError) {
                             estabDetails = data.returnValue;
                             self.linkedEstablishments.splice(pos, 1, estabDetails);
+                            self.linkedEstabsValid[pos] = true;
                         }
                     },
                     error: function () {
                         self.linkedEstablishmentError = true;
-                    }
-
-                });
-
-                var addedUrns = this.linkedEstablishments.map(function (estab) {
-                    return estab.urn;
-                });
-                addedUrns.push(this.leadEstablishmentUrn);
-
-                this.duplicateUrnsError = (addedUrns.indexOf(urn) > -1);
-
-            },
-            setLocalAuthority: function (val) {
-                var filtered = this.localAuthorities.filter(function (la) {
-                    if (val === la.value) {
-                        return la;
+                        self.linkedEstabsValid[pos] = false;
                     }
                 });
 
-                if (filtered.length) {
-                    this.selectedLaName = filtered[0].label;
-                }
-
             },
-            setEstablishmentType: function (val) {
-                var filtered = this.establishmentTypes.filter(function (establishment) {
-                    if (val === establishment.value) {
-                        return establishment;
-                    }
-                });
-
-                if (filtered.length) {
-                    this.selectedEstablishmentType = filtered[0].label;
-                }
-            },
-            setEstablishmentPhase: function (val) {
-                var filtered = this.phases.filter(function (phase) {
-                    if (val === phase.value) {
-                        return phase;
-                    }
-                });
-
-                if (filtered.length) {
-                    this.selectedEstablishmentPhase = filtered[0].label;
-                }
-            },
+           
             validateAmalgamationUrns: function (urn) {
                 var self = this,
                     estabDetails;
@@ -373,16 +344,41 @@
 
             },
             establishmentSelectionValid: function () {
-                this.validSelection = (this.leadEstablishmentUrn !== '' & !this.leadEstablishmentError &&
-                    this.linkedEstablishments.length > 0);
-                if (!this.validSelection) {
-                    if (!this.leadEstablishmentName) {
-                        this.leadEstablishmentError = true;
+                var self = this;
+                this.linkedEstablishmentError = false;
 
-                    } else if (this.linkedEstablishments.length < 1) {
-                        this.linkedEstablishmentError = true;
-                    }
-                }
+
+                $.when(
+                        self.addEstablishment(self.linkedEstab0, 0),
+                        self.addEstablishment(self.linkedEstab1, 1),
+                        self.addEstablishment(self.linkedEstab2, 2))
+                    .done(function () {
+                        var addedUrns = self.linkedEstablishments.map(function (estab) {
+                            return estab.urn;
+                        });
+                        addedUrns.push(self.leadEstablishmentUrn);
+
+                      //  self.duplicateUrnsError = (addedUrns.indexOf(urn) > -1);
+                        var linkedEstabsValid = self.linkedEstabsValid.every(function(elem) {
+                            return elem === true;
+                        });
+                        console.log(linkedEstabsValid);
+                        self.validSelection = (
+                        self.leadEstablishmentUrn !== '' &&
+                        !self.leadEstablishmentError &&
+                        self.linkedEstablishments.length > 0);
+
+                
+
+                        if (!self.validSelection) {
+                            if (!self.leadEstablishmentName) {
+                                self.leadEstablishmentError = true;
+
+                            } else if (self.linkedEstablishments.length < 1) {
+                                self.linkedEstablishmentError = true;
+                            }
+                        }
+                    });               
             },
             restart: function () {
                 if (!this.mergerTypeConfirmed) {

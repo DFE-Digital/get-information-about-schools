@@ -473,6 +473,7 @@
     <Content Include="Assets\Scripts\Elements\expanding-content.js" />
     <Content Include="Assets\Scripts\Elements\truncated-text.js" />
     <Content Include="Assets\Scripts\standalone\approvals.js" />
+    <Content Include="Assets\Scripts\standalone\bulk-create-academies.js" />
     <Content Include="Assets\Scripts\standalone\create-childrens-centre.js" />
     <Content Include="Assets\Scripts\standalone\data-status.js" />
     <Content Include="Assets\Scripts\standalone\merge-amalgamate.js" />
