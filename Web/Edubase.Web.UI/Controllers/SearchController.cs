@@ -152,7 +152,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> ResolveLocation(string placeId)
         {
             var location = await _googlePlacesService.GetCoordinateAsync(placeId);
-            var url = Url.Action("Index", "Search", new { area = "" });
+            var url = Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" });
             const string key = "LocationSearchModel.AutoSuggestValue";
             url += "?" + Request.QueryString.RemoveKeys("placeId", key).AddIfNonExistent(key, $"{location.Latitude},{location.Longitude}");
             return Redirect(url);
