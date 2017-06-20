@@ -22,9 +22,7 @@ namespace Edubase.Web.UI.Models.Validators
                 ConfigureRules();
 
                 RuleFor(x => x.EducationPhaseId)
-                    .Cascade(CascadeMode.StopOnFirstFailure)
-                    .NotEmpty().WithMessage("Please select a a phase of education")
-                    .Must((m, x) => (establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.TypeId.Value]).Contains(x.Value))
+                    .Must((m, x) => !x.HasValue || (establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.TypeId.Value]).Contains(x.Value))
                     .WithMessage("Education phase is not valid for the selected type of establishment");
             });
 
