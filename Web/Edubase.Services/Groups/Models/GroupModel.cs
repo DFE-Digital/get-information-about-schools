@@ -25,8 +25,7 @@ namespace Edubase.Services.Groups.Models
 
         public AddressDto Address { get; set; }
         public string ManagerEmailAddress { get; set; }
-
-        [JsonIgnore] //todo: texchange/ BE DONE
+        
         public string DelegationInformation { get; set; }
         
         public string GroupId { get; set; }

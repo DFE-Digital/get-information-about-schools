@@ -77,8 +77,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies)
         {
             _nomenclatureService = nomenclatureService;
-            DelegationInformation = dto.GroupDelegationInformation;
-            ShowDelegationInformation = dto.ShowDelegationInformation;
             DomainModel = dto;
             EditMode = editMode;
             GroupUId = groupUId;

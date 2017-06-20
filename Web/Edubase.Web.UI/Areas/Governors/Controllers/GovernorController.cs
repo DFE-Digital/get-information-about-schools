@@ -147,7 +147,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
                 viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
 
-                await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, x => viewModel.GovernanceMode = x.GovernanceMode);
+                await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, x => viewModel.GovernanceMode = x.GovernanceMode, x=>
+                {
+                    viewModel.ShowDelegationInformation = x.GroupTypeId.GetValueOrDefault() == (int)eLookupGroupType.MultiacademyTrust;
+                    viewModel.DelegationInformation = x.DelegationInformation;
+                });
 
                 viewModel.RemovalGid = removalGid;
                 viewModel.GovernorShared = false;
@@ -171,6 +175,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     ModelState.AddModelError("role", "The selected role already contains an appointee.");
                 }
+                
 
                 return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
             }
@@ -252,6 +257,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
                 viewModel.GovernanceMode = estabDomainModel.GovernanceMode ?? eGovernanceMode.LocalGovernors;
+            }
+
+            if (groupUId.HasValue)
+            {
+                var groupModel = (await _groupReadService.GetAsync(groupUId.Value, User)).GetResult();
+                viewModel.ShowDelegationInformation = groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust;
+                viewModel.DelegationInformation = groupModel.DelegationInformation;
             }
 
             return viewModel;
@@ -659,7 +671,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             }
 
             result.EduBaseAddToModelState(ModelState, null);
-            //ViewBag.FVErrors = result;
             await PopulateLayoutProperties(model, null, model.GroupUId); 
             return View(model);
         }
@@ -703,7 +714,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.PreviousTitles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.PreviousTitleId);
         }
         
-        private async Task PopulateLayoutProperties(object viewModel, int? establishmentUrn, int? groupUId, Action<EstablishmentModel> processEstablishment = null)
+        private async Task PopulateLayoutProperties(object viewModel, int? establishmentUrn, int? groupUId, Action<EstablishmentModel> processEstablishment = null, Action<GroupModel> processGroup = null)
         {
             if (establishmentUrn.HasValue && groupUId.HasValue)
                 throw new InvalidParameterException("Both urn and uid cannot be populated");
@@ -733,6 +744,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 vm.GroupUId = groupUId;
                 vm.SelectedTabName = "governance";
                 vm.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((eLookupGroupType)vm.GroupTypeId.Value);
+                processGroup?.Invoke(domainModel);
             }
         }
     }
