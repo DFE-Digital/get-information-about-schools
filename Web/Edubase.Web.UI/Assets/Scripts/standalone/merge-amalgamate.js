@@ -130,7 +130,7 @@
                         self.linkedEstablishmentError = data.notFound;
                         if (!self.linkedEstablishmentError) {
                             estabDetails = data.returnValue;
-                            self.linkedEstablishments.splice(pos, 0, estabDetails);
+                            self.linkedEstablishments.splice(pos, 1, estabDetails);
                         }
                     },
                     error: function () {

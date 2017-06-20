@@ -1,4 +1,5 @@
 ﻿(function () {
+
     var ccGroup = new Vue({
         el: '#create-childrens-centre',
         data: {
@@ -52,7 +53,12 @@
                 return '';
             },
             laName: function () {
-                return $('#LocalAuthorityId').find('option[value="' + this.la + '"]').text();
+                if (document.getElementById('LocalAuthorityId') && document.getElementById('LocalAuthorityId').tagName.toLowerCase() ==='select') {
+                    return $('#LocalAuthorityId').find('option[value="' + this.la + '"]').text();
+                }
+                // no dropdown for LA users - LA is uneditable for them
+                this.la = document.getElementById('la-code').value;
+                return document.getElementById('uneditable-la-name').value;
             },
             tableCount: function () {
                 return '1 - ' + this.centresInGroup.length + ' of ' + this.centresInGroup.length;

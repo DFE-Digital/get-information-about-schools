@@ -37,7 +37,7 @@
             <p class="bold-small">Replace @Model.GovernorRoleName.ToLower()</p>
             <p class="bold-xsmall">@Model.ReplaceGovernorViewModel.Name</p>
             <div class="date-group-wrap">
-                @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends" })
+                @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)" })
             </div>
         }
         <br />
