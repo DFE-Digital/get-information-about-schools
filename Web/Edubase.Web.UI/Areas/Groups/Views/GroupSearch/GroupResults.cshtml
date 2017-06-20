@@ -15,20 +15,13 @@
         <h1 class="heading-xlarge">Search results</h1>
         <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
             <p>
-                @if (Model.GroupSearchModel.Text.IsInteger())
+                
+                We found <span class="heading-xlarge count">@Model.Count</span> establishment groups
+                @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
                 {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishment groups with Companies House Number '@Model.GroupSearchModel.Text'.</text>
+                    <text>matching &lsquo;<span class="bold-small">@Model.GroupSearchModel.Text</span>&rsquo;.</text>
                 }
-                else
-                {
-                    <text>
-                        We found <span class="heading-xlarge count">@Model.Count</span> establishment groups
-                        @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
-                        {
-                            <text>matching &lsquo;<span class="bold-small">@Model.GroupSearchModel.Text</span>&rsquo;.</text>
-                        }
-                    </text>
-                }
+                
                 
             </p>
         </div>
