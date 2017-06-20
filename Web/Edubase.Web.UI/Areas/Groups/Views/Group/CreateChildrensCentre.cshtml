@@ -105,7 +105,7 @@
                         <a href="#" class="button mobile-full-width" v-on:click.prevent="step1Continue">
                             Continue
                         </a>
-                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="step0Complete=false">
+                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'">
                             Cancel
                         </a>
 
@@ -197,7 +197,8 @@
 
                         <!--JB: button for childnre-centre-details-->
                         @*<button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentAdd" class="button">Add</button>*@
-
+                        
+                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail'">&laquo;Go back</a>
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
                             <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
@@ -234,6 +235,8 @@
                         {{pendingEstabAddress}}
                         <br/>
                         URN: {{pendingEstab.urn}}
+                        <br/>
+                        <a href="#" v-on:click.prevent="appState='addCentre', searchUrn=''">Wrong establishment?</a>
                     </p>
                     
                     @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", vueModel="joinDate" })
@@ -243,7 +246,7 @@
                     
                     <div class="button-row">
                         <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup">Add</a>
-                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="">Cancel</a>
+                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='addCentre', searchUrn=''">Cancel</a>
                     </div>
 
                 </div>
@@ -254,6 +257,6 @@
 </div>
 @section ViewScripts
 {
-    @*<script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>*@
-    <script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>
+    <script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>
+    @*<script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>*@
 }
