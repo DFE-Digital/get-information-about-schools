@@ -28,5 +28,9 @@ namespace Edubase.Services.Governors
         /// <param name="principal"></param>
         /// <returns></returns>
         Task<ApiResponse> BulkUpdateProcessRequestAsync(string id, IPrincipal principal);
+
+        Task<ApiResponse> AddSharedGovernorAppointmentAsync(int governorId, int establishmentUrn, DateTime appointmentStart, DateTime? appointmentEnd, IPrincipal principal);
+        Task<ApiResponse> UpdateSharedGovernorAppointmentAsync(int governorId, int establishmentUrn, DateTime appointmentStart, DateTime? appointmentEnd, IPrincipal principal);
+        Task DeleteSharedGovernorAppointmentAsync(int governorId, int establishmentUrn, IPrincipal principal);
     }
 }

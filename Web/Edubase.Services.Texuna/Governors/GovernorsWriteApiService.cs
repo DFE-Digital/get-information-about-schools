@@ -68,5 +68,21 @@ namespace Edubase.Services.Texuna.Governors
         {
             return (await _httpClient.PostAsync($"governor/bulk-update/{id}", null, principal));
         }
+
+        public async Task<ApiResponse> AddSharedGovernorAppointmentAsync(int governorId, int establishmentUrn, DateTime appointmentStart, DateTime? appointmentEnd, IPrincipal principal)
+        {
+            return await _httpClient.PostAsync($"governor/{governorId}/establishment/{establishmentUrn}", new {startDate = appointmentStart, endDate = appointmentEnd}, principal);
+        }
+
+        public async Task<ApiResponse> UpdateSharedGovernorAppointmentAsync(int governorId, int establishmentUrn,
+            DateTime appointmentStart, DateTime? appointmentEnd, IPrincipal principal)
+        {
+            return await _httpClient.PutAsync($"governor/{governorId}/establishment/{establishmentUrn}", new { startDate = appointmentStart, endDate = appointmentEnd }, principal);
+        }
+
+        public async Task DeleteSharedGovernorAppointmentAsync(int governorId, int establishmentUrn, IPrincipal principal)
+        {
+            await _httpClient.DeleteAsync($"governor/{governorId}/establishment/{establishmentUrn}", null, principal);
+        }
     }
 }

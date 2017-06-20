@@ -46,15 +46,17 @@ namespace Edubase.Services.Enums
             GR.ChairOfTrustees,
             GR.AccountingOfficer,
             GR.ChiefFinancialOfficer,
-            GR.Establishment_SharedChairOfLocalGoverningBody
+            GR.Group_SharedChairOfLocalGoverningBody
         };
 
         public static IEnumerable<int> SingularGovernorRoles { get; } = eSingularGovernorRoles.Cast<int>();
 
         public static IEnumerable<GR> eSharedGovernorRoles { get; } = new[]
         {
-            GR.Establishment_SharedChairOfLocalGoverningBody,
-            GR.Establishment_SharedLocalGovernor
+            GR.Group_SharedChairOfLocalGoverningBody,
+            GR.Group_SharedLocalGovernor,
+            GR.Establishment_SharedLocalGovernor,
+            GR.Establishment_SharedChairOfLocalGoverningBody
         };
 
         public static IEnumerable<int> SharedGovernorRoles { get; } = eSharedGovernorRoles.Cast<int>();

@@ -219,7 +219,7 @@ else
                                 if (Model.RemovalGid != row.Model.Id)
                                 {
                                     <div class="button-wrapper">
-                                        @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Establishment_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody))
+                                        @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody))
                                         {
                                             @Html.RouteLink("Edit", "EditSharedGovernor",
                                             new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id },
@@ -295,7 +295,7 @@ else
                             else //historic governor
                             {
                                 <div class="button-wrapper">
-                                    @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Establishment_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody))
+                                    @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody))
                                     {
                                         @Html.RouteLink("Edit", "EditSharedGovernor",
                                         new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id },

@@ -12,5 +12,13 @@ namespace Edubase.Web.UI.Validation
                 controllerContext.Controller.ViewData.ModelState.AddModelError(error.Fields, error.Message);
             }
         }
+
+        public static void ApplyToModelState(this ApiResponse apiResponse, ControllerContext controllerContext)
+        {
+            foreach (var error in apiResponse.Errors)
+            {
+                controllerContext.Controller.ViewData.ModelState.AddModelError(error.Fields, error.Message);
+            }
+        }
     }
 }

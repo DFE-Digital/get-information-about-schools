@@ -95,20 +95,20 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric, int? groupUid, int? establishmentUrn)
         {
             var sharedRoles = dto.ApplicableRoles.Where(role => EnumSets.eSharedGovernorRoles.Contains(role));
-            var localEquivs = sharedRoles.Select(SharedLocalRoleEquivalence.GetLocalEquivalentToSharedRole);
+            var localEquivs = sharedRoles.Select(RoleEquivalence.GetLocalEquivalentToSharedRole);
             var allowedSharedRoles =
                 dto.ApplicableRoles.Where(x => sharedRoles.Contains(x) &&
-                                               !dto.ApplicableRoles.Contains(SharedLocalRoleEquivalence
+                                               !dto.ApplicableRoles.Contains(RoleEquivalence
                                                    .GetLocalEquivalentToSharedRole(x)
                                                    .Value));
 
             var roles = dto.ApplicableRoles.Where(role => !EnumSets.eSharedGovernorRoles.Contains(role)
                                                           ||
-                                                          (SharedLocalRoleEquivalence.GetLocalEquivalentToSharedRole(role) != null
-                                                           && !dto.ApplicableRoles.Contains(SharedLocalRoleEquivalence.GetLocalEquivalentToSharedRole(role).Value)));
+                                                          (RoleEquivalence.GetLocalEquivalentToSharedRole(role) != null
+                                                           && !dto.ApplicableRoles.Contains(RoleEquivalence.GetLocalEquivalentToSharedRole(role).Value)));
             foreach (var role in roles)
             {
-                var equivalantRoles = SharedLocalRoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
+                var equivalantRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
 
                 var grid = new GovernorGridViewModel($"{_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                 {
