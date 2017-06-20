@@ -67,7 +67,6 @@ namespace Edubase.Web.UI.Helpers
         public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 
             new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
 
-
         public static IHtmlString Conditional<TModel>(this HtmlHelper<TModel> htmlHelper, bool condition, string text)
             => condition ? htmlHelper.Raw(text) : MvcHtmlString.Empty;
 

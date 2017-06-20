@@ -5,8 +5,13 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using Edubase.Services;
+    using Edubase.Services.Establishments;
+    using Edubase.Services.Lookup;
     using Filters;
     using Helpers;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
     using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
     using R = EdubaseRoles;
@@ -15,10 +20,14 @@ namespace Edubase.Web.UI.Controllers
     public class ToolsController : Controller
     {
         private readonly ISecurityService _securityService;
+        private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly ICachedLookupService _lookup;
 
-        public ToolsController(ISecurityService securityService)
+        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, ICachedLookupService lookup)
         {
             _securityService = securityService;
+            _establishmentReadService = establishmentReadService;
+            _lookup = lookup;
         }
         
         public async Task<ActionResult> Index()
@@ -47,6 +56,28 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult BulkAcademies() => View();
 
         [HttpGet, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO, R.SOU, R.IEBT)]
-        public ActionResult MergersTool() => View();
+        public async Task<ActionResult> MergersTool()
+        {
+            var settings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+
+            var type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
+            var type2PhaseMapJson = JsonConvert.SerializeObject(type2PhaseMap, Formatting.None, settings);
+
+            var las = (await _lookup.LocalAuthorityGetAllAsync()).Select(x => new { x.Id, x.Name });
+            var lasJson = JsonConvert.SerializeObject(las, Formatting.None, settings);
+
+            var phases = (await _lookup.EducationPhasesGetAllAsync()).Select(x => new { x.Id, x.Name });
+            var phasesJson = JsonConvert.SerializeObject(phases, Formatting.None, settings);
+
+            var types = (await _lookup.EstablishmentTypesGetAllAsync()).Select(x => new { x.Id, x.Name });
+            var typesJson = JsonConvert.SerializeObject(types, Formatting.None, settings);
+
+            ViewBag.Type2PhaseMapJson = type2PhaseMapJson;
+            ViewBag.LocalAuthoritiesJson = lasJson;
+            ViewBag.TypesJson = typesJson;
+            ViewBag.PhasesJson = phasesJson;
+
+            return View();
+        }
     }
 }
