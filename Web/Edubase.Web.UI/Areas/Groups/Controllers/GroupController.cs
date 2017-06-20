@@ -321,13 +321,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             });
             
             var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
-            //if(validationEnvelope.HasWarnings) validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
             if(validationEnvelope.HasErrors) validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
 
             if (ModelState.IsValid)
             {
-                var groupUId = await _groupWriteService.SaveAsync(dto, User);
-                return RedirectToAction(nameof(Details), new { id = groupUId });
+                var apiResponse = (await _groupWriteService.SaveNewAsync(dto, User));
+                if (apiResponse.HasErrors) apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                else return RedirectToAction(nameof(Details), new { id = apiResponse.GetResponse().Value });
             }
             else viewModel.GroupTypes = await GetAcademyTrustGroupTypes(viewModel.TypeId);
 
