@@ -1,4 +1,4 @@
-﻿(function() {
+﻿(function () {
 
     var mergersApp = new Vue({
         el: '#mergers-app',
@@ -11,8 +11,8 @@
             mergerType: '',
             mergerTypeConfirmed: false,
             leadEstab: '',
-            linkedEstab0:'',
-            linkedEstab1:'',
+            linkedEstab0: '',
+            linkedEstab1: '',
             linkedEstab2: '',
             mergerEstabs: [],
             validMergeUrns: false,
@@ -22,7 +22,6 @@
             amalgamatedEstab1: '',
             amalgamatedEstab2: '',
             amalgamatedEstab3: '',
-            amalgamatedEstabs: [],
             duplicateUrnsError: false,
             mergeDateDay: '',
             mergeDateMonth: '',
@@ -35,6 +34,8 @@
 
             mergerTypeError: false,
             mergeDateError: false,
+            mergeLengthError: false,
+            mergerComplete: false,
 
             leadEstabError: false,
             leadEstabValid: false,
@@ -53,6 +54,8 @@
             amalgamatedEstab1Error: false,
             amalgamatedEstab2Error: false,
             amalgamatedEstab3Error: false,
+            amalgamateUrnError: false,
+            amalgamationLengthError: false,
 
             amalgamatedEstab0Valid: false,
             amalgamatedEstab1Valid: false,
@@ -60,7 +63,7 @@
             amalgamatedEstab3Valid: false,
 
             nameError: false,
-            typeError: false,            
+            typeError: false,
             phaseError: false,
             laError: false,
 
@@ -68,35 +71,66 @@
             commitApi: '/api/amalgamate-merge',
 
             commitErrors: '',
-            presentExitWarning: false
+            presentExitWarning: false,
+            completeAmalgamation: false,
+            amalgUrn: ''
         },
-        created: function() {
+        created: function () {
             this.populateSelect('new-establishment-type', this.types);
             this.populateSelect('LocalAuthorityId', this.localAuthorities);
         },
         computed: {
+
             displayDate: function () {
+                console.log('display date calc');
                 return this.mergeDateDay + '/' + this.mergeDateMonth + '/' + this.mergeDateYear;
             },
-            schoolDetailUrl: function () {
-                return "/Establishment/Details/" + this.leadEstab;                               
+            showGlobalError: function () {
+                console.log('computing globael');
+
+                return (
+                    this.mergerTypeError ||
+                        this.amalgamateUrnError ||
+                        this.leadEstabError ||
+                        this.linkedEstabError ||
+                        this.amalgamationLengthError ||
+                        this.nameError ||
+                        this.phaseError ||
+                        this.typeError ||
+                        this.laError ||
+                        this.mergeDateError ||
+                        this.mergeLengthError ||
+                        this.duplicateUrnsError ||
+                        this.commitErrors
+                );
             },
-            amalgUrl: function() {
+            schoolDetailUrl: function () {
+                return "/Establishment/Details/" + this.leadEstab;
+            },
+            amalgUrl: function () {
                 return '/Establishment/Details/' + this.amalgUrn;
             },
-            showGlobalError: function() {
+            showGlobalError: function () {
                 return false;
             },
-            leadEstablishmentName: function() {
+            leadEstablishmentName: function () {
                 var self = this;
                 if (self.validMergeUrns && self.mergerType === 'merger') {
                     var leadName = self.mergerEstabs.filter(function (estab) {
                         return estab.urn === Number(self.leadEstab);
                     })[0].name;
-                        
+
                     return leadName;
                 }
                 return '';
+            },
+            selectedEstablishmentType: function () {
+                var self = this;
+                if (self.typeId !== '') {
+                    var typeName = self.types.filter(function (t) {
+                        return t.id == self.typeId;
+                    })[0].name;
+                }
             }
         },
         methods: {
@@ -104,8 +138,8 @@
                 var frag = document.createDocumentFragment();
 
                 document.getElementById(control).options.length = 0;
-                
-                $.each(data, function(n, item) {
+
+                $.each(data, function (n, item) {
                     var option = document.createElement('option');
                     option.value = item.id;
                     option.innerHTML = item.name;
@@ -114,22 +148,22 @@
                 });
                 document.getElementById(control).appendChild(frag);
             },
-            updatePhases: function() {
+            updatePhases: function () {
                 var tp = type2PhaseMap;
                 var self = this;
                 var validOptions = [];
                 var validPhaseIds = tp[this.typeId];
-                
+
                 validPhaseIds.forEach(function (j) {
                     var obj = {}
-                    obj.name = self.phases[j].name;
+                    obj.name = phases[j].name;
                     obj.id = j;
                     validOptions.push(obj);
                 });
 
-              this.populateSelect('new-establishment-phase', validOptions)
+                this.populateSelect('new-establishment-phase', validOptions)
             },
-            checkMergeType: function() {
+            checkMergeType: function () {
                 this.mergerTypeError = this.mergerType === '';
                 if (!this.mergerTypeError) {
                     this.mergerTypeConfirmed = true;
@@ -138,7 +172,7 @@
             validateMergeSelection: function () {
                 this.fieldCount = 0;
                 var self = this;
-                var presentValidation = function() {
+                var presentValidation = function () {
                     if (!self.leadEstabValid) {
                         self.leadEstabError = true;
                     }
@@ -152,11 +186,11 @@
                 self.linkedEstab0Valid = true;
                 self.linkedEstab1Valid = true;
                 self.linkedEstab2Valid = true;
-
+                self.mergeLengthError = false;
                 var promise = [];
                 if (this.leadEstab !== '') {
                     this.leadEstabValid = false;
-                    this.fieldCount ++;
+                    this.fieldCount++;
                     promise.push(this.validateUrn(this.leadEstab, 'leadEstab'));
 
                 }
@@ -179,31 +213,36 @@
                     promise.push(this.validateUrn(this.linkedEstab2, 'linkedEstab2'));
                 }
 
-                $.when(promise.join(',')).done(
-                    function () {
-                        var tt;
-                        if (self.fieldCount > 0) {
-                            tt = window.setInterval(function() {
-                                if (self.fieldCount === 0) {
-                                    presentValidation();
-                                    window.clearInterval(tt);
-                                    self.validMergeUrns = true;
-                                }
-                            },
-                            100);
-                        } else {
-                            presentValidation();
-                        }
-                    });
+                if (promise.length > 1) {
+                    $.when(promise.join(',')).done(
+                        function () {
+                            var tt;
+                            if (self.fieldCount > 0) {
+                                tt = window.setInterval(function () {
+                                        if (self.fieldCount === 0) {
+                                            presentValidation();
+                                            window.clearInterval(tt);
+                                            self.validMergeUrns = true;
+                                        }
+                                    },
+                                    100);
+                            } else {
+                                presentValidation();
+                            }
+                        });
+                } else {
+                    self.mergeLengthError = true;
+                }
+
             },
-            validateUrn: function(urn, component) {
+            validateUrn: function (urn, component) {
                 var self = this;
 
                 $.ajax({
                     url: self.estabLookup.replace('{0}', urn),
                     dataType: 'json',
                     method: 'get',
-                    success: function(data) {
+                    success: function (data) {
                         self[component + 'Valid'] = !data.notFound;
                         if (self[component + 'Valid']) {
                             if (self.mergerType === 'merger') {
@@ -213,15 +252,15 @@
                             }
                         }
                     },
-                    error: function() {
-                        self[component + 'Valid'] = false;                        
+                    error: function () {
+                        self[component + 'Valid'] = false;
                     },
-                    complete: function() {
+                    complete: function () {
                         self.fieldCount--;
                     }
                 });
             },
-            validateMergerDate: function() {
+            validateMergerDate: function () {
                 var day = parseInt(this.mergeDateDay, 10),
                     month = parseInt(this.mergeDateMonth, 10),
                     year = parseInt(this.mergeDateYear, 10),
@@ -263,12 +302,14 @@
                 return dateError;
             },
 
-            validateAmalgamationSelection: function() {
+            validateAmalgamationSelection: function () {
                 this.fieldCount = 0;
                 var self = this;
+                var amalgamationUrns = [];
+
                 var presentValidation = function () {
                     if (!self.amalgamatedEstab0Valid || !self.amalgamatedEstab1Valid || !self.amalgamatedEstab2Valid || !self.amalgamatedEstab3Valid) {
-                        self.linkedEstabError = true;
+                        self.amalgamateUrnError = true;
                     }
                 }
 
@@ -277,7 +318,7 @@
                 self.amalgamatedEstab1Valid = true;
                 self.amalgamatedEstab2Valid = true;
                 self.amalgamatedEstab3Valid = true;
-
+                self.amalgamationLengthError = false;
                 var promise = [];
                 if (this.amalgamatedEstab0 !== '') {
                     this.amalgamatedEstab0Valid = false;
@@ -304,33 +345,45 @@
                     promise.push(this.validateUrn(this.amalgamatedEstab3, 'amalgamatedEstab3'));
                 }
 
-                $.when(promise.join(',')).done(
-                    function () {
-                        var tt;
-                        if (self.fieldCount > 0) {
-                            tt = window.setInterval(function () {
-                                    if (self.fieldCount === 0) {
-                                        presentValidation();
-                                        window.clearInterval(tt);
-                                        self.validMergeUrns = true;
-                                    }
-                                },
-                                100);
-                        } else {
-                            presentValidation();
-                        }
-                    });
+                if (promise.length >= 2) {
+                    $.when(promise.join(',')).done(
+                        function () {
+                            var tt;
+                            if (self.fieldCount > 0) {
+                                tt = window.setInterval(function () {
+                                        if (self.fieldCount === 0) {
+                                            presentValidation();
+                                            window.clearInterval(tt);
+                                            self.validMergeUrns = true;
+                                        }
+                                    },
+                                    100);
+                            } else {
+                                presentValidation();
+                            }
+                        });
+                } else {
+                    self.amalgamationLengthError = true;
+                }
+
             },
             processMerger: function () {
                 var self = this;
                 var postData = {};
 
                 postData.operationType = 'merge';
-                postData.MergeOrAmalgamationDate = [this.mergedDateYear, this.mergedDateMonth, this.mergedDateDay].join('-');
+                postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
                 postData.LeadEstablishmentUrn = this.leadEstab;
                 postData.UrnsToMerge = this.mergerEstabs.map(function (estab) {
                     return estab.urn;
                 });
+
+                postData.UrnsToMerge = postData.UrnsToMerge.filter(function (item) {
+                    return item != self.leadEstab;
+                })
+                console.log(postData.UrnsToMerge);
+
+
                 this.mergeDateError = this.validateMergerDate();
 
 
@@ -343,9 +396,8 @@
                         dataType: 'json',
                         data: JSON.stringify(postData),
                         success: function (data) {
-                            console.log(data);
                             if (data.hasOwnProperty('successful') && data.successful) {
-
+                                self.mergerComplete = true;
                             }
                         },
                         error: function (jqXHR) {
@@ -367,17 +419,17 @@
                     });
                 }
             },
-            processAmalgamation: function() {
+            processAmalgamation: function () {
                 var self = this;
                 var postData = {};
 
-                this.amalgamationNameError = (this.newEstablishmentName.length < 1);
+                this.nameError = (this.newName.length < 1);
                 this.establishmentTypeError = (this.estabTypeId === '');
                 this.amalgamationLaError = (this.la === '');
                 this.phaseError = (this.estabPhaseId === '');
-                this.amalgamationDateError = this.checkMergeDate();
+                this.amalgamationDateError = this.validateMergerDate();
 
-                if (!this.amalgamationNameError &&
+                if (!this.nameError &&
                     !this.establishmentTypeError &&
                     !this.amalgamationLaError &&
                     !this.phaseError &&
@@ -386,13 +438,13 @@
 
                     postData.operationType = 'amalgamate';
                     postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
-                    postData.UrnsToMerge = this.amalgamatedEstabs.map(function (estab) {
+                    postData.UrnsToMerge = this.amalgamationEstabs.map(function (estab) {
                         return estab.urn;
                     });
-                    postData.NewEstablishmentName = this.newEstablishmentName;
-                    postData.NewEstablishmentPhaseId = this.estabPhaseId;
-                    postData.NewEstablishmentTypeId = this.estabTypeId;
-                    postData.NewEstablishmentLocalAuthorityId = this.la;
+                    postData.NewEstablishmentName = this.newName;
+                    postData.NewEstablishmentPhaseId = this.phaseId;
+                    postData.NewEstablishmentTypeId = this.typeId;
+                    postData.NewEstablishmentLocalAuthorityId = this.laId;
 
 
                     $.ajax({
@@ -428,7 +480,7 @@
                 }
             }
         }
-    
+
     });
 
 }());
