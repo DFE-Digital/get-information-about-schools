@@ -73,19 +73,21 @@
             commitErrors: '',
             presentExitWarning: false,
             completeAmalgamation: false,
-            amalgUrn: '',
-            exitUrl: ''
+            amalgUrn: ''
         },
         created: function () {
             this.populateSelect('new-establishment-type', this.types);
             this.populateSelect('LocalAuthorityId', this.localAuthorities);
-            this.blockExits();
         },
         computed: {
+
             displayDate: function () {
+                console.log('display date calc');
                 return this.mergeDateDay + '/' + this.mergeDateMonth + '/' + this.mergeDateYear;
             },
             showGlobalError: function () {
+                console.log('computing globael');
+
                 return (
                     this.mergerTypeError ||
                         this.amalgamateUrnError ||
@@ -108,7 +110,9 @@
             amalgUrl: function () {
                 return '/Establishment/Details/' + this.amalgUrn;
             },
-           
+            showGlobalError: function () {
+                return false;
+            },
             leadEstablishmentName: function () {
                 var self = this;
                 if (self.validMergeUrns && self.mergerType === 'merger') {
@@ -474,24 +478,9 @@
                         }
                     });
                 }
-            },
-            exitConfirmed: function() {
-                window.location = this.exitUrl;
-            },
-            blockExits: function () {
-                var self = this;
-                $('a, [value="cancel"]').on('click', function (e) {
-                    self.exitUrl = $(this).attr('href');
-                    if (!self.completeAmalgamation || !self.mergerComplete) {
-                        e.preventDefault();
-                        self.presentExitWarning = true;
-                    }
-                });
             }
         }
 
     });
-
-    
 
 }());
