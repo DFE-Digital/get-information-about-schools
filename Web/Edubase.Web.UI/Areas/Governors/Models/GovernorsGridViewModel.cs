@@ -73,7 +73,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public IEnumerable<LookupDto> Nationalities { get; private set; }
         public IEnumerable<LookupDto> AppointingBodies { get; private set; }
-
+        
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies)
         {
             _nomenclatureService = nomenclatureService;

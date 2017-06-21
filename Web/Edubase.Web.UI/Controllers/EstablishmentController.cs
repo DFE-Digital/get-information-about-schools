@@ -308,6 +308,7 @@ namespace Edubase.Web.UI.Controllers
             }
             catch (Exception) // todo: tech debt, need to more gracefully handle 404 in this instance.
             {
+                viewModel.GovernorsGridViewModel = new Areas.Governors.Models.GovernorsGridViewModel { DomainModel = new Services.Governors.Models.GovernorsDetailsDto() };
             }
         }
 

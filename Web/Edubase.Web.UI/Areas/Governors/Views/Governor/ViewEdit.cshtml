@@ -1,13 +1,9 @@
 ﻿@using Edubase.Services.Enums;
-@using System.Linq.Expressions;
 @using Edubase.Web.UI.Models.Grid
 @model GovernorsGridViewModel
 @{
     Layout = Model.Layout;
 }
-
-
-
 
 @if (Model.EditMode)
 {
@@ -52,9 +48,7 @@ else
 {
     <div class="grid-row">
         <div class="column-two-thirds">
-            
-                @ShowLegalDuty()
-            
+            @ShowLegalDuty()
             <h2 class="bold-small">Establishment governance</h2>
             @DisplayGovernanceMode()
         </div>
@@ -75,20 +69,19 @@ else
     }
 
     @DisplayGovernors()
-
-
 }
 else
 {
-    <div class="tab-content">
-        <p>There is no governance information for this @Model.ParentEntityName</p>
+    <div class="tab-content" style="display:block !important;">
+        <div class="column-half">
+            <p>There is no governance information for this @Model.ParentEntityName</p>
+        </div>
     </div>
-    
 }
 
 
 @helper ShowDelegationInformation()
-        {
+{
     <h2 class="bold-small">Delegated authority of local governing body</h2>
     <div class="expanding-content-wrapper">
         <a href="#" class="expanding-content-trigger">
@@ -98,19 +91,19 @@ else
             @(Model.DelegationInformation ?? "Not recorded")
         </div>
     </div>
-if (Model.EditMode)
-{
+    if (Model.EditMode)
+    {
         <div class="grid-row">
             <div class="column-full">
                 @Html.RouteLink("Edit", "GroupEditDelegation", new { GroupUId = Model.GroupUId }, new { @class = "button button-grey mobile-full-width" })
             </div>
         </div>
-}
+    }
 
 }
 
 @helper ShowLegalDuty()
-        {
+{
     <div class="governors-section">
         <h2 class="bold-small">Legal duty to provide governance information</h2>
         <div class="expanding-content-wrapper" data-update-text="false">
@@ -136,7 +129,6 @@ if (Model.EditMode)
             </div>
         </div>
     </div>
-
 }
 
 

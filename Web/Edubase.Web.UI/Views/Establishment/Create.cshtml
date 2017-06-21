@@ -139,7 +139,7 @@
             }
         });
 
-        $phaseSelector.prop('disabled', 'disabled');
+        if ($typeSelector.val()=="") $phaseSelector.prop('disabled', 'disabled');
         $typeSelector.on('change', function() {
             $phaseSelector.removeAttr('disabled');
         });
