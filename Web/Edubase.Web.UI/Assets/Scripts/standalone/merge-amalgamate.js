@@ -175,6 +175,9 @@
                     if (!self.linkedEstab0Valid || !self.linkedEstab1Valid || !self.linkedEstab2Valid) {
                         self.linkedEstabError = true;
                     }
+                    if (self.linkedEstab0Valid && self.linkedEstab1Valid && self.linkedEstab2Valid && self.leadEstabValid) {
+                        self.validMergeUrns = true;
+                    }
                 }
 
                 self.linkedEstabError = false;
@@ -218,7 +221,7 @@
                                         if (self.fieldCount === 0) {
                                             presentValidation();
                                             window.clearInterval(tt);
-                                            self.validMergeUrns = true;
+                                            
                                         }
                                     },
                                     100);
@@ -304,8 +307,15 @@
                 var amalgamationUrns = [];
 
                 var presentValidation = function () {
+                    //self.validMergeUrns = true;
                     if (!self.amalgamatedEstab0Valid || !self.amalgamatedEstab1Valid || !self.amalgamatedEstab2Valid || !self.amalgamatedEstab3Valid) {
                         self.amalgamateUrnError = true;
+                    }
+                    if (self.amalgamatedEstab0Valid &&
+                        self.amalgamatedEstab1Valid &&
+                        self.amalgamatedEstab2Valid &&
+                        self.amalgamatedEstab3Valid) {
+                            self.validMergeUrns = true;
                     }
                 }
 
@@ -349,8 +359,7 @@
                                 tt = window.setInterval(function () {
                                         if (self.fieldCount === 0) {
                                             presentValidation();
-                                            window.clearInterval(tt);
-                                            self.validMergeUrns = true;
+                                            window.clearInterval(tt);                                            
                                         }
                                     },
                                     100);
@@ -487,6 +496,13 @@
                         self.presentExitWarning = true;
                     }
                 });
+            },
+            restart: function () {
+                if (!this.mergerTypeConfirmed) {
+                    window.location = '/Tools';
+                    return;
+                }
+                window.location = '/Tools/MergersTool';
             }
         }
 
