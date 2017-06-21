@@ -19,30 +19,11 @@ namespace Edubase.Web.UI.Models.Validators
 
             When(x => x.Action == EditEstablishmentModel.eAction.SaveDetails, () =>
             {
-                ConfigureRules();
-
                 RuleFor(x => x.EducationPhaseId)
                     .Must((m, x) => !x.HasValue || (establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.TypeId.Value]).Contains(x.Value))
                     .WithMessage("Education phase is not valid for the selected type of establishment");
             });
-
-            When(x => x.Action == EditEstablishmentModel.eAction.SaveLocation, () =>
-            {
-                RuleFor(x => x.LSOACode).MustAsync(async (x, ct) => (await _lookupService.LSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
-                    .When(x => !x.LSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithSummaryMessage("Area not found for Middle Super Output Area (MSOA)");
-
-                RuleFor(x => x.MSOACode).MustAsync(async (x, ct) => (await _lookupService.MSOAsGetAllAsync()).FirstOrDefault(l => l.Code == x) != null)
-                    .When(x => !x.MSOACode.IsNullOrEmpty()).WithMessage("Area not found, please enter a valid area code").WithSummaryMessage("Area not found for Lower Super Output Area (LSOA)");
-            });
         }
-
-        private void ConfigureRules()
-        {
-            RuleFor(x => x.OpenDate).Must(x => x.IsValid()).When(x => x.OpenDate.IsNotEmpty()).WithMessage("Open date is invalid");
-            RuleFor(x => x.Name).NotEmpty().WithMessage("Name is invalid");
-            RuleFor(x => x.LocalAuthorityId).NotEmpty().WithMessage("Local authority is invalid");
-            RuleFor(x => x.TypeId).NotEmpty().WithMessage("Type is invalid");
-            RuleFor(x => x.StatusId).NotEmpty().WithMessage("Status is invalid");
-        }
+        
     }
 }

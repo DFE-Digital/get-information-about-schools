@@ -190,11 +190,16 @@
                             @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "", new { @class = "form-control" })
                         </div>
                     }
-                
+                    else
+                    {
+                        @Html.HiddenFor(x => x.TypeId)
+                    }
+
                     @if (Model.EditPolicy.EducationPhaseId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
                             <label for="EducationPhaseId" class="form-label">Phase of education</label>
+                            @Html.ValidationMessageFor(x => x.EducationPhaseId)
                             @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "", new { @class = "form-control" })
                         </div>
                     }
@@ -658,7 +663,7 @@
                     });
 
                     function filterEstablishmentPhaseList() {
-                        var $typeSelector = $("select#TypeId");
+                        var $typeSelector = $("#TypeId");
                         var $phaseSelector = $("select#EducationPhaseId");
                         var optionList = '<option value="">Please select</option>';
                         var typeId = $typeSelector.val();

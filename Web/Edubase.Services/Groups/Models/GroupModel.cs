@@ -19,7 +19,6 @@ namespace Edubase.Services.Groups.Models
 
         public int? HeadTitleId { get; set; }
         public string HeadFirstName { get; set; }
-        public string HeadMiddleName { get; set; }
         public string HeadLastName { get; set; }
         
 
