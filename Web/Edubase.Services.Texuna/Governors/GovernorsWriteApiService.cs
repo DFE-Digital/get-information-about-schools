@@ -21,9 +21,9 @@ namespace Edubase.Services.Texuna.Governors
             await _httpClient.DeleteAsync($"governor/{id}", null, principal);
         }
 
-        public async Task UpdateDatesAsync(int governorId, DateTime appointmentStartDate, DateTime appointmentEndDate, IPrincipal principal)
+        public async Task<ApiResponse> UpdateDatesAsync(int governorId, DateTime appointmentStartDate, DateTime appointmentEndDate, IPrincipal principal)
         {
-            await _httpClient.PatchAsync($"governor/{governorId}", new
+            return await _httpClient.PatchAsync($"governor/{governorId}", new
             {
                 AppointmentStartDate = appointmentStartDate,
                 AppointmentEndDate = appointmentEndDate

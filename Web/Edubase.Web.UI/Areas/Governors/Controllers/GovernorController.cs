@@ -203,10 +203,19 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     {
                         var domainModel = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value, User);
                         domainModel.AppointmentEndDate = viewModel.RemovalAppointmentEndDate.ToDateTime().Value;
-                        var response = await _governorsWriteService.SaveAsync(domainModel, User);
-                        if (!response.Success && response.Errors.Length == 0)
+                        var response = await _governorsWriteService.UpdateDatesAsync(viewModel.RemovalGid.Value,
+                            domainModel.AppointmentStartDate.Value,
+                            viewModel.RemovalAppointmentEndDate.ToDateTime().Value, User);
+
+                        //var response = await _governorsWriteService.SaveAsync(domainModel, User);
+                        if (!response.Success)
                         {
-                            throw new TexunaApiSystemException($"The TEX-API said no (but gave no details!)...");
+                            if (response.Errors.Length == 0)
+                            {
+                                throw new TexunaApiSystemException($"The TEX-API said no (but gave no details!)...");
+                            }
+
+                            response.ApplyToModelState(ControllerContext);
                         }
                     }
                 }
