@@ -225,7 +225,7 @@
 
                     $.ajax({
                         url: '/api/academy/' + urn,
-                        type: 'patch',
+                        type: 'post',
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'json',
                         data: JSON.stringify({

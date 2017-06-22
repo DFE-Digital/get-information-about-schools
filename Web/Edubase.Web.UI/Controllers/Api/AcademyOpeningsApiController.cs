@@ -90,13 +90,13 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         /// <summary>
-        /// PATCH api/academy/{urn}
+        /// POST api/academy/{urn}
         /// Takes a payload with openDate and Name properties.
         /// </summary>
         /// <param name="urn"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
-        [Route("api/academy/{urn:int}"), HttpPatch, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
+        [Route("api/academy/{urn:int}"), HttpPost, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
         public async Task<ApiResponse> SaveAsync(int urn, [FromBody] dynamic payload)
         {
             DateTime openingDate = payload.openDate;
