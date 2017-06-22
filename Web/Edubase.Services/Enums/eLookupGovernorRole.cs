@@ -13,9 +13,9 @@ namespace Edubase.Services.Enums
         Member = 5,
         AccountingOfficer = 6,
         ChiefFinancialOfficer = 7,
-        Establishment_SharedChairOfLocalGoverningBody = 10,
-        Group_SharedChairOfLocalGoverningBody = 11,
-        Establishment_SharedLocalGovernor = 12,
-        Group_SharedLocalGovernor = 13,
+        Group_SharedChairOfLocalGoverningBody = 10,
+        Establishment_SharedChairOfLocalGoverningBody = 11,
+        Group_SharedLocalGovernor = 12,
+        Establishment_SharedLocalGovernor = 13,
     }
 }

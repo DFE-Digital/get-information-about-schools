@@ -65,11 +65,8 @@ namespace Edubase.Services.Governors.Models
 
         [JsonIgnore]
         public bool IsNewEntity => !Id.HasValue;
-        
-        /// <summary>
-        /// TODO: TEXCHANGE; what is this?
-        /// </summary>
-        [JsonIgnore] //Ignore for the purposes of Texuna API while we work out how this will work
+
+        [JsonProperty("establishments")]
         public IEnumerable<GovernorAppointment> Appointments { get; set; }
     }
 }

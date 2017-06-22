@@ -10,7 +10,7 @@ namespace Edubase.Services.Governors
     {
         Task<ApiResponse<int>> SaveAsync(GovernorModel model, IPrincipal principal);
         Task DeleteAsync(int id, IPrincipal principal);
-        Task UpdateDatesAsync(int governorId, DateTime appointmentStartDate, DateTime appointmentEndDate, IPrincipal principal);
+        Task<ApiResponse> UpdateDatesAsync(int governorId, DateTime appointmentStartDate, DateTime appointmentEndDate, IPrincipal principal);
         Task<ValidationEnvelopeDto> ValidateAsync(GovernorModel model, IPrincipal principal);
 
         /// <summary>
@@ -28,5 +28,9 @@ namespace Edubase.Services.Governors
         /// <param name="principal"></param>
         /// <returns></returns>
         Task<ApiResponse> BulkUpdateProcessRequestAsync(string id, IPrincipal principal);
+
+        Task<ApiResponse> AddSharedGovernorAppointmentAsync(int governorId, int establishmentUrn, DateTime appointmentStart, DateTime? appointmentEnd, IPrincipal principal);
+        Task<ApiResponse> UpdateSharedGovernorAppointmentAsync(int governorId, int establishmentUrn, DateTime appointmentStart, DateTime? appointmentEnd, IPrincipal principal);
+        Task DeleteSharedGovernorAppointmentAsync(int governorId, int establishmentUrn, IPrincipal principal);
     }
 }
