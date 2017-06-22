@@ -239,13 +239,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                         var results = await _establishmentReadService.SearchAsync(payload, User);
 
+                        if (payload.Skip == 0) model.Count = results.Count;
+                        model.Results = results.Items;
+
                         if (results.Count == 0)
                         {
                             return NoResults(model);
                         }
-
-                        if (payload.Skip == 0) model.Count = results.Count;
-                        model.Results = results.Items;
 
                         var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
 
