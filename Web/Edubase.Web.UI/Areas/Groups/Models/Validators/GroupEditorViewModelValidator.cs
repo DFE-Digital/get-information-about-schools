@@ -26,27 +26,28 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
         {
             _groupReadService = groupReadService;
             _establishmentReadService = establishmentReadService;
-            
+
 
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             // Searching for an establishment to link....
             When(x => x.Action == ActionLinkedEstablishmentSearch, () =>
             {
-                RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                    .Cascade(CascadeMode.StopOnFirstFailure)
+            RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+                .Cascade(CascadeMode.StopOnFirstFailure)
 
-                    .Must(x => x.IsInteger())
-                    .WithMessage("Please specify a valid URN")
-                    .WithSummaryMessage("The supplied URN is not valid")
+                .Must(x => x.IsInteger())
+                .WithMessage("Please specify a valid URN")
+                .WithSummaryMessage("The supplied URN is not valid")
 
-                    .Must((model, x) => !model.LinkedEstablishments.Establishments.Select(e => e.Urn).Contains(x.ToInteger().Value))
-                    .WithMessage("Link to establishment already exists")
-                    .WithSummaryMessage("Link to establishment already exists");
-                    
-                    //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false)).Success)
-                    //.WithMessage("The establishment was not found")
-                    //.WithSummaryMessage("The establishment was not found")
+                .Must((model, x) => !model.LinkedEstablishments.Establishments.Select(e => e.Urn).Contains(x.ToInteger().Value))
+                .WithMessage("Link to establishment already exists")
+                .WithSummaryMessage("Link to establishment already exists")
+
+                .MustAsync(async(x, ct) => 
+                {
+                    return (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue != null;
+                }).WithMessage("The establishment was not found").WithSummaryMessage("The establishment was not found");
 
                     //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
                     //    .GetResult().EstablishmentTypeGroupId == (int)EG.LAMaintainedSchools)

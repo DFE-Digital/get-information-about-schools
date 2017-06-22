@@ -278,7 +278,7 @@ namespace Edubase.Web.UI.Controllers
             using (MiniProfiler.Current.Step("Retrieving establishment"))
             {
                 var result = await _establishmentReadService.GetAsync(id, User);
-                if (!result.Success) return HttpNotFound();
+                if (result.ReturnValue == null) return HttpNotFound();
                 viewModel.Establishment = result.ReturnValue;
             }
 
