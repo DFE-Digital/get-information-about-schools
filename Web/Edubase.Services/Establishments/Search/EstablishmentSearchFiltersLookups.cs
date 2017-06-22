@@ -43,19 +43,7 @@ namespace Edubase.Services.Establishments.Search
 
         public int[] Section41ApprovedIds { get; set; } = new int[0];
 
-        [Obsolete("Use SENIds"), JsonIgnore]
-        public int[] SEN1Ids { get; set; } = new int[0];
-
-        [Obsolete("Use SENIds"), JsonIgnore]
-        public int[] SEN2Ids { get; set; } = new int[0];
-
-        [Obsolete("Use SENIds"), JsonIgnore]
-        public int[] SEN3Ids { get; set; } = new int[0];
-
-        [Obsolete("Use SENIds"), JsonIgnore]
-        public int[] SEN4Ids { get; set; } = new int[0];
-
-        [JsonProperty("SENIds"), JsonIgnore]
+        [JsonProperty("SENIds")]
         public int[] SENIds { get; set; } = new int[0];
 
         public int[] TeenageMothersProvisionIds { get; set; } = new int[0];

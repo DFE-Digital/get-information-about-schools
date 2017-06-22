@@ -170,7 +170,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.ProvisionBoardingIds = model.SelectedBoardingProvisionIds.ToArray();
             filters.DioceseIds = model.SelectedDioceseIds.ToArray();
             filters.AdministrativeDistrictIds = model.SelectedDistrictIds.ToArray();
-            filters.FurtherEducationTypeIds = model.SelectedGenderIds.ToArray();
+            filters.FurtherEducationTypeIds = model.SelectedFETypeIds.ToArray();
+            filters.GenderIds = model.SelectedGenderIds.ToArray();
             filters.GovernmentOfficeRegionIds = model.SelectedGORIds.ToArray();
             filters.ProvisionNurseryIds = model.SelectedNurseryProvisionIds.ToArray();
             filters.ParliamentaryConstituencyIds = model.SelectedParliamentaryConstituencyIds.ToArray();
