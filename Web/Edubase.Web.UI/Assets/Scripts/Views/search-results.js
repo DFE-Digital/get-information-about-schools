@@ -2,15 +2,17 @@
 
 // set up search filters and associated interactions
 (function() {
-    var $clearLinks = $('#EditSearchCollapse').find('.clear-selections'),
+    var $clearLinks = $('#EditSearchCollapse').find('.filter-clear'),
         $additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera'),
+        $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear'),
         $extraFiltersLink = $('#EditSearchCollapse').find('.add-filters-link'),
-        optionTemplate = '<label><input type="checkbox" value="#{0}" />{1}</label>',
+        optionTemplate = '<label><input type="checkbox" value="#{0}" class="additional-filter-type" />{1}</label>',
         optionsFragment = '';
         
        
         $additionalFilters.each(function (n, elem) {
-            var elemId = $(elem).prop('id'), elemText = $(elem).find('.option-select-label').text();
+            var elemId = $(elem).prop('id'),
+                elemText = $(elem).find('.option-select-label').text();
             optionsFragment += optionTemplate.replace('{0}', elemId).replace('{1}', elemText);
 
         });
@@ -61,7 +63,7 @@
     $('.govuk-option-select')
         .each(function() {
             if ($(this).find('.js-selected-counter').text().length) {
-                $(this).find('.clear-selections').addClass('active-clear');
+                $(this).find('.filter-clear, .additional-filter-clear').addClass('active-clear');
             }
         });
 
@@ -73,18 +75,43 @@
                 .find('input')
                 .filter(function(n, item) {
                     return $(item).prop('checked');
-                })
-                .click();
+                });
+
+            selectedFilters.click();
             $(this).removeClass('active-clear');
+        });
+
+    $additionalFilterClear.on('click', function(e) {
+        e.preventDefault();
+        var selectedFilters = $(this)
+            .next('.options-container')
+            .find('input')
+            .filter(function (n, item) {
+                return $(item).prop('checked');
+            });
+
+        $(selectedFilters).each(function(n, el) {
+            var optionsPanel = $(el.value);
+            $(this).click();
+            optionsPanel.find('input:checked').click();
+        });
+
+    });
+
+    $('#additional-filter-wrap').find('.additional-filter-type').on('change',
+        function() {
+            if (!$(this).is(':checked')) {
+                $(this.value).find('input:checked').click();
+            }
         });
 
     $('.govuk-option-select')
         .on('countUpdated',
             function(e, d) {
                 if (d.selectedCount) {
-                    $(this).find('.clear-selections').addClass('active-clear');
+                    $(this).find('.filter-clear, .additional-filter-clear').addClass('active-clear');
                 } else {
-                    $(this).find('.clear-selections').removeClass('active-clear');
+                    $(this).find('.filter-clear, .additional-filter-clear').removeClass('active-clear');
                 }
             });
 }());
