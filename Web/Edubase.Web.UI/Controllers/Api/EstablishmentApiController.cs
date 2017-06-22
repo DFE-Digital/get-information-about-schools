@@ -16,7 +16,11 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         [Route("api/establishment/{urn:int}"), HttpGet]
-        public async Task<ServiceResultDto<EstablishmentModel>> Get(int urn)
-            => await _establishmentReadService.GetAsync(urn, User);
+        public async Task<IHttpActionResult> Get(int urn)
+        {
+            var retVal = await _establishmentReadService.GetAsync(urn, User);
+            if (retVal.ReturnValue == null) return NotFound();
+            else return Ok(retVal);
+        }
     }
 }
