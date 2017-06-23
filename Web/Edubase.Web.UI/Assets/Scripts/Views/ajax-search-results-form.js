@@ -86,6 +86,8 @@
             $blanket.show();
             captureFormState();
             queryString = queryString ? queryString : $("form").serialize();
+
+    
             $.get("Search/results-js?" + queryString, function (html, textStatus, jqXHR) {
                 var count = jqXHR.getResponseHeader("x-count");
                 $(window).trigger({
@@ -146,6 +148,7 @@
             window.addEventListener('popstate', function (event) {
                 var state = event.state ? event.state : initialState;
                 restoreFormState(state.formState);
+                console.log(state.queryString);
                 refreshResults(state.queryString, true);
             }.bind(this));
         }
