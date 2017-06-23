@@ -395,7 +395,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 AppointingBodyId = viewModel.AppointingBodyId,
                 AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
-                AppointmentStartDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime()?.AddDays(1),
+                AppointmentStartDate = viewModel.Mode == CreateEditGovernorViewModel.EditMode.Replace ? viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime()?.AddDays(1) : viewModel.AppointmentStartDate.ToDateTime(),
                 DOB = viewModel.DOB.ToDateTime(),
                 EmailAddress = viewModel.EmailAddress,
                 GroupUId = viewModel.GroupUId,
