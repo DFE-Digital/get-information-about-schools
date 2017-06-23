@@ -7,6 +7,12 @@
     bool disableHint = false;
     bool.TryParse(ViewData["disableHint"]?.ToString(), out disableHint);
 
+    bool showReactivationWarning;
+    if (!bool.TryParse(ViewData["showReactivationWarning"]?.ToString(), out showReactivationWarning))
+    {
+        showReactivationWarning = false;
+    }
+
     if (ViewData["vueModel"] != null)
     {
         showBinding = String.Concat((string) @ViewData["vueModel"], "Error");
@@ -25,6 +31,12 @@
                 {
                     <div class="form-hint">For example, 20 03 2003</div>
                 }
+                
+                @if (showReactivationWarning)
+                {
+                    <div class="warning-message"><p>Changing this date may reactivate the record</p></div>
+                }
+
                 @Html.ValidationMessageFor(x => x)
                 @Html.ValidationMessageFor(x => x.Day)  
                 @Html.ValidationMessageFor(x => x.Month)
@@ -34,6 +46,7 @@
                 {
                     <span class="error-message" v-show="@showBinding" v-html="@messageBinding"></span>
                 }
+
                 <span class="inline-form-control">
                     @Html.LabelFor(x => x.Day)
                     @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Day") : null))

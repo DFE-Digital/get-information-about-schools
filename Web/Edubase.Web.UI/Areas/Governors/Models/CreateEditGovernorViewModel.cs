@@ -1,10 +1,14 @@
-﻿using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
+﻿using Edubase.Services.Enums;
+using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Models.Establishments;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
     public class CreateEditGovernorViewModel : GovernorViewModel, IGroupPageViewModel, IEstablishmentPageViewModel
     {
+        public enum EditMode { Create, Edit, Replace}
+
+        public EditMode Mode { get; set; }
         public string GovernorRoleName { get; set; }
         public int? EstablishmentUrn { get; set; }
         public int? GroupUId { get; set; }
@@ -19,6 +23,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         int? IEstablishmentPageViewModel.Urn { get; set; }
         string IEstablishmentPageViewModel.Name { get; set; }
         TabDisplayPolicy IEstablishmentPageViewModel.TabDisplayPolicy { get; set; }
+        public bool IsHistoric { get; set; }
 
         public ReplaceGovernorViewModel ReplaceGovernorViewModel { get; set; } = new ReplaceGovernorViewModel();
 

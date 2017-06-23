@@ -1,6 +1,8 @@
 ﻿using Edubase.Web.UI.Validation;
 using FluentValidation;
 using System;
+using System.Linq;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Areas.Governors.Models.Validators
 {
@@ -26,6 +28,14 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                     .WithSummaryMessage("Appointment end date must be before Appointment start date")
                     .When(x => x.ReplaceGovernorViewModel.AppointmentEndDate.IsNotEmpty() && x.AppointmentStartDate.IsNotEmpty(), ApplyConditionTo.CurrentValidator);
             });
+
+            //When(x => x.Mode == CreateEditGovernorViewModel.EditMode.Edit && EnumSets.eSingularGovernorRoles.Contains(x.GovernorRole) && x.IsHistoric,
+            //    () =>
+            //    {
+            //       RuleFor(x => x.AppointmentEndDate)
+            //        .Must(x => x.ToDateTime().HasValue && x.ToDateTime().Value < DateTime.Now.Date)
+            //        .WithMessage("Date")
+            //    });
         }
     }
 }
