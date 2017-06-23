@@ -303,6 +303,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn, eLookupGovernorRole? role, int? gid)
         {
             var replaceMode = (ControllerContext.RouteData.Route as System.Web.Routing.Route).Url.IndexOf("/Replace/", StringComparison.OrdinalIgnoreCase) > -1;
+            if (role == null && gid == null) throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
 
             if (role.HasValue)
             {
@@ -318,14 +319,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     return RedirectToRoute("SelectSharedGovernor", new { establishmentUrn = establishmentUrn.Value, role = role.Value });
                 }
             } 
-
             
-
-            if (role == null && gid == null) throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
             var viewModel = new CreateEditGovernorViewModel
             {
                 GroupUId = groupUId,
-                EstablishmentUrn = establishmentUrn
+                EstablishmentUrn = establishmentUrn,
+                Mode = CreateEditGovernorViewModel.EditMode.Create
             };
 
             if (gid.HasValue)
@@ -335,12 +334,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                 if (replaceMode)
                 {
+                    viewModel.Mode = CreateEditGovernorViewModel.EditMode.Replace;
                     viewModel.ReplaceGovernorViewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
                     viewModel.ReplaceGovernorViewModel.GID = gid;
                     viewModel.ReplaceGovernorViewModel.Name = model.GetFullName();
                 }
                 else
                 {
+                    viewModel.Mode = CreateEditGovernorViewModel.EditMode.Edit;
                     viewModel.AppointingBodyId = model.AppointingBodyId;
                     viewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
                     viewModel.AppointmentStartDate = new DateTimeViewModel(model.AppointmentStartDate);
@@ -364,6 +365,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                     viewModel.EstablishmentUrn = model.EstablishmentUrn;
                     viewModel.GroupUId = model.GroupUId;
+
+                    viewModel.IsHistoric = model.AppointmentEndDate.HasValue &&
+                                           model.AppointmentEndDate.Value < DateTime.Now.Date;
                 }
             }
 
@@ -391,7 +395,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 AppointingBodyId = viewModel.AppointingBodyId,
                 AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
-                AppointmentStartDate = viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime()?.AddDays(1),
+                AppointmentStartDate = viewModel.Mode == CreateEditGovernorViewModel.EditMode.Replace ? viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime()?.AddDays(1) : viewModel.AppointmentStartDate.ToDateTime(),
                 DOB = viewModel.DOB.ToDateTime(),
                 EmailAddress = viewModel.EmailAddress,
                 GroupUId = viewModel.GroupUId,

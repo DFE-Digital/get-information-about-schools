@@ -148,20 +148,26 @@
                 var tp = type2PhaseMap;
                 var self = this;
                 var validOptions = [];
-                var validPhaseIds = tp[this.typeId];
+                
+                var validPhaseIds =[];
+                for (var k in tp) {                    
+                    if (k === self.typeId) {
+                        validPhaseIds = tp[k];
+                    }
+                }
 
-                validPhaseIds.forEach(function (j) {
-                    var obj = {}
-                    obj.name = phases[j].name;
-                    obj.id = j;
+                for (var i = 0, len = validPhaseIds.length; i < len; i++) {
+                    var obj = phases.filter(function(phase) {
+                        return phase.id === validPhaseIds[i];
+                    })[0];
                     validOptions.push(obj);
-                });
-
-                this.populateSelect('new-establishment-phase', validOptions)
+                }
+               
+                this.populateSelect('new-establishment-phase', validOptions);
             },
             checkMergeType: function () {
-                this.mergerTypeError = this.mergerType === '';
-                if (!this.mergerTypeError) {
+                this.typeError = this.mergerType === '';
+                if (!this.typeError) {
                     this.mergerTypeConfirmed = true;
                 }
             },
@@ -383,9 +389,9 @@
                     return estab.urn;
                 });
 
-                postData.UrnsToMerge = postData.UrnsToMerge.filter(function (item) {
+                postData.UrnsToMerge = postData.UrnsToMerge.filter(function(item) {
                     return item != self.leadEstab;
-                })
+                });
                 console.log(postData.UrnsToMerge);
 
 
@@ -429,16 +435,16 @@
                 var postData = {};
 
                 this.nameError = (this.newName.length < 1);
-                this.establishmentTypeError = (this.estabTypeId === '');
-                this.amalgamationLaError = (this.la === '');
-                this.phaseError = (this.estabPhaseId === '');
-                this.amalgamationDateError = this.validateMergerDate();
+                this.typeError = (this.typeId === '');
+                this.laError = (this.laId === '');
+                this.phaseError = (this.phaseId === '');
+                this.mergeDateError = this.validateMergerDate();
 
                 if (!this.nameError &&
-                    !this.establishmentTypeError &&
-                    !this.amalgamationLaError &&
+                    !this.typeError &&
+                    !this.laError &&
                     !this.phaseError &&
-                    !this.amalgamationDateError &&
+                    !this.mergeDateError &&
                     !this.duplicateUrnsError) {
 
                     postData.operationType = 'amalgamate';
