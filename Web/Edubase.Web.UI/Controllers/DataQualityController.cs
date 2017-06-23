@@ -10,6 +10,7 @@ using Edubase.Services.Security;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.DataQuality;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -44,7 +45,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 EstablishmentType = d.EstablishmentType,
                 LastUpdated = new DateTimeViewModel(d.LastUpdated)
-            }).ToList();
+            }).OrderBy(x => x.EstablishmentType.GetEnumMember()).ToList();
 
             var urgent = false;
             foreach (var kvp in _roleToDataSetMappings)
@@ -98,7 +99,7 @@ namespace Edubase.Web.UI.Controllers
                     data.Items.Add(item);
                 }
             }
-
+            data.Items.Sort((x,y) => x.EstablishmentType.GetEnumMember().CompareTo(y.EstablishmentType.GetEnumMember()));
             return View(data);
         }
 
@@ -130,10 +131,10 @@ namespace Edubase.Web.UI.Controllers
                     LastUpdated = new DateTimeViewModel(d.LastUpdated),
                     DataOwner = d.DataOwner,
                     Email = d.Email
-                }).ToList(),
+                }).OrderBy(x=>x.EstablishmentType.GetEnumMember()).ToList(),
                 DataUpdated = dataUpdated
+               
             };
-
             return View(data);
         }
     }
