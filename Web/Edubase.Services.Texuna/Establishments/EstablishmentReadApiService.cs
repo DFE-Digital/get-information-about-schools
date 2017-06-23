@@ -162,5 +162,9 @@ namespace Edubase.Services.Texuna.Establishments
 
             return retVal;
         }
+
+        public async Task<IEnumerable<LookupDto>> GetPermissibleLocalGovernorsAsync(int urn, IPrincipal principal) => (await _httpClient.GetAsync<List<LookupDto>>($"establishment/{urn}/permissible-local-governors", principal)).GetResponse();
+
+        
     }
 }

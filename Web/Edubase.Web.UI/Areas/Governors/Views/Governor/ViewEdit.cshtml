@@ -49,8 +49,11 @@ else
     <div class="grid-row">
         <div class="column-two-thirds">
             @ShowLegalDuty()
-            <h2 class="bold-small">Establishment governance</h2>
-            @DisplayGovernanceMode()
+            @if (Model.GovernanceMode.HasValue)
+            {
+                <h2 class="bold-small">Establishment governance</h2>
+                @DisplayGovernanceMode()
+            }
         </div>
     </div>
 }
@@ -72,8 +75,8 @@ else
 }
 else
 {
-    <div class="tab-content" style="display:block !important;">
-        <div class="column-half">
+    <div class="tab-content" style="display:block !important; float:none;">
+        <div class="column-half" style="display:block !important; float:none;">
             <p>There is no governance information for this @Model.ParentEntityName</p>
         </div>
     </div>
@@ -322,9 +325,9 @@ else
 
 @helper DisplayGovernanceMode()
 {
-    if (Model.EstablishmentUrn.HasValue)
+    if (Model.EstablishmentUrn.HasValue && Model.GovernanceMode.HasValue)
     {
-        if (!Model.GovernanceMode.HasValue || Model.GovernanceMode == eGovernanceMode.LocalGovernors)
+        if (Model.GovernanceMode == eGovernanceMode.LocalGovernors)
         {
             <div class="governors-section">
                 <p>This establishment has local governors, not shared governors.</p>
@@ -351,7 +354,7 @@ else
 
         if (Model.EditMode)
         {
-                @Html.RouteLink("Edit", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-grey" })
+            @Html.RouteLink("Edit", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-grey" })
         }
     }
 }

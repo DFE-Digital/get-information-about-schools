@@ -11,5 +11,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
         public string Layout { get; set; }
         public eGovernanceMode? GovernanceMode { get; set; }
+        public eGovernanceMode[] PermissibleGovernanceModes { get; internal set; }
     }
 }

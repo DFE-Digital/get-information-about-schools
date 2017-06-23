@@ -98,8 +98,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             using (MiniProfiler.Current.Step("Retrieving Governors Details"))
             {
                 if (failed) ModelState.AddModelError("", "Unable to update Governance");
-                
-                var viewModel = new EditGovernanceModeViewModel { Urn = establishmentUrn.Value };
+
+                var viewModel = new EditGovernanceModeViewModel
+                {
+                    Urn = establishmentUrn.Value,
+                    PermissibleGovernanceModes = (await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, User)).Select(x => (eGovernanceMode)x.Id).ToArray()
+                };
                 await PopulateLayoutProperties(viewModel, establishmentUrn, null, x => viewModel.GovernanceMode = x.GovernanceMode ?? eGovernanceMode.LocalGovernors);
                 return View(viewModel);
             }
@@ -275,7 +279,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (establishmentUrn.HasValue || establishmentModel != null)
             {
                 var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
-                viewModel.GovernanceMode = estabDomainModel.GovernanceMode ?? eGovernanceMode.LocalGovernors;
+                viewModel.GovernanceMode = estabDomainModel.GovernanceMode;
             }
 
             if (groupUId.HasValue)
