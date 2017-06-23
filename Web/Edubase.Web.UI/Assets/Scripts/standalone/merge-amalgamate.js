@@ -148,16 +148,22 @@
                 var tp = type2PhaseMap;
                 var self = this;
                 var validOptions = [];
-                var validPhaseIds = tp[this.typeId];
+                
+                var validPhaseIds =[];
+                for (var k in tp) {                    
+                    if (k === self.typeId) {
+                        validPhaseIds = tp[k];
+                    }
+                }
 
-                validPhaseIds.forEach(function (j) {
-                    var obj = {}
-                    obj.name = phases[j].name;
-                    obj.id = j;
+                for (var i = 0, len = validPhaseIds.length; i < len; i++) {
+                    var obj = phases.filter(function(phase) {
+                        return phase.id === validPhaseIds[i];
+                    })[0];
                     validOptions.push(obj);
-                });
-
-                this.populateSelect('new-establishment-phase', validOptions)
+                }
+               
+                this.populateSelect('new-establishment-phase', validOptions);
             },
             checkMergeType: function () {
                 this.typeError = this.mergerType === '';
