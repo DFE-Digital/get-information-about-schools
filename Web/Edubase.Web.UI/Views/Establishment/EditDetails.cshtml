@@ -84,12 +84,12 @@
 
                     @if (Model.EditPolicy.AltSiteName.GetValueOrDefault(true))
                     {
-                        if (!Model.IsAltAddressSet)
+                        @*if (!Model.IsAltAddressSet)
                         {
                             <div class="form-group">
                                 <a href="javascript:" id="add-alt-address" onclick="$('div.alt-address').show();$(this).hide();">Add another address</a>
                             </div>
-                        }
+                        }*@
 
                         <div class="alt-address" style="display:@(Model.IsAltAddressSet ? "" : "none");">
                             <div class="grey-bar"></div>
@@ -121,9 +121,9 @@
                                 @Html.LabelFor(x => x.AltPostCode, "Postcode")
                                 @Html.TextBoxFor(x => x.AltPostCode, new { @class = "form-control alt-address" })
                             </div>
-                            <div class="form-group">
+                            @*<div class="form-group">
                                 <a href="javascript:" onclick="$('div.alt-address').hide();$('#add-alt-address').show();$('.form-control.alt-address').val('');">Remove address</a>
-                            </div>
+                            </div>*@
                         </div>
                     }
 
