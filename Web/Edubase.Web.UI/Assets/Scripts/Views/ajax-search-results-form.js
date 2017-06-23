@@ -105,7 +105,7 @@
                 $resultsElement.html(html);
 
                 if (!suppressPushState && GOVUK.support.history()) {
-                        window.history.pushState({ queryString: queryString, formState: captureFormState() }, null, window.location.href + "?" + queryString);
+                        window.history.pushState({ queryString: queryString, formState: captureFormState() }, null, window.location.href.split('?')[0] + "?" + queryString);
                 }
                 
                 $("a.download-link").attr("href", downloadUrl + queryString);
