@@ -4,36 +4,41 @@
 <div id="helpdesk" class="tab-content">
     @if (Model.UserCanEdit)
     {        
-        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey block-button mobile-full-width" })
+        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
     }
-    <table class="borderless">
-        <tr>
-            <th scope="row" style="font-weight:bold;" colspan="2">Helpdesk notes:</th>
-        </tr>
-        <tr>
-            <th colspan="2">@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")<br/><br /></th>
-        </tr>
-        <tr>
-            <th scope="row">EduBase last update:</th>
-            <td>@(Model.Establishment.HelpdeskLastUpdate?.ToString("dd/MM/yyyy"))</td>
-        </tr>
-        <tr>
-            <th scope="row">EduBase trigger 1:</th>
-            <td>@Model.Establishment.HelpdeskTrigger1</td>
-        </tr>     
-        <tr>
-            <th scope="row">Previous local authority:</th>
-            <td>@Model.HelpdeskPreviousLocalAuthorityName</td>
-        </tr>  
-        <tr>
-            <th scope="row">Previous establishment number:</th>
-            <td>@Model.Establishment.HelpdeskPreviousEstablishmentNumber</td>
-        </tr>     
+    <table class="borderless helpdesk-table">
+        <thead>
+            <tr>
+                <th scope="row" colspan="2">Helpdesk notes:</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th colspan="2">@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</th>
+            </tr>
+            <tr>
+                <th scope="row" class="row-header">EduBase last update:</th>
+                <td class="row-value">@(Model.Establishment.HelpdeskLastUpdate?.ToString("dd/MM/yyyy"))</td>
+            </tr>
+            <tr>
+                <th scope="row">EduBase trigger 1:</th>
+                <td>@Model.Establishment.HelpdeskTrigger1</td>
+            </tr>
+            <tr>
+                <th scope="row">Previous local authority:</th>
+                <td>@Model.HelpdeskPreviousLocalAuthorityName</td>
+            </tr>
+            <tr>
+                <th scope="row">Previous establishment number:</th>
+                <td>@Model.Establishment.HelpdeskPreviousEstablishmentNumber</td>
+            </tr>
+        </tbody>
+        
     </table>
     
     
     @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey block-button mobile-full-width" })
+        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey  mobile-full-width" })
     }
 </div>
