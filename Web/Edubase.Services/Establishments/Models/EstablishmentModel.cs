@@ -122,12 +122,13 @@ namespace Edubase.Services.Establishments.Models
         [DisplayName("Headteacher/Principal title")]
         public int? HeadTitleId { get; set; }
 
+        [DisplayName("Headteacher/Principal appointment date")]
+        public DateTime? HeadAppointmentDate { get; set; }
+
         public string HeadEmailAddress { get; set; }
 
         public string HeadPreferredJobTitle { get; set; }
-
-        //public DateTime? HeadAppointmentDate { get; set; }
-
+        
         public string Contact_TelephoneNumber { get; set; }
 
         public string Contact_EmailAddress { get; set; }

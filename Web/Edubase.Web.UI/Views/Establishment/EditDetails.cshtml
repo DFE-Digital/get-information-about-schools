@@ -151,6 +151,8 @@
                             @Html.HiddenFor(x => x.OldHeadLastName)
                         </div>
 
+                        @Html.EditorFor(x => x.HeadAppointmentDate, new { title = "Headteacher date of appointment" })
+
                         if (Model.EditPolicy.HeadEmailAddress)
                         {
                             <div class="form-group">
@@ -160,6 +162,8 @@
                                 @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address" })
                             </div>
                         }
+
+
                     }
 
                     @if (Model.EditPolicy.AgeRange)

@@ -27,14 +27,14 @@
                 @Model.HeadTitleName @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
             </td>
         </tr>
-        @*<tr>
-            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th> // TODO TEXCHANGE
-            <td>
-                @Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded"
-            </td>
-        </tr>*@
         if (User.Identity.IsAuthenticated)
         {
+            <tr>
+                <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th>
+                <td>
+                    @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
+                </td>
+            </tr>
             <tr>
                 <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) email address</th>
                 <td>
