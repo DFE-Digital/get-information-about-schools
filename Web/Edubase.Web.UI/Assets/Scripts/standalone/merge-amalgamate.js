@@ -127,9 +127,25 @@
                         return t.id == self.typeId;
                     })[0].name;
                 }
+            },
+            addedUrns: function() {
+                if (this.mergerType === 'merger') {
+                    return [this.leadEstab, this.linkedEstab0, this.linkedEstab1, this.linkedEstab2];
+                }
+                return [this.amalgamatedEstab0, this.amalgamatedEstab1, this.amalgamatedEstab2, this.amalgamatedEstab3];
             }
         },
         methods: {
+            hasDuplicateUrn: function() {
+                var arr = this.addedUrns.sort();
+                for (var i = 0, len = arr.length; i < len; i++) {
+                    if (arr[i] !== '' && arr[i + 1] === arr[i]) {
+                        console.log('loop ' + i);
+                        return true;
+                    }
+                }
+                return false;
+            },
             populateSelect: function (control, data) {
                 var frag = document.createDocumentFragment();
 
@@ -174,6 +190,8 @@
             validateMergeSelection: function () {
                 this.fieldCount = 0;
                 var self = this;
+                this.mergerEstabs = [];
+
                 var presentValidation = function () {
                     if (!self.leadEstabValid) {
                         self.leadEstabError = true;
@@ -186,14 +204,19 @@
                     }
                 }
 
-                self.linkedEstabError = false;
-                self.leadEstabError = false;
-                self.linkedEstab0Valid = true;
-                self.linkedEstab1Valid = true;
-                self.linkedEstab2Valid = true;
-                self.mergeLengthError = false;
+                this.linkedEstabError = false;
+                this.leadEstabError = false;
+                this.linkedEstab0Valid = true;
+                this.linkedEstab1Valid = true;
+                this.linkedEstab2Valid = true;
+                this.mergeLengthError = false;
+                this.duplicateUrnsError = this.hasDuplicateUrn();
+                if (this.duplicateUrnsError) {
+                    return true;
+                }
+
                 var promise = [];
-                if (this.leadEstab !== '') {
+                if (this.leadEstab !== '') {                    
                     this.leadEstabValid = false;
                     this.fieldCount++;
                     promise.push(this.validateUrn(this.leadEstab, 'leadEstab'));
@@ -206,7 +229,7 @@
                     promise.push(this.validateUrn(this.linkedEstab0, 'linkedEstab0'));
                 }
 
-                if (this.linkedEstab1 !== '') {
+                if (this.linkedEstab1 !== '') {                    
                     this.linkedEstab1Valid = false;
                     this.fieldCount++;
                     promise.push(this.validateUrn(this.linkedEstab1, 'linkedEstab1'));
@@ -242,7 +265,7 @@
             },
             validateUrn: function (urn, component) {
                 var self = this;
-
+                
                 $.ajax({
                     url: self.estabLookup.replace('{0}', urn),
                     dataType: 'json',
@@ -310,10 +333,8 @@
             validateAmalgamationSelection: function () {
                 this.fieldCount = 0;
                 var self = this;
-                var amalgamationUrns = [];
-
+                this.amalgamationEstabs = [];
                 var presentValidation = function () {
-                    //self.validMergeUrns = true;
                     if (!self.amalgamatedEstab0Valid || !self.amalgamatedEstab1Valid || !self.amalgamatedEstab2Valid || !self.amalgamatedEstab3Valid) {
                         self.amalgamateUrnError = true;
                     }
@@ -325,14 +346,20 @@
                     }
                 }
 
-                self.linkedEstabError = false;
-                self.amalgamatedEstab0Valid = true;
-                self.amalgamatedEstab1Valid = true;
-                self.amalgamatedEstab2Valid = true;
-                self.amalgamatedEstab3Valid = true;
-                self.amalgamationLengthError = false;
+                this.linkedEstabError = false;
+                this.amalgamatedEstab0Valid = true;
+                this.amalgamatedEstab1Valid = true;
+                this.amalgamatedEstab2Valid = true;
+                this.amalgamatedEstab3Valid = true;
+                this.amalgamationLengthError = false;
+                this.amalgamateUrnError = false;
+                this.duplicateUrnsError = this.hasDuplicateUrn();
+                if (this.duplicateUrnsError) {
+                    return true;
+                }
+
                 var promise = [];
-                if (this.amalgamatedEstab0 !== '') {
+                if (this.amalgamatedEstab0 !== '') {                    
                     this.amalgamatedEstab0Valid = false;
                     this.fieldCount++;
                     promise.push(this.validateUrn(this.amalgamatedEstab0, 'amalgamatedEstab0'));
@@ -392,7 +419,6 @@
                 postData.UrnsToMerge = postData.UrnsToMerge.filter(function(item) {
                     return item != self.leadEstab;
                 });
-                console.log(postData.UrnsToMerge);
 
 
                 this.mergeDateError = this.validateMergerDate();
