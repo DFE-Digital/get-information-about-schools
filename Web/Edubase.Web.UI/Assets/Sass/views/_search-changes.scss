@@ -8,7 +8,6 @@
     position: relative;
     border-bottom: $grey-2 2px solid;
 
-
     &:link,
     &:visited, 
     &:hover {
@@ -39,6 +38,7 @@
 
     .open-expander & {
         border-bottom: 0;
+        padding-bottom: 10px;
         &:before {
             border-bottom: 0;
             border-left: 8px solid transparent;
@@ -86,16 +86,24 @@
 
     .expander-panel {
         .checkbox-wrap {
-            width: 32%;
-            margin-right: 0;
+            width: 31%;
+            margin-right: 12px;
             margin-left: 0;
             padding-left: 3px;
-
-            @media(max-width: 980px) {
-                width: 49%;
+            float: left;
+            
+            &:nth-child(3n+1) {
+                clear: left;
             }
-
+            
+            @media(max-width: 980px) {
+                width: 49%;                
+            }
         }
+    }
+
+    .long-label label {
+        padding-top: 3px;
     }
 }
 
