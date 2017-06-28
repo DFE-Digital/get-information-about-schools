@@ -15,6 +15,8 @@
                 @Html.HiddenFor(m => m.ExistingChairType)
                 @Html.HiddenFor(m => m.Urn)
                 @Html.HiddenFor(m => m.Name)
+                @Html.HiddenFor(m => m.Role)
+
                 <div class="button-row">
                     <input type="submit" value="Select" class="button mobile-full-width" />
                     <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
@@ -38,7 +40,7 @@
                     <div class="column-two-thirds">
                         <div id="newChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">
                             <div class="replacement-chair-option">
-                                @Html.EditorFor(m => m.NewLocalGovernor)
+                                @Html.EditorFor(m => m.NewLocalGovernor, new { disableStartDate = true })
                             </div>
                         </div>
                         <div id="sharedChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
@@ -70,3 +72,27 @@
         </div>
 </div>
 
+@section ViewScripts
+{
+    <script>
+        $day = $('#DateTermEnds_Day');
+        $month = $('#DateTermEnds_Month');
+        $year = $('#DateTermEnds_Year');
+
+        function checkAndUpdateDate() {
+            if (Number($day.val()) > 0 && Number($month.val()) > 0 && Number($year.val()) > 0) {
+                var date = new Date($year.val(), $month.val() - 1, $day.val(), 0, 0, 0, 0);
+                date.setDate(date.getDate() + 1);
+                $('#NewLocalGovernor_AppointmentStartDate_Day').val(date.getDate());
+                $('#NewLocalGovernor_AppointmentStartDate_Month').val(date.getMonth() + 1);
+                $('#NewLocalGovernor_AppointmentStartDate_Year').val(date.getFullYear());
+            }
+        }
+
+        $day.blur(checkAndUpdateDate);
+        $month.blur(checkAndUpdateDate);
+        $year.blur(checkAndUpdateDate);
+
+        $(function() { checkAndUpdateDate(); });
+    </script>
+}

@@ -590,7 +590,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync((eLookupGovernorRole)governor.RoleId.Value, false, User)
                 },
                 SharedGovernors = governors.Select(g => MapGovernorToSharedGovernorViewModel(g, establishmentUrn)).ToList(),
-                NewChairType = ReplaceChairViewModel.ChairType.LocalChair
+                NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
+                Role = (eLookupGovernorRole)governor.RoleId
             };
 
             await PopulateSelectLists(model.NewLocalGovernor);
@@ -604,20 +605,20 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (model.ExistingChairType == ReplaceChairViewModel.ChairType.SharedChair)
-                {
-                    var existingGovernor =
-                        await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
-                    await _governorsWriteService.UpdateDatesAsync(model.ExistingGovernorId,
-                        existingGovernor.Appointments.SingleOrDefault(a => a.EstablishmentUrn == model.Urn.Value).AppointmentStartDate.Value,
-                        model.DateTermEnds.ToDateTime().Value, User);
-                }
-                else
-                {
-                    var existingGovernor = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
-                    existingGovernor.AppointmentEndDate = model.DateTermEnds.ToDateTime();
-                    await _governorsWriteService.SaveAsync(existingGovernor, User);
-                }
+                //if (model.ExistingChairType == ReplaceChairViewModel.ChairType.SharedChair)
+                //{
+                //    var existingGovernor =
+                //        await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
+                //    await _governorsWriteService.UpdateDatesAsync(model.ExistingGovernorId,
+                //        existingGovernor.Appointments.SingleOrDefault(a => a.EstablishmentUrn == model.Urn.Value).AppointmentStartDate.Value,
+                //        model.DateTermEnds.ToDateTime().Value, User);
+                //}
+                //else
+                //{
+                //    var existingGovernor = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
+                //    existingGovernor.AppointmentEndDate = model.DateTermEnds.ToDateTime();
+                //    await _governorsWriteService.SaveAsync(existingGovernor, User);
+                //}
 
                 if (model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair)
                 {
@@ -625,14 +626,16 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     await _governorsWriteService.UpdateDatesAsync(model.SelectedGovernorId, 
                         newGovernor.AppointmentStartDate.ToDateTime().Value,
                         newGovernor.AppointmentEndDate.ToDateTime().Value, User);
+
+                    return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = model.Urn });
                 }
                 else
                 {
-                    await _governorsWriteService.SaveAsync(new GovernorModel
+                    var newGovernor = new GovernorModel
                     {
                         AppointingBodyId = model.NewLocalGovernor.AppointingBodyId,
                         AppointmentEndDate = model.NewLocalGovernor.AppointmentEndDate.ToDateTime(),
-                        AppointmentStartDate = model.NewLocalGovernor.AppointmentStartDate.ToDateTime(),
+                        AppointmentStartDate = model.DateTermEnds.ToDateTime().Value.AddDays(1),
                         DOB = model.NewLocalGovernor.DOB.ToDateTime(),
                         EmailAddress = model.NewLocalGovernor.EmailAddress,
                         EstablishmentUrn = model.Urn,
@@ -646,12 +649,20 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         PreviousPerson_LastName = model.NewLocalGovernor.PreviousLastName,
                         //PreviousPerson_Title = model.NewLocalGovernor.PreviousTitle,//todo: texchange
                         PostCode = model.NewLocalGovernor.PostCode,
-                        RoleId = (int)eLookupGovernorRole.ChairOfTrustees,
+                        RoleId = (int) model.Role,
                         TelephoneNumber = model.NewLocalGovernor.TelephoneNumber
-                    }, User);
-                }
+                    };
 
-                return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = model.Urn });
+                    var validation = await _governorsWriteService.ValidateAsync(newGovernor, User);
+
+                    if (!validation.HasErrors)
+                    {
+                        await _governorsWriteService.SaveAsync(newGovernor, User);
+                        return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = model.Urn });
+                    }
+                    
+                    validation.ApplyToModelState(ControllerContext);
+                }
             }
 
             var governor = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User) ?? await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);

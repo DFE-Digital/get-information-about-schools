@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Edubase.Services.Enums;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
 
@@ -11,6 +12,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string GovernorFullName { get; set; }
         public int ExistingGovernorId { get; set; }
         public ChairType ExistingChairType { get; set; }
+        public eLookupGovernorRole Role { get; set; }
 
         [Display(Name = "Date term ends")]
         public DateTimeViewModel DateTermEnds { get; set; }
