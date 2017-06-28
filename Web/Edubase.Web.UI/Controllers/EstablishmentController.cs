@@ -397,7 +397,7 @@ namespace Edubase.Web.UI.Controllers
             return viewModel;
         }
 
-        [HttpGet, Route("Details/{id}")]
+        [HttpGet, Route("Details/{id}", Name = "EstabDetails")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false)
         {
             ViewBag.ShowApproved = approved;
@@ -685,6 +685,21 @@ namespace Edubase.Web.UI.Controllers
             await PopulateSelectLists(viewModel);
             return View(viewModel);
         }
+
+        [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
+        public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn)
+        {
+            await _establishmentWriteService.ConfirmAsync(urn, User);
+            return RedirectToRoute("EstabDetails", new { id = urn });
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate")]
+        public async Task<ActionResult> EstablishmentGovernanceConfirmUpToDateAsync(int urn)
+        {
+            await _establishmentWriteService.ConfirmGovernanceAsync(urn, User);
+            return RedirectToRoute("EstabDetails", new { id = urn });
+        }
+
 
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
         {

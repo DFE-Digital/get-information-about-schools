@@ -148,6 +148,8 @@ namespace Edubase.Services.Texuna.Establishments
         }
 
 
+        public async Task<ApiResponse> ConfirmAsync(int urn, IPrincipal principal) => await _httpClient.GetAsync<object>($"establishment/{urn}/confirm", principal);
 
+        public async Task<ApiResponse> ConfirmGovernanceAsync(int urn, IPrincipal principal) => await _httpClient.PostAsync($"establishment/{urn}/governance/confirm", null, principal);
     }
 }
