@@ -58,5 +58,10 @@ namespace Edubase.Web.UI.Models.Establishments
                 policy.UrbanRuralId, policy.GSSLAId, policy.Easting, policy.Northing, policy.CASWardId, policy.MSOAId, policy.LSOAId
             }.Any(x => x == true);
         }
+
+        public TabDisplayPolicy()
+        {
+
+        }
     }
 }

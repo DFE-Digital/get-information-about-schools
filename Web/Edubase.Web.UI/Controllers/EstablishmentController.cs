@@ -17,6 +17,9 @@ using Edubase.Web.UI.Areas.Governors.Controllers;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Establishments;
+using Edubase.Web.UI.Models.Establishments.Validators;
+using FluentValidation.Mvc;
+using MoreLinq;
 using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
@@ -121,6 +124,136 @@ namespace Edubase.Web.UI.Controllers
             viewModel.SelectedTab = "iebt";
             return View("EditIEBT", viewModel);
         }
+
+        #region Establishment links
+
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links/Search", Name = "EditEstabLinks_SearchForEstablishment")]
+        public async Task<ActionResult> SearchForEstablishment(int? id, SearchForEstablishmentViewModel viewModel)
+        {
+            viewModel = viewModel ?? new SearchForEstablishmentViewModel();
+            if (!id.HasValue) return HttpNotFound();
+            await PopulateEstablishmentPageViewModel(viewModel, id.Value, "links");
+
+            if (viewModel.DoSearch)
+            {
+                var results = await new SearchForEstablishmentViewModelValidator(_establishmentReadService, User).ValidateAsync(viewModel);
+                results.AddToModelState(ModelState, string.Empty);
+
+                if (ModelState.IsValid)
+                {
+                    return RedirectToRoute("CreateEstabLink", new { urn = id.Value, urnToLink = viewModel.SearchUrn.ToInteger().Value });
+                }
+            }
+            
+            return View("AddEditLink_FindEstablishment", viewModel);
+        }
+        
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links", Name = "EditEstabLinks")]
+        public async Task<ActionResult> EditLinks(int? id)
+        {
+            if (!id.HasValue) return HttpNotFound();
+
+            var viewModel = new EditEstablishmentLinksViewModel();
+            await PopulateEstablishmentPageViewModel(viewModel, id.Value, "links");
+            viewModel.Links = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id.Value, User)).Select(x => new LinkedEstabViewModel(x)).ToList();
+            await Task.WhenAll(viewModel.Links.Select(async x => x.LinkTypeName = await _cachedLookupService.GetNameAsync(() => x.LinkTypeId)));
+
+            return View("EditLinks", viewModel);
+        }
+
+        [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Link/{linkid?}", Name = "EditEstabLink"), 
+            Route("Edit/{urn:int}/Link/Create/{urnToLink:int}", Name = "CreateEstabLink")]
+        public async Task<ActionResult> AddEditLinkAsync(int urn, int? linkId, int? urnToLink)
+        {
+            var viewModel = new EditEstablishmentLinksViewModel();
+            await PopulateEstablishmentPageViewModel(viewModel, urn, "links");
+
+            if (linkId.HasValue)
+            {
+                viewModel.Links = (await _establishmentReadService.GetLinkedEstablishmentsAsync(urn, User)).Select(x => new LinkedEstabViewModel(x)).ToList();
+                viewModel.ActiveRecord = viewModel.Links.First(x => x.Id == linkId);
+                viewModel.ActiveRecord.Address = await ((await _establishmentReadService.GetAsync(viewModel.ActiveRecord.Urn.Value, User)).GetResult()).GetAddressAsync(_cachedLookupService);
+            }
+            else
+            {
+                var domainModel = (await _establishmentReadService.GetAsync(urnToLink.Value, User)).GetResult();
+                viewModel.ActiveRecord = new LinkedEstabViewModel
+                {
+                    Address = await domainModel.GetAddressAsync(_cachedLookupService),
+                    EstablishmentName = domainModel.Name,
+                    Urn = domainModel.Urn
+                };
+            }
+            
+            viewModel.LinkTypeList = await _cachedLookupService.EstablishmentLinkTypesGetAllAsync();
+            viewModel.HydrateStateToken();
+
+            return View("AddEditLink", viewModel);
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Link/{linkid?}", Name = "SaveEstabLink"),
+            Route("Edit/{urn:int}/Link/Create/{urnToLink:int}")]
+        public async Task<ActionResult> AddEditLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
+        {
+            if(deltaViewModel.Act == "delete") return await DeleteLinkAsync(deltaViewModel);
+            else
+            {
+                var viewModel = UriHelper.DeserializeUrlToken<EditEstablishmentLinksViewModel>(deltaViewModel.StateToken); // avoids more API calls, which are very slow.
+                viewModel.ActiveRecord.LinkDateEditable = deltaViewModel.ActiveRecord.LinkDateEditable;
+                viewModel.ActiveRecord.LinkTypeId = deltaViewModel.ActiveRecord.LinkTypeId;
+                viewModel.ActiveRecord.CreateReverseLink = deltaViewModel.ActiveRecord.CreateReverseLink;
+                viewModel.ActiveRecord.ReverseLinkDateEditable = deltaViewModel.ActiveRecord.ReverseLinkDateEditable;
+                viewModel.ActiveRecord.ReverseLinkTypeId = deltaViewModel.ActiveRecord.ReverseLinkTypeId;
+                viewModel.ActiveRecord.ReverseLinkSameDate = deltaViewModel.ActiveRecord.ReverseLinkSameDate;
+                viewModel.HydrateStateToken();
+
+                if (ModelState.IsValid)
+                {
+                    var link = new LinkedEstablishmentModel();
+                    var set = (await _establishmentReadService.GetLinkedEstablishmentsAsync(deltaViewModel.Urn.Value, User)).ToList();
+
+                    if (deltaViewModel.ActiveRecord.Id.HasValue)
+                    {
+                        link = set.FirstOrDefault(x => x.Id == deltaViewModel.ActiveRecord.Id);
+                        Guard.IsNotNull(link, () => new Exception($"Link with id {deltaViewModel.ActiveRecord.Id} was not found in the set"));
+                    }
+
+                    link.LinkTypeId = viewModel.ActiveRecord.LinkTypeId;
+                    link.LinkDate = viewModel.ActiveRecord.LinkDateEditable.ToDateTime();
+                    link.Urn = viewModel.ActiveRecord.Urn;
+
+                    if (!link.Id.HasValue) set.Add(link);
+
+                    var apiResponse = await _establishmentWriteService.SaveLinkedEstablishmentsAsync(deltaViewModel.Urn.Value, set.ToArray(), User);
+
+                    if (apiResponse.HasErrors) apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                    else
+                    {
+                        if (viewModel.ActiveRecord.CreateReverseLink)
+                        {
+                            await _establishmentWriteService.AddLinkedEstablishmentAsync(link.Urn.Value, viewModel.Urn.Value, viewModel.ActiveRecord.ReverseLinkTypeId.Value,
+                                (viewModel.ActiveRecord.ReverseLinkDateEditable.ToDateTime() ?? viewModel.ActiveRecord.LinkDateEditable.ToDateTime()).Value, User);
+                        }
+                        return RedirectToRoute("EditEstabLinks", new { id = deltaViewModel.Urn });
+                    }
+                }
+                return View("AddEditLink", viewModel);
+            }
+        }
+
+        private async Task<ActionResult> DeleteLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
+        {
+            await _establishmentWriteService.DeleteLinkedEstablishmentAsync(deltaViewModel.Urn.Value, deltaViewModel.ActiveRecord.Id.Value, User);
+            var reverseLinks = await _establishmentReadService.GetLinkedEstablishmentsAsync(deltaViewModel.ActiveRecord.Urn.Value, User);
+
+            var reverseLink = reverseLinks.FirstOrDefault(x => x.Urn == deltaViewModel.Urn);
+            if (reverseLink != null)
+                await _establishmentWriteService.DeleteLinkedEstablishmentAsync(deltaViewModel.ActiveRecord.Urn.Value, reverseLink.Id.Value, User);
+            
+            return RedirectToRoute("EditEstabLinks", new { id = deltaViewModel.Urn });
+        }
+
+        #endregion
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
         public async Task<ActionResult> EditIEBT(ViewModel model)
@@ -310,6 +443,16 @@ namespace Edubase.Web.UI.Controllers
             {
                 viewModel.GovernorsGridViewModel = new Areas.Governors.Models.GovernorsGridViewModel { DomainModel = new Services.Governors.Models.GovernorsDetailsDto() };
             }
+        }
+
+        private async Task PopulateEstablishmentPageViewModel(IEstablishmentPageViewModel viewModel, int urn, string selectedTabName)
+        {
+            viewModel.SelectedTab = selectedTabName;
+            viewModel.Urn = urn;
+            var domainModel = (await _establishmentReadService.GetAsync(urn, User)).GetResult();
+            var editPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, editPolicy, User);
+            viewModel.Name = domainModel.Name;
         }
 
         private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)

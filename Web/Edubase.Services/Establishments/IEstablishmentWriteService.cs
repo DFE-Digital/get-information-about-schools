@@ -20,5 +20,8 @@ namespace Edubase.Services.Establishments
         Task<ApiResponse<BulkCreateAcademiesProgress>> GetBulkCreateAcademiesProgress(Guid id, IPrincipal principal);
         Task<ApiResponse<NewAcademyRequestValidationEnvelope[]>> ValidateBulkCreateAcademies(NewAcademyRequest[] newAcademyRequests, IPrincipal principal);
         Task<ApiResponse> UpdateGovernanceModeAsync(int urn, eGovernanceMode mode, IPrincipal principal);
+        Task<ApiResponse<object, ValidationEnvelopeDto[]>> SaveLinkedEstablishmentsAsync(int urn, LinkedEstablishmentModel[] linkedEstablishmentModels, IPrincipal principal);
+        Task<ApiResponse<object, ValidationEnvelopeDto[]>> DeleteLinkedEstablishmentAsync(int urn, int linkId, IPrincipal principal);
+        Task<ApiResponse<object, ValidationEnvelopeDto[]>> AddLinkedEstablishmentAsync(int parentUrn, int urnToLink, int linkTypeId, DateTime linkDate, IPrincipal principal);
     }
 }

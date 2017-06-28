@@ -104,13 +104,6 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel CloseDate { get; set; } = new DateTimeViewModel();
         public eAction Action { get; set; }
 
-        //public int? LinkedSearchUrn { get; set; }
-        //public int? LinkedUrnToAdd { get; set; }
-        //public string LinkedEstabNameToAdd { get; set; }
-        //public eLinkType? LinkTypeToAdd { get; set; }
-        //public DateTimeViewModel LinkedDateToAdd { get; set; }
-        //public int? LinkedItemPositionToRemove { get; set; }
-        //public List<LinkedEstabViewModel> Links { get; internal set; } = new List<LinkedEstabViewModel>();
         public bool ScrollToLinksSection { get; set; }
         
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Counties.FirstOrDefault(x=>x.Value == Address_CountyId?.ToString())?.Text, Address_PostCode);

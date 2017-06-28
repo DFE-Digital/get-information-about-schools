@@ -33,36 +33,36 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             // Searching for an establishment to link....
             When(x => x.Action == ActionLinkedEstablishmentSearch, () =>
             {
-            RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                .Cascade(CascadeMode.StopOnFirstFailure)
+                RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+                    .Cascade(CascadeMode.StopOnFirstFailure)
 
-                .Must(x => x.IsInteger())
-                .WithMessage("Please specify a valid URN")
-                .WithSummaryMessage("The supplied URN is not valid")
+                    .Must(x => x.IsInteger())
+                    .WithMessage("Please specify a valid URN")
+                    .WithSummaryMessage("The supplied URN is not valid")
 
-                .Must((model, x) => !model.LinkedEstablishments.Establishments.Select(e => e.Urn).Contains(x.ToInteger().Value))
-                .WithMessage("Link to establishment already exists")
-                .WithSummaryMessage("Link to establishment already exists")
+                    .Must((model, x) => !model.LinkedEstablishments.Establishments.Select(e => e.Urn).Contains(x.ToInteger().Value))
+                    .WithMessage("Link to establishment already exists")
+                    .WithSummaryMessage("Link to establishment already exists")
 
-                .MustAsync(async(x, ct) => 
-                {
-                    return (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue != null;
-                }).WithMessage("The establishment was not found").WithSummaryMessage("The establishment was not found");
+                    .MustAsync(async (x, ct) =>
+                    {
+                        return (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue != null;
+                    }).WithMessage("The establishment was not found").WithSummaryMessage("The establishment was not found");
 
-                    //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
-                    //    .GetResult().EstablishmentTypeGroupId == (int)EG.LAMaintainedSchools)
-                    //.WithMessage("Establishment is not LA maintained, please select another one.")
-                    //.When(m => m.GroupType == GT.Federation || m.GroupType == GT.Trust, ApplyConditionTo.CurrentValidator)
+                //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
+                //    .GetResult().EstablishmentTypeGroupId == (int)EG.LAMaintainedSchools)
+                //.WithMessage("Establishment is not LA maintained, please select another one.")
+                //.When(m => m.GroupType == GT.Federation || m.GroupType == GT.Trust, ApplyConditionTo.CurrentValidator)
 
-                    //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
-                    //    .GetResult().EstablishmentTypeGroupId == (int)EG.Academies)
-                    //.WithMessage("Establishment is not an academy, please select another one.")
-                    //.When(m => m.GroupType == GT.SchoolSponsor, ApplyConditionTo.CurrentValidator)
+                //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
+                //    .GetResult().EstablishmentTypeGroupId == (int)EG.Academies)
+                //.WithMessage("Establishment is not an academy, please select another one.")
+                //.When(m => m.GroupType == GT.SchoolSponsor, ApplyConditionTo.CurrentValidator)
 
-                    //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
-                    //    .GetResult().EstablishmentTypeGroupId.Equals((int)EG.ChildrensCentres))
-                    //.WithMessage("Establishment is not a children's centre, please select another one.")
-                    //.When(m => m.GroupType == GT.ChildrensCentresCollaboration || m.GroupType == GT.ChildrensCentresGroup, ApplyConditionTo.CurrentValidator);
+                //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
+                //    .GetResult().EstablishmentTypeGroupId.Equals((int)EG.ChildrensCentres))
+                //.WithMessage("Establishment is not a children's centre, please select another one.")
+                //.When(m => m.GroupType == GT.ChildrensCentresCollaboration || m.GroupType == GT.ChildrensCentresGroup, ApplyConditionTo.CurrentValidator);
             });
 
             // Having found an establishment to link, validate the joined date if supplied...
@@ -111,7 +111,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .When(x => !x.GroupUId.HasValue, ApplyConditionTo.CurrentValidator)
                     .Must(x => x.IsValid() || x.IsEmpty())
                     .WithMessage("{0} is invalid. Please enter a valid date", x => x.OpenDateLabel);
-                
+
                 RuleFor(x => x.GroupName)
                     .Cascade(CascadeMode.StopOnFirstFailure)
                     .NotEmpty()
@@ -139,7 +139,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId: groupId, existingGroupUId: model.GroupUId)))
                     .WithMessage("Group ID already exists. Enter a different group ID.")
                     .When(x => x.GroupTypeMode.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
-                
+
             });
         }
 

@@ -23,6 +23,10 @@
                 <ul class="horizontal-tabs">
                     <li><a href="@Url.Action("EditDetails", "Establishment", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "details", "selected-tab")">Details</a></li>
                         
+                    
+                    <li><a href="@Url.Action("EditLinks", "Establishment", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "links", "selected-tab")">Links</a></li>
+                    
+
                     @if (Model.TabDisplayPolicy.Location)
                     {
                         <li><a href="@Url.Action("EditLocation", "Establishment", new { id = Model.Urn, area = "" })" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "location", "selected-tab")">Location</a></li>
