@@ -10,7 +10,13 @@
         </li>
         <li>
             @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>        
+        </li>
+        @if (Model.Results != null)
+        {
+            <li>
+                @Html.ActionLink("Change history", "Index", "ChangeHistory", new {area = ""}, null)
+            </li>
+        } 
     </ul>
 </div>
 
