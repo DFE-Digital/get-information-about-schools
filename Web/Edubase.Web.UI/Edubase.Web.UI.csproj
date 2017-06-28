@@ -365,6 +365,7 @@
     <Compile Include="Models\DataQuality\FullDataQualityStatusViewModel.cs" />
     <Compile Include="Models\DataQuality\Validators\DataQualityStatusItemValidator.cs" />
     <Compile Include="Models\DownloadsViewModel.cs" />
+    <Compile Include="Models\Establishments\CreateChildrensCentreViewModel.cs" />
     <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\EditEstablishmentLinksViewModel.cs" />
     <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
@@ -954,6 +955,7 @@
     <Content Include="Views\ChangeHistory\ReadyToDownload.cshtml" />
     <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
     <Content Include="Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
+    <Content Include="Views\Establishment\CreateChildrensCentre.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
