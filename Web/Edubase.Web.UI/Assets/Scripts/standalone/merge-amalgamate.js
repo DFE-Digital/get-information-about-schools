@@ -536,12 +536,13 @@
                 var self = this;
                 $('a, [value="cancel"]').on('click', function (e) {
                     self.exitUrl = $(this).attr('href');
-                    if (!self.completeAmalgamation || !self.mergerComplete) {
+                    if ((self.mergerType === 'amalgamation' && !self.completeAmalgamation) ||
+                        (self.mergerType == 'merger' && !self.mergerComplete)) {
                         e.preventDefault();
                         self.presentExitWarning = true;
                     }
                 });
-            },
+            },            
             restart: function () {
                 if (!this.mergerTypeConfirmed) {
                     window.location = '/Tools';
