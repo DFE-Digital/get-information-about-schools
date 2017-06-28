@@ -40,7 +40,7 @@ namespace Edubase.Web.UI.Models
         public bool IsEstablishmentSearch => SearchType == "establishment";
         public ApiSearchResult<ChangeHistorySearchItem> Results { get; internal set; }
         public long Count => (Results?.Count).GetValueOrDefault();
-        public int PageSize { get; set; } = 50;
+        public int PageSize { get; set; } = 100;
         public int StartIndex { get; set; }
         public int PageCount => (int)Math.Ceiling(Count / (double)PageSize);
         public bool ClearResults { get; set; }

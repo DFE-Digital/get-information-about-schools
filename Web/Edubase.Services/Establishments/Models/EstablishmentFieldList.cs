@@ -5,12 +5,6 @@
     /// </summary>
     public class EstablishmentFieldList : EstablishmentFieldListBase
     {
-        public bool HeadteacherDetails
-        {
-            set { HeadFirstName = HeadLastName = HeadTitleId = value; }
-            get { return HeadFirstName && HeadLastName && HeadTitleId; }
-        }
-
         public bool AgeRange
         {
             set { StatutoryHighAge = StatutoryLowAge = value; }

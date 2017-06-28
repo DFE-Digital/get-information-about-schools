@@ -37,25 +37,25 @@ namespace Edubase.Services.Texuna.Establishments
         }
 
         public async Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
-            => new ServiceResultDto<bool>((await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canaccess", principal)).Response.Value);
+            => new ServiceResultDto<bool>((await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canaccess", principal)).GetResponse().Value);
 
         public async Task<bool> CanEditAsync(int urn, IPrincipal principal)
             =>  (await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canedit", principal)).Response.Value;
 
         public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
-            => new ServiceResultDto<EstablishmentModel>((await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}", principal, false)).Response);
+            => new ServiceResultDto<EstablishmentModel>((await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}", principal, false)).GetResponse());
 
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
-            => (await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes?take={take}", user)).Response;
+            => (await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes?take={take}", user)).GetResponse();
 
         public async Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user)
-            => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/display-policy", user)).Response.Initialise(establishment);
+            => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/display-policy", user)).GetResponse().Initialise(establishment);
 
         public async Task<EstablishmentDisplayEditPolicy> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user) 
-            => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/edit-policy", user)).Response.Initialise(establishment);
+            => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/edit-policy", user)).GetResponse().Initialise(establishment);
 
         public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn, IPrincipal principal) 
-            => (await _httpClient.GetAsync<List<LinkedEstablishmentModel>>($"establishment/{urn}/linked-establishments", principal)).Response;
+            => (await _httpClient.GetAsync<List<LinkedEstablishmentModel>>($"establishment/{urn}/linked-establishments", principal)).GetResponse();
 
         public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal)
         {
@@ -64,13 +64,13 @@ namespace Edubase.Services.Texuna.Establishments
         }
 
         public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)
-            => (await _httpClient.GetAsync<List<LookupDto>>("establishment/permittedstatuses", principal)).Response.Select(x => x.Id).ToArray();
+            => (await _httpClient.GetAsync<List<LookupDto>>("establishment/permittedstatuses", principal)).GetResponse().Select(x => x.Id).ToArray();
 
         public async Task<ApiSearchResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
-            => (await _httpClient.PostAsync<ApiSearchResult<EstablishmentModel>>("establishment/search", payload, principal)).Response;
+            => (await _httpClient.PostAsync<ApiSearchResult<EstablishmentModel>>("establishment/search", payload, principal)).GetResponse();
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10) 
-            => (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).Response;
+            => (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
         
         public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model)
         {

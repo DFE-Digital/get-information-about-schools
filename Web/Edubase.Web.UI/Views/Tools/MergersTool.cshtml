@@ -155,8 +155,8 @@
 
             <dl class="merger-list">
                 <dt>Establishments to be merged</dt>
-                <dd v-for="school in mergerEstabs">
-                    <strong>{{school.name}}</strong>
+                <dd v-for="(school, index) in mergerEstabs">
+                    <strong v-if="school.urn !=leadEstab">{{school.name}}</strong>
                 </dd>
             </dl>
 

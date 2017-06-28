@@ -831,3 +831,19 @@ p.table-caption {
 .no-bottom-margin {
     margin-bottom: 0;
 }
+
+.helpdesk-table {
+    thead th {
+        font-weight: bold;
+    }
+
+    .row-header {
+        width: 36%;
+    }
+}
+
+.establishment-changes {
+    thead th {
+        padding-top: 0;
+    }
+}

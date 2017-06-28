@@ -90,6 +90,7 @@ namespace Edubase.Web.UI.Models
         public string HeadLastName { get; set; }
         public int? HeadTitleId { get; set; }
         public string HeadEmailAddress { get; set; }
+        public DateTimeViewModel HeadAppointmentDate { get; set; } = new DateTimeViewModel();
         public ContactDetailsViewModel Contact { get; set; } = new ContactDetailsViewModel();
         public ContactDetailsViewModel ContactAlt { get; set; } = new ContactDetailsViewModel();
         public int? EstablishmentNumber { get; set; }

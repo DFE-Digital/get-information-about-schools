@@ -10,21 +10,18 @@
         </li>
         <li>
             @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-        <li>
-            Change history
-        </li>
+        </li>        
     </ul>
 </div>
 
-<h1 class="heading-large">Change history</h1>
+<h1 class="heading-intro">Change history</h1>
 
 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 <div class="grid-row" id="change-history-app">
     @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
     {
-        <div class="column-full" style="display:@(Model.Results == null ? "" : "none");">
+        <div class="column-full @(Model.Results == null ? "" : "hidden")" >
             
             <div class="button-row">
                 <input type="submit" class="button" value="Apply filters" />
@@ -86,6 +83,7 @@
                         @foreach (var item in Model.EstablishmentTypes)
                         {
                             var name = ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS;
+                            
                             <span class="checkbox-wrap">
                                 <input id="@(name + "_" + item.Id)" name="@name" value="@item.Id" type="checkbox" @Html.Conditional(Model.SelectedEstablishmentTypeIds.Contains(item.Id), "checked") />
                                 <label for="@(name + "_" + item.Id)" class="edubase-button-checkbox">@item.Name</label>
@@ -178,7 +176,7 @@
                 </div>
 
                 <div class="changes-list-wrapper">
-                    <table class="edubase-table approval-changes" id="changes-table">
+                    <table class="edubase-table approval-changes establishment-changes" id="changes-table">
                         <thead>
                             <tr>
                                 @if (Model.IsEstablishmentSearch)
@@ -256,36 +254,58 @@
 
 
     <script>
-        (function () {
+        (function() {
             var panels = document.querySelectorAll('.expander-panel');
 
-            Array.prototype.forEach.call(panels, function (el) {
-                var trigger = el.querySelectorAll('.panel-trigger')[0];
+            Array.prototype.forEach.call(panels,
+                function(el) {
+                    var trigger = el.querySelectorAll('.panel-trigger')[0];
+                    var checkBoxes = el.querySelectorAll('.checkbox-wrap');
 
-                trigger.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    el.classList.toggle('open-expander');
+                    trigger.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        el.classList.toggle('open-expander');
+
+                        if (!el.getAttribute('data-checkboxheight')) {
+                            for (var i = 0, len = checkBoxes.length; i < len; i++) {
+                                var chxBox = checkBoxes[i];
+                                if (chxBox.offsetHeight > 45) {
+                                    chxBox.classList.add('long-label');
+                                }
+                                chxBox.addEventListener('click', function() {
+                                    if (!el.getAttribute('data-checkboxescleared')) {
+                                        [].forEach.call(checkBoxes, function (cb) {
+                                            cb.childNodes[0].checked = false;
+                                        });
+                                        this.childNodes[0].checked = true;
+                                        el.setAttribute('data-checkboxescleared', 1);
+                                    }
+                                });
+                            }
+
+                            el.setAttribute('data-checkboxheight', 1);
+                        }
+                    });
                 });
-            });
 
             $("#update-search-type-selection").hide();
 
-            $("#searchtype-establishment,#searchtype-group").change(function () {
+            $("#searchtype-establishment,#searchtype-group").change(function() {
                 $("#establishment-search-filters").show();
             });
 
-            $("#searchtype-establishment").change(function () {
+            $("#searchtype-establishment").change(function() {
                 $(".for-search-type-group").hide();
                 $(".for-search-type-establishment").show();
             });
 
-            $("#searchtype-group").change(function () {
+            $("#searchtype-group").change(function() {
                 $(".for-search-type-establishment").hide();
                 $(".for-search-type-group").show();
             });
 
         }());
     </script>
-    
+
 
 }

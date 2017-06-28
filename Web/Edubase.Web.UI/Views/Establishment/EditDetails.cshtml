@@ -127,7 +127,7 @@
                         </div>
                     }
 
-                    @if (Model.EditPolicy.HeadteacherDetails)
+                    @if (Model.EditPolicy.HeadTitleId)
                     {
                         <div class="form-group">
                             <label class="form-label">
@@ -135,6 +135,10 @@
                             </label>
                             @Html.DropDownListFor(x => x.HeadTitleId, Model.HeadTitles, "", new { @class = "form-control" })
                         </div>
+                    }
+
+                    @if (Model.EditPolicy.HeadFirstName)
+                    {
                         <div class="form-group">
                             <label class="form-label" for="headfirstname">
                                 @(Model.EditPolicy.HeadteacherLabel) first name
@@ -142,7 +146,10 @@
                             @Html.TextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", placeholder = "First name" })
                             @Html.HiddenFor(x => x.OldHeadFirstName)
                         </div>
+                    }
 
+                    @if (Model.EditPolicy.HeadLastName)
+                    {
                         <div class="form-group">
                             <label class="form-label">
                                 @(Model.EditPolicy.HeadteacherLabel) last name
@@ -150,17 +157,23 @@
                             @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
                             @Html.HiddenFor(x => x.OldHeadLastName)
                         </div>
-
-                        if (Model.EditPolicy.HeadEmailAddress)
-                        {
-                            <div class="form-group">
-                                <label class="form-label">
-                                    @(Model.EditPolicy.HeadteacherLabel) email address
-                                </label>
-                                @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address" })
-                            </div>
-                        }
                     }
+
+                    @if (Model.EditPolicy.HeadEmailAddress)
+                    {
+                        @Html.EditorFor(x => x.HeadAppointmentDate, new { title = "Headteacher date of appointment" })
+                    }
+
+                    @if (Model.EditPolicy.HeadEmailAddress)
+                    {
+                        <div class="form-group">
+                            <label class="form-label">
+                                @(Model.EditPolicy.HeadteacherLabel) email address
+                            </label>
+                            @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address" })
+                        </div>
+                    }
+                        
 
                     @if (Model.EditPolicy.AgeRange)
                     {

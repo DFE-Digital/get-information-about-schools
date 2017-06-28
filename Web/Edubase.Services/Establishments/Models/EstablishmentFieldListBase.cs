@@ -79,6 +79,8 @@ namespace Edubase.Services.Establishments.Models
 
         public virtual bool HeadEmailAddress { get; set; }
 
+        public virtual bool HeadAppointmentDate { get; set; }
+
         public virtual bool Contact_TelephoneNumber { get; set; }
 
         public virtual bool Contact_EmailAddress { get; set; }

@@ -18,30 +18,37 @@
             }
         </td>
     </tr>
-
-    @if (Model.DisplayPolicy.HeadteacherDetails)
+    <tr>
+        <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel):</th>
+        <td>
+            @if (Model.DisplayPolicy.HeadTitleId)
+            {
+                <text>@Model.HeadTitleName</text>
+            }
+            @if (Model.DisplayPolicy.HeadFirstName)
+            {
+                <text>@Model.Establishment.HeadFirstName</text>
+            }
+            @if (Model.DisplayPolicy.HeadLastName)
+            {
+                <text>@Model.Establishment.HeadLastName</text>
+            }
+        </td>
+    </tr>
+    @if (User.Identity.IsAuthenticated)
     {
         <tr>
-            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel):</th>
+            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th>
             <td>
-                @Model.HeadTitleName @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
+                @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
             </td>
         </tr>
-        @*<tr>
-            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th> // TODO TEXCHANGE
+        <tr>
+            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) email address</th>
             <td>
-                @Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded"
+                @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
             </td>
-        </tr>*@
-        if (User.Identity.IsAuthenticated)
-        {
-            <tr>
-                <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) email address</th>
-                <td>
-                    @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
-                </td>
-            </tr>
-        }
+        </tr>
     }
 
     @if (Model.DisplayPolicy.HeadEmailAddress)

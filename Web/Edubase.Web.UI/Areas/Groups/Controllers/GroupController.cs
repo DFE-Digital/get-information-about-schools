@@ -319,9 +319,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 StatusId = (int)eLookupGroupStatus.Open,
                 GroupId = viewModel.GroupId
             });
-            
-            var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
-            if(validationEnvelope.HasErrors) validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+
+            if (ModelState.IsValid)
+            {
+                var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
+                if (validationEnvelope.HasErrors) validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+            }
 
             if (ModelState.IsValid)
             {

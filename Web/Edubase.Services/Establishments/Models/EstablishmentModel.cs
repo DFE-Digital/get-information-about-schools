@@ -113,21 +113,22 @@ namespace Edubase.Services.Establishments.Models
         #endregion
 
 
-        [DisplayName("Headteacher/Principal first name")]
+        [DisplayName("Headteacher/principal/manager first name")]
         public string HeadFirstName { get; set; }
 
-        [DisplayName("Headteacher/Principal last name")]
+        [DisplayName("Headteacher/principal/manager last name")]
         public string HeadLastName { get; set; }
 
-        [DisplayName("Headteacher/Principal title")]
+        [DisplayName("Headteacher/principal/manager title")]
         public int? HeadTitleId { get; set; }
+
+        [DisplayName("Headteacher/principal/manager appointment date")]
+        public DateTime? HeadAppointmentDate { get; set; }
 
         public string HeadEmailAddress { get; set; }
 
         public string HeadPreferredJobTitle { get; set; }
-
-        //public DateTime? HeadAppointmentDate { get; set; }
-
+        
         public string Contact_TelephoneNumber { get; set; }
 
         public string Contact_EmailAddress { get; set; }
