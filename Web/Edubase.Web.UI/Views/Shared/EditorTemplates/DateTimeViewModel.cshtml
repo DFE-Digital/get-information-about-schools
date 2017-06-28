@@ -21,46 +21,49 @@
     }
     else
     {
-        classBinding = "class=\"form-group create-edit-form-group date-group @Html.ValidationCssClassFor(x => x) @Html.ValidationCssClassFor(x => x.Day) @Html.ValidationCssClassFor(x => x.Month) @Html.ValidationCssClassFor(x => x.Year)\"";
+        classBinding = "class=\"form-group create-edit-form-group date-group " 
+            + Html.ValidationCssClassFor(x => x) + " " + Html.ValidationCssClassFor(x => x.Day) + " " 
+            + Html.ValidationCssClassFor(x => x.Month) + " " 
+            + Html.ValidationCssClassFor(x => x.Year) + "\"";
     }
 }
 <div @Html.Raw(classBinding)>
-            <fieldset class="range-group">
-                <legend class="bold-xsmall">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
-                @if (!disableHint)
-                {
-                    <div class="form-hint">For example, 20 03 2003</div>
-                }
+    <fieldset class="range-group">
+        <legend class="bold-xsmall" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
+        @if (!disableHint)
+        {
+            <div class="form-hint">For example, 20 03 2003</div>
+        }
                 
-                @if (showReactivationWarning)
-                {
-                    <div class="warning-message"><p>Changing this date may reactivate the record</p></div>
-                }
+        @if (showReactivationWarning)
+        {
+            <div class="warning-message"><p>Changing this date may reactivate the record</p></div>
+        }
 
-                @Html.ValidationMessageFor(x => x)
-                @Html.ValidationMessageFor(x => x.Day)  
-                @Html.ValidationMessageFor(x => x.Month)
-                @Html.ValidationMessageFor(x => x.Year)
+        @Html.ValidationMessageFor(x => x)
+        @Html.ValidationMessageFor(x => x.Day)  
+        @Html.ValidationMessageFor(x => x.Month)
+        @Html.ValidationMessageFor(x => x.Year)
 
-                @if (ViewData["vueModel"] != null)
-                {
-                    <span class="error-message" v-show="@showBinding" v-html="@messageBinding"></span>
-                }
+        @if (ViewData["vueModel"] != null)
+        {
+            <span class="error-message" v-show="@showBinding" v-html="@messageBinding"></span>
+        }
 
-                <span class="inline-form-control">
-                    @Html.LabelFor(x => x.Day)
-                    @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Day") : null))
-                </span>
-                <span class="inline-form-control">
-                    @Html.LabelFor(x => x.Month)
-                    @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Month") : null))
-                </span>
-                <span class="inline-form-control">
-                    @Html.LabelFor(x => x.Year)
-                    @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Year") : null))
-                </span>
-            </fieldset>
-        </div>
+        <span class="inline-form-control">
+            @Html.LabelFor(x => x.Day)
+            @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Day") : null))
+        </span>
+        <span class="inline-form-control">
+            @Html.LabelFor(x => x.Month)
+            @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Month") : null))
+        </span>
+        <span class="inline-form-control">
+            @Html.LabelFor(x => x.Year)
+            @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, "form-control", 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Year") : null))
+        </span>
+    </fieldset>
+</div>
 
 @functions
 {

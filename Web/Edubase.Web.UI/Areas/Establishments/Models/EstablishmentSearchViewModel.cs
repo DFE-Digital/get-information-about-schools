@@ -240,10 +240,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public List<int> SelectedUrbanRuralIds { get; set; } = new List<int>();
         public IEnumerable<LookupItemViewModel> UrbanRuralDesignations { get; set; }
 
-
-        [BindAlias(BIND_ALIAS_WARD)]
-        public List<int> SelectedWardIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> Wards { get; set; }
+        
 
         
         /// <summary>

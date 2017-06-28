@@ -129,7 +129,18 @@ namespace Edubase.Services
                 return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
             }
         }
-        
+
+        public async Task<ApiResponse<TSuccess, TValidationEnvelope>> PutAsync<TSuccess, TValidationEnvelope>(string uri, object payload, IPrincipal principal)
+            where TValidationEnvelope : class
+        {
+            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
+            {
+                var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, payload);
+                var result = await SendAsync(requestMessage);
+                return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
+            }
+        }
+
         /// <summary>
         /// Posts a multipart request to the API
         /// </summary>

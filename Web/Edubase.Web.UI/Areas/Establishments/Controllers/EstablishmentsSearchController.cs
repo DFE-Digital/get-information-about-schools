@@ -106,8 +106,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     .Select(x => new LookupItemViewModel(x));
                 vm.UrbanRuralDesignations = (await _lookupService.UrbanRuralGetAllAsync()).OrderBy(x => x.Name)
                     .Select(x => new LookupItemViewModel(x));
-                vm.Wards = (await _lookupService.AdministrativeWardsGetAllAsync()).OrderBy(x => x.Name)
-                    .Select(x => new LookupItemViewModel(x));
             }
             return vm;
         }
@@ -182,8 +180,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.ProvisionSpecialClassesIds = model.SelectedSpecialClassesProvisionIds.ToArray();
             filters.SENIds = model.SelectedTypeOfSENProvisionIds.ToArray();
             filters.UrbanRuralIds = model.SelectedUrbanRuralIds.ToArray();
-            filters.AdministrativeWardIds = model.SelectedWardIds.ToArray();
-
+            
             payload.SortBy = model.GetSortOption();
 
             return retVal.Set(payload);

@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -366,8 +366,12 @@
     <Compile Include="Models\DataQuality\Validators\DataQualityStatusItemValidator.cs" />
     <Compile Include="Models\DownloadsViewModel.cs" />
     <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
+    <Compile Include="Models\Establishments\EditEstablishmentLinksViewModel.cs" />
     <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
+    <Compile Include="Models\Establishments\SearchForEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\Validators\CreateEstablishmentViewModelValidator.cs" />
+    <Compile Include="Models\Establishments\Validators\SearchForEstablishmentViewModelValidator.cs" />
+    <Compile Include="Models\Establishments\Validators\EditEstablishmentLinksViewModelValidator.cs" />
     <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
@@ -948,6 +952,7 @@
     <Content Include="Views\ChangeHistory\Index.cshtml" />
     <Content Include="Views\ChangeHistory\ReadyToDownload.cshtml" />
     <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
+    <Content Include="Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
@@ -1000,6 +1005,8 @@
     <Content Include="Views\DataQuality\ViewStatus.cshtml" />
     <Content Include="Views\Establishment\Partials\TabHelpdesk.cshtml" />
     <Content Include="Views\Establishment\EditHelpdesk.cshtml" />
+    <Content Include="Views\Establishment\EditLinks.cshtml" />
+    <Content Include="Views\Establishment\AddEditLink.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

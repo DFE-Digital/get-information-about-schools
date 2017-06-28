@@ -17,10 +17,12 @@ namespace Edubase.Services.Texuna.Establishments
     public class EstablishmentWriteApiService : IEstablishmentWriteService
     {
         private readonly HttpClientWrapper _httpClient;
-        
-        public EstablishmentWriteApiService(HttpClientWrapper httpClient)
+        private readonly IEstablishmentReadService _establishmentReadService;
+
+        public EstablishmentWriteApiService(HttpClientWrapper httpClient, IEstablishmentReadService establishmentReadService)
         {
             _httpClient = httpClient;
+            _establishmentReadService = establishmentReadService;
         }
 
         public async Task SaveAsync(EstablishmentModel model, bool overrideCR, DateTime? effectiveDate, IPrincipal principal)
@@ -118,7 +120,34 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<ApiResponse<object, ValidationEnvelopeDto[]>> SaveLinkedEstablishmentsAsync(int urn, LinkedEstablishmentModel[] linkedEstablishmentModels, IPrincipal principal)
         {
-            return await _httpClient.PostAsync<object, ValidationEnvelopeDto[]>($"establishment/{urn}/linked-establishments", linkedEstablishmentModels, principal);
+            return await _httpClient.PutAsync<object, ValidationEnvelopeDto[]>($"establishment/{urn}/linked-establishments", linkedEstablishmentModels, principal);
         }
+
+        public async Task<ApiResponse<object, ValidationEnvelopeDto[]>> DeleteLinkedEstablishmentAsync(int urn, int linkId, IPrincipal principal)
+        {
+            var set = (await _establishmentReadService.GetLinkedEstablishmentsAsync(urn, principal)).ToList();
+            set.Remove(set.First(x => x.Id == linkId));
+            return await SaveLinkedEstablishmentsAsync(urn, set.ToArray(), principal);
+        }
+
+        public async Task<ApiResponse<object, ValidationEnvelopeDto[]>> AddLinkedEstablishmentAsync(int parentUrn, int urnToLink, int linkTypeId, DateTime linkDate, IPrincipal principal)
+        {
+            var set = (await _establishmentReadService.GetLinkedEstablishmentsAsync(parentUrn, principal)).ToList();
+
+            if (!set.Any(x => x.Urn == urnToLink))
+            {
+                set.Add(new LinkedEstablishmentModel
+                {
+                    LinkDate = linkDate,
+                    LinkTypeId = linkTypeId,
+                    Urn = urnToLink
+                });
+            }
+
+            return await SaveLinkedEstablishmentsAsync(parentUrn, set.ToArray(), principal);
+        }
+
+
+
     }
 }
