@@ -222,31 +222,31 @@ else
                                 if (Model.RemovalGid != row.Model.Id)
                                 {
                                     <div class="button-wrapper">
-                                        @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody))
+                                        @if (Model.EstablishmentUrn.HasValue && row.Model.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
                                         {
                                             @Html.RouteLink("Edit", "EditSharedGovernor",
-                                            new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id },
-                                            new { @class = "button button-grey mobile-full-width" })
+                                                new {establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id},
+                                                new {@class = "button button-grey mobile-full-width"})
                                         }
                                         else
                                         {
                                             @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
-                                            new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id },
-                                            new { @class = "button button-grey mobile-full-width" })
+                                                new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
+                                                new {@class = "button button-grey mobile-full-width"})
                                         }
 
                                         @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
                                         {
                                             @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor",
-                                            new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id },
-                                            new { @class = "button button-grey mobile-full-width" })
+                                                new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
+                                                new {@class = "button button-grey mobile-full-width"})
                                         }
                                         else
                                         {
                                             @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
-                                            null, null, "gid-" + row.Model.Id,
-                                            new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id },
-                                            new { @class = "button button-grey mobile-full-width" })
+                                                null, null, "gid-" + row.Model.Id,
+                                                new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id},
+                                                new {@class = "button button-grey mobile-full-width"})
                                         }
                                     </div>
                                 }
