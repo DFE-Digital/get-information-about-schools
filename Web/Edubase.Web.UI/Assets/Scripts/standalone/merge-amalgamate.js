@@ -74,7 +74,8 @@
             presentExitWarning: false,
             completeAmalgamation: false,
             amalgUrn: '',
-            exitUrl: ''
+            exitUrl: '',
+            isProcessing: false
         },
         created: function () {
             this.populateSelect('new-establishment-type', this.types);
@@ -202,6 +203,7 @@
                     if (self.linkedEstab0Valid && self.linkedEstab1Valid && self.linkedEstab2Valid && self.leadEstabValid) {
                         self.validMergeUrns = true;
                     }
+                    self.isProcessing = false;
                 }
 
                 this.linkedEstabError = false;
@@ -216,6 +218,7 @@
                 }
 
                 var promise = [];
+                
                 if (this.leadEstab !== '') {                    
                     this.leadEstabValid = false;
                     this.fieldCount++;
@@ -242,6 +245,7 @@
                 }
 
                 if (promise.length > 1) {
+                    this.isProcessing = true;
                     $.when(promise.join(',')).done(
                         function () {
                             var tt;
@@ -334,6 +338,7 @@
                 this.fieldCount = 0;
                 var self = this;
                 this.amalgamationEstabs = [];
+                
                 var presentValidation = function () {
                     if (!self.amalgamatedEstab0Valid || !self.amalgamatedEstab1Valid || !self.amalgamatedEstab2Valid || !self.amalgamatedEstab3Valid) {
                         self.amalgamateUrnError = true;
@@ -344,6 +349,7 @@
                         self.amalgamatedEstab3Valid) {
                             self.validMergeUrns = true;
                     }
+                    self.isProcessing = false;
                 }
 
                 this.linkedEstabError = false;
@@ -359,6 +365,7 @@
                 }
 
                 var promise = [];
+
                 if (this.amalgamatedEstab0 !== '') {                    
                     this.amalgamatedEstab0Valid = false;
                     this.fieldCount++;
@@ -385,6 +392,7 @@
                 }
 
                 if (promise.length >= 2) {
+                    this.isProcessing = true;
                     $.when(promise.join(',')).done(
                         function () {
                             var tt;
@@ -408,7 +416,7 @@
             processMerger: function () {
                 var self = this;
                 var postData = {};
-
+                
                 postData.operationType = 'merge';
                 postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
                 postData.LeadEstablishmentUrn = this.leadEstab;
@@ -426,6 +434,7 @@
 
                 if (!this.mergeDateError) {
                     this.validLinkDate = true;
+                    this.isProcessing = true;
                     $.ajax({
                         url: self.commitApi,
                         method: 'post',
@@ -435,6 +444,7 @@
                         success: function (data) {
                             if (data.hasOwnProperty('successful') && data.successful) {
                                 self.mergerComplete = true;
+                                self.isProcessing = false;
                             }
                         },
                         error: function (jqXHR) {
@@ -445,13 +455,14 @@
                                 if (item === 'validationEnvelope') {
                                     var env = errObj[item][0].errors;
                                     env.forEach(function (er) {
-                                        console.log(errObj[item][0].errors);
-                                        console.log(er);
+                                        //console.log(errObj[item][0].errors);
+                                        //console.log(er);
                                         errMessage += er.message + '<br>';
                                     });
                                 }
                             }
                             self.commitErrors = errMessage;
+                            self.isProcessing = false;
                         }
                     });
                 }
@@ -473,6 +484,7 @@
                     !this.mergeDateError &&
                     !this.duplicateUrnsError) {
 
+                    this.isProcessing = true;
                     postData.operationType = 'amalgamate';
                     postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
                     postData.UrnsToMerge = this.amalgamationEstabs.map(function (estab) {
@@ -491,10 +503,10 @@
                         dataType: 'json',
                         data: JSON.stringify(postData),
                         success: function (data) {
-                            console.log(data);
                             if (data.hasOwnProperty('successful') && data.successful) {
                                 self.completeAmalgamation = true;
                                 self.amalgUrn = data.response.amalgamateNewEstablishmentUrn;
+                                self.isProcessing = false;
                             }
                         },
                         error: function (jqXHR) {
@@ -512,6 +524,7 @@
                                 }
                             }
                             self.commitErrors = errMessage;
+                            self.isProcessing = false;
                         }
                     });
                 }
