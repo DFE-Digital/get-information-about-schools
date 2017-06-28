@@ -30,7 +30,7 @@
 
             <fieldset class="inline">
                 <legend class="heading-small">Filter by establishment or group</legend>
-                <div class="form-group">
+                <div class="form-group panel-toggler">
                     <span class="radio-button-wrap">
                         <input id="searchtype-establishment" name="@nameof(Model.SearchType)" value="establishment" type="radio" @Html.Conditional(Model.SearchType == "establishment", "checked") />
                         <label class="edubase-button-radio" for="searchtype-establishment">
@@ -269,20 +269,21 @@
                         if (!el.getAttribute('data-checkboxheight')) {
                             for (var i = 0, len = checkBoxes.length; i < len; i++) {
                                 var chxBox = checkBoxes[i];
-                                if (chxBox.offsetHeight > 45) {
+                                console.log(chxBox.offsetHeight);
+                                if (chxBox.offsetHeight > 64) {
                                     chxBox.classList.add('long-label');
                                 }
-                                chxBox.addEventListener('click', function() {
+                                chxBox.addEventListener('click', function () {
                                     if (!el.getAttribute('data-checkboxescleared')) {
                                         [].forEach.call(checkBoxes, function (cb) {
-                                            cb.childNodes[0].checked = false;
+                                            cb.querySelectorAll('input')[0].checked = false;
                                         });
+
                                         this.childNodes[0].checked = true;
                                         el.setAttribute('data-checkboxescleared', 1);
                                     }
                                 });
                             }
-
                             el.setAttribute('data-checkboxheight', 1);
                         }
                     });
@@ -303,6 +304,14 @@
                 $(".for-search-type-establishment").hide();
                 $(".for-search-type-group").show();
             });
+
+            if ($('#searchtype-establishment').prop('checked')) {
+                $('#searchtype-establishment').change();
+            }
+
+            if ($('#searchtype-group').prop('checked')) {
+                $('#searchtype-group').change();
+            }
 
         }());
     </script>
