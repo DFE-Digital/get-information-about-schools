@@ -1010,6 +1010,7 @@
     <Content Include="Views\Establishment\AddEditLink.cshtml" />
     <Content Include="Views\Home\Guidance.cshtml" />
     <Content Include="Views\Home\Cookies.cshtml" />
+    <Content Include="Views\Home\News.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

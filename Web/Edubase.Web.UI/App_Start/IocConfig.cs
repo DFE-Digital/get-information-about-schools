@@ -119,6 +119,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<DataQualityWriteService>().As<IDataQualityWriteService>();
             builder.RegisterType<DataQualityReadService>().As<IDataQualityReadService>();
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
+
+            builder.RegisterType<BlobService>().As<IBlobService>();
         }
     }
 }

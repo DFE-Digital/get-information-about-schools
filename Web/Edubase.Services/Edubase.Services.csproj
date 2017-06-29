@@ -313,7 +313,6 @@
     <Compile Include="Groups\IGroupReadService.cs" />
     <Compile Include="Groups\Models\GroupModel.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\Base64String.cs" />
-    <Compile Include="IntegrationEndPoints\BlobStorage\BlobStorageEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\PathComponents.cs" />
     <Compile Include="IntegrationEndPoints\Smtp\ISmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\Smtp\MockSmtpEndPoint.cs" />
