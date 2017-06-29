@@ -661,7 +661,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = model.Urn });
                     }
                     
-                    validation.ApplyToModelState(ControllerContext);
+                    validation.ApplyToModelState(ControllerContext, nameof(model.NewLocalGovernor));
                 }
             }
 
