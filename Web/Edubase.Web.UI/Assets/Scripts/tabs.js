@@ -42,6 +42,7 @@
                 $tabs.height(setTabHeight());
             }
             
+
             if (typeof validHashes === 'undefined' || validHashes.length === 0) {
                 return;
             }
