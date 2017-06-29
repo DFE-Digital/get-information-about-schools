@@ -22,6 +22,18 @@ namespace Edubase.Web.UI.Controllers
             model.AllowTrustCreation = User.Identity.IsAuthenticated;
             return View(model);
         }
+
+        [Route("~/cookies")]
+        public ActionResult Cookies()
+        {
+            return View();
+        }
+
+        [Route("~/guidance")]
+        public ActionResult Guidance()
+        {
+            return View();
+        }
         
     }
 }
