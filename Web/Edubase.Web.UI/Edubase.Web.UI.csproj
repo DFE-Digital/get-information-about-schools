@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -1010,6 +1010,7 @@
     <Content Include="Views\Establishment\EditHelpdesk.cshtml" />
     <Content Include="Views\Establishment\EditLinks.cshtml" />
     <Content Include="Views\Establishment\AddEditLink.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Views\Home\Guidance.cshtml" />
     <Content Include="Views\Home\Cookies.cshtml" />
     <Content Include="Views\Home\News.cshtml" />

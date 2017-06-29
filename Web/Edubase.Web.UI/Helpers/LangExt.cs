@@ -22,7 +22,7 @@ namespace Edubase.Web.UI
 
     public static class LangExt
     {
-        public static IEnumerable<SelectListItem> ToSelectList(this IEnumerable<LookupDto> items, int? currentId) 
+        public static IEnumerable<SelectListItem> ToSelectList(this IEnumerable<LookupDto> items, int? currentId = null) 
             => items.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString(), Selected = currentId.HasValue && currentId.Value == x.Id });
 
         public static IEnumerable<SelectListItem> ToSelectList(this IEnumerable<UserGroupModel> items, string currentId)
