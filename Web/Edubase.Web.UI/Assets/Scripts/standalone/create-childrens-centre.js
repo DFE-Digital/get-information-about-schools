@@ -36,7 +36,10 @@
 
             urnLookupUrl: '/api/establishment/{0}',
             urnError: false,
-            appState: 'initial' // initial || groupDetail || addCentre || detail
+            appState: 'initial', // initial || groupDetail || addCentre || detail
+            pendingEdit: false,
+            detailEdit: false,
+            isProcessing: false
 
         },
         computed: {
@@ -94,7 +97,7 @@
                 var self = this;
                 self.openDateError = false;
                 self.joinDateError = false;
-
+                self.isProcessing = true;
                return $.ajax({
                     url: self.dateValidateUrl,
                     method: 'post',
@@ -114,9 +117,11 @@
                             });
 
                         self[dateProp + 'ErrorMessage'] = errors.join('<br>');
-
-                        //return errors;
-                    }
+                        self.isProcessing = false;
+                    },
+                   error: function() {
+                       self.isProcessing = false;
+                   }
                 });
             },
             lookupUrn: function () {
@@ -126,6 +131,7 @@
                     this.urnError = true;
                     return;
                 }
+                this.isProcessing = true;
                 $.ajax({
                     url: self.urnLookupUrl.replace('{0}', self.searchUrn),
                     dataType: 'json',
@@ -135,16 +141,19 @@
                         if (!self.urnError) {
                             self.pendingEstab = data.returnValue;
                             self.appState = 'detail';
+                            self.isProcessing = false;
                         }
                     },
                     error: function () {
                         self.urnError = true;
+                        self.isProcessing = false;
                     }
                 });
             },
             addToGroup: function () {
                 var self = this;
                 $.when(self.validateDate('joinDate')).done(function () {
+                    self.isProcessing = false;
                     if (!self.joinDateError) {
                         
                         self.pendingEstab.joinDate = self.joinDate;
@@ -164,18 +173,19 @@
                 });
             },
             editJoiningEstab: function (urn) {
-                var self = this;
                 this.searchUrn = urn;
+                this.pendingEdit = true;
                 this.pendingEstab = this.centresInGroup.filter(function (estab) {
                     if (urn === estab.urn) {
                         return estab;
                     }
                 })[0];
-                var pos = this.centresInGroup.map(function (estab) {
-                    return estab.urn === urn;
-                });
-                this.centresInGroup.splice(pos, 1);
 
+                var pos = this.centresInGroup.map(function (estab) {
+                    return estab.urn;
+                }).indexOf(urn);
+                
+                this.centresInGroup.splice(pos, 1);
                 var d = this.pendingEstab.joinDate;
                 this.joinDateDay = d.split('/')[0];
                 this.joinDateMonth = d.split('/')[1];
@@ -184,8 +194,8 @@
             },
             removeJoiningEstab: function (urn) {
                 var pos = this.centresInGroup.map(function (estab) {
-                    return estab.urn === urn;
-                });
+                    return estab.urn;
+                }).indexOf(urn);
                 this.centresInGroup.splice(pos, 1);
             },
             generateRadioId: function (urn) {
@@ -206,6 +216,10 @@
                     }
                 });
 
+            },
+            cancelEdit : function() {
+                this.addToGroup();
+                this.pendingEdit = false;
             }
         }
     });

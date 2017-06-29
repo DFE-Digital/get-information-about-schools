@@ -90,6 +90,11 @@ ol {
         clear: left;
         margin-right: 12px;
     }
+    &.fixed-label {
+        dt {
+            width: 120px;
+        }
+    }
 }
 
 .download-list-heading {

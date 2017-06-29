@@ -5,7 +5,7 @@
 }
 
 <div id="create-childrens-centre" v-cloak>
-
+<div aria-live="polite" class="wait-spinner" v-show="isProcessing"><p class="visually-hidden">Please wait</p></div>
     @using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post))
     {
         @Html.HiddenFor(x => x.GroupUId)
@@ -22,12 +22,12 @@
                         </ul>
                     </div>
 
-                    <h1 class="heading-xlarge">@Model.PageTitle</h1>
+                    <h1 class="heading-intro">@Model.PageTitle</h1>
                     @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
                 </div>
 
                 <div class="column-two-thirds">
-                    <div>You can use this to create children's centre groups or collaborations of existing establishments.</div>
+                    <p>You can use this to create children's centre groups or collaborations of existing establishments.</p>
                     <fieldset class="radio-wrap stacked-controls">
                         <legend class="bold-medium">Select the process that you are interested in</legend>
                         <div class="form-group">
@@ -65,13 +65,14 @@
                         </ul>
                     </div>
 
-                    <h1 class="heading-xlarge">Enter the children's centre group details</h1>
+                    <h1 class="heading-intro">Enter the children's centre group details</h1>
+                    
                     @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
                 </div>
                 <div class="column-half">
-                    <div>Add the details of the children's centre group you'd like to create.</div>
+                    <p>Add the details of the children's centre group you'd like to create.</p>
 
-                    <h2 class="bold-medium">Children's centre group details</h2>
+                    <h2 class="heading-medium">Children's centre group details</h2>
                     <div v-bind:class="['form-group', groupNameError? 'error' : '']">
                         <label for="name" class="form-label">Group name</label>
                         @Html.ValidationMessageFor(x => x.GroupName)
@@ -105,14 +106,17 @@
                         <a href="#" class="button mobile-full-width" v-on:click.prevent="step1Continue">
                             Continue
                         </a>
-                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'">
+                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'" v-show="!detailEdit">
                             Cancel
                         </a>
-
+                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="step1Continue" v-show="detailEdit">
+                            Cancel
+                        </a>
+                       
                     </div>
                 </div>
             </div>
-        <div id="step3" v-show="appState==='addCentre'">
+        <div id="step3" v-show="appState==='addCentre' && !isProcessing">
             <div class="column-full">
                 <div class="breadcrumbs">
                     <ul>
@@ -122,21 +126,21 @@
                     </ul>
                 </div>
 
-                <h1 class="heading-xlarge">Add children's centres</h1>
+                <h1 class="heading-intro">Add children's centres</h1>
                 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
             </div>
             <div class="column-full">
-                <div>Add two or more children's centres to create a children's centre group and choose which one you would like as the lead centre.</div>
+                <p>Add two or more children's centres to create a children's centre group and choose which one you would like as the lead centre.</p>
 
-                <h2 class="bold-medium">New children's centre group details</h2>
-                <dl class="key-value-list">
+                <h2 class="heading-medium">New children's centre group details</h2>
+                <dl class="key-value-list fixed-label">
                     <dt>Group Name:</dt>
                     <dd id="group-name">{{groupName}}</dd>
                     <dt>Open date:</dt>
                     <dd id="group-open-date">{{openDate}}</dd>
                     <dt>Group status:</dt>
                     <dd id="group-status">{{groupStatus}}</dd>
-                    <dt>Local authority</dt>
+                    <dt>Local authority:</dt>
                     <dd id="group-la">{{laName}}</dd>
                 </dl>
 
@@ -198,11 +202,11 @@
                         <!--JB: button for childnre-centre-details-->
                         @*<button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentAdd" class="button">Add</button>*@
                         
-                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail'">&laquo;Go back</a>
+                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', detailEdit = true">&laquo; Go back</a>
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
                             <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
-                            <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave">@(Model.InEditMode ? "Submit" : "Continue")</button>
+                            <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave">Submit</button>
                         }
 
                         @(Model.InEditMode
@@ -223,11 +227,12 @@
                         </ul>
                     </div>
 
-                    <h1 class="heading-xlarge">Enter the children's centre details</h1>
+                    <h1 class="heading-intro" v-show="!pendingEdit">Enter the children's centre details</h1>
+                    <h1 class="heading-intro" v-show="pendingEdit">Edit the children's centre group details</h1>
                     @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
                 </div>
                 <div class="column-full">
-                    <div>Ensure this is the right children's centre and add a joined date.</div>
+                    <p>Ensure this is the right children's centre and add a joined date.</p>
                     <h2 class="bold-medium">Childrens centre</h2>
                     <p>
                         {{pendingEstab.name}}
@@ -236,7 +241,7 @@
                         <br/>
                         URN: {{pendingEstab.urn}}
                         <br/>
-                        <a href="#" v-on:click.prevent="appState='addCentre', searchUrn=''">Wrong establishment?</a>
+                        <a href="#" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Wrong establishment?</a>
                     </p>
                     
                     @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", vueModel="joinDate" })
@@ -245,8 +250,14 @@
                     @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                     
                     <div class="button-row">
-                        <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup">Add</a>
-                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='addCentre', searchUrn=''">Cancel</a>
+                        <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup">
+                            <span v-show="!pendingEdit">Add</span>
+                            <span v-show="pendingEdit">Update</span>
+                        </a>
+                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Cancel</a>
+                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="cancelEdit" v-show="pendingEdit">
+                            Cancel
+                        </a>
                     </div>
 
                 </div>
@@ -257,6 +268,6 @@
 </div>
 @section ViewScripts
 {
-    <script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>
-    @*<script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>*@
+    @*<script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>*@
+    <script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>
 }
