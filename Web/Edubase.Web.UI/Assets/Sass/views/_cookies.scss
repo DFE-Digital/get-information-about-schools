@@ -1,0 +1,65 @@
+﻿.cookies {
+    .font-small {
+      font-family: "nta", Arial, sans-serif;
+      font-weight: 400;
+      text-transform: none;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .table-wrapper {
+      margin-bottom: 40px;
+    }
+
+    .report-table thead th,
+    .report-table thead td {
+      border: #bfc1c3 2px solid;
+    }
+
+    .report-table tbody tr td:first-child {
+      text-align: right;
+    }
+
+    .report-table .header-row1 th {
+      width: 20%;
+    }
+
+    .report-table .header-row1 .cohort-heading {
+      width: 5%;
+    }
+
+    .report-table .header-row1 .breakdown-heading {
+      width: 15%;
+    }
+
+    .report-table .header-row2 th {
+      width: 50%;
+    }
+
+    .report-table .row-header {
+      width: 18%;
+      text-align: right;
+    }
+
+    .report-table .grouping-header {
+      width: 12%;
+      font-weight: bold;
+      vertical-align: middle;
+    }
+
+    .report-table caption {
+      visibility: hidden;
+    }
+
+    .report-table .group-row-heading {
+      width: 20%;
+    }
+
+    .report-table .secondary-group-row-heading {
+      width: 14%;
+    }
+
+    .u-textLeft {
+      text-align: left !important;
+    }
+}
