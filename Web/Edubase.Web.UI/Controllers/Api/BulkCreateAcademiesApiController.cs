@@ -51,10 +51,10 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         [Route("api/bulk-create-academies/progress/{id}"), HttpGet, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
-        public async Task<IHttpActionResult> ProcessValidateRequestAsync(Guid id)
+        public async Task<IHttpActionResult> ProcessProgressRequestAsync(Guid id)
         {
             var result = await _establishmentWriteService.GetBulkCreateAcademiesProgress(id, User);
-            if (!result.Success) return Ok(result.GetResponse());
+            if (result.Success) return Ok(result.GetResponse());
             else return Content(HttpStatusCode.BadRequest, result.Errors);
         }
     }
