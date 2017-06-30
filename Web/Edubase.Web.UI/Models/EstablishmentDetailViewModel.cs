@@ -131,6 +131,9 @@ namespace Edubase.Web.UI.Models
         public string AltAddressCountyName { get; set; }
         public string OfstedRatingName { get; set; }
         public string HelpdeskPreviousLocalAuthorityName { get; set; }
+        
+        public string IEBTProprietorsAddressCountyName { get; set; }
+        public string IEBTChairOfProprietorsBodyAddressCountyName { get; set; }
         #endregion
 
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ", 
@@ -139,7 +142,8 @@ namespace Edubase.Web.UI.Models
             Establishment.Address_Line3, 
             Establishment.Address_Locality, 
             Establishment.Address_CityOrTown, 
-            AddressCountyName);
+            AddressCountyName, 
+            Establishment.Address_PostCode);
 
         public string GetAltAddress() => StringUtil.ConcatNonEmpties(", ",
             Establishment.AltStreet,
@@ -148,6 +152,22 @@ namespace Edubase.Web.UI.Models
             Establishment.AltTown,
             AltAddressCountyName,
             Establishment.AltPostCode);
+
+        public string GetProprietorsAddress() => StringUtil.ConcatNonEmpties(", ",
+            Establishment.IEBTModel.ProprietorsStreet,
+            Establishment.IEBTModel.ProprietorsLocality,
+            Establishment.IEBTModel.ProprietorsAddress3,
+            Establishment.IEBTModel.ProprietorsTown,
+            IEBTProprietorsAddressCountyName,
+            Establishment.IEBTModel.ProprietorsPostcode);
+
+        public string GetChairOfProprietorsBodyAddress() => StringUtil.ConcatNonEmpties(", ",
+            Establishment.IEBTModel.ChairOfProprietorsBodyStreet,
+            Establishment.IEBTModel.ChairOfProprietorsBodyLocality,
+            Establishment.IEBTModel.ChairOfProprietorsBodyAddress3,
+            Establishment.IEBTModel.ChairOfProprietorsBodyTown,
+            IEBTChairOfProprietorsBodyAddressCountyName,
+            Establishment.IEBTModel.ChairOfProprietorsBodyPostcode);
 
         public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
 
