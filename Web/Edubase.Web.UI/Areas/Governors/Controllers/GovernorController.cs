@@ -157,6 +157,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.DelegationInformation = x.DelegationInformation;
                 });
 
+
+
                 viewModel.RemovalGid = removalGid;
                 viewModel.GovernorShared = false;
                 if (removalGid.HasValue)
@@ -279,7 +281,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (establishmentUrn.HasValue || establishmentModel != null)
             {
                 var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
-                viewModel.GovernanceMode = estabDomainModel.GovernanceMode;
+                var items = await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, User); // The API uses 1 as a default value, hence we have to call another API to deduce whether to show the Governance mode UI section
+                viewModel.GovernanceMode = items.Any() ? estabDomainModel.GovernanceMode : null;
             }
 
             if (groupUId.HasValue)
@@ -770,7 +773,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 var domainModel = (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
                 var displayPolicy = (await _establishmentReadService.GetDisplayPolicyAsync(domainModel, User));
-
+                var permissibleGovernanceModes = await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, User);
+                if (!permissibleGovernanceModes.Any()) domainModel.GovernanceModeId = null; // hack the model returned.
                 var vm = (IEstablishmentPageViewModel)viewModel;
                 vm.Layout = ESTAB_LAYOUT;
                 vm.Name = domainModel.Name;
