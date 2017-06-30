@@ -705,41 +705,45 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("CreateCC")]
+        [HttpPost, EdubaseAuthorize, Route("CreateChildrensCentre")]
         public async Task<ActionResult> CreateChildrensCentre(CreateChildrensCentreViewModel model)
         {
             model.EducationPhaseId = 3;
             model.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             model.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
 
+            var newEstablishment = new EstablishmentModel
+            {
+                EducationPhaseId = model.EducationPhaseId,
+                TypeId = 41,
+                LocalAuthorityId = model.LocalAuthorityId,
+                Name = model.Name,
+                OpenDate = model.OpenDate.ToDateTime(),
+                Address_Line1 = model.Address.Line1,
+                Address_Line2 = model.Address.Line2,
+                Address_Line3 = model.Address.Line3,
+                Address_CityOrTown = model.Address.CityOrTown,
+                Address_CountyId = model.Address.County,
+                Address_PostCode = model.Address.PostCode,
+                HeadFirstName = model.ManagerFirstName,
+                HeadLastName = model.ManagerLastName,
+                HeadEmailAddress = model.ManagerEmail,
+                Contact_TelephoneNumber = model.Telephone,
+                CCOperationalHoursId = model.OperationalHoursId,
+                CCUnder5YearsOfAgeCount = model.NumberOfUnderFives,
+                CCGovernanceId = model.GovernanceId,
+                CCGovernanceDetail = model.GovernanceDetail,
+                CCDisadvantagedAreaId = model.DisadvantagedAreaId,
+                CCDirectProvisionOfEarlyYearsId = model.DirectProvisionOfEarlyYears,
+                StatusId = model.EstablishmentStatusId
+            };
+
+            var validation = await _establishmentWriteService.ValidateAsync(newEstablishment, User);
+            validation.ApplyToModelState(ControllerContext);
+
             if (ModelState.IsValid)
             {
-                var request = new EstablishmentModel
-                {
-                    EducationPhaseId = model.EducationPhaseId,
-                    TypeId = 41,
-                    LocalAuthorityId = model.LocalAuthorityId,
-                    Name = model.Name,
-                    OpenDate = model.OpenDate.ToDateTime(),
-                    Address_Line1 = model.Address.Line1,
-                    Address_Line2 = model.Address.Line2,
-                    Address_Line3 = model.Address.Line3,
-                    Address_CityOrTown = model.Address.CityOrTown,
-                    Address_CountyId = model.Address.County,
-                    Address_PostCode = model.Address.PostCode,
-                    HeadFirstName = model.ManagerFirstName,
-                    HeadLastName = model.ManagerLastName,
-                    HeadEmailAddress = model.ManagerEmail,
-                    Contact_TelephoneNumber = model.Telephone,
-                    CCOperationalHoursId = model.OperationalHoursId,
-                    CCUnder5YearsOfAgeCount = model.NumberOfUnderFives,
-                    CCGovernanceId = model.GovernanceId,
-                    CCGovernanceDetail = model.GovernanceDetail,
-                    CCDisadvantagedAreaId = model.DisadvantagedAreaId,
-                    CCDirectProvisionOfEarlyYearsId = model.DirectProvisionOfEarlyYears,
-                    StatusId = model.EstablishmentStatusId
-                };
-                var response = await _establishmentWriteService.CreateNewAsync(request, User);
+                var response = await _establishmentWriteService.CreateNewAsync(newEstablishment, true, User);
 
                 if (response.Success)
                 {

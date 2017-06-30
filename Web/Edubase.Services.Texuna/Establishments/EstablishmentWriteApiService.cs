@@ -70,6 +70,11 @@ namespace Edubase.Services.Texuna.Establishments
             return Unwrap(await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={model.GenerateEstabNumber.ToString().ToLower()}", apiModel, principal));
         }
 
+        public async Task<ApiResponse<int>> CreateNewAsync(EstablishmentModel model, bool generateEstablishmentNumber, IPrincipal principal)
+        {
+            return Unwrap(await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={generateEstablishmentNumber.ToString().ToLower()}", model, principal));
+        }
+
         public async Task<BulkUpdateProgressModel> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)
         {
             return (await _httpClient.PostMultipartAsync<BulkUpdateProgressModel>("establishment/bulk-update", bulkUpdateInfo, bulkUpdateInfo.FileName, principal)).GetResponse();
