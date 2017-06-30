@@ -239,7 +239,6 @@ namespace Edubase.Web.UI.Models
         #region IEBT properties
         public string Notes { get; set; }
         public DateTimeViewModel DateOfTheLastBridgeVisit { get; set; } = new DateTimeViewModel();
-        //public DateTime? DateOfTheLastOfstedVisit { get; set; }//OfstedInspectionDate
         public DateTimeViewModel DateOfTheLastISIVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfTheLastWelfareVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfTheLastFPVisit { get; set; } = new DateTimeViewModel();
@@ -248,19 +247,12 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel NextGeneralActionRequired { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel NextActionRequiredByWEL { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel NextActionRequiredByFP { get; set; } = new DateTimeViewModel();
-        //public Lookup Inspectorate { get; set; } //InspectorateId
-        public int? IndependentSchoolTypeId { get; set; } // LookupIndependentSchoolType
+        public int? IndependentSchoolTypeId { get; set; }
         public string CharityOrganisation { get; set; }
         public int? CharityRegistrationNumber { get; set; }
         public int? TotalNumberOfFullTimePupils { get; set; }
         public int? TotalNumberOfPartTimePupils { get; set; }
         public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
-
-        [Obsolete("Use SENStat/SENNoStat")]
-        public int? NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
-        [Obsolete("Use SENStat/SENNoStat")]
-        public int? NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
-
         public int? TotalNumberOfPupilsInPublicCare { get; set; }
         public int? PTBoysAged2AndUnder { get; set; }
         public int? PTBoysAged3 { get; set; }

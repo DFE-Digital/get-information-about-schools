@@ -57,12 +57,6 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         [JsonProperty("totalNumberOfPupilsOfCompulsorySchoolAge")]
         public bool TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
 
-        [JsonProperty("numberOfSpecialPupilsUnderASENStatementEHCP")]
-        public bool NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
-
-        [JsonProperty("numberOfSpecialPupilsNotUnderASENStatementEHCP")]
-        public bool NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
-
         [JsonProperty("totalNumberOfPupilsInPublicCare")]
         public bool TotalNumberOfPupilsInPublicCare { get; set; }
 
@@ -192,7 +186,7 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         /// <returns></returns>
         public bool Any() => Notes || DateOfTheLastBridgeVisit || DateOfTheLastISIVisit || DateOfTheLastWelfareVisit || DateOfTheLastFPVisit || DateOfTheLastSISVisit || NextOfstedVisit || NextGeneralActionRequired 
             || NextActionRequiredByWEL || NextActionRequiredByFP || IndependentSchoolTypeId || CharityOrganisation || CharityRegistrationNumber || TotalNumberOfFullTimePupils || TotalNumberOfPartTimePupils || TotalNumberOfPupilsOfCompulsorySchoolAge 
-            || NumberOfSpecialPupilsUnderASENStatementEHCP || NumberOfSpecialPupilsNotUnderASENStatementEHCP || TotalNumberOfPupilsInPublicCare || TotalNumberOfBoysInBoardingSchools || TotalNumberOfGirlsInBoardingSchools || TotalNumberOfFullTimeStaff 
+            || TotalNumberOfPupilsInPublicCare || TotalNumberOfBoysInBoardingSchools || TotalNumberOfGirlsInBoardingSchools || TotalNumberOfFullTimeStaff 
             || TotalNumberOfPartTimeStaff || LowestAnnualRateForDayPupils || HighestAnnualRateForDayPupils || LowestAnnualRateForBoardingPupils || HighestAnnualRateForBoardingPupils || ProprietorsStreet || ProprietorsLocality || ProprietorsAddress3 
             || ProprietorsTown || ProprietorsCountyId || ProprietorsPostcode || ProprietorsTelephoneNumber || ProprietorsFaxNumber || ProprietorsEmail || ProprietorsPreferredJobTitle || ChairOfProprietorsBodyName || ChairOfProprietorsBodyStreet 
             || ChairOfProprietorsBodyLocality || ChairOfProprietorsBodyAddress3 || ChairOfProprietorsBodyTown || ChairOfProprietorsBodyCountyId || ChairOfProprietorsBodyPostcode || ChairOfProprietorsBodyTelephoneNumber || ChairOfProprietorsBodyFaxNumber 

@@ -81,16 +81,15 @@ namespace Edubase.Web.UI
 
         protected void Application_BeginRequest()
         {
-            MiniProfiler.Start();
+            //MiniProfiler.Start();
         }
 
         protected void Application_EndRequest()
         {
-            MiniProfiler.Stop();
+            //MiniProfiler.Stop();
         }
 
-        private bool IsUserAllowedToSeeMiniProfilerUI(HttpRequest httpRequest) => true; // TODO: TEXCHANGE: SECURE THIS
-
-        //public static bool IsRunningOnAzure => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
+        private bool IsUserAllowedToSeeMiniProfilerUI(HttpRequest httpRequest) => false; 
+        
     }
 }
