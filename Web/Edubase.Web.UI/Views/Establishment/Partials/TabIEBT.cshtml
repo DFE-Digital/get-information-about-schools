@@ -281,8 +281,7 @@
             @if (p.ProprietorsStreet)
             {
                 <dt>Proprietor's address:</dt>
-                @* TODO: TEXCHANGE: support county and country lookups! *@
-                <dd>@Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.IEBTModel.ProprietorsStreet, Model.Establishment.IEBTModel.ProprietorsLocality, Model.Establishment.IEBTModel.ProprietorsAddress3, Model.Establishment.IEBTModel.ProprietorsTown, Model.Establishment.IEBTModel.ProprietorsCountyId?.ToString(), Model.Establishment.IEBTModel.ProprietorsPostcode)</dd>
+                <dd>@Model.GetProprietorsAddress()</dd>
 
             }
 
@@ -321,9 +320,8 @@
 
             @if (p.ChairOfProprietorsBodyStreet)
             {
-                @* TODO: TEXCHANGE: support county and country lookups! *@
                 <dt>Chair of proprietor's address:</dt>
-                <dd>@Edubase.Common.StringUtil.ConcatNonEmpties(", ", Model.Establishment.IEBTModel.ChairOfProprietorsBodyStreet, Model.Establishment.IEBTModel.ChairOfProprietorsBodyLocality, Model.Establishment.IEBTModel.ChairOfProprietorsBodyAddress3, Model.Establishment.IEBTModel.ChairOfProprietorsBodyTown, Model.Establishment.IEBTModel.ChairOfProprietorsBodyCountyId?.ToString(), Model.Establishment.IEBTModel.ChairOfProprietorsBodyPostcode)</dd>
+                <dd>@Model.GetChairOfProprietorsBodyAddress()</dd>
 
             }
 

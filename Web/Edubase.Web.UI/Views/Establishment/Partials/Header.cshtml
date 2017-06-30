@@ -23,7 +23,7 @@
         <td>
             @if (Model.DisplayPolicy.HeadTitleId)
             {
-                <text>@Model.HeadTitleName</text>
+                <text>@Model.HeadTitleName.Replace("Unknown", string.Empty)</text>
             }
             @if (Model.DisplayPolicy.HeadFirstName)
             {

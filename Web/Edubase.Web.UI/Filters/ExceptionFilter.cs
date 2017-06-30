@@ -39,7 +39,7 @@ namespace Edubase.Web.UI.Filters
 
                 filterContext.ExceptionHandled = true;
             }
-            else if (filterContext.Exception.GetBaseException() is TexunaApiSystemException) // TODO: TEXCHANGE: KHD: For removal post integration
+            else if (filterContext.Exception.GetBaseException() is TexunaApiSystemException) 
             {
                 filterContext.Result = new ViewResult
                 {

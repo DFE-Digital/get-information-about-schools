@@ -471,6 +471,7 @@
     <Content Include="Areas\Establishments\Views\BulkUpdate\Completed.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\InProgress.cshtml" />
     <Content Include="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
+    <Content Include="Assets\Sass\views\_cookies.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -1007,6 +1008,9 @@
     <Content Include="Views\Establishment\EditHelpdesk.cshtml" />
     <Content Include="Views\Establishment\EditLinks.cshtml" />
     <Content Include="Views\Establishment\AddEditLink.cshtml" />
+    <Content Include="Views\Home\Guidance.cshtml" />
+    <Content Include="Views\Home\Cookies.cshtml" />
+    <Content Include="Views\Home\News.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

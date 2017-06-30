@@ -39,15 +39,6 @@ namespace Edubase.Services.Establishments.Models
         public int? TotalNumberOfPartTimePupils { get; set; }
         public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
 
-        [Obsolete("Use SENStat/NoStat")] // todo: texchange
-        [DisplayName("Total number of special pupils under a SEN statement/ECHP")]
-        public int? NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
-
-        [Obsolete("Use SENStat/NoStat")] // todo: texchange
-        [DisplayName("Number of special pupils not under a SEN statement/EHCP")]
-        public int? NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
-
-
         public int? TotalNumberOfPupilsInPublicCare { get; set; }
 
         [DisplayName("PT boys (aged 2 and under)"), JsonProperty("PTBoysAged2AndUnder")]
