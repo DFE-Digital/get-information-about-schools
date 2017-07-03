@@ -183,12 +183,29 @@ else
                         More details
                     </a>
                     <div class="expanding-content panel-indent">
-                        @for (var index = 0; index < Model.HistoricGrids.Count; index++)
+                        @if (Model.HistoricGrids.Any())
                         {
-                            if (Model.HistoricGrids[index].Rows.Any())
-                            {
-                                @Html.DisplayFor(m => m.HistoricGrids[index])
-                            }
+                            <table class="edubase-table list-table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Appointed by</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                @for (var index = 0; index < Model.HistoricGrids.Count; index++)
+                                {
+                                    if (Model.HistoricGrids[index].Rows.Any())
+                                    {
+                                        @Html.DisplayFor(m => m.HistoricGrids[index])
+                                    }
+                                }
+                                </tbody>
+                            </table>
                         }
                     </div>
                 </div>
