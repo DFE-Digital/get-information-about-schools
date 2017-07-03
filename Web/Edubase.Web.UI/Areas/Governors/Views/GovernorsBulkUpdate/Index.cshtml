@@ -52,7 +52,7 @@ else
             <p>Follow these steps to bulk update governance data.</p>
         </div>
         <div class="column-full">
-            <div class="expanding-content-wrapper" data-update-text="false">
+            <div class="expanding-content-wrapper no-bottom-margin" data-update-text="false">
                 <a href="#" class="expanding-content-trigger">
                     Help with preparing files
                     @* TODO: REF ACTUAL HELP FILE HERE *@
@@ -74,15 +74,14 @@ else
         </div>
 
         <div class="column-full">
-            <h2 class="bold-medium">Download template</h2>
-            <p>Please download the template using the link below. Then, provide or update your governance information in the template. Finally, upload the completed template using the 'Choose file' button below.</p>
-            <a href="/public/downloads/GovernorsBulkUpdateTemplate.xlsx">GovernanceTemplate.xlsx, 18KB</a>
-            <br /><br /><br />
+            <h2 class="heading-medium">Download template</h2>
+            <p>Please download the template using the link below. Then, provide or update your governance information in the template.
+             Finally, upload the completed template using the 'Choose file' button below.</p>
+            <a href="/public/downloads/GovernorsBulkUpdateTemplate.xlsx" class="download-list-item">GovernanceTemplate.xlsx, 18KB</a>
         </div>
 
-        <div class="column-half">
-            <h2 class="bold-medium">Submit completed template</h2>
-            <br />
+        <div class="column-full">
+            <h2 class="heading-medium">Submit completed template</h2>
             <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="bulkfile" class="form-label">Upload a file</label>      
                 @Html.ValidationMessageFor(x => x.BulkFile)  
