@@ -86,9 +86,9 @@ else
 @helper ShowDelegationInformation()
 {
     <h2 class="bold-small">Delegated authority of local governing body</h2>
-    <div class="expanding-content-wrapper">
+    <div class="expanding-content-wrapper" data-update-text="false">
         <a href="#" class="expanding-content-trigger">
-            Show details
+            More details
         </a>
         <div class="expanding-content panel-indent">
             @(Model.DelegationInformation ?? "Not recorded")
