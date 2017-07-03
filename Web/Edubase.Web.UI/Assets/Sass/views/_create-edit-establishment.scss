@@ -139,9 +139,12 @@ select#headtitleid {
             display: block;
             margin: 20px 0;
         }
+        &.bold {
+            font-weight: bold;
+        }
     }
     .hint-text, .form-hint {
-        font-size: 16px;
+        font-size: 19px;
     }
 
     .grouped-controls .form-control {
