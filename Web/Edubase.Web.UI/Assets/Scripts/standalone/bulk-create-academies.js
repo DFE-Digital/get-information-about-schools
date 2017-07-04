@@ -146,6 +146,9 @@
                     }
                     return num;
                 },
+                detailUrl: function (urn) {
+                    return '/Establishment/Details/' + urn;
+                },
                 lookUpType: function(typeId){
                     var definition = academyTypes.filter(function (item) {
                         if (item.id == typeId) {

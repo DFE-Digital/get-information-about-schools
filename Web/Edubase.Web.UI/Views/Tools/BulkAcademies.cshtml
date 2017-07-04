@@ -173,8 +173,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="estab in createdAcademies">
-                        <td aria-label="URN">{{estab.urn}}</td>
-                        <td aria-label="Name">{{estab.name}}</td>
+                        <td aria-label="URN"><a v-bind:href='detailUrl(estab.urn)'>{{estab.urn}}</a></td>
+                        <td aria-label="Name"><a v-bind:href='detailUrl(estab.urn)'>{{estab.name}}</a></td>
                         <td aria-label="Establishment type" v-html="lookUpType(estab.typeId)"></td>
                         <td aria-label="Opening date" v-html="formatDisplayDate(estab.openingDate)"></td>
                     </tr>
