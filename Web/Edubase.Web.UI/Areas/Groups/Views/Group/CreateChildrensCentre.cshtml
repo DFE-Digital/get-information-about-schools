@@ -205,6 +205,7 @@
                         <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', detailEdit = true">&laquo; Go back</a>
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
+                            <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave" />
                             <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
                             <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="submitCentres">Submit</button>
                         }
