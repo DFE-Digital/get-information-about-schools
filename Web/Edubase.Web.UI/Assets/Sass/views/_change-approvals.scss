@@ -96,7 +96,7 @@
 .checkbox-wrap {
     display: inline-block;
     position: relative;
-    margin: 0 8px 20px;
+    margin: 0 8px 20px 0;
 
    
     input {
@@ -113,6 +113,15 @@
                 border-color: $grey-1;
             }
         }
+    }
+}
+
+.stacked-controls {
+    .radio-button-wrap,
+    .checkbox-wrap {
+        display: block;
+        margin-left: 0;
+        margin-bottom: 30px;
     }
 }
 
@@ -225,4 +234,26 @@ input:focus + .edubase-button-radio:before {
 
 .create-establishment dl {
     font-size: 16px;
+}
+
+.expander-panel {
+    .radio-button-wrap {
+        margin-bottom: 4px;
+        margin-left: 0;
+        margin-top: 8px;
+        padding: 5px;
+        padding-left: 0;
+    }
+        
+    .checkbox-wrap {
+        margin-bottom: 4px;
+        margin-left: 0;
+        margin-top: 8px;
+        padding: 5px;
+        padding-left: 0;
+
+        .edubase-button-checkbox {
+            font-size: 19px;
+        }
+    }
 }

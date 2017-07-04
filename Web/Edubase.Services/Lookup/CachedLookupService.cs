@@ -9,16 +9,12 @@ using Edubase.Services.Enums;
 using System.Runtime.Caching;
 using Edubase.Common;
 using Edubase.Services.Domain;
-using Edubase.Data.DbContext;
 using Edubase.Common.Cache;
 using System.Runtime.CompilerServices;
 using System.Linq.Expressions;
 
 namespace Edubase.Services.Lookup
 {
-    /// <summary>
-    /// TODO: TEXCHANGE: Establish which lookups are immutable.  May need to remove mutable lookups, or develop a way to enable cache invalidation from the back-end via messaging etc.
-    /// </summary>
     public class CachedLookupService : ICachedLookupService
     {
         Dictionary<string, Func<int, Task<string>>> _mappingAsync = null;
@@ -33,7 +29,7 @@ namespace Edubase.Services.Lookup
             _mappingAsync = new Dictionary<string, Func<int, Task<string>>>()
             {
                 { "LocalAuthorityId", async id => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "RSCRegionId", async id => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "RSCRegionId", async id => (await RscRegionsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "TypeId", async id => (await EstablishmentTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "GroupTypeId", async id => (await GroupTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "Group.StatusId", async id => (await GroupStatusesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -51,14 +47,11 @@ namespace Edubase.Services.Lookup
                 { "DioceseId", async id => (await DiocesesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "AdmissionsPolicyId", async id => (await AdmissionsPoliciesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ProvisionSpecialClassesId", async id => (await ProvisionSpecialClassesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "HeadTitleId", async id => (await HeadTitlesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "HeadTitleId", async id => (await TitlesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "EstablishmentTypeGroupId", async id => (await EstablishmentTypeGroupsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "InspectorateId", async id => (await InspectoratesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "Section41ApprovedId", async id => (await Section41ApprovedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "SEN1Id", async id => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN2Id", async id => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN3Id", async id => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "SEN4Id", async id => (await SpecialEducationNeedsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "TeenageMothersProvisionId", async id => (await TeenageMothersProvisionsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ChildcareFacilitiesId", async id => (await ChildcareFacilitiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "PRUSENId", async id => (await PRUSENsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -86,6 +79,9 @@ namespace Edubase.Services.Lookup
                 { "CCDeliveryModelId", async id => (await CCDeliveryModelsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CCGroupLeadId", async id => (await CCGroupLeadsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "LinkTypeId", async id => (await EstablishmentLinkTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CountryId", async id => (await NationalitiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "CountyId", async id => (await CountiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "OfstedRatingId", async id => (await OfstedRatingsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
             };
 
             _mapping = new Dictionary<string, Func<int, string>>()
@@ -114,9 +110,6 @@ namespace Edubase.Services.Lookup
                 { "InspectorateId",  id => InspectoratesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "Section41ApprovedId",  id => Section41ApprovedGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "SEN1Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
-                { "SEN2Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
-                { "SEN3Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
-                { "SEN4Id",  id => SpecialEducationNeedsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "TeenageMothersProvisionId",  id => TeenageMothersProvisionsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "ChildcareFacilitiesId",  id => ChildcareFacilitiesGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "PRUSENId",  id => PRUSENsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
@@ -142,7 +135,7 @@ namespace Edubase.Services.Lookup
                 { "CCDisadvantagedAreaId",  id => CCDisadvantagedAreasGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "CCDirectProvisionOfEarlyYearsId",  id => DirectProvisionOfEarlyYearsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
                 { "CCDeliveryModelId",  id => CCDeliveryModelsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
-                { "CCGroupLeadId",  id => CCGroupLeadsGetAll().FirstOrDefault(x => x.Id == id)?.Name },
+                { "CCGroupLeadId",  id => CCGroupLeadsGetAll().FirstOrDefault(x => x.Id == id)?.Name }
             };
         }
 
@@ -160,8 +153,11 @@ namespace Edubase.Services.Lookup
         public IEnumerable<LookupDto> GendersGetAll() => Auto(_lookupService.GendersGetAll);
         public async Task<IEnumerable<LookupDto>> GroupTypesGetAllAsync() => await AutoAsync(_lookupService.GroupTypesGetAllAsync);
         public IEnumerable<LookupDto> GroupTypesGetAll() => Auto(_lookupService.GroupTypesGetAll);
-        public async Task<IEnumerable<LookupDto>> HeadTitlesGetAllAsync() => await AutoAsync(_lookupService.HeadTitlesGetAllAsync);
+        public async Task<IEnumerable<LookupDto>> TitlesGetAllAsync() => await AutoAsync(_lookupService.TitlesGetAllAsync);
         public IEnumerable<LookupDto> HeadTitlesGetAll() => Auto(_lookupService.HeadTitlesGetAll);
+        public async Task<IEnumerable<LookupDto>> CountiesGetAllAsync() => await AutoAsync(_lookupService.CountiesGetAllAsync);
+        public async Task<IEnumerable<LookupDto>> OfstedRatingsGetAllAsync() => await AutoAsync(_lookupService.OfstedRatingsGetAllAsync);
+        public async Task<IEnumerable<LookupDto>> RscRegionsGetAllAsync() => await AutoAsync(_lookupService.RscRegionsGetAllAsync);
         public async Task<IEnumerable<LookupDto>> ProvisionBoardingGetAllAsync() => await AutoAsync(_lookupService.ProvisionBoardingGetAllAsync);
         public IEnumerable<LookupDto> ProvisionBoardingGetAll() => Auto(_lookupService.ProvisionBoardingGetAll);
         public async Task<IEnumerable<LookupDto>> ProvisionNurseriesGetAllAsync() => await AutoAsync(_lookupService.ProvisionNurseriesGetAllAsync);
@@ -276,6 +272,7 @@ namespace Edubase.Services.Lookup
 
         public async Task<string> GetNameAsync(string lookupName, int? id, string domain = null)
         {
+            lookupName = ProcessLookupName(lookupName);
             if (id.HasValue)
             {
                 var key = StringUtil.ConcatNonEmpties(".", domain, lookupName);
@@ -289,9 +286,9 @@ namespace Edubase.Services.Lookup
             => await GetNameAsync(((MemberExpression)expression.Body).Member.Name, expression.Compile()(), domain);
 
         public string GetName(string lookupName, int? id) 
-            => id.HasValue ? _mapping.Get(lookupName)?.Invoke(id.Value) : null;
+            => id.HasValue ? _mapping.Get(ProcessLookupName(lookupName))?.Invoke(id.Value) : null;
 
-        public bool IsLookupField(string name) => _mapping.ContainsKey(name);
+        public bool IsLookupField(string name) => _mappingAsync.ContainsKey(ProcessLookupName(name)) || _mapping.ContainsKey(ProcessLookupName(name));
 
         private async Task<T> AutoAsync<T>(Func<Task<T>> asyncFactory, [CallerMemberName] string callerName = null)
         {
@@ -308,6 +305,15 @@ namespace Edubase.Services.Lookup
             return _cacheAccessor.Auto(factory, string.Empty, GetType().Name, callerFuncName: callerName);
         }
 
+        private string ProcessLookupName(string name)
+        {
+            if (name.EndsWith("CountryId")) name = "CountryId";
+            else if (name.EndsWith("CountyId")) name = "CountyId";
+            return name;
+        }
+
         public void Dispose() => _lookupService.Dispose();
+
+        
     }
 }

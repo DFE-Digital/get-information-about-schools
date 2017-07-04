@@ -8,47 +8,56 @@
     Layout = Model.Layout;
 }
 
-    <div class="column-two-thirds">
-            <h1 class="heading-medium">Establishment governance</h1>
-            @using (Html.BeginRouteForm("EstabEditGovernanceMode", FormMethod.Post))
-            {
-                @Html.HiddenFor(x => x.Urn)
-                <div class="form-group">
-                    <fieldset>
-                        <legend class="visually-hidden">Select a governance policy</legend>
+<div class="column-two-thirds">
+        <h1 class="heading-medium">Establishment governance</h1>
+
+        @Html.ValidationSummary(null, new { @class = "error-summary" })
+
+        @using (Html.BeginRouteForm("EstabEditGovernanceMode", FormMethod.Post))
+        {
+            @Html.HiddenFor(x => x.Urn)
+            <div class="form-group">
+                <fieldset>
+                    <legend class="visually-hidden">Select a governance policy</legend>
+                    @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalGovernors))
+                    {
                         <div class="form-group">
                             <label class="block-label selection-button-radio">
                                 @Html.RadioButtonFor(x => x.GovernanceMode, eGovernanceMode.LocalGovernors)
                                 This establishment has local governors, not shared governors.
                             </label>
                         </div>
+                    }
+                    @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalAndSharedGovernors))
+                    {
                         <div class="form-group">
                             <label class="block-label selection-button-radio multi-line">
                                 @Html.RadioButtonFor(x => x.GovernanceMode, eGovernanceMode.LocalAndSharedGovernors)
                                 This establishment has local governors and also shares governors with other academies in the trust.
                             </label>
                         </div>
+                    }
+                    @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.NoLocalGovernors))
+                    {
                         <div class="form-group">
                             <label class="block-label selection-button-radio multi-line">
                                 @Html.RadioButtonFor(x => x.GovernanceMode, eGovernanceMode.NoLocalGovernors)
                                 This establishment is part of a multi academy trust and does not have local governors.
                             </label>
                         </div>
+                    }
+                    @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.SharesLocalGovernors))
+                    {
                         <div class="form-group">
                             <label class="block-label selection-button-radio">
                                 @Html.RadioButtonFor(x => x.GovernanceMode, eGovernanceMode.SharesLocalGovernors)
                                 This establishment shares local governors with other academies in the trust.
                             </label>
                         </div>
-
-                        
-                        
-                        
-                        
-
-                    </fieldset>
-                </div>
-                <button type="submit" name="action" class="button">Save</button>
-                @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", establishmentUrn = Model.Urn }, new { @class = "button button-grey" })
-            }
-    </div>
+                    }
+                </fieldset>
+            </div>
+            <button type="submit" name="action" class="button">Save</button>
+            @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", establishmentUrn = Model.Urn }, new { @class = "button button-grey" })
+        }
+</div>

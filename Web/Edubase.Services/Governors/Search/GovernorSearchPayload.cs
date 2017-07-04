@@ -1,11 +1,20 @@
-﻿using Edubase.Services.Core.Search;
+﻿using Edubase.Services.Enums;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Edubase.Services.Governors.Search
 {
     public class GovernorSearchPayload
     {
+        Dictionary<eGovernorTypesFlag, string> _govTypesMap => new Dictionary<eGovernorTypesFlag, string>
+        {
+            [eGovernorTypesFlag.MultiAcademyTrusts] = "mats",           // filtered to governors associated with MATs
+            [eGovernorTypesFlag.AcademiesWithinMAT] = "acads_in_mat",   // filtered to governors of academies associated with an MAT
+            [eGovernorTypesFlag.AcademiesWithinSAT] = "acads_in_sat",   // filtered to governors of academies associated with an SAT
+            [eGovernorTypesFlag.GovsOfLAMaintained] = "la_maintained"   // filtered to governors of LA maintained type establishments
+        };
+
         public GovernorSearchPayload()
         {
 
@@ -16,8 +25,8 @@ namespace Edubase.Services.Governors.Search
             Skip = skip;
             Take = take;
         }
-
-        [JsonIgnore] // TODO: TEXCHANGE:  support Gid search
+        
+        [JsonProperty("governorId")]
         public string Gid { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -25,6 +34,12 @@ namespace Edubase.Services.Governors.Search
         public bool IncludeHistoric { get; set; }
         public int Skip { get; set; }
         public int Take { get; set; } = 10;
+
+        [JsonIgnore]
+        public eGovernorTypesFlag[] GovernorTypesFlags { get; set; }
+
+        public string[] GovernorTypes => GovernorTypesFlags.Select(x => _govTypesMap[x]).ToArray();
+
         [JsonIgnore]
         public eSortBy SortBy { get; set; }
 

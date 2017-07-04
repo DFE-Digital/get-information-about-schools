@@ -1,9 +1,11 @@
 ﻿@using System.Linq
-@using Edubase.Services.Enums
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 @{
-    Layout = "_EditLayoutPage.cshtml";
+    if (Model.ChangesSummary == null)
+    {
+        Layout = "_EditLayoutPage.cshtml";
+    }
     ViewBag.postcodeDemo = Request["postcodeDemo"];
 }
 
@@ -17,10 +19,10 @@
             <div class="grid-row">
 
                 <div class="column-half">
-            
+
                     <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
-                
+
 
                     <div class="form-group first">
                         <label class="form-label" for="school-name">
@@ -55,10 +57,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="school-county" class="form-label">County</label>
-                        @Html.TextBoxFor(x => x.Address_County, new { maxlength = 120, id = "school-county", @class = "form-control" })
+                        <label for="Address_CountyId" class="form-label">County</label>
+                        @Html.DropDownListFor(x => x.Address_CountyId, Model.Counties, "", new { @class = "form-control" })
                     </div>
-                
+
+                    <div class="form-group">
+                        <label for="Address_CountryId" class="form-label">Country</label>
+                        @Html.DropDownListFor(x => x.Address_CountryId, Model.Countries, "", new { @class = "form-control" })
+                    </div>
+
                     @if (ViewBag.postcodeDemo == "1")
                     {
                         <div class="form-group">
@@ -74,132 +81,105 @@
                             @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control" })
                         </div>
                     }
-                
 
-
-                    @for (var i = 0; i < Model.AdditionalAddresses.Count; i++)
+                    @if (Model.EditPolicy.AltSiteName.GetValueOrDefault(true))
                     {
-                        var siteNumber = i + 2;
-                        <div class="grey-bar"></div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].SiteName, $"Site {siteNumber} name")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].SiteName, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].Line1, "Street")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Line1, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].Locality, "Locality")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Locality, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].Line3, "Address 3")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Line3, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].CityOrTown, "Town")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].CityOrTown, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].County, "County")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].County, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].PostCode, "Postcode")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].PostCode, new { @class = "form-control" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.AdditionalAddresses[i].TelephoneNumber, "Telephone")
-                            @Html.TextBoxFor(x => x.AdditionalAddresses[i].TelephoneNumber, new { @class = "form-control" })
-                        </div>
-                        if (Model.AllowHidingOfAddress)
+                        @*if (!Model.IsAltAddressSet)
                         {
                             <div class="form-group">
-                                <label class="block-label selection-button-checkbox">
-                                    @Html.CheckBoxFor(x => x.AdditionalAddresses[i].IsRestricted, new { @class = "form-control" })
-                                    Hide address from other users
-                                </label>
+                                <a href="javascript:" id="add-alt-address" onclick="$('div.alt-address').show();$(this).hide();">Add another address</a>
                             </div>
-                        }
-                        <div class="form-group">
-                            <button type="submit" name="@nameof(Model.AddressToRemoveId)"
-                                    class="link-button font-xsmall"
-                                    value="@Model.AdditionalAddresses[i].Id">
-                                Remove this address
-                            </button>
+                        }*@
+
+                        <div class="alt-address" style="display:@(Model.IsAltAddressSet ? "" : "none");">
+                            <div class="grey-bar"></div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltSiteName, $"Site name")
+                                @Html.TextBoxFor(x => x.AltSiteName, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltStreet, "Street")
+                                @Html.TextBoxFor(x => x.AltStreet, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltLocality, "Locality")
+                                @Html.TextBoxFor(x => x.AltLocality, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltAddress3, "Address 3")
+                                @Html.TextBoxFor(x => x.AltAddress3, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltTown, "Town")
+                                @Html.TextBoxFor(x => x.AltTown, new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                <label for="Address_CountyId" class="form-label">County</label>
+                                @Html.DropDownListFor(x => x.AltCountyId, Model.Counties, "", new { @class = "form-control alt-address" })
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.AltPostCode, "Postcode")
+                                @Html.TextBoxFor(x => x.AltPostCode, new { @class = "form-control alt-address" })
+                            </div>
+                            @*<div class="form-group">
+                                <a href="javascript:" onclick="$('div.alt-address').hide();$('#add-alt-address').show();$('.form-control.alt-address').val('');">Remove address</a>
+                            </div>*@
                         </div>
-                        @Html.HiddenFor(x => x.AdditionalAddresses[i].Id)
                     }
 
-                    @if (Model.AdditionalAddressesCount > 0)
-                    {
-                        <div class="grey-bar"></div>
-                    }
-
-                    @if (Model.AdditionalAddressesCount < 4)
-                    {
-                        <div class="form-group">
-                            <button type="submit" name="action" class="link-button font-xsmall" value="@ViewModel.eAction.AddAddress">Add another address</button>
-                        </div>
-                    }
-
-                    @Html.HiddenFor(x => x.AdditionalAddressesCount)
-
-                    @if (Model.DisplayPolicy.HeadteacherDetails)
+                    @if (Model.EditPolicy.HeadTitleId)
                     {
                         <div class="form-group">
                             <label class="form-label">
-                                @(Model.DisplayPolicy.HeadteacherLabel) title
+                                @(Model.EditPolicy.HeadteacherLabel) title
                             </label>
                             @Html.DropDownListFor(x => x.HeadTitleId, Model.HeadTitles, "", new { @class = "form-control" })
                         </div>
+                    }
+
+                    @if (Model.EditPolicy.HeadFirstName)
+                    {
                         <div class="form-group">
                             <label class="form-label" for="headfirstname">
-                                @(Model.DisplayPolicy.HeadteacherLabel) first name
+                                @(Model.EditPolicy.HeadteacherLabel) first name
                             </label>
                             @Html.TextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", placeholder = "First name" })
                             @Html.HiddenFor(x => x.OldHeadFirstName)
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                @(Model.DisplayPolicy.HeadteacherLabel) last name
-                            </label>
-                            @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
-                            @Html.HiddenFor(x => x.OldHeadLastName)
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                @(Model.DisplayPolicy.HeadteacherLabel) last name
-                            </label>
-                            @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
-                            @Html.HiddenFor(x => x.OldHeadLastName)
-                        </div>
-
-                        if (EnumSets.AcademiesAndFreeSchools.Contains(Model.TypeId.Value))
-                        {
-                            @*<div class="form-group">
-                                <label class="form-label">
-                                    @(Model.DisplayPolicy.HeadteacherLabel) date of appointment
-                                </label>
-                                @Html.EditorFor(x => x.HeadAppointmentDate)
-                            </div>*@
-                            <div class="form-group">
-                                <label class="form-label">
-                                    @(Model.DisplayPolicy.HeadteacherLabel) email address
-                                </label>
-                                @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address"})
-                            </div>
-                        }
                     }
 
-                    @if (Model.DisplayPolicy.AgeRange)
+                    @if (Model.EditPolicy.HeadLastName)
+                    {
+                        <div class="form-group">
+                            <label class="form-label">
+                                @(Model.EditPolicy.HeadteacherLabel) last name
+                            </label>
+                            @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
+                            @Html.HiddenFor(x => x.OldHeadLastName)
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.HeadEmailAddress)
+                    {
+                        @Html.EditorFor(x => x.HeadAppointmentDate, new { title = "Headteacher date of appointment" })
+                    }
+
+                    @if (Model.EditPolicy.HeadEmailAddress)
+                    {
+                        <div class="form-group">
+                            <label class="form-label">
+                                @(Model.EditPolicy.HeadteacherLabel) email address
+                            </label>
+                            @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address" })
+                        </div>
+                    }
+                        
+
+                    @if (Model.EditPolicy.AgeRange)
                     {
                         <div class="form-group range-group">
                             <fieldset>
-                                <legend>Age range</legend>
+                                <legend class="bold">Age range</legend>
                                 <span class="inline-form-control">
                                     <label for="agerange-from" class="form-label">
                                         Low
@@ -215,20 +195,29 @@
                         </div>
                     }
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
-                        <label for="EducationPhaseId" class="form-label">Phase of education</label>
-                        @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "", new { @class = "form-control" })
-                    </div>
-
-                    @if (Model.DisplayPolicy.TypeId)
+                   
+                    @if (Model.EditPolicy.TypeId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
                             <label class="form-label" for="TypeId">Establishment type</label>
                             @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "", new { @class = "form-control" })
                         </div>
                     }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.TypeId)
+                    }
 
-                    @if (Model.DisplayPolicy.FurtherEducationTypeId)
+                    @if (Model.EditPolicy.EducationPhaseId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                            <label for="EducationPhaseId" class="form-label">Phase of education</label>
+                            @Html.ValidationMessageFor(x => x.EducationPhaseId)
+                            @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "", new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.FurtherEducationTypeId)
                     {
                         <div class="form-group">
                             <label class="form-label" for="FurtherEducationTypeId">Further education type</label>
@@ -236,7 +225,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.GenderId)
+                    @if (Model.EditPolicy.GenderId)
                     {
                         <div class="form-group">
                             <label class="form-label" for="GenderId">Gender of entry</label>
@@ -244,17 +233,19 @@
                         </div>
                     }
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-                        <label for="LocalAuthorityId" class="form-label">Local authority</label>
-                        @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
-                    </div>
+                    @if (Model.EditPolicy.LocalAuthorityId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                            <label for="LocalAuthorityId" class="form-label">Local authority</label>
+                            @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
+                        </div>
+                    }
 
-
-                    @if (Model.DisplayPolicy.EstablishmentNumber)
+                    @if (Model.EditPolicy.EstablishmentNumber)
                     {
                         <div class="form-group">
                             <fieldset class="inline-fields">
-                                <legend>DfE number</legend>
+                                <legend class="bold">DfE number</legend>
                                 <p class="form-hint">LA code and Establishment number</p>
                                 <label class="form-label visually-hidden" for="lacode"> LA code</label>
                                 <input type="text" id="lacode" class="form-control" size="5" disabled="disabled" value="@Model.LocalAuthorityId" />
@@ -264,19 +255,24 @@
                         </div>
                     }
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
-                        <label class="form-label" for="ukprn">UK provider reference number (UKPRN)</label>
-                        @Html.ValidationMessageFor(x => x.UKPRN)
-                        @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", type = "text" })
-                    </div>
+                    @if (Model.EditPolicy.UKPRN)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
+                            <label class="form-label" for="ukprn">UK provider reference number (UKPRN)</label>
+                            @Html.ValidationMessageFor(x => x.UKPRN)
+                            @Html.TextBoxFor(x => x.UKPRN, new { id = "ukprn", @class = "form-control", type = "text" })
+                        </div>
+                    }
 
+                    @if (Model.EditPolicy.StatusId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
+                            <label for="status">Establishment status</label>
+                            @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "form-control" })
+                        </div>
+                    }
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
-                        <label for="status">Establishment status</label>
-                        @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "form-control" })
-                    </div>
-
-                    @if (Model.DisplayPolicy.AdmissionsPolicyId)
+                    @if (Model.EditPolicy.AdmissionsPolicyId)
                     {
                         <div class="form-group">
                             <label for="admissionspolicyid" class="form-label">Admissions policy</label>
@@ -284,7 +280,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Contact_WebsiteAddress)
+                    @if (Model.EditPolicy.Contact_WebsiteAddress)
                     {
                         <div class="form-group">
                             <label for="Contact_WebsiteAddress" class="form-label">Website</label>
@@ -292,7 +288,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Contact_TelephoneNumber)
+                    @if (Model.EditPolicy.Contact_TelephoneNumber)
                     {
                         <div class="form-group">
                             <label for="Contact_TelephoneNumber" class="form-label">Telephone</label>
@@ -300,60 +296,22 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.OfstedRatingDetails)
+                    @if (Model.EditPolicy.OfstedRatingDetails)
                     {
-
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.OfstedRating)">
-                            @Html.LabelFor(x => x.OfstedRating, "Ofsted rating")
-                            @Html.TextBoxFor(x => x.OfstedRating, new { @class = "form-control", type = "number", min = "0", max = "5" })
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.OfstedRatingId)">
+                            @Html.LabelFor(x => x.OfstedRatingId, "Ofsted rating", new { @class = "form-label" })
+                            @Html.DropDownListFor(x => x.OfstedRatingId, Model.OfstedRatings, "", new { @class = "form-control" })
                         </div>
 
-                        <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OfstedInspectionDate)">
-                            <fieldset>
-                                <legend>Ofsted last inspection</legend>
-                                <div class="form-hint">For example, 20 03 2003</div>
+                            @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Ofsted last inspection" })
 
-                                @Html.ValidationMessageFor(x => x.OfstedInspectionDate)
-                                <span class="inline-form-control">
-                                    <label for="ofstedinspectiondate-day">Day</label>
-                                    @Html.EduDayDropDownFor(x => x.OfstedInspectionDate.Day,
-                 new
-                 {
-                     id = "ofstedinspectiondate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-ofstedinspectiondate-day",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="ofstedinspectiondate-month">Month</label>
-                                    @Html.EduMonthDropDownFor(x => x.OfstedInspectionDate.Month,
-                 new
-                 {
-                     id = "ofstedinspectiondate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-ofstedinspectiondate-month",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="ofstedinspectiondate-year">Year</label>
-                                    @Html.EduYearDropDownFor(x => x.OfstedInspectionDate.Year,
-                 new
-                 {
-                     id = "ofstedinspectiondate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-ofstedinspectiondate-year",
-                 })
-                                </span>
-                            </fieldset>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="ofsted-report" class="form-label">Ofsted report link</label>
-                            <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
-                        </div>
+                            <div class="form-group">
+                                <label for="ofsted-report" class="form-label">Ofsted report link</label>
+                                <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
+                            </div>
                     }
 
-                    @if (Model.DisplayPolicy.InspectorateId)
+                    @if (Model.EditPolicy.InspectorateId)
                     {
                         <div class="form-group">
                             <label for="InspectorateId">Inspectorate</label>
@@ -361,19 +319,16 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ProprietorName)
+                    @if (Model.EditPolicy.ProprietorName)
                     {
                         <div class="form-group">
                             <label for="proprietor" class="form-label">Proprietor's name</label>
                             @Html.TextBoxFor(x => x.ProprietorName, new { maxlength = 120, id = "proprietor", @class = "form-control" })
                         </div>
                     }
-                </div>
+                
 
-                <h2 class="heading-medium create-edit-section-break">Details</h2>
-                <div class="column-half">
-
-                    @if (Model.DisplayPolicy.ReligiousCharacterId)
+                    @if (Model.EditPolicy.ReligiousCharacterId)
                     {
                         <div class="form-group">
                             <label for="religious-character">Religious character</label>
@@ -381,7 +336,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.DioceseId)
+                    @if (Model.EditPolicy.DioceseId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
                             <label for="diocese">Diocese</label>
@@ -389,7 +344,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ReligiousEthosId)
+                    @if (Model.EditPolicy.ReligiousEthosId)
                     {
                         <div class="form-group">
                             <label for="religious-ethos">Religious ethos</label>
@@ -397,7 +352,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ProvisionBoardingId)
+                    @if (Model.EditPolicy.ProvisionBoardingId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
                             <label for="boarders">Boarders</label>
@@ -406,7 +361,7 @@
 
                     }
 
-                    @if (Model.DisplayPolicy.ProvisionNurseryId)
+                    @if (Model.EditPolicy.ProvisionNurseryId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
                             <label for="nursery">Nursery provision</label>
@@ -414,7 +369,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
+                    @if (Model.EditPolicy.ProvisionOfficialSixthFormId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
                             <label for="sixthform">Official sixth form</label>
@@ -422,7 +377,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Capacity)
+                    @if (Model.EditPolicy.Capacity)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.Capacity)">
                             <label for="school-capacity">School capacity</label>
@@ -430,7 +385,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Section41ApprovedId)
+                    @if (Model.EditPolicy.Section41ApprovedId)
                     {
                         <div class="form-group">
                             <label for="section-41">Section 41 approved</label>
@@ -438,98 +393,34 @@
                         </div>
                     }
 
-                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.OpenDate)">
-                        <fieldset>
-                            <legend>Open date</legend>
+                    @if (Model.EditPolicy.OpenDate)
+                    {
+                        @Html.EditorFor(x => x.OpenDate, new { title = "Open date" })
+                    }
+                    
+                    @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
+                            <label for="reason-establishment-opened">Reason establishment opened</label>
+                            @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "form-control", id = "reason-establishment-opened" })
+                        </div>
+                    }
 
-                            <div class="form-hint">For example, 20 03 2003</div>
-                            @Html.ValidationMessageFor(x => x.OpenDate)
-                            <span class="inline-form-control">
-                                <label for="opendate-day">Day</label>
-                                @Html.EduDayDropDownFor(x => x.OpenDate.Day,
-                 new
-                 {
-                     id = "opendate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-opendate-day",
-                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="opendate-month">Month</label>
-                                @Html.EduMonthDropDownFor(x => x.OpenDate.Month,
-                 new
-                 {
-                     id = "opendate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-opendate-month",
-                 })
+                    @if (Model.EditPolicy.CloseDate)
+                    {
+                        @Html.EditorFor(x => x.CloseDate, new { title = "Close date" })
+                    }
 
-                            </span>
-                            <span class="inline-form-contol">
-                                <label for="opendate-year">Year</label>
-                                @Html.EduYearDropDownFor(x => x.OpenDate.Year,
-                 new
-                 {
-                     id = "opendate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-opendate-year",
-                 })
-                            </span>
-                        </fieldset>
-                    </div>
+                    @if (Model.EditPolicy.ReasonEstablishmentClosedId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
+                            <label for="reason-establishment-closed">Reason establishment closed</label>
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control", id = "reason-establishment-closed" })
+                        </div>
+                    }
 
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
-                        <label for="reason-establishment-opened">Reason establishment opened</label>
-                        @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
-                        @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "form-control", id = "reason-establishment-opened" })
-                    </div>
-
-
-                    <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.CloseDate)">
-                        <fieldset>
-                            <legend>Close date</legend>
-                            <div class="form-hint">For example, 20 03 2003</div>
-
-                            @Html.ValidationMessageFor(x => x.CloseDate)
-                            <span class="inline-form-control">
-                                <label for="Closedate-day">Day</label>
-                                @Html.EduDayDropDownFor(x => x.CloseDate.Day,
-                 new
-                 {
-                     id = "Closedate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-day",
-                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="Closedate-month">Month</label>
-                                @Html.EduMonthDropDownFor(x => x.CloseDate.Month,
-                 new
-                 {
-                     id = "Closedate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-month",
-                 })
-                            </span>
-                            <span class="inline-form-control">
-                                <label for="Closedate-year">Year</label>
-                                @Html.EduYearDropDownFor(x => x.CloseDate.Year,
-                 new
-                 {
-                     id = "Closedate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-year",
-                 })
-                            </span>
-                        </fieldset>
-                    </div>
-
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
-                        <label for="reason-establishment-closed">Reason establishment closed</label>
-                        @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control", id = "reason-establishment-closed" })
-                    </div>
-
-                    @if (Model.DisplayPolicy.ProvisionSpecialClassesId)
+                    @if (Model.EditPolicy.ProvisionSpecialClassesId)
                     {
                         <div class="form-group">
                             <label class="form-label" for="special-classes">
@@ -539,7 +430,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.SENStat)
+                    @if (Model.EditPolicy.SENStat)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.SENStat)
@@ -547,7 +438,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.SENNoStat)
+                    @if (Model.EditPolicy.SENNoStat)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.SENNoStat)
@@ -555,7 +446,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.Contact_EmailAddress)
+                    @if (Model.EditPolicy.Contact_EmailAddress)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.Contact_EmailAddress, "Email address")
@@ -563,7 +454,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
+                    @if (Model.EditPolicy.ContactAlt_EmailAddress)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.ContactAlt_EmailAddress, "Alternative email address")
@@ -572,18 +463,23 @@
                     }
 
 
-                    @if (Model.DisplayPolicy.TypeOfSENProvisionList)
+                    @if (Model.EditPolicy.SENIds)
                     {
-                        <div class="form-group grouped-controls">
-                            <label>Type of SEN provision</label>
-                            @Html.DropDownListFor(x => x.SEN1Id, Model.SENProvisions1, "", new { @class = "form-control", id = "sen-provision0" })
-                            @Html.DropDownListFor(x => x.SEN2Id, Model.SENProvisions2, "", new { @class = "form-control", id = "sen-provision1" })
-                            @Html.DropDownListFor(x => x.SEN3Id, Model.SENProvisions3, "", new { @class = "form-control", id = "sen-provision2" })
-                            @Html.DropDownListFor(x => x.SEN4Id, Model.SENProvisions4, "", new { @class = "form-control", id = "sen-provision3" })
+                        <div class="form-group">
+                            <label class="form-label" style="margin-bottom:5px;">Type of SEN provision</label>
+                            @foreach (var item in Model.SENProvisions)
+                            {
+                                <label style="margin-bottom:10px;" class="block-label"
+                                       for="@nameof(Model.SENProvisions)_@item.Id">
+                                    @item.Name
+                                    <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)"
+                                           value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked") />
+                                </label>
+                            }
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.TeenageMothersProvisionId)
+                    @if (Model.EditPolicy.TeenageMothersProvisionId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.TeenageMothersProvisionId)
@@ -591,7 +487,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.TeenageMothersCapacity)
+                    @if (Model.EditPolicy.TeenageMothersCapacity)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.TeenageMothersCapacity)
@@ -599,7 +495,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ChildcareFacilitiesId)
+                    @if (Model.EditPolicy.ChildcareFacilitiesId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.ChildcareFacilitiesId)
@@ -607,7 +503,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PRUSENId)
+                    @if (Model.EditPolicy.PRUSENId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PRUSENId)
@@ -615,7 +511,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PRUEBDId)
+                    @if (Model.EditPolicy.PRUEBDId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PRUEBDId)
@@ -623,7 +519,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PlacesPRU)
+                    @if (Model.EditPolicy.PlacesPRU)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PlacesPRU)
@@ -631,7 +527,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PruFulltimeProvisionId)
+                    @if (Model.EditPolicy.PruFulltimeProvisionId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PruFulltimeProvisionId)
@@ -639,7 +535,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.PruEducatedByOthersId)
+                    @if (Model.EditPolicy.PruEducatedByOthersId)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.PruEducatedByOthersId)
@@ -648,7 +544,7 @@
                     }
 
 
-                    @if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
+                    @if (Model.EditPolicy.TypeOfResourcedProvisionId)
                     {
                         <div class="form-group">
                             <label for="resourced-provision-type">
@@ -658,23 +554,25 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
+                    @if (Model.EditPolicy.ResourcedProvisionOnRoll)
                     {
-                        <div class="form-group">
-                            <label for="resourced-provision-headcount">Resourced provision number on roll</label>
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ResourcedProvisionOnRoll)">
+                            <label for="@nameof(Model.ResourcedProvisionOnRoll)">Resourced provision number on roll</label>
+                            @Html.ValidationMessageFor(x => x.ResourcedProvisionOnRoll)
                             @Html.TextBoxFor(x => x.ResourcedProvisionOnRoll, new { @class = "form-control", id = "resourced-provision-headcount", type = "number" })
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
+                    @if (Model.EditPolicy.ResourcedProvisionCapacity)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ResourcedProvisionCapacity)">
                             @Html.LabelFor(x => x.ResourcedProvisionCapacity, "Resourced provision capacity")
+                            @Html.ValidationMessageFor(x => x.ResourcedProvisionCapacity)
                             @Html.TextBoxFor(x => x.ResourcedProvisionCapacity, new { @class = "form-control", type = "number" })
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.SenUnitOnRoll)
+                    @if (Model.EditPolicy.SenUnitOnRoll)
                     {
                         <div class="form-group">
                             <label for="sen-unit-number">SEN unit number on roll</label>
@@ -682,7 +580,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.SenUnitCapacity)
+                    @if (Model.EditPolicy.SenUnitCapacity)
                     {
                         <div class="form-group">
                             <label for="sen-unit-capacity">SEN unit capacity</label>
@@ -690,7 +588,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.BSOInspectorateId)
+                    @if (Model.EditPolicy.BSOInspectorateId)
                     {
                         <div class="form-group">
                             <label for="bso-inspectorate">BSO: Inspectorate name</label>
@@ -698,7 +596,7 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
+                    @if (Model.EditPolicy.BSOInspectorateReportUrl)
                     {
                         <div class="form-group">
                             @Html.LabelFor(x => x.BSOInspectorateReportUrl, "Inspectorate report")
@@ -706,272 +604,98 @@
                         </div>
                     }
 
-                    @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
+                    @if (Model.EditPolicy.BSODateOfLastInspectionVisit)
                     {
-                        <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.BSODateOfLastInspectionVisit)">
-                            <fieldset>
-                                <legend>BSO: Date of last inspection</legend>
-                                <div class="form-hint">For example, 20 03 2003</div>
-
-                                @Html.ValidationMessageFor(x => x.BSODateOfLastInspectionVisit)
-                                <span class="inline-form-control">
-                                    <label for="Closedate-day">Day</label>
-                                    @Html.EduDayDropDownFor(x => x.BSODateOfLastInspectionVisit.Day,
-                 new
-                 {
-                     id = "Closedate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-day",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="Closedate-month">Month</label>
-                                    @Html.EduMonthDropDownFor(x => x.BSODateOfLastInspectionVisit.Month,
-                 new
-                 {
-                     id = "Closedate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-month",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="Closedate-year">Year</label>
-                                    @Html.EduYearDropDownFor(x => x.BSODateOfLastInspectionVisit.Year,
-                 new
-                 {
-                     id = "Closedate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-year",
-                 })
-                                </span>
-                            </fieldset>
-                        </div>
+                        @Html.EditorFor(x => x.BSODateOfLastInspectionVisit, new { title = "BSO: Date of last inspection" })
                     }
 
-                    @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
+                    @if (Model.EditPolicy.BSODateOfNextInspectionVisit)
                     {
-                        <div class="form-group create-edit-form-group drop-down-date range-group @Html.ValidationCssClassFor(x => x.BSODateOfNextInspectionVisit)">
-                            <fieldset>
-                                <legend>BSO: Next inspection visit</legend>
-                                <div class="form-hint">For example, 20 03 2003</div>
-                                <span class="inline-form-control">
-                                    @Html.ValidationMessageFor(x => x.BSODateOfNextInspectionVisit)
-                                    <label for="Closedate-day">Day</label>
-                                    @Html.EduDayDropDownFor(x => x.BSODateOfNextInspectionVisit.Day,
-                 new
-                 {
-                     id = "Closedate-day",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-day",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="Closedate-month">Month</label>
-                                    @Html.EduMonthDropDownFor(x => x.BSODateOfNextInspectionVisit.Month,
-                 new
-                 {
-                     id = "Closedate-month",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-month",
-                 })
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="Closedate-year">Year</label>
-                                    @Html.EduYearDropDownFor(x => x.BSODateOfNextInspectionVisit.Year,
-                 new
-                 {
-                     id = "Closedate-year",
-                     @class = "form-control",
-                     aria_describedby = "help-Closedate-year",
-                 })
-                                </span>
-                            </fieldset>
-                        </div>
+                        @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new { title = "BSO: Next inspection visit" })
                     }
-
-
-                    @if (Model.TabDisplayPolicy.Governance)
-                    {
-                        <h2 class="heading-medium  create-edit-section-break">Governance</h2>
-                        <p>Placeholder</p>
-                    }
-
-
-                    @*@if (Model.Urn.HasValue)
-                    {
-                        <a id="addlinkedschool"></a>
-                        <h2 class="heading-medium create-edit-section-break">Links</h2>
-                        <div class="link-establishment-form">
-                            <h2 class="bold-xsmall">Link new school</h2>
-                            <p class="font-xsmall">Enter the Establishment <abbr title="Unique Reference Number">URN</abbr></p>
-                            @Html.TextBoxFor(x => x.LinkedSearchUrn, new { maxlength = 120, id = "linkedsearchurn", @class = "form-control " })
-                            &nbsp;&nbsp;
-                            <button type="button" class="button button-next font-xsmall" name="action" value="@ViewModel.eAction.FindEstablishment">Search</button>
-                        </div>
-
-                        if (Model.LinkedUrnToAdd.HasValue)
-                        {
-                            <div class="establishment-link-results">
-
-                                <h3 class="bold-xsmall">Establishment found</h3>
-                                <p class="font-xsmall">@Model.LinkedEstabNameToAdd</p>
-                                @Html.HiddenFor(x => x.LinkedEstabNameToAdd)
-                                @Html.HiddenFor(x => x.LinkedUrnToAdd)
-                                <table class="borderless estab-links add-linked-estab">
-                                    <tr>
-                                        <td>Link type</td>
-                                        <td>
-                                            <div class="form-group @Html.ValidationCssClassFor(x => x.LinkTypeToAdd)">
-                                                @Html.ValidationMessageFor(x => x.LinkTypeToAdd)
-                                                @Html.EnumDropDownListFor(x => x.LinkTypeToAdd, new { @class = "form-control" })
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Date linked</td>
-                                        <td>
-                                            <div class="form-group drop-down-date @Html.ValidationCssClassFor(x => x.LinkedDateToAdd)">
-                                                @Html.ValidationMessageFor(x => x.LinkedDateToAdd)
-                                                @Html.DropDownListFor(x => x.LinkedDateToAdd.Day,
-                                                Enumerable.Range(1, 31).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                                                    new
-                                                    {
-                                                        id = "LinkedDateToAdd-day",
-                                                        @class = "form-control",
-                                                        aria_describedby = "help-LinkedDateToAdd-day"
-                                                    })
-
-                                                @Html.DropDownListFor(x => x.LinkedDateToAdd.Month,
-                                                Enumerable.Range(1, 12).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                                                    new
-                                                    {
-                                                        id = "LinkedDateToAdd-month",
-                                                        @class = "form-control",
-                                                        aria_describedby = "help-Closedate-month"
-                                                    })
-
-                                                @Html.DropDownListFor(x => x.LinkedDateToAdd.Year,
-                                                Enumerable.Range(1900, 200).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }),
-                                                    new
-                                                    {
-                                                        id = "LinkedDateToAdd-year",
-                                                        @class = "form-control",
-                                                        aria_describedby = "help-LinkedDateToAdd-year"
-                                                    })
-                                            </div>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" class="linked-establishment-submit-wrapper">
-                                            <button type="button" class="button mobile-full-width" name="action" value="@ViewModel.eAction.AddLinkedSchool">Add</button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        }
-
-
-                        if (Model.Links.Count > 0)
-                        {
-                            @Html.HiddenFor(x => x.LinkedItemPositionToRemove)
-                            <table class="estab-links edit-estab-links mi">
-                                <thead>
-                                    <tr>
-                                        <th><abbr title="Unique Reference Number">URN</abbr></th>
-                                        <th>Establishment name</th>
-                                        <th>Link type</th>
-                                        <th>Date linked</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (int i = 0; i < Model.Links.Count; i++)
-                                    {
-                                        var l = Model.Links[i];
-                                        <tr>
-                                            <td>@Html.ActionLink(l.Urn.ToString(), "Details", new { id = l.Urn })</td>
-                                            <td>@Html.ActionLink(l.Name, "Details", new { id = l.Urn })</td>
-                                            <td>@l.Type</td>
-                                            <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
-                                            <td>
-                                                <button type="button" name="action" class="link-button font-xsmall"
-                                                        value="RemoveLinkedSchool" onclick="$('#LinkedItemPositionToRemove').val(@i);">
-                                                    Remove
-                                                </button>
-                                                @Html.HiddenFor(x => x.Links[i].Id)
-                                                @Html.HiddenFor(x => x.Links[i].Urn)
-                                                @Html.HiddenFor(x => x.Links[i].Name)
-                                                @Html.HiddenFor(x => x.Links[i].Type)
-                                                @Html.HiddenFor(x => x.Links[i].LinkDate)
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-
-                            <div class="mvo">
-                                @for (int i = 0; i < Model.Links.Count; i++)
-                                {
-                                    var l = Model.Links[i];
-                                    <table class="estab-links">
-                                        <tbody>
-                                            <tr>
-                                                <th><abbr title="Unique Reference Number">URN</abbr></th>
-                                                <td>@Html.ActionLink(l.Urn.ToString(), "Details", "Establishment", new { id = l.Urn }, null)</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Establishment name</th>
-                                                <td>@Html.ActionLink(l.Name, "Details", "Establishment", new { id = l.Urn }, null)</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Type of link</th>
-                                                <td>@l.Type</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Date linked</th>
-                                                <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <button type="button" name="action" class="link-button font-xsmall"
-                                                            value="RemoveLinkedSchool" onclick="$('#LinkedItemPositionToRemove').val(@i);">
-                                                        Remove
-                                                    </button>
-                                                </td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                }
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <h2 class="heading-medium create-edit-section-break">Links</h2>
-
-                        <h3>Placeholder</h3>
-                    }*@
 
 
                     <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
-                
-                
 
                 </div>
-
             </div>
         </div>
 
         @if (Model.ChangesSummary != null)
         {
             Html.RenderPartial("Partials/_ConfirmChanges");
-            <br />
-            <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
-            <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
+
+            <div class="button-row">
+                <button class="button-grey button mobile-full-width" name="action" type="submit" value="@ViewModel.eAction.CancelChanges">&laquo; Back</button>
+                <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
+
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey mobile-full-width", id = "cancel-edit" })
+            </div>
+
+            @section ViewScripts {
+
+                <script>
+                    $('#cancel-edit, .requires-conf-to-leave').okCancel({
+                        ok: function() {
+                            window.location = this.el.getAttribute('href');
+                        },
+                        title: 'Are you sure you want to leave this page?',
+                        content: 'Any unsaved changes will be lost',
+                        triggerEvent: 'click'
+                    });
+                </script>
+
+            }
+
         }
-    
+        else
+        {
+            @section ViewScripts
+{
+                <script>
+                    var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
+                    var phases = @Html.Json(Model.EducationPhases);
+
+                    var $fields = $('#content').find('.form-control');
+                    var exitAttached = false;
+
+                    $fields.on('change', function () {
+                        if (!exitAttached) {
+                            DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                            exitAttached = true;
+                        }
+                    });
+
+                    $(function() {
+                        filterEstablishmentPhaseList();
+                        $("select#TypeId").on("change keyup", filterEstablishmentPhaseList);
+                    });
+
+                    function filterEstablishmentPhaseList() {
+                        var $typeSelector = $("#TypeId");
+                        var $phaseSelector = $("select#EducationPhaseId");
+                        var optionList = '<option value="">Please select</option>';
+                        var typeId = $typeSelector.val();
+                        var previousSelValue = $phaseSelector.val();
+                        if(!isNaN(typeId)) {
+                            var applicablePhases = type2PhaseMap[typeId];
+                            if(applicablePhases && applicablePhases.length > 0) {
+                                for (var i = 0; i < applicablePhases.length; i++) {
+                                    var filtered = $.grep(phases, function(ele, y) { return parseInt(ele.value, 10) == applicablePhases[i]; });
+                                    if(filtered != null && filtered.length > 0) {
+                                        optionList += '<option value="' + filtered[0].value + '" '+ (previousSelValue == filtered[0].value ? "selected" : "") +'>' + filtered[0].text + '</option>';
+                                    }
+                                }
+                            }
+                        }
+                        $phaseSelector.html(optionList);
+                    }
+
+
+                </script>
+            }
+        }
+
     </div>
 }

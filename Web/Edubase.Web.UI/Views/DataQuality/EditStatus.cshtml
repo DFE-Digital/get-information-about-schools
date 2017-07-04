@@ -1,0 +1,67 @@
+﻿@model Edubase.Web.UI.Models.DataQuality.EditDataQualityStatusViewModel
+@{
+    ViewBag.Title = "Update data status";
+    ViewBag.bodyClasses = "data-quality";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Data status", "ViewStatus", "DataQuality", new { area = "" }, null)
+                </li>
+            </ul>
+        </div>
+        @Html.ValidationSummary("Invalid date", new {@class = "error-summary"})
+        <h1 class="heading-intro">
+            Update data status
+        </h1>
+
+    </div>
+    @using (Html.BeginForm())
+    {
+        <div class="column-half">
+            @for (var index = 0; index < Model.Items.Count(); index++)
+            {
+                <div class="form-group data-status-group">
+                    <h2 class="heading-small">Establishment type</h2>
+                    <h3>@Model.Items[index].EstablishmentType.GetEnumMember()</h3>
+                    @Html.HiddenFor(m => m.Items[index].EstablishmentType)
+                    @Html.EditorFor(m => m.Items[index].LastUpdated, new {title = "Last updated"})
+                </div>
+            }
+        </div>
+
+        <div class="column-full">
+            <div class="button-row">
+                <input type="submit" class="button mobile-full-width" value="Save" id="save-data-status"/>
+                <a href="@Url.Action("ViewStatus", "DataQuality")" class="button button-grey mobile-full-width">Cancel</a>
+            </div>
+        </div>
+    }
+</div>
+
+
+@section ViewScripts
+{
+    <script>
+        var $fields = $('#content').find('.form-control');
+        var exitAttached = false;
+       
+        $fields.on('change', function () {
+            if (!exitAttached) {
+                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                exitAttached = true;
+            }
+
+        });
+
+    </script>
+}

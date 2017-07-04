@@ -104,7 +104,9 @@
 
             .cell-edit {
                 text-align: left;
-                padding-bottom: 44px;
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+                border-bottom: $grey-2 1px solid;
 
                 a {
                     display: block;

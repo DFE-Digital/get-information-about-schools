@@ -1,0 +1,32 @@
+﻿@model IHtmlString
+@{
+    ViewBag.Title = "Edubase";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+            </ul>
+        </div>
+        <h1 class="heading-xlarge">News</h1>
+    </div>
+</div>
+<div class="grid-row news">
+    @Model
+</div>
+
+@section ViewScripts {
+    
+    <style type="text/css">
+        .news p.date {
+            color: #6F777B;
+        }
+        .news h1 {
+            margin-bottom: 0;
+        }
+    </style>    
+}

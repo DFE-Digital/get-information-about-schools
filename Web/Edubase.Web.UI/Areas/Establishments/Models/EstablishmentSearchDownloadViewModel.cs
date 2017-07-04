@@ -1,8 +1,8 @@
 ﻿using Edubase.Services.Domain;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Web.UI.Models.Search;
 using System;
-using static Edubase.Services.Core.FileDownloadFactoryService;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {
@@ -12,9 +12,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         public eDataSet? Dataset { get; set; }
 
-        public SearchDownloadGenerationProgressDto Progress { get { throw new Exception("Progress object not available"); } }
+        public ProgressDto Progress { get { throw new Exception("Progress object not available"); } }
         public int Step => 2;
         public int TotalSteps => 4;
         public string DownloadName => "establishment";
+
+        eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
+
+
     }
 }

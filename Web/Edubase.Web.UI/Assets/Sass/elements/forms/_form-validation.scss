@@ -60,12 +60,10 @@ category: Forms
 */
 
 // Validation summary box
-@import "colours";
-@import "measurements";
-@import "conditionals";
-@import "typography";
 
-.validation-summary {
+
+.validation-summary,
+.validation-summary-errors {
     border: 3px solid $error-colour;
     padding: $gutter-half $gutter;
     margin-bottom: $gutter;
@@ -74,11 +72,18 @@ category: Forms
         zoom: 1;
     }
 
+    > span {
+        display: block;
+        font-weight: bold;
+        font-size: 24px;
+    }
     ul {
         margin-top: 10px;
     }
 
-    li,
+    li {
+        @include core-19;
+    }
     p {
         @include core-16;
     }
@@ -122,7 +127,8 @@ category: Forms
     // @include box-sizing(border-box);
     margin-right: 15px;
     // Error messages should be red and bold
-    .error-message {
+    .error-message,
+    .field-validation-error {
         color: $error-colour;
         font-weight: bold;
     }
@@ -149,7 +155,8 @@ category: Forms
     }
 }
 
-.error-message {
+.error-message,
+.field-validation-error {
     @include core-19;
     display: block;
     clear: both;
@@ -158,7 +165,8 @@ category: Forms
 }
 
 // Summary of multiple error messages
-.error-summary {
+.error-summary,
+.validation-summary-errors {
     // Error summary has a border on all sides
     border: 4px solid $error-colour;
     margin-top: $gutter-half;

@@ -70,20 +70,12 @@
       <HintPath>..\packages\CompaniesHouse.3.0.0\lib\net45\CompaniesHouse.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -93,14 +85,6 @@
     <Reference Include="Humanizer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
       <HintPath>..\packages\Humanizer.Core.2.1.0\lib\netstandard1.0\Humanizer.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Lucene.Net.Linq, Version=3.6.0.125, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\Lucene.Net.Linq\Lucene.Net.Linq.dll</HintPath>
@@ -109,16 +93,8 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Azure.Search, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.Search.3.0.1\lib\net45\Microsoft.Azure.Search.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -139,10 +115,6 @@
     </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime.Azure, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.4\lib\net45\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.ServiceBus, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.ServiceBus.3.4.0\lib\net45-full\Microsoft.ServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Spatial, Version=6.15.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -200,57 +172,110 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Approvals\IApprovalService.cs" />
+    <Compile Include="Approvals\Models\ePendingChangeRequestAction.cs" />
+    <Compile Include="Approvals\Models\PendingApprovalItem.cs" />
+    <Compile Include="Approvals\Models\PendingApprovalsResult.cs" />
+    <Compile Include="Approvals\Models\PendingChangeRequestAction.cs" />
     <Compile Include="BlobService.cs" />
+    <Compile Include="DataQuality\DataQualityReadService.cs" />
+    <Compile Include="DataQuality\DataQualityWriteService.cs" />
+    <Compile Include="DataQuality\IDataQualityReadService.cs" />
+    <Compile Include="DataQuality\IDataQualityWriteService.cs" />
     <Compile Include="Domain\AddressDto.cs" />
-    <Compile Include="Downloads\DownloadsService.cs" />
+    <Compile Include="Domain\ApiResponse.cs" />
+    <Compile Include="Domain\ApiSearchResult.cs" />
+    <Compile Include="Domain\ApiResultDto.cs" />
+    <Compile Include="Domain\BulkUpdateProgressModel.cs" />
+    <Compile Include="Domain\CreateEstablishmentPermissionDto.cs" />
+    <Compile Include="Domain\CreateGroupPermissionDto.cs" />
+    <Compile Include="Domain\ApiError.cs" />
+    <Compile Include="Domain\DownloadDto.cs" />
+    <Compile Include="Domain\GroupChangeDto.cs" />
+    <Compile Include="Domain\FileDownloadDto.cs" />
+    <Compile Include="Domain\NumericResultDto.cs" />
+    <Compile Include="Domain\SearchDownloadDto.cs" />
+    <Compile Include="Domain\ValidationEnvelopeDto.cs" />
+    <Compile Include="Domain\ApiWarning.cs" />
     <Compile Include="Downloads\IDownloadsService.cs" />
     <Compile Include="Downloads\Models\FileDownload.cs" />
+    <Compile Include="Downloads\Models\ScheduledExtract.cs" />
+    <Compile Include="Downloads\Models\ScheduledExtractsResult.cs" />
+    <Compile Include="Enums\eFileFormat.cs" />
     <Compile Include="Enums\eGovernanceMode.cs" />
-    <Compile Include="Enums\eLocalAuthority.cs" />
+    <Compile Include="Enums\eLookupEducationPhase.cs" />
+    <Compile Include="Enums\eLookupEstablishmentLinkType.cs" />
     <Compile Include="Enums\eLookupEstablishmentStatus.cs" />
     <Compile Include="Enums\eLookupEstablishmentType.cs" />
     <Compile Include="Enums\eLookupEstablishmentTypeGroup.cs" />
-    <Compile Include="Enums\eLookupFurtherEducationType.cs" />
     <Compile Include="Enums\eLookupGovernorAppointingBody.cs" />
     <Compile Include="Enums\eLookupGovernorRole.cs" />
     <Compile Include="Enums\eLookupGroupStatus.cs" />
     <Compile Include="Enums\eLookupGroupType.cs" />
-    <Compile Include="Enums\eLookupTypeOfResourcedProvision.cs" />
+    <Compile Include="Enums\eLookupSearchSource.cs" />
     <Compile Include="Enums\EnumSets.cs" />
+    <Compile Include="Enums\GroupChangeLinkType.cs" />
+    <Compile Include="Enums\GroupChangeRequestType.cs" />
+    <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayEditPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
+    <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
+    <Compile Include="Establishments\Models\AmalgamateMergeRequest.cs" />
+    <Compile Include="Establishments\Models\BulkCreateAcademiesProgress.cs" />
+    <Compile Include="Establishments\Models\BulkUpdateDto.cs" />
+    <Compile Include="Establishments\Models\CreateNewEstablishment.cs" />
+    <Compile Include="Establishments\Models\Establishment2JsonPropertyMap.cs" />
+    <Compile Include="Establishments\Models\IEBTModel.cs" />
+    <Compile Include="Establishments\Models\NewAcademyRequest.cs" />
+    <Compile Include="Establishments\Models\NewAcademyRequestValidationEnvelope.cs" />
+    <Compile Include="Establishments\Models\NewAcademyResult.cs" />
+    <Compile Include="Exceptions\TexunaApiNotFoundException.cs" />
+    <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
-    <Compile Include="Governors\GovernorsWriteService.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorAppointment.cs" />
-    <Compile Include="Governors\Models\GovernorModelBase.cs" />
+    <Compile Include="Governors\Models\GovernorBulkUpdateValidationResult.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
-    <Compile Include="IntegrationEndPoints\AzureSearch\AZSIgnoreAttribute.cs" />
-    <Compile Include="Core\FileDownloadFactoryService.cs" />
-    <Compile Include="Core\IFileDownloadFactoryService.cs" />
-    <Compile Include="Core\Search\eSortBy.cs" />
+    <Compile Include="Enums\eSortBy.cs" />
     <Compile Include="Domain\CompaniesHouseNumber.cs" />
     <Compile Include="Domain\OfstedRatingUrl.cs" />
     <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
     <Compile Include="Exceptions\SearchQueryTooLargeException.cs" />
-    <Compile Include="Governors\Downloads\GovernorDownloadService.cs" />
     <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
     <Compile Include="Governors\IGovernorsReadService.cs" />
     <Compile Include="Governors\Models\GovernorModel.cs" />
+    <Compile Include="Governors\Models\SearchGovernorModel.cs" />
+    <Compile Include="Governors\Search\eGovernorTypesFlag.cs" />
     <Compile Include="Governors\Search\GovernorSearchPayload.cs" />
-    <Compile Include="Governors\Search\SearchGovernorDocument.cs" />
-    <Compile Include="Groups\Downloads\GroupDownloadService.cs" />
     <Compile Include="Groups\Downloads\IGroupDownloadService.cs" />
     <Compile Include="Groups\Models\EstablishmentGroupModel.cs" />
+    <Compile Include="Groups\Models\LinkedEstablishmentGroup.cs" />
     <Compile Include="Groups\Models\SaveGroupDto.cs" />
     <Compile Include="Groups\Validation\SaveGroupDtoValidator.cs" />
     <Compile Include="IntegrationEndPoints\CompaniesHouse\ICompaniesHouseService.cs" />
+    <Compile Include="IntegrationEndPoints\CompaniesHouse\Models\CompanyAddress.cs" />
+    <Compile Include="IntegrationEndPoints\CompaniesHouse\Models\CompanyProfile.cs" />
+    <Compile Include="IntegrationEndPoints\CompaniesHouse\Models\CompanySearchModel.cs" />
+    <Compile Include="IntegrationEndPoints\Google\GooglePlacesService.cs" />
+    <Compile Include="IntegrationEndPoints\Google\IGooglePlacesService.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\AddressComponent.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\AutocompleteItemDto.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\Geometry.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\GoogleApiException.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\Location.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\MatchedSubstring.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\Photo.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\PlaceDetailApiResponse.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\Prediction.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\AutocompleteApiQueryResponse.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\Result.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\StructuredFormatting.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\Term.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\Viewport.cs" />
     <Compile Include="Lookup\CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
     <Compile Include="Domain\ChildrensCentreLocalAuthorityDto.cs" />
-    <Compile Include="Domain\CompanyProfileDto.cs" />
-    <Compile Include="Domain\CompanySearchDto.cs" />
     <Compile Include="Domain\ContactDetailDto.cs" />
     <Compile Include="Domain\EstablishmentChangeDto.cs" />
     <Compile Include="Domain\EstablishmentDto.cs" />
@@ -260,72 +285,36 @@
     <Compile Include="Domain\PagedResultDto.cs" />
     <Compile Include="Domain\ChangeDescriptorDto.cs" />
     <Compile Include="Domain\PersonDto.cs" />
-    <Compile Include="Domain\SearchDownloadGenerationProgressDto.cs" />
+    <Compile Include="Domain\ProgressDto.cs" />
     <Compile Include="Domain\ServiceResultDto.cs" />
-    <Compile Include="Establishments\DisplayPolicies\AcademyDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\BSODisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\ChildrensCentreLinkedSitesDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\ChildrensCentresDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\DisplayPolicyFactory.cs" />
-    <Compile Include="Establishments\DisplayPolicies\EstablishmentDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\FEHEDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\IndependentNMSSDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\LAMaintainedDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\OtherDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\PRUDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\SpecialPost16InstitutionDisplayPolicy.cs" />
-    <Compile Include="Establishments\DisplayPolicies\WelshDisplayPolicy.cs" />
-    <Compile Include="Establishments\Downloads\EstablishmentDownloadFullFieldList.cs" />
-    <Compile Include="Establishments\Downloads\EstablishmentDownloadCoreFieldList.cs" />
-    <Compile Include="Establishments\Downloads\EstablishmentDownloadService.cs" />
+    <Compile Include="Establishments\DisplayPolicies\EstablishmentDisplayEditPolicy.cs" />
     <Compile Include="Establishments\Downloads\IEstablishmentDownloadService.cs" />
-    <Compile Include="Establishments\Enums\EstabNumberEntryPolicy.cs" />
-    <Compile Include="Establishments\EstablishmentReadService.cs" />
     <Compile Include="Establishments\IEstablishmentWriteService.cs" />
-    <Compile Include="Establishments\ILAESTABService.cs" />
-    <Compile Include="Establishments\LAESTABService.cs" />
-    <Compile Include="Establishments\Models\AdditionalAddressModel.cs" />
     <Compile Include="Establishments\Models\EstablishmentFieldList.cs" />
     <Compile Include="Establishments\Models\EstablishmentFieldListBase.cs" />
-    <Compile Include="Establishments\Models\EstablishmentModelBase.cs" />
+    <Compile Include="Establishments\Models\EstablishmentModel.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchFiltersLookups.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchFilters.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchPayload.cs" />
-    <Compile Include="Establishments\Search\EstablishmentsSearchIndex.cs" />
-    <Compile Include="Establishments\EstablishmentWriteService.cs" />
     <Compile Include="Establishments\IEstablishmentReadService.cs" />
     <Compile Include="Establishments\Models\EstablishmentAddressModel.cs" />
-    <Compile Include="Establishments\Models\EstablishmentModel.cs" />
     <Compile Include="Establishments\Models\LinkedEstablishmentModel.cs" />
     <Compile Include="Establishments\Search\EstablishmentSuggestionItem.cs" />
-    <Compile Include="Establishments\Search\SearchEstablishmentDocument.cs" />
-    <Compile Include="Governors\GovernorsReadService.cs" />
-    <Compile Include="Governors\Search\GovernorsSearchIndex.cs" />
     <Compile Include="Governors\Search\GovernorSuggestionItem.cs" />
-    <Compile Include="Groups\GroupsWriteService.cs" />
     <Compile Include="Groups\IGroupsWriteService.cs" />
     <Compile Include="Groups\Search\SearchGroupDocument.cs" />
     <Compile Include="Groups\Search\GroupSearchPayload.cs" />
     <Compile Include="Groups\Search\GroupSuggestionItem.cs" />
-    <Compile Include="Groups\Search\GroupsSearchIndex.cs" />
     <Compile Include="IBlobService.cs" />
     <Compile Include="IMessageLoggingService.cs" />
-    <Compile Include="IntegrationEndPoints\AzureSearch\IAzureSearchEndPoint.cs" />
-    <Compile Include="IntegrationEndPoints\AzureSearch\Models\AzureSearchResult.cs" />
-    <Compile Include="IntegrationEndPoints\AzureSearch\Models\ODataGeography.cs" />
-    <Compile Include="IntegrationEndPoints\AzureSearch\Models\SearchIndex.cs" />
-    <Compile Include="IntegrationEndPoints\AzureSearch\Models\SearchIndexField.cs" />
     <Compile Include="Exceptions\EdubaseException.cs" />
     <Compile Include="Exceptions\EduSecurityException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Exceptions\PermissionDeniedException.cs" />
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="Groups\GroupReadService.cs" />
     <Compile Include="Groups\IGroupReadService.cs" />
     <Compile Include="Groups\Models\GroupModel.cs" />
-    <Compile Include="IntegrationEndPoints\AzureSearch\AzureSearchEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\Base64String.cs" />
-    <Compile Include="IntegrationEndPoints\BlobStorage\BlobStorageEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\BlobStorage\PathComponents.cs" />
     <Compile Include="IntegrationEndPoints\Smtp\ISmtpEndPoint.cs" />
     <Compile Include="IntegrationEndPoints\Smtp\MockSmtpEndPoint.cs" />
@@ -334,21 +323,15 @@
     <Compile Include="Lookup\ILookupService.cs" />
     <Compile Include="Mapping\AutoMapperServicesProfile.cs" />
     <Compile Include="MessageLoggingService.cs" />
-    <Compile Include="Lookup\LookupService.cs" />
     <Compile Include="LogMessageReadService.cs" />
     <Compile Include="Nomenclature\NomenclatureService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\StubClaimsIdConverter.cs" />
-    <Compile Include="Security\ClaimsIdentityConverters\IClaimsIdConverter.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\SecureAccessClaimsIdConverter.cs" />
     <Compile Include="Security\EdubaseRoles.cs" />
     <Compile Include="Security\EduClaimTypes.cs" />
     <Compile Include="Security\ISecurityService.cs" />
-    <Compile Include="Security\Permissions\EditGroupPermissions.cs" />
-    <Compile Include="Security\Permissions\EditEstablishmentPermissions.cs" />
-    <Compile Include="Security\Permissions\Permission.cs" />
     <Compile Include="Security\SecurityExtensionMethods.cs" />
-    <Compile Include="Security\SecurityService.cs" />
     <Compile Include="IntegrationEndPoints\CompaniesHouse\CompaniesHouseService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -368,7 +351,9 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

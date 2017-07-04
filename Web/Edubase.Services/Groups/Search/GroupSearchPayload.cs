@@ -1,6 +1,5 @@
-﻿using Edubase.Services.Core.Search;
+﻿using Edubase.Services.Enums;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace Edubase.Services.Groups.Search
 {
@@ -18,8 +17,7 @@ namespace Edubase.Services.Groups.Search
         }
 
         public int[] GroupTypeIds { get; set; }
-
-        [JsonIgnore] // TODO: TEXCHANGE:  support GroupStatusIds
+        
         public int[] GroupStatusIds { get; set; }
 
         public string Text { get; set; }

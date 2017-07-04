@@ -1,0 +1,87 @@
+﻿@using Microsoft.Ajax.Utilities
+@model BulkUpdateViewModel
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+@using (Html.BeginRouteForm("ProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="grid-row spaced-groups">
+        <div class="column-full">
+            @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure())
+            {
+                <div class="pending-updates-message dismissable-message bulk-update-success">
+                    <div class="tick"></div>
+                    <p>Your bulk update was successful.</p>
+                    <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+                </div>
+            }
+            <h1 class="heading-xlarge">Establishment bulk update</h1>
+            
+            <p>Update establishment records by uploading a CSV or XLSX file.</p>
+        </div>
+        <div class="column-full">
+
+            <div class="expanding-content-wrapper" data-update-text="false">
+                <a href="#" class="expanding-content-trigger">
+                    Help with preparing files
+                    @* TODO: REF ACTUAL HELP FILE HERE *@
+                </a>
+                <div class="expanding-content panel-indent">
+                    <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
+                    <p class="download-list-item">
+                        <a href="#">EstablishmentBulkUpdateUserGuide.pdf, 30KB</a>
+                    </p>
+                </div>
+            </div>
+
+            @if (Model.Result != null && Model.Result.IsFailure())
+            {
+                <div class="form-group error" id="error-log">
+                    <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                    <p class="download-list-item">
+                        <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
+                    </p>
+                </div>
+            }
+
+        </div>
+        <div class="column-half">
+            <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="bulkfile" class="form-label">Upload a file</label>      
+                @Html.ValidationMessageFor(x => x.BulkFile)  
+                <div class="upload-control-wrapper">
+                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "file-input" });
+                    <button class="button button-grey file-selector">Choose file</button>
+                    <div class="text-field-wrapper">
+                        <input type="text" class="file-name" readonly="readonly" value="No file chosen" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group @Html.ValidationCssClassFor(x => x.BulkUpdateType)">
+                <label class="form-label" for="upload-file-type">
+                    Select file type
+                </label>
+                @Html.ValidationMessageFor(x => x.BulkUpdateType)  
+                @Html.EnumDropDownListFor(x => x.BulkUpdateType, "Select...", new { @class = "form-control" })
+            </div>
+
+            @Html.EditorFor(m => m.EffectiveDate, new { title = "Effective date (optional)" })
+
+        </div>
+        <div class="column-full">
+            <input type="submit" class="button mobile-full-width" value="Submit"/>           
+            <a href="/Tools" class="button button-grey cancel mobile-full-width">Cancel</a>
+        </div>
+       
+</div>
+}

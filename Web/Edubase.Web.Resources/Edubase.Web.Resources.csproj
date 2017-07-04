@@ -46,6 +46,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Academy.resx</DependentUpon>
     </Compile>
+    <Compile Include="ApiMessagesHelper.cs" />
+    <Compile Include="FileDownloadNames.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FileDownloadNames.resx</DependentUpon>
+    </Compile>
     <Compile Include="IResourcesHelper.cs" />
     <Compile Include="ResourcesHelper.cs" />
     <Compile Include="LocalAuthority.Designer.cs">
@@ -65,6 +71,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Academy.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="ApiMessages.resx" />
+    <EmbeddedResource Include="FileDownloadNames.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>FileDownloadNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="LocalAuthority.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LocalAuthority.Designer.cs</LastGenOutput>
@@ -75,10 +86,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">
+      <Project>{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}</Project>
+      <Name>Edubase.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
       <Project>{d605ace4-2659-48dc-bf21-94e7b8d230da}</Project>
       <Name>Edubase.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

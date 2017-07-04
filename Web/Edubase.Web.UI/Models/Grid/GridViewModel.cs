@@ -49,7 +49,5 @@ namespace Edubase.Web.UI.Models.Grid
             Rows.Add(row);
             return row;
         }
-
-
     }
 }

@@ -130,7 +130,7 @@
                     <div class="content">
                         <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
                         <nav id="proposition-menu">
-                            <a href="/Home" id="proposition-name">Get information about educational establishments</a>
+                            <a href="/" id="proposition-name">Get information about schools</a>
 
                             <ul id="proposition-links">
                                 <li><a href="/">Search</a></li>
@@ -139,7 +139,7 @@
                                 {
                                     <li><a href="/Tools">Tools</a></li>
                                     <li>
-                                        @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)
+                                        @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id="logout-link"})
                                     </li>
                                 }
                                 else
@@ -197,8 +197,9 @@
                     <div class="footer-meta-inner">
                         <h2 class="visuallyhidden">Support links</h2>
                         <ul>
-                            <li><a href="https://form.education.gov.uk/fillform.php?self=1&form_id=cCCNJ1xSfBE&noLoginPrompt=1">Contact</a></li>
-                            <li><a href="https://www.gov.uk/government/collections/school-performance-tables-about-the-data">Guidance</a></li>
+                            <li><a href="/cookies">Cookies</a></li>
+                            <!--<li><a href="#">Contact</a></li>-->
+                            <li><a href="/guidance">Guidance</a></li>
                         </ul>
 
                         <div class="open-government-licence">
@@ -218,6 +219,12 @@
         <script src="@(ViewBag.assetsPath)/javascripts/govuk-template.js?0.13.0" type="text/javascript"></script>
 
         @RenderSection("BodyEnd", required: false)
+        
+    @if (Request.IsAuthenticated)
+    {
+        <script type="text/javascript" src="/public/assets/scripts/standalone/data-status.js"></script>
+    }
+
     </div>
 </body>
 

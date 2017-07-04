@@ -1,14 +1,28 @@
 ﻿@using Edubase.Services.Enums
 @model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
     
-<div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitle)">
-    @Html.LabelFor(x => x.GovernorTitle)
-    @Html.ValidationMessageFor(x => x.GovernorTitle)
-    @Html.DropDownListFor(x => x.GovernorTitle, Model.Titles, "", new { @class = "form-control" })
+@{
+    bool disableStartDate;
+    if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out disableStartDate))
+    {
+        disableStartDate = false;
+    }
+
+    bool showReactivationWarning;
+    if (!bool.TryParse(ViewData["reactivationWarning"]?.ToString(), out showReactivationWarning))
+    {
+        showReactivationWarning = false;
+    }
+}
+    
+<div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
+    @Html.LabelFor(x => x.GovernorTitleId)
+    @Html.ValidationMessageFor(x => x.GovernorTitleId)
+    @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new { @class = "form-control" })
 </div>
 
 <div class="form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-    @Html.LabelFor(x => x.FirstName)
+    @Html.LabelFor(x => x.FirstName, "First name (required to save record)")
     @Html.ValidationMessageFor(x => x.FirstName)
     @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
 </div>
@@ -20,7 +34,7 @@
 </div>
 
 <div class="form-group @Html.ValidationCssClassFor(x => x.LastName)">
-    @Html.LabelFor(x => x.LastName)
+    @Html.LabelFor(x => x.LastName, "Last name (required to save record)")
     @Html.ValidationMessageFor(x => x.LastName)
     @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
 </div>
@@ -36,7 +50,7 @@
 @if (Model.DisplayPolicy.AppointingBodyId)
 {
 <div class="form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
-    @Html.LabelFor(x => x.AppointingBodyId)
+    @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)")
     @Html.ValidationMessageFor(x => x.AppointingBodyId)
     @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "", new { @class = "form-control" })
 </div>
@@ -44,18 +58,21 @@
 
 @if (Model.DisplayPolicy.AppointmentStartDate)
 {
-    @Html.EditorFor(x => x.AppointmentStartDate)
+    var detail = disableStartDate ? @"based on current governor's end date" : @"required to save record";
+    var title = $"Date of appointment ({detail})";
+
+    @Html.EditorFor(x => x.AppointmentStartDate, new { title, @readonly = disableStartDate })
 }
 
 @if (Model.DisplayPolicy.AppointmentEndDate)
 {
-    @Html.EditorFor(x => x.AppointmentStartDate, new {title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends"})
+    @Html.EditorFor(x => x.AppointmentEndDate, new {title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends", showReactivationWarning })
 }
 
 @if (Model.DisplayPolicy.EmailAddress)
 {
     <div class="form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
-        @Html.LabelFor(x => x.EmailAddress)
+        @Html.LabelFor(x => x.EmailAddress, "Email address (required to save record)")
         @Html.ValidationMessageFor(x => x.EmailAddress)
         @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control" })
     </div>
@@ -77,10 +94,10 @@
 
 @if (Model.DisplayPolicy.PreviousFullName)
 {
-    <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousTitle)">
-        @Html.LabelFor(x => x.PreviousTitle)
-        @Html.ValidationMessageFor(x => x.PreviousTitle)
-        @Html.DropDownListFor(x => x.PreviousTitle, Model.PreviousTitles, "", new { @class = "form-control" })
+    <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousTitleId)">
+        @Html.LabelFor(x => x.PreviousTitleId)
+        @Html.ValidationMessageFor(x => x.PreviousTitleId)
+        @Html.DropDownListFor(x => x.PreviousTitleId, Model.PreviousTitles, "", new { @class = "form-control" })
     </div>
 
     <div class="form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">
@@ -114,7 +131,7 @@
 @if (Model.DisplayPolicy.TelephoneNumber)
 {
     <div class="form-group @Html.ValidationCssClassFor(x => x.TelephoneNumber)">
-        @Html.LabelFor(x => x.TelephoneNumber)
+        @Html.LabelFor(x => x.TelephoneNumber, "Telephone (required to save record)")
         @Html.ValidationMessageFor(x => x.TelephoneNumber)
         @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = "form-control" })
     </div>

@@ -8,33 +8,19 @@ namespace Edubase.Services.Governors.DisplayPolicies
 {
     public class GovernorDisplayPolicy
     {
-        /// <summary>
-        /// GID / Governor ID
-        /// </summary>
-        public bool Id { get; internal set; }
-        public bool FullName { get; private set; } = true;
-        public bool AppointmentStartDate { get; internal set; } = true;
-        public bool AppointmentEndDate { get; internal set; } = true;
-        public bool RoleId { get; private set; } = true;
-        public bool AppointingBodyId { get; internal set; } = true;
-        public bool EmailAddress { get; internal set; }
-        public bool DOB { get; internal set; }
-        public bool Nationality { get; internal set; }
-        public bool PostCode { get; internal set; }
-        public bool PreviousFullName { get; internal set; }
-        public bool TelephoneNumber { get; internal set; }
-
-        internal GovernorDisplayPolicy SetFullAccess(bool flag = false)
-        {
-            Id = EmailAddress = DOB = Nationality = PostCode = PreviousFullName = TelephoneNumber = flag;
-            return this;
-        }
-
-        internal GovernorDisplayPolicy()
-        {
-            
-        }
-
+        public bool Id { get; set; }
+        public bool FullName { get; set; }
+        public bool AppointmentStartDate { get; set; }
+        public bool AppointmentEndDate { get; set; }
+        public bool RoleId { get; set; } = true;
+        public bool AppointingBodyId { get; set; }
+        public bool EmailAddress { get; set; }
+        public bool DOB { get; set; }
+        public bool Nationality { get; set; }
+        public bool PostCode { get; set; }
+        public bool PreviousFullName { get; set; }
+        public bool TelephoneNumber { get; set; }
+        
         public GovernorDisplayPolicy Clone() => MemberwiseClone() as GovernorDisplayPolicy;
         
     }

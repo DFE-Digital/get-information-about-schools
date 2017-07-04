@@ -261,6 +261,7 @@
     width: auto;
     padding: 8px 0 16px 40px;
     position: relative;
+    display: inline-block;
 
     &:before {
         position: absolute;
@@ -269,6 +270,7 @@
         height: 39px;
         background-image: file-url("icons/icon-file-download.png");
         background-size:30px 39px;
+        background-repeat: no-repeat;
         left: 0;
         top: 0;
 
@@ -283,10 +285,24 @@
         display: block;
     }
 }
+
+td.download-list-item {
+    &:before {
+        background-size: contain;
+        height: 24px;
+        top: 10px;
+        left: 6px;
+    }
+}
+
 .progress-indicator {
     min-width: 100%;
     min-height: 100px;
     background: transparent url(/public/assets/images/icons/icon-loading.gif) no-repeat center;
+
+    &.padded-indicator {
+        padding-top: 80px;
+    }
 }
 
 .red-exclaim {

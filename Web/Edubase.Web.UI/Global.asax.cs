@@ -1,24 +1,18 @@
-﻿using Edubase.Common;
+﻿using Autofac;
+using Edubase.Common;
 using Edubase.Common.Cache;
-using Edubase.Data.Entity;
-using Edubase.Data.Migrations;
 using Edubase.Services;
 using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
+using StackExchange.Profiling;
 using System;
-using System.Data.Entity;
 using System.Runtime.Caching;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
-using Edubase.Web.UI.Helpers;
-using Autofac;
-using Edubase.Data.DbContext;
-using StackExchange.Profiling;
-using Edubase.Web.UI.Validation;
-using StackExchange.Profiling.Storage;
+using System.Web.Http;
+using Newtonsoft.Json.Serialization;
 
 namespace Edubase.Web.UI
 {
@@ -26,24 +20,22 @@ namespace Edubase.Web.UI
     {
         protected void Application_Start()
         {
-#if (QA)
-            GlobalConfiguration.Configure(ODataConfig.Register);
-#endif
-            SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            IocConfig.Register();
+            
+            GlobalConfiguration.Configure(x => 
+            {
+                x.MapHttpAttributeRoutes();
+                IocConfig.Register(x);
+                x.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                x.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;
+                x.Filters.Add(new ApiExceptionFilter());
+            });
 
             using (var scope = IocConfig.Container.BeginLifetimeScope())
             {
                 scope.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
-                scope.Resolve<IBlobService>().Initialise("downloads");
             }
-            
-#if (!TEXAPI)
-            var m = new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>();
-            Database.SetInitializer(m);
-#endif
 
             var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.Container));
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
@@ -89,16 +81,15 @@ namespace Edubase.Web.UI
 
         protected void Application_BeginRequest()
         {
-            MiniProfiler.Start();
+            //MiniProfiler.Start();
         }
 
         protected void Application_EndRequest()
         {
-            MiniProfiler.Stop();
+            //MiniProfiler.Stop();
         }
 
-        private bool IsUserAllowedToSeeMiniProfilerUI(HttpRequest httpRequest) => true; // TODO: TEXCHANGE: SECURE THIS
-
-        //public static bool IsRunningOnAzure => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
+        private bool IsUserAllowedToSeeMiniProfilerUI(HttpRequest httpRequest) => false; 
+        
     }
 }

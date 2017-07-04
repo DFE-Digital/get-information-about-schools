@@ -13,15 +13,20 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI
 {
+    using Edubase.Web.Resources;
     using FluentValidation.Internal;
     using FluentValidation.Resources;
     using FluentValidation.Validators;
     using MoreLinq;
+    using Services.Texuna.ChangeHistory.Models;
 
     public static class LangExt
     {
         public static IEnumerable<SelectListItem> ToSelectList(this IEnumerable<LookupDto> items, int? currentId) 
             => items.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString(), Selected = currentId.HasValue && currentId.Value == x.Id });
+
+        public static IEnumerable<SelectListItem> ToSelectList(this IEnumerable<UserGroupModel> items, string currentId)
+            => items.Select(x => new SelectListItem { Text = x.Name, Value = x.Code, Selected = currentId == x.Code });
 
         /// <summary>
         /// Adds an item to the list if it's not already in there.
@@ -73,6 +78,23 @@ namespace Edubase.Web.UI
             return nvc;
         }
 
+        public static NameValueCollection RemoveKey(this NameValueCollection nvc, string key)
+        {
+            nvc = HttpUtility.ParseQueryString(nvc.ToString());
+            Guard.IsNotNull(key.Clean(), () => new ArgumentNullException(nameof(key)));
+            nvc.Remove(key);
+            return nvc;
+        }
+
+        public static NameValueCollection RemoveKeys(this NameValueCollection nvc, params string[] keys)
+        {
+            foreach (var item in keys)
+            {
+                nvc = nvc.RemoveKey(item);
+            }
+            return nvc;
+        }
+
         /// <summary>
         /// Adds a message that will appear in the validation summary, in addition to the field-level message.
         /// </summary>
@@ -84,6 +106,22 @@ namespace Edubase.Web.UI
         public static IRuleBuilderOptions<T, TProperty> WithSummaryMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string message) => rule.WithState(x => message);
 
         public static IRuleBuilderOptions<T, TProperty> WithSummaryMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> messageProvider) => rule.WithState(messageProvider);
+
+        public static List<T> Append<T>(this List<T> list, T item)
+        {
+            list.Add(item);
+            return list;
+        }
+
+        public static string GetMessage(this ApiError error)
+        {
+            return ApiMessagesHelper.Get(error.Code, error.Message);
+        }
+
+        public static string GetMessage(this ApiWarning warning)
+        {
+            return ApiMessagesHelper.Get(warning.Code, warning.Message);
+        }
 
     }
 }

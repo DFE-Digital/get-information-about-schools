@@ -3,6 +3,7 @@
 @using Edubase.Common
 @using Edubase.Services.Enums
 @using Edubase.Web.Resources
+@using Microsoft.Ajax.Utilities
 @model EstablishmentDetailViewModel
 @{
     ViewBag.Title = Model.Establishment.Name;
@@ -10,9 +11,68 @@
     ViewBag.HideLogo = true;
 }
 
+<div class="breadcrumbs">
+    @if (Model.SearchQueryString.IsNullOrWhiteSpace())
+    {
+        <ul>
+            <li>@Html.ActionLink("Home", "Index", "Search")</li>
+            @if (Model.LegalParentGroup != null)
+            {
+                <li>@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, null)</li>
+            }
+        </ul>
+    }
+    else
+    {
+        if (Model.SearchSource == eLookupSearchSource.Governors)
+        {
+            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+        }
+        else
+        {
+            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+        }
+    }
+</div>
+
+@if (Model.IsClosed)
+{
+    if (Model.Establishment.CloseDate != null)
+    {
+        <div class="grey-warning dismissable-message">
+            <p>
+                This establishment closed on @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy")).
+                View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
+            </p>
+            <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
+        </div>
+    }
+    else
+    {
+        <div class="grey-warning dismissable-message">
+            <p>
+                This establishment is closed.
+                View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
+            </p>
+            <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
+        </div>
+    }
+}
+
+@if (ViewBag.ShowApproved)
+{
+    <div class="pending-updates-message dismissable-message ">
+        <div class="tick"></div>
+        Your changes have been approved
+        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+    </div>
+}
 <h1 class="heading-large">@Model.Establishment.Name</h1>
 <p class="urn">URN: @Model.Establishment.Urn</p>
+<p class="establishment-data-download">
+    @Html.ActionLink("Download establishment data", "DownloadCsv", new { id = Model.Establishment.Urn, area = "" }, new {  })
 
+</p>
 <div class="column-full">
     <div class="grid-row horizontal-tabs-wrapper">
         <div class="tab-wrap">
@@ -21,7 +81,7 @@
                 {
                     <li><a href="#school-dashboard" class="horizontal-tab">Details</a></li>
                 }
-                
+
                 @if (Model.TabDisplayPolicy.IEBT)
                 {
                     <li><a href="#school-iebt" class="horizontal-tab">IEBT</a></li>
@@ -37,19 +97,24 @@
                     <li><a href="#school-links" class="horizontal-tab">Links</a></li>
                 }
 
-                @if (Model.DisplayPolicy.LocationDetails && Model.TabDisplayPolicy.Location)
+                @if (Model.TabDisplayPolicy.Location)
                 {
                     <li><a href="#school-location" class="horizontal-tab">Location</a></li>
                 }
-                
+
                 @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
                 {
                     <li><a href="#school-change-history" class="horizontal-tab">Changes</a></li>
                 }
+
+                @if (Model.TabDisplayPolicy.Helpdesk)
+                {
+                    <li><a href="#helpdesk" class="horizontal-tab">Helpdesk</a></li>
+                }
             </ul>
         </div>
         <div class="tab-content-wrapper horizontal-tabs-content">
-            @{ 
+            @{
                 if (Model.TabDisplayPolicy.Details)
                 {
                     Html.RenderPartial(@"Partials\TabDetails");
@@ -70,7 +135,7 @@
                     Html.RenderPartial(@"Partials\TabLinks");
                 }
 
-                if (Model.DisplayPolicy.LocationDetails && Model.TabDisplayPolicy.Location)
+                if (Model.TabDisplayPolicy.Location)
                 {
                     Html.RenderPartial(@"Partials\TabLocation");
                 }
@@ -78,6 +143,11 @@
                 if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
                 {
                     Html.RenderPartial(@"Partials\TabChangeHistory");
+                }
+
+                if (Model.TabDisplayPolicy.Helpdesk)
+                {
+                    Html.RenderPartial(@"Partials\TabHelpdesk");
                 }
             }
         </div>

@@ -1,69 +1,82 @@
 ﻿@using Edubase.Web.UI.Models.Search
 @using Edubase.Web.UI.Helpers
 @using Edubase.Common
+@using Edubase.Services.Enums
 @using M = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
-@using P = Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
 @model M
 @{
-    ViewBag.Title = string.Format("Search results for '{0}'", Model.TextSearchModel.Text);
+    ViewBag.Title = $"Search results for '{Model.TextSearchModel.Text}'";
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 }
 
 <div class="grid-row">
-    <div class="column-full">
-        @Html.ActionLink("Go back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+    <div class="column-full results-heading">
+        <div class="breadcrumbs">            
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = @Model.SearchType})">Back to find an establishment</a>
+        </div>
 
         <h1 class="heading-xlarge">Search results</h1>
-        <p>
-            <!--  TODO: Jon; you can upload the span.heading-xlarge item with the correct count by using the x-count item in the http response of the partial request -->
-            @if (Model.SearchType == eSearchType.Text)
-            {
-                if (Model.TextSearchType == M.eTextSearchType.EstablishmentName
-                    || Model.TextSearchType == M.eTextSearchType.Unknown)
-                {
-                    <text>
-                        We found <span class="heading-xlarge count">@Model.Count</span> establishments
-                        @if (!Model.TextSearchModel.Text.IsEmpty())
-                        {
-                            <text>for the search term "@Model.TextSearchModel.Text".</text>
-                        }
-
-                    </text>
-                }
-                else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
-                {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
-                }
-                else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
-                {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
-                }
-                else if (Model.TextSearchType == M.eTextSearchType.URN)
-                {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
-                }
-            }
-            else if (Model.SearchType == eSearchType.ByLocalAuthority)
-            {
-                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected local authorities</text>
-            }
-            else if (Model.SearchType == eSearchType.Location)
-            {
-                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in the selected location</text>
-            }
-
+        @if (Model.Count > 0)
+        {
             <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
-            <a class="download-link" style="display:@(Html.Conditional(Model.Count == 0, "none"));" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new { area = "Establishments" })?@Url.CurrentQueryString()">Download these search results</a>
-        </p>
-    </div>
+            <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
+        }
+            <p>
+                <!-- TODO: Jon; you can upload the span.heading-xlarge item with the correct count by using the x-count item in the http response of the partial request -->
+                @if (Model.SearchType == eSearchType.Text)
+                {
+                    if (Model.TextSearchType == M.eTextSearchType.EstablishmentName || 
+                        Model.TextSearchType == M.eTextSearchType.Unknown)
+                    {
+                        <text>
+                            We found <span class="heading-xlarge count">@Model.Count</span> establishments
+                            @if (!Model.TextSearchModel.Text.IsEmpty())
+                            {
+                                <text>for the search term &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
+                            }
+                        </text>
+                    }
+                    else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
+                    {
+                        <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
+                    }
+                    else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
+                    {
+                        <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
+                    }
+                    else if (Model.TextSearchType == M.eTextSearchType.URN)
+                    {
+                        <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
+                    }
+                }
+                else if (Model.SearchType == eSearchType.ByLocalAuthority)
+                {
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in <span id="la-list">the selected local authorities</span></text>
+                }
+                else if (Model.SearchType == eSearchType.Location)
+                {
+                    var displayLocation = Model.LocationSearchModel.Text;
+                    var lastIndex = displayLocation.LastIndexOf(",");
+                    if (lastIndex > -1)
+                    {
+                        displayLocation = displayLocation.Substring(0, lastIndex);
+                    }
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
+                }
+                else
+                {
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
+                }
+            </p>
+        </div>
 </div>
 
 
 <div class="grid-row">
 
     <div class="column-third">
-        <div class="filter-form">
+        <div class="filter-form" id="filter-form">
             
             <div id="EditSearchCollapsible"
                  class="button-as-link js-collapsible selected mbl js-track"
@@ -153,9 +166,6 @@
 
                     @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
                     <div class="filter-divider"></div>
-
-                    @Selector("Ward", M.BIND_ALIAS_WARD, Model.Wards, Model.SelectedWardIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
                     
                     <a href="#" class="add-filters-link">Add more filters</a>
 
@@ -186,7 +196,7 @@
                     <div class="option-select-label">Add more filters</div>
                     <div class="js-selected-counter"></div>
                 </button>
-                <a href="#" class="clear-selections">Clear</a>
+                <a href="#" class="clear-selections additional-filter-clear">Clear</a>
                 <div class="options-container">
                     <div class="js-auto-height-inner">
                         <fieldset id="filter-type-target">
@@ -222,7 +232,7 @@
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter"></div>
         </div>
-        <a href="#" class="clear-selections">Clear</a>
+        <a href="#" class="clear-selections filter-clear">Clear</a>
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 <fieldset>
@@ -241,7 +251,6 @@
     </div>
 }
 
-
 @helper SortBySelector(string label)
 {
     <div class="govuk-option-select js-collapsible"
@@ -253,17 +262,16 @@
         <select class="form-control trigger-result-update" name="@M.BIND_ALIAS_SORT_BY">
             @if (Model.SearchType == eSearchType.Location)
             {
-                <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.Distance, "selected")>distance</option>
+                <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>distance</option>
             }
-            <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
-            <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
+            <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
+            <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
         </select>
     </div>
 }
 
 @helper RadiusSelector(string label)
-{
-    
+{   
     <div class="govuk-option-select js-collapsible"
             id="option-select-@label.ToLower().Replace(" ", "-")">
         <div class="container-head js-container-head">

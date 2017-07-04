@@ -6,7 +6,6 @@ using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Controllers;
@@ -20,6 +19,7 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Services.Governors.Search;
 
@@ -59,40 +59,42 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return PartialView("Partials/_GovernorSearchResults", model);
         }
 
-
         [HttpGet, Route("PrepareDownload")]
         public async Task<ActionResult> PrepareDownload(GovernorSearchDownloadViewModel viewModel)
         {
-            if (!viewModel.FileFormat.HasValue) return View("Downloads/SelectFormat", viewModel);
-            else
-            {
-                var progressId = await InvokeGovernorSearchDownloadGenerationAsync(viewModel);
-                return RedirectToAction(nameof(Download), new { id = progressId });
-            }
+            viewModel.SearchSource = eLookupSearchSource.Governors;
+            viewModel.SearchQueryString = Request.QueryString.ToString();
+
+            if (!viewModel.FileFormat.HasValue)
+                return View("Downloads/SelectFormat", viewModel);
+
+            var progressId = await _governorDownloadService.SearchWithDownloadGenerationAsync(
+                new Services.Domain.SearchDownloadDto<GovernorSearchPayload>
+                {
+                    SearchPayload = CreateSearchPayload(viewModel),
+                    FileFormat = viewModel.FileFormat.Value
+                }, User);
+            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
         }
 
         [HttpGet, Route("Download")]
-        public async Task<ActionResult> Download(Guid id)
+        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
-            var model = await _governorDownloadService.GetDownloadGenerationProgressAsync(id);
-            var viewModel = new GovernorSearchDownloadGenerationProgressViewModel(model, (model.IsComplete ? 3 : 2));
-            if (model.HasErrored) throw new Exception($"Download generation failed; Further details can be obtained from the logs using exception message id: {model.ExceptionMessageId}");
-            else if (!model.IsComplete) return View("Downloads/PreparingFilePleaseWait", viewModel);
-            else return View("Downloads/ReadyToDownload", viewModel);
-        }
-
-        private async Task<Guid> InvokeGovernorSearchDownloadGenerationAsync(GovernorSearchDownloadViewModel viewModel)
-        {
-            var payload = CreateSearchPayload(viewModel);
-            var progress = await _governorDownloadService.SearchWithDownloadGeneration_InitialiseAsync();
-            var principal = User;
-
-            // todo: remove post-texuna integration.
-            HostingEnvironment.QueueBackgroundWorkItem(async ct =>
+            var model = await _governorDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            var viewModel = new GovernorSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 3 : 2)
             {
-                await _governorDownloadService.SearchWithDownloadGenerationAsync(progress.Id, payload, principal, viewModel.FileFormat.Value);
-            });
-            return progress.Id;
+                FileFormat = fileFormat,
+                SearchSource = searchSource,
+                SearchQueryString = searchQueryString
+            };
+
+            if (model.HasErrored)
+                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+
+            if (!model.IsComplete)
+                return View("Downloads/PreparingFilePleaseWait", viewModel);
+
+            return View("Downloads/ReadyToDownload", viewModel);
         }
 
         private async Task<ActionResult> SearchGovernors(GovernorSearchViewModel model)
@@ -104,6 +106,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     .Cast<int>());
             }
 
+            model.SearchQueryString = Request.QueryString.ToString();
             model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
             model.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
 
@@ -115,23 +118,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     var results = await _governorsReadService.SearchAsync(payload, User);
                     model.Results = results.Items;
                     if (model.StartIndex == 0) model.Count = results.Count;
-
-#if (!TEXAPI)
-                    foreach (var item in model.Results)
-                    {
-                        if (item.EstablishmentUrn.HasValue && item.EstablishmentName.IsNullOrEmpty())
-                        {
-                            var establishment = await _establishmentReadService.GetAsync(item.EstablishmentUrn.Value, User);
-                            if (establishment.Success) item.EstablishmentName = establishment.ReturnValue.Name;
-                        }
-
-                        if (item.GroupUID.HasValue && item.GroupName.IsNullOrEmpty())
-                        {
-                            var result = await _groupReadService.GetAsync(item.GroupUID.Value, User);
-                            if (result.Success) item.GroupName = result.ReturnValue.Name;
-                        }
-                    }
-#endif
                 }
             }
             
@@ -145,7 +131,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             LastName = model.GovernorSearchModel.Surname.Clean(),
             RoleIds = model.SelectedRoleIds.ToArray(),
             SortBy = model.SortOption,
-            IncludeHistoric = model.GovernorSearchModel.IncludeHistoric
+            IncludeHistoric = model.GovernorSearchModel.IncludeHistoric,
+            GovernorTypesFlags = model.SelectedGovernorTypeFlagIds.Select(x => (eGovernorTypesFlag)x).ToArray()
         };
 
     }

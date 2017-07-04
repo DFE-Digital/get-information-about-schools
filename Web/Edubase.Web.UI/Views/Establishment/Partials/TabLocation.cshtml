@@ -56,35 +56,31 @@
             <td>@Model.LSOAName</td>
         </tr>
     </table>
-    @if (Model.Establishment.AdditionalAddresses.Count > 0)
+
+    @if (Model.DisplayPolicy.AltSiteName.GetValueOrDefault(true))
     {
-        <h3 class="font-small">Other sites</h3>
+        <h3 class="font-small">Other site</h3>
         <table class="borderless">
             <caption class="visually-hidden">Additional site information for @Model.Establishment.Name</caption>
 
-            @foreach (var address in Model.Establishment.AdditionalAddresses)
-            {
-                <tr>
-                    <th colspan="2">@address.SiteName</th>
-                </tr>
-                <tr>
-                    <th scope="row">
-                        Address:
-                    </th>
-                    <td>
-                        @address.ToString()
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">Telephone</th>
-                    <td>@(address.TelephoneNumber ?? "Not recorded")</td>
-                </tr>
-            }
-
+            <tr>
+                <th colspan="2">@Model.Establishment.AltSiteName</th>
+            </tr>
+            <tr>
+                <th scope="row">
+                    Address:
+                </th>
+                <td>
+                    @Model.GetAltAddress()
+                </td>
+            </tr>
+            @*<tr>
+                <th scope="row">Telephone</th>
+                <td>@(address.TelephoneNumber ?? "Not recorded")</td>
+            </tr>*@
         </table>
     }
-    
-    
+
     @if (Model.UserCanEdit)
     {
         @Html.ActionLink("Edit location details", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey block-button mobile-full-width" })

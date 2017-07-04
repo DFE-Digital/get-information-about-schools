@@ -4,13 +4,15 @@ using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
-using Edubase.Services.Groups.Models;
 using Edubase.Services.Establishments.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Establishments
 {
+    using ET = eLookupEstablishmentType;
+    using EP = eLookupEducationPhase;
+
     public interface IEstablishmentReadService
     {
         Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal);
@@ -25,7 +27,8 @@ namespace Edubase.Services.Establishments
         /// <returns></returns>
         /// <remarks>NON-BESPOKE BE</remarks>
         Task<bool> CanEditAsync(int urn, IPrincipal user);
-        Task<EstablishmentDisplayPolicy> GetDisplayPolicyAsync(IPrincipal user, EstablishmentModelBase establishment);
+        Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user);
+        Task<EstablishmentDisplayEditPolicy> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user);
         Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn, IPrincipal principal);
         Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10);
 
@@ -39,10 +42,16 @@ namespace Edubase.Services.Establishments
         ///     There's a chance that when you pass in a large query with 100s of filters
         ///     you'll get a SearchQueryTooLargeException.  There is no work-around; the size of the query needs to be reduced; this is due to a limitation in Azure Search.
         /// </exception>
-        Task<ApiSearchResult<SearchEstablishmentDocument>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
+        Task<ApiSearchResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
         Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal);
 
-        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model);
+        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model);
+        Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, eFileFormat format, IPrincipal principal);
+        Task<FileDownloadDto> GetDownloadAsync(int urn, eFileFormat format, IPrincipal principal);
+        Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap();
+        Task<IEnumerable<LookupDto>> GetPermissibleLocalGovernorsAsync(int urn, IPrincipal principal);
+
+
     }
 }

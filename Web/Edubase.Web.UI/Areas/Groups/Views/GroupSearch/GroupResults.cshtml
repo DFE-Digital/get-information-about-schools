@@ -2,40 +2,36 @@
 @using Edubase.Services.Groups.Search;
 @model GroupSearchViewModel
 @{
-    ViewBag.Title = string.Format("Search results for '{0}'", Model.GroupSearchModel.Text);
+    ViewBag.Title = $"Search results for '{Model.GroupSearchModel.Text}'";
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 }
 
 <div class="grid-row">
-    <div class="column-full">
-        @Html.ActionLink("Go back", "Index", "Search", new { area = "", SelectedTab = "Groups" }, new { @class = "home-link" })
+    <div class="column-full results-heading">
+        <div class="breadcrumbs">
+            @Html.ActionLink("Back to find an establishment group", "Index", "Search", new { area = "", SelectedTab = "Groups" }, new { @class = "home-link" })
+        </div>
         <h1 class="heading-xlarge">Search results</h1>
-        <p>
-            @if (Model.GroupSearchModel.Text.IsInteger())
-            {
-                <text>We found <span class="heading-xlarge count">@Model.Count</span> groups with Companies House Number '@Model.GroupSearchModel.Text'.</text>
-            }
-            else
-            {
-                <text>
-                    We found <span class="heading-xlarge count">@Model.Count</span> groups
-                    @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
-                    {
-                        <text>matching "@Model.GroupSearchModel.Text".</text>
-                    }
-               </text>
-            }
-            <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
-        </p>
-    </div>
+        <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
+            <p>
+                
+                We found <span class="heading-xlarge count">@Model.Count</span> establishment groups
+                @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
+                {
+                    <text>matching &lsquo;<span class="bold-small">@Model.GroupSearchModel.Text</span>&rsquo;.</text>
+                }
+                
+                
+            </p>
+        </div>
 </div>
 
 
 <div class="grid-row">
 
     <div class="column-third">
-        <div class="filter-form">
+        <div class="filter-form" id="filter-form">
 
             <div id="EditSearchCollapsible"
                  class="button-as-link js-collapsible selected mbl js-track"
@@ -57,8 +53,8 @@
                             <div class="js-selected-counter"></div>
                         </div>
                         <select class="form-control trigger-result-update" name="SortBy">
-                            <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalAZ , "selected")>alphabetical a-z</option>
-                            <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Core.Search.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
+                            <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ , "selected")>alphabetical a-z</option>
+                            <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
                         </select>
                     </div>
                     <div class="filter-divider"></div>

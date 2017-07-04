@@ -135,7 +135,8 @@ legend {
   display: block;
   color: $secondary-text-colour;
   font-weight: normal;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
+  margin-top: -2px;
 }
 
 
@@ -394,6 +395,26 @@ fieldset legend.heading-small {
     margin-left: 20px;
 }
 
-textarea {
-    margin-top: 20px;
+
+.urn-search {
+    width: 200px;
+    margin-right: 12px
+}
+
+.inline-button {
+    font-size: 16px;
+    
+}
+
+.establishment-links {
+    .checkbox-wrap {
+        margin-left: 0;
+    }
+}
+
+.data-status-group {
+    margin: 20px 0;
+    h3 {
+        margin: 0.5em 0 1em;
+    }
 }

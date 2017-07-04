@@ -1,8 +1,10 @@
-﻿using Edubase.Services.Domain;
+﻿using Edubase.Common;
+using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
+using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Models.Establishments;
 using System.Collections.Generic;
 
@@ -16,10 +18,14 @@ namespace Edubase.Web.UI.Models
             [(int)eLookupGroupType.MultiacademyTrust] = "Academy trust",
             [(int)eLookupGroupType.SchoolSponsor] = "Academy sponsor",
             [(int)eLookupGroupType.Trust] = "Trust",
-            [(int)eLookupGroupType.Federation] = "Federation"
+            [(int)eLookupGroupType.Federation] = "Federation",
+
+            [(int)eLookupGroupType.UmbrellaTrust] = "Umbrella trust",
+            [(int)eLookupGroupType.ChildrensCentresCollaboration] = "Childrens' centres collaboration",
+            [(int)eLookupGroupType.ChildrensCentresGroup] = "Childrens' centre group"
         };
 
-        public EstablishmentDisplayPolicy DisplayPolicy { get; set; }
+        public EstablishmentDisplayEditPolicy DisplayPolicy { get; set; }
 
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
 
@@ -43,20 +49,25 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<EstablishmentChangeDto> ChangeHistory { get; set; }
 
         public IEnumerable<LinkedEstabViewModel> LinkedEstablishments { get; set; }
-        
-        
+
+        public GroupModel LegalParentGroup { get; set; }
+
         public bool IsUserLoggedOn { get; set; }
 
         public bool UserCanEdit { get; set; }
         
         public bool IsClosed => Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
 
+        public string SearchQueryString { get; set; }
+
+        public eLookupSearchSource? SearchSource { get; set; }
+
         public EstablishmentDetailViewModel()
         {
 
         }
 
-        public string OfstedRatingReportUrl => (Establishment.OfstedRating.HasValue 
+        public string OfstedRatingReportUrl => (Establishment.OfstedRatingId.HasValue 
             ? new OfstedRatingUrl(Establishment.Urn).ToString() : null as string);
 
         public string GetGroupFieldLabel(GroupModel model) => _groupType2FieldLabelMappings[model.GroupTypeId.Value];
@@ -85,10 +96,7 @@ namespace Edubase.Web.UI.Models
         public string CCDisadvantagedAreaName { get; set; }
         public string CCDirectProvisionOfEarlyYearsName { get; set; }
         public string ProvisionSpecialClassesName { get; set; }
-        public string SEN1Name { get; set; }
-        public string SEN2Name { get; set; }
-        public string SEN3Name { get; set; }
-        public string SEN4Name { get; set; }
+        public string SENNames { get; set; }
         public string TeenageMothersProvisionName { get; set; }
         public string ChildcareFacilitiesName { get; set; }
         public string PRUSENName { get; set; }
@@ -110,6 +118,7 @@ namespace Edubase.Web.UI.Models
         public string MSOAName { get; set; }
         public string LSOAName { get; set; }
         public string LocalAuthorityName { get; set; }
+        public string LocalAuthorityCode { get; set; }
         public string HeadTitleName { get; set; }
         public string EducationPhaseName { get; set; }
         public string TypeName { get; set; }
@@ -117,6 +126,50 @@ namespace Edubase.Web.UI.Models
         public string GenderName { get; set; }
         public string StatusName { get; set; }
         public string AdmissionsPolicyName { get; set; }
+        public string AddressCountryName { get; set; }
+        public string AddressCountyName { get; set; }
+        public string AltAddressCountyName { get; set; }
+        public string OfstedRatingName { get; set; }
+        public string HelpdeskPreviousLocalAuthorityName { get; set; }
+        
+        public string IEBTProprietorsAddressCountyName { get; set; }
+        public string IEBTChairOfProprietorsBodyAddressCountyName { get; set; }
         #endregion
+
+        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", 
+            Establishment.Address_Line1, 
+            Establishment.Address_Line2, 
+            Establishment.Address_Line3, 
+            Establishment.Address_Locality, 
+            Establishment.Address_CityOrTown, 
+            AddressCountyName, 
+            Establishment.Address_PostCode);
+
+        public string GetAltAddress() => StringUtil.ConcatNonEmpties(", ",
+            Establishment.AltStreet,
+            Establishment.AltAddress3,
+            Establishment.AltLocality,
+            Establishment.AltTown,
+            AltAddressCountyName,
+            Establishment.AltPostCode);
+
+        public string GetProprietorsAddress() => StringUtil.ConcatNonEmpties(", ",
+            Establishment.IEBTModel.ProprietorsStreet,
+            Establishment.IEBTModel.ProprietorsLocality,
+            Establishment.IEBTModel.ProprietorsAddress3,
+            Establishment.IEBTModel.ProprietorsTown,
+            IEBTProprietorsAddressCountyName,
+            Establishment.IEBTModel.ProprietorsPostcode);
+
+        public string GetChairOfProprietorsBodyAddress() => StringUtil.ConcatNonEmpties(", ",
+            Establishment.IEBTModel.ChairOfProprietorsBodyStreet,
+            Establishment.IEBTModel.ChairOfProprietorsBodyLocality,
+            Establishment.IEBTModel.ChairOfProprietorsBodyAddress3,
+            Establishment.IEBTModel.ChairOfProprietorsBodyTown,
+            IEBTChairOfProprietorsBodyAddressCountyName,
+            Establishment.IEBTModel.ChairOfProprietorsBodyPostcode);
+
+        public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
+
     }
 }

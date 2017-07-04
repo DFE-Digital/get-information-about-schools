@@ -1,7 +1,17 @@
 ﻿@model ToolsViewModel
 @{
     ViewBag.Title = "Edubase";
+    ViewBag.bodyClasses = "tools-landing";
 }
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+    </ul>
+
+</div>
 
 <div class="grid-row">
     <div class="column-full">
@@ -10,65 +20,207 @@
 </div>
 
 <div class="grid-row">
-    
-        <div class="column-half">
-
-            <h2 class="heading-medium">Create</h2>
-            <ul>
-                <li>@Html.ActionLink("Create new School", "Create", "Establishment")</li>
-                
-                @if (Model.UserCanCreateAcademyTrustGroup)
-                {
-                    <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)</li>
-                }
-
-                @if (Model.UserCanCreateChildrensCentreGroup)
-                {
-                    <li>@Html.ActionLink("Create new Children's Centre Group or Collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)</li>
-                }
-
-                @if (Model.UserCanCreateFederationGroup)
-                {
-                    <li>@Html.ActionLink("Create new Federation", "CreateNewGroup", "Group", new { area = "Groups", type = "Federation" }, null)</li>
-                }
-
-                @if (Model.UserCanCreateSchoolTrustGroup)
-                {
-                    <li>@Html.ActionLink("Create new School Trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null)</li>
-                }
-
-                @if (Model.UserCanCreateAcademySponsor)
-                {
-                    <li>@Html.ActionLink("Create new sponsor", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null)</li>
-                }
-
-                <li>
-                    @Html.ActionLink("Bulk create new academies", "BulkAcademies", "Tools")
-                </li>
-                <li>
-                    @Html.ActionLink("Create a new establishment", "CreateEstablishment", "Tools")
-                </li>
-                <li>
-                    @Html.ActionLink("Merge / amalgamate establishments", "MergersTool", "Tools")
-                </li>
-                <li>
-                    @Html.ActionLink("View change history", "SearchChangeHistory", "Tools")
-                </li>
-                
-            </ul>
-            <h2 class="heading-medium">Approvals</h2>
-            <ul>
-                <li>
-                    @Html.ActionLink("View my approval items", "ChangeApprovals", "Tools")
-                </li>
-            </ul>
-            
-            <h2 class="heading-medium">Update</h2>
-            <ul>
-                <li>
-                    @Html.ActionLink("Establishment bulk update", "EstablishmentBulkUpdate", "Tools")
-                </li>
-            </ul>
-        </div>
-    
+    <div class="column-full">
+        <h2 class="heading-medium">Create</h2>
+    </div>
 </div>
+
+<div class="grid-row">
+    @if (Model.UserCanBulkCreateAcademies)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.ActionLink("Bulk create new academies", "BulkAcademies", "Tools")
+            </h3>
+            <p>
+                Create records for multi-academy and single-academy
+                trusts using information from
+                companies house.
+            </p>
+        </div>
+    }
+
+    @if (Model.UserCanCreateAcademyTrustGroup)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.ActionLink("Create new academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)
+            </h3>
+            <p>
+                Set up a new record for your school trust.
+            </p>
+        </div>
+    }
+
+    @if (Model.UserCanCreateChildrensCentreGroup)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.ActionLink("Create new children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null)
+            </h3>
+            <p>
+                Create records for children's centre groups
+                and children's centre collaborations for your
+                local authority.
+            </p>
+        </div>
+    }
+
+    @if (Model.UserCanCreateEstablishment)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.RouteLink("Create a new establishment", "CreateEstablishment")
+            </h3>
+            <p>
+                Set up a new establishment record.
+            </p>
+        </div>
+    }
+
+    @if (Model.UserCanCreateFederationGroup)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.ActionLink("Create new federation", "CreateNewGroup", "Group", new { area = "Groups", type = "Federation" }, null)
+            </h3>
+            <p>
+                Enter the federation's name and select its
+                status and opening date.
+            </p>
+        </div>
+    }
+
+    @if (Model.UserCanCreateSchoolTrustGroup)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.ActionLink("Create new school trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null)
+            </h3>
+            <p>
+                Enter the trust's name and select the opening
+                date and status.
+            </p>
+        </div>
+    }
+
+    @if (Model.UserCanCreateAcademySponsor)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.ActionLink("Create new sponsor", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null)
+            </h3>
+            <p>
+                Enter the sponsor's name and select the open
+                date and status.
+            </p>
+        </div>
+    }
+
+    @if (Model.UserCanMergeOrAmalgamateEstablishments)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.ActionLink("Merge & amalgamate establishments", "MergersTool", "Tools")
+            </h3>
+            <p>
+                Carry out mergers and amalgamations using
+                this wizard.
+            </p>
+        </div>
+    }
+</div>
+
+<div class="grid-row">
+    <div class="column-full section-break">
+        <h2 class="heading-medium">Update</h2>
+    </div>
+</div>
+
+<div class="grid-row">
+
+    @if (Model.UserCanBulkUpdateEstablishments)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.RouteLink("Bulk update establishments", "EstabBulkUpdate")
+            </h3>
+            <p>
+                Update establishment data as a collection,
+                rather than by individual entries.
+            </p>
+        </div>
+    }
+
+    @if (Model.UserCanBulkUpdateGovernors)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.RouteLink("Bulk update governance", "GovernorsBulkUpdate")
+            </h3>
+            <p>
+                Update your governance data as a collection,
+                rather than by individual entries.
+            </p>
+        </div>
+    }
+
+    @* This is NON-MVP <div class="column-half">
+        <h3>
+            <a href="#">Bulk update groups</a>
+        </h3>
+        <p>
+            Update group data as a collection, rather than
+            by individual entries.
+        </p>
+    </div>*@
+</div>
+
+<div class="grid-row">
+    <div class="column-full section-break">
+        <h2 class="heading-medium">Administration tools</h2>
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-half">
+        <h3>
+            @Html.RouteLink("Approvals", "PendingApprovals")
+        </h3>
+        <p>
+            View your pending changes and approve or reject.
+        </p>
+    </div>
+    
+    <div class="column-half">
+        <h3>@Html.RouteLink("Change history", "ChangeHistoryCriteria")</h3>
+        <p>
+            View changes in the data relating to
+            establishments and groups.
+        </p>
+    </div>
+
+    @if (Model.UserCanManageAcademyOpenings)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.RouteLink("Manage academy openings", "ManageAcademyOpenings")
+            </h3>
+            <p>
+                View details of proposed-to-open academies.
+                Edit academy names and opening dates.
+            </p>
+        </div>
+    }
+
+    <div class="column-half">
+        <h3>
+            @Html.ActionLink("View data status", "ViewStatus", "DataQuality")
+        </h3>
+        <p>
+            See when each team’s data was last updated.
+            You can also confirm that your team's data is up to date.
+        </p>
+    </div>
+</div>
+

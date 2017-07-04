@@ -1,54 +1,59 @@
 ﻿@using Edubase.Services.Enums;
-@using System.Linq.Expressions;
+@using Edubase.Web.UI.Models.Grid
 @model GovernorsGridViewModel
-@{ 
+@{
     Layout = Model.Layout;
 }
 
 @if (Model.EditMode)
 {
-    <div class="column-half">
-        @(Model.GroupUId.HasValue 
-              ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-grey cancel"}) 
-              : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "governance", new {area = "", id = Model.EstablishmentUrn}, new {@class = "button button-grey cancel"}))
-    </div>
-    <div class="column-two-thirds">
-        <h2 class="heading-medium">Governance</h2>
-        @if (Model.ShowDelegationInformation)
-        {
-            @ShowDelegationInformation()
-        }
+    <div class="tab-content">
+        <div class="column-half">
+            @(Model.GroupUId.HasValue
+              ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel" })
+              : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "governance", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" }))
+        </div>
+        <div class="column-two-thirds">
+            @ShowLegalDuty()
 
-        @DisplayGovernanceMode()
-    </div>
-            
-     <div class="column-half">
+            @if (Model.ShowDelegationInformation)
+            {
+                @ShowDelegationInformation()
+            }
+
+            @DisplayGovernanceMode()
+        </div>
+        
+        <div class="column-half">
             <h2 class="heading-small">Add person</h2>
-            
+
 
             @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
             {
                 <div class="form-group">
                     <label class="form-label">Select role</label>
-                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem {Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole) x.Id).ToString()}),
-                        new {id = "roleid", @class = "form-control"})
+                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }),
+                new { id = "roleid", @class = "form-control" })
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Add person" class="button mobile-full-width" />
                 </div>
-                
+
             }
 
         </div>
+    </div>
 }
 else
 {
     <div class="grid-row">
-        <div class="column-half">
-
-            <h2 class="heading-medium">Governance</h2>
-            @DisplayGovernanceMode()
-            
+        <div class="column-two-thirds">
+            @ShowLegalDuty()
+            @if (Model.GovernanceMode.HasValue)
+            {
+                <h2 class="bold-small">Establishment governance</h2>
+                @DisplayGovernanceMode()
+            }
         </div>
     </div>
 }
@@ -67,21 +72,23 @@ else
     }
 
     @DisplayGovernors()
-
-       
 }
 else
 {
-    <p>There is no governance information for this @Model.ParentEntityName</p>
+    <div class="tab-content" style="display:block !important; float:none;">
+        <div class="column-half" style="display:block !important; float:none;">
+            <p>There is no governance information for this @Model.ParentEntityName</p>
+        </div>
+    </div>
 }
 
 
 @helper ShowDelegationInformation()
 {
-    <h2 class="bold-small">Delgated authority of local governing body</h2>
-    <div class="expanding-content-wrapper">
+    <h2 class="bold-small">Delegated authority of local governing body</h2>
+    <div class="expanding-content-wrapper" data-update-text="false">
         <a href="#" class="expanding-content-trigger">
-            Show details
+            More details
         </a>
         <div class="expanding-content panel-indent">
             @(Model.DelegationInformation ?? "Not recorded")
@@ -91,219 +98,280 @@ else
     {
         <div class="grid-row">
             <div class="column-full">
-            @Html.RouteLink("Edit", "GroupEditDelegation", new {GroupUId = Model.GroupUId}, new {@class = "button button-grey mobile-full-width"})
+                @Html.RouteLink("Edit", "GroupEditDelegation", new { GroupUId = Model.GroupUId }, new { @class = "button button-grey mobile-full-width" })
             </div>
         </div>
     }
 
 }
 
+@helper ShowLegalDuty()
+{
+    <div class="governors-section">
+        <h2 class="bold-small">Legal duty to provide governance information</h2>
+        <div class="expanding-content-wrapper" data-update-text="false">
+            <a href="#" class="expanding-content-trigger">
+                More details
+            </a>
+            <div class="expanding-content panel-indent">
+                <p>
+                    All maintained school governing bodies and academy trusts have
+                    a legal duty to provide all of the governance information requested
+                    on this page in so far as it is available to them.
+                    This will increase the transparency of governance arrangements.
+                    It will enable schools and the department to identify more quickly and
+                    accurately individuals who are involved in governance, and who govern
+                    in more than one context. The information requested says nothing in itself
+                    about a person’s suitability to govern. However, it is essential information
+                    for the department to be able to uniquely identify an individual and in a
+                    small number of cases conduct checks to confirm their suitability for this
+                    important and influential role. You should provide all of the information
+                    requested insofar as it is available to you.
+                    A minimum set of information needs to be provided before a record can be saved.
+                </p>
+            </div>
+        </div>
+    </div>
+}
+
 
 
 @helper DisplayGovernors()
 {
-
-    <div class="column-two-thirds">
+    <div class="column-full">
         @if (Model.DomainModel.HasFullAccess)
         {
             // Render lists
             foreach (var grid in Model.Grids)
             {
-                <div class="governor-list">
-                    <h2 class="bold-small">@grid.Title</h2>
-                    @if (grid.Rows.Any())
-                    {
-                        foreach (var row in grid.Rows)
+                <text>
+                    @ShowGovernorEditor(grid)
+                </text>
+            }
+            if (Model.HistoricGrids.Any(h => h.Rows.Any()))
+            {
+                <h2 class="bold-small">Historic (left within last 12 months)</h2>
+                <div class="expanding-content-wrapper" data-opened-text="Less details" data-closed-text="More details">
+                    <a href="#" class="expanding-content-trigger">
+                        More details
+                    </a>
+                    <div class="expanding-content panel-indent">
+                        @foreach (var grid in Model.HistoricGrids)
                         {
-                            <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
-                                <h2 class="bold-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
-                                <dl>
-                                    @foreach (var cell in row.Cells.Skip(1))
-                                    {
-                                        <dt>@cell.Parent.Text:</dt>
-                                        <dd>@(cell.Text ?? "Not recorded")</dd>
-                                    }
-                                </dl>
-
-                                @if (Model.EditMode && grid.Tag == "current")
-                                {
-                                    if (Model.RemovalGid != row.Model.Id)
-                                    {
-                                        <div class="button-wrapper">
-                                            @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole) row.Model.RoleId == eLookupGovernorRole.Establishment_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody))
-                                            {
-                                                @Html.RouteLink("Edit", "EditSharedGovernor", 
-                                                    new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id },
-                                                    new { @class = "button button-grey mobile-full-width" })
-                                            }
-                                            else
-                                            {
-                                                @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
-                                                    new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, 
-                                                    new { @class = "button button-grey mobile-full-width" })
-                                            }
-                                            @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
-                                                null, null, "gid-" + row.Model.Id,
-                                                new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id },
-                                                new { @class = "button button-grey mobile-full-width" })
-
-                                            @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
-                                            {
-                                                @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor",
-                                                    new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id },
-                                                    new { @class = "button button-grey mobile-full-width" })
-                                            }
-                                        </div>
-                                    }
-                                    else // We're in 'removal mode' for this governor.
-                                    {
-                                        <div class="governor-edit-panel">
-
-                                            @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post))
-                                            {
-                                                @Html.HiddenFor(x => x.RemovalGid)
-                                                @Html.HiddenFor(x => x.EstablishmentUrn)
-                                                @Html.HiddenFor(x => x.GroupUId)
-                                                @Html.HiddenFor(x => x.GovernorShared)
-
-                                                <div class="form-group">
-                                                    <fieldset class="inline toggle-panels">
-                                                        <legend class="visually-hidden">Do you wish to retire or remove this person?</legend>
-                                                        <label class="block-label selection-button-radio" for="removal-mode-1">
-                                                            <input type="radio" name="removal-mode" id="removal-mode-1" value="1" checked="checked" data-toggle-panel=".retire-governor" />
-                                                            This person has completed their term
-                                                        </label>
-                                                        <label class="block-label selection-button-radio" for="removal-mode-2">
-                                                            <input type="radio" name="removal-mode" id="removal-mode-2" value="2" data-toggle-panel=".remove-governor" />
-                                                            Remove person
-                                                        </label>
-                                                    </fieldset>
-                                                </div>
-
-                                                <div class="retire-governor date-group-wrap">                                                   
-                                                    <p class="font-xsmall">Provide a data term ends to retire this person</p>
-                                                    @Html.EditorFor(x => x.RemovalAppointmentEndDate, new { title = "Date term ends" })
-
-                                                    <input type="submit" name="action" value="Save" class="button" />
-
-                                                    @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
-
-                                                </div>
-
-                                                <div class="remove-governor date-group-wrap">
-                                                    <p class="font-xsmall">Confirm you wish to remove this person</p>
-                                                    <input type="submit" name="action" value="Remove" class="button" />
-
-                                                    @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                }
-                            </div>
+                            if (grid.Rows.Any())
+                            {
+                                <text>
+                                    @ShowGovernorEditor(grid)
+                                </text>
+                            }
                         }
-                    }
-                    else
-                    {
-                        <p class="none">Not recorded</p>
-                    }
+                    </div>
                 </div>
             }
         }
         else
         {
-            // Render tables
-            foreach (var grid in Model.Grids)
+            for (var index = 0; index < Model.Grids.Count; index++)
             {
-                <div class="governor-grid">
-                    <h2 class="bold-small">@grid.Title</h2>
-                    @if (grid.Rows.Any())
-                    {
-                        <table>
-                            <thead>
-                                <tr>
-                                    @foreach (var column in grid.HeaderCells)
-                                    {
-                                        <th>@(column.Text ?? "Not recorded")</th>
-                                    }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var row in grid.Rows)
-                                {
-                                    <tr>
-                                        @foreach (var cell in row.Cells)
-                                        {
-                                            <td>@(cell.Text ?? "Not recorded")</td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <p class="none">Not recorded</p>
-                    }
-                </div>
+                @Html.DisplayFor(m => m.Grids[index])
             }
-            
-            // Render mobile table/list combo
-            foreach (var grid in Model.Grids)
+            if (Model.HistoricGrids.Any(h => h.Rows.Any()))
             {
-                @*<div class="governor-list mobile-view">
-                    <h2 class="bold-small">@grid.Title</h2>
-                    @if (grid.Rows.Any())
-                    {
-                        <table>
-                            <tbody>
-                                @foreach (var row in grid.Rows)
+                <h2 class="bold-small">Historic (left within last 12 months)</h2>
+                <div class="expanding-content-wrapper" data-opened-text="Less details" data-closed-text="More details">
+                    <a href="#" class="expanding-content-trigger">
+                        More details
+                    </a>
+                    <div class="expanding-content panel-indent">
+                        @if (Model.HistoricGrids.Any())
+                        {
+                            <table class="edubase-table list-table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Appointed by</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                @for (var index = 0; index < Model.HistoricGrids.Count; index++)
                                 {
-                                    foreach (var cell in row.Cells)
+                                    if (Model.HistoricGrids[index].Rows.Any())
                                     {
-                                        <tr>
-                                            <td class="label">@cell.Parent.Text</td>
-                                            <td class="@Html.Conditional(cell == row.Cells.First(), "name")">@(cell.Text ?? "Not recorded")</td>
-                                        </tr>
+                                        @Html.DisplayFor(m => m.HistoricGrids[index])
                                     }
                                 }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <p class="none">Not recorded</p>
-                    }
-                </div>*@
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
             }
         }
     </div>
 }
 
+@helper ShowGovernorEditor(GovernorGridViewModel grid)
+{
+        <div class="governor-list">
+            <h2 class="bold-small">@grid.Title</h2>
+            @if (grid.Rows.Any())
+            {
+                foreach (var row in grid.Rows)
+                {
+                    <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
+                        <h2 class="bold-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
+                        <dl>
+                            @foreach (var cell in row.Cells.Skip(1))
+                            {
+                                <dt>@cell.Parent.Text:</dt>
+                                <dd>@(cell.Text ?? "Not recorded")</dd>
+                            }
+                        </dl>
+
+                        @if (Model.EditMode)
+                        {
+                            if (grid.Tag == "current")
+                            {
+                                if (Model.RemovalGid != row.Model.Id)
+                                {
+                                    <div class="button-wrapper">
+                                        @if (Model.EstablishmentUrn.HasValue && row.Model.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
+                                        {
+                                            @Html.RouteLink("Edit", "EditSharedGovernor",
+                                                new {establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id},
+                                                new {@class = "button button-grey mobile-full-width"})
+                                        }
+                                        else
+                                        {
+                                            @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
+                                                new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
+                                                new {@class = "button button-grey mobile-full-width"})
+                                        }
+
+                                        @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
+                                        {
+                                            @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor",
+                                                new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
+                                                new {@class = "button button-grey mobile-full-width"})
+                                        }
+                                        else
+                                        {
+                                            @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
+                                                null, null, "gid-" + row.Model.Id,
+                                                new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id},
+                                                new {@class = "button button-grey mobile-full-width"})
+                                        }
+                                    </div>
+                                }
+                                else // We're in 'removal mode' for this governor.
+                                {
+                                    <div class="governor-edit-panel">
+
+                                        @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post))
+                                        {
+                                            @Html.HiddenFor(x => x.RemovalGid)
+                                            @Html.HiddenFor(x => x.EstablishmentUrn)
+                                            @Html.HiddenFor(x => x.GroupUId)
+                                            @Html.HiddenFor(x => x.GovernorShared)
+
+                                            <div class="form-group">
+                                                <fieldset class="inline toggle-panels">
+                                                    <legend class="visually-hidden">Do you wish to retire or remove this person?</legend>
+                                                    <label class="block-label selection-button-radio" for="removal-mode-1">
+                                                        <input type="radio" name="removal-mode" id="removal-mode-1" value="1" checked="checked" data-toggle-panel=".retire-governor" />
+                                                        This person has completed their term
+                                                    </label>
+                                                    <label class="block-label selection-button-radio" for="removal-mode-2">
+                                                        <input type="radio" name="removal-mode" id="removal-mode-2" value="2" data-toggle-panel=".remove-governor" />
+                                                        Remove person
+                                                    </label>
+                                                </fieldset>
+                                            </div>
+
+                                            <div class="retire-governor date-group-wrap">
+                                                <p class="font-xsmall">Provide a data term ends to retire this person</p>
+                                                @Html.EditorFor(x => x.RemovalAppointmentEndDate, new { title = "Date term ends" })
+
+                                                <input type="submit" name="action" value="Save" class="button" />
+
+                                                @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
+
+                                            </div>
+
+                                            <div class="remove-governor date-group-wrap">
+                                                <p class="font-xsmall">Confirm you wish to remove this person</p>
+                                                <input type="submit" name="action" value="Remove" class="button" />
+
+                                                @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "button button-grey" })
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            }
+                            else //historic governor
+                            {
+                                <div class="button-wrapper">
+                                    @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody))
+                                    {
+                                        @Html.RouteLink("Edit", "EditSharedGovernor",
+                                        new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id },
+                                        new { @class = "button button-grey mobile-full-width" })
+                                    }
+                                    else
+                                    {
+                                        @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
+                                        new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id },
+                                        new { @class = "button button-grey mobile-full-width" })
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="none">Not recorded</p>
+            }
+        </div>
+}
+
 @helper DisplayGovernanceMode()
 {
-    if (Model.EstablishmentUrn.HasValue)
+    if (Model.EstablishmentUrn.HasValue && Model.GovernanceMode.HasValue)
     {
-        if (!Model.GovernanceMode.HasValue || Model.GovernanceMode == eGovernanceMode.LocalGovernors)
+        if (Model.GovernanceMode == eGovernanceMode.LocalGovernors)
         {
-            <p>This establishment has local governors, not shared governors.</p>
-        }
+            <div class="governors-section">
+                <p>This establishment has local governors, not shared governors.</p>
+            </div>
+        }   
         else if (Model.GovernanceMode == eGovernanceMode.LocalAndSharedGovernors)
         {
-            <p>This establishment has local governors and also shares governors with other academies in the trust.</p>
+            <div class="governors-section">
+                <p>This establishment has local governors and also shares governors with other academies in the trust.</p>
+            </div>
         }
         else if (Model.GovernanceMode == eGovernanceMode.NoLocalGovernors)
         {
-            <p>This establishment is part of a multi academy trust and does not have local governors.</p>
+            <div class="governors-section">
+                <p>This establishment is part of a multi academy trust and does not have local governors.</p>
+            </div>
         }
         else if (Model.GovernanceMode == eGovernanceMode.SharesLocalGovernors)
         {
-            <p>This establishment shares local governors with other academies in the trust.</p>
+            <div class="governors-section">
+                <p>This establishment shares local governors with other academies in the trust.</p>
+            </div>
         }
 
         if (Model.EditMode)
         {
-            @Html.RouteLink("Edit", "EstabEditGovernanceMode", new {establishmentUrn = Model.EstablishmentUrn}, new {@class = "button button-grey"})
+            @Html.RouteLink("Edit", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-grey" })
         }
     }
 }

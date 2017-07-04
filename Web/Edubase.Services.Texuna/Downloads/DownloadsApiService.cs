@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Edubase.Services.Downloads.Models;
 using System.Security.Principal;
+using Edubase.Services.Domain;
+using Edubase.Services.Exceptions;
 
 namespace Edubase.Services.Texuna.Downloads
 {
@@ -18,6 +20,27 @@ namespace Edubase.Services.Texuna.Downloads
             _httpClient = httpClient;
         }
 
-        public async Task<FileDownload[]> GetListAsync(IPrincipal principal) => await _httpClient.GetAsync<FileDownload[]>($"downloads", principal);
+        public async Task<FileDownload[]> GetListAsync(IPrincipal principal) => (await _httpClient.GetAsync<FileDownload[]>($"downloads", principal)).Response;
+
+        public async Task<ScheduledExtractsResult> GetScheduledExtractsAsync(int skip, int take, IPrincipal principal)
+        {
+            try
+            {
+                return (await _httpClient.GetAsync<ScheduledExtractsResult>($"scheduled-extracts?skip={skip}&take={take}", principal)).Response;
+            }
+            catch(EduSecurityException)
+            {
+                return new ScheduledExtractsResult();
+            }
+        }
+            
+
+        public async Task<string> GenerateScheduledExtractAsync(int id, IPrincipal principal) 
+            => (await _httpClient.PostAsync<string>($"scheduled-extract/generate/{id}", null, principal)).Response;
+
+        public async Task<ProgressDto> GetProgressOfScheduledExtractGenerationAsync(Guid id, IPrincipal principal)
+            => (await _httpClient.GetAsync<ProgressDto>($"scheduled-extract/progress/{id}", principal)).Response;
+
+
     }
 }

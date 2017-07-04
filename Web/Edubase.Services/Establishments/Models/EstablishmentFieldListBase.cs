@@ -1,4 +1,6 @@
-﻿namespace Edubase.Services.Establishments.Models
+﻿using Newtonsoft.Json;
+
+namespace Edubase.Services.Establishments.Models
 {
     /// <summary>
     /// Represents the list of fields within an Establishment.
@@ -77,6 +79,8 @@
 
         public virtual bool HeadEmailAddress { get; set; }
 
+        public virtual bool HeadAppointmentDate { get; set; }
+
         public virtual bool Contact_TelephoneNumber { get; set; }
 
         public virtual bool Contact_EmailAddress { get; set; }
@@ -100,7 +104,7 @@
 
         public virtual bool EstablishmentTypeGroupId { get; set; }
 
-        public virtual bool OfstedRating { get; set; }
+        public virtual bool OfstedRatingId { get; set; }
 
         public virtual bool OfstedInspectionDate { get; set; }
 
@@ -114,13 +118,8 @@
 
         public virtual bool SENNoStat { get; set; }
 
-        public virtual bool SEN1Id { get; set; }
-
-        public virtual bool SEN2Id { get; set; }
-
-        public virtual bool SEN3Id { get; set; }
-
-        public virtual bool SEN4Id { get; set; }
+        [JsonProperty("SEN1Ids")]
+        public virtual bool SENIds { get; set; }
 
         public virtual bool TeenageMothersProvisionId { get; set; }
 
@@ -190,6 +189,23 @@
 
         public virtual bool BSODateOfNextInspectionVisit { get; set; }
 
-        public virtual bool HeadPreferredJobTitle { get; set; } = true;
+        public virtual bool HeadPreferredJobTitle { get; set; }
+
+        public bool HelpdeskNotes { get; set; }
+        public bool HelpdeskLastUpdate { get; set; }
+        public bool HelpdeskTrigger1 { get; set; }
+        public bool HelpdeskPreviousLocalAuthorityId { get; set; }
+        public bool HelpdeskPreviousEstablishmentNumber { get; set; }
+
+        public bool? AltSiteName { get; set; }
+        public bool? AltCountryId { get; set; }
+        public bool? AltUPRN { get; set; }
+        public bool? AltStreet { get; set; }
+        public bool? AltLocality { get; set; }
+        public bool? AltAddress3 { get; set; }
+        public bool? AltTown { get; set; }
+        public bool? AltCountyId { get; set; }
+        public bool? AltPostCode { get; set; }
+
     }
 }

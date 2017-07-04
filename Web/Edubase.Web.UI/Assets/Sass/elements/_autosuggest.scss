@@ -1,0 +1,70 @@
+﻿
+.suggestion-highlight {
+    font-weight: bold;
+}
+// typeahead
+
+.tt-dataset {
+    .tt-cursor {
+        background-color: $light-blue-25;
+    }
+}
+
+.twitter-typeahead {
+    width: 50%;
+
+    @include media(mobile) {
+        width: 100%;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+}
+
+.tt-menu {
+    background-color: white;
+    z-index: 99 !important;
+    width: 99%;
+    border: $grey-2 2px solid;
+    box-shadow:0 3px 2px $grey-2;
+    font-size: 16px;
+
+    .tt-suggestion {
+        a {
+            display: block;
+            padding: $gutter-one-quarter;
+            text-decoration: none;
+            color: $black;
+        }
+
+        &:hover, a:hover {
+            background-color: $light-blue-25;
+            cursor: pointer;
+        }
+    }
+
+    .estab-name {
+        width: 80%;
+        display: inline-block;
+    }
+
+    .estab-status {
+        position: absolute;
+        right: 8px;
+        font-size: 14px;
+        display: inline-block;
+        color: $grey-2;
+    }
+}
+
+.places-footer {
+    text-align: right;
+    img {
+        padding: 3px;
+    }
+}
+
+.has-typeahead.edubase-search-element .form-control {
+    width: 100%;
+}

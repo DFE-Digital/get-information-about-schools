@@ -1,19 +1,17 @@
 ﻿using Edubase.Common.Reflection;
-using Edubase.Data.DbContext;
-using Edubase.Data.Entity;
+using Edubase.Services.Governors.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.Caching;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
-using Edubase.Services.Governors.Models;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -43,80 +41,7 @@ namespace Edubase.Web.UI.Helpers
 
             return MvcHtmlString.Empty;
         }
-
-        [Obsolete]
-        private static Lazy<EstablishmentPermission[]> _permissions = new Lazy<EstablishmentPermission[]>(() =>
-        {
-            var permissions = MemoryCache.Default.Get("permissions") as EstablishmentPermission[];
-            if (permissions == null)
-            {
-                using (var dc = new ApplicationDbContext()) permissions = dc.Permissions.ToArray();
-                MemoryCache.Default.Set("permissions", permissions, DateTimeOffset.UtcNow.AddMinutes(10));
-            }
-            return permissions;
-        });
-
-        [Obsolete]
-        public static bool CanUpdateFor<TModel, TProperty>(
-            this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression)
-        {
-            var name = ExpressionHelper.GetExpressionText(expression);
-            var role = AuthHelper.GetRole();
-            var permission = _permissions.Value.FirstOrDefault(x => x.PropertyName == name && x.RoleName == role);
-            return permission?.AllowUpdate ?? true;
-        }
-
-        [Obsolete]
-        public static bool CanUpdate<TModel>(
-            this HtmlHelper<TModel> htmlHelper,
-            string name)
-        {
-            var role = AuthHelper.GetRole();
-            var permission = _permissions.Value.FirstOrDefault(x => x.PropertyName == name && x.RoleName == role);
-            return permission?.AllowUpdate ?? true;
-        }
-
-        [Obsolete]
-        public static bool CanApproveFor<TModel, TProperty>(
-            this HtmlHelper<TModel> htmlHelper,
-            Expression<Func<TModel, TProperty>> expression)
-        {
-            var name = ExpressionHelper.GetExpressionText(expression);
-            var role = AuthHelper.GetRole();
-            var permission = _permissions.Value.FirstOrDefault(x => x.PropertyName == name && x.RoleName == role);
-            return permission?.AllowApproval ?? true;
-        }
-
-        [Obsolete]
-        public static MvcHtmlString EduTextBoxFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, object attributes, string fieldName = null)
-        {
-            var canUpdate = fieldName == null ? CanUpdateFor(htmlHelper, expression) : CanUpdate(htmlHelper, fieldName);
-            var result = htmlHelper.TextBoxFor(expression, SetAttributes(!canUpdate, attributes));
-            var valMsg = htmlHelper.ValidationMessageFor(expression);
-            if (valMsg != null) result = new MvcHtmlString(valMsg.ToHtmlString() + result.ToHtmlString());
-            if (!canUpdate)
-            {
-                result = new MvcHtmlString(result.ToHtmlString() + htmlHelper.HiddenFor(expression).ToHtmlString());
-            }
-            return result;
-        }
-
-        [Obsolete]
-        public static MvcHtmlString EduDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression,
-            IEnumerable<SelectListItem> selectList, object attributes = null, string fieldName = null, string label = null)
-        {
-            var expressionText = ExpressionHelper.GetExpressionText(expression);
-            var canUpdate = fieldName == null ? CanUpdateFor(htmlHelper, expression) : CanUpdate(htmlHelper, fieldName);
-            var result = htmlHelper.DropDownListFor(expression, selectList, label ?? string.Empty, SetAttributes(!canUpdate, attributes, expressionText));
-            var valMsg = htmlHelper.ValidationMessageFor(expression);
-            if (valMsg != null) result = new MvcHtmlString(valMsg.ToHtmlString() + result.ToHtmlString());
-            if (!canUpdate)
-            {
-                result = new MvcHtmlString(result.ToHtmlString() + htmlHelper.HiddenFor(expression).ToHtmlString());
-            }
-            return result;
-        }
+        
         
 
         private static Dictionary<string, object> SetAttributes(bool isDisabled, object otherAttributes = null, string id = null)
@@ -138,42 +63,9 @@ namespace Edubase.Web.UI.Helpers
             if (isDisabled) d["style"] = d.ContainsKey("style") ? (d["style"] + ";background-color:#eee;") : "background-color:#eee";
             return d;
         }
-        
-        
-        public static MvcHtmlString EduDayDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
-            TProperty>> expression, object attributes)
-        {
-            var v = expression.Compile()(htmlHelper.ViewData.Model);
-            var items = Enumerable.Range(1, 31)
-                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(), Selected = (x.ToString() == v?.ToString()) });
-            return htmlHelper.DropDownListFor(expression, items, "", attributes);
-        }
-
-        public static MvcHtmlString EduMonthDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
-            TProperty>> expression, object attributes)
-        {
-            var v = expression.Compile()(htmlHelper.ViewData.Model);
-            var items = Enumerable.Range(1, 12)
-                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(),
-                    Selected = (x.ToString() == v?.ToString())});
-            return htmlHelper.DropDownListFor(expression, items, "", attributes);
-        }
-
-        public static MvcHtmlString EduYearDropDownFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel,
-            TProperty>> expression, object attributes)
-        {
-            var v = expression.Compile()(htmlHelper.ViewData.Model);
-            var start = 1900;
-            var count = (DateTime.UtcNow.Year + 5) - start;
-            var items = Enumerable.Range(start, count).Reverse()
-                .Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString(),
-                    Selected = (x.ToString() == v?.ToString()) });
-            return htmlHelper.DropDownListFor(expression, items, "", attributes);
-        }
 
         public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 
             new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
-
 
         public static IHtmlString Conditional<TModel>(this HtmlHelper<TModel> htmlHelper, bool condition, string text)
             => condition ? htmlHelper.Raw(text) : MvcHtmlString.Empty;
@@ -198,11 +90,18 @@ namespace Edubase.Web.UI.Helpers
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>
-        public static IHtmlString HiddenFieldsFromQueryString(this HtmlHelper html)
+        public static IHtmlString HiddenFieldsFromQueryString(this HtmlHelper html, string[] keysToExclude = null)
         {
             var sb = new StringBuilder();
             var query = html.ViewContext.HttpContext.Request.QueryString;
-            foreach (var item in query.AllKeys)
+            var keys = query.AllKeys;
+
+            if (keysToExclude != null)
+            {
+                keys = keys.Where(k => !keysToExclude.Contains(k)).ToArray();
+            }
+
+            foreach (var item in keys)
             {
                 var vals = query.GetValues(item);
                 foreach (var item2 in vals)
@@ -253,5 +152,45 @@ namespace Edubase.Web.UI.Helpers
             }
         }
 
+        public static MvcHtmlString EditorForGeneric<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
+        {
+            var propertyType = typeof(TValue);
+            if (!propertyType.IsGenericType)
+                throw new ArgumentException();
+
+            var genericType = propertyType.GetGenericArguments()[0];
+            var templateName = $"{propertyType.Name.Split('`')[0]}_{genericType.Name}";
+            return html.EditorFor<TModel, TValue>(expression, templateName);
+        }
+
+        public static MvcHtmlString DisplayForGeneric<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
+        {
+            var propertyType = typeof(TValue);
+            if (!propertyType.IsGenericType)
+                throw new ArgumentException();
+
+            var genericType = propertyType.GetGenericArguments()[0];
+            var templateName = $"{propertyType.Name.Split('`')[0]}_{genericType.Name}";
+            return html.DisplayFor<TModel, TValue>(expression, templateName);
+        }
+
+        /// <summary>
+        /// Outputs the supplied file size in megabytes and appends 'MB', or if the supplied bytes value is null, a zero length string is returned.
+        /// </summary>
+        /// <param name="html"></param>
+        /// <param name="fileSizeInBytes"></param>
+        /// <param name="decimalPlaces"></param>
+        /// <param name="minimumValue"></param>
+        /// <returns></returns>
+        public static IHtmlString FileSizeInMegabytes(this HtmlHelper html, long? fileSizeInBytes, int decimalPlaces = 2, double minimumValue = 0)
+        {
+            if (fileSizeInBytes.HasValue)
+            {
+                var mb = Math.Round((double)fileSizeInBytes.Value / 1024 / 1024, decimalPlaces);
+                var result = mb > minimumValue ? mb : minimumValue;
+                return new MvcHtmlString(result.ToString() + " MB");
+            }
+            else return new MvcHtmlString(string.Empty);
+        }
     }
 }

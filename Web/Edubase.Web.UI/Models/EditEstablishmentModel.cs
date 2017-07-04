@@ -1,6 +1,5 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Establishments.DisplayPolicies;
-using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Models.Establishments;
 using System;
 using System.Collections.Generic;
@@ -11,20 +10,11 @@ namespace Edubase.Web.UI.Models
 {
     using Services.Domain;
     using System.ComponentModel;
+    using System.Linq;
     using ET = Services.Enums.eLookupEstablishmentType;
 
     public class EditEstablishmentModel : IEstablishmentPageViewModel
     {
-        private static readonly IDictionary<byte?, string> _ofstedRatingsLookup =
-            new Dictionary<byte?, string>
-            {
-                [0] = "No Ofsted assessment published",
-                [1] = "Outstanding",
-                [2] = "Good",
-                [3] = "Requires Improvement",
-                [4] = "Inadequate"
-            };
-
         public enum eAction
         {
             Edit,
@@ -35,8 +25,6 @@ namespace Edubase.Web.UI.Models
             Confirm,
             AddLinkedSchool,
             RemoveLinkedSchool,
-            AddAddress,
-            RemoveAddress,
             CancelChanges
         }
 
@@ -46,7 +34,7 @@ namespace Edubase.Web.UI.Models
             Predecessor
         }
         
-        public EstablishmentDisplayPolicy DisplayPolicy { get; set; }
+        public EstablishmentDisplayEditPolicy EditPolicy { get; set; }
 
         public int? Urn { get; set; }
         public int? LocalAuthorityId { get; set; }
@@ -71,21 +59,30 @@ namespace Edubase.Web.UI.Models
         public int? EstablishmentTypeGroupId { get; set; }
 
 
+
         public string Address_Line1 { get; set; }
-
         public string Address_Line2 { get; set; }
-
         public string Address_Line3 { get; set; }
-
         public string Address_CityOrTown { get; set; }
-
-        public string Address_County { get; set; }
-
-        public string Address_Country { get; set; }
-
+        public int? Address_CountyId { get; set; }
+        public int? Address_CountryId { get; set; }
         public string Address_Locality { get; set; }
-
         public string Address_PostCode { get; set; }
+        
+
+
+        public string AltSiteName { get; set; }
+        public int? AltCountryId { get; set; }
+        public string AltUPRN { get; set; }
+        public string AltStreet { get; set; }
+        public string AltLocality { get; set; }
+        public string AltAddress3 { get; set; }
+        public string AltTown { get; set; }
+        public int? AltCountyId { get; set; }
+        public string AltPostCode { get; set; }
+        public bool IsAltAddressSet => AltSiteName.Clean() != null || AltStreet.Clean() != null;
+
+
 
         public string OldHeadFirstName { get; set; }
         public string HeadFirstName { get; set; }
@@ -93,44 +90,36 @@ namespace Edubase.Web.UI.Models
         public string HeadLastName { get; set; }
         public int? HeadTitleId { get; set; }
         public string HeadEmailAddress { get; set; }
-        //public DateTimeViewModel HeadAppointmentDate { get; set; }
+        public DateTimeViewModel HeadAppointmentDate { get; set; } = new DateTimeViewModel();
         public ContactDetailsViewModel Contact { get; set; } = new ContactDetailsViewModel();
         public ContactDetailsViewModel ContactAlt { get; set; } = new ContactDetailsViewModel();
-        //public int? LAESTAB { get; set; }
         public int? EstablishmentNumber { get; set; }
 
         public int? TypeId { get; set; }
+
+        [Display(Name = "Open date")]
         public DateTimeViewModel OpenDate { get; set; } = new DateTimeViewModel();
+
+        [Display(Name = "Close date")]
         public DateTimeViewModel CloseDate { get; set; } = new DateTimeViewModel();
         public eAction Action { get; set; }
 
-        public int? LinkedSearchUrn { get; set; }
-        public int? LinkedUrnToAdd { get; set; }
-        public string LinkedEstabNameToAdd { get; set; }
-        public eLinkType? LinkTypeToAdd { get; set; }
-        public DateTimeViewModel LinkedDateToAdd { get; set; }
-        public int? LinkedItemPositionToRemove { get; set; }
-        public List<LinkedEstabViewModel> Links { get; internal set; } = new List<LinkedEstabViewModel>();
         public bool ScrollToLinksSection { get; set; }
-
-        public Dictionary<string, string> SimplifiedLAESTABRules { get; set; }
-
-        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Address_County, Address_PostCode);
-
-
+        
+        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Counties.FirstOrDefault(x=>x.Value == Address_CountyId?.ToString())?.Text, Address_PostCode);
+        
         public int? FurtherEducationTypeId { get; set; }
         public string Contact_WebsiteAddress { get; set; }
         public string Contact_TelephoneNumber { get; set; }
-        public byte? OfstedRating { get; set; }
-        public string OfstedRatingText => _ofstedRatingsLookup.Get(OfstedRating);
+        public int? OfstedRatingId { get; set; }
+        
+        [Display(Name = "Ofsted last inspection")]
         public DateTimeViewModel OfstedInspectionDate { get; set; } = new DateTimeViewModel();
+
         public int? InspectorateId { get; set; }
         public string ProprietorName { get; set; }
         public int? Section41ApprovedId { get; set; }
-        public int? SEN1Id { get; set; }
-        public int? SEN2Id { get; set; }
-        public int? SEN3Id { get; set; }
-        public int? SEN4Id { get; set; }
+        public int[] SENIds { get; set; }
         public int? TypeOfResourcedProvisionId { get; set; }
         public int? ResourcedProvisionOnRoll { get; set; }
         public int? ResourcedProvisionCapacity { get; set; }
@@ -153,9 +142,11 @@ namespace Edubase.Web.UI.Models
 
         public string MSOACode { get; set; }
         public string LSOACode { get; set; }
-        public List<AdditionalAddressModel> AdditionalAddresses { get; set; } = new List<AdditionalAddressModel>();
-        public int AdditionalAddressesCount { get; set; }
+
+        [Display(Name = "BSO: Date of last inspection")]
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
+
+        [Display(Name = "BSO: Next inspection visit")]
         public DateTimeViewModel BSODateOfNextInspectionVisit { get; set; } = new DateTimeViewModel();
 
         public IEnumerable<SelectListItem> AccommodationChanges { get; set; }
@@ -180,14 +171,11 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> ReasonsEstablishmentOpened { get; set; }
         public IEnumerable<SelectListItem> ReasonsEstablishmentClosed { get; set; }
         public IEnumerable<SelectListItem> SpecialClassesProvisions { get; set; }
-        public IEnumerable<SelectListItem> SENProvisions1 { get; set; }
-        public IEnumerable<SelectListItem> SENProvisions2 { get; set; }
-        public IEnumerable<SelectListItem> SENProvisions3 { get; set; }
-        public IEnumerable<SelectListItem> SENProvisions4 { get; set; }
+        
         public IEnumerable<SelectListItem> TypeOfResourcedProvisions { get; set; }
         public IEnumerable<SelectListItem> TeenageMothersProvisions { get; set; }
         public IEnumerable<SelectListItem> ChildcareFacilitiesProvisions { get; set; }
-        public IEnumerable<SelectListItem> RSCRegionLocalAuthorites { get; internal set; }
+        public IEnumerable<SelectListItem> RSCRegions { get; internal set; }
         public IEnumerable<SelectListItem> GovernmentOfficeRegions { get; internal set; }
         public IEnumerable<SelectListItem> AdministrativeDistricts { get; internal set; }
         public IEnumerable<SelectListItem> AdministrativeWards { get; internal set; }
@@ -200,11 +188,8 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }
 
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
-
-        public Guid? AddressToRemoveId { get; set; }
-
-        public bool AllowHidingOfAddress { get; set; }
-
+        
+        
         public List<ChangeDescriptorDto> ChangesSummary { get; set; }
 
         public bool RequireConfirmationOfChanges => true;
@@ -213,6 +198,7 @@ namespace Edubase.Web.UI.Models
 
         public bool IsAcademy => TypeId.OneOfThese(ET.Academy1619Converter, ET.Academy1619SponsorLed, ET.AcademyAlternativeProvisionConverter, ET.AcademyAlternativeProvisionSponsorLed, ET.AcademyConverter, ET.AcademySpecialConverter, ET.AcademySpecialSponsorLed, ET.AcademySponsorLed, ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsAlternativeProvision, ET.FreeSchoolsSpecial, ET.StudioSchools, ET.UniversityTechnicalCollege, ET.CityTechnologyCollege);
 
+        [Display(Name = "Effective date (optional)")]
         public DateTimeViewModel ChangeEffectiveDate { get; set; } = new DateTimeViewModel();
 
         public string OriginalEstablishmentName { get; set; }
@@ -253,7 +239,6 @@ namespace Edubase.Web.UI.Models
         #region IEBT properties
         public string Notes { get; set; }
         public DateTimeViewModel DateOfTheLastBridgeVisit { get; set; } = new DateTimeViewModel();
-        //public DateTime? DateOfTheLastOfstedVisit { get; set; }//OfstedInspectionDate
         public DateTimeViewModel DateOfTheLastISIVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfTheLastWelfareVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfTheLastFPVisit { get; set; } = new DateTimeViewModel();
@@ -262,19 +247,12 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel NextGeneralActionRequired { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel NextActionRequiredByWEL { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel NextActionRequiredByFP { get; set; } = new DateTimeViewModel();
-        //public Lookup Inspectorate { get; set; } //InspectorateId
-        public int? IndependentSchoolTypeId { get; set; } // LookupIndependentSchoolType
+        public int? IndependentSchoolTypeId { get; set; }
         public string CharityOrganisation { get; set; }
         public int? CharityRegistrationNumber { get; set; }
         public int? TotalNumberOfFullTimePupils { get; set; }
         public int? TotalNumberOfPartTimePupils { get; set; }
         public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
-
-        [Obsolete("Use SENStat/SENNoStat")]
-        public int? NumberOfSpecialPupilsUnderASENStatementEHCP { get; set; }
-        [Obsolete("Use SENStat/SENNoStat")]
-        public int? NumberOfSpecialPupilsNotUnderASENStatementEHCP { get; set; }
-
         public int? TotalNumberOfPupilsInPublicCare { get; set; }
         public int? PTBoysAged2AndUnder { get; set; }
         public int? PTBoysAged3 { get; set; }
@@ -294,13 +272,11 @@ namespace Edubase.Web.UI.Models
         public int? HighestAnnualRateForDayPupils { get; set; }
         public int? LowestAnnualRateForBoardingPupils { get; set; }
         public int? HighestAnnualRateForBoardingPupils { get; set; }
-        //public Lookup BoardingEstablishment { get; set; } //ProvisionBoardingId
-        //public string ProprietorsName { get; set; } //ProprietorName
         public string ProprietorsStreet { get; set; }
         public string ProprietorsLocality { get; set; }
         public string ProprietorsAddress3 { get; set; }
         public string ProprietorsTown { get; set; }
-        public string ProprietorsCounty { get; set; }
+        public int? ProprietorsCountyId { get; set; }
         public string ProprietorsPostcode { get; set; }
         public string ProprietorsTelephoneNumber { get; set; }
         public string ProprietorsFaxNumber { get; set; }
@@ -311,7 +287,7 @@ namespace Edubase.Web.UI.Models
         public string ChairOfProprietorsBodyLocality { get; set; }
         public string ChairOfProprietorsBodyAddress3 { get; set; }
         public string ChairOfProprietorsBodyTown { get; set; }
-        public string ChairOfProprietorsBodyCounty { get; set; }
+        public int? ChairOfProprietorsBodyCountyId { get; set; }
         public string ChairOfProprietorsBodyPostcode { get; set; }
         public string ChairOfProprietorsBodyTelephoneNumber { get; set; }
         public string ChairOfProprietorsBodyFaxNumber { get; set; }
@@ -327,6 +303,21 @@ namespace Edubase.Web.UI.Models
 
 
         #endregion
+
+        public bool CanOverrideCRProcess { get; set; }
+
+        public bool OverrideCRProcess { get; set; }
+        public IEnumerable<SelectListItem> Counties { get; internal set; }
+        public IEnumerable<SelectListItem> Countries { get; internal set; }
+        public IEnumerable<SelectListItem> OfstedRatings { get; internal set; }
+        public List<LookupDto> SENProvisions { get; internal set; }
+
+        public string HelpdeskNotes { get; set; }
+        public DateTimeViewModel HelpdeskLastUpdate { get; set; } = new DateTimeViewModel();
+        public int? HelpdeskPreviousLocalAuthorityId { get; set; }
+        public int? HelpdeskPreviousEstablishmentNumber { get; set; }
+
+        public Dictionary<int, int[]> Type2PhaseMap { get; set; }
 
         public EditEstablishmentModel()
         {

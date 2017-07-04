@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Edubase.Common;
 using Edubase.Common.Text;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
@@ -14,12 +15,14 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     using UI.Models;
     using GR = Services.Enums.eLookupGovernorRole;
     using Services.Enums;
+    using Edubase.Services.Domain;
 
     public class GovernorsGridViewModel : Groups.Models.CreateEdit.IGroupPageViewModel, IEstablishmentPageViewModel
     {
         private readonly NomenclatureService _nomenclatureService;
 
-        public List<GridViewModel<GovernorModel>> Grids { get; set; } = new List<GridViewModel<GovernorModel>>();
+        public List<GovernorGridViewModel> Grids { get; set; } = new List<GovernorGridViewModel>();
+        public List<GovernorGridViewModel> HistoricGrids { get; set; } = new List<GovernorGridViewModel>();
         public List<LookupItemViewModel> GovernorRoles { get; internal set; }
         public GovernorsDetailsDto DomainModel { get; set; }
 
@@ -68,17 +71,20 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public eGovernanceMode? GovernanceMode { get; set; }
 
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groudUId, int? establishmentUrn, NomenclatureService nomenclatureService)
+        public IEnumerable<LookupDto> Nationalities { get; private set; }
+        public IEnumerable<LookupDto> AppointingBodies { get; private set; }
+        
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies)
         {
             _nomenclatureService = nomenclatureService;
-            DelegationInformation = dto.GroupDelegationInformation;
-            ShowDelegationInformation = dto.ShowDelegationInformation;
             DomainModel = dto;
             EditMode = editMode;
-            GroupUId = groudUId;
+            GroupUId = groupUId;
+            Nationalities = nationalities;
+            AppointingBodies = appointingBodies;
             EstablishmentUrn = establishmentUrn;
-            CreateGrids(dto, dto.CurrentGovernors, false);
-            CreateGrids(dto, dto.HistoricalGovernors, true);
+            CreateGrids(dto, dto.CurrentGovernors, false, groupUId, establishmentUrn);
+            CreateGrids(dto, dto.HistoricalGovernors, true, groupUId, establishmentUrn);
         }
 
         public GovernorsGridViewModel()
@@ -86,20 +92,42 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         }
 
-        private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric)
+        private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric, int? groupUid, int? establishmentUrn)
         {
-            foreach (var role in dto.ApplicableRoles)
+            var sharedRoles = dto.ApplicableRoles.Where(role => EnumSets.eSharedGovernorRoles.Contains(role));
+            var localEquivs = sharedRoles.Select(RoleEquivalence.GetLocalEquivalentToSharedRole);
+            var allowedSharedRoles =
+                dto.ApplicableRoles.Where(x => sharedRoles.Contains(x) &&
+                                               !dto.ApplicableRoles.Contains(RoleEquivalence
+                                                   .GetLocalEquivalentToSharedRole(x)
+                                                   .Value));
+
+            var roles = dto.ApplicableRoles.Where(role => !EnumSets.eSharedGovernorRoles.Contains(role)
+                                                          ||
+                                                          (RoleEquivalence.GetLocalEquivalentToSharedRole(role) != null
+                                                           && !dto.ApplicableRoles.Contains(RoleEquivalence.GetLocalEquivalentToSharedRole(role).Value)));
+            foreach (var role in roles)
             {
-                var grid = new GridViewModel<GovernorModel>(_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true) + (isHistoric ? $" (in past 12 months)" : string.Empty));
-                grid.Tag = isHistoric ? "historic" : "current";
+                var equivalantRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
+
+                var grid = new GovernorGridViewModel($"{_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
+                {
+                    Tag = isHistoric ? "historic" : "current",
+                    Role = role,
+                    IsSharedRole = EnumSets.eSharedGovernorRoles.Contains(role),
+                    GroupUid = groupUid,
+                    EstablishmentUrn = establishmentUrn,
+                    IsHistoricRole = isHistoric
+                };
+
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
                 Guard.IsNotNull(displayPolicy, () => new Exception($"The display policy should not be null for the role '{role}'"));
-                bool includeEndDate = ((isHistoric && role == GR.Member || role != GR.Member) 
-                    && displayPolicy.AppointmentEndDate) || (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
+                bool includeEndDate = ((isHistoric && role == GR.Member || role != GR.Member) && displayPolicy.AppointmentEndDate) || 
+                                       (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
 
                 SetupHeader(role, grid, displayPolicy, includeEndDate);
-                
-                var list = governors.Where(x => x.RoleId == (int)role);
+
+                var list = governors.Where(x => x.RoleId.HasValue && equivalantRoles.Contains(x.RoleId.Value));
                 foreach (var governor in list)
                 {
                     var isShared = governor.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value);
@@ -111,27 +139,34 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var endDate = (isShared && appointment != null) ? appointment.AppointmentEndDate : governor.AppointmentEndDate;
 
                     var row = grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
-                                                   .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
+                                                   .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
                                                    .AddCell(governor.Id, displayPolicy.Id)
-                                                   .AddCell(governor.AppointingBodyName, displayPolicy.AppointingBodyId)
+                                                   .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name, displayPolicy.AppointingBodyId)
                                                    .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
                                                    .AddCell(endDate?.ToString("dd/MM/yyyy"), includeEndDate)
                                                    .AddCell(governor.PostCode, displayPolicy.PostCode)
                                                    .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
                                                    .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
-                                                   .AddCell(governor.Nationality, displayPolicy.Nationality)
+                                                   .AddCell(Nationalities.FirstOrDefault(x => x.Id == governor.NationalityId)?.Name, displayPolicy.Nationality)
                                                    .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
                                                    .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
                 }
 
-                Grids.Add(grid);
+                if (isHistoric)
+                {
+                    HistoricGrids.Add(grid);
+                }
+                else
+                {
+                    Grids.Add(grid);
+                }
             }
         }
 
         private void SetupHeader(GR role, GridViewModel<GovernorModel> grid, GovernorDisplayPolicy displayPolicy, bool includeEndDate)
         {
             grid.AddHeaderCell("Name", displayPolicy.FullName)
-                .AddHeaderCell("Shared with", role.OneOfThese(GR.Establishment_SharedChairOfLocalGoverningBody, GR.Establishment_SharedLocalGovernor, GR.Group_SharedChairOfLocalGoverningBody, GR.Group_SharedLocalGovernor))
+                .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
                 .AddHeaderCell("GID", displayPolicy.Id)
                 .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
                 .AddHeaderCell("From", displayPolicy.AppointmentStartDate)

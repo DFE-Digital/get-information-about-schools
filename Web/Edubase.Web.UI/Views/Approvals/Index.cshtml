@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = "Edubase: review and approve changes";
+    ViewBag.bodyClasses = "change-approvals";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+<div id="change-approvals" v-cloak>
+    <div class="grid-row">
+        <div class="column-full">
+            <div class="wait-spinner" v-show="isProcessing" aria-live="polite">
+                <p class="visually-hidden">Please wait</p>
+            </div>
+            <h1 class="heading-large" v-show="!isProcessing">Items for approval</h1>
+            <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRemoved">
+                <div class="tick"></div>
+                <p>Items approved. The editor has been notified by email.</p>
+                <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false"><span class="visually-hidden">Dismiss notification</span></a>
+            </div>
+            
+            <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRejected">
+                <div class="tick"></div>
+                <p>Items rejected. The editor has been notified by email.</p>
+                <a class="cross" href="#" v-on:click="itemsConfirmedRejected = false"><span class="visually-hidden">Dismiss notification</span></a>
+            </div>
+            <p v-show="!isProcessing">
+                You have <span class="heading-xlarge count">{{currentCount}}</span> items that require your approval.
+            </p>
+
+            <div class="approve-reject" v-show="!isProcessing">
+                <form>
+                    <div class="error-summary" v-show="approvalError || noneSelectedError">
+                        <p class="error-message" v-show="approvalError">Please select some changes to approve</p>
+                        <p class="error-message" v-show="noneSelectedError">Please select some changes to reject</p>
+                    </div>
+                    <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
+                        <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
+                        <button type="submit" name="action" value="" class="button" 
+                                v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false">Reject</button>
+                    </div>
+
+                    <div v-show="pendingRejection">
+                        <div v-bind:class="['form-group', (invalidReason || reasonLength) ? 'error' : '']">
+                            <label for="reason">Reason for rejecting updates</label>
+                            <span class="form-hint">Enter reason (Maximum 1000 characters)</span>
+                            <span class="error-message" v-show="invalidReason">Please enter a reason for the rejection.</span>
+                            <span class="error-message" v-show="reasonLength">Please enter a reason less than 1000 characters</span>
+                            <textarea id="reason" class="edubase-textarea"></textarea>
+                        </div>
+                        <div class="submit-cancel-panel">
+                            <button type="submit" name="action" class="button" v-on:click.prevent="confirmRejection">Confirm</button>
+                            <button type="submit" name="action" class="button button-grey cancel mobile-full-width"
+                                     v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false">Cancel</button>
+                        </div>
+                    </div>
+
+
+                </form>
+                <div>
+                    <div class="pagination" v-show="!isProcessing">
+                        <p class="pagination-info">
+                            Showing
+                            <span class="pagination-range">
+                                {{ paginationDescription }}
+                            </span>
+                            of
+                            <span class="result-count">{{currentCount}}</span>
+                        </p>
+                        <ul class="pagination-links">
+                            <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
+                            <li v-for="item in totalPages">
+                                <span v-if="item === currentPage + 1" class="numeric-pagination go-nowhere">{{ item }}</span>
+                                <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(item -1)">{{ item }}</a>
+                            </li>
+                            <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                        </ul>                       
+                    </div>
+                </div>
+                <div class="changes-list-wrapper"  v-show="!isProcessing">
+                    <changes-table :pages="changes" :current-page="currentPage"></changes-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section ViewScripts{
+
+    <script type="text/x-template" id="table-template">
+        <table class="edubase-table approval-changes" id="changes-table">
+            <thead>
+                <tr>
+                    <td class="cell-checkbox">&nbsp;</td>
+                    <th scope="col" class="cell-urn">
+                        <abbr title="Unique reference number">
+                            URN
+                        </abbr>
+                    </th>
+                    <th scope="col" class="cell-estab">Establishment</th>
+                    <th scope="col" class="cell-updatedfield">Updated field</th>
+                    <th scope="col" class="cell-oldvalue">Old value</th>
+                    <th scope="col" class="cell-newvalue">New value</th>
+                    <th scope="col" class="cell-edate">Effective date</th>
+                    <th scope="col" class="cell-rdate">Date requested</th>
+                    <th scope="col" class="cell-suggested">Suggested from</th>
+                </tr>
+            </thead>
+            <tbody v-if="pages.length > 0">
+                <tr v-for="(entry, index) in page">
+                    <td class="cell-checkbox" aria-label="Select item">     
+                        <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox">
+                        <label class="edubase-label edubase-button-checkbox" :for="'change-'+entry.id">
+                            <span class="visuallyhidden">Select this change for approval or rejection</span>
+                        </label>
+                    </td>
+                    <td aria-label="URN">
+                        <a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentUrn}}</a>
+                    </td>
+                    <td aria-label="Establishment"><a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentName}}</a></td>
+                    <td aria-label="Updated field">{{entry.fieldName}}</td>
+                    <td aria-label="Old value">{{entry.oldValue}}</td>
+                    <td aria-label="New value">{{entry.newValue}}</td>
+                    <td aria-label="Effective date">{{formatDate(entry.effectiveDateUtc)}}</td>
+                    <td aria-label="Date requested">{{formatDate(entry.requestedDateUtc)}}</td>
+                    <td aria-label="Suggested from">{{entry.originatorFullName}}</td>
+                </tr>
+            </tbody>
+            <tbody v-else>
+                <tr>
+                    <td colspan="9">
+                        <p> You have no items requiring approval.</p>        
+                    </td>
+                </tr>
+            </tbody>
+         </table>
+
+</script>
+
+<script src="/public/assets/scripts/standalone/approvals.js"></script>
+
+}

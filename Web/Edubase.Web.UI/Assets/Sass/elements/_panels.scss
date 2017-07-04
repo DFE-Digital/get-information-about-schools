@@ -6,32 +6,30 @@
 
 // Indented panels with a grey left hand border
 .panel-indent {
-  @extend %contain-floats;
-  clear: both;
-  border-left: 4px solid $border-colour;
+    @extend %contain-floats;
+    clear: both;
+    border-left: 4px solid $border-colour;
+    padding: 5px 0 5px 12px;
+    margin: ($gutter $gutter-half 4px 3px);
 
-  padding: 5px 0 5px 12px;
-  margin: ($gutter $gutter-half 4px 3px);
+    legend {
+        margin-top: 0;
+    }
+    // Remove bottom margin on last paragraph
+    p:only-child,
+    p:last-child {
+        margin-bottom: 0;
+    }
 
-  legend {
-    margin-top: 0;
-  }
-  
-  // Remove bottom margin on last paragraph
-  p:only-child,
-  p:last-child {
-    margin-bottom: 0;
-  }
-  
-  .form-group:last-child {
-    margin-bottom: 0;
-  }
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
 }
 
 
 .expanding-content-wrapper {
     margin: 8px 0 20px;
-    
+
     .panel-indent {
         margin-top: 2px;
         word-wrap: break-word;
@@ -40,4 +38,119 @@
 
 .governor-edit-panel {
     margin-bottom: 20px;
+}
+
+.link-relationship {
+    font-size: 16px;
+    margin-bottom: 0.55em;
+
+    strong {
+        font-weight: bold;
+        display: block;
+    }
+}
+
+.establishment-summary {
+    font-size: 16px;
+}
+
+.gov-radio-wrap {
+    margin-bottom: 8px;
+}
+
+.governor-toggles li {
+    margin-bottom: 36px;
+}
+
+.warning-message {
+    background-color: $yellow-25;
+    background-image: file-url('icons/icon-important-2x.png');
+    background-repeat: no-repeat;
+    background-position: 10px 50%;
+    background-size: 36px;
+    border-left: $black 4px solid;
+    min-height: 60px;
+
+    p {
+        font-weight: bold;
+        padding: 1em 12px 1em 58px;
+    }
+
+    @include media(mobile) {
+        background-size: 24px;
+
+        p {
+            padding-left: 40px;
+        }
+    }
+
+    .search-toggle-panel & {
+        max-width: 50%;
+
+        @include media(mobile) {
+            max-width: 100%;
+        }
+    }
+
+    #group-search-container &,
+    #governor-search-wrapper & {
+        max-width: 50%;
+
+        @include media(mobile) {
+            max-width: 100%;
+        }
+    }
+}
+
+
+.grey-warning {
+    background-color: $grey-3;
+    border-left: $black 4px solid;
+    position: relative;
+
+    p {
+        padding: 1em 12px 1em;
+    }
+
+    .cross {
+        position: absolute;
+        background-image: url('/public/assets/images/icons/grey-cross-transparent.png');
+        top: 50%;
+        margin-top: -8px;
+        right: 16px;
+        width: 16px;
+        height: 16px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        cursor: pointer;
+
+        &:active {
+            border: 0;
+            outline: none;
+        }
+
+        &:focus {
+            background-color: transparent;
+        }
+    }
+}
+
+.section-break {
+    border-top: $grey-3 2px solid;
+    margin-top: 20px;
+}
+
+.tools-landing {
+    h3 {
+        font-size: 21px;
+    }
+
+    .column-half:nth-child(odd) {
+        clear: left;
+    }
+}
+
+
+.panel-toggler {
+    margin-bottom: 0;
 }

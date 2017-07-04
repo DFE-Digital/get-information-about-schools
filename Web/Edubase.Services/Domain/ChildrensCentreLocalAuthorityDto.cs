@@ -1,4 +1,4 @@
-﻿using Edubase.Data.Entity;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace Edubase.Services.Domain
     {
         public string FirstName { get; set; }
         public string Surname { get; set; }
+        [JsonIgnore]
         public string FullName => Common.StringUtil.ConcatNonEmpties(" ", FirstName, Surname);
         public string EmailAddress { get; set; }
         public string TelephoneNumber { get; set; }
@@ -21,12 +22,5 @@ namespace Edubase.Services.Domain
 
         }
 
-        public ChildrensCentreLocalAuthorityDto(LocalAuthority la)
-        {
-            FirstName = la.FirstName;
-            Surname = la.LastName;
-            EmailAddress = la.EmailAddress;
-            TelephoneNumber = la.TelephoneNumber;
-        }
     }
 }

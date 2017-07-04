@@ -7,8 +7,8 @@ using System.Security.Principal;
 
 namespace Edubase.Web.UI.Models.Establishments
 {
+    using Services.Establishments.DisplayPolicies;
     using ET = eLookupEstablishmentType;
-    using TG = eLookupEstablishmentTypeGroup;
 
     public class TabDisplayPolicy
     {
@@ -19,10 +19,13 @@ namespace Edubase.Web.UI.Models.Establishments
         public bool Location { get; set; } = true;
         public bool ChangeHistory { get; set; } = true;
 
-        public TabDisplayPolicy(EstablishmentModel model, IPrincipal principal)
+        public bool Helpdesk { get; set; }
+
+        public TabDisplayPolicy(EstablishmentModel model, EstablishmentDisplayEditPolicy policy, IPrincipal principal)
         {
-            IEBT = model.TypeId.OneOfThese(ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool)
-                && (new[] { EdubaseRoles.IEBT, EdubaseRoles.Admin }).Any(x => principal.IsInRole(x));
+            IEBT = policy.IEBTDetail.Any();
+
+            Helpdesk = policy.HelpdeskNotes;
 
             Governance = model.TypeId.OneOfThese(
                     ET.Academy1619Converter, 
@@ -49,7 +52,16 @@ namespace Edubase.Web.UI.Models.Establishments
                     ET.VoluntaryAidedSchool,
                     ET.VoluntaryControlledSchool);
 
-            Location = !model.TypeId.OneOfThese(ET.BritishSchoolsOverseas);
+            Location = new[]
+            {
+                policy.RSCRegionId, policy.GovernmentOfficeRegionId, policy.AdministrativeDistrictId, policy.AdministrativeWardId, policy.ParliamentaryConstituencyId,
+                policy.UrbanRuralId, policy.GSSLAId, policy.Easting, policy.Northing, policy.CASWardId, policy.MSOAId, policy.LSOAId
+            }.Any(x => x == true);
+        }
+
+        public TabDisplayPolicy()
+        {
+
         }
     }
 }

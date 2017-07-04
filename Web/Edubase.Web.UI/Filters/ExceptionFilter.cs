@@ -34,17 +34,17 @@ namespace Edubase.Web.UI.Filters
                 filterContext.Result = new ViewResult
                 {
                     ViewName = "~/Views/Shared/DomainError.cshtml",
-                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "Functionality has not been implemented yet: underlying error: " + filterContext.Exception.GetBaseException().Message } }
+                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "Functionality has not been implemented yet. Underlying error: " + filterContext.Exception.GetBaseException().Message } }
                 };
 
                 filterContext.ExceptionHandled = true;
             }
-            else if (filterContext.Exception.GetBaseException() is TexunaApiSystemException) // TODO: KHD: For removal post integration
+            else if (filterContext.Exception.GetBaseException() is TexunaApiSystemException) 
             {
                 filterContext.Result = new ViewResult
                 {
                     ViewName = "~/Views/Shared/DomainError.cshtml",
-                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "The API didn't play ball there. Our survey said: " + filterContext.Exception.GetBaseException().Message } }
+                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "Error: " + filterContext.Exception.GetBaseException().Message } }
                 };
 
                 filterContext.ExceptionHandled = true;
@@ -58,7 +58,7 @@ namespace Edubase.Web.UI.Filters
                     filterContext.Result = new ViewResult
                     {
                         ViewName = "~/Views/Shared/Error.cshtml",
-                        ViewData = new ViewDataDictionary() { { "ErrorCode", msg.Id } }
+                        ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id }
                     };
 
                     filterContext.ExceptionHandled = true;

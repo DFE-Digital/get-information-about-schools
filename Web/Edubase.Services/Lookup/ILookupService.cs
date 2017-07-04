@@ -64,7 +64,7 @@ namespace Edubase.Services.Lookup
         IEnumerable<LookupDto> GSSLAGetAll();
         Task<IEnumerable<LookupDto>> GSSLAGetAllAsync();
         IEnumerable<LookupDto> HeadTitlesGetAll();
-        Task<IEnumerable<LookupDto>> HeadTitlesGetAllAsync();
+        Task<IEnumerable<LookupDto>> TitlesGetAllAsync();
         IEnumerable<LookupDto> IndependentSchoolTypesGetAll();
         Task<IEnumerable<LookupDto>> IndependentSchoolTypesGetAllAsync();
         IEnumerable<LookupDto> InspectorateNamesGetAll();
@@ -119,5 +119,8 @@ namespace Edubase.Services.Lookup
         Task<IEnumerable<LookupDto>> TypeOfResourcedProvisionsGetAllAsync();
         IEnumerable<LookupDto> UrbanRuralGetAll();
         Task<IEnumerable<LookupDto>> UrbanRuralGetAllAsync();
+        Task<IEnumerable<LookupDto>> CountiesGetAllAsync();
+        Task<IEnumerable<LookupDto>> OfstedRatingsGetAllAsync();
+        Task<IEnumerable<LookupDto>> RscRegionsGetAllAsync();
     }
 }

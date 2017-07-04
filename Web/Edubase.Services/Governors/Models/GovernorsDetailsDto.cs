@@ -39,8 +39,8 @@ namespace Edubase.Services.Governors.Models
         /// </summary>
         public bool HasGovernors => (CurrentGovernors != null && CurrentGovernors.Any()) || (HistoricalGovernors != null && HistoricalGovernors.Any());
 
-        public string GroupDelegationInformation { get; set; }
-        public bool ShowDelegationInformation { get; set; }
+        //public string GroupDelegationInformation { get; set; }
+        //public bool ShowDelegationInformation { get; set; }
     }
 
     public class GovernorsDetailsTexunaDto : GovernorsDetailsDto

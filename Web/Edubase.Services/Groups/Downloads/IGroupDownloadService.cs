@@ -1,13 +1,15 @@
-﻿using System;
-using System.Security.Principal;
+﻿using System.Security.Principal;
 using System.Threading.Tasks;
-using Edubase.Services.Core;
+using Edubase.Services.Domain;
+using System;
 using Edubase.Services.Groups.Search;
 
 namespace Edubase.Services.Groups.Downloads
 {
-    public interface IGroupDownloadService : IFileDownloadFactoryService
+    public interface IGroupDownloadService
     {
-        Task SearchWithDownloadGenerationAsync(Guid taskId, GroupSearchPayload payload, IPrincipal principal, FileDownloadFactoryService.eFileFormat format);
+        Task<DownloadDto> DownloadGroupHistory(int groupUid, DownloadType downloadType, IPrincipal principal);
+        Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal);
+        Task<Guid> SearchWithDownloadGenerationAsync(SearchDownloadDto<GroupSearchPayload> payload, IPrincipal principal);
     }
 }

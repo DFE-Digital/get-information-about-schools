@@ -4,15 +4,8 @@
 
     <tr>
         <th scope="row">Address:</th>
-        <td>@Model.Establishment.GetAddress()</td>
+        <td>@Model.GetAddress()</td>
     </tr>
-    @if (Model.Establishment.AdditionalAddresses.Count > 0)
-    {
-        <tr>
-            <td>&nbsp;</td>
-            <td><a href="#school-location" class="tab-manipulator">View other sites</a></td>
-        </tr>
-    }
     <tr>
         <th scope="row">Local authority:</th>
         <td>
@@ -21,34 +14,41 @@
                 <a href="/Establishments/Search?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
                     @Model.LocalAuthorityName
                 </a>
-                <text>(@Model.Establishment.LocalAuthorityId)</text>
+                <text>(@Model.LocalAuthorityCode)</text>
             }
         </td>
     </tr>
-
-    @if (Model.DisplayPolicy.HeadteacherDetails)
+    <tr>
+        <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel):</th>
+        <td>
+            @if (Model.DisplayPolicy.HeadTitleId)
+            {
+                <text>@Model.HeadTitleName.Replace("Unknown", string.Empty)</text>
+            }
+            @if (Model.DisplayPolicy.HeadFirstName)
+            {
+                <text>@Model.Establishment.HeadFirstName</text>
+            }
+            @if (Model.DisplayPolicy.HeadLastName)
+            {
+                <text>@Model.Establishment.HeadLastName</text>
+            }
+        </td>
+    </tr>
+    @if (User.Identity.IsAuthenticated)
     {
         <tr>
-            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel):</th>
-            <td>
-                @Model.HeadTitleName @Model.Establishment.HeadFirstName @Model.Establishment.HeadLastName
-            </td>
-        </tr>
-        @*<tr>
             <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th>
             <td>
-                @Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded"
+                @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
             </td>
-        </tr>*@
-        if (User.Identity.IsAuthenticated)
-        {
-            <tr>
-                <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) email address</th>
-                <td>
-                    @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
-                </td>
-            </tr>
-        }
+        </tr>
+        <tr>
+            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) email address</th>
+            <td>
+                @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
+            </td>
+        </tr>
     }
 
     @if (Model.DisplayPolicy.HeadEmailAddress)
@@ -101,19 +101,16 @@
         </tr>
     }
 
-    @if (Model.DisplayPolicy.GroupDetails)
+    @foreach (var group in Model.Groups) 
     {
-        foreach (var group in Model.Groups)
-        {
-            <tr>
-                <th scope="row">@(Model.GetGroupFieldLabel(group)):</th>
-                <td>
-                    @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUID, area = "Groups" }, null)
-                </td>
-            </tr>
-        }
+        <tr>
+            <th scope="row">@(Model.GetGroupFieldLabel(group)):</th>
+            <td>
+                @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUId, area = "Groups" }, null)
+            </td>
+        </tr>
     }
-
+    
     @if (Model.DisplayPolicy.GenderId)
     {
         <tr>
@@ -130,9 +127,12 @@
             <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
             @if (Model.DisplayPolicy.EstablishmentNumber)
             {
-                <text>DfE number: @Model.Establishment.GetLAESTAB()<br /></text>
+                <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br /></text>
             }
-            <abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN
+            @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
+            { 
+                <text><abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN</text>
+            }
         </td>
     </tr>
 
@@ -186,14 +186,14 @@
         <tr><th scope="row">Telephone:</th><td>@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</td></tr>
     }
 
-    @if (Model.DisplayPolicy.OfstedRatingDetails)
+    @if (Model.DisplayPolicy.OfstedRatingId)
     {
         <tr>
             <th scope="row">Ofsted rating:</th>
             <td>
-                @if (Model.Establishment.OfstedRating.HasValue)
+                @if (Model.Establishment.OfstedRatingId.HasValue)
                 {
-                    <span class="highlighted-ofsted-rating">@Model.Establishment.OfstedRating</span>
+                    <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
                 }
                 else
                 {

@@ -97,6 +97,16 @@ $path: $images-path;
   @include core-19();
   background: none;
   border: none;
+  text-decoration: underline;
+  color: $link-colour;
+  cursor: pointer;
+
+  &:hover {
+      color: $link-hover-colour;
+  }
+  &:focus {
+      background-color: $yellow;
+  }
 }
 
 // Button skins

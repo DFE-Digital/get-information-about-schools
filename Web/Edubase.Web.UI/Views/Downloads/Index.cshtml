@@ -1,32 +1,137 @@
 ﻿@using Edubase.Services.Downloads.Models;
-@model FileDownload[]
+@model DownloadsViewModel
 @{
     ViewBag.Title = "Downloads";
     ViewBag.HideLogo = true;
+    var downloadGroups = Model.GetFileDownloadGroups();
 }
 
-<h1 class="heading-large">Downloads</h1>
-<p>Select a file to download</p>
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>                
+            </ul>
 
-<ul class="lis">
-    @foreach (var item in Model)
-    {
-        <li class="download-list-item">
-           <span class="icon-link-copy">
-                <a href="@item.Url" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@item.Description)|download">@item.Description</a>
-                in ZIP format. @ConvertBytesToMegabytes(item.FileSizeInBytes) MB
-            </span>
+        </div>
+        <h1 class="heading-xlarge">Downloads</h1>
+    </div>
+    <div class="column-two-thirds">
+        <p class="@(Model.AreScheduledExtractsAvailable ? "": "no-bottom-margin")">This data is updated daily. You can download any information you search for.</p>
+    </div>   
+</div>
 
-        </li>
-    }
+<div class="grid-row">
+    <div class="column-full">
+        <div class="horizontal-tabs-wrapper">
+            @if (Model.AreScheduledExtractsAvailable)
+            {
+                <div class="tab-wrap">
+                    <ul class="horizontal-tabs">
+                        <li>
+                            <a href="#group-data" class="horizontal-tab">
+                                Establishment &amp; group data
+                            </a>
+                        </li>                   
+                        <li>
+                            <a href="#scheduled-extracts" class="horizontal-tab">
+                                Scheduled extracts
+                            </a>
+                        </li>                                        
+                    </ul>
+                </div>
+            }
+            <div class="tab-content-wrapper horizontal-tabs-content">
+                <div id="group-data" class="tab-content">
+                    <div class="column-two-thirds">
+                        <p class="timestamp">Created at 00:00 on 01/06/2017</p>
 
-</ul>
+                        @foreach (var group in downloadGroups)
+                        {
+                            <h2 class="heading-medium">@group.Heading</h2>
+                            <p>@group.Paragraph</p>
+                            <ul class="lis">
+                                @foreach (var item in group.SubSections)
+                                {
+                                    <li style="margin-top:35px;" class="download-list-heading">@item.Heading</li>
+                                    foreach (var file in item.Files)
+                                    {
+                                        <li class="download-list-item">
+                                            <span class="icon-link-copy">
+                                                <a href="@file.Item2.Url" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">@file.Item1, @Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)</a>
+                                            </span>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        }
+                    </div>
+                    
+                </div>
+                @if (Model.AreScheduledExtractsAvailable)
+                {
+                    <div id="scheduled-extracts" class="tab-content">
+                        
+                        <p>
+                            This is full data that can be found on the Register of educational establishments (Edubase).
+                            When you request a ﬁle the data will be generated and then ready for download a short time
+                            after the request.
+                        </p>
+                        
+                        @if (Model.Pagination.PageCount > 1)
+                        {
+                            <div class="top-pagination">
+                                @Html.Partial("_GenericPagination", Model.Pagination)
+                            </div>
+                        }
 
-@functions {
+                        <table class="edubase-table retain-columns @(Model.Pagination.PageCount > 1 ? "" : "no-pagination")">
+                            <thead>
+                                <tr>
+                                    <th>File</th>
+                                    <th class="download-id">ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var item in Model.ScheduledExtracts.Items)
+                            {
+                                <tr>
+                                    <td class="download-list-item">
+                                        @Html.RouteLink(item.Name, "RequestScheduledExtract", new {id = item.Id}, new {rel = "nofollow"})
+                                    </td>
+                                    <td>
+                                        @item.Id
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                        @if (Model.Pagination.PageCount > 1)
+                        {
+                            <div class="lower-pagination">
+                                @Html.Partial("_GenericPagination", Model.Pagination)
+                            </div>
+                        }
+                    </div>
+                }
+                
+            </div>
+        </div>
+    </div>
+</div>
 
-    double ConvertBytesToMegabytes(long bytes, int decimalPlaces = 2, double minimumValue = 0)
-    {
-        var mb = Math.Round((double)bytes / 1024 / 1024, decimalPlaces);
-        return mb > minimumValue ? mb : minimumValue;
-    }
+
+
+
+@if (Model.AreScheduledExtractsAvailable)
+{
+   
+    @*
+        @Model.Skip - number of records to skip, so /?skip=10 in the qs
+        @Model.Take - number of records to take, so /?skip=15&take=20 will skip the first 15 scheduled extract records and then take 20
+        @Model.ScheduledExtractsCount - the total number of records in the entire data set.
+    *@
 }
+

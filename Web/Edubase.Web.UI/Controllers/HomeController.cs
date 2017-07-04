@@ -1,14 +1,7 @@
-﻿using Edubase.Common;
-using Edubase.Common.Cache;
-using Edubase.Common.Text;
-using Edubase.Data.Repositories.Establishments;
+﻿using Edubase.Common.Cache;
 using Edubase.Services;
-using Edubase.Services.Domain;
 using Edubase.Services.Lookup;
 using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -18,10 +11,14 @@ namespace Edubase.Web.UI.Controllers
     public class HomeController : EduBaseController
     {
         private readonly ILookupService _lookup;
+        private readonly IBlobService _blobService;
+        private readonly ICacheAccessor _cacheAccessor;
 
-        public HomeController(ILookupService lookup)
+        public HomeController(ILookupService lookup, IBlobService blobService, ICacheAccessor cacheAccessor)
         {
             _lookup = lookup;
+            _blobService = blobService;
+            _cacheAccessor = cacheAccessor;
         }
 
         [Route]
@@ -34,57 +31,30 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
-        [Route("enums/now")]
-        public async Task<ActionResult> Enums()
+        [Route("~/cookies")]
+        public ActionResult Cookies()
         {
-            var sb = new StringBuilder();
-            //Action<string, IEnumerable<LookupDto>> f = (name, list) =>
-            //{
-            //    sb.AppendLine($"\tpublic enum {name}");
-            //    sb.AppendLine("\t{");
-            //    foreach (var item in list)
-            //    {
-            //        sb.AppendLine($"\t\t{AsEnumName(item.Name)} = {item.Id},");
-            //    }
-            //    sb.AppendLine("\t}");
-            //    sb.AppendLine();
-            //    sb.AppendLine();
-            //    sb.AppendLine();
-            //};
-
-            //var l = (Services.Texuna.Lookup.LookupApiService)_lookup;
-
-            //foreach (var key in l._map.Keys)
-            //{
-            //    try
-            //    {
-            //        f("e" + AsEnumName(key), await l._map[key]());
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        sb.AppendLine(key+$" failed with {ex}");
-            //    }
-                
-            //}
-
-
-            //f("eLookupGovernorRole", await _lookup.GovernorRolesGetAllAsync());
-            //f("eLookupGovernorAppointingBody", await _lookup.GovernorAppointingBodiesGetAllAsync());
-            //f("eLookupGroupType", await _lookup.GroupTypesGetAllAsync());
-            //f("eLookupEstablishmentTypeGroup", await _lookup.EstablishmentTypeGroupsGetAllAsync());
-            //f("eLookupEstablishmentType", await _lookup.EstablishmentTypesGetAllAsync());
-            //f("eLookupEstablishmentStatus", await _lookup.EstablishmentStatusesGetAllAsync());
-            //f("eLookupGroupStatus", await _lookup.GroupStatusesGetAllAsync());
-
-            return Content(sb.ToString(), "text/plain");
+            return View();
         }
 
-        public static string AsEnumName(string text)
+        [Route("~/guidance")]
+        public ActionResult Guidance()
         {
-            var retVal = text.CleanOfNonChars(true).ToTitleCase().Replace(" ", "");
-            if (retVal.IsInteger()) retVal = "v_" + retVal;
-            if (char.IsNumber(retVal[0])) retVal = "_" + retVal;
-            return retVal;
+            return View();
         }
+
+        [Route("~/news")]
+        public async Task<ActionResult> News()
+        {
+            var blob = _blobService.GetBlobReference("content", "news.html");
+            var html = await _cacheAccessor.GetAsync<string>("news");
+            if (html == null)
+            {
+                html = await blob.DownloadTextAsync();
+                await _cacheAccessor.SetAsync("news", html, TimeSpan.FromHours(1));
+            }
+            return View(new MvcHtmlString(html));
+        }
+
     }
 }

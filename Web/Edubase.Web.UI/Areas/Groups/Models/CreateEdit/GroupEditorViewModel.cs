@@ -2,6 +2,7 @@
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Models;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -42,8 +43,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public eSaveMode SaveMode { get; set; }
         public string FieldNamePrefix => _fieldNamePrefixers.Get(GroupTypeMode);
         public bool InEditMode => GroupUId.HasValue;
-        public int? GroupStatusId { get; set; }
-        public string GroupManagerEmailAddress { get; set; }
+        public string ManagerEmailAddress { get; set; }
         public int? LocalAuthorityId { get; set; }
         public bool IsLocalAuthorityEditable { get; set; }
         public string LocalAuthorityName { get; set; }
@@ -54,6 +54,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
         public DateTimeViewModel OpenDate { get; set; } = new DateTimeViewModel();
+
+        [Display(Name = "Closed date")]
         public DateTimeViewModel ClosedDate { get; set; } = new DateTimeViewModel();
 
         public int? CCLeadCentreUrn { get; set; }
@@ -92,8 +94,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         /// Children's centre group types
         /// </summary>
         public IEnumerable<SelectListItem> CCGroupTypes { get; set; }
-
-        public IEnumerable<SelectListItem> Statuses { get; set; }
+        
 
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
 

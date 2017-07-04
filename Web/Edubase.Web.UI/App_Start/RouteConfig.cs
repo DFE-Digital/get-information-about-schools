@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace Edubase.Web.UI
@@ -12,7 +9,6 @@ namespace Edubase.Web.UI
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapMvcAttributeRoutes();
-
             routes.MapRoute("prototype", "prototype/{viewName}", new { controller = "Prototype", action = "Index", area = "" });
         }
     }

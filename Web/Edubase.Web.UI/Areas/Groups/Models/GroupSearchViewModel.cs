@@ -1,5 +1,5 @@
 ﻿using Edubase.Common;
-using Edubase.Services.Core.Search;
+using Edubase.Services.Enums;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Models;
@@ -31,6 +31,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public bool HasError => !Error.IsNullOrEmpty();
 
         public char? SortBy { get; set; }
+
+        public string SearchQueryString { get; set; }
+
+        public eLookupSearchSource? SearchSource { get; set; }
 
         public eSortBy SortOption => SortBy == 'z' ? eSortBy.NameAlphabeticalZA : eSortBy.NameAlphabeticalAZ;
 

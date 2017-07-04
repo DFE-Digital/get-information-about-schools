@@ -1,5 +1,6 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Domain;
+using Edubase.Services.IntegrationEndPoints.CompaniesHouse.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,12 +13,12 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
     public class CreateAcademyTrustViewModel
     {
-        public CreateAcademyTrustViewModel(CompanyProfileDto companyProfile)
+        public CreateAcademyTrustViewModel(CompanyProfile companyProfile)
         {
             Name = companyProfile.Name;
             OpenDate = companyProfile.IncorporationDate;
             CompaniesHouseNumber = companyProfile.Number;
-            Address = companyProfile.Address.ToString();
+            Address = companyProfile.Address.ToString().Clean();
             CompaniesHouseAddressToken = UriHelper.SerializeToUrlToken(companyProfile.Address);
             TrustExists = false;
         }
@@ -27,7 +28,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         }
 
-        public CreateAcademyTrustViewModel(CompanyProfileDto companyProfile, IEnumerable<SelectListItem> groupTypes) 
+        public CreateAcademyTrustViewModel(CompanyProfile companyProfile, IEnumerable<SelectListItem> groupTypes) 
             : this(companyProfile)
         {
             GroupTypes = groupTypes;
@@ -45,6 +46,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
         public bool TrustExists { get; internal set; }
+        public bool AllowSave { get; set; } = true;
         public IEnumerable<SelectListItem> GroupTypes { get; set; }
 
         public string CompaniesHouseAddressToken { get; set; }

@@ -143,8 +143,8 @@ nav.tabs {
             float: left;
             border: 0;
             width: auto;
-            margin: 0 1.6em 0 0;
-            min-width: 160px;
+            margin: 0 1.2em 0 0;
+            min-width: 133px;
             max-width: 380px;
 
             
@@ -226,4 +226,8 @@ nav.tabs {
             padding-left: 0;
         }
     }
+}
+
+.tab-content .top-pagination .pagination {
+    border: 0;
 }

@@ -1,119 +1,82 @@
 ﻿using Edubase.Services.Security;
 using Edubase.Web.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using Edubase.Services;
+    using Edubase.Services.Establishments;
+    using Edubase.Services.Lookup;
     using Filters;
+    using Helpers;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
+    using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
+    using R = EdubaseRoles;
 
-    [RoutePrefix("Tools"), Route("{action=index}")]
+    [RoutePrefix("Tools"), Route("{action=index}"), EdubaseAuthorize]
     public class ToolsController : Controller
     {
         private readonly ISecurityService _securityService;
+        private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly ICachedLookupService _lookup;
 
-        public ToolsController(ISecurityService securityService)
+        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, ICachedLookupService lookup)
         {
             _securityService = securityService;
+            _establishmentReadService = establishmentReadService;
+            _lookup = lookup;
         }
-
-        // GET: Tools
-        public ActionResult Index()
+        
+        public async Task<ActionResult> Index()
         {
-            var viewModel = new ToolsViewModel();
-            var permission = _securityService.GetCreateGroupPermission(User);
+            var createGroupPermission = await _securityService.GetCreateGroupPermissionAsync(User);
+            var createEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
 
-            viewModel.UserCanCreateAcademyTrustGroup = permission.CanCreate((int)GT.MultiacademyTrust, permission.LocalAuthorityIds.FirstOrDefault()) 
-                || permission.CanCreate((int)GT.SingleacademyTrust, permission.LocalAuthorityIds.FirstOrDefault());
-
-            viewModel.UserCanCreateChildrensCentreGroup = permission.CanCreate((int)GT.ChildrensCentresCollaboration, permission.LocalAuthorityIds.FirstOrDefault())
-                || permission.CanCreate((int)GT.ChildrensCentresGroup, permission.LocalAuthorityIds.FirstOrDefault());
-
-            viewModel.UserCanCreateFederationGroup = permission.CanCreate((int)GT.Federation, permission.LocalAuthorityIds.FirstOrDefault());
-
-            viewModel.UserCanCreateSchoolTrustGroup = permission.CanCreate((int)GT.Trust, permission.LocalAuthorityIds.FirstOrDefault());
-
-            viewModel.UserCanCreateAcademySponsor = permission.CanCreate((int)GT.SchoolSponsor, permission.LocalAuthorityIds.FirstOrDefault());
+            var viewModel = new ToolsViewModel
+            {
+                UserCanCreateAcademyTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.MultiacademyTrust || x == GT.SingleacademyTrust),
+                UserCanCreateChildrensCentreGroup = createGroupPermission.GroupTypes.Any(x => x == GT.ChildrensCentresCollaboration || x == GT.ChildrensCentresGroup),
+                UserCanCreateFederationGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Federation),
+                UserCanCreateSchoolTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Trust),
+                UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
+                UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
+                UserCanManageAcademyOpenings = User.InRole(R.ROLE_BACKOFFICE, R.EFADO, R.AP_AOS),
+                UserCanBulkCreateAcademies = User.InRole(R.ROLE_BACKOFFICE, R.EFADO, R.AP_AOS),
+                UserCanMergeOrAmalgamateEstablishments = User.InRole(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO, R.SOU, R.IEBT),
+                UserCanBulkUpdateGovernors = User.InRole(R.EDUBASE_GROUP_MAT, R.ESTABLISHMENT, R.EFADO, R.ROLE_BACKOFFICE),
+                UserCanBulkUpdateEstablishments = User.InRole(R.ROLE_PRISM, R.ROLE_STAKEHOLDER, R.ROLE_BACKOFFICE)
+            };
 
             return View(viewModel);
         }
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult BulkAcademies()
+        [HttpGet, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO)]
+        public ActionResult BulkAcademies() => View();
+
+        [HttpGet, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO, R.SOU, R.IEBT)]
+        public async Task<ActionResult> MergersTool()
         {
-            return View();
-        }
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult MergersTool()
-        {
-            return View();
-        }
+            var settings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
 
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult ChangeApprovals()
-        {
-            return View();
-        }
+            var type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
+            var type2PhaseMapJson = JsonConvert.SerializeObject(type2PhaseMap, Formatting.None, settings);
 
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult CreateEstablishment()
-        {
-            return View();
-        }
+            var las = (await _lookup.LocalAuthorityGetAllAsync()).Select(x => new { x.Id, x.Name });
+            var lasJson = JsonConvert.SerializeObject(las, Formatting.None, settings);
 
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult ManageAcademyOpenings()
-        {
-            return View();
-        }
+            var phases = (await _lookup.EducationPhasesGetAllAsync()).Select(x => new { x.Id, x.Name });
+            var phasesJson = JsonConvert.SerializeObject(phases, Formatting.None, settings);
 
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult SearchChangeHistory()
-        {
-            return View();
-        }
+            var types = (await _lookup.EstablishmentTypesGetAllAsync()).Select(x => new { x.Id, x.Name });
+            var typesJson = JsonConvert.SerializeObject(types, Formatting.None, settings);
 
-        [HttpGet, EdubaseAuthorize]
-        public ActionResult EstablishmentBulkUpdate()
-        {
-            return View();
-        }
+            ViewBag.Type2PhaseMapJson = type2PhaseMapJson;
+            ViewBag.LocalAuthoritiesJson = lasJson;
+            ViewBag.TypesJson = typesJson;
+            ViewBag.PhasesJson = phasesJson;
 
-        [HttpPost, EdubaseAuthorize]
-        public ActionResult EstablishmentBulkUpdate(
-            HttpPostedFileBase bulkfile,
-            string fileType,
-            string effectiveddateDay,
-            string effectiveddateMonth,
-            string effectiveddateYear)
-        {
-            ViewBag.globalError = false;
-            ViewBag.invalidFileError = false;
-            ViewBag.fileTypeError = false;
-            ViewBag.missingFileError = false;
-
-            ViewBag.fileTypeUnselected = fileType == "";
-
-            if (bulkfile != null && bulkfile.ContentLength > 0)
-            {
-                ViewBag.fileName = Path.GetFileName(bulkfile.FileName);
-                ViewBag.fileExtension = Path.GetExtension(bulkfile.FileName);
-                ViewBag.invalidFileError = ViewBag.fileName == "invalid.csv";
-                ViewBag.fileTypeError = !(ViewBag.fileExtension == ".csv" || ViewBag.fileExtension == ".xlsx");
-            }
-            else
-            {
-                ViewBag.missingFileError = true;
-            }
-
-            ViewBag.globalError = ViewBag.missingFileError || ViewBag.invalidFileError || ViewBag.fileTypeError /*|| ViewBag.fileTypeUnselected*/;
-            ViewBag.fileError = ViewBag.missingFileError || ViewBag.fileTypeError;
-
-            ViewBag.success = !(ViewBag.globalError || ViewBag.fileTypeUnselected);
             return View();
         }
     }

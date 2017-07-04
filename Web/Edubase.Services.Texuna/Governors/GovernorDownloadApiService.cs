@@ -1,42 +1,29 @@
-﻿using Edubase.Services.Governors.Downloads;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Edubase.Services.Core;
-using Edubase.Services.Domain;
+﻿using Edubase.Services.Domain;
+using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Governors.Search;
-using System.IO;
+using System;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace Edubase.Services.Texuna.Governors
 {
     public class GovernorDownloadApiService : IGovernorDownloadService
     {
-        public Task<MemoryStream> CreateCsvStreamAsync(List<string> headers, List<List<string>> rows)
+        private readonly HttpClientWrapper _httpClient;
+
+        public GovernorDownloadApiService(HttpClientWrapper httpClient)
         {
-            throw new NotImplementedException();
+            _httpClient = httpClient;
         }
 
-        public MemoryStream CreateXlsxStream(string title, string worksheetTitle, List<string> headers, List<List<string>> rows)
+        public async Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal)
         {
-            throw new NotImplementedException();
+            return (await _httpClient.GetAsync<ProgressDto>("governor/search/download/progress?id=" + taskId, principal)).Response;
         }
 
-        public Task<SearchDownloadGenerationProgressDto> GetDownloadGenerationProgressAsync(Guid taskId)
+        public async Task<Guid> SearchWithDownloadGenerationAsync(SearchDownloadDto<GovernorSearchPayload> payload, IPrincipal principal)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task SearchWithDownloadGenerationAsync(Guid taskId, GovernorSearchPayload payload, IPrincipal principal, FileDownloadFactoryService.eFileFormat format)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<SearchDownloadGenerationProgressDto> SearchWithDownloadGeneration_InitialiseAsync()
-        {
-            throw new NotImplementedException();
+            return (await _httpClient.PostAsync<ApiResultDto<Guid>>("governor/search/download/generate", payload, principal)).Response.Value;
         }
     }
 }

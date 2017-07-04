@@ -1,18 +1,23 @@
 ﻿using System;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Models.Search;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
     public class GovernorSearchDownloadGenerationProgressViewModel : IDownloadGenerationProgressModel
     {
-        public SearchDownloadGenerationProgressDto Progress { get; set; }
+        public eFileFormat? FileFormat { get; set; }
+        public ProgressDto Progress { get; set; }
+        public string SearchQueryString { get; set; }
+        public eLookupSearchSource? SearchSource { get; set; }
         public int Step { get; private set; }
         public int TotalSteps => 3;
         public string DownloadName => "governor";
-        
 
-        public GovernorSearchDownloadGenerationProgressViewModel(SearchDownloadGenerationProgressDto progressDto, int step)
+        eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
+
+        public GovernorSearchDownloadGenerationProgressViewModel(ProgressDto progressDto, int step)
         {
             Progress = progressDto;
             Step = step;

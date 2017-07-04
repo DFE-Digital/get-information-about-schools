@@ -12,5 +12,6 @@ namespace Edubase.Services.Downloads.Models
         public string Url { get; set; }
         public string Description { get; set; }
         public long FileSizeInBytes { get; set; }
+        public string Tag { get; set; }
     }
 }

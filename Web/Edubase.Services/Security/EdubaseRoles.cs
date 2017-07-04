@@ -1,39 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Edubase.Services.Security
+﻿namespace Edubase.Services.Security
 {
-    public static class EdubaseRoles
+    public class EdubaseRoles
     {
-        public const string Establishment = "Establishment";
-        public const string MAT = "MAT";
-        public const string LA = "LA";
-        public const string LAChildrensCentre = "LAChildrensCentre";
-        public const string EFA = "EFA"; // education funding agency
-        public const string AOS = "AOS"; // Academies Operations and Strategy
-        public const string FSG = "FSG"; // free schools group
-        public const string IEBT = "IEBT"; // Independent Education and Boarding Schools Team
-        public const string School = "School"; // School organisation
-        public const string PRU = "PRU"; // pupil referral unit
-        public const string ChildrensCentre = "ChildrensCentre";
-        public const string Admin = "Admin";
-
-        public static readonly string[] AllRoles = new []{
-            Establishment,
-            MAT,
-            LA,
-            LAChildrensCentre,
-            EFA,
-            AOS,
-            FSG,
-            IEBT,
-            School,
-            PRU,
-            ChildrensCentre,
-            Admin
-        };
+        public const string EDUBASE_CMT = "edubase_cmt";
+        public const string ROLE_BACKOFFICE = "ROLE_BACKOFFICE";
+        public const string AP_AOS = "AP";
+        public const string APT = "APT";
+        public const string ROLE_PRISM = "ROLE_PRISM";
+        public const string EDUBASE_CHILDRENS_CENTRE_POLICY = "edubase_childrens_centre_policy";
+        public const string EFADO = "EFADO";
+        public const string FST = "FST";
+        public const string IEBT = "IEBT";
+        public const string SOU = "SOU";
+        public const string EDUBASE_LACCDO = "edubase_LACCDO";
+        public const string ROLE_STAKEHOLDER = "ROLE_STAKEHOLDER";
+        public const string LADO = "LADO";
+        public const string EDUBASE_GROUP_MAT = "edubase_group_mat";
+        public const string ESTABLISHMENT = "establishment";
+        public const string ROLE_ESTABLISHMENT = "ROLE_ESTABLISHMENT";
+        public const string ESTABLISHMENTWITHSTAFF = "establishmentWithStaff";
     }
 }

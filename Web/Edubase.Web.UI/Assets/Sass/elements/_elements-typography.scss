@@ -163,6 +163,17 @@ main {
   }
 
 }
+.heading-xsmall {
+  @include bold-16();
+
+  margin-top: em(10, 16);
+  margin-bottom: em(5, 16);
+
+  @include media(tablet) {
+    margin-top: em(20, 19);
+  }
+
+}
 
 // Text
 p {

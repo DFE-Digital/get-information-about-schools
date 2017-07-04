@@ -1,12 +1,9 @@
 ﻿using Edubase.Common.Spatial;
-using Edubase.Services.Core.Search;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Edubase.Services.Establishments.Search
 {
@@ -41,6 +38,11 @@ namespace Edubase.Services.Establishments.Search
         [JsonProperty("sortBy")]
         internal string SortByDescriptor => SortBy.ToString();
 
+        [JsonIgnore]
+        public List<string> Select { get; set; } = new List<string>();
+
+        [JsonProperty("select")]
+        public IEnumerable<string> SelectFields => Select.Select(x => Establishment2JsonPropertyMap.Convert(x));
 
     }
 }

@@ -1,0 +1,139 @@
+﻿@using System.Linq
+@model EditEstablishmentLinksViewModel
+@{
+    Layout = "_EditLayoutPage.cshtml";
+}
+
+@using (Html.BeginRouteForm("SaveEstabLink", new { urn = Model.Urn, linkid = Model.ActiveRecord.Id }, FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.Urn)
+    @Html.HiddenFor(x => x.ActiveRecord.Id)
+    @Html.HiddenFor(x => x.ActiveRecord.Urn)
+    @Html.HiddenFor(x => x.StateToken);
+    <div class="tab-content">
+        <div class="attach-link">
+            <div class="button-row">
+                <button name="act" value="save" class="button mobile-full-width">Save</button>
+                @if (!Model.IsNew)
+                {
+                    <button name="act" value="delete" class="button button-grey mobile-full-width estab-link-delete">Delete</button>
+                }
+                <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })" class="button button-grey mobile-full-width">Cancel</a>
+            </div>
+            <div class="column-two-thirds">
+                <h2 class="bold-medium">Link to other establishment</h2>
+                <h3 class="heading-small">Establishment to be linked</h3>
+                <ul class="establishment-summary">
+                    <li>@Model.ActiveRecord.EstablishmentName</li>
+                    <li>@Model.ActiveRecord.Address</li>
+                    <li>URN: @Model.ActiveRecord.Urn</li>
+                </ul>
+                @if (Model.IsNew)
+                {
+                    <a href="@Url.RouteUrl("EditEstabLinks_SearchForEstablishment", new { id = Model.Urn })" class="body-link">Wrong establishment?</a>
+                }
+            </div>
+
+
+            <div class="column-two-thirds">
+                <h3 class="heading-small">Relationship</h3>
+                <h4 class="bold-xsmall">Relationship of:</h4>
+                <p class="link-relationship">
+                    @Model.Name, URN: @Model.Urn
+                    <strong>to</strong>
+                    @Model.ActiveRecord.EstablishmentName, URN: @Model.ActiveRecord.Urn
+                </p>
+            </div>
+            <div class="column-half">
+                <div class="form-group @Html.ValidationCssClassFor(x => x.ActiveRecord.LinkTypeId)">
+                    @Html.ValidationMessageFor(x => x.ActiveRecord.LinkTypeId)
+                    @Html.DropDownListFor(x => x.ActiveRecord.LinkTypeId, Model.LinkTypes, "", new { @class = "form-control" })
+                </div>
+                @Html.EditorFor(x => x.ActiveRecord.LinkDateEditable, new { title = "Date of link", style = "font-weight:bold;" })
+            </div>
+
+
+            @if (Model.IsNew)
+            {
+                <div class="column-two-thirds">
+                    <div class="form-group">
+                        <span class="checkbox-wrap">
+                            @Html.CheckBoxFor(x => x.ActiveRecord.CreateReverseLink)
+                            @Html.LabelFor(x => x.ActiveRecord.CreateReverseLink, "Add a reverse link to show on new establishments page", new { @class = "edubase-button-checkbox" })
+                        </span>
+                    </div>
+                </div>
+                <div id="create-reserve-link" style="display:@Html.Conditional(!Model.ActiveRecord.CreateReverseLink, "none")">
+                    <div class="column-half">
+                        <h4 class="bold-xsmall">Relationship of:</h4>
+                        <p class="link-relationship">
+                            @Model.ActiveRecord.EstablishmentName, URN: @Model.ActiveRecord.Urn
+                            <strong>to</strong>
+                            @Model.Name, URN: @Model.Urn
+                        </p>
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.ActiveRecord.ReverseLinkTypeId)">
+                            @Html.ValidationMessageFor(x => x.ActiveRecord.ReverseLinkTypeId)
+                            @Html.DropDownListFor(x => x.ActiveRecord.ReverseLinkTypeId, Model.ReverseLinkTypes, "", new { @class = "form-control" })
+                        </div>
+
+                        @Html.EditorFor(x => x.ActiveRecord.ReverseLinkDateEditable, new { title = "Date of link", style = "font-weight:bold;", @readonly = Model.ActiveRecord.ReverseLinkSameDate })
+                    </div>
+                    <div class="column-two-thirds">
+                        <div class="form-group">
+                            <span class="checkbox-wrap">
+                                @Html.CheckBoxFor(x => x.ActiveRecord.ReverseLinkSameDate)
+                                @Html.LabelFor(x => x.ActiveRecord.ReverseLinkSameDate, "Use same dates", new { @class = "edubase-button-checkbox" })
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="button-row">
+                <button name="act" value="save" class="button mobile-full-width">Save</button>
+                @if (!Model.IsNew)
+                {
+                    <button name="act" value="delete" class="button button-grey mobile-full-width estab-link-delete">Delete</button>
+                }
+                <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })" class="button button-grey  mobile-full-width">Cancel</a>
+            </div>
+        </div>
+    </div>
+}
+
+@section ViewScripts{
+    
+    <script type="text/javascript">
+
+        $(function () {
+            $('#ActiveRecord_CreateReverseLink').change(function () {
+                $("#create-reserve-link").toggle();
+            });
+            $('#ActiveRecord_ReverseLinkSameDate').change(function () {
+                if (this.checked) {
+                    $("#ActiveRecord_ReverseLinkDateEditable_Day").prop("disabled", true);
+                    $("#ActiveRecord_ReverseLinkDateEditable_Month").prop("disabled", true);
+                    $("#ActiveRecord_ReverseLinkDateEditable_Year").prop("disabled", true);
+                } else {
+                    $("#ActiveRecord_ReverseLinkDateEditable_Day").removeProp("disabled");
+                    $("#ActiveRecord_ReverseLinkDateEditable_Month").removeProp("disabled");
+                    $("#ActiveRecord_ReverseLinkDateEditable_Year").removeProp("disabled");
+                }
+            });
+
+            var $fields = $('#content').find('.form-control');
+            var exitAttached = false;
+
+            $fields.on('change', function () {
+                if (!exitAttached) {
+                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                    exitAttached = true;
+                }
+
+            });
+            
+        });
+
+    </script>
+    
+}

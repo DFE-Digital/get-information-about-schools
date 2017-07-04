@@ -1,0 +1,45 @@
+﻿@using Edubase.Web.UI
+@model Tuple<Edubase.Services.Domain.ProgressDto, ChangeHistoryViewModel>
+@{
+    ViewBag.bodyClasses = "schools-search-page search-page";
+    ViewBag.hideLogo = true;
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+                </li>
+                <li>
+                    Change history
+                </li>
+            </ul>
+        </div>
+        <h1 class="heading-intro">Change history</h1>
+    </div>
+    <div class="horizontal-tabs-wrapper">        
+        <div class="column-full">
+            
+            <h2 class="heading-small">Download change history</h2>
+            <p>Your requested file is ready to download.</p>
+            
+            <ul>
+                <li class="download-list-item">
+                    <span class="icon-link-copy">
+                        <a href="@Model.Item1.FileLocationUri" target="_blank" rel="nofollow">Establishment change history in @Model.Item2.DownloadFormat format</a> 
+                        <br /> (Will download as a ZIP file. Open the ZIP to access its contents)
+                    </span>
+                </li>
+            </ul>
+
+            <p><a class="button button-grey" href="@Url.RouteUrl("ChangeHistorySearch")?@Request.QueryString.RemoveKeys(nameof(Model.Item2.StartDownload))">Search results</a></p>
+            
+        </div>
+    </div>
+</div>
+

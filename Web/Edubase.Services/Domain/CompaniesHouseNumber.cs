@@ -18,5 +18,7 @@ namespace Edubase.Services.Domain
         public string Number => _number;
 
         public static CompaniesHouseNumber Parse(string companiesHouseNumber) => new CompaniesHouseNumber(companiesHouseNumber);
+
+        public override string ToString() => _number;
     }
 }

@@ -1,21 +1,32 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Edubase.Services.Groups.Models
 {
     public class SaveGroupDto
     {
         public GroupModel Group { get; set; }
-        public List<EstablishmentGroupModel> LinkedEstablishments { get; set; }
+        public List<LinkedEstablishmentGroup> LinkedEstablishments { get; set; }
 
+        [JsonIgnore]
         public bool IsNewEntity => !GetGroupUId().HasValue;
 
         private int? _groupUId = null;
 
-        public int? GetGroupUId() => _groupUId ?? Group?.GroupUID;
+        public int? GetGroupUId() => _groupUId ?? Group?.GroupUId;
+
+        public int? GroupUId
+        {
+            get
+            {
+                return GetGroupUId();
+            }
+            set
+            {
+                _groupUId = value;
+                if (Group != null) Group.GroupUId = value;
+            }
+        }
 
         public SaveGroupDto()
         {
@@ -27,13 +38,13 @@ namespace Edubase.Services.Groups.Models
         {
         }
 
-        public SaveGroupDto(GroupModel group, List<EstablishmentGroupModel> linkedEstablishments)
+        public SaveGroupDto(GroupModel group, List<LinkedEstablishmentGroup> linkedEstablishments)
         {
             Group = group;
             LinkedEstablishments = linkedEstablishments;
         }
 
-        public SaveGroupDto(int groupUId, List<EstablishmentGroupModel> linkedEstablishments)
+        public SaveGroupDto(int groupUId, List<LinkedEstablishmentGroup> linkedEstablishments)
         {
             _groupUId = groupUId;
             LinkedEstablishments = linkedEstablishments;

@@ -2,7 +2,6 @@
 using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
-using Edubase.Services.IntegrationEndPoints.AzureSearch.Models;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -30,23 +29,17 @@ namespace Edubase.Services.Groups
 
         Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal);
 
+        Task<bool> CanEditAsync(int uid, IPrincipal principal);
+
         /// <summary>
         /// Retrieves the list of Establishment Groups associated with a Group
         /// </summary>
         /// <param name="groupUid"></param>
         /// <returns></returns>
-        Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal);
+        Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal, bool includeFutureDated = false);
 
-        Task<bool> ExistsAsync(IPrincipal principal, string name, int? localAuthorityId = null, int? existingGroupUId = null);
-        Task<bool> ExistsAsync(CompaniesHouseNumber number, IPrincipal principal); // TODO: TEXCHANGE: add to the API spec
+        Task<bool> ExistsAsync(IPrincipal principal, CompaniesHouseNumber? companiesHouseNumber = null, string groupId = null, int? existingGroupUId = null, string name = null, int? localAuthorityId = null);
 
-        /// <summary>
-        /// Checks whether a groud id already exists within the database
-        /// </summary>
-        /// <param name="groupId">The Group ID to check</param>
-        /// <param name="existingGroupUId">The existing UID of the record, so it can be excluded from the check</param>
-        /// <returns></returns>
-        Task<bool> ExistsAsync(IPrincipal principal, string groupId, int? existingGroupUId = null); // TODO: TEXCHANGE: add to the API spec
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel original, GroupModel model);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model);
         Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal user);

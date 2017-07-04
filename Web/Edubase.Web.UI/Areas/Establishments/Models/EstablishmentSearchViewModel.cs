@@ -1,16 +1,13 @@
 ﻿using Edubase.Common;
-using Edubase.Services.Establishments.Search;
-using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Helpers.ModelBinding;
-using System;
-using System.Collections.Generic;
-using static Edubase.Services.Establishments.Search.EstablishmentSearchPayload;
-using MoreLinq;
-using System.Linq;
 using Edubase.Common.Spatial;
+using Edubase.Services.Enums;
+using Edubase.Services.Establishments.Models;
+using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
-using Edubase.Services.Core.Search;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 {
@@ -72,7 +69,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
             UKPRN
         }
 
-        public IList<SearchEstablishmentDocument> Results { get; set; }
+        public IList<EstablishmentModel> Results { get; set; }
         public string Error { get; set; }
 
         public eTextSearchType TextSearchType
@@ -89,6 +86,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public int PageSize { get; set; } = 50;
         public int StartIndex { get; set; }
         public bool HasError => !Error.IsNullOrEmpty();
+
+        public string SearchQueryString { get; set; }
+        public eLookupSearchSource? SearchSource { get; set; }
 
         public int[] GetRadiusOptions() => _radiuses;
 
@@ -240,10 +240,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public List<int> SelectedUrbanRuralIds { get; set; } = new List<int>();
         public IEnumerable<LookupItemViewModel> UrbanRuralDesignations { get; set; }
 
-
-        [BindAlias(BIND_ALIAS_WARD)]
-        public List<int> SelectedWardIds { get; set; } = new List<int>();
-        public IEnumerable<LookupItemViewModel> Wards { get; set; }
+        
 
         
         /// <summary>
@@ -253,5 +250,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public bool GoToDetailPageOnOneResult { get; set; }
 
         #endregion
+
+        public Dictionary<EstablishmentModel, string> Addresses { get; private set; } = new Dictionary<EstablishmentModel, string>();
+        public Dictionary<EstablishmentModel, string> LAESTABs { get; private set; } = new Dictionary<EstablishmentModel, string>();
+
+
     }
 }

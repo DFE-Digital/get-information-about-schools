@@ -8,16 +8,23 @@
     }
 
     a.download-link {
-        float:none; 
+        
         display:block; 
         margin-top:10px;
         margin-right:10px;
         outline: none;
         padding: 3px;
         @include media(desktop){
-            float:right;
+            margin-right: 0;
+            position: absolute;
+            right: 15px;
+            top: 92px;
         }
     }
+}
+
+.results-heading {
+    position: relative;
 }
 
 .result-info {
@@ -40,9 +47,20 @@
         clear: both;
         margin-bottom: 20px;
         border-bottom: 1px solid #bfc1c3;
+        position: relative;
 
         &:last-child {
             border-bottom:0; 
+        }
+        .additional-closed {
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size:12px;
+            color: $grey-1;
+            @media (min-width: 640px) {
+                font-size: 14px;
+            }
         }
     }
     dl {
@@ -94,6 +112,7 @@
     overflow: hidden;
     position: relative;
     font-size: 16px;
+    clear: both;
 
     .top-pagination & {
         border-bottom: $black 1px solid;
@@ -174,20 +193,36 @@ div.approval-data
 table.approval-items {
     display: table;
     font-size: 14px;
-    
+
     th {
-        font-weight:bold;
-        text-align:left;
+        font-weight: bold;
+        text-align: left;
     }
 
     td, th {
         font-size: 13px;
-        padding:5px 3px 5px 3px;
-        border-bottom:2px solid #eee;
+        padding: 5px 3px 5px 3px;
+        border-bottom: 2px solid #eee;
         width: 12.5%;
-     }
 
-    
+        dl {
+            margin-bottom: 20px;
+            overflow: hidden;
+            font-size: 13px;
+
+            dt, dd {
+                float: left;
+            }
+
+            dt {
+                clear: left;
+                margin-right: 12px;
+                font-weight: bold;
+            }
+        }
+    }
+
+
     td.bb {
         -ms-word-break: break-all;
         word-break: break-all;
@@ -197,13 +232,16 @@ table.approval-items {
 
     @include media(mobile) {
         border-bottom: 1px solid #eee;
+
         thead {
             display: none;
         }
+
         tr {
-            border-top: 3px solid #eee;            
+            border-top: 3px solid #eee;
         }
-        td  {
+
+        td {
             clear: left;
             display: block;
             float: left;
@@ -211,14 +249,16 @@ table.approval-items {
             font-size: 14px;
             padding: 0.5em 0;
             border-bottom: 1px solid #eee;
+
             &:before {
                 content: attr(aria-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em
             }
+
             &:last-child {
-                border:0;
+                border: 0;
             }
         }
     }
@@ -265,7 +305,7 @@ ul.approval-items{
         .tick {
             position:absolute;
             left:0;
-            top:0;
+            top:5px;
             width:35px;
             height:35px;
             background-image: url('/public/assets/images/icons/tick.png');
@@ -275,10 +315,10 @@ ul.approval-items{
         .cross {
             position:absolute;
             background-image: url('/public/assets/images/icons/white-cross-transparent.png');
-            top:10px;
-            right:8px;
-            width:20px;
-            height:20px;
+            top:13px;
+            right:12px;
+            width:16px;
+            height:16px;
             background-repeat:no-repeat;
             background-size:contain;
             cursor:pointer;
@@ -339,4 +379,13 @@ ul.approval-items{
 
 .edubase-filter-submit {
     margin-top: 12px;
+}
+
+
+#la-list {
+    word-wrap: break-word;
+}
+
+.govenors-results {
+    padding-left: 15px;
 }

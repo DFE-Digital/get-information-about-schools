@@ -4,14 +4,22 @@
     ViewBag.hideLogo = true;
     ViewBag.Title = "Create academy trust";
 }
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
 
 @using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Get))
 { 
     <div class="grid-row">
-        <div class="column-full">
-            @Html.ActionLink("Back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
-            
-            
+        <div class="column-full">                      
             <h1 class="heading-xlarge">
                 Create a new Multi academy trust or Single academy trust
             </h1>

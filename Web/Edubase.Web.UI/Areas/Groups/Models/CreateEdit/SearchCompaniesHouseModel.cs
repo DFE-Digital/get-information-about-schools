@@ -1,5 +1,6 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Domain;
+using Edubase.Services.IntegrationEndPoints.CompaniesHouse.Models;
 using System;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
@@ -8,7 +9,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
     {
 
         public string SearchText { get; set; }
-        public PagedDto<CompanyProfileDto> Results { get; set; }
+        public PagedDto<CompanyProfile> Results { get; set; }
         public bool NotFound { get; set; }
         public bool IsNumberSearch => SearchText.IsInteger();
         public int StartIndex { get; set; }

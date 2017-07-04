@@ -28,6 +28,8 @@
         @Html.HiddenFor(x => x.GroupName)
         @Html.HiddenFor(x => x.GroupTypeId)
         @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
+        @Html.HiddenFor(x => x.IsHistoric)
+        @Html.HiddenFor(x => x.Mode)
 
         @Html.HiddenFor(x => x.ReplaceGovernorViewModel.GID)
         @Html.HiddenFor(x => x.ReplaceGovernorViewModel.Name)
@@ -37,13 +39,13 @@
             <p class="bold-small">Replace @Model.GovernorRoleName.ToLower()</p>
             <p class="bold-xsmall">@Model.ReplaceGovernorViewModel.Name</p>
             <div class="date-group-wrap">
-                @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends" })
+                @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)" })
             </div>
         }
         <br />
         <p  class="bold-small">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</p>
             
-        @Html.EditorFor(m => m)
+        @Html.EditorFor(m => m, new { disableStartDate = Model.ReplaceGovernorViewModel.GID.HasValue, reactivationWarning = (Model.Mode == CreateEditGovernorViewModel.EditMode.Edit && Model.AppointmentEndDate.ToDateTime().HasValue && Model.AppointmentEndDate.ToDateTime().Value < DateTime.Now.Date) })
 
         <div class="button-row">
             @Buttons()
@@ -72,4 +74,38 @@
         }
     </button>
     @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-grey" })
+}
+
+@section ViewScripts
+{
+    <script>
+        var $fields = $('#content').find('.form-control');
+        var exitAttached = false;
+
+        $fields.on('change', function () {
+            if (!exitAttached) {
+                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                exitAttached = true;
+            }
+
+        });
+
+        $day = $('#ReplaceGovernorViewModel_AppointmentEndDate_Day');
+        $month = $('#ReplaceGovernorViewModel_AppointmentEndDate_Month');
+        $year = $('#ReplaceGovernorViewModel_AppointmentEndDate_Year');
+
+        function checkAndUpdateDate() {
+            if (Number($day.val()) > 0 && Number($month.val()) > 0 && Number($year.val()) > 0) {
+                var date = new Date($year.val(), $month.val()-1, $day.val(), 0, 0, 0, 0);
+                date.setDate(date.getDate() + 1);
+                $('#AppointmentStartDate_Day').val(date.getDate());
+                $('#AppointmentStartDate_Month').val(date.getMonth()+1);
+                $('#AppointmentStartDate_Year').val(date.getFullYear());
+            }
+        }
+
+        $day.blur(checkAndUpdateDate);
+        $month.blur(checkAndUpdateDate);
+        $year.blur(checkAndUpdateDate);
+    </script>
 }

@@ -187,4 +187,4 @@
 }($));
 
 
-$('#bulk-acamedmy-create').bulkAcademies();
+//$('#bulk-acamedmy-create').bulkAcademies();

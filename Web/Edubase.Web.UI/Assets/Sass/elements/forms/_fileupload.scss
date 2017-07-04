@@ -11,7 +11,7 @@
 .js-enabled {
    .upload-control-wrapper {
        position: relative;
-       height: 40px;
+       min-height: 40px;
     }
 
     .file-selector { 
@@ -19,10 +19,14 @@
         left: 0;
         top: 0;
         z-index: 12;
+
+        @include media(mobile) {
+            width: 100%;
+        }
     }
 
     .file-name {
-        min-width: 290px;
+        min-width: 330px;
         border: 0;
         position: relative;
         top: 8px;
@@ -35,6 +39,13 @@
         z-index: 8;
         top:0;
         bottom: 0;
+
+        @include media(mobile){
+            display: block;
+            padding-left: 0;
+            position: relative;
+            top: 12px;
+        }
     }
 
     .file-input {
@@ -63,9 +74,11 @@
 .bulk-update-success {
     margin: 20px 0;
     div.tick {
-        top: 5px;
+        top: 7px;
     }
-    a.cross {
-        top: 10px;
-    }
+    
+}
+
+.no-bottom-margin {
+    margin-bottom: 0;
 }

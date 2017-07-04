@@ -50,7 +50,7 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> GendersGetAllAsync() => await GetData("genders");
         public async Task<IEnumerable<LookupDto>> GovernmentOfficeRegionsGetAllAsync() => await GetData("government-office-regions");
         public async Task<IEnumerable<LookupDto>> GSSLAGetAllAsync() => await GetData("gssla");
-        public async Task<IEnumerable<LookupDto>> HeadTitlesGetAllAsync() => await GetData("head-titles");
+        public async Task<IEnumerable<LookupDto>> TitlesGetAllAsync() => await GetData("titles");
         public async Task<IEnumerable<LookupDto>> IndependentSchoolTypesGetAllAsync() => await GetData("independent-school-types");
         public async Task<IEnumerable<LookupDto>> InspectorateNamesGetAllAsync() => await GetData("inspectorate-names");
         public async Task<IEnumerable<LookupDto>> InspectoratesGetAllAsync() => await GetData("inspectorates");
@@ -77,7 +77,10 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> TeenageMothersProvisionsGetAllAsync() => await GetData("teenage-mothers-provisions");
         public async Task<IEnumerable<LookupDto>> TypeOfResourcedProvisionsGetAllAsync() => await GetData("type-of-resourced-provisions");
         public async Task<IEnumerable<LookupDto>> UrbanRuralGetAllAsync() => await GetData("urban-rural");
-        private async Task<IEnumerable<LookupDto>> GetData(string name) => await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + name, _securityService.CreateAnonymousPrincipal());
+        public async Task<IEnumerable<LookupDto>> CountiesGetAllAsync() => await GetData("counties");
+        public async Task<IEnumerable<LookupDto>> OfstedRatingsGetAllAsync() => await GetData("ofsted-ratings");
+        public async Task<IEnumerable<LookupDto>> RscRegionsGetAllAsync() => await GetData("rsc-regions");
+        private async Task<IEnumerable<LookupDto>> GetData(string name) => (await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + name, _securityService.CreateAnonymousPrincipal())).GetResponse();
 
         #region Synchronous methods (deprecating)
 
@@ -365,6 +368,7 @@ namespace Edubase.Services.Texuna.Lookup
         {
             throw new NotImplementedException();
         }
+
 
         #endregion
     }

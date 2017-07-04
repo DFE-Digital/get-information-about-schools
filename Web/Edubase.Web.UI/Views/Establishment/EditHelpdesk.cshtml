@@ -1,0 +1,101 @@
+﻿@using System.Linq
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@using System.Linq.Expressions
+@model ViewModel
+@{
+    if (Model.ChangesSummary == null)
+    {
+        Layout = "_EditLayoutPage.cshtml";
+    }
+}
+@using (Html.BeginForm())
+{
+    <div class="tab-content">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.Urn)
+        @Html.HiddenFor(x => x.Name)
+        @Html.HiddenFor(x => x.SelectedTab)
+
+        <div style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
+        
+            <div class="column-half">
+
+                <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveLocation">Save</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                
+                <div class="form-group first">
+                    @Html.LabelFor(x => x.HelpdeskNotes, "Helpdesk notes" , new { @class="form-label"})
+                    @Html.TextAreaFor(x => x.HelpdeskNotes, new { @class = "form-control", rows = "10", maxlength = "1000" })
+                </div>
+
+                @Html.EditorFor(x => x.HelpdeskLastUpdate, new { title = "Edubase last update" })
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
+                    @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId, "Previous local authority")
+                    @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new { @class = "form-control" })
+                </div>
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
+                    @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber, "Previous establishment number")
+                    @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber)
+                    @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "form-control" })
+                </div>
+                
+                <div class="button-row lower">
+                    <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveLocation">Save</button>
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                </div>
+                
+            
+                 
+            </div>
+        </div>
+
+        @if (Model.ChangesSummary != null)
+        {
+            Html.RenderPartial("Partials/_ConfirmChanges");
+
+            <div class="button-row">
+                <button class="button-grey button mobile-full-width" name="action" type="submit" value="@ViewModel.eAction.CancelChanges">&laquo; Back</button>
+                <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
+
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-grey mobile-full-width", id = "cancel-edit"})
+            </div> 
+            
+            @section ViewScripts {
+    
+                <script>
+                    $('#cancel-edit, .requires-conf-to-leave').okCancel({
+                        ok: function() {
+                            window.location = this.el.getAttribute('href');
+                        },
+                        title: 'Are you sure you want to leave this page?',
+                        content: 'Any unsaved changes will be lost',
+                        triggerEvent: 'click'
+                    });
+                </script>
+
+            }           
+        }
+        else
+        {
+@section ViewScripts
+{
+    <script>
+        var $fields = $('#content').find('.form-control');
+        var exitAttached = false;
+       
+        $fields.on('change', function () {
+            if (!exitAttached) {
+                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                exitAttached = true;
+            }
+
+        });
+
+    </script>
+}
+        }
+    
+    </div>
+}

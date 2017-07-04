@@ -1,0 +1,50 @@
+﻿@using Edubase.Web.UI.Models.Search;
+@using Edubase.Web.UI
+@using VM = Edubase.Web.UI.Models.Search.LocationDisambiguationViewModel;
+@model VM
+@{
+    ViewBag.bodyClasses = "schools-search-page search-page";
+    ViewBag.hideLogo = true;
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">Search Edubase</h1>
+    </div>
+
+    <a href="/">Back</a>
+    
+    <p>Search by location:</p>
+
+    <p class="font-small"><span class="bold-medium">@Model.MatchingLocations.Count</span> &nbsp;Location@(Model.MatchingLocations.Count == 1 ? "" : "s") matching '<span class="bold-small">@Model.SearchText</span>'</p>
+
+    @if (Model.MatchingLocations.Count > 1)
+    {
+        <p class="bold-small">Select the location you are interested in</p>
+
+        <ul>
+            @foreach (var item in Model.MatchingLocations)
+            {
+                <li><a href="@Url.Action("ResolveLocation", "Search", new { area = "" })?@Request.QueryString&placeId=@item.Id">@item.Name</a></li>
+            }
+        </ul>
+        <br />
+        <a href="/" class="button">Cancel</a>
+    }
+    else if (Model.MatchingLocations.Count == 1)
+    {
+        <p>Did you mean 
+            <a href="@Url.Action("ResolveLocation", "Search", new { area = "" })?@Request.QueryString&placeId=@Model.MatchingLocations[0].Id">
+                @Model.MatchingLocations[0].Name
+            </a>?
+        </p>
+    }else
+    {
+        <p class="bold-small">No locations were found. Please refine your search criteria.<br /></p>
+        <a href="/" class="button button-next">Continue</a>
+    }
+
+
+
+</div>
+

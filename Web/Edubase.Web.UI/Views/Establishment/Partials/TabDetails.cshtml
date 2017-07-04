@@ -4,15 +4,20 @@
     @if (Model.UserCanEdit)
     {
         @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
+        
     }
     
-    <div class="map-container">       
-        <div id="map" class="school-detail-map"
-             data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
-             data-school-name="@Model.Establishment.Name"
-             data-school-address="@Model.Establishment.GetAddress()"></div>
-        <a href="#map" id="map-toggle" class="map-toggle">Show map</a>
-    </div>
+    @if (Model.Establishment.Location != null)
+    {
+        <div class="map-container">
+            <div id="map" class="school-detail-map"
+                 data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
+                 data-school-name="@Model.Establishment.Name"
+                 data-school-address="@Model.GetAddress()"></div>
+            <a href="#map" id="map-toggle" class="map-toggle">Show map</a>
+        </div>
+    }
+    
 
     <table class="borderless">
         <caption class="visually-hidden">@Model.Establishment.Name details</caption>
@@ -280,27 +285,12 @@
             </tr>
         }
 
-        @if (Model.DisplayPolicy.TypeOfSENProvisionList)
+        @if (Model.DisplayPolicy.SENIds)
         {
             <tr>
                 <th scope="row">Type of SEN provision:</th>
                 <td>
-                    @if (Model.Establishment.SEN1Id.HasValue)
-                    {
-                        <text>@Model.SEN1Name<br /></text>
-                    }
-                    @if (Model.Establishment.SEN2Id.HasValue)
-                    {
-                        <text>@Model.SEN2Name<br /></text>
-                    }
-                    @if (Model.Establishment.SEN3Id.HasValue)
-                    {
-                        <text>@Model.SEN3Name<br /></text>
-                    }
-                    @if (Model.Establishment.SEN4Id.HasValue)
-                    {
-                        <text>@Model.SEN4Name<br /></text>
-                    }
+                    @Model.SENNames
                 </td>
             </tr>
         }

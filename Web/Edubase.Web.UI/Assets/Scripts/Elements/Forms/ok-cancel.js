@@ -10,7 +10,9 @@
         title: 'Are you sure...',
         content: 'That you want to perform this action?',
         triggerEvent: 'change',
-        onPause: false
+        onPause: false,
+        immediate: false,
+        idPrefix: ''
     };
 
 
@@ -42,49 +44,66 @@
         pause: function (pausedState) {
             this.opts.onPause = pausedState || false;
         },
+        unbind: function() {
+            $(this.el).off(this.opts.triggerEvent);
+            $(this.el).removeData('okCancel');
+        },
         init: function () {
             var opts = this.opts;
             var $el = $(this.el);
             var self = this;
-            var overlay = '<div id="modal-overlay" class="modal-overlay hidden"></div>' +
-                '<div id="modal-content" class="modal-content hidden" role="dialog"><a href="#" id="exit-overlay" class="modal-exit">Close</a><div id="modal-inner">' +
-                '<h3 class="heading-large" id="modal-title">'+ opts.title + '</h3><p id="modal-content-area">'+ opts.content + '</p></div> ' +
-                '<div class="button-row"><a href="#" class="button mobile-full-width" id="button-ok">OK</a><a href="#" class="button button-grey mobile-full-width" id="button-cancel">Cancel</a></div>' +
-                '</div>';
+            var overlay = '<div id="'+opts.idPrefix+'modal-overlay" class="modal-overlay hidden"></div>' +
+                '<div id="' + opts.idPrefix + 'modal-content" class="modal-content hidden" role="dialog"><a href="#" id="' + opts.idPrefix + 'exit-overlay" class="modal-exit">Close</a>' +
+                '<div id="' + opts.idPrefix + 'modal-inner" class="modal-inner">' +
+                '<h3 class="heading-large" id="' + opts.idPrefix + 'modal-title">' + opts.title + '</h3><p id="' + opts.idPrefix + 'modal-content-area">' + opts.content + '</p></div> ' +
+                '<div class="button-row"><a href="#" class="button mobile-full-width allow-exit" id="' + opts.idPrefix + 'button-ok">OK</a>';
+            
+            if ($.isFunction(opts.cancel)) {
+                overlay += '<a href="#" class="button button-grey mobile-full-width allow-exit" id="' + opts.idPrefix + 'button-cancel">Cancel</a>';
+            } 
+            overlay += '</div></div>';
 
 
-            if ($('#modal-overlay').length === 0) {
+            if ($('#' + opts.idPrefix + 'modal-overlay').length === 0) {
                 $('#full-content').append(overlay);
             }
             
-            
-            $el.on(opts.triggerEvent, function(e) {
+            function displayModal(e) {
                 e.preventDefault();
                 if (!opts.onPause) {
                     self.showModal();
-                }                
-            });
+                }
+            }
+            
+            $el.on(opts.triggerEvent, displayModal);
 
 
-            $('#exit-overlay , #modal-overlay').on('click', function (e) {
+            $('#' + opts.idPrefix + 'exit-overlay , #' + opts.idPrefix + 'modal-overlay').on('click', function (e) {
                 e.preventDefault();
                 self.closeModal();
             });
+
+            if (opts.immediate) {
+                self.showModal();
+                $el.off(opts.triggerEvent, displayModal);
+            }
         },
         closeModal: function () {
+            var opts = this.opts;
             unbindEscapeKey();
-            $('#full-content').off('click', '#button-ok');
-            $('#full-content').off('click', '#button-cancel');
+            $('#full-content').off('click', '#' + opts.idPrefix + 'button-ok');
+            $('#full-content').off('click', '#' + opts.idPrefix + 'button-cancel');
             
-            $('#modal-content , #modal-overlay').addClass('hidden');
+            $('#' + opts.idPrefix + 'modal-content , #' + opts.idPrefix + 'modal-overlay').addClass('hidden');
 
         },
         updateModalContent: function (title, content) {
+            
             if (title) {
-               $('#modal-title').text(title); 
+                $('#' + this.opts.idPrefix + 'modal-title').text(title);
             }
             if (content) {
-                $('#modal-content-area').text(content);
+                $('#' + this.opts.idPrefix + 'modal-content-area').html(content);
             }
         },
         showModal: function () {
@@ -92,10 +111,10 @@
             var self = this;
 
             bindEscapeKey.call(self);
-            $('#modal-overlay, #modal-content').removeClass('hidden');
+            $('#' + opts.idPrefix + 'modal-overlay, #' + opts.idPrefix + 'modal-content').removeClass('hidden');
 
-            var modalChildren = $('#modal-inner').children();
-            var description = $('#modal-inner').find(':header').slice(0, 1);
+            var modalChildren = $('#'+ opts.idPrefix +'modal-inner').children();
+            var description = $('#' + opts.idPrefix + 'modal-inner').find(':header').slice(0, 1);
 
             modalChildren.attr('tabindex', 0);
 
@@ -115,18 +134,18 @@
                     labelId = description.next().attr('id');
                 }
 
-                $('#modal-content').attr({ 'aria-labelledby': labelId, 'aria-describedby': descId });
+                $('#' + opts.idPrefix + 'modal-content').attr({ 'aria-labelledby': labelId, 'aria-describedby': descId });
             }
 
-            $('#modal-label').focus();
+            $('#' + opts.idPrefix + 'modal-label').focus();
 
-            $('#full-content').on('click', '#button-ok', function (e) {
+            $('#full-content').on('click', '#' + opts.idPrefix + 'button-ok', function (e) {
                 e.preventDefault();
                 opts.ok.call(self);
                 self.closeModal();
             });
 
-            $('#full-content').on('click', '#button-cancel', function (e) {
+            $('#full-content').on('click', '#' + opts.idPrefix + 'button-cancel', function (e) {
                 e.preventDefault();
                 opts.cancel.call(self);
                 self.closeModal();

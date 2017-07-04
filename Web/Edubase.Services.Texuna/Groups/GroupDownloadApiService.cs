@@ -1,42 +1,31 @@
 ﻿using Edubase.Services.Groups.Downloads;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Edubase.Services.Core;
 using Edubase.Services.Domain;
-using Edubase.Services.Groups.Search;
-using System.IO;
 using System.Security.Principal;
+using System;
+using Edubase.Services.Groups.Search;
 
 namespace Edubase.Services.Texuna.Groups
 {
     public class GroupDownloadApiService : IGroupDownloadService
     {
-        public Task<MemoryStream> CreateCsvStreamAsync(List<string> headers, List<List<string>> rows)
+        private readonly HttpClientWrapper _httpClient;
+
+        public GroupDownloadApiService(HttpClientWrapper httpClient)
         {
-            throw new NotImplementedException();
+            _httpClient = httpClient;
         }
 
-        public MemoryStream CreateXlsxStream(string title, string worksheetTitle, List<string> headers, List<List<string>> rows)
+        public async Task<DownloadDto> DownloadGroupHistory(int groupUid, DownloadType downloadType, IPrincipal principal) => (await _httpClient.GetAsync<DownloadDto>($"group/{groupUid}/changes/download?format={downloadType}", principal)).Response;
+
+        public async Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal)
         {
-            throw new NotImplementedException();
+            return (await _httpClient.GetAsync<ProgressDto>("group/search/download/progress?id=" + taskId, principal)).Response;
         }
 
-        public Task<SearchDownloadGenerationProgressDto> GetDownloadGenerationProgressAsync(Guid taskId)
+        public async Task<Guid> SearchWithDownloadGenerationAsync(SearchDownloadDto<GroupSearchPayload> payload, IPrincipal principal)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task SearchWithDownloadGenerationAsync(Guid taskId, GroupSearchPayload payload, IPrincipal principal, FileDownloadFactoryService.eFileFormat format)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<SearchDownloadGenerationProgressDto> SearchWithDownloadGeneration_InitialiseAsync()
-        {
-            throw new NotImplementedException();
+            return (await _httpClient.PostAsync<ApiResultDto<Guid>>("group/search/download/generate", payload, principal)).Response.Value;
         }
     }
 }

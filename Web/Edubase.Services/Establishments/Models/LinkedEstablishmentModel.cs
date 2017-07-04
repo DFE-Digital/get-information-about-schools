@@ -15,18 +15,9 @@ namespace Edubase.Services.Establishments.Models
         public int? Urn { get; set; }
         public DateTime? LinkDate { get; set; }
         public string EstablishmentName { get; set; }
-
-        [JsonProperty("linkType")]
+        
         public int? LinkTypeId { get; set; }
-
-        public LinkedEstablishmentModel(EstablishmentLink link)
-        {
-            Id = link.Id;
-            Urn = link.LinkedEstablishmentUrn;
-            LinkTypeId = link.LinkType?.Id;
-            LinkDate = link.LinkEstablishedDate;
-            EstablishmentName = link.LinkedEstablishment.Name;
-        }
+        
 
         public LinkedEstablishmentModel()
         {

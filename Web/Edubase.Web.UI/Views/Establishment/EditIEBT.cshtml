@@ -3,7 +3,10 @@
 @using System.Linq.Expressions
 @model ViewModel
 @{
-    Layout = "_EditLayoutPage.cshtml";
+    if (Model.ChangesSummary == null)
+    {
+        Layout = "_EditLayoutPage.cshtml";
+    }
 }
 
 @using (Html.BeginForm())
@@ -35,15 +38,15 @@
                 </div>
                 
                 @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Bridge visit" })
-                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Ofsted visit" })
-                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last ISI visit" })
-                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last welfare visit"})
-                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last FP visit"})
-                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last SIS visit"})
-                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Next Ofsted visit"})
-                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Next general action required"})
-                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Next action required by WEL"})
-                @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Next action required by FP"})
+                @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Date of last Ofsted visit" })
+                @Html.EditorFor(x => x.DateOfTheLastISIVisit, new { title = "Date of last ISI visit" })
+                @Html.EditorFor(x => x.DateOfTheLastWelfareVisit, new { title = "Date of last welfare visit"})
+                @Html.EditorFor(x => x.DateOfTheLastFPVisit, new { title = "Date of last FP visit"})
+                @Html.EditorFor(x => x.DateOfTheLastSISVisit, new { title = "Date of last SIS visit"})
+                @Html.EditorFor(x => x.NextOfstedVisit, new { title = "Next Ofsted visit"})
+                @Html.EditorFor(x => x.NextGeneralActionRequired, new { title = "Next general action required"})
+                @Html.EditorFor(x => x.NextActionRequiredByWEL, new { title = "Next action required by WEL"})
+                @Html.EditorFor(x => x.NextActionRequiredByFP, new { title = "Next action required by FP"})
 
                 <div class="form-group">
                     <label for="InspectorateId">Inspectorate</label>
@@ -60,8 +63,8 @@
                 @RenderNumericTextBox("Total number of full time pupils", x => x.TotalNumberOfFullTimePupils)
                 @RenderNumericTextBox("Total number of part time pupils", x => x.TotalNumberOfPartTimePupils)
                 @RenderNumericTextBox("Total number of pupils of compulsory school age", x => x.TotalNumberOfPupilsOfCompulsorySchoolAge)
-                @RenderNumericTextBox("Total number of special pupils under a SEN statement/ECHP", x => x.NumberOfSpecialPupilsUnderASENStatementEHCP)
-                @RenderNumericTextBox("Number of special pupils not under a SEN statement/EHCP", x => x.NumberOfSpecialPupilsNotUnderASENStatementEHCP)
+                @RenderNumericTextBox("Total number of special pupils under a SEN statement/ECHP", x => x.SENStat)
+                @RenderNumericTextBox("Number of special pupils not under a SEN statement/EHCP", x => x.SENNoStat)
                 @RenderNumericTextBox("Total number of pupils in public care", x => x.TotalNumberOfPupilsInPublicCare)
                 
                 @RenderNumericTextBox("PT boys (aged 2 and under)", x => x.PTBoysAged2AndUnder)
@@ -117,7 +120,12 @@
                         @RenderTextBox("Locality", x => x.ProprietorsLocality, "cloneable")
                         @RenderTextBox("Address 3", x => x.ProprietorsAddress3, "cloneable")
                         @RenderTextBox("Town", x => x.ProprietorsTown, "cloneable")
-                        @RenderTextBox("County", x => x.ProprietorsCounty, "cloneable")
+                        
+                        <div class="form-group cloneable">
+                            <label for="ProprietorsCountyId" class="form-label">County</label>
+                            @Html.DropDownListFor(x => x.ProprietorsCountyId, Model.Counties, "", new { @class = "form-control" })
+                        </div>
+
                         @RenderTextBox("Postcode", x => x.ProprietorsPostcode, "cloneable",  "postcode-field")
                         @RenderTextBox("Telephone number", x => x.ProprietorsTelephoneNumber, "cloneable")
                         @RenderTextBox("Fax number", x => x.ProprietorsFaxNumber, "cloneable")
@@ -141,7 +149,12 @@
                     @RenderTextBox("Locality", x => x.ChairOfProprietorsBodyLocality)
                     @RenderTextBox("Address 3", x => x.ChairOfProprietorsBodyAddress3)
                     @RenderTextBox("Town", x => x.ChairOfProprietorsBodyTown)
-                    @RenderTextBox("County", x => x.ChairOfProprietorsBodyCounty)
+                    
+                    <div class="form-group cloneable">
+                        <label for="ChairOfProprietorsBodyCountyId" class="form-label">County</label>
+                        @Html.DropDownListFor(x => x.ChairOfProprietorsBodyCountyId, Model.Counties, "", new { @class = "form-control" })
+                    </div>
+
                     @RenderTextBox("Postcode", x => x.ChairOfProprietorsBodyPostcode, null, "postcode-field")
                     @RenderTextBox("Telephone number", x => x.ChairOfProprietorsBodyTelephoneNumber)
                     @RenderTextBox("Fax number", x => x.ChairOfProprietorsBodyFaxNumber)
@@ -170,11 +183,45 @@
         {
             Html.RenderPartial("Partials/_ConfirmChanges");
             <div class="button-row">
-                <button type="submit" name="action" value="@ViewModel.eAction.CancelChanges" class="button button-grey mobile-full-width">Cancel</button>
+                <button class="button-grey button mobile-full-width" name="action" type="submit" value="@ViewModel.eAction.CancelChanges">&laquo; Back</button>
                 <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
-            </div>            
+
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-grey mobile-full-width", id = "cancel-edit"})
+            </div>
+
+                @section ViewScripts {
+
+                    <script>
+                        $('#cancel-edit, .requires-conf-to-leave').okCancel({
+                            ok: function() {
+                                window.location = this.el.getAttribute('href');
+                            },
+                            title: 'Are you sure you want to leave this page?',
+                            content: 'Any unsaved changes will be lost',
+                            triggerEvent: 'click'
+                        });
+                    </script>
+                }
         }
-    
+        else
+        {
+            @section ViewScripts {
+                <script>
+                    var $fields = $('#content').find('.form-control');
+                    var exitAttached = false;
+
+                    $fields.on('change', function () {
+                        if (!exitAttached) {
+                            DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                            exitAttached = true;
+                        }
+                    });
+
+                </script>
+                
+            }
+        }
+
     </div>
 }
 

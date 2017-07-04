@@ -1,16 +1,14 @@
-﻿using System;
+﻿using Edubase.Services.Domain;
+using Edubase.Services.Establishments.Search;
+using System;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Edubase.Services.Domain;
-using Edubase.Services.Establishments.Search;
-using static Edubase.Services.Core.FileDownloadFactoryService;
-using Edubase.Services.Core;
 
 namespace Edubase.Services.Establishments.Downloads
 {
-    public interface IEstablishmentDownloadService : IFileDownloadFactoryService
+    public interface IEstablishmentDownloadService
     {
-        Task SearchWithDownloadGenerationAsync(Guid taskId, EstablishmentSearchPayload payload, 
-            IPrincipal principal, eDataSet dataSet, eFileFormat format);
+        Task<Guid> SearchWithDownloadGenerationAsync(EstablishmentSearchDownloadPayload payload, IPrincipal principal);
+        Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal);
     }
 }

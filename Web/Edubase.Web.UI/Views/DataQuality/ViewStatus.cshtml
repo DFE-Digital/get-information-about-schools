@@ -1,0 +1,69 @@
+﻿@model Edubase.Web.UI.Models.DataQuality.FullDataQualityStatusViewModel
+    @{
+        ViewBag.bodyClasses = "data-quality";
+    }
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+                </li>
+            </ul>
+        </div>
+        
+
+        @if (Model.DataUpdated)
+        {
+            <div class="pending-updates-message dismissable-message">
+                <div class="tick"></div>
+                <p>Data status has been updated.</p>
+                <a href="#" class="cross"><span class="visually-hidden">Dismiss notification</span></a>
+            </div>
+        }
+        <h1 class="heading-intro">Data status</h1>
+
+        <p class="table-caption">These dates show when each of our teams last updated their data.</p>
+
+        <table class="edubase-table no-pagination">
+            <thead>
+            <tr>
+                <th>Establishment type</th>
+                <th>Last updated</th>
+                <th>Data owner</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Items)
+            {
+                var hasClause = (item.DataOwner == "Independent Education and Boarding Team");
+
+                <tr>
+                    <td aria-label="Establishment type">@item.EstablishmentType.GetEnumMember()</td>
+                    <td aria-label="Last updated">@item.LastUpdated.ToString()</td>
+                    <td aria-label="Data owner" @Html.Raw(hasClause ? "aria-describedby = 'independent-pending'" : "")>
+                        @item.DataOwner
+                        @(hasClause ? "*" : "")
+                    </td>
+                    <td aria-label="Email">
+                        <span class="truncate">
+                            @item.Email
+                        </span>
+                    </td>
+                </tr>
+            }
+
+            </tbody>
+        </table>
+
+        <p id="independent-pending" class="table-footnote">* All approved changes to schools' registered details are recorded at this date. Changes still pending approval won't appear here yet.</p>
+
+        <div class="button-row">
+            <a class="button button-grey" href="/DataQuality/Edit">Update status</a>
+        </div>
+    </div>
+</div>

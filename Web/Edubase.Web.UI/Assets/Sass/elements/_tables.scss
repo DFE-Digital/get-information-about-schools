@@ -523,6 +523,13 @@ table {
 
 .edubase-table {
     border-top: 1px solid $black;
+    &.no-pagination {
+        border-top: 0;
+
+        tbody tr:last-child {
+              td {  border-bottom: 0;}
+            }
+    }
      th {
         font-weight: bold;
         text-align: left;
@@ -676,6 +683,16 @@ table {
 
 }
 
+
+.list-table {
+    border-top: 0;
+    
+    tr:last-child {
+        td {
+            border-bottom: 0;
+        }
+    }
+}
 @media(max-width: 940px) {
     .changes-list-wrapper {
         border-top: 2px $black solid;    
@@ -716,7 +733,49 @@ table {
     }
 }
 
+.retain-columns { // only suitable for tables with 2 columns
+     @include media(mobile) {
+         thead {
+           display: table-header-group;
+           th:first-child {
+               width: 75%;
+           }
+        }
 
+         tr {
+            border-top: 1px solid $black;
+             &:first-child {
+                border: none;
+            }
+        }
+
+        td {
+            display: table-cell;
+            float: none;
+            padding-left: 6px;
+            width: auto !important;
+           
+            &:before {
+                content: "";
+                display: none;
+                
+            }
+
+            &:last-child {
+                border-bottom: $grey-3 1px solid;
+            }
+        }
+    }
+}
+
+.changes-summary {
+    tbody tr:last-child {
+        td {
+            border-bottom: 4px solid $black;
+        }
+
+    }
+}
 
 
 
@@ -737,5 +796,54 @@ p.table-caption {
     margin: 20px 0;
     @include media(mobile) {
         width: 100%;
+    }
+
+    + .date-group {
+        margin: 30px 0;
+    }
+}
+
+
+.edit-cell {
+    text-align: right;
+}
+
+.download-id {
+    width: 40px;
+}
+
+.table-footnote {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.data-description {
+    font-size: 16px;
+    @include media(tablet){
+        width: 75%;
+    }
+}
+
+.timestamp {
+    font-size: 16px;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.helpdesk-table {
+    thead th {
+        font-weight: bold;
+    }
+
+    .row-header {
+        width: 36%;
+    }
+}
+
+.establishment-changes {
+    thead th {
+        padding-top: 0;
     }
 }

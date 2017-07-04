@@ -1,4 +1,5 @@
 ﻿@using Edubase.Common;
+@using Edubase.Services.Enums
 @model GovernorSearchViewModel
 
 @if (Model.Error != null)
@@ -17,8 +18,8 @@ else if (Model.Count > 0)
             @Html.Partial("_GenericPagination")
         </div>
     }
-    <div>
-        <ul class="school-results-listing">
+    <div class="govenors-results">
+        <ul class="school-results-listing" id="governor-search-results">
             @foreach (var result in Model.Results)
                 {
                 <li>
@@ -27,16 +28,16 @@ else if (Model.Count > 0)
                         @if (result.EstablishmentUrn.HasValue)
                         {
                             <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                            <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
+                            <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Establishment", new { id = result.EstablishmentUrn, area = "", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors }, null)</dd>
                             <dt>Establishment:</dt>
-                            <dd>@Html.ActionLink(result.EstablishmentName ?? "--", "Details", "Establishment", new { id = result.EstablishmentUrn, area = "" }, null)</dd>
+                            <dd>@Html.ActionLink(result.EstablishmentName ?? "--", "Details", "Establishment", new { id = result.EstablishmentUrn, area = "", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors }, null)</dd>
                         }
                         else
                         {
                             <dt>UID:</dt>
-                            <dd>@Html.ActionLink(result.GroupUID.ToString(), "Details", "Group", new { id = result.GroupUID, area = "groups" }, null)</dd>
+                            <dd>@Html.ActionLink(result.GroupUId.ToString(), "Details", "Group", new { id = result.GroupUId, area = "groups", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors }, null)</dd>
                             <dt>Group:</dt>
-                            <dd>@Html.ActionLink(result.GroupName ?? "--", "Details", "Group", new { id = result.GroupUID, area = "groups" }, null)</dd>
+                            <dd>@Html.ActionLink(result.GroupName ?? "--", "Details", "Group", new { id = result.GroupUId, area = "groups", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors }, null)</dd>
                         }
 
                     </dl>

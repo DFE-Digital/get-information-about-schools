@@ -1,0 +1,104 @@
+﻿@model GovernorsBulkUpdateViewModel
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+@if (Model.BadFileType)
+{
+    <div class="validation-summary-errors">
+        <span>Incorrect file type</span>
+        <ul>
+            <li>You have uploaded an incorrect file type. Please upload an XLSX file.</li>
+        </ul>
+    </div>
+}
+else if (Model.ErrorLogDownload != null)
+{
+    <div class="validation-summary-errors">
+        <span>Validation fail</span>
+        <ul>
+            <li>The data contained in the XLSX was invalid. Please download the error log to correct your data before resubmitting.</li>
+        </ul>
+    </div>
+}
+else
+{
+    @Html.ValidationSummary("Incorrect or missing details")
+}
+
+
+@using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="grid-row spaced-groups">
+        <div class="column-full">
+            @if (Model.WasSuccessful)
+            {
+                <div class="pending-updates-message dismissable-message bulk-update-success">
+                    <div class="tick"></div>
+                    <p>Your bulk update was successful.</p>
+                    <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+                </div>
+            }
+            <h1 class="heading-xlarge">Governance bulk update</h1>
+            
+            <p>Follow these steps to bulk update governance data.</p>
+        </div>
+        <div class="column-full">
+            <div class="expanding-content-wrapper no-bottom-margin" data-update-text="false">
+                <a href="#" class="expanding-content-trigger">
+                    Help with preparing files
+                    @* TODO: REF ACTUAL HELP FILE HERE *@
+                </a>
+                <div class="expanding-content panel-indent">
+                    <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
+                </div>
+            </div>
+
+            @if (Model.ErrorLogDownload != null)
+            {
+                <div class="form-group error" id="error-log">
+                    <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                    <p class="download-list-item">
+                        <a href="@Model.ErrorLogDownload.Url">@Model.ErrorLogDownload.Name</a>
+                    </p>
+                </div>
+            }
+        </div>
+
+        <div class="column-full">
+            <h2 class="heading-medium">Download template</h2>
+            <p>Please download the template using the link below. Then, provide or update your governance information in the template.
+             Finally, upload the completed template using the 'Choose file' button below.</p>
+            <a href="/public/downloads/GovernorsBulkUpdateTemplate.xlsx" class="download-list-item">GovernanceTemplate.xlsx, 18KB</a>
+        </div>
+
+        <div class="column-full">
+            <h2 class="heading-medium">Submit completed template</h2>
+            <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="bulkfile" class="form-label">Upload a file</label>      
+                @Html.ValidationMessageFor(x => x.BulkFile)  
+                <div class="upload-control-wrapper">
+                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "file-input" });
+                    <button class="button button-grey file-selector">Choose file</button>
+                    <div class="text-field-wrapper">
+                        <input type="text" class="file-name" readonly="readonly" value="No file chosen" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="column-full">
+            <input type="submit" class="button mobile-full-width" value="Submit"/>           
+            <a href="/Tools" class="button button-grey cancel mobile-full-width">Cancel</a>
+        </div>
+       
+</div>
+}
