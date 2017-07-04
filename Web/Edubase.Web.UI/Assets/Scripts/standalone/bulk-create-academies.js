@@ -141,7 +141,7 @@
             },
             methods: {
                 pad: function(num) {
-                    if (num < 10) {
+                    if (num < 10 && num.toString().length < 2) {
                         return '0' + num;
                     }
                     return num;
