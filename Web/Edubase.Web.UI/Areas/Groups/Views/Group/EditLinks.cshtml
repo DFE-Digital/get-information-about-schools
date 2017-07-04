@@ -105,10 +105,11 @@
                             }
                             else if (Model.LinkedEstablishments.Establishments[i].EditMode)
                             {
-                            <div class="form-group">
-                                <button type="submit" class="button button-grey allow-exit" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit">Cancel</button>
-                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
-                            </div>
+                                <div class="form-group">
+                                    @Html.ActionLink("Cancel", "EditLinks","Group", new { area = "Groups"}, new {@class= "button button-grey allow-exit" })
+                                    @*<button type="submit" class="button button-grey allow-exit" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit">Cancel</button>*@
+                                    <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
+                                </div>
                             }
 
 
