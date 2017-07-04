@@ -1,4 +1,5 @@
 ﻿using System;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Texuna.ChangeHistory.Models
 {
@@ -16,5 +17,10 @@ namespace Edubase.Services.Texuna.ChangeHistory.Models
         public string FieldName { get; set; }
         public string OldValue { get; set; }
         public string NewValue { get; set; }
+        public GroupChangeRequestType? RequestType { get; set; }
+        public GroupChangeLinkType? LinkType { get; set; }
+        public DateTime? LinkDateUtc { get; set; }
+        public int? LinkUrn { get; set; }
+        public string LinkEstablishmentName { get; set; }
     }
 }
