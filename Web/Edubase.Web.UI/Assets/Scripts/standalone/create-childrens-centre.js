@@ -93,6 +93,55 @@
             }
         },
         methods: {
+            submitCentres: function () {
+                var self = this;
+                var centres = this.centresInGroup;
+                var frag = document.createDocumentFragment();
+                var form = document.getElementById('create-childrens-centres');
+                var fields = [
+                    'Urn',
+                    'JoinedDateEditable.Day',
+                    'JoinedDateEditable.Month',
+                    'JoinedDateEditable.Year',
+                    'CCIsLeadCentre'
+                ];
+
+                for (var i = 0, len = centres.length; i < len; i++) {
+                    var centre = centres[i];
+                    for (var j = 0, fLen = fields.length; j < fLen; j ++) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'LinkedEstablishments.Establishments[' + i + '].' + fields[j];
+
+                        switch(j) {
+                            case 0:
+                                input.value = centre.urn;
+                                break;
+                            case 1:
+                                input.value = centre.joinDate.split('/')[0];
+                                break;
+                            case 2:
+                                input.value = centre.joinDate.split('/')[1];
+                                break;
+                            case 3:
+                                input.value = centre.joinDate.split('/')[2];
+                                break;
+                            case 4:
+                                input.value = centre.urn === self.groupLead;
+                                break;
+                        }
+
+                        frag.appendChild(input);
+                    }
+                   
+
+                }
+                form.appendChild(frag);
+                window.setTimeout(function() {
+                    form.submit();
+                },100);
+                
+            },
             validateDate: function (dateProp) {
                 var self = this;
                 self.openDateError = false;

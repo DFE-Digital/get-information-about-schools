@@ -6,7 +6,7 @@
 
 <div id="create-childrens-centre" v-cloak>
 <div aria-live="polite" class="wait-spinner" v-show="isProcessing"><p class="visually-hidden">Please wait</p></div>
-    @using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post))
+    @using (Html.BeginForm("Create", "Group", new { area = "Groups"  }, FormMethod.Post, new { @id = "create-childrens-centres" }))
     {
         @Html.HiddenFor(x => x.GroupUId)
         @Html.HiddenFor(x => x.GroupTypeMode)
@@ -29,7 +29,7 @@
                 <div class="column-two-thirds">
                     <p>You can use this to create children's centre groups or collaborations of existing establishments.</p>
                     <fieldset class="radio-wrap stacked-controls">
-                        <legend class="bold-medium">Select the process that you are interested in</legend>
+                        <legend class="heading-medium">Select the process that you are interested in</legend>
                         <div class="form-group">
                             @foreach (var groupType in Model.CCGroupTypes)
                             {
@@ -206,7 +206,7 @@
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
                             <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
-                            <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave">Submit</button>
+                            <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="submitCentres">Submit</button>
                         }
 
                         @(Model.InEditMode
