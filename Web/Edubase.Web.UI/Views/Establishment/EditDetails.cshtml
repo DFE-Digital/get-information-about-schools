@@ -179,7 +179,7 @@
                     {
                         <div class="form-group range-group">
                             <fieldset>
-                                <legend>Age range</legend>
+                                <legend class="bold">Age range</legend>
                                 <span class="inline-form-control">
                                     <label for="agerange-from" class="form-label">
                                         Low
@@ -245,7 +245,7 @@
                     {
                         <div class="form-group">
                             <fieldset class="inline-fields">
-                                <legend>DfE number</legend>
+                                <legend class="bold">DfE number</legend>
                                 <p class="form-hint">LA code and Establishment number</p>
                                 <label class="form-label visually-hidden" for="lacode"> LA code</label>
                                 <input type="text" id="lacode" class="form-control" size="5" disabled="disabled" value="@Model.LocalAuthorityId" />
@@ -326,10 +326,7 @@
                             @Html.TextBoxFor(x => x.ProprietorName, new { maxlength = 120, id = "proprietor", @class = "form-control" })
                         </div>
                     }
-                </div>
-
-                <h2 class="heading-medium create-edit-section-break">Details</h2>
-                <div class="column-half">
+                
 
                     @if (Model.EditPolicy.ReligiousCharacterId)
                     {

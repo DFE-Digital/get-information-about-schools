@@ -70,6 +70,9 @@
             blockExits();
         },
         methods: {
+            detailUrl: function (urn) {
+                return '/Establishment/Details/' + urn;
+            },
             formatDate: function (date, separator) {
                 if (!date) {
                     date = new Date();

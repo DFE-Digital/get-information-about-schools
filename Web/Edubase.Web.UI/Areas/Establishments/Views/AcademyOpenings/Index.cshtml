@@ -119,13 +119,13 @@
                                     <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
                                     <dl>
                                         <dt>URN:</dt>
-                                        <dd><a href="#">{{ od.urn }}</a></dd>
+                                        <dd><a v-bind:href="detailUrl(od.urn )">{{ od.urn }}</a></dd>
                                         <dt>Establishment name:</dt>
                                         <dd>{{updateName}}</dd>
                                         <dt>Establishment type:</dt>
                                         <dd>{{ od.establishmentType }}</dd>
                                         <dt>Predecessor URN:</dt>
-                                        <dd><a href="#">{{ od.predecessorUrn }}</a></dd>
+                                        <dd><a v-bind:href="detailUrl(od.predecessorUrn )">{{ od.predecessorUrn }}</a></dd>
                                         <dt>Predecessor name:</dt>
                                         <dd>{{ od.predecessorName }}</dd>
                                     </dl>

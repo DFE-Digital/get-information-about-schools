@@ -1,8 +1,38 @@
 ﻿@model Edubase.Web.UI.Models.Grid.GovernorGridViewModel
 
 <div class="governor-grid">
+@if (!User.Identity.IsAuthenticated && Model.IsHistoricRole)
+{
+    if (Model.Rows.Any())
+    {
+       foreach (var row in Model.Rows)
+            {
+                var cellCount = 0;
+                <tr>
+                    @foreach (var cell in row.Cells)
+                    {
+
+                        <td aria-label="@Model.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
+                        if (cellCount == 0)
+                        {
+                            <td aria-label="Role">@Model.Title</td>
+                            if (row.Cells.Count() == 3)
+                            {
+                                <td aria-label="Appointed by">Not recorded</td>
+                            }
+                        }
+                       
+                        cellCount++;
+                    }
+                </tr>
+            }
+            
+    }
+}
+else
+{
     <h2 class="heading-small">@Model.Title</h2>
-    @if (!User.Identity.IsAuthenticated && Model.GroupUid != null && Model.IsSharedRole)
+    if (!User.Identity.IsAuthenticated && Model.GroupUid != null && Model.IsSharedRole)
     {
         if (Model.Rows.Any())
         {
@@ -21,26 +51,26 @@
             {
                 <table class="edubase-table list-table">
                     <thead>
-                    <tr>
-                        @foreach (var column in Model.HeaderCells)
-                        {
-                            <th>@(column.Text ?? "Not recorded")</th>
-                        }
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var row in Model.Rows)
-                    {
-                        var cellCount = 0;
                         <tr>
-                            @foreach (var cell in row.Cells)
+                            @foreach (var column in Model.HeaderCells)
                             {
-
-                                <td aria-label="@Model.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
-                                cellCount++;
+                                <th>@(column.Text ?? "Not recorded")</th>
                             }
                         </tr>
-                    }
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Rows)
+                        {
+                            var cellCount = 0;
+                            <tr>
+                                @foreach (var cell in row.Cells)
+                                {
+
+                                    <td aria-label="@Model.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
+                                    cellCount++;
+                                }
+                            </tr>
+                        }
                     </tbody>
                 </table>
             }
@@ -57,7 +87,7 @@
                                 <dd>@(cell.Text ?? "Not recorded")</dd>
                             }
                         </dl>
-                          
+
                     </div>
                 }
             }
@@ -68,4 +98,9 @@
             <p class="none">Not recorded</p>
         }
     }
+
+}
+
+
+   
 </div>

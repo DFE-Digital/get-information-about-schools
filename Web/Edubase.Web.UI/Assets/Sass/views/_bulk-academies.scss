@@ -5,14 +5,17 @@
 }
 
 .bulk-academy-create {
-    .error-message {
-        display: none;
-
-    }
-    .error .error-message {
+    .change-link {
+        font-size: 16px;
         display: block;
+        float: left;
+        margin: 4px 0;
     }
 
+    .establishment-details {
+        clear:both;
+        overflow: hidden;
+    }
     .result-list .button-row {
         display: none;     
         padding: 0;   
@@ -27,15 +30,25 @@
         padding: 20px 0;
     }
 
+    .inline-submit {
+       
+        margin-left: 0;
+    }
 
+    .inline-with-button .form-control {
+        width: 60%;
+        @include media(mobile) {
+            width: 50%;
+        }
+    }
+   
+    .button {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
 
-    .help-with-this-tool {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: #f0f0f0;
-        border: $black 1px solid;
-        width: 200px;
-        padding: 12px;
+    .table-caption {
+        font-size: 14px;
+        margin: 12px 0;
     }
 }
