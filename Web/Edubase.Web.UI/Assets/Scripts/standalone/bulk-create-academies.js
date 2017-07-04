@@ -10,6 +10,7 @@
                 invalidUrn: false,
                 duplicateUrn: false,
                 urnLookUpError: '',
+                apiValidationError: '',
 
                 estabTypeError: false,
 
@@ -68,7 +69,8 @@
                             this.openDateError ||
                             this.invalidUrn ||
                             this.commitError ||
-                            this.urnLookUpError !== ''
+                            this.urnLookUpError !== '' ||
+                            this.apiValidationError !== ''
                     );
                 },
                 validationParams: function() {
@@ -291,6 +293,7 @@
                 var self = this;
                 this.openDateError = this.validateOpenDate();
                 this.urnLookUpError = '';
+                this.apiValidationError = '';
                 var dateArray = [this.pad(this.openDateDay), this.pad(this.openDateMonth), this.openDateYear];
 
                 if (!this.openDateError) {
@@ -338,13 +341,13 @@
 
                             } else {
                                 var messages = data[0].errors.map(function(elem) { return elem.message });
-                                self.urnLookUpError = messages.join('<br>');
+                                self.apiValidationError = messages.join('<br>');
                             }
                             self.isProcessing = false;
                             self.isSearching = false;
                         },
                         error: function(jqXHR) {
-                            self.urnLookUpError = "The urn in is invalid";
+                            self.apiValidationError = "Something went wrong checking the establishment.";
                             self.isProcessing = false;
                             self.isSearching = false;
                         }
@@ -365,6 +368,13 @@
                 this.openDateDay = openingDate[0];
                 this.openDateMonth = openingDate[1];
                 this.openDateYear = openingDate[2];
+            },
+            cancelAddEdit: function () {
+               
+                this.pendingEdit = false;
+                this.pendingEstab = {};
+                this.searchUrn = '';
+                this.apiValidationError = '';
             },
             couldDelete: function (urn) {
                 this.pendingDelete = true;

@@ -32,7 +32,7 @@
                     <h2 class="heading-medium error-summary-heading missing-date" v-show="openDateError">
                         Information missing.
                     </h2>
-                    <h2 class="heading-medium error-summary-heading missing-date" v-show="urnLookUpError!==''">
+                    <h2 class="heading-medium error-summary-heading missing-date" v-show="urnLookUpError!=='' || apiValidationError!==''">
                         There was a problem.
                     </h2>
                     <h2 class="heading-medium error-summary-heading no-academies hidden">
@@ -44,6 +44,7 @@
                         <li class="error-message" v-show="invalidUrn"><a href="#establishment-urn">URN is invalid</a></li>
                         <li class="error-message" v-show="duplicateUrn"><a href="#establishment-urn">URN is a duplicate</a></li>
                         <li class="error-message" v-show="urnLookUpError!==''"><a href="#establishment-urn">{{urnLookUpError}}</a></li>
+                        <li class="error-message" v-show="apiValidationError!==''"><a href="#establishment-urn">{{apiValidationError}}</a></li>
                         <li class="error-message" v-show="dateError"><a href="#academy-open-date">Opening date not specified</a></li>
                         <li class="error-message" v-show="noAcademyError"><a href="#academy-type">Please add an academy</a></li>
                     </ul>
@@ -76,7 +77,7 @@
                         {{pendingEstabAddress}} <br />
                         URN: {{pendingEstab.urn}} <br />
                         <span v-show="!pendingEdit">
-                            <a href="#" class="change-link" v-on:click.prevent="pendingEstab={}">Wrong establishment</a>
+                            <a href="#" class="change-link" v-on:click.prevent="pendingEstab={}">Wrong establishment?</a>
                         </span>
                     </p>
 
@@ -111,7 +112,7 @@
                     <div class="button-row">
                         <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="!pendingEdit">Add</button>
                         <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="pendingEdit">Save</button>
-                        <a class="button mobile-full-width button-grey" id="add-item-to-list" v-on:click.prevent="pendingEstab={}, searchUrn=''">Cancel</a>
+                        <a class="button mobile-full-width button-grey" id="add-item-to-list" v-on:click.prevent="cancelAddEdit">Cancel</a>
                     </div>
 
                 </div>
@@ -226,9 +227,9 @@
         ];
     </script>
 
-    @*<script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>*@
+    <script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>
     
-    <script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>
+    @*<script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>*@
 
 }
 
