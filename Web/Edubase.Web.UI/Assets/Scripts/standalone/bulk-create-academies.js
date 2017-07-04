@@ -1,135 +1,172 @@
 ﻿(function () {
+    var today = new Date();
+        var bulkAcademies = new Vue({
+            el: '#bulk-academies',
+            data: {
+                establishments: [],
+                addedUrns: [],
+                searchUrn: '',
+                establishmentType: '',
+                invalidUrn: false,
+                duplicateUrn: false,
+                urnLookUpError: '',
 
-    var bulkAcademies = new Vue({
-        el: '#bulk-academies',
-        data: {
-            establishments: [],
-            addedUrns: [],
-            searchUrn: '',
-            establishmentType: '',
-            invalidUrn: false,
-            duplicateUrn: false,
+                estabTypeError: false,
 
-            estabTypeError: false,
+                pendingEstab: {},
+                pendingEdit: false,
+                establishmentFound: false,
+                openDateDay: today.getDate(),
+                openDateMonth: today.getMonth() + 1,
+                openDateYear: today.getFullYear(),
+                openDateError: false,
+                academyType: '',
+                academyUnselectedError: false,
+                dateError: false,
+                noAcademyError: false,
+                commitError: false,
+                commitErrorMessage: '',
+                displayExitWarning: false,
+                exitUrl: '',
+                urnApiUrl: '/api/establishment/{0}',
+                validationUrl: '/api/bulk-create-academies/validate',
+                commitUrl: '/api/bulk-create-academies',
+                progressUrl: '/api/bulk-create-academies/progress/{0}',
+                commitErrors: '',
 
-            pendingEstab : {},
-            pendingEdit: false,
-            establishmentFound: false,
-            openDateDay: '',
-            openDateMonth: '',
-            openDateYear: '',
-            openDateError: false,
-            academyType: '',
-            academyUnselectedError: false,
-            dateError: false,
-            noAcademyError: false,
-            commitError: false,
-            commitErrorMessage: '',
-            displayExitWarning: false,
-            urnApiUrl: '/api/establishment/{0}',
-            validationUrl: '/api/bulk-create-academies/validate',
-            commitUrl: '/api/bulk-create-academies',
-            progressUrl: '/api/bulk-create-academies/progress/{0}',
-            commitErrors: '',
+                isProcessing: false,
+                isCommiting: false,
+                isSearching: false,
+                createdCount: 0,
+                isComplete: false,
+                createdAcademies: [],
+                pendingDelete: false,
+                pendingDeleteItem: ''
 
-            isProcessing: false,
-            isComplete: false,
-            pendingDelete: false,
-            pendingDeleteItem: ''
-
-
-        },
-        created: function() {
-            var frag = document.createDocumentFragment();
-            for (var i = 0, len = academyTypes.length; i < len; i++) {
-                var opt = document.createElement('option');
-                var t = types[i];
-                opt.value = t.id;
-                opt.innerHTML = t.name;
-                frag.appendChild(opt);
-            }
-            document.getElementById('academy-type').appendChild(frag);
-        },
-        computed: {
-            showGlobalError: function () {
-                return (
-                    this.estabTypeError ||
-                        this.duplicateUrn ||
-                        this.noAcademyTypeError ||
-                        this.academyUnselectedError ||
-                        this.openDateError ||
-                        this.invalidUrn ||
-                        this.commitError
-                );
-            },
-            pageHeading: function() {
-                if (this.pendingEdit) {
-                    return 'Edit details';
-                }
-                if (Object.keys(this.pendingEstab).length > 0) {
-                    return 'Enter new academy details';
-                }
-                if (this.isProcessing) {
-                    return 'Creating academies';
-                }
-                if (this.isComplete) {
-                    return 'Academies created';
-                }
-
-                return 'Bulk create new academies';
 
             },
-            displayDate: function () {
-                return [this.openDateDay, this.openDateMonth, this.openDateYear].join('/');
+            created: function() {
+                var frag = document.createDocumentFragment();
+                for (var i = 0, len = academyTypes.length; i < len; i++) {
+                    var opt = document.createElement('option');
+                    var t = types[i];
+                    opt.value = t.id;
+                    opt.innerHTML = t.name;
+                    frag.appendChild(opt);
+                }
+                document.getElementById('academy-type').appendChild(frag);
+
+                this.blockExits();
             },
-            estabTypeName: function () {
-                if (true) {
-                    return true;
+            computed: {
+                showGlobalError: function() {
+                    return (
+                        this.estabTypeError ||
+                            this.duplicateUrn ||
+                            this.noAcademyTypeError ||
+                            this.academyUnselectedError ||
+                            this.openDateError ||
+                            this.invalidUrn ||
+                            this.commitError ||
+                            this.urnLookUpError !== ''
+                    );
+                },
+                validationParams: function() {
+                    return {
+                        PredecessorEstablishmentUrn: self.searchUrn,
+                        OpeningDate: [today.getFullYear(), today.getMonth(), today.getDate()].join('-'),
+                        TypeId: 28
+                    }
+
+                },
+                pageHeading: function() {
+                    if (this.pendingEdit) {
+                        return 'Edit details';
+                    }
+                    if (Object.keys(this.pendingEstab).length > 0) {
+                        return 'Enter new academy details';
+                    }
+                    if (this.isComplete) {
+                        return 'Academies created';
+                    }
+                    if (this.isCommiting) {
+                        return 'Creating academies';
+                    }
+
+                    if (this.isProcessing) {
+                        return '';
+                    }
+                    return 'Bulk create new academies';
+
+                },
+
+                displayDate: function() {
+
+                    return [this.pad(this.openDateDay), this.pad(this.openDateMonth), this.openDateYear].join('/');
+                },
+
+                pendingEstabAddress: function() {
+                    var self = this;
+                    if (Object.keys(self.pendingEstab).length > 1) {
+                        var address = [];
+                        if (self.pendingEstab.address_Line1) {
+                            address.push(self.pendingEstab.address_Line1);
+                        }
+
+                        if (self.pendingEstab.address_Line2) {
+                            address.push(self.pendingEstab.address_Line2);
+                        }
+
+                        if (self.pendingEstab.address_Line3) {
+                            address.push(self.pendingEstab.address_Line3);
+                        }
+
+                        if (self.pendingEstab.address_Locality) {
+                            address.push(self.pendingEstab.address_Locality);
+                        }
+
+                        if (self.pendingEstab.address_CityOrTown) {
+                            address.push(self.pendingEstab.address_CityOrTown);
+                        }
+
+                        if (self.pendingEstab.addresaddress_PostCodes_Locality) {
+                            address.push(self.pendingEstab.address_PostCode);
+                        }
+
+                        return address.join(", ");
+                    } else {
+                        return '';
+                    }
                 }
             },
-            pendingEstabAddress: function() {
+            methods: {
+                pad: function(num) {
+                    if (num < 10) {
+                        return '0' + num;
+                    }
+                    return num;
+                },
+                lookUpType: function(typeId){
+                    var definition = academyTypes.filter(function (item) {
+                        if (item.id == typeId) {
+                            return item;
+                        }
+                    });
+                    return definition[0].name;
+            },
+            lookupEstabName: function (urn) {
                 var self = this;
-                if (Object.keys(self.pendingEstab).length > 1) {
-                    var address = [];
-                    if (self.pendingEstab.address_Line1) {
-                        address.push(self.pendingEstab.address_Line1);
-                    }
-
-                    if (self.pendingEstab.address_Line2) {
-                        address.push(self.pendingEstab.address_Line2);
-                    }
-
-                    if (self.pendingEstab.address_Line3) {
-                        address.push(self.pendingEstab.address_Line3);
-                    }
-
-                    if (self.pendingEstab.address_Locality) {
-                        address.push(self.pendingEstab.address_Locality);
-                    }
-
-                    if (self.pendingEstab.address_CityOrTown) {
-                        address.push(self.pendingEstab.address_CityOrTown);
-                    }
-
-                    if (self.pendingEstab.addresaddress_PostCodes_Locality) {
-                        address.push(self.pendingEstab.address_PostCode);
-                    }
-
-                    return address.join(", ");
-                } else {
-                    return '';
-                }
-            }
-        },
-        methods: {
-            
-            lookUpType: function (typeId) {
-                var definition = types.filter(function (item) {
-                    if (item.id === typeId) {
-                        return item;
-                    }
-                });
-                return definition[0].name;
+                return  $.ajax({
+                            url: self.urnApiUrl.replace('{0}', urn),
+                            method: 'get',
+                            dataType: 'json',
+                            success: function (data) {
+                                return data;
+                            },
+                            error: function() {
+                                return 'Error looking up new establishment name';
+                            }
+                        });
             },
             validateType: function (estabType) {
                 var self = this;
@@ -143,50 +180,68 @@
             },
             formatDisplayDate: function (d) {                               
                 var date = new Date(d);
-                return [date.getDate(), date.getMonth()+1 , date.getFullYear()].join('/');
+                return [this.pad(date.getDate()), this.pad(date.getMonth()+1) , date.getFullYear()].join('/');
             },
+
             estabLookUp: function () {
                 var self = this;
                 this.pendingEdit = false;
                 this.invalidUrn = this.searchUrn === '' || isNaN(this.searchUrn);
                 this.duplicateUrn = this.addedUrns.indexOf(self.searchUrn) > -1;
+                this.urnLookUpError = '';
 
                 if (this.invalidUrn || this.duplicateUrn) {
                     return true;
                 }
 
-                $.ajax({
-                    url: self.urnApiUrl.replace('{0}', self.searchUrn),
-                    method: 'get',
-                    dataType: 'json',
-                    success: function (data) {
-                        console.log(data);
-                        var estab = data.returnValue;
-                        self.validateType(estab.typeId);
-                        if (!self.estabTypeError) {
-                            estab.typeName = self.lookUpType(estab.typeId);                            
-                            estab.academyType = 28; // acad convertor as default
-                            self.pendingEstab = estab;                            
+                this.isProcessing = true;
+                this.isSearching = true;
+                function lookUp() {
+                    return $.ajax({
+                        url: self.urnApiUrl.replace('{0}', self.searchUrn),
+                        method: 'get',
+                        dataType: 'json',
+                        success: function(data) {
+                            return data;
+                        },
+                        error: function () {
+                            self.invalidUrn = true;
                         }
-                       
-                    },
-                    error: function (jqXHR) {
-                        var errObj = JSON.parse(jqXHR.responseText);
-                        var errMessage = '';
+                    });
+                }
 
-                        for (var item in errObj) {
-                            if (item === 'validationEnvelope') {
-                                var env = errObj[item][0].errors;
-                                env.forEach(function (er) {
-                                    console.log(errObj[item][0].errors);
-                                    console.log(er);
-                                    errMessage += er.message + '<br>';
-                                });
-                            }
+                $.when(lookUp())
+                    .then(
+                        function(d1) {
+                            $.ajax({
+                                url: self.validationUrl,
+                                method: 'post',
+                                contentType: 'application/json; charset=utf-8',
+                                data: JSON.stringify([{
+                                    PredecessorEstablishmentUrn: self.searchUrn,
+                                    OpeningDate: [today.getFullYear(), self.pad(today.getMonth()+1), self.pad(today.getDate())].join('-'),
+                                    TypeId: 28
+                                }]),
+                                success: function(data) {
+                                    if (data.length === 0) {
+                                        var estab = d1.returnValue;
+                                        estab.academyType = 28; // acad convertor as default
+                                        self.pendingEstab = estab;
+
+                                    } else {
+                                        var messages = data[0].errors.map(function(elem) { return elem.message });
+                                        self.urnLookUpError = messages.join('<br>');
+                                    }
+                                    self.isProcessing = false;
+                                    
+                                },
+                                error: function(jqXHR) {
+                                    self.urnLookUpError = "The urn in is invalid";
+                                    self.isProcessing = false;
+                                }
+                            });
                         }
-                        self.commitErrors = errMessage;
-                    }
-                });
+                    );
             },
             validateOpenDate: function () {
                 var day = parseInt(this.openDateDay, 10),
@@ -194,8 +249,7 @@
                     year = parseInt(this.openDateYear, 10),
 
                     dateError = false,
-                    months31 = [0, 2, 4, 6, 7, 9, 11],
-                    currentYear = new Date().getFullYear();
+                    months31 = [0, 2, 4, 6, 7, 9, 11];
 
                 if (!day || !month || !year || isNaN(day) || isNaN(month) || isNaN(year)) {
                     dateError = true;
@@ -232,35 +286,68 @@
             addEstablishment: function () {
                 var self = this;
                 this.openDateError = this.validateOpenDate();
-                var dateArray = [this.openDateDay, this.openDateMonth, this.openDateYear];
+                this.urnLookUpError = '';
+                var dateArray = [this.pad(this.openDateDay), this.pad(this.openDateMonth), this.openDateYear];
 
                 if (!this.openDateError) {
-                    this.pendingEstab.displayDate = dateArray.join('/');
-                    this.pendingEstab.comDate = dateArray.reverse().join('-');
-                    
-                    if (this.pendingEdit) {
-                        var estabs = this.establishments.filter(function(estab) {
-                            if (estab.urn !== self.pendingEstab.urn) {
-                                return estab;
+                    self.isProcessing = true;
+
+                    $.ajax({
+                        url: self.validationUrl,
+                        method: 'post',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify([
+                            {
+                                PredecessorEstablishmentUrn: self.pendingEstab.urn,
+                                OpeningDate: [self.openDateYear, self.pad(self.openDateMonth), self.pad(self.openDateDay)].join('-'),
+                                TypeId: self.pendingEstab.academyType
                             }
-                        });
-                        this.establishments = estabs;
+                        ]),
+                        success: function(data) {
+                            if (data.length === 0) {
+                                self.pendingEstab.displayDate = dateArray.join('/');
+                                self.pendingEstab.comDate = dateArray.reverse().join('-');
+                                self.pendingEstab.typeName = self.lookUpType(self.pendingEstab.academyType);
+                                if (self.pendingEdit) {
+                                    var estabs = self.establishments.filter(function (estab) {
+                                        if (estab.urn !== self.pendingEstab.urn) {
+                                            return estab;
+                                        }
+                                    });
+                                    self.establishments = estabs;                                    
 
-                    } else {
-                        this.addedUrns.push(this.searchUrn);
+                                } else {
+                                    self.addedUrns.push(self.searchUrn);
 
-                    }
-                    
-                    this.establishments.push(this.pendingEstab);
-                    this.addedUrns.push(this.searchUrn);
+                                }
 
-                    this.pendingEstab = {};
-                    this.searchUrn = '';
-                    this.openDateDay = '';
-                    this.openDateMonth = '';
-                    this.openDateYear = '';
-                    
+                                self.establishments.push(self.pendingEstab);
+                                self.addedUrns.push(self.searchUrn);
+
+                                self.pendingEstab = {};
+                                self.searchUrn = '';
+                                self.openDateDay = today.getDate();
+                                self.openDateMonth = today.getMonth() + 1;
+                                self.openDateYear = today.getFullYear();
+                                self.pendingEdit = false;
+                                
+
+                            } else {
+                                var messages = data[0].errors.map(function(elem) { return elem.message });
+                                self.urnLookUpError = messages.join('<br>');
+                            }
+                            self.isProcessing = false;
+                            self.isSearching = false;
+                        },
+                        error: function(jqXHR) {
+                            self.urnLookUpError = "The urn in is invalid";
+                            self.isProcessing = false;
+                            self.isSearching = false;
+                        }
+                    });
                 }
+
+               
             },
             editRecord: function (urn) {
                 this.pendingEdit = true;
@@ -287,11 +374,32 @@
                         return estab;
                     }
                 });
+                var urns = this.addedUrns.filter(function(urn) {
+                    if (urn != self.pendingDeleteItem) {
+                        return urn;
+                    }
+                });
+
+                this.addedUrns = urns;
                 this.establishments = estabs;
                 this.pendingDelete = false;
                 this.pendingDeleteItem = '';
-            },           
+            },
+            blockExits: function () {
+                var self = this;
+                $('a, [value="cancel"]').on('click', function (e) {
+                    self.exitUrl = $(this).attr('href');
+                    if (self.establishments.length > 0 && !self.isComplete)  {
+                        e.preventDefault();
+                        self.displayExitWarning = true;
+                    }
+                });
+            },
+            confirmedExit: function() {
+                window.location = this.exitUrl;
+            },
             commitChanges: function () {
+                // hold. on. to. your. butts.
                 var self = this;
                 var envelope = [];
                 var responseId;
@@ -302,50 +410,70 @@
                     newAcademy.TypeId = estab.academyType;
                     envelope.push(newAcademy);
                 });
-                console.log(JSON.stringify(envelope));
 
-                $.ajax({
+                self.isProcessing = true;
+                self.isCommiting = true;
+                self.pendingEstab = {};
+
+                $.ajax({ // post all converting academies
                     url: self.commitUrl,
                     dataType: 'json',
                     method: 'post',
                     data:  JSON.stringify(envelope),
                     contentType: 'application/json; charset=utf-8',
                     success: function(data) {
-                        console.log(data);
                         responseId = data.response.id;
-
-                        var doneYet = window.setInterval(function() {
+                        var doneYet = window.setInterval(function() { // poll state of conversions
                             $.ajax({
                                 url: self.progressUrl.replace('{0}', responseId),
-                                method: 'get',
-                                //data: { id: responseId },
-                               // contentType: 'application/json; charset=utf-8',
+                                method: 'get',                                
                                 dataType: 'json',
                                 success: function(data) {
-                                    console.log(data);
-                                    window.clearInterval(doneYet);
+                                    self.createdCount = data.result.length;
+                                    if (data.isComplete) {
+                                        window.clearInterval(doneYet);
+                                        // get the new establishment names from their new URNs
+                                        if (data.result.length > 1) {
+                                            var requests = [];
+                                            for (var i = 0, len = data.result.length; i < len; i++) {
+                                                requests.push(self.lookupEstabName(data.result[i].urn));
+                                            }
+
+                                            $.when.apply($, requests).done(function() {
+                                                $.each(arguments,
+                                                    function (i, estab) {
+                                                        data.result[i].name = estab[0].returnValue.name;
+                                                    });
+                                                self.createdAcademies = data.result;
+                                                self.isComplete = true;
+                                                self.isProcessing = false;
+                                            });
+
+                                        } else {
+                                            self.createdAcademies = data.result;
+                                            $.when(self.lookupEstabName(self.createdAcademies[0].urn)).then(
+                                                function (d1) {
+                                                    self.createdAcademies[0].name = d1.returnValue.name;
+                                                    self.isComplete = true;
+                                                    self.isProcessing = false;
+                                                });                                            
+                                        }                                        
+                                    }                                    
                                 },
                                 error: function(jqXHR, textStatus, errorThrown) {
-                                    console.log(jqXHR);
-                                    console.log(textStatus);
-                                    console.log(errorThrown);
                                     window.clearInterval(doneYet);
+                                    self.isProcessing = false;
                                 }
                             });
-                        },1000);
+                        }, 1500);
 
                     },
                     error: function (jqXHR) {
-                        //console.log(jqXHR);
                         var res = JSON.parse(jqXHR.responseText);
                         var errMessage = [];
-                        console.log(jqXHR.responseText);
-
-                        console.log(res.length);
-
+                       
                         for (var i = 0, len = res.validationEnvelope.length; i < len; i++) {
                             var er = res.validationEnvelope[i];
-                            console.log(er);
                             errMessage.push(er.urn + ': ');
                             if (er.hasWarnings && !er.hasErrors) {
                                 er.warnings.forEach(function(msg) {
@@ -357,28 +485,10 @@
                                 });
                             } else {
                                 errMessage.push('No specific error message suplied');
-                            }
-                            
-
+                            }                            
                         }
-
-                        //for (var item in res) {
-                        //    console.log(item);
-                        //    if (item === 'validationEnvelope') {
-                        //        var env = res[item][0].errors;
-                        //        var estab = res[item][0].urn;
-                        //        errMessage.push(res[item][0].urn + ': ');
-                        //        env.forEach(function (er) {
-                        //            //console.log(errObj[item][0].errors);
-                        //            //console.log(er);
-                        //            errMessage.push(er.message);
-                        //        });
-                        //    }
-                        //}
-                        console.log(errMessage.join('\n'));
-
-                        // var p = JSON.parse(jqXHR).responseText;
-                        //console.log(p);
+                        self.isProcessing = false;
+                       // console.log(errMessage.join('\n'));
                     }
                 });
             }

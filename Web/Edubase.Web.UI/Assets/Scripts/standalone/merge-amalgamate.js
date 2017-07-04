@@ -455,8 +455,6 @@
                                 if (item === 'validationEnvelope') {
                                     var env = errObj[item][0].errors;
                                     env.forEach(function (er) {
-                                        //console.log(errObj[item][0].errors);
-                                        //console.log(er);
                                         errMessage += er.message + '<br>';
                                     });
                                 }
