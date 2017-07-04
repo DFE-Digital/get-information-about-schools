@@ -625,7 +625,7 @@ namespace Edubase.Web.UI.Controllers
             vm.HelpdeskPreviousLocalAuthorityName = await c.GetNameAsync("LocalAuthorityId", vm.Establishment.HelpdeskPreviousLocalAuthorityId);
 
             var sens = await c.SpecialEducationNeedsGetAllAsync();
-            vm.SENNames = StringUtil.Sentenceify((vm.Establishment.SENIds ?? new int[0]).Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
+            vm.SENNames = StringUtil.SentencifyNoFormating((vm.Establishment.SENIds ?? new int[0]).Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
 
             vm.AddressCountryName = await c.GetNameAsync("CountryId", vm.Establishment.Address_CountryId);
             vm.AddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.Address_CountyId);
