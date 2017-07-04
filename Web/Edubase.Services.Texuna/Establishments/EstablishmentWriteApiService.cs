@@ -46,7 +46,12 @@ namespace Edubase.Services.Texuna.Establishments
 
             return (await _httpClient.PutAsync<ValidationEnvelopeDto>($"establishment/validate", model, principal)).Response;
         }
-                
+
+        public async Task<ValidationEnvelopeDto> ValidateCreateAsync(EstablishmentModel model, bool generateEstablishmentNumber, IPrincipal principal)
+        {
+            return (await _httpClient.PostAsync<ValidationEnvelopeDto>($"establishment/validate?autogenestabno={generateEstablishmentNumber.ToString().ToLower()}", model, principal)).Response;
+        }
+
         /// <summary>
         /// Creates a new establishment and returns its URN
         /// </summary>

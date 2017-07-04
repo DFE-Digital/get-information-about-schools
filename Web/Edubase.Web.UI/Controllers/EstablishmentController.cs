@@ -697,7 +697,7 @@ namespace Edubase.Web.UI.Controllers
                 CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
                 Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
                 Address = new AddressViewModel(),
-                EducationPhaseId = 3
+                EducationPhaseId = 1
             };
 
             await PopulateCCSelectLists(model);
@@ -708,7 +708,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpPost, EdubaseAuthorize, Route("CreateChildrensCentre")]
         public async Task<ActionResult> CreateChildrensCentre(CreateChildrensCentreViewModel model)
         {
-            model.EducationPhaseId = 3;
+            model.EducationPhaseId = 1;
             model.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             model.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
 
@@ -735,10 +735,11 @@ namespace Edubase.Web.UI.Controllers
                 CCGovernanceDetail = model.GovernanceDetail,
                 CCDisadvantagedAreaId = model.DisadvantagedAreaId,
                 CCDirectProvisionOfEarlyYearsId = model.DirectProvisionOfEarlyYears,
-                StatusId = model.EstablishmentStatusId
+                StatusId = model.EstablishmentStatusId,
+                IEBTModel = new IEBTModel()
             };
 
-            var validation = await _establishmentWriteService.ValidateAsync(newEstablishment, User);
+            var validation = await _establishmentWriteService.ValidateCreateAsync(newEstablishment, true, User);
             validation.ApplyToModelState(ControllerContext);
 
             if (ModelState.IsValid)
