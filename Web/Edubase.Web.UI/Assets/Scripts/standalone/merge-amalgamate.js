@@ -124,9 +124,11 @@
             selectedEstablishmentType: function () {
                 var self = this;
                 if (self.typeId !== '') {
-                    var typeName = self.types.filter(function (t) {
+                    var typeName = types.filter(function(t) {
                         return t.id == self.typeId;
                     })[0].name;
+
+                    return typeName;
                 }
             },
             addedUrns: function() {
