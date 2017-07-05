@@ -212,6 +212,7 @@
                         error: function () {
                             self.invalidUrn = true;
                             self.isProcessing = false;
+                            self.isSearching = false;
                         }
                     });
                 }
