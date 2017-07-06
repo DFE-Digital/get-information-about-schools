@@ -212,6 +212,7 @@
                         error: function () {
                             self.invalidUrn = true;
                             self.isProcessing = false;
+                            self.isSearching = false;
                         }
                     });
                 }
@@ -400,9 +401,11 @@
                 this.pendingDeleteItem = '';
             },
             blockExits: function () {
-                var self = this;
-                $('a, [value="cancel"]').on('click', function (e) {
+                var self = this;                
+                $('a, [value="cancel"]').not('.modal-button').on('click', function (e) {
                     self.exitUrl = $(this).attr('href');
+                    console.log('Estabs: ' + self.establishments.length);
+                    console.log('isComplete' + self.isComplete);
                     if (self.establishments.length > 0 && !self.isComplete)  {
                         e.preventDefault();
                         self.displayExitWarning = true;

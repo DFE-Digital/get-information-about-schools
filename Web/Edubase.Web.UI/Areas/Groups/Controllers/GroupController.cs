@@ -158,6 +158,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 if (actionResult != null) return actionResult;
             }
 
+            if (viewModel.GroupTypeMode == eGroupTypeMode.ChildrensCentre)
+            {
+                return View("CreateChildrensCentre", viewModel);
+            }
+
             return View("Create", viewModel);
         }
 
@@ -419,7 +424,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 Urn = x.Urn,
                 Id = x.Id,
-                JoinedDate = x.JoinedDate,
+                JoinedDate = x.JoinedDate ?? x.JoinedDateEditable.ToDateTime(),
                 CCIsLeadCentre = x.CCIsLeadCentre
             }).ToList();
 

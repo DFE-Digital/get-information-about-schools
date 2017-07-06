@@ -689,11 +689,91 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
+        [HttpGet, EdubaseAuthorize, Route("CreateChildrensCentre", Name = "CreateChildrensCentre")]
+        public async Task<ActionResult> CreateChildrensCentre()
+        {
+            var model = new CreateChildrensCentreViewModel
+            {
+                CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
+                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
+                Address = new AddressViewModel(),
+                EducationPhaseId = 1
+            };
+
+            await PopulateCCSelectLists(model);
+
+            return View(model);
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("CreateChildrensCentre")]
+        public async Task<ActionResult> CreateChildrensCentre(CreateChildrensCentreViewModel model)
+        {
+            model.EducationPhaseId = 1;
+            model.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
+            model.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
+
+            var newEstablishment = new EstablishmentModel
+            {
+                EducationPhaseId = model.EducationPhaseId,
+                TypeId = 41,
+                LocalAuthorityId = model.LocalAuthorityId,
+                Name = model.Name,
+                OpenDate = model.OpenDate.ToDateTime(),
+                Address_Line1 = model.Address.Line1,
+                Address_Line2 = model.Address.Line2,
+                Address_Line3 = model.Address.Line3,
+                Address_CityOrTown = model.Address.CityOrTown,
+                Address_CountyId = model.Address.County,
+                Address_PostCode = model.Address.PostCode,
+                HeadFirstName = model.ManagerFirstName,
+                HeadLastName = model.ManagerLastName,
+                HeadEmailAddress = model.ManagerEmail,
+                Contact_TelephoneNumber = model.Telephone,
+                CCOperationalHoursId = model.OperationalHoursId,
+                CCUnder5YearsOfAgeCount = model.NumberOfUnderFives,
+                CCGovernanceId = model.GovernanceId,
+                CCGovernanceDetail = model.GovernanceDetail,
+                CCDisadvantagedAreaId = model.DisadvantagedAreaId,
+                CCDirectProvisionOfEarlyYearsId = model.DirectProvisionOfEarlyYears,
+                StatusId = model.EstablishmentStatusId,
+                IEBTModel = new IEBTModel()
+            };
+
+            var validation = await _establishmentWriteService.ValidateCreateAsync(newEstablishment, true, User);
+            validation.ApplyToModelState(ControllerContext);
+
+            if (ModelState.IsValid)
+            {
+                var response = await _establishmentWriteService.CreateNewAsync(newEstablishment, true, User);
+
+                if (response.Success)
+                {
+                    return RedirectToAction(nameof(Details), new {id = response.Response});
+                }
+
+                response.ApplyToModelState(ControllerContext);
+            }
+
+            await PopulateCCSelectLists(model);
+            return View(model);
+        }
+
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
         {
             viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
             viewModel.EstablishmentTypes = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).Where(x=> viewModel.CreateEstablishmentPermission.Types.Cast<int>().Contains(x.Id)).ToSelectList(viewModel.EstablishmentTypeId);
             viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).ToSelectList(viewModel.EducationPhaseId);
-        }       
+        }
+
+        private async Task PopulateCCSelectLists(CreateChildrensCentreViewModel viewModel)
+        {
+            viewModel.OperationalHoursOptions = (await _cachedLookupService.CCOperationalHoursGetAllAsync()).ToSelectList();
+            viewModel.GovernanceOptions = (await _cachedLookupService.CCGovernanceGetAllAsync()).ToSelectList();
+            viewModel.DisadvantagedAreaOptions = (await _cachedLookupService.CCDisadvantagedAreasGetAllAsync()).ToSelectList();
+            viewModel.DirectProvisionOfEarlyYearsOptions = (await _cachedLookupService.DirectProvisionOfEarlyYearsGetAllAsync()).ToSelectList();
+            viewModel.EstablishmentStatusOptions = (await _cachedLookupService.EstablishmentStatusesGetAllAsync()).ToSelectList();
+            viewModel.Address.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList();
+            await PopulateSelectLists(viewModel);
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Edubase: Bulk create new academies";
     ViewBag.bodyClasses = "bulk-academy-create";
-}<div id="bulk-academies" v-cloak>
+
     <div class="breadcrumbs">
         <ul>
             <li>
@@ -12,7 +12,7 @@
             </li>
         </ul>
     </div>
-
+}<div id="bulk-academies" v-cloak>
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-xlarge">{{pageHeading}}</h1>
@@ -122,27 +122,27 @@
                 <p class="table-caption" v-show="establishments.length > 1">Showing 1 - {{establishments.length}} of {{establishments.length}}</p>
                 <table class="edubase-table">
                     <thead>
-                    <tr>
-                        <th>URN</th>
-                        <th>Name</th>
-                        <th>Establishment type</th>
-                        <th>Opening date</th>
-                        <td colspan="2"></td>
-                    </tr>
+                        <tr>
+                            <th>URN</th>
+                            <th>Name</th>
+                            <th>Establishment type</th>
+                            <th>Opening date</th>
+                            <td colspan="2"></td>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="estab in establishments">
-                        <td aria-label="URN">{{estab.urn}}</td>
-                        <td aria-label="Name">{{estab.name}}</td>
-                        <td aria-label="Establishment type">{{estab.typeName}}</td>
-                        <td aria-label="Opening date">{{estab.displayDate}}</td>
-                        <td>
-                            <a href="#" v-on:click.prevent="editRecord(estab.urn)">Edit</a>
-                        </td>
-                        <td>
-                            <a href="#" v-on:click="couldDelete(estab.urn)">Remove</a>
-                        </td>
-                    </tr>
+                        <tr v-for="estab in establishments">
+                            <td aria-label="URN">{{estab.urn}}</td>
+                            <td aria-label="Name">{{estab.name}}</td>
+                            <td aria-label="Establishment type">{{estab.typeName}}</td>
+                            <td aria-label="Opening date">{{estab.displayDate}}</td>
+                            <td>
+                                <a href="#" v-on:click.prevent="editRecord(estab.urn)">Edit</a>
+                            </td>
+                            <td>
+                                <a href="#" v-on:click="couldDelete(estab.urn)">Remove</a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <p class="table-caption" v-show="establishments.length > 1">Showing 1 - {{establishments.length}} of {{establishments.length}}</p>
@@ -151,7 +151,7 @@
                     @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-grey cancel mobile-full-width", v_show = "(Object.keys(pendingEstab).length < 1 || establishments.length > 0) && !isProcessing" })
                 </div>
             </div>
-            
+
         </div>
     </form>
 
@@ -197,16 +197,16 @@
             <a href="#" id="button-cancel" class="button button-grey mobile-full-width" v-on:click.prevent="pendingDelete=false, pendingDeleteItem=''">Cancel</a>
         </div>
     </div>
-    
-    <div  role="dialog" class="modal-content" v-show="displayExitWarning">
+
+    <div role="dialog" class="modal-content" v-show="displayExitWarning">
         <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="displayExitWarning=false">Close</a>
         <div id="modal-inner">
             <h3 class="heading-large">Are you sure you want to leave?</h3>
             <p>All changes will be lost.</p>
         </div>
         <div class="button-row">
-            <a href="#" id="button-ok" class="button mobile-full-width" v-on:click.prevent="confirmedExit">OK</a>
-            <a href="#" id="button-cancel" class="button button-grey mobile-full-width" v-on:click.prevent="displayExitWarning=false">Cancel</a>
+            <a href="#" id="button-ok" class="button mobile-full-width modal-button" v-on:click.prevent="confirmedExit">OK</a>
+            <a href="#" id="button-cancel" class="button button-grey mobile-full-width modal-button" v-on:click.prevent="displayExitWarning=false">Cancel</a>
         </div>
     </div>
 </div>
@@ -227,9 +227,9 @@
         ];
     </script>
 
-    <script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>
+    @*<script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>*@
     
-    @*<script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>*@
+    <script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>
 
 }
 

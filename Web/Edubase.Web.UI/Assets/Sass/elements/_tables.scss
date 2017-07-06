@@ -794,6 +794,7 @@ table {
 p.table-caption {
     width: 66%;
     margin: 20px 0;
+    font-size: 16px;
     @include media(mobile) {
         width: 100%;
     }
