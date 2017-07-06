@@ -53,16 +53,16 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 Group = new GroupModel
                 {
-                    GroupTypeId = model.GroupTypeId,
-                    LocalAuthorityId = model.LocalAuthorityId,
-                    Name = model.Name,
-                    OpenDate = model.OpenDate,
+                    GroupTypeId = model?.GroupTypeId,
+                    LocalAuthorityId = model?.LocalAuthorityId,
+                    Name = model?.Name,
+                    OpenDate = model?.OpenDate,
                 },
-                LinkedEstablishments = model.Establishments.Select(e => new LinkedEstablishmentGroup
+                LinkedEstablishments = model?.Establishments?.Select(e => new LinkedEstablishmentGroup
                     {
-                        CCIsLeadCentre = e.CCIsLeadCentre,
-                        Urn = e.Urn,
-                        JoinedDate = e.JoinedDate
+                        CCIsLeadCentre = e?.CCIsLeadCentre ?? false,
+                        Urn = e?.Urn,
+                        JoinedDate = e?.JoinedDate
                     })
                     .ToList()
             };
