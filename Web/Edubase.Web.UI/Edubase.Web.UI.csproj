@@ -309,6 +309,7 @@
     <Compile Include="Areas\Groups\Models\CreateEdit\IGroupPageViewModel.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\LinkedEstablishmentSearchViewModel.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\ValidateChildrensCentreStep2.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\ValidateCCGroupWithEstablishments.cs" />
     <Compile Include="Areas\Groups\Models\Validators\ValidateChildrensCentreStep2Validator.cs" />
     <Compile Include="Areas\Groups\Models\EstablishmentGroupViewModel.cs" />
     <Compile Include="Areas\Groups\Models\GroupDetailViewModel.cs" />
