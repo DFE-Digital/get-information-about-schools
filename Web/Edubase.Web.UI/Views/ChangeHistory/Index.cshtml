@@ -3,6 +3,12 @@
 @{
     ViewBag.Title = "Edubase: search change history";
     ViewBag.bodyClasses = "search-changes";
+
+    var recordCount = 0;
+    if (Model.Results != null)
+    {
+       recordCount = (int)Model.Results.Count;
+    }
 }
 <div class="breadcrumbs">
     <ul>
@@ -26,7 +32,7 @@
 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 <div class="grid-row" id="change-history-app">
-    @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
+    @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get,  new { id="change-history-form", data_record_count = recordCount } ))
     {
         <div class="column-full @(Model.Results == null ? "" : "hidden")" >
             
@@ -175,7 +181,7 @@
                     </span>
                 </div>
 
-                <button type="submit" name="@nameof(Model.StartDownload)" class="button" value="true">Continue</button>
+                <button type="submit" name="@nameof(Model.StartDownload)" class="button" value="true" id="download-continue">Continue</button>
                 
                 <div>
                     <p><button type="submit" name="@nameof(Model.ClearResults)" class="button-as-link" value="true">Show filters</button></p>
@@ -326,7 +332,6 @@
                         if (!el.getAttribute('data-checkboxheight')) {
                             for (var i = 0, len = checkBoxes.length; i < len; i++) {
                                 var chxBox = checkBoxes[i];
-                                console.log(chxBox.offsetHeight);
                                 if (chxBox.offsetHeight > 64) {
                                     chxBox.classList.add('long-label');
                                 }
@@ -370,8 +375,22 @@
                 $('#searchtype-group').change();
             }
 
+
+            if (Number($('#change-history-form').data().recordCount) > 20000) {
+                $('#download-continue').okCancel({
+                    ok: function () {
+                        this.closeModal();
+                    },
+                    cancel: null,
+                    title: 'Too many records',
+                    content: 'Please filter your search to fewer than 20000 records.',
+                    triggerEvent: 'click'
+
+                });
+            }
         }());
     </script>
 
-
+    
+    
 }
