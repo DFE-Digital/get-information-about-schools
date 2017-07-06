@@ -16,9 +16,9 @@
 <div id="mergers-app" v-cloak>
 <div class="grid-row">
 <div class="column-full">
-    <h1 class="heading-intro" id="page-heading">
+    <h1 class="heading-xlarge" id="page-heading">
         <span v-show="!mergerTypeConfirmed">Amalgamations and mergers tool</span>
-        <span v-show="mergerType == 'merger' && mergerTypeConfirmed">Merger</span>
+        <span v-show="mergerType == 'merger' && mergerTypeConfirmed && !mergerComplete">Merger</span>
         <span v-show="mergerType == 'amalgamation' && !completeAmalgamation && mergerTypeConfirmed">Amalgamation</span>
         <span  v-show="mergerComplete && mergerType== 'merger'">Merger complete</span>
         <span  v-show="completeAmalgamation">Amalgamation complete</span>
@@ -347,7 +347,7 @@
                 <dt><strong class="heading-small">Closing establishment details</strong></dt>
                 <dd>
                     <ol class="linked-establishments">
-                        <li v-for="school in amalgamationEstabs"><span>{{school.id}} - {{school.name}}</span></li>
+                        <li v-for="school in amalgamationEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
                     </ol>
                 </dd>
             </dl>

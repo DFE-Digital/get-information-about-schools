@@ -88,6 +88,21 @@ select#headtitleid {
     }
 }
 
+legend {
+    font-weight: normal;
+    font-size: 19px;
+
+    &.bold-legend {
+        font-weight: bold;
+        display: block;
+        margin: 20px 0;
+    }
+
+    &.bold {
+        font-weight: bold;
+    }
+}
+
 .date-group {
     .form-control {
         width: 60px;        
@@ -112,6 +127,7 @@ select#headtitleid {
     .form-hint {
         font-size: 16px;
     }
+    
 }
 
 .create-edit-school {
@@ -130,19 +146,6 @@ select#headtitleid {
     }
     
     
-    legend {
-        font-weight: normal;
-        font-size: 19px;
-
-        &.bold-legend {
-            font-weight: bold;
-            display: block;
-            margin: 20px 0;
-        }
-        &.bold {
-            font-weight: bold;
-        }
-    }
     .hint-text, .form-hint {
         font-size: 19px;
     }
@@ -277,6 +280,10 @@ div.governor-list, div.governor-grid {
         margin-bottom:15px;
     }
 
+}
+
+.expanding-content-wrapper .governor-grid:first-child .heading-small {
+    margin-top: 0;
 }
 
 

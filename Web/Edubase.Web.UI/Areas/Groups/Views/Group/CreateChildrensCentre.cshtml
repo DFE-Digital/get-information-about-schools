@@ -74,7 +74,7 @@
 
                     <h2 class="heading-medium">Children's centre group details</h2>
                     <div v-bind:class="['form-group', groupNameError? 'error' : '']">
-                        <label for="name" class="form-label">Group name</label>
+                        <label for="name" class="form-label">{{capitalise(groupTypeName)}} name</label>
                         @Html.ValidationMessageFor(x => x.GroupName)
                         <span class="error-message" v-show="groupNameError">Please check the group name</span>
                         @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control", v_model="groupName" })
@@ -132,7 +132,7 @@
             <div class="column-full">
                 <p>Add two or more children's centres to create a children's centre group and choose which one you would like as the lead centre.</p>
 
-                <h2 class="heading-medium">New children's centre group details</h2>
+                <h2 class="heading-medium">New children's centre {{groupTypeName}} details</h2>
                 <dl class="key-value-list fixed-label">
                     <dt>Group Name:</dt>
                     <dd id="group-name">{{groupName}}</dd>
@@ -144,7 +144,7 @@
                     <dd id="group-la">{{laName}}</dd>
                 </dl>
 
-                <h2 class="bold-medium">Add children's centres</h2>
+                <h2 class="heading-medium">Add children's centres</h2>
                 <div v-bind:class="['form-group', urnError? 'error' : '']">
                     @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                     <label class="form-label">
@@ -156,65 +156,65 @@
                 </div>
                 <!-- JB: list of "added" centres here -->
                 <div v-show="centresInGroup.length > 0">
+                    <h2 class="heading-medium">Children’s centres to add to the {{groupTypeName}}</h2>
                     <p class="table-caption">{{ tableCount }}</p>
                     <table class="edubase-table childrens-centre-listing">
                         <thead>
-                            <tr>
-                                <th v-if="groupType === '9'">Lead centre</th>
-                                <th>URN</th>
-                                <th>Name</th>
-                                <th>Join date</th>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                        <tr>
+                            <th v-if="groupType === '9'">Lead centre</th>
+                            <th>URN</th>
+                            <th>Name</th>
+                            <th>Join date</th>
+                            <td></td>
+                            <td></td>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(estab, index) in centresInGroup">
-                                <td aria-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '9'">
-                                    <span class="radio-button-wrap">
-                                        <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked ="estab.urn == groupLead" v-model="groupLead"/>                                        
-                                        @*@Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new {id = "lead-" + Model.LinkedEstablishments.Establishments[i].Urn})*@
-                                        <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
-                                            <span class="visuallyhidden">Set as lead establishment</span>
-                                        </label>
-                                    </span>
-                                </td>
+                        <tr v-for="(estab, index) in centresInGroup">
+                            <td aria-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '9'">
+                                <span class="radio-button-wrap">
+                                    <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked ="estab.urn == groupLead" v-model="groupLead"/>                                        
+                                    @*@Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new {id = "lead-" + Model.LinkedEstablishments.Establishments[i].Urn})*@
+                                    <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
+                                        <span class="visuallyhidden">Set as lead establishment</span>
+                                    </label>
+                                </span>
+                            </td>
 
-                                <td aria-label="URN" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">
-                                    <input type="hidden" :value="estab.urn" name="estab-in-group" /> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!!  -->
-                                    {{estab.urn}}
-                                </td>
+                            <td aria-label="URN" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">
+                                <input type="hidden" :value="estab.urn" name="estab-in-group" /> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!!  -->
+                                {{estab.urn}}
+                            </td>
 
-                                <td aria-label="Name" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
-                                <td aria-label="Join date" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
-                                <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn)">Edit</a></td>
-                                <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)">Remove</a></td>
-                            </tr>
+                            <td aria-label="Name" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
+                            <td aria-label="Join date" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
+                            <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn)">Edit</a></td>
+                            <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)">Remove</a></td>
+                        </tr>
                         </tbody>
                     </table>
-                    <p class="table-caption">{{tableCount}}</p>
-                    
-                    <div>
+                    <p class="table-caption">{{tableCount}}</p>                                        
+                </div>
+                <div>
 
-                        <!--JB: show the below from step 3 onwards-->
-                        @*<a href="#" class="button button-grey cancel mobile-full-width">Go back</a>*@
+                    <!--JB: show the below from step 3 onwards-->
+                    @*<a href="#" class="button button-grey cancel mobile-full-width">Go back</a>*@
 
-                        <!--JB: button for childnre-centre-details-->
-                        @*<button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentAdd" class="button">Add</button>*@
+                    <!--JB: button for childnre-centre-details-->
+                    @*<button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentAdd" class="button">Add</button>*@
                         
-                        <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', detailEdit = true">&laquo; Go back</a>
-                        @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                        {
-                            <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave" />
-                            <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
-                            <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="submitCentres">Submit</button>
-                        }
 
-                        @(Model.InEditMode
-                              ? Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
-                              : Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" }))
-                    </div>
-                </div>                
+                    <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', detailEdit = true">&laquo; Go back</a>
+                    @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                    {
+                        <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
+                        <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="submitCentres">Create</button>
+                    }
+
+                    @(Model.InEditMode
+                          ? Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+                          : Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" }))
+                </div>
             </div>
         </div>
                      

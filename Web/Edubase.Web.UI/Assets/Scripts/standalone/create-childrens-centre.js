@@ -43,6 +43,12 @@
 
         },
         computed: {
+            groupTypeName: function() {
+                if (this.groupType === '8') {
+                    return 'group';
+                }
+                return 'collaboration';
+            },
             openDate: function () {
                 if (this.openDateDay !== '' && this.openDateMonth !== '' && this.openDateYear !== '') {
                     return [this.openDateDay, this.openDateMonth, this.openDateYear].join('/');
@@ -130,17 +136,17 @@
                                 input.value = centre.urn === self.groupLead;
                                 break;
                         }
-
                         frag.appendChild(input);
                     }
-                   
-
                 }
                 form.appendChild(frag);
                 window.setTimeout(function() {
                     form.submit();
                 },100);
                 
+            },
+            capitalise: function(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
             },
             validateDate: function (dateProp) {
                 var self = this;
