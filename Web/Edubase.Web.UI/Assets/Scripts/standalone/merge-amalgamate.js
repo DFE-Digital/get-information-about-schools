@@ -459,6 +459,9 @@
                                     env.forEach(function (er) {
                                         errMessage += er.message + '<br>';
                                     });
+                                } else if (!errObj.validationEnvelope && item === 'errors') {
+                                    errMessage = errObj.errors[0].message;
+                                    self.validMergeUrns = false;
                                 }
                             }
                             self.commitErrors = errMessage;
@@ -514,13 +517,16 @@
                             var errMessage = '';
 
                             for (var item in errObj) {
-                                if (item === 'validationEnvelope') {
+                                if (item === 'validationEnvelope' && errObj.validationEnvelope) {                                    
                                     var env = errObj[item][0].errors;
                                     env.forEach(function (er) {
                                         console.log(errObj[item][0].errors);
                                         console.log(er);
                                         errMessage += er.message + '<br>';
                                     });
+                                } else if (!errObj.validationEnvelope && item === 'errors') {                                    
+                                    errMessage = errObj.errors[0].message;
+                                    self.validMergeUrns = false;
                                 }
                             }
                             self.commitErrors = errMessage;
