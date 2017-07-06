@@ -214,6 +214,7 @@
                 this.linkedEstab1Valid = true;
                 this.linkedEstab2Valid = true;
                 this.mergeLengthError = false;
+                this.commitErrors = '';
                 this.duplicateUrnsError = this.hasDuplicateUrn();
                 if (this.duplicateUrnsError) {
                     return true;
@@ -361,6 +362,7 @@
                 this.amalgamatedEstab3Valid = true;
                 this.amalgamationLengthError = false;
                 this.amalgamateUrnError = false;
+                this.commitErrors = '';
                 this.duplicateUrnsError = this.hasDuplicateUrn();
                 if (this.duplicateUrnsError) {
                     return true;
