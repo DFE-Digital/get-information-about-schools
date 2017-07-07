@@ -17,15 +17,15 @@
                 @Html.HiddenFor(m => m.Name)
                 @Html.HiddenFor(m => m.Role)
 
-                <div class="button-row">
+                @*<div class="button-row">
                     <input type="submit" value="Select" class="button mobile-full-width" />
                     <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
-                </div>
+                </div>*@
                 <h2 class="heading-medium">Replace chair of local governing body</h2>
                 <h3 class="heading-small">@Model.GovernorFullName</h3>
 
                 @Html.EditorFor(m => m.DateTermEnds)
-                <div class="form-group inline toggle-panels">
+                @*<div class="form-group inline toggle-panels">
                     <label class="block-label">
                         @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.LocalChair, new { id = "newChair", @class = "panel-trigger", data_toggle_panel = "#newChairDetails" })
                         New Chair
@@ -35,14 +35,15 @@
                         @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.SharedChair, new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#sharedChairDetails" })
                         Shared Chair
                     </label>
-                </div>
+                </div>*@
+                <h3 class="heading-medium">New chair of local governing body</h3>
                 <div id="replacement-chair-details" class="exapanding-list-wrap chair-replace governor-toggles">
                     <div class="column-two-thirds">
-                        <div id="newChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">
+                        @*<div id="newChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">*@
                             <div class="replacement-chair-option">
                                 @Html.EditorFor(m => m.NewLocalGovernor, new { disableStartDate = true })
                             </div>
-                        </div>
+                        @*</div>
                         <div id="sharedChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
                             <div class="replacement-chair-option">
                                 <div class="shared-governor-list">
@@ -61,11 +62,11 @@
                                     }
                                 </div>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
                 <div class="button-row">
-                    <input type="submit" value="Select" class="button mobile-full-width" />
+                    <input type="submit" value="Save" class="button mobile-full-width" />
                     <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                 </div>
             }

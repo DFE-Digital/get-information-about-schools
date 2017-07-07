@@ -607,6 +607,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [HttpPost, Route(ESTAB_REPLACE_GOVERNOR)]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)
         {
+            model.NewChairType = ReplaceChairViewModel.ChairType.LocalChair;
             if (ModelState.IsValid)
             {
                 //if (model.ExistingChairType == ReplaceChairViewModel.ChairType.SharedChair)
