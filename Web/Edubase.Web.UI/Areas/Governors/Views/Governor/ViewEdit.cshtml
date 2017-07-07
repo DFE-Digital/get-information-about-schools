@@ -214,8 +214,8 @@ else
                                 <dd>@(cell.Text ?? "Not recorded")</dd>
                             }
                         </dl>
-
-                        @if (Model.EditMode)
+                        
+                        @if (Model.EditMode && !EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
                         {
                             if (grid.Tag == "current")
                             {
