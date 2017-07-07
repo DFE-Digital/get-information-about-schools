@@ -2,6 +2,8 @@
 @{
     ViewBag.hideLogo = true;
     ViewBag.Title = Model.PageTitle;
+
+    ViewBag.BodyClasses = "create-childrens-centre";
 }
 
 <div id="create-childrens-centre" v-cloak>
@@ -128,6 +130,14 @@
 
                 <h1 class="heading-intro">Add children's centres</h1>
                 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+                <div class="error-summary" v-show="apiErrors.length>0">
+                    <h2 class="error-summary-heading heading-medium">There <span v-html="wasWere"></span> error<span v-show="apiErrors.length > 1">s</span> creating the {{groupTypeName}}</h2>
+                    <ul class="error-summary-list">
+                        <li v-for="err in apiErrors" class="error-message">
+                            {{err.field}} : {{err.message}}
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="column-full">
                 <p>Add two or more children's centres to create a children's centre group and choose which one you would like as the lead centre.</p>
@@ -145,7 +155,7 @@
                 </dl>
 
                 <h2 class="heading-medium">Add children's centres</h2>
-                <div v-bind:class="['form-group', urnError? 'error' : '']">
+                <div v-bind:class="['form-group inline-with-button', urnError? 'error' : '']">
                     @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                     <label class="form-label">
                         Establishment <abbr title="Unique Reference Number">URN</abbr>
@@ -161,7 +171,7 @@
                     <table class="edubase-table childrens-centre-listing">
                         <thead>
                         <tr>
-                            <th v-if="groupType === '9'">Lead centre</th>
+                            <th v-if="groupType === '8'">Lead centre</th>
                             <th>URN</th>
                             <th>Name</th>
                             <th>Join date</th>
@@ -171,7 +181,7 @@
                         </thead>
                         <tbody>
                         <tr v-for="(estab, index) in centresInGroup">
-                            <td aria-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '9'">
+                            <td aria-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
                                 <span class="radio-button-wrap">
                                     <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked ="estab.urn == groupLead" v-model="groupLead"/>                                        
                                     @*@Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new {id = "lead-" + Model.LinkedEstablishments.Establishments[i].Urn})*@
@@ -195,16 +205,9 @@
                     </table>
                     <p class="table-caption">{{tableCount}}</p>                                        
                 </div>
-                <div>
-
-                    <!--JB: show the below from step 3 onwards-->
-                    @*<a href="#" class="button button-grey cancel mobile-full-width">Go back</a>*@
-
-                    <!--JB: button for childnre-centre-details-->
-                    @*<button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentAdd" class="button">Add</button>*@
-                        
-
-                    <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', detailEdit = true">&laquo; Go back</a>
+                <div class="button-row">
+                    
+                    <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail, apiErrors=[]', detailEdit = true">&laquo; Go back</a>
                     @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                     {
                         <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave" />
@@ -270,6 +273,6 @@
 </div>
 @section ViewScripts
 {
-    @*<script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>*@
-    <script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>
+    <script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>
+    @*<script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>*@
 }
