@@ -645,30 +645,34 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
         public async Task<ActionResult> Create()
         {
-            var viewModel = new CreateEstablishmentViewModel
+            var viewModel = new CreateChildrensCentreViewModel
             {
                 CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
-                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()
+                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
+                Address = new AddressViewModel(),
             };
-            await PopulateSelectLists(viewModel); 
+            await PopulateCCSelectLists(viewModel);
             return View(viewModel);
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
-        public async Task<ActionResult> Create(CreateEstablishmentViewModel viewModel)
+        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel)
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
+
+            if (viewModel.EstablishmentTypeId == 41)
+                return await CreateChildrensCentre(viewModel);
 
             if (ModelState.IsValid)
             {
                 var response = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
                 {
-                    EducationPhaseId = viewModel.EducationPhaseId.Value,
+                    EducationPhaseId = viewModel.EducationPhaseId,
                     EstablishmentNumber = viewModel.EstablishmentNumber,
-                    EstablishmentTypeId = viewModel.EstablishmentTypeId.Value,
-                    GenerateEstabNumber = viewModel.GenerateEstabNumber.Value,
-                    LocalAuthorityId = viewModel.LocalAuthorityId.Value,
+                    EstablishmentTypeId = viewModel.EstablishmentTypeId,
+                    GenerateEstabNumber = viewModel.GenerateEstabNumber ?? false,
+                    LocalAuthorityId = viewModel.LocalAuthorityId,
                     Name = viewModel.Name
                 }, User);
 
@@ -685,32 +689,29 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            await PopulateSelectLists(viewModel);
+            await PopulateCCSelectLists(viewModel);
             return View(viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route("CreateChildrensCentre", Name = "CreateChildrensCentre")]
-        public async Task<ActionResult> CreateChildrensCentre()
-        {
-            var model = new CreateChildrensCentreViewModel
-            {
-                CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
-                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
-                Address = new AddressViewModel(),
-                EducationPhaseId = 1
-            };
+        //[HttpGet, EdubaseAuthorize, Route("CreateChildrensCentre", Name = "CreateChildrensCentre")]
+        //public async Task<ActionResult> CreateChildrensCentre()
+        //{
+        //    var model = new CreateChildrensCentreViewModel
+        //    {
+        //        CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
+        //        Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
+        //        Address = new AddressViewModel(),
+        //        EducationPhaseId = 1
+        //    };
 
-            await PopulateCCSelectLists(model);
+        //    await PopulateCCSelectLists(model);
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
-        [HttpPost, EdubaseAuthorize, Route("CreateChildrensCentre")]
-        public async Task<ActionResult> CreateChildrensCentre(CreateChildrensCentreViewModel model)
+        private async Task<ActionResult> CreateChildrensCentre(CreateChildrensCentreViewModel model)
         {
             model.EducationPhaseId = 1;
-            model.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
-            model.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
 
             var newEstablishment = new EstablishmentModel
             {

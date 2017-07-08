@@ -297,7 +297,7 @@
             },
             validateMergerDate: function () {
                 var day = parseInt(this.mergeDateDay, 10),
-                    month = parseInt(this.mergeDateMonth, 10),
+                    month = parseInt(this.mergeDateMonth -1, 10),
                     year = parseInt(this.mergeDateYear, 10),
 
                     dateError = false,

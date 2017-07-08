@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -65,7 +66,7 @@ namespace Edubase.Web.UI.Controllers
             }
 
             viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(g => !EnumSets.SharedGovernorRoles.Contains(g.Id)).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
 
             return View("Index", viewModel);
         }

@@ -19,7 +19,7 @@ namespace Edubase.Web.UI.Models
         public string CityOrTown { get; set; }
 
         [Display(Name = "County (required to save record)")]
-        public int County { get; set; }
+        public int? County { get; set; }
 
         [Display(Name = "Country")]
         public string Country { get; set; }

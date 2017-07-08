@@ -148,7 +148,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     (await _cachedLookupService.NationalitiesGetAllAsync()), 
                     (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
                 
-                var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
+                // TODO: remove the where once shared gov is fixed
+                var applicableRoles = domainModel.ApplicableRoles.Where(r => !EnumSets.eSharedGovernorRoles.Contains(r)).Cast<int>();
                 viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
 
                 await PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, x => viewModel.GovernanceMode = x.GovernanceMode, x=>
@@ -491,9 +492,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == (int)role).Name;
             var governors = (await _governorsReadService.GetSharedGovernorsAsync(establishmentUrn, User)).Where(g => RoleEquivalence.GetEquivalentRole(role).Contains((eLookupGovernorRole)g.RoleId)).ToList();
 
+            var sharedGovernors = governors.Select(async g => await MapGovernorToSharedGovernorViewModel(g, establishmentUrn));
+
             var viewModel = new SelectSharedGovernorViewModel
             {
-                Governors = governors.Select(g => MapGovernorToSharedGovernorViewModel(g, establishmentUrn)).ToList(),
+                Governors = (await Task.WhenAll(sharedGovernors)).ToList(),
                 GovernorType = roleName.ToLowerInvariant()
             };
 
@@ -522,10 +525,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 }
             }
 
-            var governors = (await _governorsReadService.GetSharedGovernorsAsync(model.Urn.Value, User))
-                .Where(g => RoleEquivalence.GetEquivalentRole(model.Role).Contains((eLookupGovernorRole)g.RoleId))
-                .Select(g => MapGovernorToSharedGovernorViewModel(g, model.Urn.Value))
-                .ToList();
+            var governors = (await Task.WhenAll(
+                (await _governorsReadService.GetSharedGovernorsAsync(model.Urn.Value, User))
+                .Where(g => RoleEquivalence.GetEquivalentRole(model.Role).Contains((eLookupGovernorRole) g.RoleId))
+                .Select(g => MapGovernorToSharedGovernorViewModel(g, model.Urn.Value)))).ToList();
 
             foreach (var previousGovernor in model.Governors)
             {
@@ -550,7 +553,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             var model = new EditSharedGovernorViewModel
             {
-                Governor = MapGovernorToSharedGovernorViewModel(governor, establishmentUrn),
+                Governor = await MapGovernorToSharedGovernorViewModel(governor, establishmentUrn),
                 GovernorType = roleName
             };
 
@@ -569,7 +572,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             var governor = await _governorsReadService.GetGovernorAsync(model.Governor.Id, User);
             var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == governor.RoleId.Value).Name;
-            model.Governor = MapGovernorToSharedGovernorViewModel(governor, model.Urn.Value);
+            model.Governor = await MapGovernorToSharedGovernorViewModel(governor, model.Urn.Value);
             model.GovernorType = roleName;
 
             await PopulateLayoutProperties(model, model.Urn.Value, null, null);
@@ -592,7 +595,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync((eLookupGovernorRole)governor.RoleId.Value, false, User)
                 },
-                SharedGovernors = governors.Select(g => MapGovernorToSharedGovernorViewModel(g, establishmentUrn)).ToList(),
+                SharedGovernors = (await Task.WhenAll(governors.Select(async g => await MapGovernorToSharedGovernorViewModel(g, establishmentUrn)))).ToList(),
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
                 Role = (eLookupGovernorRole)governor.RoleId
             };
@@ -606,6 +609,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [HttpPost, Route(ESTAB_REPLACE_GOVERNOR)]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)
         {
+            model.NewChairType = ReplaceChairViewModel.ChairType.LocalChair;
             if (ModelState.IsValid)
             {
                 //if (model.ExistingChairType == ReplaceChairViewModel.ChairType.SharedChair)
@@ -646,11 +650,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         Person_FirstName = model.NewLocalGovernor.FirstName,
                         Person_MiddleName = model.NewLocalGovernor.MiddleName,
                         Person_LastName = model.NewLocalGovernor.LastName,
-                        //Person_Title = model.NewLocalGovernor.GovernorTitle,//todo: texchange
+                        Person_TitleId = model.NewLocalGovernor.GovernorTitleId,
                         PreviousPerson_FirstName = model.NewLocalGovernor.PreviousFirstName,
                         PreviousPerson_MiddleName = model.NewLocalGovernor.PreviousMiddleName,
                         PreviousPerson_LastName = model.NewLocalGovernor.PreviousLastName,
-                        //PreviousPerson_Title = model.NewLocalGovernor.PreviousTitle,//todo: texchange
+                        PreviousPerson_TitleId = model.NewLocalGovernor.PreviousTitleId,
                         PostCode = model.NewLocalGovernor.PostCode,
                         RoleId = (int) model.Role,
                         TelephoneNumber = model.NewLocalGovernor.TelephoneNumber
@@ -672,7 +676,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var governors = (await _governorsReadService.GetSharedGovernorsAsync(model.Urn.Value, User)).Where(g => g.RoleId == governor.RoleId && g.Id != model.ExistingGovernorId).ToList();
 
             model.NewLocalGovernor.DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync((eLookupGovernorRole)governor.RoleId.Value, false, User);
-            model.SharedGovernors = governors.Select(g => MapGovernorToSharedGovernorViewModel(g, model.Urn.Value)).ToList();
+            model.SharedGovernors = (await Task.WhenAll(governors.Select(async g => await MapGovernorToSharedGovernorViewModel(g, model.Urn.Value)))).ToList();
 
             await PopulateSelectLists(model.NewLocalGovernor);
             await PopulateLayoutProperties(model, model.Urn, null, null);
@@ -723,7 +727,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        private SharedGovernorViewModel MapGovernorToSharedGovernorViewModel(GovernorModel governor, int establishmentUrn)
+        private async Task<SharedGovernorViewModel> MapGovernorToSharedGovernorViewModel(GovernorModel governor, int establishmentUrn)
         {
             var dateNow = DateTime.Now.Date;
             var appointment = governor.Appointments?.SingleOrDefault(g => g.EstablishmentUrn == establishmentUrn);
@@ -732,15 +736,18 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                                      .Select(a => new SharedGovernorViewModel.EstablishmentViewModel { Urn = a.EstablishmentUrn.Value, EstablishmentName = a.EstablishmentName })
                                      .ToList();
 
+            var appointingBodies = await _cachedLookupService.GovernorAppointingBodiesGetAllAsync();
+            var nationalities = await _cachedLookupService.NationalitiesGetAllAsync();
+
             return new SharedGovernorViewModel
             {
-                //AppointingBodyName = governor.AppointingBodyId, // todo: texchange!
+                AppointingBodyName = appointingBodies.Single(g => g.Id == governor.AppointingBodyId).Name,
                 AppointmentStartDate = appointment?.AppointmentStartDate != null ? new DateTimeViewModel(appointment.AppointmentStartDate) : new DateTimeViewModel(),
                 AppointmentEndDate = appointment?.AppointmentEndDate != null ? new DateTimeViewModel(appointment.AppointmentEndDate) : new DateTimeViewModel(),
                 DOB = governor.DOB,
                 FullName = governor.GetFullName(),
                 Id = governor.Id.Value,
-                //Nationality = governor.Nationality, // todo: texchange
+                Nationality = nationalities.Single(n => n.Id == governor.NationalityId).Name,
                 PostCode = governor.PostCode,
                 Selected = appointment != null,
                 PreExisting = appointment != null,
