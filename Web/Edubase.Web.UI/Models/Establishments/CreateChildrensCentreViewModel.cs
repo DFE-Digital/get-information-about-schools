@@ -25,25 +25,25 @@ namespace Edubase.Web.UI.Models.Establishments
         public string Telephone { get; set; }
 
         [Display(Name = "Operational hours (required to save record)")]
-        public int OperationalHoursId { get; set; }
+        public int? OperationalHoursId { get; set; }
 
         [Display(Name = "Number of under 5s (required to save record)")]
         public int? NumberOfUnderFives { get; set; }
 
         [Display(Name = "Governance (required to save record)")]
-        public int GovernanceId { get; set; }
+        public int? GovernanceId { get; set; }
 
         [Display(Name = "Governance detail (required to save record)")]
         public string GovernanceDetail { get; set; }
 
         [Display(Name = "Disadvantaged area (required to save record)")]
-        public int DisadvantagedAreaId { get; set; }
+        public int? DisadvantagedAreaId { get; set; }
 
         [Display(Name = "Direct provision of early years (required to save record)")]
-        public int DirectProvisionOfEarlyYears { get; set; }
+        public int? DirectProvisionOfEarlyYears { get; set; }
 
         [Display(Name = "Establishment status")]
-        public int EstablishmentStatusId { get; set; }
+        public int? EstablishmentStatusId { get; set; }
 
         public IEnumerable<SelectListItem> OperationalHoursOptions { get; set; }
         public IEnumerable<SelectListItem> GovernanceOptions { get; set; }
