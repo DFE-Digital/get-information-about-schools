@@ -1,4 +1,4 @@
-﻿@model CreateEstablishmentViewModel
+﻿@model CreateChildrensCentreViewModel
 @{
     ViewBag.Title = "Edubase: Create a new establishment";
     ViewBag.bodyClasses = "create-establishment";
@@ -18,7 +18,7 @@
 <div id="create-establishment">
     <div class="grid-row">
         <div class="column-full">
-            <h1 class="heading-intro">
+            <h1 class="heading-intro" id="title">
                 Create a school or college
             </h1>
 
@@ -50,7 +50,7 @@
                     @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "form-control" })
                 </div>
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
+                <div id="establishment-type-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
                     @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "form-label" })
                     @Html.ValidationMessageFor(x => x.EstablishmentTypeId)
                     @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
@@ -145,10 +145,10 @@
         });
 
         function filterEstablishmentPhaseList() {
-            
+
             var optionList = '<option value="">Please select</option>';
             var typeId = $typeSelector.val();
-            var previousSelValue = $phaseSelector.val(); 
+            var previousSelValue = (typeId === "41" ? "1" : $phaseSelector.val()); 
             if(!isNaN(typeId)) {
                 var applicablePhases = type2PhaseMap[typeId];
                 if(applicablePhases && applicablePhases.length > 0) {
@@ -159,10 +159,21 @@
                         }
                     }
                 }
+
+                if (typeId === "41") {
+                    createChildrensCentre();
+                }
             }
             $phaseSelector.html(optionList);
         }
 
-
+        function createChildrensCentre() {
+            $("#title").text("Create a children's centre");
+            $("#establishment-type-form-group").hide();
+            $("#number-gen-options").hide();
+            $("#enter-number").hide();
+            $phaseSelector.prop('disabled', 'disabled');
+        }
+       
     </script>
 }

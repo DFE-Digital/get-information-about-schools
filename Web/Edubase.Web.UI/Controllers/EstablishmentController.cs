@@ -645,12 +645,13 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
         public async Task<ActionResult> Create()
         {
-            var viewModel = new CreateEstablishmentViewModel
+            var viewModel = new CreateChildrensCentreViewModel
             {
                 CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
-                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()
+                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
+                Address = new AddressViewModel(),
             };
-            await PopulateSelectLists(viewModel); 
+            await PopulateCCSelectLists(viewModel);
             return View(viewModel);
         }
 
