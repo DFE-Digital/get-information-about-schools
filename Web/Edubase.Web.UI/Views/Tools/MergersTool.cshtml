@@ -37,7 +37,7 @@
         <li v-bind:class="['error-message', (leadEstabError) ? '' : 'hidden']"><a href="#lead-establishment">The lead establishment URN is invalid</a></li>
         <li v-bind:class="['error-message', (linkedEstabError) ? '' : 'hidden']"><a href="#linked-establishments">URN is invalid</a></li>
         <li v-bind:class="['error-message', (amalgamateUrnError) ? '' : 'hidden']"><a href="#linked-establishments">You have entered an invalid URN. Please correct the invalid URN to continue</a></li>
-        <li v-bind:class="['error-message', (mergeDateError && mergerType==='merger') ? '' : 'hidden']"><a href="#merger-date">Merger date not specified</a></li>
+        <li v-bind:class="['error-message', (mergeDateError && mergerType==='merger') ? '' : 'hidden']"><a href="#merger-date">Merger date is invalid</a></li>
         <li v-bind:class="['error-message', (amalgamationLengthError || mergeLengthError)  ? '' : 'hidden']"><a href="#amalg-linked">Select between two and four schools. Please add another URN to continue</a></li>
         <li v-bind:class="['error-message', nameError ? '' : 'hidden']"><a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a></li>
         <li v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden']"><a href="#">You have entered an duplicate URN. Please correct the invalid URN to continue</a></li>
@@ -168,7 +168,7 @@
 
             <div v-bind:class="['form-group range-group date-group', mergeDateError ? 'error' : '' ]">
                 <fieldset id="merger-date">
-                    <span v-bind:class="['error-message', mergeDateError ? '' : 'hidden']">Please select establishment open date</span>
+                    <span v-bind:class="['error-message', mergeDateError ? '' : 'hidden']">Please enter a valid establishment open date</span>
                     <legend class="bold">Merge date</legend>
                     <div class="form-hint">For example, 20 03 2003</div>
 
@@ -407,9 +407,9 @@
     
    
 
-    <script src="/Assets/Scripts/standalone/merge-amalgamate.js"></script>
+    @*<script src="/Assets/Scripts/standalone/merge-amalgamate.js"></script>*@
     
-    @*<script src="/public/assets/scripts/standalone/merge-amalgamate.js"></script>*@
+    <script src="/public/assets/scripts/standalone/merge-amalgamate.js"></script>
  
     
     
