@@ -199,28 +199,33 @@
     </div>
     <div v-show="mergerComplete">
         <div class="column-two-thirds">
-            <dl class="summary-list">
-                <dt><strong class="bold-small">Closing establishment details</strong></dt>
-                <dd>
-                    <ol class="linked-establishments">
-                        <li v-for="school in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
-                    </ol>
-                </dd>
-            </dl>
+            <div class="summary-panel">
+                <dl class="summary-list">
+                    <dt><strong class="bold-small">Closing establishment details</strong></dt>
+                    <dd>
+                        <ol class="linked-establishments">
+                            <li v-for="school in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
+                        </ol>
+                    </dd>
+                </dl>
+                </div>
+                <div class="summary-panel">
+                    <h3 class="heading-small">Merged establishment details</h3>
+                    <a v-bind:href="schoolDetailUrl">{{leadEstab}} - {{leadEstablishmentName}}</a>
+                    <ul class="amalg-summary">
+                        <li>Establishment type: Free schools</li>
+                        <li>Merger date: {{displayDate}}</li>
+                    </ul>
+                </div>
 
-            <h3 class="heading-medium">Merged establishment details</h3>
-            <a v-bind:href="schoolDetailUrl">{{leadEstab}} - {{leadEstablishmentName}}</a>
-            <ul>
-                <li>Establishment type: Free schools</li>
-                <li>Amalgamation date: {{displayDate}}</li>
-            </ul>
 
-            <p>
-                <a v-bind:href="schoolDetailUrl">
-                    Please update the merged record to reflect any changes (for
-                    example, establishment name or age range)</a>.
-            </p>
-        </div>
+                <p>
+                    Please update the
+                    <a v-bind:href="schoolDetailUrl">merged record</a>
+                    to reflect any changes (for
+                    example, establishment name or age range).
+                </p>
+            </div>
     </div>
 </div>
             
@@ -359,7 +364,7 @@
             
         <div class="summary-panel">
             <h3 class="heading-small">New establishment details</h3>
-            <dl>
+            <dl class="amalg-summary">
                 <dt><a v-bind:href="amalgUrl">{{amalgUrn}} - {{ newName }}</a></dt>
                 <dd>Establishment type: {{ selectedEstablishmentType }}</dd>
                 <dd>Amalgamation date: {{ displayDate }}</dd>
@@ -368,7 +373,7 @@
         </div>
             
 
-        <p><a v-bind:href="amalgUrl">Please complete the new establishment record</a>.</p>
+        <p>Please complete the new <a v-bind:href="amalgUrl">establishment record</a>.</p>
     </div>
 
 </div>
