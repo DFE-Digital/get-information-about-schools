@@ -207,7 +207,7 @@
                 </div>
                 <div class="button-row">
                     
-                    <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail, apiErrors=[]', detailEdit = true">&laquo; Go back</a>
+                    <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true">&laquo; Go back</a>
                     @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                     {
                         <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave" />

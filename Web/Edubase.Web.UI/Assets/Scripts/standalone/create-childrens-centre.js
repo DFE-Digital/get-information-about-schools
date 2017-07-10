@@ -178,7 +178,7 @@
                 }
 
                 $.when(validate()).done(function () {
-                    self.isProcessing = false;
+                   
                     if (self.apiErrors.length === 0) {
                         for (i = 0; i < len; i++) {
                             var centre = centres[i];
@@ -188,21 +188,21 @@
                                 input.name = 'LinkedEstablishments.Establishments[' + i + '].' + fields[j];
 
                                 switch (j) {
-                                    case 0:
-                                        input.value = centre.urn;
-                                        break;
-                                    case 1:
-                                        input.value = centre.joinDate.split('/')[0];
-                                        break;
-                                    case 2:
-                                        input.value = centre.joinDate.split('/')[1];
-                                        break;
-                                    case 3:
-                                        input.value = centre.joinDate.split('/')[2];
-                                        break;
-                                    case 4:
-                                        input.value = centre.urn === self.groupLead;
-                                        break;
+                                case 0:
+                                    input.value = centre.urn;
+                                    break;
+                                case 1:
+                                    input.value = centre.joinDate.split('/')[0];
+                                    break;
+                                case 2:
+                                    input.value = centre.joinDate.split('/')[1];
+                                    break;
+                                case 3:
+                                    input.value = centre.joinDate.split('/')[2];
+                                    break;
+                                case 4:
+                                    input.value = centre.urn === self.groupLead;
+                                    break;
                                 }
                                 frag.appendChild(input);
                             }
@@ -211,9 +211,12 @@
 
                         form.appendChild(frag);
 
-                        window.setTimeout(function () {
-                            form.submit();
-                        }, 100);
+                        window.setTimeout(function() {
+                                form.submit();
+                            },
+                            100);
+                    } else {
+                        self.isProcessing = false;
                     }
                 });
             },
@@ -294,7 +297,7 @@
                         self.joinDateYear = '';
                         self.appState = 'addCentre';
 
-                        if (self.centresInGroup.length === 1) {
+                        if (self.centresInGroup.length === 1 && self.groupType === 8) {
                             self.groupLead = self.centresInGroup[0].urn;
                         }
                     }
