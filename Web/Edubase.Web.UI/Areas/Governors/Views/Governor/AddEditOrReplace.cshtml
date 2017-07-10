@@ -79,33 +79,48 @@
 @section ViewScripts
 {
     <script>
-        var $fields = $('#content').find('.form-control');
-        var exitAttached = false;
+        (function () {
+            var $fields = $('#content').find('.form-control');
+            var exitAttached = false;
 
-        $fields.on('change', function () {
-            if (!exitAttached) {
-                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                exitAttached = true;
+            $fields.on('change', function () {
+                if (!exitAttached) {
+                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                    exitAttached = true;
+                }
+
+            });
+
+            var $day = $('#ReplaceGovernorViewModel_AppointmentEndDate_Day');
+            var $month = $('#ReplaceGovernorViewModel_AppointmentEndDate_Month');
+            var $year = $('#ReplaceGovernorViewModel_AppointmentEndDate_Year');
+
+            function checkAndUpdateDate() {
+                if (Number($day.val()) > 0 && Number($month.val()) > 0 && Number($year.val()) > 0) {
+                    var date = new Date($year.val(), $month.val() - 1, $day.val(), 0, 0, 0, 0);
+                    date.setDate(date.getDate() + 1);
+                    $('#AppointmentStartDate_Day').val(date.getDate());
+                    $('#AppointmentStartDate_Month').val(date.getMonth() + 1);
+                    $('#AppointmentStartDate_Year').val(date.getFullYear());
+                }
             }
 
-        });
+            $day.blur(checkAndUpdateDate);
+            $month.blur(checkAndUpdateDate);
+            $year.blur(checkAndUpdateDate);
 
-        $day = $('#ReplaceGovernorViewModel_AppointmentEndDate_Day');
-        $month = $('#ReplaceGovernorViewModel_AppointmentEndDate_Month');
-        $year = $('#ReplaceGovernorViewModel_AppointmentEndDate_Year');
+            if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric').value === 'True') {
+                $('.warning-message').addClass('hidden');
+                var $endDateFields = $('#AppointmentEndDate_Day, #AppointmentEndDate_Month, #AppointmentEndDate_Year');
+                var warningShown = false;
 
-        function checkAndUpdateDate() {
-            if (Number($day.val()) > 0 && Number($month.val()) > 0 && Number($year.val()) > 0) {
-                var date = new Date($year.val(), $month.val()-1, $day.val(), 0, 0, 0, 0);
-                date.setDate(date.getDate() + 1);
-                $('#AppointmentStartDate_Day').val(date.getDate());
-                $('#AppointmentStartDate_Month').val(date.getMonth()+1);
-                $('#AppointmentStartDate_Year').val(date.getFullYear());
+                $endDateFields.on('change', function (e) {
+                    if (!warningShown) {
+                        $('.warning-message').removeClass('hidden');
+                        $endDateFields.off('change');
+                    }
+                });
             }
-        }
-
-        $day.blur(checkAndUpdateDate);
-        $month.blur(checkAndUpdateDate);
-        $year.blur(checkAndUpdateDate);
-    </script>
+        }());
+</script>
 }
