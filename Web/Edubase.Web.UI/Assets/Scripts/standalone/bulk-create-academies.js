@@ -50,7 +50,7 @@
                 var frag = document.createDocumentFragment();
                 for (var i = 0, len = academyTypes.length; i < len; i++) {
                     var opt = document.createElement('option');
-                    var t = types[i];
+                    var t = academyTypes[i];
                     opt.value = t.id;
                     opt.innerHTML = t.name;
                     frag.appendChild(opt);
