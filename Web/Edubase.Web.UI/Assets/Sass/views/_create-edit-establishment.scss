@@ -236,14 +236,14 @@ div.governor-list, div.governor-grid {
     table {
         th, td {
             text-align:left;
-            font-size:16px;
+            font-size:14px;
             padding:15px 8px 15px 0px;
         }
         th {
             font-weight:bold;
         }
     }
-    p.none { font-size:16px; }
+    p.none { font-size:14px; }
 }
 
 
@@ -258,7 +258,7 @@ div.governor-list, div.governor-grid {
         line-height: 1.6;
         margin-bottom: 15px;
         @media (min-width: 640px) {
-            font-size: 16px;
+            font-size: 14px;
         }
     }
     dt, dd {
