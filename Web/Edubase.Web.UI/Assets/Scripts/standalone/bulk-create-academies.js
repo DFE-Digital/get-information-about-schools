@@ -142,6 +142,8 @@
                 },
                 buildTypesDropDown: function () {
                     var frag = document.createDocumentFragment();
+                    var select = document.getElementById('academy-type');
+                    select.innerHTML = '';
                     for (var i = 0, len = this.validTypes.length; i < len; i++) {
                         var opt = document.createElement('option');
                         var t = this.validTypes[i];
@@ -149,7 +151,7 @@
                         opt.innerHTML = t.name;
                         frag.appendChild(opt);
                     }
-                    document.getElementById('academy-type').appendChild(frag);
+                    select.appendChild(frag);
                 },
                 detailUrl: function (urn) {
                     return '/Establishment/Details/' + urn;
@@ -253,13 +255,11 @@
                             self.validTypes = [];
                             for (var i = 0, len = academyTypes.length; i <len; i++ ) {
                                 estabValidationReqs.push(checkEstabType(academyTypes[i].id));
-
                             }
 
                             $.when.apply($, estabValidationReqs).done(function () {
                                 $.each(arguments, // the data from the API requests to determine valid est types
                                     function (i, validationResult) {
-                                        //console.log(JSON.stringify(validationResult));
                                         if (validationResult[0].length === 0) {
                                             self.validTypes.push(academyTypes[i]);
                                         }
