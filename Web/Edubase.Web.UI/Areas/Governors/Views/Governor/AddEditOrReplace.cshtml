@@ -17,7 +17,13 @@
     @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post))
     {
              
-        <h2 class="heading-medium tab-lead">@(Model.Mode == CreateEditGovernorViewModel.EditMode.Edit ? "Edit" : "Add" )  @Model.GovernorRoleName.ToLower()</h2>
+        <h2 class="heading-medium tab-lead">
+            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Edit ? "Edit" : "") 
+            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Create ? "Add" : "") 
+            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Replace ? "Replace" : "") 
+            
+            @Model.GovernorRoleName.ToLower()
+        </h2>
             
         @Html.HiddenFor(x => x.GovernorRole)
         @Html.HiddenFor(x => x.GovernorRoleName)
@@ -36,13 +42,13 @@
             
         if (Model.ReplaceGovernorViewModel.GID.HasValue)
         {
-            <p class="bold-small">Replace @Model.GovernorRoleName.ToLower()</p>
-            <p class="bold-xsmall">@Model.ReplaceGovernorViewModel.Name</p>
+            @*<p class="bold-small">Replace @Model.GovernorRoleName.ToLower()</p>*@
+            <h3 class="heading-small">@Model.ReplaceGovernorViewModel.Name</h3>
             <div class="date-group-wrap">
                 @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)" })
             </div>
         }
-        @*<p  class="bold-small">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</p>*@
+        <h2 class="heading-medium">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</h2>
             
         @Html.EditorFor(m => m, new { disableStartDate = Model.ReplaceGovernorViewModel.GID.HasValue, reactivationWarning = (Model.Mode == CreateEditGovernorViewModel.EditMode.Edit && Model.AppointmentEndDate.ToDateTime().HasValue && Model.AppointmentEndDate.ToDateTime().Value < DateTime.Now.Date) })
 
