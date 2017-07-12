@@ -388,6 +388,9 @@ fieldset legend.heading-small {
 
 .button-wrapper { // used to contain floats on buttons
     overflow: hidden;
+    margin-top: -3px;
+    margin-left: -3px;
+    padding: 3px;
 }
 
 .inline-submit {
