@@ -287,3 +287,17 @@
     </div>
     
 }
+
+@section ViewScripts
+{
+    <script language="javascript">
+        var $openSelector = $("#b_1");
+        var $openClosedSelector = $("#b_4");
+
+        $($openSelector).change(function() {
+            if (this.checked) {
+                $openClosedSelector.prop('checked', true);
+            }
+        })
+    </script>
+}
