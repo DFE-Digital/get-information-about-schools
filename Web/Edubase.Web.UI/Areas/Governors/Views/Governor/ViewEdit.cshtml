@@ -25,7 +25,7 @@
         </div>
         
         <div class="column-half">
-            <h2 class="bold-small">Add person</h2>
+            <h2 class="heading-small">Add person</h2>
 
 
             @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
@@ -205,7 +205,7 @@ else
                 foreach (var row in grid.Rows)
                 {
                     <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
-                        <h2 class="bold-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
+                        <h3 class="heading-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h3>
                         <dl>
                             @foreach (var cell in row.Cells.Skip(1))
                             {
