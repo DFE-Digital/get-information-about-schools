@@ -693,7 +693,6 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-<<<<<<< HEAD
         [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
         public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn)
         {
