@@ -466,3 +466,18 @@ div.shared-governor-list {
 .tab-lead {
     margin-top: 0;
 }
+
+.inline-select-button {
+    margin-bottom: 50px;
+    select {
+        width: 66%;
+        display: inline-block;
+        margin-right: 12px;
+    }
+    .button {
+        display: inline-block;
+        font-size: 16px;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
