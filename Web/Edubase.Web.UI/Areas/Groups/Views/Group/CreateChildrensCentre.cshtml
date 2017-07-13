@@ -67,18 +67,18 @@
                         </ul>
                     </div>
 
-                    <h1 class="heading-intro">Enter the children's centre group details</h1>
+                    <h1 class="heading-intro">Enter the children's centre {{groupTypeName}} details</h1>
                     
                     @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
                 </div>
                 <div class="column-half">
-                    <p>Add the details of the children's centre group you'd like to create.</p>
+                    <p>Add the details of the children's centre {{groupTypeName}} you'd like to create.</p>
 
-                    <h2 class="heading-medium">Children's centre group details</h2>
+                    <h2 class="heading-medium">Children's centre {{groupTypeName}} details</h2>
                     <div v-bind:class="['form-group', groupNameError? 'error' : '']">
                         <label for="name" class="form-label">{{capitalise(groupTypeName)}} name</label>
                         @Html.ValidationMessageFor(x => x.GroupName)
-                        <span class="error-message" v-show="groupNameError">Please check the group name</span>
+                        <span class="error-message" v-show="groupNameError">Please check the {{groupTypeName}} name</span>
                         @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control", v_model="groupName" })
                     </div>
 
@@ -140,7 +140,8 @@
                 </div>
             </div>
             <div class="column-full">
-                <p>Add two or more children's centres to create a children's centre group and choose which one you would like as the lead centre.</p>
+                <p>Add two or more children's centres to create a children's centre {{groupTypeName}} 
+                <span v-if="groupType==8">and choose which one you would like as the lead centre</span>.</p>
 
                 <h2 class="heading-medium">New children's centre {{groupTypeName}} details</h2>
                 <dl class="key-value-list fixed-label">
@@ -238,7 +239,7 @@
                 </div>
                 <div class="column-full">
                     <p>Ensure this is the right children's centre and add a joined date.</p>
-                    <h2 class="bold-medium">Childrens centre</h2>
+                    <h2 class="heading-medium">Childrens centre</h2>
                     <p>
                         {{pendingEstab.name}}
                         <br/>

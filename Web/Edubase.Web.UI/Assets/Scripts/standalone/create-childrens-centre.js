@@ -3,7 +3,7 @@
     var ccGroup = new Vue({
         el: '#create-childrens-centre',
         data: {
-            groupType: '9',
+            groupType: '8',
             groupName: '',
             groupNameError: false,
 
@@ -46,7 +46,7 @@
         },
         computed: {
             groupTypeName: function() {
-                if (this.groupType === '8') {
+                if (this.groupType == 8) {
                     return 'group';
                 }
                 return 'collaboration';
@@ -297,7 +297,7 @@
                         self.joinDateYear = '';
                         self.appState = 'addCentre';
 
-                        if (self.centresInGroup.length === 1 && self.groupType === 8) {
+                        if (self.centresInGroup.length === 1 && self.groupType == 8) {
                             self.groupLead = self.centresInGroup[0].urn;
                         }
                     }

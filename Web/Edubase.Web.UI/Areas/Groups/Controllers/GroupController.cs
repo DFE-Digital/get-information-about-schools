@@ -471,7 +471,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
             viewModel.CCGroupTypes = (await _lookup.GroupTypesGetAllAsync())
-                    .Where(x => x.Id.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)).ToSelectList(viewModel.GroupTypeId);
+                    .Where(x => x.Id.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)).OrderBy(x => x.Id).ToSelectList(viewModel.GroupTypeId);
             return viewModel;
         }
 
