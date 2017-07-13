@@ -29,19 +29,31 @@
         }
     }
 </div>
-    <h1 class="heading-large">@Model.Group.Name</h1>
+    <h1 class="heading-intro">@Model.Group.Name</h1>
 
     @if(Model.Group.ConfirmationUpToDateGovernanceRequired)
     {
-        <div style="float:none;clear:both;" class="up-to-date-confirmations">
-            <p>Governance record last confirmed: @(Model.Group.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</p>
-            <p>
-                Confirm governance record is up to date:
-                @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
-                {
-                    <button class="button button-grey">Confirm</button>
-                }
-            </p>
+        <div class="up-to-date-confirmations expanding-content-wrapper" data-update-text="false">
+            <a class="expanding-content-trigger" href="#">Confirm records</a>
+            <div class="expanding-content panel-indent">
+                <div class="data-confirmation-panel">
+                    <p class="confirmation-statement">
+                        Governance record last confirmed:
+                        <span class="confirmation-date">
+                            @(Model.Group.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
+                        </span>
+                    </p>
+
+                    @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
+                    {
+                        <label class="confirmation-label" for="governance-data-confirm">
+                            Confirm governance record is up to date:
+                        </label>
+                        <button class="button button-grey confirmation-button" id="governance-data-confirm">Confirm</button>
+                    }
+                </div>
+            </div>
+            
         </div>
     }
 
@@ -74,7 +86,7 @@
                         @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
                     }
 
-                    <div style="float:none; clear:both;"></div><!-- Sorry Jon. -->
+                    @*<div style="float:none; clear:both;"></div> No worries Kris*@<!-- Sorry Jon. -->
 
                     <table class="borderless no-padding">
                         @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
