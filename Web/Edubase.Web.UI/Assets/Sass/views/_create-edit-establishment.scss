@@ -471,7 +471,12 @@ div.shared-governor-list {
         width: 66%;
         display: inline-block;
         margin-right: 12px;
+        
+        .is-mac & {
+            font-size: 19px;
+        }
     }
+    
     .button {
         display: inline-block;
         font-size: 16px;
