@@ -29,7 +29,7 @@
 }
 <div @Html.Raw(classBinding)>
     <fieldset class="range-group">
-        <legend class="bold-xsmall" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
+        <legend class="bold" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
         @if (!disableHint)
         {
             <div class="form-hint">For example, 20 03 2003</div>

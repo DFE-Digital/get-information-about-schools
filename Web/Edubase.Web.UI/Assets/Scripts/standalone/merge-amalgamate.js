@@ -124,9 +124,11 @@
             selectedEstablishmentType: function () {
                 var self = this;
                 if (self.typeId !== '') {
-                    var typeName = self.types.filter(function (t) {
+                    var typeName = types.filter(function(t) {
                         return t.id == self.typeId;
                     })[0].name;
+
+                    return typeName;
                 }
             },
             addedUrns: function() {
@@ -212,6 +214,7 @@
                 this.linkedEstab1Valid = true;
                 this.linkedEstab2Valid = true;
                 this.mergeLengthError = false;
+                this.commitErrors = '';
                 this.duplicateUrnsError = this.hasDuplicateUrn();
                 if (this.duplicateUrnsError) {
                     return true;
@@ -294,7 +297,7 @@
             },
             validateMergerDate: function () {
                 var day = parseInt(this.mergeDateDay, 10),
-                    month = parseInt(this.mergeDateMonth, 10),
+                    month = parseInt(this.mergeDateMonth -1, 10),
                     year = parseInt(this.mergeDateYear, 10),
 
                     dateError = false,
@@ -359,6 +362,7 @@
                 this.amalgamatedEstab3Valid = true;
                 this.amalgamationLengthError = false;
                 this.amalgamateUrnError = false;
+                this.commitErrors = '';
                 this.duplicateUrnsError = this.hasDuplicateUrn();
                 if (this.duplicateUrnsError) {
                     return true;
@@ -455,10 +459,11 @@
                                 if (item === 'validationEnvelope') {
                                     var env = errObj[item][0].errors;
                                     env.forEach(function (er) {
-                                        //console.log(errObj[item][0].errors);
-                                        //console.log(er);
                                         errMessage += er.message + '<br>';
                                     });
+                                } else if (!errObj.validationEnvelope && item === 'errors') {
+                                    errMessage = errObj.errors[0].message;
+                                    self.validMergeUrns = false;
                                 }
                             }
                             self.commitErrors = errMessage;
@@ -514,13 +519,16 @@
                             var errMessage = '';
 
                             for (var item in errObj) {
-                                if (item === 'validationEnvelope') {
+                                if (item === 'validationEnvelope' && errObj.validationEnvelope) {                                    
                                     var env = errObj[item][0].errors;
                                     env.forEach(function (er) {
                                         console.log(errObj[item][0].errors);
                                         console.log(er);
                                         errMessage += er.message + '<br>';
                                     });
+                                } else if (!errObj.validationEnvelope && item === 'errors') {                                    
+                                    errMessage = errObj.errors[0].message;
+                                    self.validMergeUrns = false;
                                 }
                             }
                             self.commitErrors = errMessage;

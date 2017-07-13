@@ -262,7 +262,7 @@
                                             <td aria-label="Request type">@item.RequestType.GetEnumMember()</td>
                                             <td aria-label="Change">
                                                 <dl>
-                                                    @if (item.RequestType == GroupChangeDto.GroupChangeRequestType.GroupChange)
+                                                    @if (item.RequestType == GroupChangeRequestType.GroupChange)
                                                     {
                                                         <dt>Field</dt><dd>@item.Name</dd>
                                                         <dt>Old value</dt><dd>@item.OldValue</dd>

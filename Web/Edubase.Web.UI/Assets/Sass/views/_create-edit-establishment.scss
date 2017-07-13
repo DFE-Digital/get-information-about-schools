@@ -1,11 +1,8 @@
 ﻿
 
 .create-edit-form-group {
-    margin-bottom: 23px;
-
     label {
         margin-bottom: 2px;
-        font-size: 16px;
     }
 
     .data-quality & {
@@ -89,6 +86,21 @@ select#headtitleid {
     }
 }
 
+legend {
+    font-weight: normal;
+    font-size: 19px;
+
+    &.bold-legend {
+        font-weight: bold;
+        display: block;
+        margin: 20px 0;
+    }
+
+    &.bold {
+        font-weight: bold;
+    }
+}
+
 .date-group {
     .form-control {
         width: 60px;        
@@ -107,12 +119,10 @@ select#headtitleid {
         margin-right: 1em;
     }
     legend {
-        font-size: 16px;
+        font-size: 19px;
         margin-bottom: 0;
     }
-    .form-hint {
-        font-size: 16px;
-    }
+    
 }
 
 .create-edit-school {
@@ -122,7 +132,7 @@ select#headtitleid {
     }
 
     label {
-        font-size: 16px;
+        font-size: 19px;
         margin-bottom: 2px;
     }
 
@@ -131,18 +141,8 @@ select#headtitleid {
     }
     
     
-    legend {
-        font-weight: normal;
-        font-size: 16px;
-
-        &.bold-legend {
-            font-weight: bold;
-            display: block;
-            margin: 20px 0;
-        }
-    }
     .hint-text, .form-hint {
-        font-size: 16px;
+        font-size: 19px;
     }
 
     .grouped-controls .form-control {
@@ -234,19 +234,22 @@ div.governor-list, div.governor-grid {
     table {
         th, td {
             text-align:left;
-            font-size:16px;
+            font-size:14px;
             padding:15px 8px 15px 0px;
         }
         th {
             font-weight:bold;
         }
     }
-    p.none { font-size:16px; }
+    p.none { font-size:14px; }
+    dt { font-size: 14px; }
+    dd { font-size: 14px; }
 }
 
 
 .governors-section {
     margin-bottom: 30px;
+    font-size: 14px;
 }
 
 .governor-list {
@@ -256,7 +259,7 @@ div.governor-list, div.governor-grid {
         line-height: 1.6;
         margin-bottom: 15px;
         @media (min-width: 640px) {
-            font-size: 16px;
+            font-size: 14px;
         }
     }
     dt, dd {
@@ -275,6 +278,10 @@ div.governor-list, div.governor-grid {
         margin-bottom:15px;
     }
 
+}
+
+.expanding-content-wrapper .governor-grid:first-child .heading-small {
+    margin-top: 0;
 }
 
 
@@ -436,4 +443,44 @@ div.shared-governor-list {
 
 .create-estab-number-gen {
     padding-top: 16px;
+}
+
+
+.create-childrens-centre {
+    .inline-submit {
+        margin-left: 0;
+        padding-left: 40px;
+        padding-right: 40px;
+
+    }
+    .inline-with-button .form-control {
+        width: 50%;
+    }
+    .button-row {
+        padding-top: 50px;
+    }
+}
+
+.tab-lead {
+    margin-top: 0;
+}
+
+.inline-select-button {
+    margin-bottom: 35px;
+    select {
+        width: 66%;
+        display: inline-block;
+        margin-right: 12px;
+        
+        .is-mac & {
+            font-size: 19px;
+        }
+    }
+    
+    .button {
+        display: inline-block;
+        font-size: 16px;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
 }

@@ -28,6 +28,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Web.UI.Validation;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
@@ -624,7 +625,7 @@ namespace Edubase.Web.UI.Controllers
             vm.HelpdeskPreviousLocalAuthorityName = await c.GetNameAsync("LocalAuthorityId", vm.Establishment.HelpdeskPreviousLocalAuthorityId);
 
             var sens = await c.SpecialEducationNeedsGetAllAsync();
-            vm.SENNames = StringUtil.Sentenceify((vm.Establishment.SENIds ?? new int[0]).Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
+            vm.SENNames = StringUtil.SentencifyNoFormating((vm.Establishment.SENIds ?? new int[0]).Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
 
             vm.AddressCountryName = await c.GetNameAsync("CountryId", vm.Establishment.Address_CountryId);
             vm.AddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.Address_CountyId);
@@ -644,30 +645,34 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
         public async Task<ActionResult> Create()
         {
-            var viewModel = new CreateEstablishmentViewModel
+            var viewModel = new CreateChildrensCentreViewModel
             {
                 CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
-                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()
+                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
+                Address = new AddressViewModel(),
             };
-            await PopulateSelectLists(viewModel); 
+            await PopulateCCSelectLists(viewModel);
             return View(viewModel);
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
-        public async Task<ActionResult> Create(CreateEstablishmentViewModel viewModel)
+        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel)
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
+
+            if (viewModel.EstablishmentTypeId == 41)
+                return await CreateChildrensCentre(viewModel);
 
             if (ModelState.IsValid)
             {
                 var response = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
                 {
-                    EducationPhaseId = viewModel.EducationPhaseId.Value,
+                    EducationPhaseId = viewModel.EducationPhaseId,
                     EstablishmentNumber = viewModel.EstablishmentNumber,
-                    EstablishmentTypeId = viewModel.EstablishmentTypeId.Value,
-                    GenerateEstabNumber = viewModel.GenerateEstabNumber.Value,
-                    LocalAuthorityId = viewModel.LocalAuthorityId.Value,
+                    EstablishmentTypeId = viewModel.EstablishmentTypeId,
+                    GenerateEstabNumber = viewModel.GenerateEstabNumber ?? false,
+                    LocalAuthorityId = viewModel.LocalAuthorityId,
                     Name = viewModel.Name
                 }, User);
 
@@ -684,10 +689,11 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            await PopulateSelectLists(viewModel);
+            await PopulateCCSelectLists(viewModel);
             return View(viewModel);
         }
 
+<<<<<<< HEAD
         [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
         public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn)
         {
@@ -702,6 +708,71 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToRoute("EstabDetails", new { id = urn });
         }
 
+        //[HttpGet, EdubaseAuthorize, Route("CreateChildrensCentre", Name = "CreateChildrensCentre")]
+        //public async Task<ActionResult> CreateChildrensCentre()
+        //{
+        //    var model = new CreateChildrensCentreViewModel
+        //    {
+        //        CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
+        //        Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
+        //        Address = new AddressViewModel(),
+        //        EducationPhaseId = 1
+        //    };
+
+        //    await PopulateCCSelectLists(model);
+
+        //    return View(model);
+        //}
+
+        private async Task<ActionResult> CreateChildrensCentre(CreateChildrensCentreViewModel model)
+        {
+            model.EducationPhaseId = 1;
+
+            var newEstablishment = new EstablishmentModel
+            {
+                EducationPhaseId = model.EducationPhaseId,
+                TypeId = 41,
+                LocalAuthorityId = model.LocalAuthorityId,
+                Name = model.Name,
+                OpenDate = model.OpenDate.ToDateTime(),
+                Address_Line1 = model.Address.Line1,
+                Address_Line2 = model.Address.Line2,
+                Address_Line3 = model.Address.Line3,
+                Address_CityOrTown = model.Address.CityOrTown,
+                Address_CountyId = model.Address.County,
+                Address_PostCode = model.Address.PostCode,
+                HeadFirstName = model.ManagerFirstName,
+                HeadLastName = model.ManagerLastName,
+                HeadEmailAddress = model.ManagerEmail,
+                Contact_TelephoneNumber = model.Telephone,
+                CCOperationalHoursId = model.OperationalHoursId,
+                CCUnder5YearsOfAgeCount = model.NumberOfUnderFives,
+                CCGovernanceId = model.GovernanceId,
+                CCGovernanceDetail = model.GovernanceDetail,
+                CCDisadvantagedAreaId = model.DisadvantagedAreaId,
+                CCDirectProvisionOfEarlyYearsId = model.DirectProvisionOfEarlyYears,
+                StatusId = model.EstablishmentStatusId,
+                IEBTModel = new IEBTModel()
+            };
+
+            var validation = await _establishmentWriteService.ValidateCreateAsync(newEstablishment, true, User);
+            validation.ApplyToModelState(ControllerContext);
+
+            if (ModelState.IsValid)
+            {
+                var response = await _establishmentWriteService.CreateNewAsync(newEstablishment, true, User);
+
+                if (response.Success)
+                {
+                    return RedirectToAction(nameof(Details), new {id = response.Response});
+                }
+
+                response.ApplyToModelState(ControllerContext);
+            }
+
+            await PopulateCCSelectLists(model);
+            return View(model);
+        }
 
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
         {
@@ -710,6 +781,15 @@ namespace Edubase.Web.UI.Controllers
             viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).ToSelectList(viewModel.EducationPhaseId);
         }
 
-
+        private async Task PopulateCCSelectLists(CreateChildrensCentreViewModel viewModel)
+        {
+            viewModel.OperationalHoursOptions = (await _cachedLookupService.CCOperationalHoursGetAllAsync()).ToSelectList();
+            viewModel.GovernanceOptions = (await _cachedLookupService.CCGovernanceGetAllAsync()).ToSelectList();
+            viewModel.DisadvantagedAreaOptions = (await _cachedLookupService.CCDisadvantagedAreasGetAllAsync()).ToSelectList();
+            viewModel.DirectProvisionOfEarlyYearsOptions = (await _cachedLookupService.DirectProvisionOfEarlyYearsGetAllAsync()).ToSelectList();
+            viewModel.EstablishmentStatusOptions = (await _cachedLookupService.EstablishmentStatusesGetAllAsync()).ToSelectList();
+            viewModel.Address.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList();
+            await PopulateSelectLists(viewModel);
+        }
     }
 }

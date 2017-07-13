@@ -6,14 +6,15 @@
 
     .linked-establishments {
         counter-reset: estab-counter;
+        margin-bottom: 1em;
         li {
-            margin-bottom: 0.5em;
+            margin-bottom: 0.25em;
             width: 90%;
             position: relative;
             display: list-item;
 
             &:before {
-                content: counter(estab-counter);
+                content: counter(estab-counter)".";
                 counter-increment: estab-counter;
                 position: absolute;
                 left: 0;
@@ -48,8 +49,35 @@
 
     .merger-list {
         margin: 20px 0;
-
     }
+    .field-group {
+        margin-top: 12px;
+    }
+
+    .special-snowflake-radios {
+        margin-bottom:50px;
+    }
+
+    .form-label {
+        margin-bottom: 2px;
+    }
+
+    @include media(tablet) {
+        #establishment-0,
+        #establishment-1,
+        #establishment-2 {
+            width: 70%;
+        }
+        
+        #lead-establishment {
+            width:66%;    
+        }
+    }
+
+    .amalg-summary {
+        margin-bottom: 1em;
+    }
+
 
 }
 
@@ -72,18 +100,3 @@
     width: 6em;
 }
 
-/// temp overlay showing available establishments
-#demo-establishment-list {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 280px;
-    padding: 0.5em;
-    background-color: $grey-2;
-    border: $black 1px solid;
-    
-    &.hidden {
-    display: none;
-    }
-}

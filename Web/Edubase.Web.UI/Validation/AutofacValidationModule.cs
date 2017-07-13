@@ -56,6 +56,10 @@ namespace Edubase.Web.UI.Validation
                 .Keyed<IValidator>(typeof(IValidator<CreateEstablishmentViewModel>))
                 .As<IValidator>();
 
+            builder.RegisterType<CreateChildrensCentreViewModelValidator>()
+                .Keyed<IValidator>(typeof(IValidator<CreateChildrensCentreViewModel>))
+                .As<IValidator>();
+
             builder.RegisterType<EditEstablishmentLinksViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<EditEstablishmentLinksViewModel>))
                 .As<IValidator>();

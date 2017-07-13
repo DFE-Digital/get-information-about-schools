@@ -54,6 +54,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
         public DateTimeViewModel OpenDate { get; set; } = new DateTimeViewModel();
+        public string AddressJsonToken { get; set; }
 
         [Display(Name = "Closed date")]
         public DateTimeViewModel ClosedDate { get; set; } = new DateTimeViewModel();

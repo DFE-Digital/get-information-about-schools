@@ -35,6 +35,16 @@ namespace Edubase.Common
                 "&lsquo;<span class=\"bold-small\">", items.Last(),"</span>&rsquo;");
         }
 
+
+        public static string SentencifyNoFormating(string[] items, SentenceifyOptions option = SentenceifyOptions.AND)
+        {
+            items = items.Select(x => x.Clean()).Where(x => x != null).ToArray();
+            if (items.Length == 0) return null;
+            else if (items.Length == 1) return items[0];
+            else if (items.Length == 2) return string.Join(string.Concat(SPACE, option.ToString().ToLower(), SPACE), items);
+            else return string.Concat(string.Join(", ", items.Take(items.Length - 1)), SPACE, option.ToString().ToLower(), SPACE, items.Last());
+        }
+
         public static bool Boolify(string data, bool defaultValue = false)
         {
             var retVal = false;

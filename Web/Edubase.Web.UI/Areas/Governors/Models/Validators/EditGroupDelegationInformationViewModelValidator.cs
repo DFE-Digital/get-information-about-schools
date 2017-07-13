@@ -8,7 +8,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
         public EditGroupDelegationInformationViewModelValidator()
         {
             RuleFor(x => x.DelegationInformation)
-                .Must(x => x.Length <= 1000)
+                .Must(x => x == null || x.Length <= 1000)
                 .WithMessage("Must be 1000 characters or less")
                 .WithSummaryMessage("Details must be 1000 characters or less");
         }

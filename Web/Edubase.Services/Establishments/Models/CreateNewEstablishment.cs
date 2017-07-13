@@ -11,11 +11,11 @@ namespace Edubase.Services.Establishments.Models
     {
         public string Name { get; set; }
         [JsonIgnore]
-        public bool GenerateEstabNumber { get; set; }
+        public bool? GenerateEstabNumber { get; set; }
         public string EstablishmentNumber { get; set; }
-        public int LocalAuthorityId { get; set; }
-        public int EducationPhaseId { get; set; }
+        public int? LocalAuthorityId { get; set; }
+        public int? EducationPhaseId { get; set; }
         [JsonProperty("typeId")]
-        public int EstablishmentTypeId { get; set; }
+        public int? EstablishmentTypeId { get; set; }
     }
 }

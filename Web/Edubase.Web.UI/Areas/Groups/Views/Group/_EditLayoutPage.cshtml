@@ -42,7 +42,17 @@
                 </ul>
             </div>
             <div class="tab-content-wrapper horizontal-tabs-content">
-                @RenderBody()
+                @if (Model.SelectedTabName == "governance")
+                {
+                    <div class="tab-content">
+                        @RenderBody()
+                    </div>
+                }
+                else
+                {
+                    @RenderBody()
+                }
+                
             </div>
         </div>
     </div>

@@ -165,6 +165,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 if (actionResult != null) return actionResult;
             }
 
+            if (viewModel.GroupTypeMode == eGroupTypeMode.ChildrensCentre)
+            {
+                return View("CreateChildrensCentre", viewModel);
+            }
+
             return View("Create", viewModel);
         }
 
@@ -174,18 +179,21 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public async Task<ActionResult> EditDetails(int id)
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
-            var viewModel = new GroupEditorViewModel(eSaveMode.Details);
-            viewModel.Address = domainModel.Address.ToString();
-            viewModel.ClosedDate = new DateTimeViewModel(domainModel.ClosedDate);
-            viewModel.OpenDate = new DateTimeViewModel(domainModel.OpenDate);
-            viewModel.LocalAuthorityId = domainModel.LocalAuthorityId;
-            viewModel.GroupTypeId = domainModel.GroupTypeId;
-            viewModel.ManagerEmailAddress = domainModel.ManagerEmailAddress;
-            viewModel.GroupName = domainModel.Name;
-            viewModel.CompaniesHouseNumber = domainModel.CompaniesHouseNumber;
-            viewModel.GroupUId = domainModel.GroupUId;
-            viewModel.GroupId = domainModel.GroupId;
-            viewModel.SelectedTabName = "details";
+            var viewModel = new GroupEditorViewModel(eSaveMode.Details)
+            {
+                Address = domainModel.Address.ToString(),
+                AddressJsonToken = UriHelper.SerializeToUrlToken(domainModel.Address),
+                ClosedDate = new DateTimeViewModel(domainModel.ClosedDate),
+                OpenDate = new DateTimeViewModel(domainModel.OpenDate),
+                LocalAuthorityId = domainModel.LocalAuthorityId,
+                GroupTypeId = domainModel.GroupTypeId,
+                ManagerEmailAddress = domainModel.ManagerEmailAddress,
+                GroupName = domainModel.Name,
+                CompaniesHouseNumber = domainModel.CompaniesHouseNumber,
+                GroupUId = domainModel.GroupUId,
+                GroupId = domainModel.GroupId,
+                SelectedTabName = "details"
+            };
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
@@ -418,7 +426,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 ManagerEmailAddress = viewModel.ManagerEmailAddress,
                 Name = viewModel.GroupName,
                 OpenDate = viewModel.OpenDate.ToDateTime(),
-                ClosedDate = viewModel.ClosedDate.ToDateTime()
+                ClosedDate = viewModel.ClosedDate.ToDateTime(),
+                Address = UriHelper.TryDeserializeUrlToken<AddressDto>(viewModel.AddressJsonToken)
             };
 
             Func<List<LinkedEstablishmentGroup>> createLinksDomainModel = 
@@ -426,7 +435,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 Urn = x.Urn,
                 Id = x.Id,
-                JoinedDate = x.JoinedDate,
+                JoinedDate = x.JoinedDate ?? x.JoinedDateEditable.ToDateTime(),
                 CCIsLeadCentre = x.CCIsLeadCentre
             }).ToList();
 
@@ -469,7 +478,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
             viewModel.CCGroupTypes = (await _lookup.GroupTypesGetAllAsync())
-                    .Where(x => x.Id.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)).ToSelectList(viewModel.GroupTypeId);
+                    .Where(x => x.Id.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)).OrderBy(x => x.Id).ToSelectList(viewModel.GroupTypeId);
             return viewModel;
         }
 

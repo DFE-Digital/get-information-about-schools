@@ -16,9 +16,9 @@
 <div id="mergers-app" v-cloak>
 <div class="grid-row">
 <div class="column-full">
-    <h1 class="heading-intro" id="page-heading">
+    <h1 class="heading-xlarge" id="page-heading">
         <span v-show="!mergerTypeConfirmed">Amalgamations and mergers tool</span>
-        <span v-show="mergerType == 'merger' && mergerTypeConfirmed">Merger</span>
+        <span v-show="mergerType == 'merger' && mergerTypeConfirmed && !mergerComplete">Merger</span>
         <span v-show="mergerType == 'amalgamation' && !completeAmalgamation && mergerTypeConfirmed">Amalgamation</span>
         <span  v-show="mergerComplete && mergerType== 'merger'">Merger complete</span>
         <span  v-show="completeAmalgamation">Amalgamation complete</span>
@@ -37,7 +37,7 @@
         <li v-bind:class="['error-message', (leadEstabError) ? '' : 'hidden']"><a href="#lead-establishment">The lead establishment URN is invalid</a></li>
         <li v-bind:class="['error-message', (linkedEstabError) ? '' : 'hidden']"><a href="#linked-establishments">URN is invalid</a></li>
         <li v-bind:class="['error-message', (amalgamateUrnError) ? '' : 'hidden']"><a href="#linked-establishments">You have entered an invalid URN. Please correct the invalid URN to continue</a></li>
-        <li v-bind:class="['error-message', (mergeDateError && mergerType==='merger') ? '' : 'hidden']"><a href="#merger-date">Merger date not specified</a></li>
+        <li v-bind:class="['error-message', (mergeDateError && mergerType==='merger') ? '' : 'hidden']"><a href="#merger-date">Merger date is invalid</a></li>
         <li v-bind:class="['error-message', (amalgamationLengthError || mergeLengthError)  ? '' : 'hidden']"><a href="#amalg-linked">Select between two and four schools. Please add another URN to continue</a></li>
         <li v-bind:class="['error-message', nameError ? '' : 'hidden']"><a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a></li>
         <li v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden']"><a href="#">You have entered an duplicate URN. Please correct the invalid URN to continue</a></li>
@@ -63,7 +63,7 @@
         </p>
 
         <fieldset class="merger-almalgamation">
-            <legend>Select the process you are interested in.</legend>
+            <legend class="bold">Select the process you are interested in</legend>
 
             <p id="almagamation-desc">
                 Amalgamation - a proposal for two or more schools to close and a new
@@ -73,7 +73,7 @@
                 Merger - a proposal for one or more schools to close and the remaining
                 school to be altered.
             </p>
-            <div v-bind:class="['form-group', mergerTypeError ? 'error' : '']">
+            <div v-bind:class="['form-group special-snowflake-radios', mergerTypeError ? 'error' : '']">
                 <span v-bind:class="['error-message', mergerTypeError ? '' : 'hidden' ]">Please select almalgamation or merger.</span>
                 <span class="radio-button-wrap">
                     <input id="radio-amalgamation" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
@@ -92,7 +92,7 @@
         </fieldset>
     </div>
     <div class="column-full">
-        <div class="submit-cancel-panel">
+        <div class="button-row">
             <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="checkMergeType">Continue</button>
             <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
         </div>
@@ -119,7 +119,7 @@
 
             <div v-bind:class="['form-group', linkedEstabError || duplicateUrnsError ? 'error' : '' ]">
                 <fieldset>
-                    <legend>Select additional establishments to be merged</legend>
+                    <legend class="bold">Select additional establishments to be merged</legend>
                     <p class="form-hint">
                         Up to 3 additional establishments can be merged (minimum of 1 establishment).
                     </p>
@@ -151,22 +151,25 @@
         <div class="column-two-thirds" id="merger-summary">
             <p>You can propose closing one or more schools and altering the remaining school.</p>
             <h2 class="heading-small">Establishments to be merged</h2>
-            <p>Lead establishment (remains open)</p>
-            <p>
+            <p>Lead establishment (remains open)
+            <br/>
                 <span>{{ leadEstab }}</span> {{ leadEstablishmentName }}
             </p>
 
             <dl class="merger-list">
                 <dt>Establishments to be merged</dt>
-                <dd v-for="(school, index) in mergerEstabs">
-                    <strong v-if="school.urn !=leadEstab">{{school.name}}</strong>
+                <dd>
+                    <ol class="linked-establishments">
+                        <li v-for="(school, index) in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
+                    </ol>
+                    @*<strong v-if="school.urn !=leadEstab">{{school.urn}} {{school.name}}</strong>*@
                 </dd>
             </dl>
 
-            <div v-bind:class="['form-group range-group', mergeDateError ? 'error' : '' ]">
+            <div v-bind:class="['form-group range-group date-group', mergeDateError ? 'error' : '' ]">
                 <fieldset id="merger-date">
-                    <span v-bind:class="['error-message', mergeDateError ? '' : 'hidden']">Please select establishment open date</span>
-                    <legend>Merge date</legend>
+                    <span v-bind:class="['error-message', mergeDateError ? '' : 'hidden']">Please enter a valid establishment open date</span>
+                    <legend class="bold">Merge date</legend>
                     <div class="form-hint">For example, 20 03 2003</div>
 
                     <span class="inline-form-control">
@@ -196,27 +199,33 @@
     </div>
     <div v-show="mergerComplete">
         <div class="column-two-thirds">
-            <dl class="summary-list">
-                <dt><strong class="bold-small">Closing establishment details</strong></dt>
-                <dd>
-                    <ol class="linked-establishments">
-                        <li v-for="school in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
-                    </ol>
-                </dd>
-            </dl>
+            <div class="summary-panel">
+                <dl class="summary-list">
+                    <dt><strong class="bold-small">Closing establishment details</strong></dt>
+                    <dd>
+                        <ol class="linked-establishments">
+                            <li v-for="school in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
+                        </ol>
+                    </dd>
+                </dl>
+                </div>
+                <div class="summary-panel">
+                    <h3 class="heading-small">Merged establishment details</h3>
+                    <a v-bind:href="schoolDetailUrl">{{leadEstab}} - {{leadEstablishmentName}}</a>
+                    <ul class="amalg-summary">
+                        <li>Establishment type: Free schools</li>
+                        <li>Merger date: {{displayDate}}</li>
+                    </ul>
+                </div>
 
-            <h3 class="heading-medium">Merged establishment details</h3>
-            <a v-bind:href="schoolDetailUrl">{{leadEstab}} - {{leadEstablishmentName}}</a>
-            <ul>
-                <li>Establishment type: Free schools</li>
-                <li>Amalgamation date: {{displayDate}}</li>
-            </ul>
 
-            <p>
-                Please update the merged record to reflect any changes (for
-                example, establishment name or age range).
-            </p>
-        </div>
+                <p>
+                    Please update the
+                    <a v-bind:href="schoolDetailUrl">merged record</a>
+                    to reflect any changes (for
+                    example, establishment name or age range).
+                </p>
+            </div>
     </div>
 </div>
             
@@ -230,8 +239,8 @@
         </div>
         <div class="column-two-thirds">
             <p>You can propose closing two or more schools and establishing a new school</p>
-
-            <label class="form-label">Select establishements to be amalgamated</label>
+            <fieldset>           
+            <legend class="bold">Select establishments to be amalgamated</legend>
             <span class="form-hint">
                 Up to 4 establishments can be amalgamated (minimum of 2 establishments)
             </span>
@@ -254,7 +263,7 @@
                     </ol>
                 </dd>
             </dl>
-
+            </fieldset>
         </div>
         <div class="column-full">
             <div class="submit-cancel-panel">
@@ -280,7 +289,7 @@
                 </dd>
             </dl>
             <fieldset>
-                <legend class="heading-small">New School details</legend>
+                <legend class="bold">New School details</legend>
                 <div v-bind:class="['form-group', nameError ? 'error' : '' ]">
                     <label class="form-label">Establishment name</label>
                     <span v-bind:class="['error-message', nameError ? '' : 'hidden' ]">Please enter a new school name</span>
@@ -309,10 +318,10 @@
                     <select class="form-control" id="LocalAuthorityId" name="LocalAuthorityId" v-model="laId"></select>
                 </div>
 
-                <div v-bind:class="['form-group range-group', mergeDateError ? 'error' : '' ]">
+                <div v-bind:class="['form-group range-group date-group', mergeDateError ? 'error' : '' ]">
                     <fieldset>
                         <span v-bind:class="['error-message', mergeDateError ? '' : 'hidden']">Please enter the date of the amalgamation.</span>
-                        <legend>Amalgamation date</legend>
+                        <legend class="bold">Amalgamation date</legend>
                         <div class="form-hint">For example, 20 03 2003</div>
 
                         <span class="inline-form-control">
@@ -347,7 +356,7 @@
                 <dt><strong class="heading-small">Closing establishment details</strong></dt>
                 <dd>
                     <ol class="linked-establishments">
-                        <li v-for="school in amalgamationEstabs"><span>{{school.id}} - {{school.name}}</span></li>
+                        <li v-for="school in amalgamationEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
                     </ol>
                 </dd>
             </dl>
@@ -355,7 +364,7 @@
             
         <div class="summary-panel">
             <h3 class="heading-small">New establishment details</h3>
-            <dl>
+            <dl class="amalg-summary">
                 <dt><a v-bind:href="amalgUrl">{{amalgUrn}} - {{ newName }}</a></dt>
                 <dd>Establishment type: {{ selectedEstablishmentType }}</dd>
                 <dd>Amalgamation date: {{ displayDate }}</dd>
@@ -364,7 +373,7 @@
         </div>
             
 
-        <p>Please complete the new establishment record.</p>
+        <p>Please complete the new <a v-bind:href="amalgUrl">establishment record</a>.</p>
     </div>
 
 </div>
