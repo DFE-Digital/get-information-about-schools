@@ -86,6 +86,7 @@
             <script type="text/javascript">
                 document.body.className = document.body.className.replace(/\bno-js\b/, 'js-enabled');
                 if (!('ontouchstart' in document.documentElement)) { document.body.className += ' no-touch'; }
+                if (navigator.userAgent.indexOf('Mac OS X')) { document.body.className += ' is-mac';}
             </script>
         }
 

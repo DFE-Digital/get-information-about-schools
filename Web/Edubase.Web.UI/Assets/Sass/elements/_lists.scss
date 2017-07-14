@@ -82,17 +82,23 @@ ol {
 .key-value-list {
     margin-bottom: 20px;
     overflow: hidden;
-    font-size: 16px;
+
     dt, dd {
         float: left;
     }
+
     dt {
         clear: left;
         margin-right: 12px;
     }
+
+    dd {
+        padding-top: 1px;
+    }
+
     &.fixed-label {
         dt {
-            width: 120px;
+            width: 130px;
         }
     }
 }
@@ -101,3 +107,4 @@ ol {
     font-size: 21px;
     margin: 20px 0 12px;
 }
+

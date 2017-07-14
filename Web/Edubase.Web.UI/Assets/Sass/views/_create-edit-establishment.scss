@@ -1,8 +1,6 @@
 ﻿
 
 .create-edit-form-group {
-    margin-bottom: 23px;
-
     label {
         margin-bottom: 2px;
     }
@@ -468,12 +466,17 @@ div.shared-governor-list {
 }
 
 .inline-select-button {
-    margin-bottom: 50px;
+    margin-bottom: 35px;
     select {
         width: 66%;
         display: inline-block;
         margin-right: 12px;
+        
+        .is-mac & {
+            font-size: 19px;
+        }
     }
+    
     .button {
         display: inline-block;
         font-size: 16px;
