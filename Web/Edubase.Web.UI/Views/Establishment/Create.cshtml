@@ -139,8 +139,8 @@
                 </div>
 
             </div>
-            <div class="column-full">
-                <fieldset class="inline create-estab-number-gen" id="number-gen-options">
+            <div class="column-full" id="number-gen-options">
+                <fieldset class="inline create-estab-number-gen">
                     <legend class="bold-small">Establishment number</legend>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
                         @Html.ValidationMessageFor(x => x.GenerateEstabNumber)
@@ -157,8 +157,8 @@
                 </fieldset>
             </div>
 
-            <div class="column-half">
-                <div id="enter-number" class="form-group panel-border-narrow estab-number-wrap hidden @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+            <div id="enter-number" class="column-half">
+                <div class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
                     @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number")
                     @Html.ValidationMessageFor(x => x.EstablishmentNumber)
                     @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control" })
@@ -275,6 +275,7 @@
         $(document).ready(function() {
             $("#number-gen-options").hide();
             $("#establishment-phase-form-group").hide();
+            $("#enter-number").hide();
         })
 
     </script>
