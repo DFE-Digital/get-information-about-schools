@@ -21,7 +21,7 @@
                     <input type="submit" value="Select" class="button mobile-full-width" />
                     <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                 </div>*@
-                <h2 class="heading-medium">Replace chair of local governing body</h2>
+                <h2 class="heading-medium tab-lead">Replace chair of local governing body</h2>
                 <h3 class="heading-small">@Model.GovernorFullName</h3>
 
                 @Html.EditorFor(m => m.DateTermEnds)

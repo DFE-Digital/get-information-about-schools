@@ -67,7 +67,7 @@
         <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
     </div>
 }
-<h1 class="heading-large">@Model.Establishment.Name</h1>
+<h1 class="heading-large">@(Model.Establishment.Name.Clean() ?? "(name not recorded)")</h1>
 <p class="urn">URN: @Model.Establishment.Urn</p>
 <p class="establishment-data-download">
     @Html.ActionLink("Download establishment data", "DownloadCsv", new { id = Model.Establishment.Urn, area = "" }, new {  })

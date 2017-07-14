@@ -14,7 +14,7 @@
             display: list-item;
 
             &:before {
-                content: counter(estab-counter);
+                content: counter(estab-counter)".";
                 counter-increment: estab-counter;
                 position: absolute;
                 left: 0;
@@ -73,6 +73,12 @@
             width:66%;    
         }
     }
+
+    .amalg-summary {
+        margin-bottom: 1em;
+    }
+
+
 }
 
 .top-button-panel {

@@ -42,21 +42,12 @@
                 isComplete: false,
                 createdAcademies: [],
                 pendingDelete: false,
-                pendingDeleteItem: ''
+                pendingDeleteItem: '',
+                validTypes: [] 
 
 
             },
             created: function() {
-                var frag = document.createDocumentFragment();
-                for (var i = 0, len = academyTypes.length; i < len; i++) {
-                    var opt = document.createElement('option');
-                    var t = academyTypes[i];
-                    opt.value = t.id;
-                    opt.innerHTML = t.name;
-                    frag.appendChild(opt);
-                }
-                document.getElementById('academy-type').appendChild(frag);
-
                 this.blockExits();
             },
             computed: {
@@ -73,6 +64,7 @@
                             this.apiValidationError !== ''
                     );
                 },
+                
                 validationParams: function() {
                     return {
                         PredecessorEstablishmentUrn: self.searchUrn,
@@ -148,6 +140,19 @@
                     }
                     return num;
                 },
+                buildTypesDropDown: function () {
+                    var frag = document.createDocumentFragment();
+                    var select = document.getElementById('academy-type');
+                    select.innerHTML = '';
+                    for (var i = 0, len = this.validTypes.length; i < len; i++) {
+                        var opt = document.createElement('option');
+                        var t = this.validTypes[i];
+                        opt.value = t.id;
+                        opt.innerHTML = t.name;
+                        frag.appendChild(opt);
+                    }
+                    select.appendChild(frag);
+                },
                 detailUrl: function (urn) {
                     return '/Establishment/Details/' + urn;
                 },
@@ -190,6 +195,7 @@
 
             estabLookUp: function () {
                 var self = this;
+                var estabValidationReqs = [];
                 this.pendingEdit = false;
                 this.invalidUrn = this.searchUrn === '' || isNaN(this.searchUrn);
                 this.duplicateUrn = this.addedUrns.indexOf(self.searchUrn) > -1;
@@ -217,35 +223,56 @@
                     });
                 }
 
+                function checkEstabType(eType) {
+                    return $.ajax({
+                            url: self.validationUrl,
+                            method: 'post',
+                            contentType: 'application/json; charset=utf-8',
+                            data: JSON.stringify([
+                                {
+                                    PredecessorEstablishmentUrn: self.searchUrn,
+                                    OpeningDate: [
+                                        today.getFullYear(), self.pad(today.getMonth() + 1), self.pad(today.getDate())
+                                    ].join('-'),
+                                    TypeId: eType
+                                }
+                            ]),
+                            success: function(data) {
+                                self.isProcessing = false;
+
+                            },
+                            error: function(jqXHR) {
+                                self.urnLookUpError = "The urn in is invalid";
+                                self.isProcessing = false;
+                            }
+                        });
+                }
+
+
                 $.when(lookUp())
                     .then(
-                        function(d1) {
-                            $.ajax({
-                                url: self.validationUrl,
-                                method: 'post',
-                                contentType: 'application/json; charset=utf-8',
-                                data: JSON.stringify([{
-                                    PredecessorEstablishmentUrn: self.searchUrn,
-                                    OpeningDate: [today.getFullYear(), self.pad(today.getMonth()+1), self.pad(today.getDate())].join('-'),
-                                    TypeId: 28
-                                }]),
-                                success: function(data) {
-                                    if (data.length === 0) {
-                                        var estab = d1.returnValue;
-                                        estab.academyType = 28; // acad convertor as default
-                                        self.pendingEstab = estab;
+                        function (d1) { // d1 is the data from the estab lookup
+                            self.validTypes = [];
+                            for (var i = 0, len = academyTypes.length; i <len; i++ ) {
+                                estabValidationReqs.push(checkEstabType(academyTypes[i].id));
+                            }
 
+                            $.when.apply($, estabValidationReqs).done(function () {
+                                $.each(arguments, // the data from the API requests to determine valid est types
+                                    function (i, validationResult) {
+                                        if (validationResult[0].length === 0) {
+                                            self.validTypes.push(academyTypes[i]);
+                                        }
+                                    });
+                                window.setTimeout(function () {
+                                    if (self.validTypes.length > 0) {
+                                        var estab = d1.returnValue;
+                                        self.buildTypesDropDown();
+                                        self.pendingEstab = estab;
                                     } else {
-                                        var messages = data[0].errors.map(function(elem) { return elem.message });
-                                        self.urnLookUpError = messages.join('<br>');
+                                        self.urnLookUpError = "The urn in is invalid";
                                     }
-                                    self.isProcessing = false;
-                                    
-                                },
-                                error: function(jqXHR) {
-                                    self.urnLookUpError = "The urn in is invalid";
-                                    self.isProcessing = false;
-                                }
+                                }, 0);
                             });
                         }
                     );
@@ -404,8 +431,7 @@
                 var self = this;                
                 $('a, [value="cancel"]').not('.modal-button').on('click', function (e) {
                     self.exitUrl = $(this).attr('href');
-                    console.log('Estabs: ' + self.establishments.length);
-                    console.log('isComplete' + self.isComplete);
+                    
                     if (self.establishments.length > 0 && !self.isComplete)  {
                         e.preventDefault();
                         self.displayExitWarning = true;

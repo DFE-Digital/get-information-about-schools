@@ -41,9 +41,7 @@
 }
 
 .link-relationship {
-    font-size: 16px;
-    margin-bottom: 0.55em;
-
+    margin-bottom: 2px;
     strong {
         font-weight: bold;
         display: block;
@@ -51,7 +49,7 @@
 }
 
 .establishment-summary {
-    font-size: 16px;
+    //font-size: 16px;
 }
 
 .gov-radio-wrap {
@@ -153,4 +151,8 @@
 
 .panel-toggler {
     margin-bottom: 0;
+}
+
+.retire-governor, .remove-governor {
+    margin-top: 10px;
 }

@@ -12,16 +12,16 @@
     @Html.HiddenFor(x => x.StateToken);
     <div class="tab-content">
         <div class="attach-link">
-            <div class="button-row">
+            @*<div>
                 <button name="act" value="save" class="button mobile-full-width allow-exit">Save</button>
                 @if (!Model.IsNew)
                 {
                     <button name="act" value="delete" class="button button-grey mobile-full-width estab-link-delete">Delete</button>
                 }
                 <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })" class="button button-grey mobile-full-width">Cancel</a>
-            </div>
+            </div>*@
             <div class="column-two-thirds">
-                <h2 class="bold-medium">Link to other establishment</h2>
+                <h2 class="heading-medium tab-lead">Link to other establishment</h2>
                 <h3 class="heading-small">Establishment to be linked</h3>
                 <ul class="establishment-summary">
                     <li>@Model.ActiveRecord.EstablishmentName</li>
@@ -36,8 +36,8 @@
 
 
             <div class="column-two-thirds">
-                <h3 class="heading-small">Relationship</h3>
-                <h4 class="bold-xsmall">Relationship of:</h4>
+                <h3 class="heading-medium">Relationship</h3>
+                <h4 class="bold-small">Relationship of:</h4>
                 <p class="link-relationship">
                     @Model.Name, URN: @Model.Urn
                     <strong>to</strong>
@@ -65,7 +65,7 @@
                 </div>
                 <div id="create-reserve-link" style="display:@Html.Conditional(!Model.ActiveRecord.CreateReverseLink, "none")">
                     <div class="column-half">
-                        <h4 class="bold-xsmall">Relationship of:</h4>
+                        <h4 class="bold-small">Relationship of:</h4>
                         <p class="link-relationship">
                             @Model.ActiveRecord.EstablishmentName, URN: @Model.ActiveRecord.Urn
                             <strong>to</strong>
@@ -111,9 +111,9 @@
             });
             $('#ActiveRecord_ReverseLinkSameDate').change(function () {
                 if (this.checked) {
-                    $("#ActiveRecord_ReverseLinkDateEditable_Day").prop("disabled", true);
-                    $("#ActiveRecord_ReverseLinkDateEditable_Month").prop("disabled", true);
-                    $("#ActiveRecord_ReverseLinkDateEditable_Year").prop("disabled", true);
+                    $("#ActiveRecord_ReverseLinkDateEditable_Day").attr("disabled", "disabled").val('');
+                    $("#ActiveRecord_ReverseLinkDateEditable_Month").attr("disabled", "disabled").val('');
+                    $("#ActiveRecord_ReverseLinkDateEditable_Year").attr("disabled", "disabled").val('');
                 } else {
                     $("#ActiveRecord_ReverseLinkDateEditable_Day").removeProp("disabled");
                     $("#ActiveRecord_ReverseLinkDateEditable_Month").removeProp("disabled");

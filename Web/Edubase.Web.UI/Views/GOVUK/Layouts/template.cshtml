@@ -86,6 +86,7 @@
             <script type="text/javascript">
                 document.body.className = document.body.className.replace(/\bno-js\b/, 'js-enabled');
                 if (!('ontouchstart' in document.documentElement)) { document.body.className += ' no-touch'; }
+                if (navigator.userAgent.indexOf('Mac OS X')) { document.body.className += ' is-mac';}
             </script>
         }
 
@@ -110,6 +111,18 @@
                             GOV.UK uses cookies to make the site simpler. <a href="/cookies">Find out more about cookies</a>
                         </p>
                     }
+                </div>
+            </div>
+        </div>
+        <div id="global-news-message" class="hidden">
+            <div class="outer-block">
+                <div class="inner-block">
+                    <p>
+                        This site is for test purposes only. To update or search live records use
+                        <a href="http://www.education.gov.uk/edubase/home.xhtml" class="allow-exit">Edubase2</a>.
+                        View the <a href="/news" class="allow-exit">news</a> page for release updates.
+                    </p>
+                    <a href="#" id="news-dismiss" class="news-dismiss allow-exit" title="Dismiss this message"></a>
                 </div>
             </div>
         </div>
@@ -200,6 +213,7 @@
                             <li><a href="/cookies">Cookies</a></li>
                             <!--<li><a href="#">Contact</a></li>-->
                             <li><a href="/guidance">Guidance</a></li>
+                            <li><a href="/news">News</a></li>
                         </ul>
 
                         <div class="open-government-licence">

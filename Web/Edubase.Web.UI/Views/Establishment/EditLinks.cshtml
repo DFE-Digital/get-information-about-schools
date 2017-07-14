@@ -8,11 +8,11 @@
 {
     <div class="tab-content">
         <div class="links-list">
-            <div class="button-row">
+            <div>
                 @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey mobile-full-width" })
             </div>
 
-            <p class="table-caption">
+            <p>
                 These establishments are linked with @Model.Name,
                 URN: @Model.Urn For example, they may be predecessor or successor establishments.
             </p>

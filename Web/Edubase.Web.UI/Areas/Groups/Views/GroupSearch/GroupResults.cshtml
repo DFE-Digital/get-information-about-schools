@@ -126,3 +126,17 @@
     </div>
 
 </div>
+
+@section ViewScripts
+{
+    <script language="javascript">
+        var $openSelector = $("#group-status_1");
+        var $openClosedSelector = $("#group-status_4");
+
+        $($openSelector).change(function() {
+            if (this.checked) {
+                $openClosedSelector.prop('checked', true);
+            }
+        })
+    </script>
+}

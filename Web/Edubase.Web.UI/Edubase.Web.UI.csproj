@@ -474,10 +474,12 @@
     <Content Include="Areas\Establishments\Views\BulkUpdate\InProgress.cshtml" />
     <Content Include="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
     <Content Include="Assets\Sass\views\_cookies.scss" />
+    <Content Include="Assets\Sass\elements\_news-message.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\expanding-content.js" />
+    <Content Include="Assets\Scripts\Elements\news-message.js" />
     <Content Include="Assets\Scripts\Elements\truncated-text.js" />
     <Content Include="Assets\Scripts\standalone\approvals.js" />
     <Content Include="Assets\Scripts\standalone\bulk-create-academies.js" />
@@ -526,6 +528,7 @@
     <Content Include="public\assets\images\icon-gender-mixed.png" />
     <Content Include="public\assets\images\icon-location.png" />
     <Content Include="public\assets\images\icon-pupils.png" />
+    <Content Include="public\assets\images\icons\black-transparent-cross.png" />
     <Content Include="public\assets\images\icons\cross.PNG" />
     <Content Include="public\assets\images\icons\exclaim-red-x2.png" />
     <Content Include="public\assets\images\icons\exclaim-red.png" />
@@ -956,7 +959,6 @@
     <Content Include="Views\ChangeHistory\ReadyToDownload.cshtml" />
     <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
     <Content Include="Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
-    <Content Include="Views\Establishment\CreateChildrensCentre.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
