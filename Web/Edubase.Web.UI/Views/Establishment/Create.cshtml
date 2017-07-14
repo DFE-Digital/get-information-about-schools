@@ -19,7 +19,7 @@
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-intro" id="title">
-                Create a school or college
+                Create an establishment
             </h1>
 
             @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
@@ -50,6 +50,12 @@
                     @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "form-control" })
                 </div>
                 
+                <div id="establishment-type-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
+                    @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "form-label" })
+                    @Html.ValidationMessageFor(x => x.EstablishmentTypeId)
+                    @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
+                </div>
+
                 <div class="childrens-centre-fields" style="display:none">
                     @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)"})
                 
@@ -106,13 +112,7 @@
                     </div>
                 </div>
 
-                <div id="establishment-type-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
-                    @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "form-label" })
-                    @Html.ValidationMessageFor(x => x.EstablishmentTypeId)
-                    @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
-                </div>
-
-                <div class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                <div id="establishment-phase-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
                     @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "form-label" })
                     @Html.ValidationMessageFor(x => x.EducationPhaseId)
                     @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "form-control" })
@@ -184,11 +184,11 @@
         var $typeSelector = $("#EstablishmentTypeId");
         var $phaseSelector = $("#EducationPhaseId");
 
-        $(function () {
+        $(function() {
             var $radios = $('#number-gen-options').find(':radio');
             var $enterNumber = $("#enter-number");
 
-            var func = function () {
+            var func = function() {
                 if ($radios.filter(':checked').val() === 'False') {
                     $enterNumber.removeClass('hidden');
                 } else {
@@ -204,53 +204,78 @@
             $("select#EstablishmentTypeId").on("change keyup", filterEstablishmentPhaseList);
         });
 
-       
+
         var $fields = $('#content').find('.form-control');
         var exitAttached = false;
 
-        $fields.on('change', function () {
-            if (!exitAttached) {
-                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                exitAttached = true;
-            }
-        });
+        $fields.on('change',
+            function() {
+                if (!exitAttached) {
+                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                    exitAttached = true;
+                }
+            });
 
-        if ($typeSelector.val()=="") $phaseSelector.prop('disabled', 'disabled');
-        $typeSelector.on('change', function() {
-            $phaseSelector.removeAttr('disabled');
-        });
+        if ($typeSelector.val() == "") $phaseSelector.prop('disabled', 'disabled');
+        $typeSelector.on('change',
+            function() {
+                $phaseSelector.removeAttr('disabled');
+            });
 
         function filterEstablishmentPhaseList() {
 
             var optionList = '<option value="">Please select</option>';
             var typeId = $typeSelector.val();
-            var previousSelValue = (typeId === "41" ? "1" : $phaseSelector.val()); 
-            if(!isNaN(typeId)) {
+            var previousSelValue = (typeId === "41" ? "1" : $phaseSelector.val());
+            if (!isNaN(typeId)) {
                 var applicablePhases = type2PhaseMap[typeId];
-                if(applicablePhases && applicablePhases.length > 0) {
+                if (applicablePhases && applicablePhases.length > 0) {
                     for (var i = 0; i < applicablePhases.length; i++) {
-                        var filtered = $.grep(phases, function(ele, y) { return parseInt(ele.value, 10) == applicablePhases[i]; });
-                        if(filtered != null && filtered.length > 0) {
-                            optionList += '<option value="' + filtered[0].value + '" '+ (previousSelValue == filtered[0].value ? "selected" : "") +'>' + filtered[0].text + '</option>';
+                        var filtered = $.grep(phases,
+                            function(ele, y) { return parseInt(ele.value, 10) == applicablePhases[i]; });
+                        if (filtered != null && filtered.length > 0) {
+                            optionList += '<option value="' +
+                                filtered[0].value +
+                                '" ' +
+                                (previousSelValue == filtered[0].value ? "selected" : "") +
+                                '>' +
+                                filtered[0].text +
+                                '</option>';
                         }
                     }
                 }
 
                 if (typeId === "41") {
                     createChildrensCentre();
+                } else {
+                    createOther();
                 }
             }
             $phaseSelector.html(optionList);
         }
 
+        function createOther() {
+            $("#establishment-phase-form-group").show();
+            $("#number-gen-options").show();
+            $("#enter-number").show();
+            $phaseSelector.removeAttr('disabled');
+            $(".childrens-centre-fields").hide();
+        }
+
         function createChildrensCentre() {
-            $("#title").text("Create a children's centre");
-            $("#establishment-type-form-group").hide();
+            //$("#title").text("Create a children's centre");
+            //$("#establishment-type-form-group").hide();
+            $("#establishment-phase-form-group").show();
             $("#number-gen-options").hide();
             $("#enter-number").hide();
             $phaseSelector.prop('disabled', 'disabled');
             $(".childrens-centre-fields").show();
         }
-       
+
+        $(document).ready(function() {
+            $("#number-gen-options").hide();
+            $("#establishment-phase-form-group").hide();
+        })
+
     </script>
 }
