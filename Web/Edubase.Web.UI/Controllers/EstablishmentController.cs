@@ -715,7 +715,6 @@ namespace Edubase.Web.UI.Controllers
 
             var newEstablishment = new EstablishmentModel
             {
-                EducationPhaseId = model.EducationPhaseId,
                 TypeId = 41,
                 LocalAuthorityId = model.LocalAuthorityId,
                 Name = model.Name,
@@ -728,7 +727,7 @@ namespace Edubase.Web.UI.Controllers
                 Address_PostCode = model.Address.PostCode,
                 HeadFirstName = model.ManagerFirstName,
                 HeadLastName = model.ManagerLastName,
-                HeadEmailAddress = model.ManagerEmail,
+                Contact_EmailAddress = model.CentreEmail,
                 Contact_TelephoneNumber = model.Telephone,
                 CCOperationalHoursId = model.OperationalHoursId,
                 CCUnder5YearsOfAgeCount = model.NumberOfUnderFives,
@@ -736,6 +735,7 @@ namespace Edubase.Web.UI.Controllers
                 CCGovernanceDetail = model.GovernanceDetail,
                 CCDisadvantagedAreaId = model.DisadvantagedAreaId,
                 CCDirectProvisionOfEarlyYearsId = model.DirectProvisionOfEarlyYears,
+                CCPhaseTypeId = 3,
                 StatusId = model.EstablishmentStatusId,
                 IEBTModel = new IEBTModel()
             };
