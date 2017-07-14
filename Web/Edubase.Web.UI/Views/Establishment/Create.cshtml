@@ -158,7 +158,7 @@
             </div>
 
             <div id="enter-number" class="column-half">
-                <div class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                <div id="enter-number-form-group" class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
                     @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number")
                     @Html.ValidationMessageFor(x => x.EstablishmentNumber)
                     @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control" })
@@ -190,9 +190,11 @@
 
             var func = function() {
                 if ($radios.filter(':checked').val() === 'False') {
-                    $enterNumber.removeClass('hidden');
+                    //$enterNumber.removeClass('hidden');
+                    $enterNumber.show();
                 } else {
-                    $enterNumber.addClass('hidden');
+                    //$enterNumber.addClass('hidden');
+                    $enterNumber.hide();
                 }
             };
 
@@ -257,7 +259,6 @@
         function createOther() {
             $("#establishment-phase-form-group").show();
             $("#number-gen-options").show();
-            $("#enter-number").show();
             $phaseSelector.removeAttr('disabled');
             $(".childrens-centre-fields").hide();
         }
