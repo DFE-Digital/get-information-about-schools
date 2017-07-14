@@ -56,5 +56,9 @@ namespace Edubase.Web.UI.Controllers
             return View(new MvcHtmlString(html));
         }
 
+        [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
+        public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
+        
+
     }
 }
