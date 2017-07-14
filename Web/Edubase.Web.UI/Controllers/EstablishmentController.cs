@@ -148,7 +148,19 @@ namespace Edubase.Web.UI.Controllers
             
             return View("AddEditLink_FindEstablishment", viewModel);
         }
-        
+
+        [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Address", Name = "ReplaceEstablishmentAddress")]
+        public async Task<ActionResult> ReplaceEstablishmentAddressAsync(int urn)
+        {
+            const int UK = 90;
+            var viewModel = new ReplaceAddressViewModel
+            {
+                Countries = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(UK)
+            };
+            await PopulateEstablishmentPageViewModel(viewModel, urn, "details");
+            return View("ReplaceAddress", viewModel);
+        }
+
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links", Name = "EditEstabLinks")]
         public async Task<ActionResult> EditLinks(int? id)
         {
