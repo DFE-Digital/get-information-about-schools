@@ -39,16 +39,6 @@ namespace Edubase.Web.UI.Filters
 
                 filterContext.ExceptionHandled = true;
             }
-            else if (filterContext.Exception.GetBaseException() is TexunaApiSystemException) 
-            {
-                filterContext.Result = new ViewResult
-                {
-                    ViewName = "~/Views/Shared/DomainError.cshtml",
-                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "Error: " + filterContext.Exception.GetBaseException().Message } }
-                };
-
-                filterContext.ExceptionHandled = true;
-            }
             else // unhandled/unexpected exception; log it and tell the user.
             {
                 var msg = Log(filterContext.HttpContext, filterContext.Exception);
