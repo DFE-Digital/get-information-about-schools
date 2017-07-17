@@ -25,6 +25,9 @@ namespace Edubase.Services.Establishments.Models
         public DateTime? EffectiveDate { get; set; }
 
         [JsonIgnore]
+        public bool OverrideCRProcess { get; set; }
+
+        [JsonIgnore]
         public eBulkUpdateType BulkFileType { get; set; }
 
         [JsonProperty("type")]

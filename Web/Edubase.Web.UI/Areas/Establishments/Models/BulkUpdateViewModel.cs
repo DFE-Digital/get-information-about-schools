@@ -14,5 +14,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public HttpPostedFileBase BulkFile { get; set; }
         public eBulkUpdateType? BulkUpdateType { get; set; }
         public BulkUpdateProgressModel Result { get; internal set; }
+        public bool CanOverrideCRProcess { get; set; }
+        public bool OverrideCRProcess { get; set; }
+
+        public BulkUpdateViewModel()
+        {
+
+        }
+
+        public BulkUpdateViewModel(bool canOverrideCRProcess)
+        {
+            CanOverrideCRProcess = canOverrideCRProcess;
+        }
     }
 }
