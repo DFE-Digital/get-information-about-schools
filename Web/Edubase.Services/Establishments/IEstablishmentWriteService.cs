@@ -25,5 +25,7 @@ namespace Edubase.Services.Establishments
         Task<ApiResponse<object, ValidationEnvelopeDto[]>> SaveLinkedEstablishmentsAsync(int urn, LinkedEstablishmentModel[] linkedEstablishmentModels, IPrincipal principal);
         Task<ApiResponse<object, ValidationEnvelopeDto[]>> DeleteLinkedEstablishmentAsync(int urn, int linkId, IPrincipal principal);
         Task<ApiResponse<object, ValidationEnvelopeDto[]>> AddLinkedEstablishmentAsync(int parentUrn, int urnToLink, int linkTypeId, DateTime linkDate, IPrincipal principal);
+        Task<ApiResponse> ConfirmAsync(int urn, IPrincipal principal);
+        Task<ApiResponse> ConfirmGovernanceAsync(int urn, IPrincipal principal);
     }
 }
