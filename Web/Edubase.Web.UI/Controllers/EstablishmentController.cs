@@ -28,6 +28,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Domain;
 using Edubase.Web.UI.Validation;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
@@ -45,6 +46,25 @@ namespace Edubase.Web.UI.Controllers
         private readonly NomenclatureService _nomenclatureService;
         private readonly IResourcesHelper _resourcesHelper;
         private readonly ISecurityService _securityService;
+
+        private readonly Dictionary<string, string> validationFieldMapping = new Dictionary<string, string>
+        {
+            {"address_Line1", "Address.Line1"},
+            {"address_CityOrTown", "Address.CityOrTown" },
+            {"address_CountyId", "Address.County" },
+            {"address_PostCode", "Address.PostCode" },
+            {"headFirstName", "ManagerFirstName" },
+            {"headLastName", "ManagerLastName" },
+            {"contact_EmailAddress", "CentreEmail" },
+            {"contact_TelephoneNumber", "Telephone" },
+            {"ccOperationalHoursId", "OperationalHoursId" },
+            {"ccUnder5YearsOfAgeCount", "NumberOfUnderFives" },
+            {"ccGovernanceId", "GovernanceId" },
+            {"ccGovernanceDetail", "GovernanceDetail" },
+            {"ccDisadvantagedAreaId", "DisadvantagedAreaId" },
+            {"ccDirectProvisionOfEarlyYearsId", "DirectProvisionOfEarlyYears" },
+            {"statusId", "EstablishmentStatusId" }
+        };
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService, 
@@ -755,7 +775,7 @@ namespace Edubase.Web.UI.Controllers
             };
 
             var validation = await _establishmentWriteService.ValidateCreateAsync(newEstablishment, true, User);
-            validation.ApplyToModelState(ControllerContext);
+            ApplyCreateChildrensCenterValidationErrors(validation);
 
             if (ModelState.IsValid)
             {
@@ -773,6 +793,19 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
+        private void ApplyCreateChildrensCenterValidationErrors(ValidationEnvelopeDto validation)
+        {
+            foreach (var error in validation.Errors)
+            {
+                if (validationFieldMapping.ContainsKey(error.Fields))
+                {
+                    error.Fields = validationFieldMapping[error.Fields];
+                }
+            }
+
+            validation.ApplyToModelState(ControllerContext);
+        }
+
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
         {
             viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
@@ -782,12 +815,14 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task PopulateCCSelectLists(CreateChildrensCentreViewModel viewModel)
         {
+            viewModel.PhaseId = 3;
             viewModel.OperationalHoursOptions = (await _cachedLookupService.CCOperationalHoursGetAllAsync()).ToSelectList();
             viewModel.GovernanceOptions = (await _cachedLookupService.CCGovernanceGetAllAsync()).ToSelectList();
             viewModel.DisadvantagedAreaOptions = (await _cachedLookupService.CCDisadvantagedAreasGetAllAsync()).ToSelectList();
             viewModel.DirectProvisionOfEarlyYearsOptions = (await _cachedLookupService.DirectProvisionOfEarlyYearsGetAllAsync()).ToSelectList();
             viewModel.EstablishmentStatusOptions = (await _cachedLookupService.EstablishmentStatusesGetAllAsync()).ToSelectList();
             viewModel.Address.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList();
+            viewModel.Phases = (await _cachedLookupService.CCPhaseTypesGetAllAsync()).ToSelectList();
             await PopulateSelectLists(viewModel);
         }
     }
