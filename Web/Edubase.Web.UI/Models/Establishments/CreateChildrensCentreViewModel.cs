@@ -18,10 +18,10 @@ namespace Edubase.Web.UI.Models.Establishments
         [Display(Name = "Manager last name (required to save record)")]
         public string ManagerLastName { get; set; }
 
-        [Display(Name = "Manager email (required to save record)")]
-        public string ManagerEmail { get; set; }
+        [Display(Name = "Centre email (required to save record)")]
+        public string CentreEmail { get; set; }
 
-        [Display(Name = "Telephone (required to save record)")]
+        [Display(Name = "Centre telephone (required to save record)")]
         public string Telephone { get; set; }
 
         [Display(Name = "Operational hours (required to save record)")]

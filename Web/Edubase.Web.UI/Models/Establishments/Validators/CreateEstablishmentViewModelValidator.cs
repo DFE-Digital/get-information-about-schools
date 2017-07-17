@@ -85,7 +85,7 @@ namespace Edubase.Web.UI.Models.Establishments.Validators
                     .Must(x => !string.IsNullOrWhiteSpace(x))
                     .WithMessage("Please enter the manager last name");
 
-                RuleFor(x => x.ManagerEmail)
+                RuleFor(x => x.CentreEmail)
                     .Must(x => !string.IsNullOrWhiteSpace(x))
                     .WithMessage("Please enter the manager email");
 
