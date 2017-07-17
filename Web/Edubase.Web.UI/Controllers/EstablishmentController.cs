@@ -803,7 +803,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            validation.ApplyToModelState(ControllerContext);
+            validation.ApplyToModelState(ControllerContext, true);
         }
 
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)

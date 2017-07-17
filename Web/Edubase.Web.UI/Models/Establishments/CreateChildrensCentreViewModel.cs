@@ -4,6 +4,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models.Establishments
 {
+
     public class CreateChildrensCentreViewModel : CreateEstablishmentViewModel
     {
         [Display(Name = "Open date (required tp save record)")]
