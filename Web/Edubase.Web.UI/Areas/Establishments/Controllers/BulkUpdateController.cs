@@ -2,6 +2,7 @@
 using Edubase.Common.IO;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
+using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Helpers;
 using System;
@@ -24,12 +25,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route(Name = "EstabBulkUpdate")]
-        public ActionResult Index() => View(new BulkUpdateViewModel());
+        public ActionResult Index() => View(new BulkUpdateViewModel(User.IsInRole(R.ROLE_BACKOFFICE)));
 
 
         [HttpPost, Route("Index", Name = "ProcessBulkUpdate")]
         public async Task<ActionResult> ProcessBulkUpdate(BulkUpdateViewModel viewModel)
         {
+            viewModel.CanOverrideCRProcess = User.IsInRole(R.ROLE_BACKOFFICE);
+
             if (ModelState.IsValid)
             {
                 var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
@@ -38,7 +41,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var payload = new BulkUpdateDto
                 {
                     BulkFileType = viewModel.BulkUpdateType.Value,
-                    FileName = fileName
+                    FileName = fileName,
+                    OverrideCRProcess = viewModel.CanOverrideCRProcess && viewModel.OverrideCRProcess
                 };
 
                 var state = UriHelper.SerializeToUrlToken(payload);
@@ -66,6 +70,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     EffectiveDate = new UI.Models.DateTimeViewModel(dto.EffectiveDate),
                     Result = model
                 };
+                vm.CanOverrideCRProcess = User.IsInRole(R.ROLE_BACKOFFICE);
+                vm.OverrideCRProcess = dto.OverrideCRProcess;
                 return View("Index", vm);
             }
         }

@@ -77,6 +77,15 @@
 
             @Html.EditorFor(m => m.EffectiveDate, new { title = "Effective date (optional)" })
 
+            @if (Model.CanOverrideCRProcess)
+            {
+                <span class="checkbox-wrap">
+                    @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id = "override-cr" })
+                    @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new { @for = "override-cr", @class = "edubase-button-checkbox" })
+                </span>
+                <br /><br />
+            }
+
         </div>
         <div class="column-full">
             <input type="submit" class="button mobile-full-width" value="Submit"/>           

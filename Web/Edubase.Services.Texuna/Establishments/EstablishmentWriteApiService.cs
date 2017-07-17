@@ -82,7 +82,9 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<BulkUpdateProgressModel> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)
         {
-            return (await _httpClient.PostMultipartAsync<BulkUpdateProgressModel>("establishment/bulk-update", bulkUpdateInfo, bulkUpdateInfo.FileName, principal)).GetResponse();
+            var overrideCRFlag = bulkUpdateInfo.OverrideCRProcess ? "?overridecr=true" : string.Empty;
+            return (await _httpClient.PostMultipartAsync<BulkUpdateProgressModel>("establishment/bulk-update" + overrideCRFlag, 
+                bulkUpdateInfo, bulkUpdateInfo.FileName, principal)).GetResponse();
         }
 
         public async Task<BulkUpdateProgressModel> BulkUpdateAsync_GetProgressAsync(Guid taskId, IPrincipal principal)
