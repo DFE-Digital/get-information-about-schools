@@ -71,7 +71,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
 
-        [Route(nameof(Details) + "/{id:int}"), HttpGet]
+        [Route(nameof(Details) + "/{id:int}", Name ="GroupDetails"), HttpGet]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups)
         {
             var model = (await _groupReadService.GetAsync(id, User)).GetResult();
@@ -98,6 +98,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value);
             
             return View(viewModel);
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{uid:int}", Name = "GroupGovernanceConfirmUpToDate")]
+        public async Task<ActionResult> GroupGovernanceConfirmUpToDateAsync(int uid)
+        {
+            await _groupWriteService.ConfirmGovernanceAsync(uid, User);
+            return RedirectToRoute("GroupDetails", new { id = uid });
         }
 
         [HttpGet]

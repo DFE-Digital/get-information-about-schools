@@ -287,5 +287,10 @@ namespace Edubase.Services.Establishments.Models
         public string HelpdeskTrigger1 { get; set; }
         public int? HelpdeskPreviousLocalAuthorityId { get; set; }
         public int? HelpdeskPreviousEstablishmentNumber { get; set; }
+
+        public bool ConfirmationUpToDateRequired { get; set; }
+        public bool ConfirmationUpToDateGovernanceRequired { get; set; }
+        public DateTime? ConfirmationUpToDate_LastConfirmationDate { get; set; }
+        public DateTime? ConfirmationUpToDateGovernance_LastConfirmationDate { get; set; }
     }
 }
