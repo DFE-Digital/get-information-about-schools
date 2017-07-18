@@ -38,6 +38,7 @@
             validateUrl: '/Groups/Group/CreateChildrensCentre/Validate/All',
             apiErrors: [],
             urnError: false,
+            tooFewCentresError: false,
             appState: 'initial', // initial || groupDetail || addCentre || detail
             pendingEdit: false,
             detailEdit: false,
@@ -122,6 +123,12 @@
                     'CCIsLeadCentre'
                 ];
                 var estabs = [];
+
+                this.tooFewCentresError = this.centresInGroup.length < 2;
+
+                if (this.tooFewCentresError) {
+                    return;
+                }
 
                 this.isProcessing = true;
 
@@ -258,6 +265,8 @@
                 var self = this;
                 this.urnError = false;
                 this.apiErrors = [];
+                this.tooFewCentresError = false;
+
                 if (isNaN(this.searchUrn) || this.searchUrn === '') {
                     this.urnError = true;
                     return;
@@ -307,6 +316,7 @@
                 this.searchUrn = urn;
                 this.pendingEdit = true;
                 this.apiErrors = [];
+                this.tooFewCentresError = false;
                 this.pendingEstab = this.centresInGroup.filter(function (estab) {
                     if (urn === estab.urn) {
                         return estab;
@@ -326,6 +336,7 @@
             },
             removeJoiningEstab: function (urn) {
                 this.apiErrors = [];
+                this.tooFewCentresError = false;
                 var pos = this.centresInGroup.map(function (estab) {
                     return estab.urn;
                 }).indexOf(urn);
