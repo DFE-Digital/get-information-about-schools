@@ -23,7 +23,7 @@ namespace Edubase.Common.Reflection
             Type type = null;
             if (item is Type) type = (Type)item;
             else type = item.GetType();
-            var propInfo = type.GetProperty(propertyName);
+            var propInfo = type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
             var val = propInfo?.GetValue(item, null);
             return val;
         }

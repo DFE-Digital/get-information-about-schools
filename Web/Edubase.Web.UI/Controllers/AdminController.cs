@@ -61,5 +61,8 @@ namespace Edubase.Web.UI.Controllers
 
         public async Task FlushErrors() => await DependencyResolver.Current
                 .GetService<IMessageLoggingService>().FlushAsync();
+
+        
+
     }
 }
