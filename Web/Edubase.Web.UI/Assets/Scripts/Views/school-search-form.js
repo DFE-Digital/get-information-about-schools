@@ -250,7 +250,7 @@
             }
 
             if (suggestion.hasOwnProperty('groupType')) {
-                var tmpl = '<div><a href="javascript:">' + suggestion[field] + '</span><span class="estab-status">' + suggestion.groupType + '</span></a></div>';
+                var tmpl = '<div><a href="javascript:"><span class="group-type-name">' + suggestion.groupType + '</span><span class="estab-name">' + suggestion[field] + '</span></a></div>';
             }
 
             return tmpl;
