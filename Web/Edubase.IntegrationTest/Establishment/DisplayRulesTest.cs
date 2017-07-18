@@ -6,11 +6,13 @@ using Edubase.Services.Enums;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
+using Edubase.Services.Security;
 using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Security;
 using LinqToExcel;
 using LinqToExcel.Attributes;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
@@ -19,6 +21,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,15 +49,20 @@ namespace Edubase.IntegrationTest.Establishment
         public int TypeId { get; set; }
         public string TypeName { get; set; }
         public string FieldName { get; set; }
+        public string FlagDetail { get; set; }
+        public string FailDescription { get; set; }
     }
 
     [TestFixture]
     public class DisplayRulesTest
     {
-        [Test, TestCase("")] // anon and then BO user
+        [Test, TestCase(""), TestCase("3601308")] // anon and then BO user
         public async Task CheckDisplayRules(string saUserId)
         {
-            var p = new GenericPrincipal(new GenericIdentity(""), new string[0]);
+            var claims = new List<Claim>() { new Claim(EduClaimTypes.UserId, saUserId) };
+            var id = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
+            var p = new ClaimsPrincipal(id);
+            
             var client = new Services.HttpClientWrapper(new HttpClient(new HttpClientHandler { UseCookies = false}) { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) });
             var svc = new EstablishmentReadApiService(client, new CachedLookupService(new LookupApiService(client, new SecurityApiService(client)), new CacheAccessor(new JsonConverterCollection() { new DbGeographyConverter() })));
 
@@ -95,15 +103,55 @@ namespace Edubase.IntegrationTest.Establishment
                         foreach (var nvp in item.Urn2PolicyMap)
                         {
                             var yayNay = ReflectionHelper.GetPropertyValue<bool>(nvp.Value, fieldName);
-                            if (flag.Equals("Yes", StringComparison.OrdinalIgnoreCase) /*flag.IndexOf("yes", StringComparison.OrdinalIgnoreCase) > -1*/ && yayNay == false)
+                            if (flag.Equals("Yes", StringComparison.OrdinalIgnoreCase) && yayNay == false)
                             {
                                 report.Add(new AnalysisResult
                                 {
                                     FieldName = fieldName,
                                     LayoutId = item.LayoutId,
-                                    TypeId= item.TypeId,
-                                    SampleUrn=nvp.Key,
-                                    TypeName= ((eLookupEstablishmentType)item.TypeId).ToString()
+                                    TypeId = item.TypeId,
+                                    SampleUrn = nvp.Key,
+                                    TypeName = ((eLookupEstablishmentType)item.TypeId).ToString(),
+                                    FlagDetail = flag,
+                                    FailDescription = "Rule specifies 'Yes' but policy flag says FALSE or 'no'"
+                                });
+                            }else if (flag.Equals("No", StringComparison.OrdinalIgnoreCase) && yayNay == true)
+                            {
+                                report.Add(new AnalysisResult
+                                {
+                                    FieldName = fieldName,
+                                    LayoutId = item.LayoutId,
+                                    TypeId = item.TypeId,
+                                    SampleUrn = nvp.Key,
+                                    TypeName = ((eLookupEstablishmentType)item.TypeId).ToString(),
+                                    FlagDetail = flag,
+                                    FailDescription = "Rule specifies 'No' but policy flag says TRUE or 'yes'"
+                                });
+                            }
+                            else if (saUserId.Clean() != null && flag.Equals("Yes not public", StringComparison.OrdinalIgnoreCase) && yayNay == false)
+                            {
+                                report.Add(new AnalysisResult
+                                {
+                                    FieldName = fieldName,
+                                    LayoutId = item.LayoutId,
+                                    TypeId = item.TypeId,
+                                    SampleUrn = nvp.Key,
+                                    TypeName = ((eLookupEstablishmentType)item.TypeId).ToString(),
+                                    FlagDetail = flag,
+                                    FailDescription = $"User is {saUserId}.  Field flag should be TRUE."
+                                });
+                            }
+                            else if (saUserId.Clean() == null && flag.Equals("Yes not public", StringComparison.OrdinalIgnoreCase) && yayNay == true)
+                            {
+                                report.Add(new AnalysisResult
+                                {
+                                    FieldName = fieldName,
+                                    LayoutId = item.LayoutId,
+                                    TypeId = item.TypeId,
+                                    SampleUrn = nvp.Key,
+                                    TypeName = ((eLookupEstablishmentType)item.TypeId).ToString(),
+                                    FlagDetail = flag,
+                                    FailDescription = "User is ANON.  Field flag should be FALSE."
                                 });
                             }
                         }
@@ -113,8 +161,8 @@ namespace Edubase.IntegrationTest.Establishment
             }
 
 
-            var lines = report.Select(x => $"{x.FieldName},{x.LayoutId},{x.TypeId},{x.TypeName},{x.SampleUrn}");
-            File.WriteAllLines("c:\\temp\\display policy report.csv", lines);
+            var lines = report.Select(x => $"{x.FieldName},{x.LayoutId},{x.TypeId},{x.TypeName},{x.SampleUrn},{x.FlagDetail},{x.FailDescription}");
+            File.WriteAllLines($"c:\\temp\\display policy report-{saUserId.Clean() ?? "anon"}.csv", new[] { "FieldName,LayoutId,EstabTypeId,TypeName,ExampleUrn,FlagDetail (from rule s/s),Failure description" }.Concat(lines));
 
 
         }
