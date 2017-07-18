@@ -4,6 +4,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models.Establishments
 {
+
     public class CreateChildrensCentreViewModel : CreateEstablishmentViewModel
     {
         [Display(Name = "Open date (required tp save record)")]
@@ -18,10 +19,10 @@ namespace Edubase.Web.UI.Models.Establishments
         [Display(Name = "Manager last name (required to save record)")]
         public string ManagerLastName { get; set; }
 
-        [Display(Name = "Manager email (required to save record)")]
-        public string ManagerEmail { get; set; }
+        [Display(Name = "Centre email (required to save record)")]
+        public string CentreEmail { get; set; }
 
-        [Display(Name = "Telephone (required to save record)")]
+        [Display(Name = "Centre telephone (required to save record)")]
         public string Telephone { get; set; }
 
         [Display(Name = "Operational hours (required to save record)")]
@@ -45,10 +46,14 @@ namespace Edubase.Web.UI.Models.Establishments
         [Display(Name = "Establishment status")]
         public int? EstablishmentStatusId { get; set; }
 
+        [Display(Name = "Phase (required to save record)")]
+        public int? PhaseId { get; set; }
+
         public IEnumerable<SelectListItem> OperationalHoursOptions { get; set; }
         public IEnumerable<SelectListItem> GovernanceOptions { get; set; }
         public IEnumerable<SelectListItem> DisadvantagedAreaOptions { get; set; }
         public IEnumerable<SelectListItem> DirectProvisionOfEarlyYearsOptions { get; set; }
         public IEnumerable<SelectListItem> EstablishmentStatusOptions { get; set; }
+        public IEnumerable<SelectListItem> Phases { get; set; }
     }
 }

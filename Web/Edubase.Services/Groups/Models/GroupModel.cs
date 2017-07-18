@@ -30,5 +30,8 @@ namespace Edubase.Services.Groups.Models
         public string GroupId { get; set; }
         
         public int? LocalAuthorityId { get; set; }
+
+        public bool ConfirmationUpToDateGovernanceRequired { get; set; }
+        public DateTime? ConfirmationUpToDateGovernance_LastConfirmationDate { get; set; }
     }
 }

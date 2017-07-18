@@ -12,8 +12,8 @@ namespace Edubase.Web.UI.Models.Establishments
         public string Name { get; set; }
         public bool? GenerateEstabNumber { get; set; }
         public string EstablishmentNumber { get; set; }
-        public int LocalAuthorityId { get; set; }
-        public int EducationPhaseId { get; set; }
+        public int? LocalAuthorityId { get; set; }
+        public int? EducationPhaseId { get; set; }
         public int EstablishmentTypeId { get; set; }
         
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }

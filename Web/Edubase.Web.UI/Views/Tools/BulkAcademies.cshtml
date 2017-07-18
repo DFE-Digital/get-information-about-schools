@@ -47,6 +47,7 @@
                         <li class="error-message" v-show="apiValidationError!==''"><a href="#establishment-urn">{{apiValidationError}}</a></li>
                         <li class="error-message" v-show="dateError"><a href="#academy-open-date">Opening date not specified</a></li>
                         <li class="error-message" v-show="noAcademyError"><a href="#academy-type">Please add an academy</a></li>
+                        <li class="error-message" v-show="academyUnselectedError"><a href="#academy-type">Please select an establishment type</a></li>
                     </ul>
                 </div>
 
@@ -86,7 +87,7 @@
                             New establishment type
                         </label>
                         <span class="error-message" v-show="academyUnselectedError">Please select establishment type</span>
-                        <select class="form-control" id="academy-type" v-model="pendingEstab.academyType"></select>
+                        <select class="form-control" id="academy-type" v-model="pendingEstab.academyType" autocomplete="off"></select>
                     </div>
                     <div v-bind:class="['form-group','range-group',  openDateError? 'error': '']" id="academy-open-date">
                         <fieldset>
@@ -110,8 +111,8 @@
                     </div>
                     <div class="button-row">
                         <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="!pendingEdit">Add</button>
-                        <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="pendingEdit">Save</button>
-                        <a class="button mobile-full-width button-grey" id="add-item-to-list" v-on:click.prevent="cancelAddEdit">Cancel</a>
+                        <button class="button mobile-full-width" id="save-item-to-list" v-on:click.prevent="addEstablishment" v-show="pendingEdit">Save</button>
+                        <a class="button mobile-full-width button-grey" id="cancel-add-item-to-list" v-on:click.prevent="cancelAddEdit">Cancel</a>
                     </div>
 
                 </div>
@@ -266,9 +267,9 @@
         ];
     </script>
 
-    @*<script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>*@
+    <script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>
     
-    <script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>
+    @*<script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>*@
 
 }
 

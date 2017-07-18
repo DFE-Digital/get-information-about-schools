@@ -26,5 +26,7 @@ namespace Edubase.Services.Texuna.Groups
             if (dto.IsNewEntity) return (await _httpClient.PostAsync<ValidationEnvelopeDto>($"group/validate", dto, principal)).GetResponse();
             else return (await _httpClient.PutAsync<ValidationEnvelopeDto>($"group/validate", dto, principal)).Response;
         }
+
+        public async Task<ApiResponse> ConfirmGovernanceAsync(int uid, IPrincipal principal) => await _httpClient.PostAsync($"group/{uid}/governance/confirm", null, principal);
     }
 }

@@ -1,6 +1,7 @@
 // Tables
 // ==========================================================================
 
+$changeTableThPadding: 18px;
 
 table {
   border-collapse: collapse;
@@ -355,13 +356,10 @@ table {
     }
   }
 
-    th 
-    {
-        a 
-        {
+    th {
+        a {
             text-decoration: none;
-            &:hover 
-            {
+            &:hover {
                 text-decoration: underline;
             }
             &:focus {
@@ -374,13 +372,11 @@ table {
             position: relative;
         }
 
-        a.js-sort
-        {
+        a.js-sort {
             display:inline-block;
             padding-right:11px;
         }
-        a.js-sort:after
-        {
+        a.js-sort:after  {
             content:'';
             position:absolute;
             right:0;
@@ -773,7 +769,6 @@ table {
         td {
             border-bottom: 4px solid $black;
         }
-
     }
 }
 
@@ -846,5 +841,63 @@ p.table-caption {
 .establishment-changes {
     thead th {
         padding-top: 0;
+    }
+}
+
+.change-history {
+    table-layout: fixed;
+
+    .key-value-list {
+        margin-bottom: 0;
+        dt {
+            font-weight: bold;
+            margin-right: 4px;
+            margin-top: 1px;
+            &:after {
+                content: ":";
+            }
+        }
+        dd {
+            word-wrap: break-word;
+        }
+    }
+
+    .cell-edate {
+        width: 10%;
+        padding-top: $changeTableThPadding;
+    }
+
+    .cell-requesttype {
+        width: 11%;
+        padding-top: $changeTableThPadding;
+    }
+    .cell-urn {
+        width: 7%;      
+    }
+    .cell-estab {
+        width: 16%;
+        padding-top: $changeTableThPadding;
+    }
+    .cell-change {
+        width: 44%;
+        padding-top: $changeTableThPadding;
+    }
+    .cell-suggested {
+        width: 12%;
+        padding-top: $changeTableThPadding;
+    }
+
+    &.establishment-changes .cell-urn {
+        padding-top: $changeTableThPadding;
+    }
+    .cell-updatedfield, 
+    .cell-oldvalue,
+    .cell-newvalue,
+    .cell-suggested {
+        padding-top: $changeTableThPadding;
+    }
+
+    tbody td {
+        word-wrap: break-word;
     }
 }
