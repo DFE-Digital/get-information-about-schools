@@ -36,6 +36,8 @@
             padding: $gutter-one-quarter;
             text-decoration: none;
             color: $black;
+            overflow: hidden;
+            position: relative;
         }
 
         &:hover, a:hover {
@@ -55,6 +57,22 @@
         font-size: 14px;
         display: inline-block;
         color: $grey-2;
+    }
+
+    .group-type-name {
+        float: right;
+        font-size: 14px;
+        display: inline-block;
+        color: $grey-2;
+        
+        + .estab-name {
+            float: left;
+            max-width: 70%;
+
+             @include media(mobile) {
+                max-width: 50%;
+            }
+        }
     }
 }
 
