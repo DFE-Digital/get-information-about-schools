@@ -136,10 +136,16 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("This field is mandatory")
                     .WithSummaryMessage("Please enter a Group ID")
                     .When(x => x.SaveGroupDetail)
+                    
                     .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId: groupId, existingGroupUId: model.GroupUId)))
                     .WithMessage("Group ID already exists. Enter a different group ID.")
                     .When(x => x.GroupTypeMode.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
 
+                RuleFor(x => x.GroupId)
+                    .Must(x => !string.IsNullOrWhiteSpace(x))
+                    .WithMessage("This field is mandatory")
+                    .WithSummaryMessage("Please enter a Group ID")
+                    .When(x => x.GroupTypeMode == eGroupTypeMode.Sponsor, ApplyConditionTo.CurrentValidator);
             });
         }
 

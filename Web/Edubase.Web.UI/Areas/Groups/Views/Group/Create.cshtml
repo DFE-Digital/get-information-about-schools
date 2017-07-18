@@ -159,8 +159,9 @@
 
                 @if (Model.GroupType.Equals(L.SchoolSponsor) || (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust)))
                 {
-                    <div class="form-group">
+                    <div class="form-group  @Html.ValidationCssClassFor(x=>x.GroupId)">
                         <label for="groupid" class="form-label">Group ID</label>
+                        @Html.ValidationMessageFor(x => x.GroupId)
                         @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
                     </div>
                 }

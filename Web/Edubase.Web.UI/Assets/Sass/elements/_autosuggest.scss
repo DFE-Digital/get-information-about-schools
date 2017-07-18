@@ -30,6 +30,8 @@
     box-shadow:0 3px 2px $grey-2;
     font-size: 16px;
 
+    display: block !important;
+
     .tt-suggestion {
         a {
             display: block;
@@ -59,20 +61,30 @@
         color: $grey-2;
     }
 
+    .group-name {
+        display: inline-block;
+        @include media(mobile) {
+            padding-bottom: 18px;
+        }
+
+    }
+
     .group-type-name {
         float: right;
         font-size: 14px;
         display: inline-block;
         color: $grey-2;
         
-        + .estab-name {
-            float: left;
-            max-width: 70%;
-
-             @include media(mobile) {
-                max-width: 50%;
-            }
+        @include media(mobile) {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            max-width: 100%;
         }
+        
+        @include media(tablet) {
+            max-width: 35%;
+        }    
     }
 }
 
