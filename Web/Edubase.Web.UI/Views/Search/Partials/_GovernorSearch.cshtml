@@ -27,11 +27,11 @@
                 <div class="expanding-search-field" id="searchtype-gov-namerole-ref">
                     <div class="edubase-search-element">
                         <label for="forename" class="form-label">First name</label>
-                        @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control auto-clear"})
+                        @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control"})
                     </div>
                     <div class="edubase-search-element">
                         <label for="surname" class="form-label">Last name</label>
-                        @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new {maxlength = 120, id = "surname", @class = "form-control auto-clear"})
+                        @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new {maxlength = 120, id = "surname", @class = "form-control"})
                     </div>
 
                     <div class="form-group">
@@ -84,7 +84,7 @@
                                     <span class="visuallyhidden">What does GID mean?</span>
                                 </a>
                             </label>
-                            @Html.TextBoxFor(x => x.GovernorSearchModel.Gid, new { maxlength = 10, @class = "form-control auto-clear" })
+                            @Html.TextBoxFor(x => x.GovernorSearchModel.Gid, new { maxlength = 10, @class = "form-control" })
                         </div>
 
                         <div class="form-group">

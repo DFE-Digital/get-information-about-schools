@@ -249,6 +249,10 @@
                 tmpl = '<div><a href="javascript:"><span class="estab-name">' + suggestion[field] + '</span><span class="estab-status">Closed</span></a></div>';
             }
 
+            if (suggestion.hasOwnProperty('groupType')) {
+                var tmpl = '<div><a href="javascript:"><span class="group-type-name">' + suggestion.groupType + '</span><span class="estab-name">' + suggestion[field] + '</span></a></div>';
+            }
+
             return tmpl;
         };
 
