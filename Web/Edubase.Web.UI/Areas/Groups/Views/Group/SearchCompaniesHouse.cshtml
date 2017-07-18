@@ -21,8 +21,9 @@
     <div class="grid-row">
         <div class="column-full">                      
             <h1 class="heading-xlarge">
-                Create a new Multi academy trust or Single academy trust
+                Create an academy trust
             </h1>
+            To create an academy trust record select the company record from Companies House.
 
             @Html.ValidationSummary(null, new { @class = "error-summary" })
 
@@ -31,9 +32,13 @@
     </div>
     <div class="grid-row">
         <div class="column-two-thirds">
+            
+            <h2 class="heading-medium">
+                Add company
+            </h2>
 
             <div class="form-group inline-with-button">
-                <label class="form-label">Enter Companies House number OR Company name</label>
+                <label class="form-label">Enter the Companies House name or number</label>
 
                 @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control "})
                 <button type="submit" class="button button-next">Search</button>
@@ -42,7 +47,7 @@
         </div>
     </div>
 
-    if (Model.Results != null)
+    if (Model.Results != null && !Model.NotFound)
     {
         <div class="grid-row">
             <div class="column-two-thirds">
