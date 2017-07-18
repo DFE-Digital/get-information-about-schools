@@ -95,7 +95,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, 20, User);
             }
 
-            await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value);
+            await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value, true);
             
             return View(viewModel);
         }
