@@ -26,6 +26,7 @@ namespace Edubase.Services
         private readonly HttpClient _httpClient;
         private readonly JsonMediaTypeFormatter _formatter = new JsonMediaTypeFormatter();
         private const string HEADER_SA_USER_ID = "sa_user_id";
+        private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
 
         private string ApiUsername => ConfigurationManager.AppSettings["api:Username"];
         private string ApiPassword => ConfigurationManager.AppSettings["api:Password"];
@@ -47,7 +48,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: GET {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
+                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync<TResponse>(result, throwOnNotFound);
             }
@@ -57,7 +58,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
+                var requestMessage = await CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync(result);
             }
@@ -67,7 +68,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: DELETE {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
+                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
                 var result = await SendAsync(requestMessage);
                 await ParseHttpResponseMessageAsync(result);
             }
@@ -79,7 +80,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
+                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync<T>(result);
             }
@@ -89,7 +90,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
+                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync(result);
             }
@@ -103,7 +104,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
+                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync<T>(result);
             }
@@ -113,7 +114,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
+                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync(result);
             }
@@ -124,7 +125,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal, payload);
+                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, payload);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
             }
@@ -135,7 +136,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Put, uri, principal, payload);
+                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, payload);
                 var result = await SendAsync(requestMessage);
                 return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
             }
@@ -157,7 +158,7 @@ namespace Edubase.Services
         {
             using (MiniProfiler.Current.Step($"TEXAPI: POST (multipart) {uri}"))
             {
-                var requestMessage = CreateHttpRequestMessage(HttpMethod.Post, uri, principal);
+                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal);
 
                 var content = new MultipartContent("form-data", Guid.NewGuid().ToString());
 
@@ -232,7 +233,7 @@ namespace Edubase.Services
             {
                 var json = await message.Content.ReadAsStringAsync();
                 var errors = ParseApiErrors(json);
-                Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException("The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. " + json));
+                Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException("The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. " + json, GetRequestJsonBody(message.RequestMessage)));
                 response.Fail(errors);
             }
 
@@ -257,7 +258,7 @@ namespace Edubase.Services
                 if (response.ValidationEnvelope == null)
                 {
                     var errors = ParseApiErrors(json);
-                    Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException("The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. " + json));
+                    Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException("The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. " + json, GetRequestJsonBody(message.RequestMessage)));
                     response.Fail(errors);
                 }
             }
@@ -292,7 +293,7 @@ namespace Edubase.Services
                         AssertJsonContent(message);
                         break;
                     case HttpStatusCode.InternalServerError:
-                        throw new TexunaApiSystemException($"The API returned an 'Internal Server Error'. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+                        throw new TexunaApiSystemException($"The API returned an 'Internal Server Error'. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
                     case HttpStatusCode.NotFound:
                         if (throwOnNotFound)
                             throw new TexunaApiNotFoundException($"The API returned 404 Not Found. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
@@ -300,7 +301,7 @@ namespace Edubase.Services
                     case HttpStatusCode.Forbidden:
                         throw new EduSecurityException("The current principal does not have permission to call this API");
                     default:
-                        throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+                        throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
                 }
             }
         }
@@ -310,7 +311,7 @@ namespace Edubase.Services
             if (message?.Content?.Headers?.ContentType?.MediaType != "application/json")
             {
                 throw new TexunaApiSystemException(
-                    $"The API returned an invalid content type: '{message?.Content?.Headers?.ContentType?.MediaType}' (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+                    $"The API returned an invalid content type: '{message?.Content?.Headers?.ContentType?.MediaType}' (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
             }
         }
 
@@ -350,17 +351,25 @@ namespace Edubase.Services
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
             {
                 throw new TexunaApiSystemException(
-                    $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})");
+                    $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})", GetRequestJsonBody(requestMessage));
             }
         }
 
-        private HttpRequestMessage CreateHttpRequestMessage(HttpMethod method, string uri, IPrincipal principal, object requestBodyData = null)
+        private async Task<HttpRequestMessage> CreateHttpRequestMessage(HttpMethod method, string uri, IPrincipal principal, object requestBodyData = null)
         {
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(HEADER_SA_USER_ID, principal.GetUserId() ?? string.Empty);
-            if (requestBodyData != null) requestMessage.Content = new ObjectContent<object>(requestBodyData, _formatter);
+            if (requestBodyData != null)
+            {
+                requestMessage.Content = new ObjectContent<object>(requestBodyData, _formatter);
+                requestMessage.Properties[REQ_BODY_JSON_PAYLOAD] = await requestMessage.Content.ReadAsStringAsync();
+            }
+            else requestMessage.Properties[REQ_BODY_JSON_PAYLOAD] = string.Empty;
+
             return requestMessage;
         }
+
+        private string GetRequestJsonBody(HttpRequestMessage msg) => msg != null && msg.Properties.ContainsKey(REQ_BODY_JSON_PAYLOAD) ? msg.Properties[REQ_BODY_JSON_PAYLOAD]?.ToString() ?? string.Empty : string.Empty;
 
         #endregion
     }

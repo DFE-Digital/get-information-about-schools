@@ -29,16 +29,6 @@ namespace Edubase.Web.UI.Filters
 
                 filterContext.ExceptionHandled = true;
             }
-            else if (filterContext.Exception.GetBaseException() is NotImplementedException || filterContext.Exception.GetBaseException() is DependencyResolutionException) // TODO: KHD: For removal post integration
-            {
-                filterContext.Result = new ViewResult
-                {
-                    ViewName = "~/Views/Shared/DomainError.cshtml",
-                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "Functionality has not been implemented yet. Underlying error: " + filterContext.Exception.GetBaseException().Message } }
-                };
-
-                filterContext.ExceptionHandled = true;
-            }
             else // unhandled/unexpected exception; log it and tell the user.
             {
                 var msg = Log(filterContext.HttpContext, filterContext.Exception);
@@ -49,6 +39,16 @@ namespace Edubase.Web.UI.Filters
                     {
                         ViewName = "~/Views/Shared/Error.cshtml",
                         ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id }
+                    };
+
+                    filterContext.ExceptionHandled = true;
+                }
+                else // show full technical error detail
+                {
+                    filterContext.Result = new ViewResult
+                    {
+                        ViewName = "~/Views/Shared/FullErrorDetail.cshtml",
+                        ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id }
                     };
 
                     filterContext.ExceptionHandled = true;
@@ -79,7 +79,8 @@ namespace Edubase.Web.UI.Filters
                 Url = ctx?.Request?.Url.ToString(),
                 UserAgent = ctx?.Request?.UserAgent,
                 UserId = userId,
-                UserName = userName
+                UserName = userName,
+                RequestJsonBody = (exception as TexunaApiSystemException)?.ApiRequestJsonPayload ?? string.Empty
             };
 
             DependencyResolver.Current.GetService<IMessageLoggingService>().Push(msg);

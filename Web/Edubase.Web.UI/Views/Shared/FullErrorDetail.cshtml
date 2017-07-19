@@ -1,0 +1,36 @@
+﻿@model Exception
+
+@{
+    Layout = "../dfe/layouts/template.cshtml";
+    ViewBag.Title = "Edubase";
+    ViewBag.pageDescription = "";
+    ViewBag.pageClass = "error-page view-logs";
+    ViewBag.suppressHomeLink = true;
+}
+
+<h1 class="text-danger heading-medium">Error</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+@if (ViewBag.ErrorCode != null)
+{
+    <p style="color:#ddd;">Error code: @ViewBag.ErrorCode</p>
+}
+
+<hr />
+<h1 class="heading-medium">Details</h1>
+<table>
+    <tr>
+        <td class="bold-xsmall" style="width:100px;">Message</td>
+        <td>@Model.Message</td>
+    </tr>
+    <tr>
+        <td class="bold-xsmall">Stack trace</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="plain">@FormatHelpers.HtmlizeNewLines(Model.ToString())</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:right;"><a href="/Admin/LogDetail/@ViewBag.ErrorCode" target="_blank">View full error report</a></td>
+    </tr>
+</table>
+
