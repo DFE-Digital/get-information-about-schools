@@ -35,6 +35,7 @@
             }*@
 
             <h1 class="heading-xlarge">Enter academy trust details</h1> 
+            Add the details of the new academy trust.
             @if (Model.TrustExists == true)
             {
                 <div class="error-summary">
@@ -49,11 +50,11 @@
             {
                 Html.ValidationSummary(null, new {@class = "error-summary"});
             }
+           
         </div>
     </div>
     <div class="grid-row">
         <div class="column-two-thirds">
-            Add the details of the new academy trust.
             <div id="company" class="@((Model.TrustExists) ? "error": "")">
                 <h2 class="bold-small">Selected company</h2>
                 
@@ -75,7 +76,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">Incorporated:</th>
-                                <td>@(Model.OpenDate?.ToString("dd MMMM yyyy"))</td>
+                                <td>@(Model.OpenDate?.ToString("dd/MM/yyyy"))</td>
                             </tr>
                             <tr>
                                 <th scope="row">Address:</th>
@@ -97,6 +98,7 @@
 
         <div class="column-half">
             <div class="single-group">
+                <h2 class="bold-small">Trust details</h2>
                 <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
                     <label for="TypeId" class="form-label bold-small">Trust type</label>
                     @Html.ValidationMessageFor(x => x.TypeId)

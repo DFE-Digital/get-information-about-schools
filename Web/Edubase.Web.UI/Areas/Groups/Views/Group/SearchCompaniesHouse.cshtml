@@ -54,7 +54,7 @@
                 <label class="form-label">Enter the Companies House name or number</label>
 
                 @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control "})
-                <button type="submit" class="button button-next">Search</button>
+                <button type="submit" class="button">Find</button>
             </div>
 
         </div>
@@ -112,4 +112,3 @@
 
 
 }
-@Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
