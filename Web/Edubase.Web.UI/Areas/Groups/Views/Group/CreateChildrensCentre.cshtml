@@ -138,6 +138,14 @@
                         </li>
                     </ul>
                 </div>
+                <div class="error-summary" v-show="tooFewCentresError">
+                    <h2 class="error-summary-heading heading-medium">Please add more centres to the {{groupTypeName}}</h2>
+                    <ul class="error-summary=list">
+                        <li class="error-message">
+                            You need to add at least two centres
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="column-full">
                 <p>Add two or more children's centres to create a children's centre {{groupTypeName}} 
@@ -208,7 +216,7 @@
                 </div>
                 <div class="button-row">
                     
-                    <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true">&laquo; Go back</a>
+                    <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true,tooFewCentresError=false">&laquo; Go back</a>
                     @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                     {
                         <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave" />

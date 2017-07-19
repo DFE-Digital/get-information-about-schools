@@ -30,6 +30,7 @@ namespace Edubase.Data.Entity
         public eLevel Level { get; set; }
         public string UserName { get; set; }
         public string UserId { get; set; }
+        public string RequestJsonBody { get; set; }
 
         /// <summary>
         /// Initialises with UtcNow as the partition key and DateUtc field, and generates a new Guid for the RowKey

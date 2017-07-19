@@ -28,6 +28,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> LogDetail(string id)
         {
             var message = await new LogMessageReadService().GetAsync(id);
+            if (message == null) return Content("Log message not found.  Please note it may take up to 30 seconds for a log message to become available at this URL.", "text/plain");
             return View(message);
         }
         
@@ -61,5 +62,8 @@ namespace Edubase.Web.UI.Controllers
 
         public async Task FlushErrors() => await DependencyResolver.Current
                 .GetService<IMessageLoggingService>().FlushAsync();
+
+        
+
     }
 }

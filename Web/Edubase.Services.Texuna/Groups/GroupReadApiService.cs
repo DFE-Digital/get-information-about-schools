@@ -91,6 +91,19 @@ namespace Edubase.Services.Texuna.Groups
         }
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
-            => (await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}", principal)).GetResponse();
+        {
+            var suggestions = (await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}",
+                principal)).GetResponse();
+
+            foreach (var suggestion in suggestions)
+            {
+                if (!suggestions.Any(s => string.Equals(s.Name, suggestion.Name) && s.GroupUId != suggestion.GroupUId))
+                {
+                    suggestion.GroupType = "";
+                }
+            }
+
+            return suggestions;
+        }
     }
 }

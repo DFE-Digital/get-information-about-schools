@@ -6,5 +6,6 @@
         public int GroupUId { get; set; }
         public string Name { get; set; }
         public string Text => Name;
+        public string GroupType { get; set; }
     }
 }

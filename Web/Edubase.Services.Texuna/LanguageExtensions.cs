@@ -20,5 +20,7 @@ namespace Edubase.Services.Texuna
             if (str != null) return $"{name}={str}&";
             else return string.Empty;
         }
+
+
     }
 }

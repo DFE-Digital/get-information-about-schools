@@ -97,6 +97,7 @@ namespace Edubase.Services.Establishments.Models
 
         public string Address_PostCode { get; set; }
 
+        public string Address_UPRN { get; set; }
 
         #region Alt Address
 
@@ -109,7 +110,6 @@ namespace Edubase.Services.Establishments.Models
         public string AltTown { get; set; }
         public int? AltCountyId { get; set; }
         public string AltPostCode { get; set; }
-
         #endregion
 
 
