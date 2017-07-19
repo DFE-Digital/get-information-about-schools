@@ -31,6 +31,7 @@ using System.Web.Mvc;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Validation;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
+using Edubase.Services.Texuna.Lookup;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -87,12 +88,28 @@ namespace Edubase.Web.UI.Controllers
             _securityService = securityService;
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
-        public async Task<ActionResult> EditDetails(int? id)
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}", Name = "EditEstablishmentDetail")]
+        public async Task<ActionResult> EditDetails(int? id, string addrtok)
         {
             if (!id.HasValue) return HttpNotFound();
             ViewModel viewModel = await CreateEditViewModel(id);
             viewModel.SelectedTab = "details";
+
+            if (addrtok.Clean() != null)
+            {
+                var replaceAddressViewModel = UriHelper.TryDeserializeUrlToken<ReplaceAddressViewModel>(addrtok);
+                if (replaceAddressViewModel != null)
+                {
+                    viewModel.Address_CityOrTown = replaceAddressViewModel.Town;
+                    viewModel.Address_CountryId = replaceAddressViewModel.CountryId;
+                    viewModel.Address_CountyId = replaceAddressViewModel.CountyId;
+                    viewModel.Address_Line1 = replaceAddressViewModel.Street;
+                    viewModel.Address_Locality = replaceAddressViewModel.Locality;
+                    viewModel.Address_Line3 = replaceAddressViewModel.Address3;
+                    viewModel.Address_PostCode = replaceAddressViewModel.PostCode;
+                    viewModel.Address_UPRN = replaceAddressViewModel.SelectedUPRN;
+                }
+            }
             return View(viewModel);
         }
 
@@ -172,11 +189,35 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Address", Name = "ReplaceEstablishmentAddress")]
         public async Task<ActionResult> ReplaceEstablishmentAddressAsync(int urn)
         {
-            const int UK = 90;
-            var viewModel = new ReplaceAddressViewModel
+            var viewModel = new ReplaceAddressViewModel((await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(Constants.COUNTRY_ID_UK));
+            viewModel.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList();
+            await PopulateEstablishmentPageViewModel(viewModel, urn, "details");
+            return View("ReplaceAddress", viewModel);
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Address", Name = "ReplaceEstablishmentAddressPost")]
+        public async Task<ActionResult> ReplaceEstablishmentAddressPostAsync(int urn, ReplaceAddressViewModel viewModel)
+        {
+            ModelState.Clear();
+
+            if (viewModel.CountryId == Constants.COUNTRY_ID_UK && viewModel.PostCode.Clean() != null && viewModel.ActionName == "find-address")
             {
-                Countries = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(UK)
-            };
+                viewModel.LookupAddresses = await _establishmentReadService.GetAddressesByPostCodeAsync(viewModel.PostCode, User);
+                viewModel.Step = "selectaddress";
+            }
+            else if (viewModel.ActionName == "address-selected" && viewModel.SelectedUPRN != null)
+            {
+                var address = viewModel.LookupAddresses.FirstOrDefault(x => x.UPRN == viewModel.SelectedUPRN);
+                viewModel.Street = address.Street;
+                viewModel.Town = address.Town;
+                viewModel.Step = "editaddress";
+            }
+            else if (viewModel.ActionName == "replace-address")
+            {
+                var payload = UriHelper.SerializeToUrlToken(viewModel);
+                return RedirectToRoute("EditEstablishmentDetail", new { id = urn, addrtok = payload });
+            }
+
             await PopulateEstablishmentPageViewModel(viewModel, urn, "details");
             return View("ReplaceAddress", viewModel);
         }

@@ -69,8 +69,11 @@
                     <div class="form-group">
                         <label for="school-postcode" class="form-label">Post code</label>
                         @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control postcode-field", disabled = "disabled" })
+                        @Html.HiddenFor(x => x.Address_PostCode)
                         @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn }, new { @class = "replace-address" })
                     </div>
+
+                    @Html.HiddenFor(x => x.Address_UPRN)
 
                     @if (Model.EditPolicy.AltSiteName.GetValueOrDefault(true))
                     {

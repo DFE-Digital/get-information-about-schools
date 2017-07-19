@@ -3,8 +3,11 @@
     Layout = "_EditLayoutPage.cshtml";
 }
 
-@using (Html.BeginRouteForm("ReplaceEstablishmentAddress", FormMethod.Get))
+@using (Html.BeginRouteForm("ReplaceEstablishmentAddressPost", FormMethod.Post))
 {
+    @Html.HiddenFor(x => x.AddressLookupResultJsonToken)
+    @Html.HiddenFor(x => x.CountiesJsonToken)
+    @Html.HiddenFor(x => x.CountriesJsonToken)
     <div class="tab-content">
         @*<input type="submit" class="button" value="Save" />*@
         <a href="#" class="button button-grey">Cancel</a>
@@ -12,72 +15,79 @@
             
             <fieldset class="column-half">
                 <legend class="heading-small">Address details</legend>
-                <div id="address-search-step1">
-                    <div class="form-group">
-                        @Html.LabelFor(x => x.CountryId, "Country", new { @class = "form-label" })
-                        @Html.DropDownListFor(x => x.CountryId, Model.Countries, "", new { @class = "form-control" })
+                
+                @if (Model.Step == "enterpostcode")
+                {
+                    <div id="address-search-step1">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.CountryId, "Country", new { @class = "form-label" })
+                            @Html.DropDownListFor(x => x.CountryId, Model.Countries, "", new { @class = "form-control" })
+                        </div>
+
+                        <div class="form-group postcode-search">
+                            @Html.LabelFor(x => x.PostCode, "Postcode", new { @class = "form-label" })
+                            @Html.TextBoxFor(x => x.PostCode, new { @class = "form-control postcode-field" })
+                            <button type="submit" name="@nameof(Model.ActionName)" value="find-address" class="button edubase-button inline-button">Find address</button>
+                        </div>
                     </div>
-
-                    <div class="form-group postcode-search">
-                        @Html.LabelFor(x => x.PostCode, "Postcode", new { @class = "form-label" })
-                        @Html.TextBoxFor(x=>x.PostCode, new { @class = "form-control postcode-field" })
-                        <input type="submit" class="button edubase-button inline-button" value="Find address" />
+                }
+                else if (Model.Step == "selectaddress")
+                {
+                    @Html.HiddenFor(x => x.PostCode)
+                    @Html.HiddenFor(x => x.CountryId)
+                    <div id="address-search-step2">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedUPRN)">
+                            @Html.LabelFor(x => x.SelectedUPRN, "Pick an address")
+                            @Html.ValidationMessageFor(x => x.SelectedUPRN)
+                            @Html.DropDownListFor(x => x.SelectedUPRN, Model.GetLookupAddressSelectListItems(Model.SelectedUPRN), string.Empty, new { @class = "form-control" })
+                            <br /><br />
+                            <button type="submit" name="@nameof(Model.ActionName)" value="address-selected" class="button edubase-button inline-button">Submit</button>
+                        </div>
                     </div>
-                </div>
-
-                @*<div id="address-search-step2" v-show="step === 1">
-                    <div v-bind:class="['form-group ', (addressLookupError) ? 'error' : '']">
-                        <label class="form-label">Pick an address</label>
-                        <span class="error-message" v-show="addressLookupError">Sorry, something went wrong. Please try reselecting an address.</span>
-                        <select class="form-control" id="address-results" v-on:change.prevent="selectAddress">
-                            <option value="0">Please select</option>
-                        </select>
+                }
+                else if (Model.Step == "editaddress")
+                {
+                    @Html.HiddenFor(x => x.SelectedUPRN)
+                    @Html.HiddenFor(x => x.CountryId)
+                    <div id="address-search-step3">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Street, new { @class = "form-label" })
+                            @Html.TextBoxFor(x => x.Street, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Locality, new { @class = "form-label" })
+                            @Html.TextBoxFor(x => x.Locality, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Address3, new { @class = "form-label" })
+                            @Html.TextBoxFor(x => x.Address3, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Town, "City / Town", new { @class = "form-label" })
+                            @Html.TextBoxFor(x => x.Town, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.CountyId, "County", new { @class = "form-label" })
+                            @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.PostCode, "Postcode", new { @class = "form-label" })
+                            @Html.TextBoxFor(x => x.PostCode, new { @class = "form-control postcode-field", disabled = true })
+                            @Html.HiddenFor(x => x.PostCode)
+                        </div>
+                        @Html.RouteLink("Wrong postcode?", "ReplaceEstablishmentAddress", new { urn = ViewContext.RouteData.Values["urn"] }, new { @class = "replace-address" })
                     </div>
+                }
 
-                </div>*@
-
-                @*<div id="address-search-step3" v-show="step===2 || !isUk">
-                    <div class="form-group">
-                        <label class="form-label" for="estab-street">Street</label>
-                        <input type="text" id="estab-street" class="form-control" v-model="addressLineOne" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="estab-locality">Locality</label>
-                        <input type="text" id="estab-locality" class="form-control" v-model="addressLineTwo" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="estab-address3">Address 3</label>
-                        <input type="text" id="estab-address3" class="form-control" v-model="addressLineThree" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="estab-city" v-show="!isUk">City / Town</label>
-                        <label class="form-label" for="estab-city" v-show="isUk">Town</label>
-                        <input type="text" id="estab-city" class="form-control" v-model="town" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="estab-county" v-show="isUk">County</label>
-                        <label class="form-label" for="estab-county" v-show="!isUk">County / State / Region</label>
-                        <input type="text" id="estab-county" class="form-control" v-model="county" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="estab-postcode" v-show="isUk">Postcode</label>
-                        <label class="form-label" for="estab-postcode" v-show="!isUk">Postcode / Zipcode</label>
-                        <input type="text" id="estab-postcode" class="form-control postcode-field" :disabled="isUk ? 'disabled': null" v-model="postcode" />
-                    </div>
-                    <a href="#" class="font-xsmall" v-show="isUk" v-on:click.prevent="resetSearch">Wrong postcode?</a>
-
-                </div>*@
             </fieldset>
 
-            @*<div class="button-row">
-                <input type="submit" class="button" value="Save" v-show="step === 2 || !isUk" v-on:click.prevent="allDone" />
-                <a href="#" class="button button-grey" v-on:click.prevent="allDone">Cancel</a>
-            </div>*@
-
+            @if (Model.Step == "editaddress")
+            {
+                <div class="button-row">
+                    <button type="submit" name="@nameof(Model.ActionName)" value="replace-address" class="button edubase-button inline-button">Replace address</button>
+                    @*<input type="submit" class="button" value="Save" v-show="step === 2 || !isUk" v-on:click.prevent="allDone" />
+                    <a href="#" class="button button-grey" v-on:click.prevent="allDone">Cancel</a>*@
+                </div>
+            }
     </div>
 }

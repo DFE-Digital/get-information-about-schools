@@ -1,4 +1,5 @@
 ﻿using Edubase.Common;
+using Edubase.Common.Reflection;
 using Edubase.Common.Spatial;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -97,12 +98,15 @@ namespace Edubase.Services.Establishments.Models
 
         public string Address_PostCode { get; set; }
 
+        [IgnoreChanges]
         public string Address_UPRN { get; set; }
 
         #region Alt Address
 
         public string AltSiteName { get; set; }
         public int? AltCountryId { get; set; }
+
+        [IgnoreChanges]
         public string AltUPRN { get; set; }
         public string AltStreet { get; set; }
         public string AltLocality { get; set; }
@@ -279,8 +283,8 @@ namespace Edubase.Services.Establishments.Models
 
         public DateTime? CreatedUtc { get; set; }
         public DateTime? LastUpdatedUtc { get; set; }
-        public async Task<string> GetAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, await lookup.GetNameAsync("CountyId", Address_CountyId), Address_PostCode);
-        public async Task<string> GetAltAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", AltStreet, AltAddress3, AltLocality, AltTown, await lookup.GetNameAsync("CountyId", AltCountyId), AltPostCode);
+        public async Task<string> GetAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Locality, Address_Line3, Address_CityOrTown, await lookup.GetNameAsync("CountyId", Address_CountyId), Address_PostCode);
+        public async Task<string> GetAltAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", AltStreet, AltLocality, AltAddress3, AltTown, await lookup.GetNameAsync("CountyId", AltCountyId), AltPostCode);
         public string GetLAESTAB(string laCode) => string.Concat(laCode, "/", EstablishmentNumber.GetValueOrDefault().ToString("D4"));
         public string HelpdeskNotes { get; set; }
         public DateTime? HelpdeskLastUpdate { get; set; }

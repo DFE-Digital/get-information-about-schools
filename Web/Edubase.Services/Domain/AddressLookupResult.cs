@@ -4,15 +4,22 @@ namespace Edubase.Services.Domain
 {
     public class AddressLookupResult
     {
-        private readonly AddressBaseResult _result;
-
         public AddressLookupResult(AddressBaseResult result)
         {
-            _result = result;
+            Street = StringUtil.ConcatNonEmpties(" ", result.BuildingNumber, result.ThoroughfareName);
+            Town = result.PostTown;
+            UPRN = result.UPRN;
         }
 
-        public string Street => StringUtil.ConcatNonEmpties(", ", _result.BuildingNumber, _result.ThoroughfareName);
-        public string Town => _result.PostTown;
-        public string UPRN => _result.UPRN;
+        public AddressLookupResult()
+        {
+
+        }
+
+        public string Street { get; set; }
+        public string Town { get; set; }
+        public string UPRN { get; set; }
+        
+        public override string ToString() => Street + ", " + Town;
     }
 }
