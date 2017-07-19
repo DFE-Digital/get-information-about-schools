@@ -39,6 +39,7 @@
             apiErrors: [],
             urnApiErrors: [],
             urnError: false,
+            duplicateUrnError: false,
             tooFewCentresError: false,
             appState: 'initial', // initial || groupDetail || addCentre || detail
             pendingEdit: false,
@@ -81,6 +82,11 @@
             },
             tableCount: function () {
                 return '1 - ' + this.centresInGroup.length + ' of ' + this.centresInGroup.length;
+            },
+            addedUrns: function() {
+                return this.centresInGroup.map(function(estab) {
+                    return estab.urn;
+                });
             },
             pendingEstabAddress: function () {
                 var address = [];
@@ -267,6 +273,10 @@
                 this.apiErrors = [];
                 this.urnApiErrors = [];
                 this.tooFewCentresError = false;
+
+                this.duplicateUrnError = this.addedUrns.indexOf(Number(this.searchUrn)) > -1;
+
+                if (this.duplicateUrnError) {  return; }
 
                 if (isNaN(this.searchUrn) || this.searchUrn === '') {
                     this.urnError = true;
