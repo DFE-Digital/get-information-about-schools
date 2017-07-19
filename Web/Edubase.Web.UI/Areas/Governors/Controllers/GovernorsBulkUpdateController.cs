@@ -15,14 +15,23 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
     public class GovernorsBulkUpdateController : Controller
     {
         readonly IGovernorsWriteService _governorsWriteService;
+        readonly IGovernorsReadService _governorsReadService;
 
-        public GovernorsBulkUpdateController(IGovernorsWriteService governorsWriteService)
+        public GovernorsBulkUpdateController(IGovernorsWriteService governorsWriteService, IGovernorsReadService governorsReadService)
         {
             _governorsWriteService = governorsWriteService;
+            _governorsReadService = governorsReadService;
         }
 
         [HttpGet, Route(Name = "GovernorsBulkUpdate")]
-        public ActionResult Index() => View(new GovernorsBulkUpdateViewModel());
+        public async Task<ActionResult> Index()
+        {
+            var viewModel = new GovernorsBulkUpdateViewModel
+            {
+                TemplateUri = await _governorsReadService.GetGovernorBulkUpdateTemplateUri(User)
+            };
+            return View(viewModel);
+        }
 
 
         [HttpPost, Route("Index", Name = "GovernorsProcessBulkUpdate")]
