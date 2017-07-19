@@ -1,6 +1,6 @@
 ﻿@model SearchCompaniesHouseModel
 @{
-    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.bodyClasses = "create-edit-school school-details create-academy-trust";
     ViewBag.hideLogo = true;
     ViewBag.Title = "Create academy trust";
 }
@@ -20,23 +20,14 @@
 { 
     <div class="grid-row">
         <div class="column-full">                      
-            <h1 class="heading-xlarge">
-                Create an academy trust
-            </h1>
-            To create an academy trust record select the company record from Companies House.
+            <h1 class="heading-xlarge">Create an academy trust</h1>
+            <p>To create an academy trust record select the company record from Companies House.</p>
 
             @Html.ValidationSummary(null, new { @class = "error-summary" })
-
-
         </div>
     </div>
     <div class="grid-row">
         <div class="column-two-thirds">
-            
-            <h2 class="heading-medium">
-                Add company
-            </h2>
-            
             @if (string.IsNullOrWhiteSpace(Model.SearchText) && Request.Url.PathAndQuery.Contains("SearchText"))
             {
                 <div class="warning-message">
@@ -50,11 +41,11 @@
                 </div>
             }
 
+            <h2 class="heading-small">Add company</h2>
             <div class="form-group inline-with-button">
-                <label class="form-label">Enter the Companies House name or number</label>
-
-                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control "})
-                <button type="submit" class="button">Find</button>
+                @Html.LabelFor(x => x.SearchText, "Enter the Companies House name or number", new { @class = "form-label"})
+                @Html.TextBoxFor(x => x.SearchText, new {maxlength = 120, @class = "form-control "})
+                <button type="submit" class="button inline-submit">Find</button>
             </div>
 
         </div>
