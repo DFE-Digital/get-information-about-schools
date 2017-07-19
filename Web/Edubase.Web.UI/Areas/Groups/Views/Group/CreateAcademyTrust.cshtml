@@ -11,49 +11,82 @@
 {
     <div class="grid-row">
         <div class="column-full">
-            @Html.ActionLink("Back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+            <div class="breadcrumbs">
+                <ul>
+                    <li>
+                        @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+                    </li>
+                    <li>
+                        @Html.ActionLink("Create an academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)
+                    </li>
+                </ul>
+            </div>
             
-            @if (Model.TrustExists == true)
+            @*@if (Model.TrustExists == true)
             {
                 <div class="pending-updates-message dismissable-message dismissable-warning">
                     <div class="exclaim"></div>
                     Trust already exists, please select cancel to start again
                     <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
                 </div>
-            }
+            }*@
 
-            <h1 class="heading-xlarge">Create a new Multi academy trust or Single academy trust</h1> 
-            @Html.ValidationSummary(null, new { @class = "error-summary" })
+            <h1 class="heading-xlarge">Enter academy trust details</h1> 
+            @if (Model.TrustExists == true)
+            {
+                <div class="error-summary">
+                    <h2 class="heading-medium error-summary-heading">Duplicate record found</h2>
+                    Company is already a multi-academy trust. To complete the record:
+                    <ul class="error-summary-list">
+                        <li class="error-message"><a href="#company">Please select a different company</a></li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                Html.ValidationSummary(null, new {@class = "error-summary"});
+            }
         </div>
     </div>
     <div class="grid-row">
         <div class="column-two-thirds">
+            Add the details of the new academy trust.
+            <div id="company" class="@((Model.TrustExists) ? "error": "")">
+                <h2 class="bold-small">Selected company</h2>
+                
+                @if (Model.TrustExists == true)
+                {
+                    <span class="field-validation-error">Please select a different company</span>
+                }
 
-            <h2 class="bold-small">Selected company</h2>
+                <ul class="school-results-listing">
+                    <li>
+                        <table class="borderless trust-details">
+                            <tr>
+                                <th scope="row">Company name:</th>
+                                <td>@Model.Name</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Companies House Number:</th>
+                                <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber">@Model.CompaniesHouseNumber</a></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Incorporated:</th>
+                                <td>@(Model.OpenDate?.ToString("dd MMMM yyyy"))</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Address:</th>
+                                <td>@Model.Address</td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
 
-            <ul class="school-results-listing">
-                <li>
-                    <h2 class="bold-small">
-                        @Model.Name
-                    </h2>
-                    <table class="borderless trust-details">
-                        <tr>
-                            <th scope="row">Companies House Number:</th>
-                            <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber">@Model.CompaniesHouseNumber</a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Incorporated:</th>
-                            <td>@(Model.OpenDate?.ToString("dd MMMM yyyy"))</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Address:</th>
-                            <td>@Model.Address</td>
-                        </tr>
-                    </table>
-                </li>
-            </ul>
-
-            @Html.ActionLink("Change", "SearchCompaniesHouse", "Group", new { area = "Groups" }, new { @class = "button mobile-full-width" })
+                @Html.ActionLink("Wrong company?", "SearchCompaniesHouse", "Group", new {area = "Groups"}, null)
+            </div>
 
             @Html.HiddenFor(x => x.CompaniesHouseAddressToken)
             @Html.HiddenFor(x => x.Address)
@@ -67,12 +100,12 @@
                 <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
                     <label for="TypeId" class="form-label bold-small">Trust type</label>
                     @Html.ValidationMessageFor(x => x.TypeId)
-                    @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", new { @class = "form-control" })
+                    @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", GetAttributes("form-control", Model.TrustExists))
                 </div>
                 <div class="form-group @Html.ValidationCssClassFor(x => x.GroupId)">
                     @Html.LabelFor(x => x.GroupId)
                     @Html.ValidationMessageFor(x => x.GroupId)
-                    @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120 })
+                    @Html.TextBoxFor(x => x.GroupId, GetAttributes("form-control", Model.TrustExists, 120))
                 </div>
             </div>
         </div>
@@ -80,11 +113,12 @@
     </div>
     <div class="grid-row">
         <div class="column-full">
-            @Html.ActionLink("Cancel", "SearchCompaniesHouse", "Group", new { area = "Groups" }, new { @class = "button button-grey mobile-full-width cancel" })
+            @Html.ActionLink("« Go back", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "button button-grey mobile-full-width cancel"})
             @if (!Model.TrustExists && Model.AllowSave)
             {
-                <button type="submit" class="button submit mobile-full-width">Submit</button>
+                <button type="submit" class="button submit mobile-full-width">Create</button>
             }
+            @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-grey mobile-full-width cancel"})
         </div>
     </div>
 }
@@ -104,4 +138,25 @@
         });
 
     </script>
+}
+
+@functions
+{
+    object GetAttributes(string cssClasses, bool? readOnly = null, int? maxlength = null)
+    {
+        if (maxlength.HasValue)
+        {
+            if (readOnly.HasValue && readOnly.Value)
+                return new { @class = cssClasses, @disabled = "disabled", maxlength = maxlength };
+
+            return new { @class = cssClasses, maxlength = maxlength };
+        }
+        else
+        {
+            if (readOnly.HasValue && readOnly.Value)
+                return new { @class = cssClasses, @disabled = "disabled"};
+
+            return new { @class = cssClasses};
+        }
+    }
 }

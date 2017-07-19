@@ -36,6 +36,19 @@
             <h2 class="heading-medium">
                 Add company
             </h2>
+            
+            @if (string.IsNullOrWhiteSpace(Model.SearchText) && Request.Url.PathAndQuery.Contains("SearchText"))
+            {
+                <div class="warning-message">
+                    <p>Please enter a Companies House name or number to start a search</p>
+                </div>
+            }
+            else if (Model.NotFound)
+            {
+                <div class="warning-message">
+                    <p>We couldn't find any companies matching your search criteria</p>
+                </div>
+            }
 
             <div class="form-group inline-with-button">
                 <label class="form-label">Enter the Companies House name or number</label>
@@ -49,22 +62,11 @@
 
     if (Model.Results != null && !Model.NotFound)
     {
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <p>
-                    We found <span class="heading-xlarge">@Model.Results.Count</span>
-                    @(Model.Results.Count == 1 ? "company" : "companies")
-                    @(Model.IsNumberSearch ? $"with the Companies House number '{Model.SearchText}'" : $"matching '{Model.SearchText}'").
-                </p>
-
-            </div>
-        </div>
-
-        
+       
         if (Model.Results.PageCount > 1)
         {
             <div class="grid-row">
-                <div class="column-two-thirds top-pagination">
+                <div class="column-full top-pagination">
                     @Html.Partial("_GenericPagination", Model)
                 </div>
             </div>
@@ -74,29 +76,26 @@
         if (Model.Results.Items.Any())
         {
             <div class="grid-row">
-                <div class="column-two-thirds">
-                    <ul class="school-results-listing">
+                <div class="column-full">
+                    <table class="edubase-table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Companies House no.</th>
+                            <th>Incorporated</th>
+                            <th>Address</th>
+                        </tr>
+                        </thead>
                         @foreach (var result in Model.Results.Items)
                         {
-                            <li>
-                                <h2>@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, new { @class = "bold-small" })</h2>
-                               <table class="borderless trust-details">
-                                    <tr>
-                                        <th scope="row">Companies House Number:</th>
-                                        <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Incorporated:</th>
-                                        <td>@(result.IncorporationDate?.ToString("dd MMMM yyyy"))</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Address:</th>
-                                        <td>@(result.Address.ToString() ?? "Not recorded")</td>
-                                    </tr>
-                                </table>
-                            </li>
+                            <tr>
+                                <td aria-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
+                                <td aria-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
+                                <td aria-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
+                                <td aria-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
+                            </tr>
                         }
-                    </ul>
+                    </table>
                 </div>
             </div>
         }
@@ -109,16 +108,6 @@
                 </div>
             </div>
         }
-
-        if (Model.NotFound)
-        {
-            <div class="grid-row">
-                <div class="column-two-thirds">
-                    <p>Please check the Companies House number or Company name entered.</p>
-                </div>
-            </div>
-        }
-
     }
 
 
