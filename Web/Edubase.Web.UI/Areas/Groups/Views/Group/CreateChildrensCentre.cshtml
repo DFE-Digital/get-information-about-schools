@@ -138,6 +138,14 @@
                         </li>
                     </ul>
                 </div>
+                <div class="error-summary" v-show="urnApiErrors.length>0">
+                    <h2 class="error-summary-heading heading-medium">Please check the URN</h2>
+                    <ul class="error-summary-list">
+                        <li v-for="err in urnApiErrors" class="error-message">
+                            {{err.field}} : {{err.message}}
+                        </li>
+                    </ul>
+                </div>
                 <div class="error-summary" v-show="tooFewCentresError">
                     <h2 class="error-summary-heading heading-medium">Please add more centres to the {{groupTypeName}}</h2>
                     <ul class="error-summary=list">
@@ -164,12 +172,12 @@
                 </dl>
 
                 <h2 class="heading-medium">Add children's centres</h2>
-                <div v-bind:class="['form-group inline-with-button', urnError? 'error' : '']">
+                <div v-bind:class="['form-group inline-with-button', (urnError || urnApiErrors.length > 0)? 'error' : '']">
                     @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                     <label class="form-label">
                         Establishment <abbr title="Unique Reference Number">URN</abbr>
                     </label>
-                    <span class="error-message" v-show="urnError">Please check the URN</span>
+                    <span class="error-message" v-show="urnError || urnApiErrors.length > 0">Please check the URN</span>
                     @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box", v_model= "searchUrn" })
                     <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn">Find</button>
                 </div>
@@ -282,6 +290,6 @@
 </div>
 @section ViewScripts
 {
-    @*<script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>*@
-    <script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>
+    <script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>
+    @*<script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>*@
 }
