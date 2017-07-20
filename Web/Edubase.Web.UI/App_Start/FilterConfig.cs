@@ -10,6 +10,7 @@ namespace Edubase.Web.UI
         {
             filters.Add(new UnauthorizedAccessAttribute());
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new HandleUnsuccessfulSamlOperationException());
             filters.Add(new ExceptionHandler());
         }
     }

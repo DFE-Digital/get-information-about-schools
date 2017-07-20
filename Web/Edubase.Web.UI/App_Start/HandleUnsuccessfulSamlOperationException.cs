@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using Kentor.AuthServices.Exceptions;
 
-namespace Edubase.Web.UI.App_Start
+namespace Edubase.Web.UI
 {
     public class HandleUnsuccessfulSamlOperationException : FilterAttribute, IExceptionFilter
     {
