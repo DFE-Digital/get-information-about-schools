@@ -182,7 +182,9 @@
     <Compile Include="DataQuality\DataQualityWriteService.cs" />
     <Compile Include="DataQuality\IDataQualityReadService.cs" />
     <Compile Include="DataQuality\IDataQualityWriteService.cs" />
+    <Compile Include="Domain\AddressBaseResult.cs" />
     <Compile Include="Domain\AddressDto.cs" />
+    <Compile Include="Domain\AddressLookupResult.cs" />
     <Compile Include="Domain\ApiResponse.cs" />
     <Compile Include="Domain\ApiSearchResult.cs" />
     <Compile Include="Domain\ApiResultDto.cs" />

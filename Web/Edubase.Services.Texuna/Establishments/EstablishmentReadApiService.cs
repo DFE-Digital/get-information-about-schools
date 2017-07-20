@@ -165,6 +165,18 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<IEnumerable<LookupDto>> GetPermissibleLocalGovernorsAsync(int urn, IPrincipal principal) => (await _httpClient.GetAsync<List<LookupDto>>($"establishment/{urn}/permissible-local-governors", principal)).GetResponse();
 
-        
+        public async Task<IEnumerable<AddressLookupResult>> GetAddressesByPostCodeAsync(string postCode, IPrincipal principal)
+        {
+            try
+            {
+                var list = await _httpClient.GetAsync<AddressBaseResult[]>("establishment/addressBase/queryByPostcode?postcode=" + postCode.Replace(" ", string.Empty), principal);
+                return list.GetResponse().Select(x => new AddressLookupResult(x)).ToList();
+            }
+            catch // I have actually given up asking Texuna to return errors in the error envelope at this stage.
+            {
+                return Enumerable.Empty<AddressLookupResult>();
+            }
+            
+        }
     }
 }

@@ -31,6 +31,7 @@ using System.Web.Mvc;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Validation;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
+using Edubase.Services.Texuna.Lookup;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -87,13 +88,47 @@ namespace Edubase.Web.UI.Controllers
             _securityService = securityService;
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
-        public async Task<ActionResult> EditDetails(int? id)
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}", Name = "EditEstablishmentDetail")]
+        public async Task<ActionResult> EditDetails(int? id, string addrtok)
         {
             if (!id.HasValue) return HttpNotFound();
             ViewModel viewModel = await CreateEditViewModel(id);
             viewModel.SelectedTab = "details";
+
+            if (addrtok.Clean() != null)
+                ReplaceAddressFromUrlToken(addrtok, viewModel);
+
             return View(viewModel);
+        }
+
+        private void ReplaceAddressFromUrlToken(string addrtok, ViewModel viewModel)
+        {
+            var replaceAddressViewModel = UriHelper.TryDeserializeUrlToken<ReplaceAddressViewModel>(addrtok);
+            if (replaceAddressViewModel != null)
+            {
+                if (replaceAddressViewModel.Target == "main")
+                {
+                    viewModel.Address_CityOrTown = replaceAddressViewModel.Town;
+                    viewModel.Address_CountryId = replaceAddressViewModel.CountryId;
+                    viewModel.Address_CountyId = replaceAddressViewModel.CountyId;
+                    viewModel.Address_Line1 = replaceAddressViewModel.Street;
+                    viewModel.Address_Locality = replaceAddressViewModel.Locality;
+                    viewModel.Address_Line3 = replaceAddressViewModel.Address3;
+                    viewModel.Address_PostCode = replaceAddressViewModel.PostCode;
+                    viewModel.Address_UPRN = replaceAddressViewModel.SelectedUPRN;
+                }
+                else if(replaceAddressViewModel.Target=="alt")
+                {
+                    viewModel.AltTown = replaceAddressViewModel.Town;
+                    viewModel.AltCountryId = replaceAddressViewModel.CountryId;
+                    viewModel.AltCountyId = replaceAddressViewModel.CountyId;
+                    viewModel.AltStreet = replaceAddressViewModel.Street;
+                    viewModel.AltLocality = replaceAddressViewModel.Locality;
+                    viewModel.AltAddress3 = replaceAddressViewModel.Address3;
+                    viewModel.AltPostCode = replaceAddressViewModel.PostCode;
+                    viewModel.AltUPRN = replaceAddressViewModel.SelectedUPRN;
+                }
+            }
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
@@ -168,7 +203,53 @@ namespace Edubase.Web.UI.Controllers
             
             return View("AddEditLink_FindEstablishment", viewModel);
         }
-        
+
+        [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "ReplaceEstablishmentAddress")]
+        public async Task<ActionResult> ReplaceEstablishmentAddressAsync(int urn, string target)
+        {
+            var viewModel = new ReplaceAddressViewModel((await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(Constants.COUNTRY_ID_UK), 
+                (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(), target);
+            await PopulateEstablishmentPageViewModel(viewModel, urn, "details");
+            return View("ReplaceAddress", viewModel);
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "ReplaceEstablishmentAddressPost")]
+        public async Task<ActionResult> ReplaceEstablishmentAddressPostAsync(int urn, string target, ReplaceAddressViewModel viewModel)
+        {
+            ModelState.Clear();
+
+            if(viewModel.ActionName == null)
+            {
+                if (viewModel.CountryId == Constants.COUNTRY_ID_UK) viewModel.Step = "enterpostcode";
+                else viewModel.Step = "editaddress";
+            }
+            else if (viewModel.ActionName == "find-address")
+            {
+                if(viewModel.CountryId == Constants.COUNTRY_ID_UK)
+                {
+                    viewModel.LookupAddresses = await _establishmentReadService.GetAddressesByPostCodeAsync(viewModel.PostCode, User);
+                    if(viewModel.LookupAddresses.Any()) viewModel.Step = "selectaddress";
+                    else ModelState.AddModelError("PostCode", "We couldn't find any addresses matching that postcode");
+                }
+                else viewModel.Step = "editaddress";
+            }
+            else if (viewModel.ActionName == "address-selected" && viewModel.SelectedUPRN != null)
+            {
+                var address = viewModel.LookupAddresses.FirstOrDefault(x => x.UPRN == viewModel.SelectedUPRN);
+                viewModel.Street = address.Street;
+                viewModel.Town = address.Town;
+                viewModel.Step = "editaddress";
+            }
+            else if (viewModel.ActionName == "replace-address")
+            {
+                var payload = UriHelper.SerializeToUrlToken(viewModel);
+                return RedirectToRoute("EditEstablishmentDetail", new { id = urn, addrtok = payload });
+            }
+
+            await PopulateEstablishmentPageViewModel(viewModel, urn, "details");
+            return View("ReplaceAddress", viewModel);
+        }
+
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links", Name = "EditEstabLinks")]
         public async Task<ActionResult> EditLinks(int? id)
         {

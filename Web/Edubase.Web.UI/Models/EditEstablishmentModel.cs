@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Models
         public int? Address_CountryId { get; set; }
         public string Address_Locality { get; set; }
         public string Address_PostCode { get; set; }
-        
+        public string Address_UPRN { get; set; }
 
 
         public string AltSiteName { get; set; }
