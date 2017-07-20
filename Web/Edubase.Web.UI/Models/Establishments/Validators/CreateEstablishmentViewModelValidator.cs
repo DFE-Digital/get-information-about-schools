@@ -73,7 +73,7 @@ namespace Edubase.Web.UI.Models.Establishments.Validators
 
                 RuleFor(x => x.Address.County)
                     .Must(x => x != null)
-                    .WithMessage("Please select the country");
+                    .WithMessage("Please select the county");
 
                 RuleFor(x => x.Address.PostCode)
                     .Must(x => !string.IsNullOrWhiteSpace(x))
