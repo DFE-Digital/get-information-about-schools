@@ -13,6 +13,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Http;
 using Newtonsoft.Json.Serialization;
+using Kentor.AuthServices.Exceptions;
 
 namespace Edubase.Web.UI
 {
@@ -75,6 +76,11 @@ namespace Edubase.Web.UI
             {
                 var ctx = HttpContext.Current;
                 var ex = ctx?.Server?.GetLastError();
+                if (ex is UnsuccessfulSamlOperationException)
+                {
+                    Response.Redirect("/Unauthorized/LoginFailed");
+                }
+
                 if (ctx != null && ex != null) new ExceptionHandler().Log(new HttpContextWrapper(ctx), ex);
             }
         }
