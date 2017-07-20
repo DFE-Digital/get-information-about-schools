@@ -56,28 +56,36 @@
                         @Html.TextBoxFor(x => x.Address_CityOrTown, new { maxlength = 120, id = "school-town", @class = "form-control" })
                     </div>
 
-                    <div class="form-group">
-                        <label for="Address_CountyId" class="form-label">County</label>
-                        @Html.DropDownListFor(x => x.Address_CountyId, Model.Counties, "", new { @class = "form-control" })
-                    </div>
+                    @if (Model.Address_CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+                    {
+                        <div class="form-group">
+                            <label for="Address_CountyId" class="form-label">County</label>
+                            @Html.DropDownListFor(x => x.Address_CountyId, Model.Counties, "", new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.Address_CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Address_CountryId, "Country", new { @class = "form-label" })
+                            @Html.DropDownListFor(x => x.Address_CountryId, Model.Countries, "", new { @class = "form-control", disabled = "disabled" })
+                        </div>
+                    }
+
+                    @Html.HiddenFor(x => x.Address_CountryId)
 
                     <div class="form-group">
-                        <label for="Address_CountryId" class="form-label">Country</label>
-                        @Html.DropDownListFor(x => x.Address_CountryId, Model.Countries, "", new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="school-postcode" class="form-label">Post code</label>
-                        @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, id = "school-postcode", @class = "form-control postcode-field", disabled = "disabled" })
+                        @Html.LabelFor(x => x.Address_PostCode, "Postcode", new { @class = "form-label" })
+                        @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, @class = "form-control postcode-field", disabled = "disabled" })
                         @Html.HiddenFor(x => x.Address_PostCode)
-                        @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn }, new { @class = "replace-address" })
+                        @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn, target = "main" }, new { @class = "replace-address" })
                     </div>
 
                     @Html.HiddenFor(x => x.Address_UPRN)
 
                     @if (Model.EditPolicy.AltSiteName.GetValueOrDefault(true))
                     {
-                        <div class="alt-address" style="display:@(Model.IsAltAddressSet ? "" : "none");">
+                        <div class="alt-address">
                             <div class="grey-bar"></div>
                             <div class="form-group">
                                 @Html.LabelFor(x => x.AltSiteName, $"Site name")
@@ -99,14 +107,32 @@
                                 @Html.LabelFor(x => x.AltTown, "Town")
                                 @Html.TextBoxFor(x => x.AltTown, new { @class = "form-control alt-address" })
                             </div>
+
+                            @if (Model.AltCountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.AltCountyId, "County", new { @class = "form-label" })
+                                    @Html.DropDownListFor(x => x.AltCountyId, Model.Counties, "", new { @class = "form-control alt-address" })
+                                </div>
+                            }
+
+                            @if (Model.AltCountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.AltCountryId, "Country", new { @class = "form-label" })
+                                    @Html.DropDownListFor(x => x.AltCountryId, Model.Countries, "", new { @class = "form-control", disabled = "disabled" })
+                                </div>
+                            }
+                            @Html.HiddenFor(x => x.AltCountryId)
+
                             <div class="form-group">
-                                <label for="Address_CountyId" class="form-label">County</label>
-                                @Html.DropDownListFor(x => x.AltCountyId, Model.Counties, "", new { @class = "form-control alt-address" })
+                                @Html.LabelFor(x => x.AltPostCode, "Postcode", new { @class = "form-label" })
+                                @Html.TextBoxFor(x => x.AltPostCode, new { maxlength = 120, @class = "form-control postcode-field alt-address", disabled = "disabled" })
+                                @Html.HiddenFor(x => x.AltPostCode)
+                                @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt" }, new { @class = "replace-address" })
                             </div>
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.AltPostCode, "Postcode")
-                                @Html.TextBoxFor(x => x.AltPostCode, new { @class = "form-control alt-address" })
-                            </div>
+
+                            @Html.HiddenFor(x => x.AltUPRN)
                         </div>
                     }
 

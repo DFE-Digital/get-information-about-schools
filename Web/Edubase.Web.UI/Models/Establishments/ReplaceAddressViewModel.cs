@@ -1,5 +1,6 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Domain;
+using Edubase.Services.Texuna.Lookup;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,22 +13,35 @@ namespace Edubase.Web.UI.Models.Establishments
     {
         [JsonProperty]
         public string Street { get; set; }
+
         [JsonProperty]
         public string Locality { get; set; }
+
         [JsonProperty]
         public string Address3 { get; set; }
+
         [JsonProperty]
         public string Town { get; set; }
+
         [JsonProperty]
         public int? CountyId { get; set; }
+
         [JsonProperty]
         public string PostCode { get; set; }
+
         [JsonProperty]
         public int? CountryId { get; set; }
+
+        public string TownLabel => CountryId.GetValueOrDefault() == Constants.COUNTRY_ID_UK ? "Town" : "Town / City";
+
+        public string PostCodeLabel => CountryId.GetValueOrDefault() == Constants.COUNTRY_ID_UK ? "Postcode" : "Postcode / Zipcode";
+
         public IEnumerable<SelectListItem> Counties { get; internal set; }
         public IEnumerable<SelectListItem> Countries { get; internal set; }
+
         [JsonProperty]
         public string SelectedUPRN { get; set; }
+
         public string ActionName { get; set; }
 
         public string AddressLookupResultJsonToken
@@ -48,6 +62,12 @@ namespace Edubase.Web.UI.Models.Establishments
             set { Counties = UriHelper.TryDeserializeUrlToken<IEnumerable<SelectListItem>>(value); }
         }
 
+        /// <summary>
+        /// Target address to replace; i.e., main address or alternative address
+        /// </summary>
+        [JsonProperty]
+        public string Target { get; set; }
+
         public IEnumerable<AddressLookupResult> LookupAddresses { get; set; }
         public IEnumerable<SelectListItem> GetLookupAddressSelectListItems(string selectedUPRN) => LookupAddresses?.Select(x => new SelectListItem { Text = x.ToString(), Value = x.UPRN, Selected = selectedUPRN == x.UPRN });
         string IEstablishmentPageViewModel.SelectedTab { get; set; }
@@ -63,9 +83,11 @@ namespace Edubase.Web.UI.Models.Establishments
 
         }
 
-        public ReplaceAddressViewModel(IEnumerable<SelectListItem> countries)
+        public ReplaceAddressViewModel(IEnumerable<SelectListItem> countries, IEnumerable<SelectListItem> counties, string target)
         {
             Countries = countries;
+            Counties = counties;
+            Target = target;
         }
     }
 }
