@@ -9,5 +9,10 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
+
+        public ActionResult LoginFailed()
+        {
+            return View();
+        }
     }
 }
