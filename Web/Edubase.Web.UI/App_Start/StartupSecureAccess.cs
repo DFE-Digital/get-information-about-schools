@@ -92,7 +92,7 @@ namespace Edubase.Web.UI
 //#endif
         }
 
-        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/wildcard-dfe.pfx"), "test", X509KeyStorageFlags.MachineKeySet);
+        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/edubase3.pfx"), "test", X509KeyStorageFlags.MachineKeySet);
 
         // TODO: one day get rid of this
         //private static X509Certificate2 GetSPCertificateFromCertStore()
