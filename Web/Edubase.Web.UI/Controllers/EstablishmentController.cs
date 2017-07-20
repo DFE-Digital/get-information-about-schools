@@ -229,7 +229,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     viewModel.LookupAddresses = await _establishmentReadService.GetAddressesByPostCodeAsync(viewModel.PostCode, User);
                     if(viewModel.LookupAddresses.Any()) viewModel.Step = "selectaddress";
-                    else ModelState.AddModelError("PostCode", "Sorry, no addresses were found for this postcode");
+                    else ModelState.AddModelError("PostCode", "We couldn't find any addresses matching that postcode");
                 }
                 else viewModel.Step = "editaddress";
             }
