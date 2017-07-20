@@ -12,14 +12,6 @@
     @Html.HiddenFor(x => x.StateToken);
     <div class="tab-content">
         <div class="attach-link">
-            @*<div>
-                <button name="act" value="save" class="button mobile-full-width allow-exit">Save</button>
-                @if (!Model.IsNew)
-                {
-                    <button name="act" value="delete" class="button button-grey mobile-full-width estab-link-delete">Delete</button>
-                }
-                <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })" class="button button-grey mobile-full-width">Cancel</a>
-            </div>*@
             <div class="column-two-thirds">
                 <h2 class="heading-medium tab-lead">Link to other establishment</h2>
                 <h3 class="heading-small">Establishment to be linked</h3>
@@ -129,7 +121,6 @@
                     DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                     exitAttached = true;
                 }
-
             });
             
         });

@@ -106,6 +106,7 @@
     <Compile Include="Groups\GroupReadApiService.cs" />
     <Compile Include="Groups\GroupsWriteApiService.cs" />
     <Compile Include="LanguageExtensions.cs" />
+    <Compile Include="Lookup\Constants.cs" />
     <Compile Include="Lookup\LookupApiService.cs" />
     <Compile Include="Models\BoolResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

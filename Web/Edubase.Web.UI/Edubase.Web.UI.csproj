@@ -370,6 +370,7 @@
     <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\EditEstablishmentLinksViewModel.cs" />
     <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
+    <Compile Include="Models\Establishments\ReplaceAddressViewModel.cs" />
     <Compile Include="Models\Establishments\SearchForEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\Validators\CreateEstablishmentViewModelValidator.cs" />
     <Compile Include="Models\Establishments\Validators\SearchForEstablishmentViewModelValidator.cs" />
@@ -960,6 +961,7 @@
     <Content Include="Views\ChangeHistory\ReadyToDownload.cshtml" />
     <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
     <Content Include="Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
+    <Content Include="Views\Establishment\ReplaceAddress.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />

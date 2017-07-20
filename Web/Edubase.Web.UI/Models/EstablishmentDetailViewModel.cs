@@ -137,18 +137,17 @@ namespace Edubase.Web.UI.Models
         #endregion
 
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ", 
-            Establishment.Address_Line1, 
-            Establishment.Address_Line2, 
-            Establishment.Address_Line3, 
+            Establishment.Address_Line1,
             Establishment.Address_Locality, 
+            Establishment.Address_Line3,
             Establishment.Address_CityOrTown, 
             AddressCountyName, 
             Establishment.Address_PostCode);
 
         public string GetAltAddress() => StringUtil.ConcatNonEmpties(", ",
             Establishment.AltStreet,
-            Establishment.AltAddress3,
             Establishment.AltLocality,
+            Establishment.AltAddress3,
             Establishment.AltTown,
             AltAddressCountyName,
             Establishment.AltPostCode);
