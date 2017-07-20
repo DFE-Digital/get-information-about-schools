@@ -32,6 +32,7 @@ using Edubase.Services.Domain;
 using Edubase.Web.UI.Validation;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 using Edubase.Services.Texuna.Lookup;
+using static Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -371,7 +372,7 @@ namespace Edubase.Web.UI.Controllers
             model.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             await PopulateSelectLists(model);
 
-            if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
+            if (model.Action == eAction.SaveDetails || model.Action == eAction.SaveIEBT || model.Action == eAction.SaveLocation)
             {
                 await ValidateAsync(model, domainModel);
 
@@ -381,21 +382,17 @@ namespace Edubase.Web.UI.Controllers
                     
                     var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, User);
 
-                    if (model.RequireConfirmationOfChanges && changes.Any()) model.ChangesSummary = changes;
-                    else
-                    {
-                        await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                        return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value, approved = model.OverrideCRProcess });
-                    }
+                    if (changes.Any()) model.ChangesSummary = changes;
+                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
-            else if (model.Action == ViewModel.eAction.Confirm)
+            else if (model.Action == eAction.Confirm)
             {
                 if (ModelState.IsValid)
                 {
                     await PrepareModels(model, domainModel);
                     await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                    return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value, approved = model.OverrideCRProcess });
+                    return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
 

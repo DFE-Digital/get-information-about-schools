@@ -10,6 +10,7 @@ namespace Edubase.Services.Establishments.Models
 {
     public class IEBTModel
     {
+        [DisplayName("IEBT Notes")]
         public string Notes { get; set; }
         public DateTime? DateOfTheLastBridgeVisit { get; set; }
 

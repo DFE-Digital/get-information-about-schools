@@ -74,7 +74,7 @@ namespace Edubase.Services.Texuna.Establishments
         
         public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model)
         {
-            var changes = ReflectionHelper.DetectChanges(model, original);
+            var changes = ReflectionHelper.DetectChanges(model, original, typeof(IEBTModel));
             var retVal = new List<ChangeDescriptorDto>();
 
             foreach (var change in changes)
@@ -86,7 +86,7 @@ namespace Edubase.Services.Texuna.Establishments
                 }
 
                 if (change.Name.EndsWith("Id", StringComparison.Ordinal)) change.Name = change.Name.Substring(0, change.Name.Length - 2);
-                change.Name = change.Name.Replace("_", "");
+                change.Name = change.Name.Replace("_", "").Replace(nameof(IEBTModel) + ".", string.Empty);
                 change.Name = change.Name.ToProperCase(true);
 
                 retVal.Add(new ChangeDescriptorDto
