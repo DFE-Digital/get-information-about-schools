@@ -145,6 +145,12 @@
             $("select#CountryId").change(function () {
                 $(document.forms[0]).submit();
             });
+            $("button.choose-address").hide();
+            $("#SelectedUPRN").change(function () {
+                setTimeout(function () {
+                    $($("button.choose-address")[0]).click();
+                }, 100);
+            });
         });
     </script>
 }
