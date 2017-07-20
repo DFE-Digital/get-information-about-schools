@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using Edubase.Common;
 using Edubase.Services.Exceptions;
 using Autofac.Core;
+using Kentor.AuthServices.Exceptions;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -27,6 +28,11 @@ namespace Edubase.Web.UI.Filters
                     ViewData = new ViewDataDictionary() { { "PublicErrorMessage", (filterContext.Exception as EdubaseException).Message } }
                 };
 
+                filterContext.ExceptionHandled = true;
+            }
+            else if (filterContext.Exception is UnsuccessfulSamlOperationException)
+            {
+                filterContext.Result = new RedirectResult("/Unauthorized/LoginFailed");
                 filterContext.ExceptionHandled = true;
             }
             else // unhandled/unexpected exception; log it and tell the user.

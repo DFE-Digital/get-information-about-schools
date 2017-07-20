@@ -269,7 +269,6 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\AutoMapperWebProfile.cs" />
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
-    <Compile Include="App_Start\HandleUnsuccessfulSamlOperationException.cs" />
     <Compile Include="App_Start\StartupSASimulator.cs" />
     <Compile Include="App_Start\StartupSecureAccess.cs" />
     <Compile Include="Areas\Establishments\Controllers\AcademyOpeningsController.cs" />
