@@ -65,7 +65,24 @@
                 <div class="expander-panel open-expander">
                     <a href="#" class="panel-trigger heading-small">Date</a>
                     <div class="expander-panel-content">
-                       <div class="form-group panel-indent">
+                        <div class="form-group inline">
+                            <span class="radio-button-wrap">
+                                <input id="date-applied" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, "checked")>
+                                <label class="edubase-button-radio" for="date-applied">Applied</label>
+                            </span>
+
+                            <span class="radio-button-wrap">
+                                <input id="date-approved" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, "checked")>
+                                <label class="edubase-button-radio" for="date-approved">Approved</label>
+                            </span>
+
+                            <span class="radio-button-wrap">
+                                <input id="date-effective" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, "checked")>
+                                <label class="edubase-button-radio" for="date-effective">Effective</label>
+                            </span>
+                        </div>
+
+                        <div class="form-group panel-indent">
                             @Html.EditorFor(x => x.DateFilterFrom, new { title = "Changed date from", disableHint = true })
                             @Html.EditorFor(x => x.DateFilterTo, new { title = "Changed date to", disableHint = true })
                         </div>
@@ -125,6 +142,11 @@
                             <div class="form-group">
                                 @Html.LabelFor(x => x.SelectedSuggesterId, "Change suggested by", new { @class = "form-label" })
                                 @Html.DropDownListFor(x => x.SelectedSuggesterId, Model.Suggesters, "Select user group", new { @class = "form-control" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.SelectedApproverId, "Change approved by", new { @class = "form-label" })
+                                @Html.DropDownListFor(x => x.SelectedApproverId, Model.Approvers, "Select user group", new { @class = "form-control" })
                             </div>
                         </div>
                     </div>
@@ -227,7 +249,7 @@
                                         Group UID
                                     </abbr>
                                 </th>
-                                <th scope="col" class="cell-estab">Group name</th>
+                                <th scope="col" class="cell-estab">Group</th>
                                 <th scope="col" class="cell-change">Change</th>
                                 <th scope="col" class="cell-suggested">Suggested by</th>
                             </tr>
@@ -241,7 +263,7 @@
                                         <td aria-label="Date changed">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
                                         <td aria-label="Request type">@item.RequestType</td>
                                         <td aria-label="Group UID"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupUId)</a></td>
-                                        <td aria-label="Group name"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupName)</a></td>
+                                        <td aria-label="Group"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupName)</a></td>
                                         <td aria-label="Change">
                                             <dl class="key-value-list">
                                                 @if (item.RequestType == GroupChangeRequestType.GroupChange)
