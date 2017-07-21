@@ -68,7 +68,7 @@
         {
             <div class="grid-row">
                 <div class="column-full">
-                    <table class="edubase-table">
+                    <table class="edubase-table company-details">
                         <thead>
                         <tr>
                             <th>Name</th>
@@ -79,7 +79,7 @@
                         </thead>
                         @foreach (var result in Model.Results.Items)
                         {
-                            <tr>
+                            <tr class="company-result">
                                 <td aria-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
                                 <td aria-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
                                 <td aria-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
@@ -94,7 +94,7 @@
         if (Model.Results.PageCount > 1)
         {
             <div class="grid-row">
-                <div class="column-two-thirds lower-pagination">
+                <div class="column-full lower-pagination">
                     @Html.Partial("_GenericPagination", Model)
                 </div>
             </div>
