@@ -7,7 +7,7 @@
         font-size: 16px;
         display: block;
         float: left;
-        margin: 4px 0;
+        margin: 0;
     }
 
     .establishment-details {
@@ -51,7 +51,22 @@
         margin: 12px 0;
     }
 
-    .trust-details {
+    .new-trust-details {
         font-size: 16px;
+    }
+
+    .company-result {
+        margin-top: 1px;
+        margin-bottom: 3px;
+        margin-left: -8px;
+        width: 100%;
+    }
+
+    .company-details {
+        margin-top: 4px;
+    }
+
+    .trust-details-header {
+        margin-bottom: 6px;
     }
 }

@@ -26,7 +26,6 @@
             </div>
 
             <h1 class="heading-xlarge">Enter academy trust details</h1> 
-            <p>Add the details of the new academy trust.</p>
             @if (Model.TrustExists == true)
             {
                 <div class="error-summary">
@@ -41,7 +40,7 @@
             {
                 Html.ValidationSummary(null, new {@class = "error-summary"});
             }
-           
+            <p>Add the details of the new academy trust.</p>           
         </div>
     </div>
     <div class="grid-row">
@@ -54,22 +53,22 @@
                     <span class="field-validation-error">Please select a different company</span>
                 }
 
-                <table class="borderless trust-details">
+                <table class="borderless company-result">
                     <tr>
-                        <th scope="row">Company name:</th>
-                        <td>@Model.Name</td>
+                        <th scope="row" class="new-trust-details">Company name:</th>
+                        <td class="new-trust-details">@Model.Name</td>
                     </tr>
                     <tr>
-                        <th scope="row">Companies House Number:</th>
-                        <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber">@Model.CompaniesHouseNumber</a></td>
+                        <th scope="row" class="new-trust-details">Companies House Number:</th>
+                        <td class="new-trust-details"><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber">@Model.CompaniesHouseNumber</a></td>
                     </tr>
                     <tr>
-                        <th scope="row">Incorporated:</th>
-                        <td>@(Model.OpenDate?.ToString("dd/MM/yyyy"))</td>
+                        <th scope="row" class="new-trust-details">Incorporated:</th>
+                        <td class="new-trust-details">@(Model.OpenDate?.ToString("dd/MM/yyyy"))</td>
                     </tr>
                     <tr>
-                        <th scope="row">Address:</th>
-                        <td>@Model.Address</td>
+                        <th scope="row" class="new-trust-details">Address:</th>
+                        <td class="new-trust-details">@Model.Address</td>
                     </tr>
                 </table>
 
@@ -85,7 +84,7 @@
 
         <div class="column-half">
             <div class="single-group">
-                <h2 class="bold-small">Trust details</h2>
+                <h2 class="bold-small trust-details-header">Trust details</h2>
                 <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
                     <label for="TypeId" class="form-label bold-small">Trust type</label>
                     @Html.ValidationMessageFor(x => x.TypeId)
