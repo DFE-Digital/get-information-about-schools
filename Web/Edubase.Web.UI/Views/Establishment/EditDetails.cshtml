@@ -668,12 +668,19 @@
                     var $fields = $('#content').find('.form-control');
                     var exitAttached = false;
 
-                    $fields.on('change', function () {
+                    var registerUnloadNotification = function () {
                         if (!exitAttached) {
                             DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                             exitAttached = true;
                         }
-                    });
+                    };
+
+                    $fields.on('change', registerUnloadNotification);
+
+                    @if (Model.IsDirty)
+                    {
+                        <text>registerUnloadNotification();</text>
+                    }
 
                     $(function() {
                         filterEstablishmentPhaseList();

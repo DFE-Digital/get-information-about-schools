@@ -93,12 +93,12 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> EditDetails(int? id, string addrtok)
         {
             if (!id.HasValue) return HttpNotFound();
-            ViewModel viewModel = await CreateEditViewModel(id);
+            ViewModel viewModel = await CreateEditViewModel(id, vm =>
+            {
+                if (addrtok.Clean() != null)
+                    ReplaceAddressFromUrlToken(addrtok, vm);
+            });
             viewModel.SelectedTab = "details";
-
-            if (addrtok.Clean() != null)
-                ReplaceAddressFromUrlToken(addrtok, viewModel);
-
             return View(viewModel);
         }
 
@@ -129,6 +129,7 @@ namespace Edubase.Web.UI.Controllers
                     viewModel.AltPostCode = replaceAddressViewModel.PostCode;
                     viewModel.AltUPRN = replaceAddressViewModel.SelectedUPRN;
                 }
+                viewModel.IsDirty = true;
             }
         }
 
@@ -239,6 +240,7 @@ namespace Edubase.Web.UI.Controllers
                 var address = viewModel.LookupAddresses.FirstOrDefault(x => x.UPRN == viewModel.SelectedUPRN);
                 viewModel.Street = address.Street;
                 viewModel.Town = address.Town;
+                viewModel.PostCode = address.PostCode;
                 viewModel.Step = "editaddress";
             }
             else if (viewModel.ActionName == "replace-address")
@@ -481,7 +483,7 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        private async Task<ViewModel> CreateEditViewModel(int? id)
+        private async Task<ViewModel> CreateEditViewModel(int? id, Action<ViewModel> preprocessViewModel = null)
         {
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
             var viewModel = _mapper.Map<ViewModel>(domainModel);
@@ -491,6 +493,8 @@ namespace Edubase.Web.UI.Controllers
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
             viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
+
+            preprocessViewModel?.Invoke(viewModel);
 
             await PopulateSelectLists(viewModel);
             return viewModel;
