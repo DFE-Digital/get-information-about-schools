@@ -77,7 +77,7 @@
                             </span>
 
                             <span class="radio-button-wrap">
-                                <input id="date-effective" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, "checked")>
+                                <input id="date-effective" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE" type="radio" @Html.Conditional(Model.DateFilterMode != ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED || Model.DateFilterMode != ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, "checked")>
                                 <label class="edubase-button-radio" for="date-effective">Effective</label>
                             </span>
                         </div>
