@@ -64,8 +64,8 @@
             <div id="establishment-search-filters" class="panel-indent" style="display:@(Model.SearchType != null ? "" : "none");">
                 <div class="expander-panel open-expander">
                     <a href="#" class="panel-trigger heading-small">Date</a>
-                    <div class="expander-panel-content">
-                        <div class="form-group inline">
+                    <div class="expander-panel-content" >
+                        <div class="form-group inline hidden" id="date-type">
                             <span class="radio-button-wrap">
                                 <input id="date-applied" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, "checked")>
                                 <label class="edubase-button-radio" for="date-applied">Applied</label>
@@ -144,7 +144,7 @@
                                 @Html.DropDownListFor(x => x.SelectedSuggesterId, Model.Suggesters, "Select user group", new { @class = "form-control" })
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group hidden" id="approver-wrap">
                                 @Html.LabelFor(x => x.SelectedApproverId, "Change approved by", new { @class = "form-label" })
                                 @Html.DropDownListFor(x => x.SelectedApproverId, Model.Approvers, "Select user group", new { @class = "form-control" })
                             </div>
@@ -352,6 +352,11 @@
             $("#update-search-type-selection").hide();
 
             $("#searchtype-establishment,#searchtype-group").change(function () {
+                if (this.value === 'establishment') {
+                    $('#approver-wrap, #date-type').removeClass('hidden');
+                } else {
+                    $('#approver-wrap, #date-type').addClass('hidden');
+                }
                 $("#establishment-search-filters").show();
             });
 
