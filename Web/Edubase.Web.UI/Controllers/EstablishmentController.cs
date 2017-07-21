@@ -129,6 +129,7 @@ namespace Edubase.Web.UI.Controllers
                     viewModel.AltPostCode = replaceAddressViewModel.PostCode;
                     viewModel.AltUPRN = replaceAddressViewModel.SelectedUPRN;
                 }
+                viewModel.IsDirty = true;
             }
         }
 

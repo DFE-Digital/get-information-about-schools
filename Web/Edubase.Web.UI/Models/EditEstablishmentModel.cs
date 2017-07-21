@@ -66,6 +66,10 @@ namespace Edubase.Web.UI.Models
         public int? UKPRN { get; set; }
         public int? EstablishmentTypeGroupId { get; set; }
 
+        /// <summary>
+        /// Flags whether there are unsaved changes in the viewmodel
+        /// </summary>
+        public bool IsDirty { get; set; }
 
 
         public string Address_Line1 { get; set; }
