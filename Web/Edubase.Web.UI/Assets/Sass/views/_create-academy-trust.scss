@@ -62,8 +62,18 @@
         width: 100%;
     }
 
+
+    .pagination {
+        border-bottom-width: 2px;
+        margin-bottom: 20px;
+    }
+
     .company-details {
-        margin-top: 4px;
+       border-top: 0;
+
+       thead th {
+           padding-top: 6px;           
+       }
     }
 
     .trust-details-header {
