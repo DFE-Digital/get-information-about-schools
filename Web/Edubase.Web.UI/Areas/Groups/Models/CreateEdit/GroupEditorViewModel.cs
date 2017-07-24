@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
-    using System;
+    using Edubase.Services.Domain;
     using GT = eLookupGroupType;
 
     public class GroupEditorViewModel : GroupEditorViewModelBase
@@ -37,6 +37,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public const string ActionLinkedEstablishmentCancelEdit = "cancel";
         public const string ActionLinkedEstablishmentSave = "savejoineddate";
         public const string ActionLinkedEstablishmentSearch = "search";
+
+        public string[] RecognisedWarningCodes { get; set; } = new[] { ApiWarningCodes.CONFIRMATION_CC_CLOSE };
 
         public string Action { get; set; }
         public int ActionUrn => int.Parse(Action.Split('-')[1]);
@@ -98,7 +100,22 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         
 
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
+        
+        public List<ApiWarning> WarningsToProcess { get; private set; } = new List<ApiWarning>();
 
+        public bool ProcessedWarnings { get; set; }
+
+        public void SetWarnings(ValidationEnvelopeDto envelope)
+        {
+            if (!ProcessedWarnings && !envelope.Errors.Any())
+            {
+                var warnings = envelope.Warnings;
+                warnings = warnings ?? new List<ApiWarning>();
+                warnings = warnings.Where(x => RecognisedWarningCodes.Contains(x.Code) == true).Distinct().ToList();
+                WarningsToProcess = warnings;
+                ProcessedWarnings = true;
+            }
+        }
 
         public GroupEditorViewModel()
         {
