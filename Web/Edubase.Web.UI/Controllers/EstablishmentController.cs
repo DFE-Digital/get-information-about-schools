@@ -28,8 +28,11 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Domain;
 using Edubase.Web.UI.Validation;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
+using Edubase.Services.Texuna.Lookup;
+using static Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -45,6 +48,25 @@ namespace Edubase.Web.UI.Controllers
         private readonly NomenclatureService _nomenclatureService;
         private readonly IResourcesHelper _resourcesHelper;
         private readonly ISecurityService _securityService;
+
+        private readonly Dictionary<string, string> validationFieldMapping = new Dictionary<string, string>
+        {
+            {"address_Line1", "Address.Line1"},
+            {"address_CityOrTown", "Address.CityOrTown" },
+            {"address_CountyId", "Address.County" },
+            {"address_PostCode", "Address.PostCode" },
+            {"headFirstName", "ManagerFirstName" },
+            {"headLastName", "ManagerLastName" },
+            {"contact_EmailAddress", "CentreEmail" },
+            {"contact_TelephoneNumber", "Telephone" },
+            {"ccOperationalHoursId", "OperationalHoursId" },
+            {"ccUnder5YearsOfAgeCount", "NumberOfUnderFives" },
+            {"ccGovernanceId", "GovernanceId" },
+            {"ccGovernanceDetail", "GovernanceDetail" },
+            {"ccDisadvantagedAreaId", "DisadvantagedAreaId" },
+            {"ccDirectProvisionOfEarlyYearsId", "DirectProvisionOfEarlyYears" },
+            {"statusId", "EstablishmentStatusId" }
+        };
 
         public EstablishmentController(IEstablishmentReadService establishmentReadService, 
             IGroupReadService groupReadService, 
@@ -67,13 +89,48 @@ namespace Edubase.Web.UI.Controllers
             _securityService = securityService;
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}")]
-        public async Task<ActionResult> EditDetails(int? id)
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}", Name = "EditEstablishmentDetail")]
+        public async Task<ActionResult> EditDetails(int? id, string addrtok)
         {
             if (!id.HasValue) return HttpNotFound();
-            ViewModel viewModel = await CreateEditViewModel(id);
+            ViewModel viewModel = await CreateEditViewModel(id, vm =>
+            {
+                if (addrtok.Clean() != null)
+                    ReplaceAddressFromUrlToken(addrtok, vm);
+            });
             viewModel.SelectedTab = "details";
             return View(viewModel);
+        }
+
+        private void ReplaceAddressFromUrlToken(string addrtok, ViewModel viewModel)
+        {
+            var replaceAddressViewModel = UriHelper.TryDeserializeUrlToken<ReplaceAddressViewModel>(addrtok);
+            if (replaceAddressViewModel != null)
+            {
+                if (replaceAddressViewModel.Target == "main")
+                {
+                    viewModel.Address_CityOrTown = replaceAddressViewModel.Town;
+                    viewModel.Address_CountryId = replaceAddressViewModel.CountryId;
+                    viewModel.Address_CountyId = replaceAddressViewModel.CountyId;
+                    viewModel.Address_Line1 = replaceAddressViewModel.Street;
+                    viewModel.Address_Locality = replaceAddressViewModel.Locality;
+                    viewModel.Address_Line3 = replaceAddressViewModel.Address3;
+                    viewModel.Address_PostCode = replaceAddressViewModel.PostCode;
+                    viewModel.Address_UPRN = replaceAddressViewModel.SelectedUPRN;
+                }
+                else if(replaceAddressViewModel.Target=="alt")
+                {
+                    viewModel.AltTown = replaceAddressViewModel.Town;
+                    viewModel.AltCountryId = replaceAddressViewModel.CountryId;
+                    viewModel.AltCountyId = replaceAddressViewModel.CountyId;
+                    viewModel.AltStreet = replaceAddressViewModel.Street;
+                    viewModel.AltLocality = replaceAddressViewModel.Locality;
+                    viewModel.AltAddress3 = replaceAddressViewModel.Address3;
+                    viewModel.AltPostCode = replaceAddressViewModel.PostCode;
+                    viewModel.AltUPRN = replaceAddressViewModel.SelectedUPRN;
+                }
+                viewModel.IsDirty = true;
+            }
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
@@ -148,7 +205,54 @@ namespace Edubase.Web.UI.Controllers
             
             return View("AddEditLink_FindEstablishment", viewModel);
         }
-        
+
+        [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "ReplaceEstablishmentAddress")]
+        public async Task<ActionResult> ReplaceEstablishmentAddressAsync(int urn, string target)
+        {
+            var viewModel = new ReplaceAddressViewModel((await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(Constants.COUNTRY_ID_UK), 
+                (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(), target);
+            await PopulateEstablishmentPageViewModel(viewModel, urn, "details");
+            return View("ReplaceAddress", viewModel);
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "ReplaceEstablishmentAddressPost")]
+        public async Task<ActionResult> ReplaceEstablishmentAddressPostAsync(int urn, string target, ReplaceAddressViewModel viewModel)
+        {
+            ModelState.Clear();
+
+            if(viewModel.ActionName == null)
+            {
+                if (viewModel.CountryId == Constants.COUNTRY_ID_UK) viewModel.Step = "enterpostcode";
+                else viewModel.Step = "editaddress";
+            }
+            else if (viewModel.ActionName == "find-address")
+            {
+                if(viewModel.CountryId == Constants.COUNTRY_ID_UK)
+                {
+                    viewModel.LookupAddresses = await _establishmentReadService.GetAddressesByPostCodeAsync(viewModel.PostCode, User);
+                    if(viewModel.LookupAddresses.Any()) viewModel.Step = "selectaddress";
+                    else ModelState.AddModelError("PostCode", "We couldn't find any addresses matching that postcode");
+                }
+                else viewModel.Step = "editaddress";
+            }
+            else if (viewModel.ActionName == "address-selected" && viewModel.SelectedUPRN != null)
+            {
+                var address = viewModel.LookupAddresses.FirstOrDefault(x => x.UPRN == viewModel.SelectedUPRN);
+                viewModel.Street = address.Street;
+                viewModel.Town = address.Town;
+                viewModel.PostCode = address.PostCode;
+                viewModel.Step = "editaddress";
+            }
+            else if (viewModel.ActionName == "replace-address")
+            {
+                var payload = UriHelper.SerializeToUrlToken(viewModel);
+                return RedirectToRoute("EditEstablishmentDetail", new { id = urn, addrtok = payload });
+            }
+
+            await PopulateEstablishmentPageViewModel(viewModel, urn, "details");
+            return View("ReplaceAddress", viewModel);
+        }
+
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links", Name = "EditEstabLinks")]
         public async Task<ActionResult> EditLinks(int? id)
         {
@@ -270,7 +374,7 @@ namespace Edubase.Web.UI.Controllers
             model.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             await PopulateSelectLists(model);
 
-            if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
+            if (model.Action == eAction.SaveDetails || model.Action == eAction.SaveIEBT || model.Action == eAction.SaveLocation)
             {
                 await ValidateAsync(model, domainModel);
 
@@ -280,21 +384,17 @@ namespace Edubase.Web.UI.Controllers
                     
                     var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, User);
 
-                    if (model.RequireConfirmationOfChanges && changes.Any()) model.ChangesSummary = changes;
-                    else
-                    {
-                        await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                        return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value, approved = model.OverrideCRProcess });
-                    }
+                    if (changes.Any()) model.ChangesSummary = changes;
+                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
-            else if (model.Action == ViewModel.eAction.Confirm)
+            else if (model.Action == eAction.Confirm)
             {
                 if (ModelState.IsValid)
                 {
                     await PrepareModels(model, domainModel);
                     await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                    return RedirectToAction("Details", "Establishment", new { id = model.Urn.Value, approved = model.OverrideCRProcess });
+                    return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
 
@@ -383,7 +483,7 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        private async Task<ViewModel> CreateEditViewModel(int? id)
+        private async Task<ViewModel> CreateEditViewModel(int? id, Action<ViewModel> preprocessViewModel = null)
         {
             var domainModel = (await _establishmentReadService.GetAsync(id.Value, User)).GetResult();
             var viewModel = _mapper.Map<ViewModel>(domainModel);
@@ -394,11 +494,13 @@ namespace Edubase.Web.UI.Controllers
             viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
 
+            preprocessViewModel?.Invoke(viewModel);
+
             await PopulateSelectLists(viewModel);
             return viewModel;
         }
 
-        [HttpGet, Route("Details/{id}")]
+        [HttpGet, Route("Details/{id}", Name = "EstabDetails")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false)
         {
             ViewBag.ShowApproved = approved;
@@ -693,6 +795,20 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
+        [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
+        public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn)
+        {
+            await _establishmentWriteService.ConfirmAsync(urn, User);
+            return RedirectToRoute("EstabDetails", new { id = urn });
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate")]
+        public async Task<ActionResult> EstablishmentGovernanceConfirmUpToDateAsync(int urn)
+        {
+            await _establishmentWriteService.ConfirmGovernanceAsync(urn, User);
+            return RedirectToRoute("EstabDetails", new { id = urn });
+        }
+
         //[HttpGet, EdubaseAuthorize, Route("CreateChildrensCentre", Name = "CreateChildrensCentre")]
         //public async Task<ActionResult> CreateChildrensCentre()
         //{
@@ -741,7 +857,7 @@ namespace Edubase.Web.UI.Controllers
             };
 
             var validation = await _establishmentWriteService.ValidateCreateAsync(newEstablishment, true, User);
-            validation.ApplyToModelState(ControllerContext);
+            ApplyCreateChildrensCenterValidationErrors(validation);
 
             if (ModelState.IsValid)
             {
@@ -759,6 +875,19 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
+        private void ApplyCreateChildrensCenterValidationErrors(ValidationEnvelopeDto validation)
+        {
+            foreach (var error in validation.Errors)
+            {
+                if (validationFieldMapping.ContainsKey(error.Fields))
+                {
+                    error.Fields = validationFieldMapping[error.Fields];
+                }
+            }
+
+            validation.ApplyToModelState(ControllerContext, true);
+        }
+
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
         {
             viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
@@ -768,12 +897,14 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task PopulateCCSelectLists(CreateChildrensCentreViewModel viewModel)
         {
+            viewModel.PhaseId = 3;
             viewModel.OperationalHoursOptions = (await _cachedLookupService.CCOperationalHoursGetAllAsync()).ToSelectList();
             viewModel.GovernanceOptions = (await _cachedLookupService.CCGovernanceGetAllAsync()).ToSelectList();
             viewModel.DisadvantagedAreaOptions = (await _cachedLookupService.CCDisadvantagedAreasGetAllAsync()).ToSelectList();
             viewModel.DirectProvisionOfEarlyYearsOptions = (await _cachedLookupService.DirectProvisionOfEarlyYearsGetAllAsync()).ToSelectList();
             viewModel.EstablishmentStatusOptions = (await _cachedLookupService.EstablishmentStatusesGetAllAsync()).ToSelectList();
             viewModel.Address.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList();
+            viewModel.Phases = (await _cachedLookupService.CCPhaseTypesGetAllAsync()).ToSelectList();
             await PopulateSelectLists(viewModel);
         }
     }

@@ -20,7 +20,7 @@
             <div class="wait-spinner" v-show="isProcessing" aria-live="polite">
                 <p class="visually-hidden">Please wait</p>
             </div>
-            <h1 class="heading-large" v-show="!isProcessing">Items for approval</h1>
+            <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
             <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRemoved">
                 <div class="tick"></div>
                 <p>Items approved. The editor has been notified by email.</p>
@@ -45,7 +45,7 @@
                     <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
                         <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
                         <button type="submit" name="action" value="" class="button" 
-                                v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false">Reject</button>
+                                v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false, reason=''">Reject</button>
                     </div>
 
                     <div v-show="pendingRejection">
@@ -54,7 +54,7 @@
                             <span class="form-hint">Enter reason (Maximum 1000 characters)</span>
                             <span class="error-message" v-show="invalidReason">Please enter a reason for the rejection.</span>
                             <span class="error-message" v-show="reasonLength">Please enter a reason less than 1000 characters</span>
-                            <textarea id="reason" class="edubase-textarea"></textarea>
+                            <textarea id="reason" class="edubase-textarea" v-model="reason"></textarea>
                         </div>
                         <div class="submit-cancel-panel">
                             <button type="submit" name="action" class="button" v-on:click.prevent="confirmRejection">Confirm</button>

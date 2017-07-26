@@ -43,6 +43,7 @@
             el: '#change-approvals',
             data: {
                 changes: [],
+                reason: '',
                 currentPage: 0,
                 pages: [],
                 initialCount: 0,

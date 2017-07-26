@@ -1,0 +1,89 @@
+﻿.academies-list-wrapper {
+    clear: both;
+}
+
+.create-academy-trust {
+    .change-link {
+        font-size: 16px;
+        display: block;
+        float: left;
+        margin: 0;
+    }
+
+    .establishment-details {
+        clear: both;
+        overflow: hidden;
+    }
+
+    .result-list .button-row {
+        display: none;
+        padding: 0;
+    }
+
+    .button-row {
+        padding-top: 12px;
+    }
+
+    .academies-bulk-list > li {
+        border-bottom: $grey-2 1px solid;
+        padding: 20px 0;
+    }
+
+    .inline-submit {
+        margin-left: 0;
+    }
+
+    .inline-with-button .form-control {
+        width: 60%;
+
+        @include media(mobile) {
+            width: 50%;
+        }
+    }
+
+    .button {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    .table-caption {
+        font-size: 14px;
+        margin: 12px 0;
+    }
+
+    .new-trust-details {
+        font-size: 16px;
+    }
+
+    .company-result {
+        margin-top: 1px;
+        margin-bottom: 3px;
+        margin-left: -8px;
+        width: 100%;
+    }
+
+
+    .pagination {
+        border-bottom-width: 2px;
+        margin-bottom: 20px;
+    }
+
+    .company-details {
+       border-top: 0;
+
+       thead th {
+           padding-top: 6px;           
+       }
+
+       tbody td {
+           padding: 8px 4px;
+       }
+    }
+
+    .trust-details-header {
+        margin-bottom: 6px;
+    }
+    .lower-pagination .pagination{
+        border-top-width: 2px;
+    }
+}

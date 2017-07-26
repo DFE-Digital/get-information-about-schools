@@ -71,7 +71,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
 
-        [Route(nameof(Details) + "/{id:int}"), HttpGet]
+        [Route(nameof(Details) + "/{id:int}", Name ="GroupDetails"), HttpGet]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups)
         {
             var model = (await _groupReadService.GetAsync(id, User)).GetResult();
@@ -95,9 +95,16 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, 20, User);
             }
 
-            await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value);
+            await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value, true);
             
             return View(viewModel);
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{uid:int}", Name = "GroupGovernanceConfirmUpToDate")]
+        public async Task<ActionResult> GroupGovernanceConfirmUpToDateAsync(int uid)
+        {
+            await _groupWriteService.ConfirmGovernanceAsync(uid, User);
+            return RedirectToRoute("GroupDetails", new { id = uid });
         }
 
         [HttpGet]
@@ -290,6 +297,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 if (viewModel.SearchText.IsInteger()) viewModel.Results = await _companiesHouseService.SearchByCompaniesHouseNumber(viewModel.SearchText);
                 else viewModel.Results = await _companiesHouseService.SearchByName(viewModel.SearchText, viewModel.StartIndex, viewModel.PageSize);
                 viewModel.NotFound = !viewModel.Results.Items.Any();
+
+                if (viewModel.Results.Count == 1)
+                {
+                    return RedirectToAction("CreateAcademyTrust", "Group", new {companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups"});
+                }
             }
             return View(viewModel);
         }
@@ -304,8 +316,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var groupTypes = await GetAcademyTrustGroupTypes();
 
             var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
-            vm.TrustExists = await _groupReadService.ExistsAsync(User, companiesHouseNumber: CompaniesHouseNumber.Parse(companiesHouseNumber));
-            
+
+            var existingTrust = await _groupReadService.SearchByIdsAsync(null, null, companiesHouseNumber, User);
+            if (existingTrust != null && existingTrust.Items.Any())
+            {
+                vm.TrustExists = true;
+                vm.TypeId = existingTrust.Items.First().GroupTypeId;
+                vm.GroupId = existingTrust.Items.First().GroupId;
+            }
+
             if (vm.Address == null) ModelState.AddModelError("", "This company record doesn't have an address");
             if (!vm.OpenDate.HasValue) ModelState.AddModelError("", "This company record doesn't have an incorporation date");
 

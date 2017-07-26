@@ -36,6 +36,14 @@ namespace Edubase.Web.UI.Models
         
         public EstablishmentDisplayEditPolicy EditPolicy { get; set; }
 
+        public Dictionary<string, string> SelectedTab2DetailPageTabNameMapping { get; private set; } = new Dictionary<string, string>
+        {
+            ["details"] = "#school-dashboard",
+            ["location"] = "#school-location",
+            ["iebt"] = "#school-iebt",
+            ["helpdesk"] = "#helpdesk"
+        };
+
         public int? Urn { get; set; }
         public int? LocalAuthorityId { get; set; }
         public string Name { get; set; }
@@ -58,6 +66,10 @@ namespace Edubase.Web.UI.Models
         public int? UKPRN { get; set; }
         public int? EstablishmentTypeGroupId { get; set; }
 
+        /// <summary>
+        /// Flags whether there are unsaved changes in the viewmodel
+        /// </summary>
+        public bool IsDirty { get; set; }
 
 
         public string Address_Line1 { get; set; }
@@ -68,7 +80,7 @@ namespace Edubase.Web.UI.Models
         public int? Address_CountryId { get; set; }
         public string Address_Locality { get; set; }
         public string Address_PostCode { get; set; }
-        
+        public string Address_UPRN { get; set; }
 
 
         public string AltSiteName { get; set; }
@@ -191,9 +203,7 @@ namespace Edubase.Web.UI.Models
         
         
         public List<ChangeDescriptorDto> ChangesSummary { get; set; }
-
-        public bool RequireConfirmationOfChanges => true;
-
+        
         public bool IsLAMaintained => TypeId.OneOfThese(ET.CommunitySchool, ET.FoundationSchool, ET.LANurserySchool, ET.PupilReferralUnit, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool, ET.CommunitySpecialSchool, ET.FoundationSpecialSchool);
 
         public bool IsAcademy => TypeId.OneOfThese(ET.Academy1619Converter, ET.Academy1619SponsorLed, ET.AcademyAlternativeProvisionConverter, ET.AcademyAlternativeProvisionSponsorLed, ET.AcademyConverter, ET.AcademySpecialConverter, ET.AcademySpecialSponsorLed, ET.AcademySponsorLed, ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsAlternativeProvision, ET.FreeSchoolsSpecial, ET.StudioSchools, ET.UniversityTechnicalCollege, ET.CityTechnologyCollege);

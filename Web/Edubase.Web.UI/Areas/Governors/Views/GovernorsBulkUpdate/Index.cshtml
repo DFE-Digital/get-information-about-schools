@@ -37,6 +37,7 @@ else
 
 @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    @Html.HiddenFor(x => x.TemplateUri)
     <div class="grid-row spaced-groups">
         <div class="column-full">
             @if (Model.WasSuccessful)
@@ -59,6 +60,9 @@ else
                 </a>
                 <div class="expanding-content panel-indent">
                     <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
+                    <p class="download-list-item">
+                        <a href="https://edubasepr.blob.core.windows.net/guidance/Governance%20User%20Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="bulkUpdate|governance|download">Governance guidance PDF, 118KB</a>
+                    </p>
                 </div>
             </div>
 
@@ -77,7 +81,7 @@ else
             <h2 class="heading-medium">Download template</h2>
             <p>Please download the template using the link below. Then, provide or update your governance information in the template.
              Finally, upload the completed template using the 'Choose file' button below.</p>
-            <a href="/public/downloads/GovernorsBulkUpdateTemplate.xlsx" class="download-list-item">GovernanceTemplate.xlsx, 18KB</a>
+            <a href="@Model.TemplateUri" class="download-list-item">GovernanceTemplate.xlsx, 18KB</a>
         </div>
 
         <div class="column-full">

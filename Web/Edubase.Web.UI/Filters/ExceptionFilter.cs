@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using Edubase.Common;
 using Edubase.Services.Exceptions;
 using Autofac.Core;
+using Kentor.AuthServices.Exceptions;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -29,14 +30,9 @@ namespace Edubase.Web.UI.Filters
 
                 filterContext.ExceptionHandled = true;
             }
-            else if (filterContext.Exception.GetBaseException() is NotImplementedException || filterContext.Exception.GetBaseException() is DependencyResolutionException) // TODO: KHD: For removal post integration
+            else if (filterContext.Exception is UnsuccessfulSamlOperationException)
             {
-                filterContext.Result = new ViewResult
-                {
-                    ViewName = "~/Views/Shared/DomainError.cshtml",
-                    ViewData = new ViewDataDictionary() { { "PublicErrorMessage", "Functionality has not been implemented yet. Underlying error: " + filterContext.Exception.GetBaseException().Message } }
-                };
-
+                filterContext.Result = new RedirectResult("/Unauthorized/LoginFailed");
                 filterContext.ExceptionHandled = true;
             }
             else // unhandled/unexpected exception; log it and tell the user.
@@ -49,6 +45,16 @@ namespace Edubase.Web.UI.Filters
                     {
                         ViewName = "~/Views/Shared/Error.cshtml",
                         ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id }
+                    };
+
+                    filterContext.ExceptionHandled = true;
+                }
+                else // show full technical error detail
+                {
+                    filterContext.Result = new ViewResult
+                    {
+                        ViewName = "~/Views/Shared/FullErrorDetail.cshtml",
+                        ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id }
                     };
 
                     filterContext.ExceptionHandled = true;
@@ -79,7 +85,8 @@ namespace Edubase.Web.UI.Filters
                 Url = ctx?.Request?.Url.ToString(),
                 UserAgent = ctx?.Request?.UserAgent,
                 UserId = userId,
-                UserName = userName
+                UserName = userName,
+                RequestJsonBody = (exception as TexunaApiSystemException)?.ApiRequestJsonPayload ?? string.Empty
             };
 
             DependencyResolver.Current.GetService<IMessageLoggingService>().Push(msg);

@@ -141,17 +141,29 @@
                     return num;
                 },
                 buildTypesDropDown: function () {
+                    var self = this;
                     var frag = document.createDocumentFragment();
                     var select = document.getElementById('academy-type');
                     select.innerHTML = '';
+                    var ps = document.createElement('option');
+                    ps.appendChild(document.createTextNode('Please select'));
+                   
+                    frag.appendChild(ps);
                     for (var i = 0, len = this.validTypes.length; i < len; i++) {
                         var opt = document.createElement('option');
                         var t = this.validTypes[i];
+                       
                         opt.value = t.id;
                         opt.innerHTML = t.name;
                         frag.appendChild(opt);
                     }
                     select.appendChild(frag);
+
+                    window.setTimeout(function() {
+                        select.options[0].selected = true;
+                        self.pendingEstab.academyType = 'Please select';
+                    },100);
+                    
                 },
                 detailUrl: function (urn) {
                     return '/Establishment/Details/' + urn;
@@ -271,6 +283,7 @@
                                         self.pendingEstab = estab;
                                     } else {
                                         self.urnLookUpError = "The urn in is invalid";
+                                        self.isSearching = false;
                                     }
                                 }, 0);
                             });
@@ -320,11 +333,12 @@
             addEstablishment: function () {
                 var self = this;
                 this.openDateError = this.validateOpenDate();
+                this.academyUnselectedError = this.pendingEstab.academyType === 'Please select';
                 this.urnLookUpError = '';
                 this.apiValidationError = '';
                 var dateArray = [this.pad(this.openDateDay), this.pad(this.openDateMonth), this.openDateYear];
 
-                if (!this.openDateError) {
+                if (!this.openDateError && !this.academyUnselectedError) {
                     self.isProcessing = true;
 
                     $.ajax({

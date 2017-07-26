@@ -35,7 +35,8 @@
             }
         </td>
     </tr>
-    @if (User.Identity.IsAuthenticated)
+
+    @if (Model.DisplayPolicy.HeadEmailAddress)
     {
         <tr>
             <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th>
@@ -43,16 +44,6 @@
                 @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
             </td>
         </tr>
-        <tr>
-            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) email address</th>
-            <td>
-                @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
-            </td>
-        </tr>
-    }
-
-    @if (Model.DisplayPolicy.HeadEmailAddress)
-    {
         <tr>
             <th scope="row">@(Model.DisplayPolicy.HeadEmailAddressLabel):</th>
             <td>

@@ -7,7 +7,7 @@
     var recordCount = 0;
     if (Model.Results != null)
     {
-       recordCount = (int)Model.Results.Count;
+        recordCount = (int)Model.Results.Count;
     }
 }
 <div class="breadcrumbs">
@@ -21,9 +21,9 @@
         @if (Model.Results != null)
         {
             <li>
-                @Html.ActionLink("Change history", "Index", "ChangeHistory", new {area = ""}, null)
+                @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = "" }, null)
             </li>
-        } 
+        }
     </ul>
 </div>
 
@@ -32,10 +32,10 @@
 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 <div class="grid-row" id="change-history-app">
-    @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get,  new { id="change-history-form", data_record_count = recordCount } ))
+    @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get, new { id = "change-history-form", data_record_count = recordCount }))
     {
-        <div class="column-full @(Model.Results == null ? "" : "hidden")" >
-            
+        <div class="column-full @(Model.Results == null ? "" : "hidden")">
+
             <div class="button-row">
                 <input type="submit" class="button" value="Apply filters" />
                 @Html.RouteLink("Clear filters", "ChangeHistoryCriteria", null, new { @class = "button button-grey" })
@@ -64,8 +64,8 @@
             <div id="establishment-search-filters" class="panel-indent" style="display:@(Model.SearchType != null ? "" : "none");">
                 <div class="expander-panel open-expander">
                     <a href="#" class="panel-trigger heading-small">Date</a>
-                    <div class="expander-panel-content">
-                        <div class="form-group inline">
+                    <div class="expander-panel-content" >
+                        <div class="form-group inline hidden" id="date-type">
                             <span class="radio-button-wrap">
                                 <input id="date-applied" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, "checked")>
                                 <label class="edubase-button-radio" for="date-applied">Applied</label>
@@ -77,7 +77,7 @@
                             </span>
 
                             <span class="radio-button-wrap">
-                                <input id="date-effective" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE" type="radio" @Html.Conditional(Model.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, "checked")>
+                                <input id="date-effective" name="@nameof(Model.DateFilterMode)" value="@ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE" type="radio" @Html.Conditional(Model.DateFilterMode != ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED || Model.DateFilterMode != ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, "checked")>
                                 <label class="edubase-button-radio" for="date-effective">Effective</label>
                             </span>
                         </div>
@@ -96,7 +96,7 @@
                         @foreach (var item in Model.EstablishmentTypes)
                         {
                             var name = ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS;
-                            
+
                             <span class="checkbox-wrap">
                                 <input id="@(name + "_" + item.Id)" name="@name" value="@item.Id" type="checkbox" @Html.Conditional(Model.SelectedEstablishmentTypeIds.Contains(item.Id), "checked") />
                                 <label for="@(name + "_" + item.Id)" class="edubase-button-checkbox">@item.Name</label>
@@ -144,7 +144,7 @@
                                 @Html.DropDownListFor(x => x.SelectedSuggesterId, Model.Suggesters, "Select user group", new { @class = "form-control" })
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group hidden" id="approver-wrap">
                                 @Html.LabelFor(x => x.SelectedApproverId, "Change approved by", new { @class = "form-label" })
                                 @Html.DropDownListFor(x => x.SelectedApproverId, Model.Approvers, "Select user group", new { @class = "form-control" })
                             </div>
@@ -160,12 +160,12 @@
                 @Html.RouteLink("Clear filters", "ChangeHistoryCriteria", null, new { @class = "button button-grey" })
             </div>
         </div>
-        
+
         if (Model.Results != null)
         {
             <div class="column-full">
                 <h2 class="heading-small">Download change history</h2>
-                
+
                 <div class="form-group padded-group">
                     <span class="radio-button-wrap">
                         <input id="download-csv" name="@nameof(Model.DownloadFormat)" value="csv" type="radio" @Html.Conditional(Model.DownloadFormat == Edubase.Services.Enums.eFileFormat.CSV, "checked") />
@@ -182,17 +182,16 @@
                 </div>
 
                 <button type="submit" name="@nameof(Model.StartDownload)" class="button" value="true" id="download-continue">Continue</button>
-                
+
                 <div>
                     <p><button type="submit" name="@nameof(Model.ClearResults)" class="button-as-link" value="true">Show filters</button></p>
                     @Html.Partial("_GenericPagination", Model)
                 </div>
 
-                <div class="changes-list-wrapper">
-                    @if (Model.IsEstablishmentSearch)
+                @if (Model.IsEstablishmentSearch)
                     {
-                        <table class="edubase-table approval-changes establishment-changes" id="changes-table">
-                            <thead>
+                    <table class="edubase-table change-history establishment-changes" id="changes-table">
+                        <thead>
                             <tr>
                                 <th scope="col" class="cell-urn">
                                     <abbr title="Unique reference number">
@@ -205,12 +204,12 @@
                                 <th scope="col" class="cell-oldvalue">Old value</th>
                                 <th scope="col" class="cell-newvalue">New value</th>
                                 <th scope="col" class="cell-suggested">Suggested by</th>
-                                <th scope="col" class="cell-edate">Approved by</th>
+                                <th scope="col" class="cell-suggested">Approved by</th>
                             </tr>
-                            </thead>
-                            @if (Model.Results.Items.Any())
-                            {
-                                <tbody>
+                        </thead>
+                        @if (Model.Results.Items.Any())
+                        {
+                            <tbody>
                                 @foreach (var item in Model.Results.Items)
                                 {
                                     <tr>
@@ -224,90 +223,89 @@
                                         <td aria-label="Approved by">@item.ApproverName</td>
                                     </tr>
                                 }
-                                </tbody>
-                            }
-                            else
-                            {
-                                <tbody>
+                            </tbody>
+                        }
+                        else
+                        {
+                            <tbody>
                                 <tr>
                                     <td colspan="9">
                                         <p> No items</p>
                                     </td>
                                 </tr>
-                                </tbody>
-                            }
-                        </table>
-                    }
-                    else
-                    {
-                        <table class="edubase-table approval-changes establishment-changes" id="changes-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="cell-edate">Date changed</th>
-                                    <th scope="col" class="cell-requesttype">Request type</th>
-                                    <th scope="col" class="cell-urn">
-                                        <abbr title="Unique identifier">
-                                            Group UID
-                                        </abbr>
-                                    </th>
-                                    <th scope="col" class="cell-estab">Group</th>
-                                    <th scope="col" class="cell-change">Change</th>
-                                    <th scope="col" class="cell-suggested">Suggested by</th>
-                                </tr>
-                            </thead>
-                            @if (Model.Results.Items.Any())
-                            {
-                                <tbody>
-                                    @foreach (var item in Model.Results.Items)
-                                    {
-                                        <tr>
-                                            <td aria-label="Date changed">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
-                                            <td aria-label="Request type">@item.RequestType</td>
-                                            <td aria-label="Group UID"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupUId)</a></td>
-                                            <td aria-label="Group"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupName)</a></td>
-                                            <td aria-label="Change">
-                                                <dl>
-                                                    @if (item.RequestType == GroupChangeRequestType.GroupChange)
-                                                    {
-                                                        <dt>Field</dt>
-                                                        <dd>@item.FieldName</dd>
-                                                        <dt>Old value</dt>
-                                                        <dd>@item.OldValue</dd>
-                                                        <dt>New value</dt>
-                                                        <dd>@item.NewValue</dd>
-                                                    }
-                                                    else
-                                                    {
-                                                        <dt>Establishment</dt>
-                                                        <dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
-                                                        <dt>Link date</dt>
-                                                        <dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
-                                                        <dt>Type</dt>
-                                                        <dd>@(item.LinkType?.ToString() ?? "not recorded")</dd>
-                                                    }
-
-                                                </dl>
-                                            </td>
-                                            <td aria-label="Suggested by">@item.SuggesterName</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            }
-                            else
-                            {
-                                <tbody>
+                            </tbody>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <table class="edubase-table change-history" id="changes-table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="cell-edate">Date changed</th>
+                                <th scope="col" class="cell-requesttype">Request type</th>
+                                <th scope="col" class="cell-urn">
+                                    <abbr title="Unique identifier">
+                                        Group UID
+                                    </abbr>
+                                </th>
+                                <th scope="col" class="cell-estab">Group</th>
+                                <th scope="col" class="cell-change">Change</th>
+                                <th scope="col" class="cell-suggested">Suggested by</th>
+                            </tr>
+                        </thead>
+                        @if (Model.Results.Items.Any())
+                        {
+                            <tbody>
+                                @foreach (var item in Model.Results.Items)
+                                {
                                     <tr>
-                                        <td colspan="9">
-                                            <p> No items</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            }
-                        </table>
-                    }
-                </div>
+                                        <td aria-label="Date changed">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
+                                        <td aria-label="Request type">@item.RequestType</td>
+                                        <td aria-label="Group UID"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupUId)</a></td>
+                                        <td aria-label="Group"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupName)</a></td>
+                                        <td aria-label="Change">
+                                            <dl class="key-value-list">
+                                                @if (item.RequestType == GroupChangeRequestType.GroupChange)
+                                                {
+                                                    <dt>Field</dt>
+                                                    <dd>@item.FieldName</dd>
+                                                    <dt>Old value</dt>
+                                                    <dd>@item.OldValue</dd>
+                                                    <dt>New value</dt>
+                                                    <dd>@item.NewValue</dd>
+                                                }
+                                                else
+                                                {
+                                                    <dt>Establishment</dt>
+                                                    <dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
+                                                    <dt>Link date</dt>
+                                                    <dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
+                                                    <dt>Type</dt>
+                                                    <dd>@(item.LinkType?.ToString() ?? "not recorded")</dd>
+                                                }
 
+                                            </dl>
+                                        </td>
+                                        <td aria-label="Suggested by">@item.SuggesterName</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                        else
+                        {
+                            <tbody>
+                                <tr>
+                                    <td colspan="9">
+                                        <p> No items</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                }
             </div>
+
         }
     }
 </div>
@@ -317,15 +315,15 @@
 
 
     <script>
-        (function() {
+        (function () {
             var panels = document.querySelectorAll('.expander-panel');
 
             Array.prototype.forEach.call(panels,
-                function(el) {
+                function (el) {
                     var trigger = el.querySelectorAll('.panel-trigger')[0];
                     var checkBoxes = el.querySelectorAll('.checkbox-wrap');
 
-                    trigger.addEventListener('click', function(e) {
+                    trigger.addEventListener('click', function (e) {
                         e.preventDefault();
                         el.classList.toggle('open-expander');
 
@@ -353,16 +351,21 @@
 
             $("#update-search-type-selection").hide();
 
-            $("#searchtype-establishment,#searchtype-group").change(function() {
+            $("#searchtype-establishment,#searchtype-group").change(function () {
+                if (this.value === 'establishment') {
+                    $('#approver-wrap, #date-type').removeClass('hidden');
+                } else {
+                    $('#approver-wrap, #date-type').addClass('hidden');
+                }
                 $("#establishment-search-filters").show();
             });
 
-            $("#searchtype-establishment").change(function() {
+            $("#searchtype-establishment").change(function () {
                 $(".for-search-type-group").hide();
                 $(".for-search-type-establishment").show();
             });
 
-            $("#searchtype-group").change(function() {
+            $("#searchtype-group").change(function () {
                 $(".for-search-type-establishment").hide();
                 $(".for-search-type-group").show();
             });
@@ -391,6 +394,6 @@
         }());
     </script>
 
-    
-    
+
+
 }

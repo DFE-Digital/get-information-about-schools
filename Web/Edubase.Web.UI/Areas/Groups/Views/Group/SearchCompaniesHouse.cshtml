@@ -1,6 +1,6 @@
 ﻿@model SearchCompaniesHouseModel
 @{
-    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.bodyClasses = "create-edit-school school-details create-academy-trust";
     ViewBag.hideLogo = true;
     ViewBag.Title = "Create academy trust";
 }
@@ -20,46 +20,44 @@
 { 
     <div class="grid-row">
         <div class="column-full">                      
-            <h1 class="heading-xlarge">
-                Create a new Multi academy trust or Single academy trust
-            </h1>
+            <h1 class="heading-xlarge">Create an academy trust</h1>
+            <p>To create an academy trust record select the company record from Companies House.</p>
 
             @Html.ValidationSummary(null, new { @class = "error-summary" })
-
-
         </div>
     </div>
     <div class="grid-row">
         <div class="column-two-thirds">
+            @if (string.IsNullOrWhiteSpace(Model.SearchText) && Request.Url.PathAndQuery.Contains("SearchText"))
+            {
+                <div class="warning-message">
+                    <p>Please enter a Companies House name or number to start a search</p>
+                </div>
+            }
+            else if (Model.NotFound)
+            {
+                <div class="warning-message">
+                    <p>We couldn't find any companies matching your search criteria</p>
+                </div>
+            }
 
+            <h2 class="heading-small">Add company</h2>
             <div class="form-group inline-with-button">
-                <label class="form-label">Enter Companies House number OR Company name</label>
-
-                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control "})
-                <button type="submit" class="button button-next">Search</button>
+                @Html.LabelFor(x => x.SearchText, "Enter the Companies House name or number", new { @class = "form-label"})
+                @Html.TextBoxFor(x => x.SearchText, new {maxlength = 120, @class = "form-control "})
+                <button type="submit" class="button inline-submit">Find</button>
             </div>
 
         </div>
     </div>
 
-    if (Model.Results != null)
+    if (Model.Results != null && !Model.NotFound)
     {
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <p>
-                    We found <span class="heading-xlarge">@Model.Results.Count</span>
-                    @(Model.Results.Count == 1 ? "company" : "companies")
-                    @(Model.IsNumberSearch ? $"with the Companies House number '{Model.SearchText}'" : $"matching '{Model.SearchText}'").
-                </p>
-
-            </div>
-        </div>
-
-        
+       
         if (Model.Results.PageCount > 1)
         {
             <div class="grid-row">
-                <div class="column-two-thirds top-pagination">
+                <div class="column-full top-pagination">
                     @Html.Partial("_GenericPagination", Model)
                 </div>
             </div>
@@ -69,29 +67,26 @@
         if (Model.Results.Items.Any())
         {
             <div class="grid-row">
-                <div class="column-two-thirds">
-                    <ul class="school-results-listing">
+                <div class="column-full">
+                    <table class="edubase-table company-details">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Companies House no.</th>
+                            <th>Incorporated</th>
+                            <th>Address</th>
+                        </tr>
+                        </thead>
                         @foreach (var result in Model.Results.Items)
                         {
-                            <li>
-                                <h2>@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, new { @class = "bold-small" })</h2>
-                               <table class="borderless trust-details">
-                                    <tr>
-                                        <th scope="row">Companies House Number:</th>
-                                        <td><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Incorporated:</th>
-                                        <td>@(result.IncorporationDate?.ToString("dd MMMM yyyy"))</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Address:</th>
-                                        <td>@(result.Address.ToString() ?? "Not recorded")</td>
-                                    </tr>
-                                </table>
-                            </li>
+                            <tr class="company-result">
+                                <td aria-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
+                                <td aria-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
+                                <td aria-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
+                                <td aria-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
+                            </tr>
                         }
-                    </ul>
+                    </table>
                 </div>
             </div>
         }
@@ -99,23 +94,12 @@
         if (Model.Results.PageCount > 1)
         {
             <div class="grid-row">
-                <div class="column-two-thirds lower-pagination">
+                <div class="column-full lower-pagination">
                     @Html.Partial("_GenericPagination", Model)
                 </div>
             </div>
         }
-
-        if (Model.NotFound)
-        {
-            <div class="grid-row">
-                <div class="column-two-thirds">
-                    <p>Please check the Companies House number or Company name entered.</p>
-                </div>
-            </div>
-        }
-
     }
 
 
 }
-@Html.ActionLink("Cancel", "Index", "Home", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })

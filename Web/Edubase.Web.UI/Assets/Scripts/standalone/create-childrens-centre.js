@@ -37,7 +37,10 @@
             urnLookupUrl: '/api/establishment/{0}',
             validateUrl: '/Groups/Group/CreateChildrensCentre/Validate/All',
             apiErrors: [],
+            urnApiErrors: [],
             urnError: false,
+            duplicateUrnError: false,
+            tooFewCentresError: false,
             appState: 'initial', // initial || groupDetail || addCentre || detail
             pendingEdit: false,
             detailEdit: false,
@@ -79,6 +82,11 @@
             },
             tableCount: function () {
                 return '1 - ' + this.centresInGroup.length + ' of ' + this.centresInGroup.length;
+            },
+            addedUrns: function() {
+                return this.centresInGroup.map(function(estab) {
+                    return estab.urn;
+                });
             },
             pendingEstabAddress: function () {
                 var address = [];
@@ -122,6 +130,12 @@
                     'CCIsLeadCentre'
                 ];
                 var estabs = [];
+
+                this.tooFewCentresError = this.centresInGroup.length < 2;
+
+                if (this.tooFewCentresError) {
+                    return;
+                }
 
                 this.isProcessing = true;
 
@@ -208,7 +222,6 @@
                             }
                         }
 
-
                         form.appendChild(frag);
 
                         window.setTimeout(function() {
@@ -258,6 +271,13 @@
                 var self = this;
                 this.urnError = false;
                 this.apiErrors = [];
+                this.urnApiErrors = [];
+                this.tooFewCentresError = false;
+
+                this.duplicateUrnError = this.addedUrns.indexOf(Number(this.searchUrn)) > -1;
+
+                if (this.duplicateUrnError) {  return; }
+
                 if (isNaN(this.searchUrn) || this.searchUrn === '') {
                     this.urnError = true;
                     return;
@@ -271,12 +291,60 @@
                         self.urnError = data.notFound;
                         if (!self.urnError) {
                             self.pendingEstab = data.returnValue;
-                            self.appState = 'detail';
-                            self.isProcessing = false;
+                            self.remoteUrnValidation();
                         }
                     },
                     error: function () {
                         self.urnError = true;
+                        self.isProcessing = false;
+                    }
+                });
+            },
+            remoteUrnValidation: function() {
+                var self = this;
+                var o = {};
+                var today = new Date();
+                var centre = self.pendingEstab;
+                o.urn = centre.urn;
+                o.joinedDate = [today.getFullYear(), today.getMonth() + 1, today.getDate()].join('-');
+                o.cCIsLeadCentre = centre.urn === self.groupLead;
+
+                var validationObj = {
+                    "groupTypeId": self.groupType,
+                    "name": self.groupName,
+                    "openDate": [self.openDateYear, self.openDateMonth, self.openDateDay].join('-'),
+                    "localAuthorityId": self.la,
+                    "establishments": [o]
+                }
+                $.ajax({
+                    url: self.validateUrl,
+                    method: 'post',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify(validationObj),
+                    success: function (data) {
+                        if (data.length > 0) {
+                            $(data).each(function(n, error) {
+                                var o = {};
+                                // ensure that only URN errors are included 
+                                // and ignore the message about the number of establishments in the group - this validation of a single URN
+                                if (/\d/.test(error.Fields) && error.Message.indexOf('must have more than one linked') === -1) {
+                                    var est = self.pendingEstab;
+                                    o.field = est.name + ' (' + est.urn + ')';
+                                    o.message = error.Message;
+                                    self.urnApiErrors.push(o);
+                                } 
+                            });
+                            self.isProcessing = false;
+                        } else {                          
+                           self.isProcessing = false; 
+                        }
+                        if (self.urnApiErrors.length === 0) {
+                            self.appState = 'detail';
+                        }
+                    },
+                    error: function (jqXhr) {
+                        console.log(jqXhr);
                         self.isProcessing = false;
                     }
                 });
@@ -307,6 +375,7 @@
                 this.searchUrn = urn;
                 this.pendingEdit = true;
                 this.apiErrors = [];
+                this.tooFewCentresError = false;
                 this.pendingEstab = this.centresInGroup.filter(function (estab) {
                     if (urn === estab.urn) {
                         return estab;
@@ -326,6 +395,7 @@
             },
             removeJoiningEstab: function (urn) {
                 this.apiErrors = [];
+                this.tooFewCentresError = false;
                 var pos = this.centresInGroup.map(function (estab) {
                     return estab.urn;
                 }).indexOf(urn);

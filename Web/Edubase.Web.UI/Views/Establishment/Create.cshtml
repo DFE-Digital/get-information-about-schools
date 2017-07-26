@@ -55,6 +55,12 @@
                     @Html.ValidationMessageFor(x => x.EstablishmentTypeId)
                     @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
                 </div>
+                
+                <div id="establishment-phase-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                    @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "form-label" })
+                    @Html.ValidationMessageFor(x => x.EducationPhaseId)
+                    @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "form-control" })
+                </div>
 
                 <div class="childrens-centre-fields" style="display:none">
                     @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)"})
@@ -110,15 +116,13 @@
                         @Html.ValidationMessageFor(x => x.GovernanceDetail)
                         @Html.TextBoxFor(x => x.GovernanceDetail, new { @class = "form-control" })
                     </div>
-                </div>
 
-                <div id="establishment-phase-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
-                    @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "form-label" })
-                    @Html.ValidationMessageFor(x => x.EducationPhaseId)
-                    @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "form-control" })
-                </div>
-                
-                <div class="childrens-centre-fields" style="display:none">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.PhaseId)">
+                        @Html.LabelFor(x => x.PhaseId)
+                        @Html.ValidationMessageFor(x => x.PhaseId)
+                        @Html.DropDownListFor(x => x.PhaseId, Model.Phases, "Please select", new { @class = "form-control", disabled="disabled" })
+                    </div>
+
                     <div class="form-group @Html.ValidationCssClassFor(x => x.DisadvantagedAreaId)">
                         @Html.LabelFor(x => x.DisadvantagedAreaId, new { @class = "form-label" })
                         @Html.ValidationMessageFor(x => x.DisadvantagedAreaId)
@@ -190,10 +194,8 @@
 
             var func = function() {
                 if ($radios.filter(':checked').val() === 'False') {
-                    //$enterNumber.removeClass('hidden');
                     $enterNumber.show();
                 } else {
-                    //$enterNumber.addClass('hidden');
                     $enterNumber.hide();
                 }
             };
@@ -266,7 +268,7 @@
         function createChildrensCentre() {
             //$("#title").text("Create a children's centre");
             //$("#establishment-type-form-group").hide();
-            $("#establishment-phase-form-group").show();
+            $("#establishment-phase-form-group").hide();
             $("#number-gen-options").hide();
             $("#enter-number").hide();
             $phaseSelector.prop('disabled', 'disabled');

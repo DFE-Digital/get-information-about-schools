@@ -15,8 +15,9 @@ namespace Edubase.Web.UI.Models.Establishments.Validators
 
             RuleFor(x => x.EducationPhaseId)
                 .Cascade(CascadeMode.StopOnFirstFailure)
+                .NotNull().WithMessage("Please select a a phase of education")
                 .NotEmpty().WithMessage("Please select a a phase of education")
-                .Must((m, x) => (establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId]).Contains(x))
+                .Must((m, x) => (establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId]).Contains(x.Value))
                 .WithMessage("Education phase is not valid for the selected type of establishment");
 
             RuleFor(x => x.EstablishmentTypeId).NotEmpty().WithMessage("Please select an establishment type");
@@ -37,8 +38,9 @@ namespace Edubase.Web.UI.Models.Establishments.Validators
 
             RuleFor(x => x.EducationPhaseId)
                 .Cascade(CascadeMode.StopOnFirstFailure)
+                .NotNull().WithMessage("Please select a a phase of education")
                 .NotEmpty().WithMessage("Please select a a phase of education")
-                .Must((m, x) => (establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId]).Contains(x))
+                .Must((m, x) => (establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId]).Contains(x.Value))
                 .WithMessage("Education phase is not valid for the selected type of establishment")
                 .When(x => x.EstablishmentTypeId != 41);
 
@@ -71,7 +73,7 @@ namespace Edubase.Web.UI.Models.Establishments.Validators
 
                 RuleFor(x => x.Address.County)
                     .Must(x => x != null)
-                    .WithMessage("Please select the country");
+                    .WithMessage("Please select the county");
 
                 RuleFor(x => x.Address.PostCode)
                     .Must(x => !string.IsNullOrWhiteSpace(x))

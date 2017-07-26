@@ -370,6 +370,7 @@
     <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\EditEstablishmentLinksViewModel.cs" />
     <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
+    <Compile Include="Models\Establishments\ReplaceAddressViewModel.cs" />
     <Compile Include="Models\Establishments\SearchForEstablishmentViewModel.cs" />
     <Compile Include="Models\Establishments\Validators\CreateEstablishmentViewModelValidator.cs" />
     <Compile Include="Models\Establishments\Validators\SearchForEstablishmentViewModelValidator.cs" />
@@ -475,6 +476,7 @@
     <Content Include="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
     <Content Include="Assets\Sass\views\_cookies.scss" />
     <Content Include="Assets\Sass\elements\_news-message.scss" />
+    <Content Include="Assets\Sass\views\_create-academy-trust.scss" />
     <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -959,6 +961,7 @@
     <Content Include="Views\ChangeHistory\ReadyToDownload.cshtml" />
     <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
     <Content Include="Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
+    <Content Include="Views\Establishment\ReplaceAddress.cshtml" />
     <None Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
@@ -1017,7 +1020,9 @@
     <Content Include="Views\Home\Guidance.cshtml" />
     <Content Include="Views\Home\Cookies.cshtml" />
     <Content Include="Views\Home\News.cshtml" />
+    <Content Include="Views\Shared\FullErrorDetail.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
+    <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />

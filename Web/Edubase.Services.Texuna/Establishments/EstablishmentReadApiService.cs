@@ -74,7 +74,7 @@ namespace Edubase.Services.Texuna.Establishments
         
         public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model)
         {
-            var changes = ReflectionHelper.DetectChanges(model, original);
+            var changes = ReflectionHelper.DetectChanges(model, original, typeof(IEBTModel));
             var retVal = new List<ChangeDescriptorDto>();
 
             foreach (var change in changes)
@@ -86,7 +86,7 @@ namespace Edubase.Services.Texuna.Establishments
                 }
 
                 if (change.Name.EndsWith("Id", StringComparison.Ordinal)) change.Name = change.Name.Substring(0, change.Name.Length - 2);
-                change.Name = change.Name.Replace("_", "");
+                change.Name = change.Name.Replace("_", "").Replace(nameof(IEBTModel) + ".", string.Empty);
                 change.Name = change.Name.ToProperCase(true);
 
                 retVal.Add(new ChangeDescriptorDto
@@ -165,6 +165,18 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<IEnumerable<LookupDto>> GetPermissibleLocalGovernorsAsync(int urn, IPrincipal principal) => (await _httpClient.GetAsync<List<LookupDto>>($"establishment/{urn}/permissible-local-governors", principal)).GetResponse();
 
-        
+        public async Task<IEnumerable<AddressLookupResult>> GetAddressesByPostCodeAsync(string postCode, IPrincipal principal)
+        {
+            try
+            {
+                var list = await _httpClient.GetAsync<AddressBaseResult[]>("establishment/addressBase/queryByPostcode?postcode=" + postCode.Replace(" ", string.Empty), principal);
+                return list.GetResponse().Select(x => new AddressLookupResult(x)).ToList();
+            }
+            catch // I have actually given up asking Texuna to return errors in the error envelope at this stage.
+            {
+                return Enumerable.Empty<AddressLookupResult>();
+            }
+            
+        }
     }
 }
