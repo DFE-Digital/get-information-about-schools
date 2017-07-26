@@ -62,6 +62,7 @@
             },
             created: function() {
                 this.getChangesData();
+                
             },
             computed: {
                 pageCount: function () {
@@ -123,7 +124,7 @@
                 confirmRejection: function () {
                     var self = this;
                     this.invalidReason = $('#reason').val().length < 1;
-                    this.reasonLength = $('#reason').val().length > 1000;
+                    this.reasonLength = $('#reason').val().length > 1024;
 
                     var selectedItems = $('#changes-table').find('.boldened-checkbox')
                         .filter(':checked');
@@ -206,4 +207,6 @@
             }
         });
 
+
+    $('#reason').textCount({ maxLength: 1024 });
 }());

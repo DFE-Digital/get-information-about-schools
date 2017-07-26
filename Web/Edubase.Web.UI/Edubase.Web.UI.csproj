@@ -485,6 +485,7 @@
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\expanding-content.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\textCounter.js" />
     <Content Include="Assets\Scripts\Elements\news-message.js" />
     <Content Include="Assets\Scripts\Elements\Forms\nested-filters.js" />
     <Content Include="Assets\Scripts\Elements\truncated-text.js" />
