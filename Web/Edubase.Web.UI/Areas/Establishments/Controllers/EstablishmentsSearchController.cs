@@ -181,8 +181,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.SENIds = model.SelectedTypeOfSENProvisionIds.ToArray();
             filters.UrbanRuralIds = model.SelectedUrbanRuralIds.ToArray();
 
-            filters.AdministrativeWardIds = model.SelectedWardIds.ToArray();
-
             filters.CloseDateMin = model.CloseDateFrom?.ToDateTime();
             filters.CloseDateMax = model.CloseDateTo?.ToDateTime();
             filters.StatutoryLowAgeMin = model.AgeRangeLowFrom;
