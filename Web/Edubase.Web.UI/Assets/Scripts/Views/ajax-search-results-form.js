@@ -313,15 +313,11 @@
             window.addEventListener('popstate', function (event) {
                 var state = event.state ? event.state : initialState;
                 restoreFormState(state.formState);
-<<<<<<< HEAD
-                console.log(state.queryString);
-                refreshResults(state.queryString, true);
-=======
                 window.setTimeout(function() {
                     refreshResults(state.queryString, true);
                 },1000);
                 
->>>>>>> 9cfe176... 9843 front end work
+                
             }.bind(this));
         }
     });
