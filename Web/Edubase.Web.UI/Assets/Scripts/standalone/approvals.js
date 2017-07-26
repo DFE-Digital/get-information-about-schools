@@ -85,7 +85,9 @@
                 getChangesData: function (skip, callback) {
                     var self = this;
                     this.isProcessing = true;
+
                     $('#changes-table').find(':checkbox').prop('checked', false);
+                    
                     $.ajax({
                         url: defaults.apiUrl,
                         data: {
@@ -111,7 +113,11 @@
                 rejectSuccessCallBack: function() {
                     this.pendingRejection = false;
                     this.itemsConfirmedRejected = true;
-                    document.getElementById('reason').value = '';
+                    this.reason = '';
+                    window.setTimeout(function() {
+                        $("#reason").data().textCount.setCount();
+                    },0);
+                    
                 },
                 updateCount: function (removedCount) {
                     this.currentCount = this.currentCount - removedCount;
