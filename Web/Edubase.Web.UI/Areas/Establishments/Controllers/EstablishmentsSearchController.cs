@@ -181,10 +181,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.SENIds = model.SelectedTypeOfSENProvisionIds.ToArray();
             filters.UrbanRuralIds = model.SelectedUrbanRuralIds.ToArray();
 
-            filters.AdministrativeWardIds = model.SelectedWardIds.ToArray();
-
-            filters.CloseDateMin = model.CloseDateFrom;
-            filters.CloseDateMax = model.CloseDateTo;
+            filters.CloseDateMin = model.CloseDateFrom?.ToDateTime();
+            filters.CloseDateMax = model.CloseDateTo?.ToDateTime();
             filters.StatutoryLowAgeMin = model.AgeRangeLowFrom;
             filters.StatutoryLowAgeMax = model.AgeRangeLowTo;
             filters.StatutoryHighAgeMin = model.AgeRangeHighFrom;
@@ -288,8 +286,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                 using (MiniProfiler.Current.Step("Populate filter lookups from CachedLookupService"))
                 {
-                    model.EstablishmentTypes =
-                        (await _lookupService.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
+                    var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
+                    var establishmentGroupTypes = await _lookupService.EstablishmentTypeGroupsGetAllAsync();
+                    model.EstablishmentTypes = establishmentTypes.GroupBy(x => x.GroupId)
+                        .Join(establishmentGroupTypes, 
+                              t => t.Key, 
+                              g => g.Id, 
+                              (establishments, groupDetails) =>  new HeirarchicalLookupItemViewModel
+                              {
+                                  Id = groupDetails.Id,
+                                  Name = groupDetails.Name,
+                                  ChildItems = establishments.Select(e => new HeirarchicalLookupItemViewModel { Id = e.Id, Name = e.Name}).ToList()
+                              }).ToList();
+                        
 
                     model.EstablishmentStatuses = (await _lookupService.EstablishmentStatusesGetAllAsync())
                         .Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id))

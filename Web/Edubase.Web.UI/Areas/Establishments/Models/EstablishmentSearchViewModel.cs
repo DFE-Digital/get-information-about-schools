@@ -139,7 +139,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         [BindAlias(BIND_ALIAS_SELECTED_SEARCH_FILTERS)]
         public string SelectedExtraSearchFilters { get; set; }
 
-        public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
+        public IEnumerable<HeirarchicalLookupItemViewModel> EstablishmentTypes { get; set; }
 
         [BindAlias(BIND_ALIAS_TYPEIDS)]
         public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();

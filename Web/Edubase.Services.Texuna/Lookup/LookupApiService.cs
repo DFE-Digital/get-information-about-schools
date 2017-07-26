@@ -4,7 +4,6 @@ using Edubase.Services.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Edubase.Services.Texuna.Lookup
@@ -14,6 +13,53 @@ namespace Edubase.Services.Texuna.Lookup
         private const string ApiPrefix = "lookup/";
         private readonly HttpClientWrapper _httpClient;
         private readonly ISecurityService _securityService;
+
+        private readonly Dictionary<int, int> establishmentTypeToGroup = new Dictionary<int, int>
+        {
+            {39, 2},
+            {40, 2},
+            {36, 2},
+            {37, 2},
+            {28, 2},
+            {38, 2},
+            {27, 2},
+            {22, 2},
+            {31, 10},
+            {41, 4},
+            {42, 4},
+            {5, 6},
+            {1, 7},
+            {6, 8},
+            {14, 10},
+            {16, 10},
+            {4, 7},
+            {11, 8},
+            {29, 3},
+            {33, 3},
+            {32, 3},
+            {30, 3},
+            {15, 1},
+            {23, 5},
+            {8, 8},
+            {43, 10},
+            {13, 7},
+            {44, 10},
+            {21, 10},
+            {7, 8},
+            {19, 10},
+            {10, 6},
+            {9, 8},
+            {17, 10},
+            {12, 7},
+            {18, 10},
+            {20, 10},
+            {25, 1},
+            {26, 10},
+            {35, 3},
+            {34, 3},
+            {2, 7},
+            {3, 7}
+        };
 
         public LookupApiService(HttpClientWrapper httpClient, ISecurityService securityService)
         {
@@ -27,7 +73,23 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> GroupTypesGetAllAsync() => await GetData("group-types");
         public async Task<IEnumerable<LookupDto>> EstablishmentTypeGroupsGetAllAsync() => await GetData("establishment-type-groups");
         public async Task<IEnumerable<LookupDto>> EstablishmentStatusesGetAllAsync() => await GetData("establishment-statuses");
-        public async Task<IEnumerable<LookupDto>> EstablishmentTypesGetAllAsync() => await GetData("establishment-types");
+
+        public async Task<IEnumerable<EstablishmentLookupDto>> EstablishmentTypesGetAllAsync()
+        {
+            var establishmentTypes =
+            (await _httpClient.GetAsync<List<LookupDto>>($"{ApiPrefix}establishment-types",
+                _securityService.CreateAnonymousPrincipal())).Response;
+            return establishmentTypes.Join(establishmentTypeToGroup, e => e.Id, et => et.Key,
+                (e, et) => new EstablishmentLookupDto
+                {
+                    Code = e.Code,
+                    Id = e.Id,
+                    Name = e.Name,
+                    DisplayOrder = e.DisplayOrder,
+                    GroupId = et.Value
+                });
+        }
+
         public async Task<IEnumerable<LookupDto>> GroupStatusesGetAllAsync() => await GetData("group-statuses");
         public async Task<IEnumerable<LookupDto>> AccommodationChangedGetAllAsync() => await GetData("accommodation-changed");
         public async Task<IEnumerable<LookupDto>> AdministrativeDistrictsGetAllAsync() => await GetData("administrative-districts");
@@ -189,7 +251,7 @@ namespace Edubase.Services.Texuna.Lookup
             throw new NotImplementedException();
         }
         
-        public IEnumerable<LookupDto> EstablishmentTypesGetAll()
+        public IEnumerable<EstablishmentLookupDto> EstablishmentTypesGetAll()
         {
             throw new NotImplementedException();
         }
