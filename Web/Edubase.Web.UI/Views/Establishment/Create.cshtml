@@ -276,10 +276,15 @@
         }
 
         $(document).ready(function() {
-            $("#number-gen-options").hide();
-            $("#establishment-phase-form-group").hide();
-            $("#enter-number").hide();
-        })
+            if ($('.validation-summary-errors').length === 0) {
+                $("#number-gen-options").hide();
+                $("#establishment-phase-form-group").hide();
+                $("#enter-number").hide();
+            }   
+        });
+            
+        
+       
 
     </script>
 }
