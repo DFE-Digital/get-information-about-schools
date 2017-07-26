@@ -274,6 +274,7 @@
     <Compile Include="Areas\Establishments\Controllers\AcademyOpeningsController.cs" />
     <Compile Include="Areas\Establishments\Controllers\BulkUpdateController.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
+    <Compile Include="Models\AgeRangeFilterViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkUpdateViewModelValidator.cs" />
@@ -1026,6 +1027,7 @@
     <Content Include="Views\Home\Cookies.cshtml" />
     <Content Include="Views\Home\News.cshtml" />
     <Content Include="Views\Shared\FullErrorDetail.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\AgeRangeFilterViewModel.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

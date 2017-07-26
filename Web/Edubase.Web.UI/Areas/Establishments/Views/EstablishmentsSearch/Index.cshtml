@@ -124,12 +124,10 @@
                     @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
                     
                     @CloseDateFilter()
-
-
-                    @AgeRangeFilter("Age range low", "AgeRangeLow")
-
-
-                    @AgeRangeFilter("Age range high", "AgeRangeHigh")
+                    
+                    @Html.EditorFor(x => x.AgeRangeLow, new { title = "Age range low" })
+                    
+                    @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high" })
                     
                     <!-- begin opted in filters -->
 
@@ -324,12 +322,17 @@
     <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="true">
         <div class="container-head js-container-head">
             <div class="option-select-label">Close date</div>
-
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text">Date applied</span>
-            </div>
+            @if ((Model.CloseDateFrom != null && Model.CloseDateFrom.IsNotEmpty()) || (Model.CloseDateTo != null && Model.CloseDateTo.IsNotEmpty()))
+            {
+                <div class="js-selected-counter">
+                    <span class="js-selected-counter-text">Date applied</span>
+                </div>
+            }
         </div>
-        <a href="#" class="clear-selections">Clear</a>
+        @if ((Model.CloseDateFrom != null && Model.CloseDateFrom.IsNotEmpty()) || (Model.CloseDateTo != null && Model.CloseDateTo.IsNotEmpty()))
+        {
+            <a href="#" class="clear-selections">Clear</a>
+        }
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 <div class="form-group date-group">
@@ -370,38 +373,6 @@
                 </div>
                 <div class="form-group">
                     <a href="#" class="button button-grey filter-button">Apply</a>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
-@helper AgeRangeFilter(string label, string name)
-{
-    <div class="govuk-option-select age-filter js-collapsible no-scroll" data-closed-on-load="true" id="option-select-close-date">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text">Age selected</span>
-            </div>
-        </div>
-        <a href="#" class="clear-selections">Clear</a>
-        <div class="options-container" id="">
-            <div class="js-auto-height-inner">
-                <div class="form-group date-group">
-                    <fieldset class="range-group">
-                        <span class="error-message hidden">Please check the age(s) you have entered</span>
-                        <span class="inline-form-control">
-                            <label class="form-label">From</label>
-                            <input type="text" class="form-control" maxlength="2">
-                        </span>
-                        <span class="inline-form-control">
-                            <label class="form-label">To</label>
-                            <input type="text" class="form-control">
-                        </span>
-                    </fieldset>
-                </div>
-                <div class="form-group"><a href="#" class="button button-grey filter-button">Apply</a>
                 </div>
             </div>
         </div>

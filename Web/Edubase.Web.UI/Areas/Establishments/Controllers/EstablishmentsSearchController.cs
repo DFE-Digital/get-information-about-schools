@@ -183,10 +183,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             filters.CloseDateMin = model.CloseDateFrom?.ToDateTime();
             filters.CloseDateMax = model.CloseDateTo?.ToDateTime();
-            filters.StatutoryLowAgeMin = model.AgeRangeLowFrom;
-            filters.StatutoryLowAgeMax = model.AgeRangeLowTo;
-            filters.StatutoryHighAgeMin = model.AgeRangeHighFrom;
-            filters.StatutoryHighAgeMax = model.AgeRangeHighTo;
+            filters.StatutoryLowAgeMin = model.AgeRangeLow?.From;
+            filters.StatutoryLowAgeMax = model.AgeRangeLow?.To;
+            filters.StatutoryHighAgeMin = model.AgeRangeHigh?.From;
+            filters.StatutoryHighAgeMax = model.AgeRangeHigh?.To;
 
 
             payload.SortBy = model.GetSortOption();
