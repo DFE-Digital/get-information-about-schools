@@ -1,0 +1,62 @@
+﻿.date-filters.govuk-option-select {
+    .range-group {
+        margin: 12px 0;
+    }
+    label {
+        width: auto;
+        display: block;
+        padding: 0;
+        &:hover {
+            background-color: #fff;
+        }
+    }
+
+    legend {
+        display: inline-block;
+        width: auto;
+        min-width: 2.5em;
+        margin: 26px 8px 0 12px
+    }
+    .inline-form-control {
+        margin-right: 8px;
+    }
+
+    .filter-button {
+        @include core-19;
+        width: 58%;
+        float: right;
+        margin-bottom: 12px;
+        margin-right: 32px;
+    }
+
+}
+
+.age-filter.govuk-option-select {
+    label {
+        width: auto;
+        display: block;
+        padding: 0;
+        &:hover {
+            background-color: #fff;
+        }
+    }
+
+    .filter-button {
+        @include core-19;
+        width: 70%;
+        float: right;
+        margin-bottom: 12px;
+        margin-right: 44px;
+    }
+    .range-group {
+        margin: 12px;
+    }
+
+    .inline-form-control {
+        margin-right: 8px;
+    }
+
+    .form-control {
+        min-width: 112px;
+    }
+}

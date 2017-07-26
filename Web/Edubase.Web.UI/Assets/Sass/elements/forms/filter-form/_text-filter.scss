@@ -66,9 +66,9 @@ category: Forms
       padding-left: 2px;
     }
 
-    label {
+    /*label {
       display: block;
-    }
+    }*/
 
     input {
       //padding: 5px;
@@ -95,11 +95,11 @@ category: Forms
     }
   }
 
-  .button {
+  /*.button {
     @include button($button-colour);
     width: auto;
     @include bold-24;
-  }
+  }*/
 
   .closed {
     .checkbox-container {

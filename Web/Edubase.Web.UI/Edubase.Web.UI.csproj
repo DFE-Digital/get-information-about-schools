@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -477,11 +477,14 @@
     <Content Include="Assets\Sass\views\_cookies.scss" />
     <Content Include="Assets\Sass\elements\_news-message.scss" />
     <Content Include="Assets\Sass\views\_create-academy-trust.scss" />
-    <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
+    <Content Include="Assets\Sass\elements\_filter-form-controls.scss" />
+    <Content Include="Assets\Sass\elements\_filter-radios.scss" />
+    <Content Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\expanding-content.js" />
     <Content Include="Assets\Scripts\Elements\news-message.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\nested-filters.js" />
     <Content Include="Assets\Scripts\Elements\truncated-text.js" />
     <Content Include="Assets\Scripts\standalone\approvals.js" />
     <Content Include="Assets\Scripts\standalone\bulk-create-academies.js" />
@@ -565,6 +568,7 @@
     <Content Include="public\assets\images\ofsted-logo-sm.jpeg" />
     <Content Include="public\assets\images\ofsted-logo-x-small.jpeg" />
     <Content Include="public\assets\images\ofsted-logo.jpg" />
+    <Content Include="public\assets\images\option-select-toggle-child-sprite.png" />
     <Content Include="public\assets\images\option-select-toggle-sprite.png" />
     <Content Include="public\c3\c3.css" />
     <Content Include="public\c3\c3.js" />

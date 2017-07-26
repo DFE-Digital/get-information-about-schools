@@ -101,7 +101,18 @@ category: Forms
   background-color: $grey-3;
   padding: 5px;
   position: relative;
+  margin-bottom: 1em;
 
+  .error{
+      padding-left: 0;
+      border-left: 0;
+  }
+  .error-message {
+      font-size: 16px;
+  }
+  &.date-filters .error-message {
+      padding-left: 15px;
+  }
   @include media(desktop) {
     /* Redefine scrollbars on desktop where these lists are scrollable
     so they are always visible in option lists */
@@ -138,16 +149,18 @@ category: Forms
     background-color: $page-colour;
     overflow-y: scroll;
     overflow-x: hidden;
+    max-height: 200px;
+    
 
-    @include media(desktop) {
-      max-height: 200px;
+    .error-message.hidden {
+        display: none;
     }
 
     label {
       @include inline-block;
       padding: 7px 0 7px 30px;
       border-bottom: 1px solid $border-colour;
-      width: 100%;
+      width: 95%;
       cursor: pointer;
       font-size:16px;
 
@@ -165,9 +178,11 @@ category: Forms
       }
     }
 
-    input {
-      margin-left: -23px;
-      vertical-align: top;
+    .filter-input {      
+      position: absolute;
+      top: 0;
+      left: 0;
+      @include opacity(0);
     }
   }
 
@@ -235,7 +250,14 @@ category: Forms
       }
     }
   }
+  &.no-scroll {
+      .options-container {
+          overflow-y: auto;
+          max-height: none;
+      }
+  }
 }
+
 
 #option-select-sort-by,
 #option-select-within-radius-of {
@@ -244,4 +266,43 @@ category: Forms
           margin-left: 10px;
           margin-bottom: 12px;
       }
+}
+
+
+.govuk-option-select {
+    .nested-items {
+        .child-option-toggle {
+            display: block;
+            width: 20px;
+            height: 20px;
+            position: relative;
+            float: right;
+            right: 5px;
+            top:  0;
+            &:after {
+                content: "";
+                background-image: file-url('option-select-toggle-child-sprite.png');
+                background-repeat: no-repeat;
+                background-position: 50% 100%;
+                background-size: 28px auto;  
+                width: 20px;
+                height: 20px;
+                display: block;
+            }
+
+            &:active, &:focus {
+                background-color: transparent;
+            }
+                                 
+        }
+        .open-children.child-option-toggle::after {
+            background-position: 50% top;
+        }
+        dd {
+          label {
+             width: calc(100% - 40px);
+             margin-left: 20px;
+          }
+        }
+    }
 }
