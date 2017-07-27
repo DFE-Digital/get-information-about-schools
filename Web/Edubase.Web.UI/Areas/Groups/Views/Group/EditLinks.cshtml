@@ -100,7 +100,7 @@
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                             {
                             <div class="button-row">
-                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
+                                <button type="submit" class="button button-grey button-remove" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
                                 <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-grey">Edit</button>
                             </div>
                             }
@@ -154,7 +154,23 @@
 
         </script>
     }
-    
+    @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+    {
+        <script>
+            $('#content').find('.button-remove').okCancel({
+                triggerEvent: 'click',
+                title: 'Are you sure you want to remove this academy?',
+                content: 'All governor information associated with this academy will be removed too.',
+                idPrefix: 'remove-',
+                ok: function () {
+                    $(this.el).data().okCancel.unbind();
+                    $(this.el).click();
+                }
+            })
+        </script>
+    }
+
+
     @if (Request.HttpMethod == "POST" && Model.Action != "cancel" )
     {
         <script>
