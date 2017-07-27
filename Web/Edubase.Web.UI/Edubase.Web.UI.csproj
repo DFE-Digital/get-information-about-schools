@@ -955,7 +955,7 @@
     <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
     <Content Include="Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
     <Content Include="Views\Establishment\ReplaceAddress.cshtml" />
-    <None Include="Views\Establishment\Details.cshtml" />
+    <Content Include="Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Index.cshtml" />
