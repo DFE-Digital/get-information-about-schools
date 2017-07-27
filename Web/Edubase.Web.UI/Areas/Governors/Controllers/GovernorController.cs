@@ -27,6 +27,7 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using Newtonsoft.Json;
+using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -684,7 +685,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpGet, EdubaseAuthorize]
         [Route(GROUP_EDIT_DELEGATION, Name = "GroupEditDelegation")]
         public async Task<ActionResult> GroupEditDelegation(int groupUId)
         {
@@ -703,7 +704,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return RedirectToRoute("GroupEditGovernance", new { GroupUId = groupUId });
         }
 
-        [HttpPost]
+        [HttpPost, EdubaseAuthorize]
         [Route(GROUP_EDIT_DELEGATION)]
         public async Task<ActionResult> GroupEditDelegation(EditGroupDelegationInformationViewModel model)
         {
