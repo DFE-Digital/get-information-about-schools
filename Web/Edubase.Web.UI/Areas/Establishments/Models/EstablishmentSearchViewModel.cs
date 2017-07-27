@@ -62,6 +62,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public const string BIND_ALIAS_CLOSE_DATE_TO = "ac";
         public const string BIND_ALIAS_AGE_RANGE_LOW_FROM = "ad";
         public const string BIND_ALIAS_AGE_RANGE_HIGH_FROM = "af";
+        public const string BIND_ALIAS_OFSTEDRATINGS = "ag";
         #endregion
 
         public enum eTextSearchType
@@ -244,9 +245,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public List<int> SelectedUrbanRuralIds { get; set; } = new List<int>();
         public IEnumerable<LookupItemViewModel> UrbanRuralDesignations { get; set; }
 
-        
+        [BindAlias(BIND_ALIAS_OFSTEDRATINGS)]
+        public List<int> SelectedOfstedRatingIds { get; set; } = new List<int>();
+        public IEnumerable<LookupItemViewModel> OfstedRatings { get; set; }
 
-        
+
+
         /// <summary>
         /// When one result is found, whether to redirect the user to the detail page
         /// </summary>

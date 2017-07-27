@@ -106,6 +106,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     .Select(x => new LookupItemViewModel(x));
                 vm.UrbanRuralDesignations = (await _lookupService.UrbanRuralGetAllAsync()).OrderBy(x => x.Name)
                     .Select(x => new LookupItemViewModel(x));
+                vm.OfstedRatings = (await _lookupService.OfstedRatingsGetAllAsync()).OrderBy(x => x.Name)
+                    .Select(x => new LookupItemViewModel(x));
             }
             return vm;
         }
@@ -187,6 +189,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.StatutoryLowAgeMax = model.AgeRangeLow?.To;
             filters.StatutoryHighAgeMin = model.AgeRangeHigh?.From;
             filters.StatutoryHighAgeMax = model.AgeRangeHigh?.To;
+            filters.OfstedRatingIds = model.SelectedOfstedRatingIds.ToArray();
 
 
             payload.SortBy = model.GetSortOption();

@@ -16,5 +16,6 @@ namespace Edubase.Services.Establishments.Search
         public int? StatutoryLowAgeMax { get; set; }
         public int? StatutoryHighAgeMin { get; set; }
         public int? StatutoryHighAgeMax { get; set; }
+        public int[] OfstedRatingIds { get; set; }
     }
 }
