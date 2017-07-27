@@ -1,6 +1,6 @@
 ﻿@model AgeRangeFilterViewModel
 
-<div class="govuk-option-select age-filter js-collapsible no-scroll" data-closed-on-load="true" id="option-select-close-date">
+<div class="govuk-option-select age-filter js-collapsible no-scroll additional-search-critera hidden" data-closed-on-load="true" id="@($"option-select-{ViewData.ModelMetadata.PropertyName}")">
     <div class="container-head js-container-head">
         <div class="option-select-label">@(ViewData["title"] ?? "Age range")</div>
         @if ((Model?.From != null && Model.From.HasValue) || (Model?.To != null && Model.To.HasValue))
