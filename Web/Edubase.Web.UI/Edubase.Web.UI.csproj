@@ -425,6 +425,8 @@
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="public\assets\scripts\**\*.*" />
+    <Content Include="public\assets\stylesheets\**\*.*" />
     <Content Include="App_Data\sa-dev.education.gov.uk-metadata.xml" />
     <Content Include="App_Data\sa-uat.education.gov.uk-metadata.xml" />
     <Content Include="App_Data\sa.education.gov.uk-metadata.xml" />
