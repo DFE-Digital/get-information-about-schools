@@ -51,9 +51,8 @@
                     <div v-show="pendingRejection">
                         <div v-bind:class="['form-group', (invalidReason || reasonLength) ? 'error' : '']">
                             <label for="reason">Reason for rejecting updates</label>
-                            <span class="form-hint">Enter reason (Maximum 1000 characters)</span>
                             <span class="error-message" v-show="invalidReason">Please enter a reason for the rejection.</span>
-                            <span class="error-message" v-show="reasonLength">Please enter a reason less than 1000 characters</span>
+                            <span class="error-message" v-show="reasonLength">Please enter a reason less than 1024 characters</span>
                             <textarea id="reason" class="edubase-textarea" v-model="reason"></textarea>
                         </div>
                         <div class="submit-cancel-panel">

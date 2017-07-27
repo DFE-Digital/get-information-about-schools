@@ -10,5 +10,11 @@ namespace Edubase.Services.Establishments.Search
         public int? EstablishmentNumber { get; set; }
         public DateTime? OpenDateMin { get; set; }
         public DateTime? OpenDateMax { get; set; }
+        public DateTime? CloseDateMin { get; set; }
+        public DateTime? CloseDateMax { get; set; }
+        public int? StatutoryLowAgeMin { get; set; }
+        public int? StatutoryLowAgeMax { get; set; }
+        public int? StatutoryHighAgeMin { get; set; }
+        public int? StatutoryHighAgeMax { get; set; }
     }
 }

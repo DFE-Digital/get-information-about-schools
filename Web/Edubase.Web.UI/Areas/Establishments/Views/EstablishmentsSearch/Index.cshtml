@@ -22,6 +22,13 @@
             <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
             <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
         }
+        <div class="error-summary hidden" id="js-filter-error-summary">
+            <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
+            <ul class="error-summary-list">
+                <li class="summary-date-error error-message hidden">Your date format is not recognised</li>
+                <li class="summary-range-error error-message hidden">Your age range format is not recognised</li>
+            </ul>
+        </div>
             <p>
                 <!-- TODO: Jon; you can upload the span.heading-xlarge item with the correct count by using the x-count item in the http response of the partial request -->
                 @if (Model.SearchType == eSearchType.Text)
@@ -90,84 +97,89 @@
 
                 <div class="blanket"></div>
 
-                <div class="filter-divider"></div>
+                
                 <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new { area = "" })">
 
                     @if (Model.SearchType == eSearchType.Location)
                     {
                         @RadiusSelector("Within radius of")
-                        <div class="filter-divider"></div>
+                        
                     }
 
                     @SortBySelector("Sort by")
-                    <div class="filter-divider"></div>
                     
-                    @Selector("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
-                    <div class="filter-divider"></div>
+                    
+                    @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
+                    
 
                     @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses, Model.SelectedEstablishmentStatusIds)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases, Model.SelectedEducationPhaseIds)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities, Model.SelectedLocalAuthorityIds)
-                    <div class="filter-divider"></div>
+                    
             
                     @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
-                    <div class="filter-divider"></div>
+                    
+                    @CloseDateFilter()
+                    
+                    @Html.EditorFor(x => x.AgeRangeLow, new { title = "Age range low" })
+                    
+                    @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high" })
                     
                     <!-- begin opted in filters -->
 
                     @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies, Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions, Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses, Model.SelectedDioceseIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts, Model.SelectedDistrictIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes, Model.SelectedFETypeIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders, Model.SelectedGenderIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs, Model.SelectedGORIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions, Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies, Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses, Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions, Model.SelectedRSCRegionIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations, Model.SelectedSection41Ids, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions, Model.SelectedSixthFormProvisionIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions, Model.SelectedSpecialClassesProvisionIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
+                    
 
                     @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions, Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
-
-                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
-                    <div class="filter-divider"></div>
                     
-                    <a href="#" class="add-filters-link">Add more filters</a>
+
+                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)                    
+
+                    <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
+                    <a href="#" class="add-filters-link add-clear-filters">+ Add more filters</a>
 
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
 
@@ -230,22 +242,138 @@
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
-            <div class="js-selected-counter"></div>
+            <div class="js-selected-counter">
+                <span class="js-selected-counter-text"></span>
+                
+            </div>
         </div>
         <a href="#" class="clear-selections filter-clear">Clear</a>
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 <fieldset>
-                    <legend class="visuallyhidden">Select an option below to filter the results</legend>
+                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @foreach (var item in items)
                     {
-                        <label for="@(name)_@item.Id">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                            @item
-                            <span class="visuallyhidden">- changing the selection will refresh the results</span>
-                        </label>
+                        <div class="filter-wrapper">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <label for="@(name)_@item.Id" class="filter-radio">
+                                @item
+                            </label>
+                        </div>                        
                     }
                 </fieldset>
+            </div>
+        </div>
+    </div>
+}
+
+@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
+{
+    var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
+    if (!closed)
+    {
+        additionalClassName = additionalClassName.RemoveSubstring("hidden");
+    }
+    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
+         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">@label</div>
+            <div class="js-selected-counter">
+                <span class="js-selected-counter-text"></span>
+                
+            </div>
+        </div>
+        <a href="#" class="clear-selections">Clear</a>
+        <div class="options-container">
+            <div class="js-auto-height-inner">
+                <fieldset>
+                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    @foreach (var item in items)
+                    {
+                        <dl class="nested-items">
+                            <dt>
+                                <input @*name="@name" value="@item.Id"*@ id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                                <label for="@(name)_@item.Id" class="filter-radio">
+                                    @item
+                                    <a href="#" class="child-option-toggle"></a>
+                                </label>
+                            </dt>
+                            <dd class="filter-group">
+                                @foreach (var child in item.ChildItems)
+                                {
+                                    <div class="filter-wrapper">
+                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked") />
+                                        <label for="@(name)_@(item.Id)_@child.Id" class="filter-radio">
+                                            @child
+                                        </label>
+                                    </div>                                    
+                                }
+                            </dd>
+                        </dl>                        
+                    }
+                </fieldset>
+            </div>
+        </div>
+    </div>
+}
+
+@helper CloseDateFilter()
+{
+    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="true">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">Close date</div>
+            @if ((Model.CloseDateFrom != null && Model.CloseDateFrom.IsNotEmpty()) || (Model.CloseDateTo != null && Model.CloseDateTo.IsNotEmpty()))
+            {
+                <div class="js-selected-counter">
+                    <span class="js-selected-counter-text">Date applied</span>
+                </div>
+            }
+        </div>
+        @if ((Model.CloseDateFrom != null && Model.CloseDateFrom.IsNotEmpty()) || (Model.CloseDateTo != null && Model.CloseDateTo.IsNotEmpty()))
+        {
+            <a href="#" class="clear-selections">Clear</a>
+        }
+        <div class="options-container" id="">
+            <div class="js-auto-height-inner">
+                <div class="form-group date-group">
+                    
+                    <fieldset class="range-group search-from-date">
+                        <span class="error-message hidden">Please check the date(s) you have entered</span>
+                        <legend>From</legend>
+                        <span class="inline-form-control">
+                            @Html.LabelFor(m => m.CloseDateFrom.Day, "Day", new {@class = "form-label"})
+                            @Html.TextBoxFor(m => m.CloseDateFrom.Day, new {@class = "form-control", maxlength = 2})
+                        </span>
+                        <span class="inline-form-control">
+                            @Html.LabelFor(m => m.CloseDateFrom.Month, "Month", new {@class = "form-label"})
+                            @Html.TextBoxFor(m => m.CloseDateFrom.Month, new {@class = "form-control", maxlength = 2})
+                        </span>
+                        <span class="inline-form-control">
+                            @Html.LabelFor(m => m.CloseDateFrom.Year, "Year", new {@class = "form-label"})
+                            @Html.TextBoxFor(m => m.CloseDateFrom.Year, new {@class = "form-control", maxlength = 4})
+                        </span>
+                    </fieldset>
+                </div>
+                <div class="form-group date-group">
+                    <fieldset class="range-group search-to-date">
+                        <legend>To</legend>
+                        <span class="inline-form-control">
+                            @Html.LabelFor(m => m.CloseDateTo.Day, "Day", new { @class="form-label" })
+                            @Html.TextBoxFor(m => m.CloseDateTo.Day, new { @class = "form-control", maxlength = 2 })
+                        </span>
+                        <span class="inline-form-control">
+                            @Html.LabelFor(m => m.CloseDateTo.Month, "Month", new { @class="form-label" })
+                            @Html.TextBoxFor(m => m.CloseDateTo.Month, new { @class = "form-control", maxlength = 2 })
+                        </span>
+                        <span class="inline-form-control">
+                            @Html.LabelFor(m => m.CloseDateTo.Year, "Year", new { @class="form-label" })
+                            @Html.TextBoxFor(m => m.CloseDateTo.Year, new { @class = "form-control", maxlength = 4 })
+                        </span>
+                    </fieldset>
+                </div>
+                <div class="form-group">
+                    <a href="#" class="button button-grey filter-button">Apply</a>
+                </div>
             </div>
         </div>
     </div>
@@ -257,7 +385,6 @@
          id="option-select-@label.ToLower().Replace(" ", "-")">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
-            <div class="js-selected-counter"></div>
         </div>
         <select class="form-control trigger-result-update" name="@M.BIND_ALIAS_SORT_BY">
             @if (Model.SearchType == eSearchType.Location)

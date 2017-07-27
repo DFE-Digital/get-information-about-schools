@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Data.Entity;
 using System.Threading.Tasks;
-using Edubase.Data.Entity;
-using Edubase.Services.Enums;
-using System.Runtime.Caching;
 using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Common.Cache;
@@ -17,16 +12,16 @@ namespace Edubase.Services.Lookup
 {
     public class CachedLookupService : ICachedLookupService
     {
-        Dictionary<string, Func<int, Task<string>>> _mappingAsync = null;
-        Dictionary<string, Func<int, string>> _mapping = null;
-        ILookupService _lookupService;
-        ICacheAccessor _cacheAccessor;
+        private readonly Dictionary<string, Func<int, Task<string>>> _mappingAsync;
+        private readonly Dictionary<string, Func<int, string>> _mapping;
+        private readonly ILookupService _lookupService;
+        private readonly ICacheAccessor _cacheAccessor;
 
         public CachedLookupService(ILookupService lookupService, ICacheAccessor cacheAccessor)
         {
             _lookupService = lookupService;
             _cacheAccessor = cacheAccessor;
-            _mappingAsync = new Dictionary<string, Func<int, Task<string>>>()
+            _mappingAsync = new Dictionary<string, Func<int, Task<string>>>
             {
                 { "LocalAuthorityId", async id => (await LocalAuthorityGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "RSCRegionId", async id => (await RscRegionsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -147,8 +142,8 @@ namespace Edubase.Services.Lookup
         public IEnumerable<LookupDto> EducationPhasesGetAll() => Auto(_lookupService.EducationPhasesGetAll);
         public async Task<IEnumerable<LookupDto>> EstablishmentStatusesGetAllAsync() => await AutoAsync(_lookupService.EstablishmentStatusesGetAllAsync);
         public IEnumerable<LookupDto> EstablishmentStatusesGetAll() => Auto(_lookupService.EstablishmentStatusesGetAll);
-        public async Task<IEnumerable<LookupDto>> EstablishmentTypesGetAllAsync() => await AutoAsync(_lookupService.EstablishmentTypesGetAllAsync);
-        public IEnumerable<LookupDto> EstablishmentTypesGetAll() => Auto(_lookupService.EstablishmentTypesGetAll);
+        public async Task<IEnumerable<EstablishmentLookupDto>> EstablishmentTypesGetAllAsync() => await AutoAsync(_lookupService.EstablishmentTypesGetAllAsync);
+        public IEnumerable<EstablishmentLookupDto> EstablishmentTypesGetAll() => Auto(_lookupService.EstablishmentTypesGetAll);
         public async Task<IEnumerable<LookupDto>> GendersGetAllAsync() => await AutoAsync(_lookupService.GendersGetAllAsync);
         public IEnumerable<LookupDto> GendersGetAll() => Auto(_lookupService.GendersGetAll);
         public async Task<IEnumerable<LookupDto>> GroupTypesGetAllAsync() => await AutoAsync(_lookupService.GroupTypesGetAllAsync);

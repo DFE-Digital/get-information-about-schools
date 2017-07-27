@@ -5,6 +5,7 @@
     var $clearLinks = $('#EditSearchCollapse').find('.filter-clear'),
         $additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera'),
         $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear'),
+        $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]'),
         $extraFiltersLink = $('#EditSearchCollapse').find('.add-filters-link'),
         optionTemplate = '<label><input type="checkbox" value="#{0}" class="additional-filter-type" />{1}</label>',
         optionsFragment = '';
@@ -19,7 +20,21 @@
 
     $('#filter-type-target').append(optionsFragment);
 
+    $textFieldFilters.on('change', function () {
+        var $govUkSelect = $(this).parents('.govuk-option-select');
+        var siblings = $govUkSelect.find('input');
+        var hasValues = siblings.filter(function(n, field) {
+                if (field.value.trim() !== '') {
+                    return field.value;
+                }
+        }).length > 0;
 
+        if (hasValues) {
+            $govUkSelect.find('.clear-selections').addClass('active-clear');
+        } else {
+            $govUkSelect.find('.clear-selections').removeClass('active-clear');
+        }
+    });
 
     $extraFiltersLink.on('click', function(e) {
         e.preventDefault();
@@ -62,13 +77,13 @@
 
     $('.govuk-option-select')
         .each(function() {
-            if ($(this).find('.js-selected-counter').text().length) {
-                $(this).find('.filter-clear, .additional-filter-clear').addClass('active-clear');
+            if ($(this).find('.js-selected-counter-text').text().length) {
+                $(this).find('.clear-selections').addClass('active-clear');
             }
         });
 
     $clearLinks.on('click',
-        function(e) {
+        function (e) {
             e.preventDefault();
             var selectedFilters = $(this)
                 .next('.options-container')
@@ -79,6 +94,9 @@
 
             selectedFilters.click();
             $(this).removeClass('active-clear');
+            if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
+                selectedFilters.prop('checked', false);
+            }
         });
 
     $additionalFilterClear.on('click', function(e) {
@@ -114,4 +132,5 @@
                     $(this).find('.filter-clear, .additional-filter-clear').removeClass('active-clear');
                 }
             });
+
 }());

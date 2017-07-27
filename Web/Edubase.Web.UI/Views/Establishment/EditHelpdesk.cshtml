@@ -73,6 +73,8 @@
                         content: 'Any unsaved changes will be lost',
                         triggerEvent: 'click'
                     });
+
+                    $('#HelpdeskNotes').textCount({ maxLength: 255 });
                 </script>
 
             }           
@@ -90,8 +92,8 @@
                 DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                 exitAttached = true;
             }
-
         });
+        $('#HelpdeskNotes').textCount({ maxLength: 255 });
 
     </script>
 }

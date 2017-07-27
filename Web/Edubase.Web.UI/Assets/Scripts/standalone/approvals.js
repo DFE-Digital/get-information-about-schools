@@ -62,6 +62,7 @@
             },
             created: function() {
                 this.getChangesData();
+                
             },
             computed: {
                 pageCount: function () {
@@ -84,7 +85,9 @@
                 getChangesData: function (skip, callback) {
                     var self = this;
                     this.isProcessing = true;
+
                     $('#changes-table').find(':checkbox').prop('checked', false);
+                    
                     $.ajax({
                         url: defaults.apiUrl,
                         data: {
@@ -110,7 +113,11 @@
                 rejectSuccessCallBack: function() {
                     this.pendingRejection = false;
                     this.itemsConfirmedRejected = true;
-                    document.getElementById('reason').value = '';
+                    this.reason = '';
+                    window.setTimeout(function() {
+                        $("#reason").data().textCount.setCount();
+                    },0);
+                    
                 },
                 updateCount: function (removedCount) {
                     this.currentCount = this.currentCount - removedCount;
@@ -123,7 +130,7 @@
                 confirmRejection: function () {
                     var self = this;
                     this.invalidReason = $('#reason').val().length < 1;
-                    this.reasonLength = $('#reason').val().length > 1000;
+                    this.reasonLength = $('#reason').val().length > 1024;
 
                     var selectedItems = $('#changes-table').find('.boldened-checkbox')
                         .filter(':checked');
@@ -206,4 +213,6 @@
             }
         });
 
+
+    $('#reason').textCount({ maxLength: 1024 });
 }());
