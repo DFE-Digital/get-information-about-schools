@@ -371,15 +371,19 @@ ul.approval-items{
 
 .add-clear-filters {
     font-size: 14px;
+    display: block;
+    float: left;
 }
-
 .add-filters-link {
+    margin-bottom: 2em;
+    float: right;
+}
+#filter-addtional-controls {
     display: none;
 
     .js-enabled & {
         display: block;
-        margin-bottom: 2em;
-        float: right;
+       
     }
 
     &.hidden {

@@ -1,20 +1,14 @@
 ﻿@model AgeRangeFilterViewModel
 
 <div class="govuk-option-select age-filter js-collapsible no-scroll additional-search-critera hidden" data-closed-on-load="true" id="@($"option-select-{ViewData.ModelMetadata.PropertyName}")">
+
     <div class="container-head js-container-head">
-        <div class="option-select-label">@(ViewData["title"] ?? "Age range")</div>
-        @if ((Model?.From != null && Model.From.HasValue) || (Model?.To != null && Model.To.HasValue))
-        {
+        <div class="option-select-label">@(ViewData["title"] ?? "Age range")</div>        
             <div class="js-selected-counter">
                 <span class="js-selected-counter-text">Age selected</span>
             </div>
-            
-        }
     </div>
-    @if ((Model?.From != null && Model.From.HasValue) || (Model?.To != null && Model.To.HasValue))
-{
-    <a href="#" class="clear-selections">Clear</a>
-}
+    <a href="#" class="clear-selections filter-clear">Clear</a>
     <div class="options-container" id="">
         <div class="js-auto-height-inner">
             <div class="form-group date-group">
@@ -30,7 +24,8 @@
                     </span>
                 </fieldset>
             </div>
-            <div class="form-group"><a href="#" class="button button-grey filter-button">Apply</a>
+            <div class="form-group">
+                <a href="#" class="button button-grey filter-button">Apply</a>
             </div>
         </div>
     </div>
