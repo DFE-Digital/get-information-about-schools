@@ -461,7 +461,6 @@
     <Content Include="App_Data\sa.education.gov.uk-certificate.cer" />
     <Content Include="App_Data\edubase3.pfx" />
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
-    <Content Include="App_Data\Kentor.AuthServices.Tests.pfx" />
     <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\SelectSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\EditSharedGovernor.cshtml" />
