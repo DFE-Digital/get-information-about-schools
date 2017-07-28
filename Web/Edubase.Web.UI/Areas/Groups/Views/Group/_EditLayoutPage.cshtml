@@ -26,15 +26,36 @@
             <div class="tab-wrap">
                 <ul class="horizontal-tabs">
                     <li>
-                        <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#details")" class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "details", "selected-tab")">Details</a>
+                        @if (string.Equals(Model.SelectedTabName, "details"))
+                        {
+                            <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" class="horizontal-tab selected-tab">Details</a>
+                        }
+                        else
+                        {
+                            <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#details")" class="horizontal-tab">Details</a>
+                        }
                     </li>
                     <li>
-                        <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#list")" class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "links", "selected-tab")">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                        @if (string.Equals(Model.SelectedTabName, "links"))
+                        {
+                            <a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" class="horizontal-tab selected-tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                        }
+                        else
+                        {
+                            <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#list")" class="horizontal-tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                        }
                     </li>
                     @if (Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li>
-                            <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#governance")" class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "governance", "selected-tab")">Governance</a>
+                            @if (string.Equals(Model.SelectedTabName, "governance"))
+                            {
+                                <a href="@Url.Action("Edit", "Governor", new { groupUId = Model.GroupUId, area = "Governors" })" class="horizontal-tab selected-tab">Governance</a>
+                            }
+                            else
+                            {
+                                <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#governance")" class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "governance", "selected-tab")">Governance</a>
+                            }
                         </li>
                     }
                 </ul>
