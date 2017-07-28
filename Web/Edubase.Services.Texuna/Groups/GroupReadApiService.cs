@@ -57,29 +57,15 @@ namespace Edubase.Services.Texuna.Groups
         }
 
         public async Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal principal) =>
-            (await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal)).Response;
+            (await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal)).GetResponse();
 
         public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal, bool includeFutureDated = false) 
             => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments?editMode={includeFutureDated}", principal)).GetResponse();
 
-        public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model)
-        {
-            throw new NotImplementedException($"{nameof(GroupReadApiService)}::{nameof(GetModelChangesAsync)}");
-        }
-
-        public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel original, GroupModel model)
-        {
-            throw new NotImplementedException($"{nameof(GroupReadApiService)}::{nameof(GetModelChangesAsync)}");
-        }
-
-        public Task<int[]> GetParentGroupIdsAsync(int establishmentUrn, IPrincipal principal)
-        {
-            throw new NotImplementedException($"NOT REQUIRED POST INT: {nameof(GroupReadApiService)}::{nameof(GetParentGroupIdsAsync)}");
-        }
 
         public async Task<ApiSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {
-            return (await _httpClient.PostAsync<ApiSearchResult<SearchGroupDocument>>("group/search", payload, principal)).Response;
+            return (await _httpClient.PostAsync<ApiSearchResult<SearchGroupDocument>>("group/search", payload, principal)).GetResponse();
         }
 
         public async Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
@@ -87,7 +73,7 @@ namespace Edubase.Services.Texuna.Groups
             return (await _httpClient.GetAsync<ApiSearchResult<SearchGroupDocument>>(string.Concat("group/searchbyids?",
                 groupId.UrlTokenize("groupId"), 
                 groupUId.UrlTokenize("groupUId"), 
-                companiesHouseNumber.UrlTokenize("companiesHouseNumber")), principal)).Response;
+                companiesHouseNumber.UrlTokenize("companiesHouseNumber")), principal)).GetResponse();
         }
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)

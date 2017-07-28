@@ -510,7 +510,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     TypeName = establishmentGroup.TypeName,
                     HeadTitleName = establishmentGroup.HeadTitle,
                     JoinedDate = establishmentGroup.JoinedDate,
-                    CCIsLeadCentre = establishmentGroup.CCIsLeadCentre ?? false
+                    CCIsLeadCentre = establishmentGroup.CCIsLeadCentre ?? false,
+                    LAESTAB = establishmentGroup.LAESTAB,
+                    LocalAuthorityName = establishmentGroup.LocalAuthorityName,
+                    PhaseName = establishmentGroup.PhaseName,
+                    StatusName = establishmentGroup.StatusName
                 });
             }
         }

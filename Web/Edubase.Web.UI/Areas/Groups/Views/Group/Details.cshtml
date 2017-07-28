@@ -86,8 +86,6 @@
                         @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
                     }
 
-                    @*<div style="float:none; clear:both;"></div> No worries Kris*@<!-- Sorry Jon. -->
-
                     <table class="borderless no-padding">
                         @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                         {
@@ -198,18 +196,35 @@
                                             <text>(Lead centre)</text>
                                         }
                                     </h2>
+
                                     <dl>
                                         <dt>Address:</dt>
                                         <dd>@result.Address</dd>
+
+                                        <dt>Phase / type:</dt>
+                                        <dd>
+                                            @(result.PhaseName ?? "Not recorded"),
+                                            @(result.TypeName ?? "Not recorded")
+                                        </dd>
+
                                         <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                                        <dd> @result.Urn</dd>
-                                        <dt>School type:</dt>
-                                        <dd>@result.TypeName</dd>
-                                        <dt>Headteacher name:</dt>
-                                        <dd>@result.HeadFullName</dd>
+                                        <dd>@result.Urn</dd>
+                                        
+                                        <dt class="inline-details">
+                                            <abbr title="Local authority - Establishment number">LAESTAB</abbr>:
+                                        </dt>
+                                        <dd>@(result.LAESTAB ?? "Not recorded")</dd>
+                                        
+                                        <dt>Status:</dt>
+                                        <dd>@(result.StatusName ?? "Not recorded")</dd>
+                                        
+                                        <dt>Local authority name:</dt>
+                                        <dd>@(result.LocalAuthorityName ?? "Not recorded")</dd>
+
                                         <dt>Joined date:</dt>
                                         <dd>@(result.JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
                                     </dl>
+
                                 </li>
                             }
                         </ul>

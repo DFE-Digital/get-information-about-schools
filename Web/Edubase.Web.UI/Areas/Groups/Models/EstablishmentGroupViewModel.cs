@@ -19,6 +19,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string HeadLastName { get; set; }
         public DateTime? JoinedDate { get; set; }
 
+        public string PhaseName { get; set; }
+        public string LAESTAB { get; set; }
+        public string LocalAuthorityName { get; set; }
+        public string StatusName { get; set; }
+
         [Display(Name = "Joined date")]
         public DateTimeViewModel JoinedDateEditable { get; set; } = new DateTimeViewModel();
 
