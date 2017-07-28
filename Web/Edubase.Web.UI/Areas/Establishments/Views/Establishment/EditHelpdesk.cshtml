@@ -22,7 +22,7 @@
 
                 <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveLocation">Save</button>
                 @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
-                
+
                 <div class="form-group first">
                     @Html.LabelFor(x => x.HelpdeskNotes, "Helpdesk notes" , new { @class="form-label"})
                     @Html.TextAreaFor(x => x.HelpdeskNotes, new { @class = "form-control", rows = "10", maxlength = "1000" })

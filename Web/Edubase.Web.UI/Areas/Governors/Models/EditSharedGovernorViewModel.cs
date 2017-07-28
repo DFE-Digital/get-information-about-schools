@@ -1,4 +1,4 @@
-﻿using Edubase.Web.UI.Models.Establishments;
+﻿using Edubase.Web.UI.Areas.Establishments.Models;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {

@@ -1,12 +1,12 @@
-﻿using Edubase.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Texuna.Lookup;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
 
-namespace Edubase.Web.UI.Models.Establishments
+namespace Edubase.Web.UI.Areas.Establishments.Models
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class ReplaceAddressViewModel : IEstablishmentPageViewModel

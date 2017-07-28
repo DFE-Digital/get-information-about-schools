@@ -1,7 +1,15 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services;
+using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
@@ -12,31 +20,23 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
+using Edubase.Services.Texuna.Lookup;
 using Edubase.Web.Resources;
+using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Web.UI.Areas.Establishments.Models.Validators;
 using Edubase.Web.UI.Areas.Governors.Controllers;
+using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
-using Edubase.Web.UI.Models.Establishments;
-using Edubase.Web.UI.Models.Establishments.Validators;
+using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using MoreLinq;
 using StackExchange.Profiling;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using Edubase.Services.Domain;
-using Edubase.Web.UI.Validation;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
-using Edubase.Services.Texuna.Lookup;
-using static Edubase.Web.UI.Models.EditEstablishmentModel;
 
-namespace Edubase.Web.UI.Controllers
+namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    [RoutePrefix("Establishment")]
+    [RouteArea("Establishments"), RoutePrefix("Establishment")]
     public class EstablishmentController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -374,7 +374,7 @@ namespace Edubase.Web.UI.Controllers
             model.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             await PopulateSelectLists(model);
 
-            if (model.Action == eAction.SaveDetails || model.Action == eAction.SaveIEBT || model.Action == eAction.SaveLocation)
+            if (model.Action == EditEstablishmentModel.eAction.SaveDetails || model.Action == EditEstablishmentModel.eAction.SaveIEBT || model.Action == EditEstablishmentModel.eAction.SaveLocation)
             {
                 await ValidateAsync(model, domainModel);
 
@@ -388,7 +388,7 @@ namespace Edubase.Web.UI.Controllers
                     else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
-            else if (model.Action == eAction.Confirm)
+            else if (model.Action == EditEstablishmentModel.eAction.Confirm)
             {
                 if (ModelState.IsValid)
                 {

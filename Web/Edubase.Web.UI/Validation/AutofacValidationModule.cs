@@ -8,8 +8,6 @@ using Edubase.Web.UI.Areas.Groups.Models.Validators;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.DataQuality;
 using Edubase.Web.UI.Models.DataQuality.Validators;
-using Edubase.Web.UI.Models.Establishments;
-using Edubase.Web.UI.Models.Establishments.Validators;
 using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
 

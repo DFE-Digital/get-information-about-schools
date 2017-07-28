@@ -1,6 +1,6 @@
 ﻿@using Edubase.Web.UI.Models
 @using System.Linq
-@using ViewModel = Edubase.Web.UI.Models.Establishments.IEstablishmentPageViewModel
+@using ViewModel = Edubase.Web.UI.Areas.Establishments.Models.IEstablishmentPageViewModel
 @model ViewModel
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
@@ -24,11 +24,11 @@
                     <li>
                         @if (string.Equals(Model.SelectedTab, "details"))
                         {
-                            <a href="@Url.Action("EditDetails", "Establishment", new {id = Model.Urn, area = ""})" class="horizontal-tab selected-tab">Details</a>
+                            <a href="@Url.Action("EditDetails", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">Details</a>
                         }
                         else
                         {
-                            <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = ""})}#school-dashboard")" class="horizontal-tab">Details</a>
+                            <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-dashboard")" class="horizontal-tab">Details</a>
                         }
                         
                     </li>
@@ -37,11 +37,11 @@
                     <li>
                         @if (string.Equals(Model.SelectedTab, "links"))
                         {
-                            <a href="@Url.Action("EditLinks", "Establishment", new {id = Model.Urn, area = ""})" class="horizontal-tab selected-tab">Links</a>
+                            <a href="@Url.Action("EditLinks", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">Links</a>
                         }
                         else
                         {
-                            <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = ""})}#school-links")" class="horizontal-tab">Links</a>
+                            <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-links")" class="horizontal-tab">Links</a>
                         }
                     </li>
                     
@@ -51,11 +51,11 @@
                         <li>
                             @if (string.Equals(Model.SelectedTab, "location"))
                             {
-                                <a href="@Url.Action("EditLocation", "Establishment", new {id = Model.Urn, area = ""})" class="horizontal-tab selected-tab">Location</a>
+                                <a href="@Url.Action("EditLocation", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">Location</a>
                             }
                             else
                             {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = ""})}#school-location")" class="horizontal-tab">Location</a>
+                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-location")" class="horizontal-tab">Location</a>
                             }
                         </li>
                     }
@@ -65,11 +65,11 @@
                         <li>
                             @if (string.Equals(Model.SelectedTab, "iebt"))
                             {
-                                <a href="@Url.Action("EditIEBT", "Establishment", new {id = Model.Urn, area = ""})" class="horizontal-tab selected-tab">IEBT</a>
+                                <a href="@Url.Action("EditIEBT", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">IEBT</a>
                             }
                             else
                             {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = ""})}#school-iebt")" class="horizontal-tab">IEBT</a>
+                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-iebt")" class="horizontal-tab">IEBT</a>
                             }
                         </li>
                     }
@@ -83,7 +83,7 @@
                             }
                             else
                             {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = ""})}#school-governance")" class="horizontal-tab">Governance</a>
+                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-governance")" class="horizontal-tab">Governance</a>
                             }
                         </li>
                     }
@@ -93,11 +93,11 @@
                         <li>
                             @if (string.Equals(Model.SelectedTab, "helpdesk"))
                             {
-                                <a href="@Url.Action("EditHelpdesk", "Establishment", new {id = Model.Urn, area = ""})" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "helpdesk", "selected-tab")">Helpdesk</a>
+                                <a href="@Url.Action("EditHelpdesk", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "helpdesk", "selected-tab")">Helpdesk</a>
                             }
                             else
                             {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = ""})}#helpdesk")" class="horizontal-tab">Helpdesk</a>
+                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#helpdesk")" class="horizontal-tab">Helpdesk</a>
                             }
                         </li>
                     }

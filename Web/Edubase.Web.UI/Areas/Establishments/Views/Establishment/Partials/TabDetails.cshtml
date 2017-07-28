@@ -4,7 +4,6 @@
     @if (Model.UserCanEdit)
     {
         @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
-        
     }
     
     @if (Model.Establishment.Location != null)

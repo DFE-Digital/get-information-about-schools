@@ -1,11 +1,6 @@
 ﻿using Edubase.Web.UI.Helpers.ModelBinding;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 
-namespace Edubase.Web.UI.Models.Establishments
+namespace Edubase.Web.UI.Areas.Establishments.Models
 {
     public class SearchForEstablishmentViewModel : IEstablishmentPageViewModel
     {

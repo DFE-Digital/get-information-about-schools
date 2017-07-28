@@ -10,8 +10,8 @@
     <div class="tab-content">
         <div class="column-half">
             @(Model.GroupUId.HasValue
-              ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel" })
-              : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "school-governance", new { area = "", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" }))
+                  ? Html.ActionLink("Cancel", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel" })
+                  : Html.ActionLink("Cancel", "Details", "Establishment", null, null, "school-governance", new { area = "Establishments", id = Model.EstablishmentUrn }, new { @class = "button button-grey cancel" }))
         </div>
         <div class="column-two-thirds">
             @ShowLegalDuty()

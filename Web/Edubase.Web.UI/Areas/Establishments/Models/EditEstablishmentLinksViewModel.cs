@@ -1,12 +1,10 @@
-﻿using Edubase.Services.Establishments.Models;
-using System.Collections.Generic;
-using System;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Edubase.Common;
-using Newtonsoft.Json;
 using Edubase.Services.Domain;
+using Edubase.Web.UI.Models;
 
-namespace Edubase.Web.UI.Models.Establishments
+namespace Edubase.Web.UI.Areas.Establishments.Models
 {
     public class EditEstablishmentLinksViewModel : IEstablishmentPageViewModel
     {

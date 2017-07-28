@@ -1,10 +1,7 @@
-﻿using Edubase.Services;
-using Edubase.Services.Establishments;
-using Edubase.Web.UI.Validation;
+﻿using Edubase.Web.UI.Validation;
 using FluentValidation;
-using System.Linq;
 
-namespace Edubase.Web.UI.Models.Establishments.Validators
+namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
 {
     public class EditEstablishmentLinksViewModelValidator : EdubaseAbstractValidator<EditEstablishmentLinksViewModel>
     {

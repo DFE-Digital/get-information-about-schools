@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Edubase.Services.Domain;
 
-namespace Edubase.Web.UI.Models.Establishments
+namespace Edubase.Web.UI.Areas.Establishments.Models
 {
     public class CreateEstablishmentViewModel
     {

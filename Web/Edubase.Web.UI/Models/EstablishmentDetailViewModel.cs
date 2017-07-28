@@ -5,8 +5,8 @@ using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Models.Establishments;
 using System.Collections.Generic;
+using Edubase.Web.UI.Areas.Establishments.Models;
 
 namespace Edubase.Web.UI.Models
 {

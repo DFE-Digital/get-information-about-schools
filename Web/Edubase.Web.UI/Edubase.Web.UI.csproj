@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -328,7 +328,7 @@
     <Compile Include="Controllers\DataQualityController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EduBaseController.cs" />
-    <Compile Include="Controllers\EstablishmentController.cs" />
+    <Compile Include="Areas\Establishments\Controllers\EstablishmentController.cs" />
     <Compile Include="Controllers\PrototypeController.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IocConfig.cs" />
@@ -363,15 +363,15 @@
     <Compile Include="Models\DataQuality\FullDataQualityStatusViewModel.cs" />
     <Compile Include="Models\DataQuality\Validators\DataQualityStatusItemValidator.cs" />
     <Compile Include="Models\DownloadsViewModel.cs" />
-    <Compile Include="Models\Establishments\CreateChildrensCentreViewModel.cs" />
-    <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
-    <Compile Include="Models\Establishments\EditEstablishmentLinksViewModel.cs" />
-    <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
-    <Compile Include="Models\Establishments\ReplaceAddressViewModel.cs" />
-    <Compile Include="Models\Establishments\SearchForEstablishmentViewModel.cs" />
-    <Compile Include="Models\Establishments\Validators\CreateEstablishmentViewModelValidator.cs" />
-    <Compile Include="Models\Establishments\Validators\SearchForEstablishmentViewModelValidator.cs" />
-    <Compile Include="Models\Establishments\Validators\EditEstablishmentLinksViewModelValidator.cs" />
+    <Compile Include="Areas\Establishments\Models\CreateChildrensCentreViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\CreateEstablishmentViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\EditEstablishmentLinksViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\IEstablishmentPageViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\ReplaceAddressViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\SearchForEstablishmentViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\Validators\CreateEstablishmentViewModelValidator.cs" />
+    <Compile Include="Areas\Establishments\Models\Validators\SearchForEstablishmentViewModelValidator.cs" />
+    <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentLinksViewModelValidator.cs" />
     <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
@@ -400,7 +400,7 @@
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\EditEstablishmentModel.cs" />
-    <Compile Include="Models\Establishments\TabDisplayPolicy.cs" />
+    <Compile Include="Areas\Establishments\Models\TabDisplayPolicy.cs" />
     <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\SearchCompaniesHouseModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
@@ -416,7 +416,7 @@
     <Compile Include="Models\Search\SearchPayloadViewModel.cs" />
     <Compile Include="Models\Search\SearchViewModel.cs" />
     <Compile Include="Models\ToolsViewModel.cs" />
-    <Compile Include="Models\Establishments\Validators\EditEstablishmentModelValidator.cs" />
+    <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentModelValidator.cs" />
     <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
     <Compile Include="MvcResult\ChallengeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -940,10 +940,10 @@
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
-    <Content Include="Views\Establishment\EditDetails.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditDetails.cshtml" />
     <Content Include="Views\Prototype\Placeholder.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
-    <Content Include="Views\Establishment\Create.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Create.cshtml" />
     <Content Include="Views\Admin\Logs.cshtml" />
     <Content Include="Views\Admin\LogDetail.cshtml" />
     <Content Include="Views\Shared\Secure.cshtml" />
@@ -953,19 +953,19 @@
     <Content Include="Views\ChangeHistory\Index.cshtml" />
     <Content Include="Views\ChangeHistory\ReadyToDownload.cshtml" />
     <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
-    <Content Include="Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
-    <Content Include="Views\Establishment\ReplaceAddress.cshtml" />
-    <Content Include="Views\Establishment\Details.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\ReplaceAddress.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Index.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabDetails.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabIEBT.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabLinks.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabGovernance.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabLocation.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabChangeHistory.cshtml" />
-    <Content Include="Views\Establishment\Partials\Header.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabDetails.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabIEBT.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabLinks.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabGovernance.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabLocation.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabChangeHistory.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\Header.cshtml" />
     <Content Include="Views\Shared\Downloads\SelectFormat.cshtml" />
     <Content Include="Views\Shared\Downloads\SelectDataset.cshtml" />
     <Content Include="Views\Shared\Downloads\PreparingFilePleaseWait.cshtml" />
@@ -979,11 +979,11 @@
     <Content Include="Views\Shared\_GenericPagination.cshtml" />
     <Content Include="Views\Tools\Index.cshtml" />
     <Content Include="Views\Shared\DomainError.cshtml" />
-    <Content Include="Views\Establishment\_EditLayoutPage.cshtml" />
-    <Content Include="Views\Establishment\Partials\_ConfirmChanges.cshtml" />
-    <Content Include="Views\Establishment\EditIEBT.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\_EditLayoutPage.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\_ConfirmChanges.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditIEBT.cshtml" />
     <Content Include="Views\Tools\BulkAcademies.cshtml" />
-    <Content Include="Views\Establishment\EditLocation.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditLocation.cshtml" />
     <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
     <Content Include="Views\Approvals\Index.cshtml" />
@@ -1005,10 +1005,10 @@
     <Content Include="Views\DataQuality\Status.cshtml" />
     <Content Include="Views\DataQuality\EditStatus.cshtml" />
     <Content Include="Views\DataQuality\ViewStatus.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabHelpdesk.cshtml" />
-    <Content Include="Views\Establishment\EditHelpdesk.cshtml" />
-    <Content Include="Views\Establishment\EditLinks.cshtml" />
-    <Content Include="Views\Establishment\AddEditLink.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabHelpdesk.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditHelpdesk.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditLinks.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\AddEditLink.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Views\Home\Guidance.cshtml" />
     <Content Include="Views\Home\Cookies.cshtml" />

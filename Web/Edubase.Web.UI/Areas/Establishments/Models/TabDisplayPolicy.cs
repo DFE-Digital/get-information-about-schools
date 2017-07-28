@@ -1,13 +1,12 @@
-﻿using Edubase.Common;
-using Edubase.Services.Enums;
-using Edubase.Services.Establishments.Models;
-using Edubase.Services.Security;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Principal;
+using Edubase.Common;
+using Edubase.Services.Enums;
+using Edubase.Services.Establishments.DisplayPolicies;
+using Edubase.Services.Establishments.Models;
 
-namespace Edubase.Web.UI.Models.Establishments
+namespace Edubase.Web.UI.Areas.Establishments.Models
 {
-    using Services.Establishments.DisplayPolicies;
     using ET = eLookupEstablishmentType;
 
     public class TabDisplayPolicy

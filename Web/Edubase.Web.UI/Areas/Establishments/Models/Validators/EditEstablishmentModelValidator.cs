@@ -1,22 +1,16 @@
-﻿using Edubase.Common;
-using Edubase.Services.Lookup;
+﻿using System.Linq;
+using Edubase.Services;
+using Edubase.Services.Establishments;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation;
-using System.Linq;
-using Edubase.Services.Enums;
-using Edubase.Services.Establishments;
-using Edubase.Services;
 
-namespace Edubase.Web.UI.Models.Validators
+namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
 {
     public class EditEstablishmentModelValidator : EdubaseAbstractValidator<EditEstablishmentModel>
     {
-        private ICachedLookupService _lookupService;
-
-        public EditEstablishmentModelValidator(ICachedLookupService lookupService, IEstablishmentReadService establishmentReadService)
+        public EditEstablishmentModelValidator(IEstablishmentReadService establishmentReadService)
         {
-            _lookupService = lookupService;
-
             When(x => x.Action == EditEstablishmentModel.eAction.SaveDetails, () =>
             {
                 RuleFor(x => x.EducationPhaseId)

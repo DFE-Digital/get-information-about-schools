@@ -2,7 +2,7 @@
 
 <div id="school-location" class="tab-content">
     @if (Model.UserCanEdit)
-    {        
+    {
         @Html.ActionLink("Edit location details", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey block-button mobile-full-width" })
     }
     <table class="borderless">
