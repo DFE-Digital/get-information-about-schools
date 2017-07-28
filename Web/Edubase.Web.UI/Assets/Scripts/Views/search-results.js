@@ -66,7 +66,7 @@
             var specifier = $ele.val() + bindAlias;
             $ele.val(specifier); 
         });
-
+        $('#filter-addtional-controls').removeClass('hidden');
     });
 
     $('#add-filter-cancel').on('click', function(e) {
