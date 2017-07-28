@@ -1,5 +1,5 @@
-﻿@using Edubase.Services.Enums
-@using Edubase.Common;
+﻿@using Edubase.Common
+@using Edubase.Services.Enums
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.IGroupPageViewModel;
 @model VM
 @{
@@ -26,17 +26,15 @@
             <div class="tab-wrap">
                 <ul class="horizontal-tabs">
                     <li>
-                        <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" 
-                           class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "details", "selected-tab")">Details</a>
+                        <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#details")" class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "details", "selected-tab")">Details</a>
                     </li>
-                    <li><a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" 
-                           class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "links", "selected-tab")">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                    <li>
+                        <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#list")" class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "links", "selected-tab")">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
                     </li>
                     @if (Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li>
-                            <a href="@Url.Action("Edit", "Governor", new { groupUId = Model.GroupUId, area = "Governors" })"
-                               class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "governance", "selected-tab")">Governance</a>
+                            <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#governance")" class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "governance", "selected-tab")">Governance</a>
                         </li>
                     }
                 </ul>
