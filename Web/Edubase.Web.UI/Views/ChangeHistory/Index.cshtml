@@ -27,33 +27,38 @@
     </ul>
 </div>
 
-<h1 class="heading-intro">Change history</h1>
+<h1 class="heading-xlarge">Change history</h1>
 
 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 <div class="grid-row" id="change-history-app">
     @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get, new { id = "change-history-form", data_record_count = recordCount }))
     {
+        <div class="column-two-thirds">
+            <p>
+                This allows you to find out when establishments (such as schools, colleges and
+                children's centres) and groups (such as multi academy trusts and federations)
+                made changes to their records and what was changed.
+            </p>
+            <p>
+                If you want to view the change history for a single establishment or group, look in
+                the 'Changes' tab on the establishment or group's page.
+            </p>
+        </div>
         <div class="column-full @(Model.Results == null ? "" : "hidden")">
-
-            <div class="button-row">
-                <input type="submit" class="button" value="Apply filters" />
-                @Html.RouteLink("Clear filters", "ChangeHistoryCriteria", null, new { @class = "button button-grey" })
-            </div>
-
             <fieldset class="inline">
-                <legend class="heading-small">Filter by establishment or group</legend>
+                <legend class="heading-small">Choose establishment or group change history</legend>
                 <div class="form-group panel-toggler">
                     <span class="radio-button-wrap">
                         <input id="searchtype-establishment" name="@nameof(Model.SearchType)" value="establishment" type="radio" @Html.Conditional(Model.SearchType == "establishment", "checked") />
                         <label class="edubase-button-radio" for="searchtype-establishment">
-                            Establishment
+                            All establishments
                         </label>
                     </span>
                     <span class="radio-button-wrap">
                         <input id="searchtype-group" name="@nameof(Model.SearchType)" value="group" type="radio" @Html.Conditional(Model.SearchType == "group", "checked") />
                         <label class="edubase-button-radio" for="searchtype-group">
-                            Group
+                            All groups
                         </label>
                     </span>
                 </div>
@@ -63,7 +68,10 @@
 
             <div id="establishment-search-filters" class="panel-indent" style="display:@(Model.SearchType != null ? "" : "none");">
                 <div class="expander-panel open-expander">
-                    <a href="#" class="panel-trigger heading-small">Date</a>
+                    <a href="#" class="panel-trigger heading-small">Changed date</a>
+                    <a href="#date-reference-help" class="icon-help">
+                        <span class="visuallyhidden">About date types</span>
+                    </a>
                     <div class="expander-panel-content" >
                         <div class="form-group inline hidden" id="date-type">
                             <span class="radio-button-wrap">
@@ -152,13 +160,29 @@
                     </div>
                 </div>
 
-
+            @Html.RouteLink("Reset filters", "ChangeHistoryCriteria", null)
             </div>
 
             <div class="button-row">
-                <input type="submit" class="button" value="Apply filters" />
-                @Html.RouteLink("Clear filters", "ChangeHistoryCriteria", null, new { @class = "button button-grey" })
+                <input type="submit" class="button" value="Search" />
+                
             </div>
+            <div class="helptext-container">
+                <div id="date-reference-help">
+                    <h3 class="bold-small">Types of dates</h3>
+                    <p class="change-history-help">
+                        <strong class="bold-xsmall">Applied:</strong>
+                        When the establishment or group submitted the change request.
+                        <br/>
+                        <strong class="bold-xsmall">Approved:</strong>
+                        When the relevant authority granted the change request.
+                        <br/>
+                        <strong class="bold-xsmall">Effective:</strong>
+                        When the change actually took effect.
+                    </p>
+                </div>
+            </div>
+            
         </div>
 
         if (Model.Results != null)
@@ -353,9 +377,9 @@
 
             $("#searchtype-establishment,#searchtype-group").change(function () {
                 if (this.value === 'establishment') {
-                    $('#approver-wrap, #date-type').removeClass('hidden');
+                    $('#approver-wrap, #date-type, .icon-help').removeClass('hidden');
                 } else {
-                    $('#approver-wrap, #date-type').addClass('hidden');
+                    $('#approver-wrap, #date-type, .icon-help').addClass('hidden');
                 }
                 $("#establishment-search-filters").show();
             });
