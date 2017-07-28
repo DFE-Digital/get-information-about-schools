@@ -46,7 +46,7 @@ namespace Edubase.Services.Texuna.Establishments
             => new ServiceResultDto<EstablishmentModel>((await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}", principal, false)).Response);
 
         public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
-            => (await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes?take={take}", user)).GetResponse();
+            => (await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes?take={take}&skip=0", user)).GetResponse();
 
         public async Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user)
             => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/display-policy", user)).GetResponse().Initialise(establishment);
