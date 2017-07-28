@@ -19,5 +19,17 @@ namespace Edubase.Services.Groups.Models
         public string Name { get; set; }
         public string TypeName { get; set; }
         public int? Urn { get; set; }
+
+        [JsonProperty("phaseName")]
+        public string PhaseName { get; set; }
+
+        [JsonProperty("laestab")]
+        public string LAESTAB { get; set; }
+
+        [JsonProperty("localAuthorityName")]
+        public string LocalAuthorityName { get; set; }
+
+        [JsonProperty("statusName")]
+        public string StatusName { get; set; }
     }
 }
