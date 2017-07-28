@@ -200,7 +200,7 @@
                             content: 'Any unsaved changes will be lost',
                             triggerEvent: 'click'
                         });
-                        $('#Notes').textCount();
+                        $('#Notes').textCount({ maxLength: 200 });
                     </script>
                 }
         }
@@ -217,7 +217,7 @@
                             exitAttached = true;
                         }
                     });
-                    $('#Notes').textCount();
+                    $('#Notes').textCount({ maxLength : 200});
                 </script>
                 
             }

@@ -51,6 +51,15 @@
 }
 
 
+.expander-panel {
+    position: relative;
+
+    .icon-help {
+        position: absolute;
+        left: 148px;
+        top: 20px;
+    }
+}
 .expander-panel-content {   
     display: none;
     padding-bottom: 20px;
@@ -115,4 +124,13 @@
 }
 .padded-group {
     padding: 20px 0 0;
+}
+
+.change-history-help {
+    font-size: 16px;
+    padding: 12px 20px 0 0;
+
+    .bold-xsmall {
+        font-size: 16px;
+    }
 }
