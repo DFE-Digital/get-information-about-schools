@@ -185,6 +185,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             filters.CloseDateMin = model.CloseDateFrom?.ToDateTime();
             filters.CloseDateMax = model.CloseDateTo?.ToDateTime();
+            filters.OpenDateMin = model.OpenDateFrom?.ToDateTime();
+            filters.OpenDateMax = model.OpenDateTo?.ToDateTime();
             filters.StatutoryLowAgeMin = model.AgeRangeLow?.From;
             filters.StatutoryLowAgeMax = model.AgeRangeLow?.To;
             filters.StatutoryHighAgeMin = model.AgeRangeHigh?.From;
