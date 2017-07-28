@@ -21,8 +21,10 @@
                 opts = this.opts,
                 $tabs = $el.find('.' + opts.tabClass),
                 $tabbedContent = $el.find('.' + opts.tabContentClass),
-                validHashes = $.map($tabs, function(elem) {
-                    return $(elem).attr('href').split('#')[1];
+                validHashes = $.map($tabs, function (elem) {
+                    if ($(elem).attr('href').indexOf('#') === 0) {
+                        return $(elem).attr('href').split('#')[1];
+                    }                    
                 }),
                 intialTabSelection = $.inArray(window.location.hash.replace('#', ''), validHashes);
             
@@ -65,18 +67,19 @@
             $('.tab-manipulator').on('click', function (e) {
                 e.preventDefault();
                 var hash = $(this).attr('href').replace('#', ''),
-                    hasTab = $.inArray(hash, validHashes);
-                console.log()
-                console.log('hasTab ' + hasTab);
+                    hasTab = $.inArray(hash, validHashes);            
                 if (hasTab > -1) {
                     $tabs.eq(hasTab).click();
                     $(window).scrollTop($tabs.offset().top);
                 }
             });
 
-            $tabs.on('click', function (e) {                
-                e.preventDefault();
+            $tabs.on('click', function (e) {                                
                 var targetContent = $(this).attr('href');
+                if (targetContent.indexOf('#') !== 0) {
+                    return true;
+                }
+                e.preventDefault();
                 location.replace(targetContent);
                 
                 $tabs.removeClass(opts.selectedTabClass);
@@ -94,11 +97,14 @@
             });
             
             // only process the hash if it's for a valid
-            if (window.location.hash && intialTabSelection > -1) {
+            if (window.location.hash !== '' && intialTabSelection > -1) {
                 $tabs.eq(intialTabSelection).click();
             } else {
-                $tabs.slice(0, 1).addClass(opts.selectedTabClass);
-                $tabbedContent.slice(0, 1).removeClass('hidden-tab-content').attr('aria-hidden', false);
+                if ($('.' + opts.selectedTabClass).length === 0) {
+                    $tabs.slice(0, 1).addClass(opts.selectedTabClass);
+                    $tabbedContent.slice(0, 1).removeClass('hidden-tab-content').attr('aria-hidden', false);
+                } 
+                
             }
         }
     };
