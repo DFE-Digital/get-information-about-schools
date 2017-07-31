@@ -9,11 +9,11 @@
             function(e) {
                 e.preventDefault();
                 GOVUK.setCookie('seen-news-banner', true, { days: self.delay });
-                self.newsBanner.classList.add('hidden');
+                $(self.newsBanner).addClass('hidden');
             });
 
         if (GOVUK.getCookie('seen-news-banner') !== 'true') {
-            this.newsBanner.classList.remove('hidden');
+            $(this.newsBanner).removeClass('hidden');
 
         }
     }

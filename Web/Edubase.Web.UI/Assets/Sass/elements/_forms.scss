@@ -313,7 +313,9 @@ legend {
 
 hr { height:3px; background-color:$grey-3; border:none; }
 
-input[disabled=disabled], select[disabled=disabled] {
+input[disabled=disabled], 
+select[disabled=disabled],
+input:disabled {
     background-color: #eee;
 }
 

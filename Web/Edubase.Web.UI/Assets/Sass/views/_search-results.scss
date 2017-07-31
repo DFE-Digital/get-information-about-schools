@@ -358,6 +358,11 @@ ul.approval-items{
         display: inline-block;
     }
 
+    &.clear-disabled {
+        color: $grey-1;
+        text-decoration: none;
+    }
+
     .age-filter & , 
     .date-filters & {
         left: 94px;
@@ -409,4 +414,8 @@ ul.approval-items{
     .hidden {
         display: none;
     }
+}
+
+.pending-results-update {
+    @include opacity(0.6);
 }

@@ -141,7 +141,7 @@ namespace Edubase.Web.UI.Models
             Establishment.Address_Locality, 
             Establishment.Address_Line3,
             Establishment.Address_CityOrTown, 
-            AddressCountyName, 
+            AddressCountyName.Replace("Not recorded", string.Empty), 
             Establishment.Address_PostCode);
 
         public string GetAltAddress() => StringUtil.ConcatNonEmpties(", ",
@@ -149,7 +149,7 @@ namespace Edubase.Web.UI.Models
             Establishment.AltLocality,
             Establishment.AltAddress3,
             Establishment.AltTown,
-            AltAddressCountyName,
+            AltAddressCountyName.Replace("Not recorded", string.Empty),
             Establishment.AltPostCode);
 
         public string GetProprietorsAddress() => StringUtil.ConcatNonEmpties(", ",
@@ -157,7 +157,7 @@ namespace Edubase.Web.UI.Models
             Establishment.IEBTModel.ProprietorsLocality,
             Establishment.IEBTModel.ProprietorsAddress3,
             Establishment.IEBTModel.ProprietorsTown,
-            IEBTProprietorsAddressCountyName,
+            IEBTProprietorsAddressCountyName.Replace("Not recorded", string.Empty),
             Establishment.IEBTModel.ProprietorsPostcode);
 
         public string GetChairOfProprietorsBodyAddress() => StringUtil.ConcatNonEmpties(", ",
@@ -165,7 +165,7 @@ namespace Edubase.Web.UI.Models
             Establishment.IEBTModel.ChairOfProprietorsBodyLocality,
             Establishment.IEBTModel.ChairOfProprietorsBodyAddress3,
             Establishment.IEBTModel.ChairOfProprietorsBodyTown,
-            IEBTChairOfProprietorsBodyAddressCountyName,
+            IEBTChairOfProprietorsBodyAddressCountyName.Replace("Not recorded", string.Empty),
             Establishment.IEBTModel.ChairOfProprietorsBodyPostcode);
 
         public GovernorsGridViewModel GovernorsGridViewModel { get; set; }

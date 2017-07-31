@@ -46,9 +46,14 @@
       border-left: 0;
       left: 10px;
     }
-   
-
 }
+input:disabled + .filter-radio {
+    color: $grey-1;
+        &:before, &:after {
+            border-color: $grey-3;
+        }
+    }
+
  .filter-wrapper {
     position: relative;
     overflow: hidden;
