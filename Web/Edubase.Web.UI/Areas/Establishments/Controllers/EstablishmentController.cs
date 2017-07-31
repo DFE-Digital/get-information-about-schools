@@ -455,9 +455,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             model.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             await PopulateSelectLists(model);
 
-            if (model.Action == EditEstablishmentModel.eAction.SaveDetails || model.Action == EditEstablishmentModel.eAction.SaveIEBT || model.Action == EditEstablishmentModel.eAction.SaveLocation)
+            if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
             {
+                var originalEstabTypeId = (eLookupEstablishmentType) domainModel.TypeId;
                 await ValidateAsync(model, domainModel);
+                var newEstabTypeId = (eLookupEstablishmentType)domainModel.TypeId;
 
                 if (ModelState.IsValid)
                 {
@@ -465,11 +467,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     
                     var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, User);
 
+                    if (originalEstabTypeId == eLookupEstablishmentType.ChildrensCentreLinkedSite && newEstabTypeId == eLookupEstablishmentType.ChildrensCentre) model.CCIsPromoting = true;
+                    else if (originalEstabTypeId == eLookupEstablishmentType.ChildrensCentre && newEstabTypeId == eLookupEstablishmentType.ChildrensCentreLinkedSite) model.CCIsDemoting = true;
+
                     if (changes.Any()) model.ChangesSummary = changes;
                     else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
-            else if (model.Action == EditEstablishmentModel.eAction.Confirm)
+            else if (model.Action == ViewModel.eAction.Confirm)
             {
                 if (ModelState.IsValid)
                 {
@@ -493,7 +498,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 await PrepareModels(viewModel, existingDomainModel);
                 var validationEnvelope = await _establishmentWriteService.ValidateAsync(existingDomainModel, User);
-                validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.Message));
                 validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.Message));
             }
         }
