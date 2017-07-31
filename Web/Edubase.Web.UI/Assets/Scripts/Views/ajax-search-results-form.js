@@ -243,7 +243,6 @@
                     }
                 });
 
-
                 var toDateValues = $.map(toDateFields, function (field) {
                     if (field.value.trim() !== '') {
                         return field.value;
@@ -257,9 +256,6 @@
                     validDate = false;
                 }
 
-                if (fromDateValues.length === 0 && toDateValues.length === 0) {
-                    validDate = false;
-                }
 
                 if (fromDateValues.length === 3 && validDate) {
                     dateObj.day = fromDateValues[0];

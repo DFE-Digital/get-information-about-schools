@@ -63,6 +63,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public const string BIND_ALIAS_AGE_RANGE_LOW_FROM = "ad";
         public const string BIND_ALIAS_AGE_RANGE_HIGH_FROM = "af";
         public const string BIND_ALIAS_OFSTEDRATINGS = "ag";
+        public const string BIND_ALIAS_OPEN_DATE_FROM = "ah";
+        public const string BIND_ALIAS_OPEN_DATE_TO = "ai";
         #endregion
 
         public enum eTextSearchType
@@ -262,6 +264,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         [BindAlias(BIND_ALIAS_CLOSE_DATE_TO)]
         public DateTimeViewModel CloseDateTo { get; set; }
+
+        [BindAlias(BIND_ALIAS_OPEN_DATE_FROM)]
+        public DateTimeViewModel OpenDateFrom { get; set; }
+
+        [BindAlias(BIND_ALIAS_OPEN_DATE_TO)]
+        public DateTimeViewModel OpenDateTo { get; set; }
 
         [BindAlias(BIND_ALIAS_AGE_RANGE_LOW_FROM)]
         public AgeRangeFilterViewModel AgeRangeLow { get; set; }
