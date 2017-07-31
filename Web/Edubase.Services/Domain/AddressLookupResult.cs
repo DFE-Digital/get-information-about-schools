@@ -1,4 +1,5 @@
 ﻿using Edubase.Common;
+using Edubase.Common.Text;
 
 namespace Edubase.Services.Domain
 {
@@ -6,8 +7,8 @@ namespace Edubase.Services.Domain
     {
         public AddressLookupResult(AddressBaseResult result)
         {
-            Street = StringUtil.ConcatNonEmpties(" ", result.BuildingNumber, result.ThoroughfareName);
-            Town = result.PostTown;
+            Street = StringUtil.ConcatNonEmpties(" ", result.BuildingNumber, result.ThoroughfareName?.ToLower()?.ToTitleCase());
+            Town = result.PostTown?.ToLower()?.ToTitleCase();
             UPRN = result.UPRN;
             PostCode = result.Postcode;
         }
