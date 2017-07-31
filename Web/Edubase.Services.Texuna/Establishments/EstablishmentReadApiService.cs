@@ -100,10 +100,10 @@ namespace Edubase.Services.Texuna.Establishments
             return retVal;
         }
 
-        public async Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, eFileFormat format, IPrincipal principal) 
+        public async Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, DownloadType format, IPrincipal principal) 
             => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/changes/download?format={format.ToString().ToLower()}", principal)).GetResponse();
 
-        public async Task<FileDownloadDto> GetDownloadAsync(int urn, eFileFormat format, IPrincipal principal)
+        public async Task<FileDownloadDto> GetDownloadAsync(int urn, DownloadType format, IPrincipal principal)
             => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/download?format={format.ToString().ToLower()}", principal)).GetResponse();
 
         public Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap()

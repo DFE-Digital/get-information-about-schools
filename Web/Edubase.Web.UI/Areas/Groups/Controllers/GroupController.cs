@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Edubase.Services.Groups.Downloads;
-using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
@@ -20,7 +18,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Models.CreateEdit;
     using Models.Validators;
     using Services.Domain;
-    using Services.Governors;
     using Services.Groups.Models;
     using Services.IntegrationEndPoints.CompaniesHouse;
     using StackExchange.Profiling;
@@ -30,9 +27,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using static Models.CreateEdit.GroupEditorViewModelBase;
     using static Models.CreateEdit.GroupEditorViewModel;
     using Services.Enums;
-    using Governors.Models;
     using Services.Nomenclature;
-    using Services.Governors.Models;
     using MoreLinq;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
@@ -42,10 +37,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
         private readonly ISecurityService _securityService;
-        private readonly IGovernorsReadService _governorsReadService;
         private readonly IGroupsWriteService _groupWriteService;
         private readonly ICompaniesHouseService _companiesHouseService;
-        private readonly IGroupDownloadService _groupDownloadService;
         private readonly NomenclatureService _nomenclatureService;
         
         public GroupController(
@@ -53,21 +46,17 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             ISecurityService securityService,
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
-            IGovernorsReadService governorsReadService,
             IGroupsWriteService groupWriteService,
             ICompaniesHouseService companiesHouseService,
-            IGroupDownloadService groupDownloadService,
             NomenclatureService nomenclatureService)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
             _groupReadService = groupReadService;
             _establishmentReadService = establishmentReadService;
-            _governorsReadService = governorsReadService;
             _groupWriteService = groupWriteService;
             _companiesHouseService = companiesHouseService;
             _nomenclatureService = nomenclatureService;
-            _groupDownloadService = groupDownloadService;
         }
 
 
@@ -228,22 +217,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             return View("EditDetails", viewModel);
-        }
-
-        /// <summary>
-        /// Does 2nd-level validation
-        /// </summary>
-        /// <param name="viewModel"></param>
-        /// <returns></returns>
-        private async Task ValidateAsync(GroupEditorViewModel viewModel)
-        {
-            if (viewModel.Action == ActionSave && ModelState.IsValid)
-            {
-                var dto = CreateSaveDto(viewModel);
-                var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
-                //validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
-            }
         }
 
         [HttpGet]
@@ -519,12 +492,20 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
         }
 
-
-        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/{downloadType}/{id}")]
-        public async Task<ActionResult> DownloadChangeHistory(int id, DownloadType downloadType)
+        /// <summary>
+        /// Does 2nd-level validation
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        private async Task ValidateAsync(GroupEditorViewModel viewModel)
         {
-            var response = await _groupDownloadService.DownloadGroupHistory(id, downloadType, User);
-            return Redirect(response.Url);
+            if (viewModel.Action == ActionSave && ModelState.IsValid)
+            {
+                var dto = CreateSaveDto(viewModel);
+                var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
+                //validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+            }
         }
     }
 }

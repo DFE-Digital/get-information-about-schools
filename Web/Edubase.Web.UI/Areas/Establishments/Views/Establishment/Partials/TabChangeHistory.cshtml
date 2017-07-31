@@ -1,4 +1,5 @@
-﻿@model EstablishmentDetailViewModel
+﻿@using Edubase.Services.Domain
+@model EstablishmentDetailViewModel
 
 
 <div id="school-change-history" class="tab-content approval-data">
@@ -10,8 +11,8 @@
     else
     {
         <p>
-            @Html.ActionLink("Download data in CSV format", "DownloadCsvChangeHistory", new { id = Model.Establishment.Urn, area = "" }, new { style = "margin-bottom:10px; display:block;" })
-            @Html.ActionLink("Download data in XLSX format", "DownloadXlsxChangeHistory", new { id = Model.Establishment.Urn, area = "" })
+            @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, new { style = "margin-bottom:10px; display:block;" })
+            @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.xlsx }, null)
             <br />
         </p>
         @*if (Model.PageCount > 1)

@@ -47,8 +47,8 @@ namespace Edubase.Services.Establishments
 
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model);
-        Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, eFileFormat format, IPrincipal principal);
-        Task<FileDownloadDto> GetDownloadAsync(int urn, eFileFormat format, IPrincipal principal);
+        Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, DownloadType format, IPrincipal principal);
+        Task<FileDownloadDto> GetDownloadAsync(int urn, DownloadType format, IPrincipal principal);
         Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap();
         Task<IEnumerable<LookupDto>> GetPermissibleLocalGovernorsAsync(int urn, IPrincipal principal);
         Task<IEnumerable<AddressLookupResult>> GetAddressesByPostCodeAsync(string postCode, IPrincipal principal);

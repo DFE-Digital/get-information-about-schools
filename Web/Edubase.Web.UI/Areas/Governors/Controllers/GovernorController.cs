@@ -270,32 +270,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     }
                 }).Result;
             }
-        }
-
-        internal async Task<GovernorsGridViewModel> CreateGovernorsViewModel(int? groupUId = null, int? establishmentUrn = null, EstablishmentModel establishmentModel = null)
-        {
-            establishmentUrn = establishmentUrn ?? establishmentModel?.Urn;
-
-            var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
-            var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService,
-                (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
-
-            if (establishmentUrn.HasValue || establishmentModel != null)
-            {
-                var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
-                var items = await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, User); // The API uses 1 as a default value, hence we have to call another API to deduce whether to show the Governance mode UI section
-                viewModel.GovernanceMode = items.Any() ? estabDomainModel.GovernanceMode : null;
-            }
-
-            if (groupUId.HasValue)
-            {
-                var groupModel = (await _groupReadService.GetAsync(groupUId.Value, User)).GetResult();
-                viewModel.ShowDelegationInformation = groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust;
-                viewModel.DelegationInformation = groupModel.DelegationInformation;
-            }
-
-            return viewModel;
-        }
+        }  
 
         /// <summary>
         /// GET
@@ -391,7 +366,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             return View(viewModel);}
 
-
         [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR), 
             Route(GROUP_EDIT_GOVERNOR), Route(ESTAB_EDIT_GOVERNOR),
             Route(GROUP_REPLACE_GOVERNOR), HttpPost]
@@ -462,29 +436,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await PopulateLayoutProperties(viewModel, viewModel.EstablishmentUrn, viewModel.GroupUId);
             
             return View(viewModel);
-        }
-
-        private void ErrorsToModelState<TModel>(IEnumerable<ApiError> errors)
-        {
-            var type = typeof(TModel);
-            var properties = type.GetProperties();
-            foreach (var error in errors)
-            {
-                foreach (var property in properties)
-                {
-                    JsonPropertyAttribute attribute = null;
-                    if (property.HasAttribute<JsonPropertyAttribute>())
-                    {
-                        attribute = property.GetAttribute<JsonPropertyAttribute>();
-                    }
-
-                    if (string.Equals(error.Fields, property.Name, StringComparison.OrdinalIgnoreCase) ||
-                        (attribute != null && string.Equals(error.Fields, attribute.PropertyName, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        ModelState.AddModelError(property.Name, error.Message);
-                    }
-                }
-            }
         }
 
         [HttpGet, Route(ESTAB_SELECT_SHARED_GOVERNOR, Name = "SelectSharedGovernor")]
@@ -728,6 +679,31 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
+        internal async Task<GovernorsGridViewModel> CreateGovernorsViewModel(int? groupUId = null, int? establishmentUrn = null, EstablishmentModel establishmentModel = null)
+        {
+            establishmentUrn = establishmentUrn ?? establishmentModel?.Urn;
+
+            var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
+            var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService,
+                (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
+
+            if (establishmentUrn.HasValue || establishmentModel != null)
+            {
+                var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
+                var items = await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, User); // The API uses 1 as a default value, hence we have to call another API to deduce whether to show the Governance mode UI section
+                viewModel.GovernanceMode = items.Any() ? estabDomainModel.GovernanceMode : null;
+            }
+
+            if (groupUId.HasValue)
+            {
+                var groupModel = (await _groupReadService.GetAsync(groupUId.Value, User)).GetResult();
+                viewModel.ShowDelegationInformation = groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust;
+                viewModel.DelegationInformation = groupModel.DelegationInformation;
+            }
+
+            return viewModel;
+        }
+
         private async Task<SharedGovernorViewModel> MapGovernorToSharedGovernorViewModel(GovernorModel governor, int establishmentUrn)
         {
             var dateNow = DateTime.Now.Date;
@@ -802,6 +778,29 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 vm.SelectedTabName = "governance";
                 vm.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((eLookupGroupType)vm.GroupTypeId.Value);
                 processGroup?.Invoke(domainModel);
+            }
+        }
+
+        private void ErrorsToModelState<TModel>(IEnumerable<ApiError> errors)
+        {
+            var type = typeof(TModel);
+            var properties = type.GetProperties();
+            foreach (var error in errors)
+            {
+                foreach (var property in properties)
+                {
+                    JsonPropertyAttribute attribute = null;
+                    if (property.HasAttribute<JsonPropertyAttribute>())
+                    {
+                        attribute = property.GetAttribute<JsonPropertyAttribute>();
+                    }
+
+                    if (string.Equals(error.Fields, property.Name, StringComparison.OrdinalIgnoreCase) ||
+                        (attribute != null && string.Equals(error.Fields, attribute.PropertyName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        ModelState.AddModelError(property.Name, error.Message);
+                    }
+                }
             }
         }
     }

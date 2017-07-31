@@ -62,6 +62,51 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return PartialView("Partials/_EstablishmentSearchResults", model);
         }
 
+        [HttpGet, Route("PrepareDownload")]
+        public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
+        {
+            viewModel.SearchSource = eLookupSearchSource.Establishments;
+
+            if (!viewModel.Dataset.HasValue)
+            {
+                viewModel.SearchQueryString = Request.QueryString.ToString();
+                return View("Downloads/SelectDataset", viewModel);
+            }
+
+            if (!viewModel.FileFormat.HasValue)
+                return View("Downloads/SelectFormat", viewModel);
+
+            var progressId = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(
+                new EstablishmentSearchDownloadPayload
+                {
+                    SearchPayload = (await GetEstablishmentSearchPayload(viewModel)).Object,
+                    DataSet = viewModel.Dataset.Value,
+                    FileFormat = viewModel.FileFormat.Value
+                }, User);
+            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
+        }
+
+        [HttpGet, Route("Download")]
+        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        {
+
+            var model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            var viewModel = new EstablishmentSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 4 : 3)
+            {
+                FileFormat = fileFormat,
+                SearchSource = searchSource,
+                SearchQueryString = searchQueryString
+            };
+
+            if (model.HasErrored)
+                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+
+            if (!model.IsComplete)
+                return View("Downloads/PreparingFilePleaseWait", viewModel);
+
+            return View("Downloads/ReadyToDownload", viewModel);
+        }
+
         private async Task<EstablishmentSearchViewModel> PopulateLookups(EstablishmentSearchViewModel vm)
         {
             using (MiniProfiler.Current.Step($"{GetType().Name}.{nameof(PopulateLookups)}"))
@@ -120,7 +165,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 { "id", urn },
                 { "area", "Establishments" }
             });
-
 
         private async Task<Returns<EstablishmentSearchPayload>> GetEstablishmentSearchPayload(EstablishmentSearchViewModel model)
         {
@@ -199,7 +243,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return retVal.Set(payload);
         }
 
-        //
         private ActionResult NoResults(EstablishmentSearchViewModel model)
         {
             var routeDictionary = new RouteValueDictionary
@@ -356,51 +399,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             return null;
-        }
-
-        [HttpGet, Route("PrepareDownload")]
-        public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
-        {
-            viewModel.SearchSource = eLookupSearchSource.Establishments;
-
-            if (!viewModel.Dataset.HasValue)
-            {
-                viewModel.SearchQueryString = Request.QueryString.ToString();
-                return View("Downloads/SelectDataset", viewModel);
-            }
-
-            if (!viewModel.FileFormat.HasValue)
-                return View("Downloads/SelectFormat", viewModel);
-
-            var progressId = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(
-                new EstablishmentSearchDownloadPayload
-                {
-                    SearchPayload = (await GetEstablishmentSearchPayload(viewModel)).Object,
-                    DataSet = viewModel.Dataset.Value,
-                    FileFormat = viewModel.FileFormat.Value
-                }, User);
-            return RedirectToAction(nameof(Download), new {id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
-        }
-
-        [HttpGet, Route("Download")]
-        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
-        { 
-
-            var model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id, User);
-            var viewModel = new EstablishmentSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 4 : 3)
-                {
-                    FileFormat = fileFormat,
-                    SearchSource = searchSource,
-                    SearchQueryString = searchQueryString
-                };
-
-            if (model.HasErrored)
-                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
-
-            if (!model.IsComplete)
-                return View("Downloads/PreparingFilePleaseWait", viewModel);
-
-            return View("Downloads/ReadyToDownload", viewModel);
         }
     }
 }

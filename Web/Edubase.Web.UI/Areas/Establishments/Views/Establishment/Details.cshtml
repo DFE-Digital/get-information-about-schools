@@ -1,6 +1,7 @@
 ﻿@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
 @using Edubase.Common
+@using Edubase.Services.Domain
 @using Edubase.Services.Enums
 @using Edubase.Web.Resources
 @using Microsoft.Ajax.Utilities
@@ -72,7 +73,7 @@
 
 <p class="urn">URN: @Model.Establishment.Urn</p>
 <p class="establishment-data-download">
-    @Html.ActionLink("Download establishment data", "DownloadCsv", new { id = Model.Establishment.Urn, area = "" }, new { })
+    @Html.ActionLink("Download establishment data", "DownloadEstablishmentData", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, new { })
 </p>
 
 @if (Model.Establishment.ConfirmationUpToDateRequired || Model.Establishment.ConfirmationUpToDateGovernanceRequired)

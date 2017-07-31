@@ -14,11 +14,9 @@ using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
-using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
-using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Services.Texuna.Lookup;
 using Edubase.Web.Resources;
@@ -44,8 +42,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IMapper _mapper;
         private readonly IEstablishmentWriteService _establishmentWriteService;
         private readonly ICachedLookupService _cachedLookupService;
-        private readonly IGovernorsReadService _governorsReadService;
-        private readonly NomenclatureService _nomenclatureService;
         private readonly IResourcesHelper _resourcesHelper;
         private readonly ISecurityService _securityService;
 
@@ -73,8 +69,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             IMapper mapper, 
             IEstablishmentWriteService establishmentWriteService,
             ICachedLookupService cachedLookupService,
-            IGovernorsReadService governorsReadService,
-            NomenclatureService nomenclatureService,
             IResourcesHelper resourcesHelper,
             ISecurityService securityService)
         {
@@ -83,8 +77,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _mapper = mapper;
             _establishmentWriteService = establishmentWriteService;
             _cachedLookupService = cachedLookupService;
-            _governorsReadService = governorsReadService;
-            _nomenclatureService = nomenclatureService;
             _resourcesHelper = resourcesHelper;
             _securityService = securityService;
         }
@@ -100,37 +92,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             });
             viewModel.SelectedTab = "details";
             return View(viewModel);
-        }
-
-        private void ReplaceAddressFromUrlToken(string addrtok, ViewModel viewModel)
-        {
-            var replaceAddressViewModel = UriHelper.TryDeserializeUrlToken<ReplaceAddressViewModel>(addrtok);
-            if (replaceAddressViewModel != null)
-            {
-                if (replaceAddressViewModel.Target == "main")
-                {
-                    viewModel.Address_CityOrTown = replaceAddressViewModel.Town;
-                    viewModel.Address_CountryId = replaceAddressViewModel.CountryId;
-                    viewModel.Address_CountyId = replaceAddressViewModel.CountyId;
-                    viewModel.Address_Line1 = replaceAddressViewModel.Street;
-                    viewModel.Address_Locality = replaceAddressViewModel.Locality;
-                    viewModel.Address_Line3 = replaceAddressViewModel.Address3;
-                    viewModel.Address_PostCode = replaceAddressViewModel.PostCode;
-                    viewModel.Address_UPRN = replaceAddressViewModel.SelectedUPRN;
-                }
-                else if(replaceAddressViewModel.Target=="alt")
-                {
-                    viewModel.AltTown = replaceAddressViewModel.Town;
-                    viewModel.AltCountryId = replaceAddressViewModel.CountryId;
-                    viewModel.AltCountyId = replaceAddressViewModel.CountyId;
-                    viewModel.AltStreet = replaceAddressViewModel.Street;
-                    viewModel.AltLocality = replaceAddressViewModel.Locality;
-                    viewModel.AltAddress3 = replaceAddressViewModel.Address3;
-                    viewModel.AltPostCode = replaceAddressViewModel.PostCode;
-                    viewModel.AltUPRN = replaceAddressViewModel.SelectedUPRN;
-                }
-                viewModel.IsDirty = true;
-            }
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
@@ -183,7 +144,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("EditIEBT", viewModel);
         }
 
-        #region Establishment links
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
+        public async Task<ActionResult> EditIEBT(ViewModel model)
+        {
+            return await SaveEstablishment(model);
+        }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links/Search", Name = "EditEstabLinks_SearchForEstablishment")]
         public async Task<ActionResult> SearchForEstablishment(int? id, SearchForEstablishmentViewModel viewModel)
@@ -346,6 +311,137 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
+        [HttpGet, Route("Details/{id}", Name = "EstabDetails")]
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false)
+        {
+            ViewBag.ShowApproved = approved;
+            var viewModel = new EstablishmentDetailViewModel
+            {
+                IsUserLoggedOn = User.Identity.IsAuthenticated,
+                SearchQueryString = searchQueryString,
+                SearchSource = searchSource
+            };
+
+            using (MiniProfiler.Current.Step("Retrieving establishment"))
+            {
+                var result = await _establishmentReadService.GetAsync(id, User);
+                if (result.ReturnValue == null) return HttpNotFound();
+                viewModel.Establishment = result.ReturnValue;
+            }
+
+            await Task.WhenAll(
+                PopulateLinkedEstablishments(id, viewModel),
+                PopulateChangeHistory(id, viewModel),
+                PopulateGroups(id, viewModel),
+                PopulateDisplayPolicies(viewModel),
+                PopulateEditPermissions(viewModel),
+                PopulateLookupNames(viewModel),
+                PopulateGovernors(viewModel));
+
+            viewModel.AgeRangeToolTip = _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
+
+            return View(viewModel);
+        }
+
+        [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
+        public async Task<ActionResult> Create()
+        {
+            var viewModel = new CreateChildrensCentreViewModel
+            {
+                CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
+                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
+                Address = new AddressViewModel(),
+            };
+            await PopulateCCSelectLists(viewModel);
+            return View(viewModel);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
+        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel)
+        {
+            viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
+            viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
+
+            if (viewModel.EstablishmentTypeId == 41)
+                return await CreateChildrensCentre(viewModel);
+
+            if (ModelState.IsValid)
+            {
+                var response = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
+                {
+                    EducationPhaseId = viewModel.EducationPhaseId,
+                    EstablishmentNumber = viewModel.EstablishmentNumber,
+                    EstablishmentTypeId = viewModel.EstablishmentTypeId,
+                    GenerateEstabNumber = viewModel.GenerateEstabNumber ?? false,
+                    LocalAuthorityId = viewModel.LocalAuthorityId,
+                    Name = viewModel.Name
+                }, User);
+
+                if (response.Success)
+                {
+                    return RedirectToAction(nameof(Details), new { id = response.Response });
+                }
+                else
+                {
+                    foreach (var error in response.Errors)
+                    {
+                        ModelState.AddModelError(error.Fields, error.Message);
+                    }
+                }
+            }
+
+            await PopulateCCSelectLists(viewModel);
+            return View(viewModel);
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
+        public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn)
+        {
+            await _establishmentWriteService.ConfirmAsync(urn, User);
+            return RedirectToRoute("EstabDetails", new { id = urn });
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate")]
+        public async Task<ActionResult> EstablishmentGovernanceConfirmUpToDateAsync(int urn)
+        {
+            await _establishmentWriteService.ConfirmGovernanceAsync(urn, User);
+            return RedirectToRoute("EstabDetails", new { id = urn });
+        }
+
+        private void ReplaceAddressFromUrlToken(string addrtok, ViewModel viewModel)
+        {
+            var replaceAddressViewModel = UriHelper.TryDeserializeUrlToken<ReplaceAddressViewModel>(addrtok);
+            if (replaceAddressViewModel != null)
+            {
+                if (replaceAddressViewModel.Target == "main")
+                {
+                    viewModel.Address_CityOrTown = replaceAddressViewModel.Town;
+                    viewModel.Address_CountryId = replaceAddressViewModel.CountryId;
+                    viewModel.Address_CountyId = replaceAddressViewModel.CountyId;
+                    viewModel.Address_Line1 = replaceAddressViewModel.Street;
+                    viewModel.Address_Locality = replaceAddressViewModel.Locality;
+                    viewModel.Address_Line3 = replaceAddressViewModel.Address3;
+                    viewModel.Address_PostCode = replaceAddressViewModel.PostCode;
+                    viewModel.Address_UPRN = replaceAddressViewModel.SelectedUPRN;
+                }
+                else if (replaceAddressViewModel.Target == "alt")
+                {
+                    viewModel.AltTown = replaceAddressViewModel.Town;
+                    viewModel.AltCountryId = replaceAddressViewModel.CountryId;
+                    viewModel.AltCountyId = replaceAddressViewModel.CountyId;
+                    viewModel.AltStreet = replaceAddressViewModel.Street;
+                    viewModel.AltLocality = replaceAddressViewModel.Locality;
+                    viewModel.AltAddress3 = replaceAddressViewModel.Address3;
+                    viewModel.AltPostCode = replaceAddressViewModel.PostCode;
+                    viewModel.AltUPRN = replaceAddressViewModel.SelectedUPRN;
+                }
+                viewModel.IsDirty = true;
+            }
+        }
+
         private async Task<ActionResult> DeleteLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {
             await _establishmentWriteService.DeleteLinkedEstablishmentAsync(deltaViewModel.Urn.Value, deltaViewModel.ActiveRecord.Id.Value, User);
@@ -356,14 +452,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 await _establishmentWriteService.DeleteLinkedEstablishmentAsync(deltaViewModel.ActiveRecord.Urn.Value, reverseLink.Id.Value, User);
             
             return RedirectToRoute("EditEstabLinks", new { id = deltaViewModel.Urn });
-        }
-
-        #endregion
-
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
-        public async Task<ActionResult> EditIEBT(ViewModel model)
-        {
-            return await SaveEstablishment(model);
         }
 
         private async Task<ActionResult> SaveEstablishment(ViewModel model)
@@ -500,41 +588,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return viewModel;
         }
 
-        [HttpGet, Route("Details/{id}", Name = "EstabDetails")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false)
-        {
-            ViewBag.ShowApproved = approved;
-            var viewModel = new EstablishmentDetailViewModel
-            {
-                IsUserLoggedOn = User.Identity.IsAuthenticated,
-                SearchQueryString = searchQueryString,
-                SearchSource = searchSource
-            };
-
-            using (MiniProfiler.Current.Step("Retrieving establishment"))
-            {
-                var result = await _establishmentReadService.GetAsync(id, User);
-                if (result.ReturnValue == null) return HttpNotFound();
-                viewModel.Establishment = result.ReturnValue;
-            }
-
-            await Task.WhenAll(
-                PopulateLinkedEstablishments(id, viewModel),
-                PopulateChangeHistory(id, viewModel),
-                PopulateGroups(id, viewModel),
-                PopulateDisplayPolicies(viewModel),
-                PopulateEditPermissions(viewModel),
-                PopulateLookupNames(viewModel),
-                PopulateGovernors(viewModel));
-
-            viewModel.AgeRangeToolTip = _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
-
-            return View(viewModel);
-        }
-
         private static async Task PopulateGovernors(EstablishmentDetailViewModel viewModel)
         {
             try
@@ -585,23 +638,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.LinkedEstablishments = (await _establishmentReadService.GetLinkedEstablishmentsAsync(id, User)).Select(x => new LinkedEstabViewModel(x)).ToList();
             await Task.WhenAll(viewModel.LinkedEstablishments.Select(async x => x.LinkTypeName = await _cachedLookupService.GetNameAsync(() => x.LinkTypeId)));
         }
-
-        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/csv/{id}")]
-        public async Task<ActionResult> DownloadCsvChangeHistory(int id) 
-            => Redirect((await _establishmentReadService.GetChangeHistoryDownloadAsync(id, eFileFormat.CSV, User)).Url);
-        
-        
-        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/xlsx/{id}")]
-        public async Task<ActionResult> DownloadXlsxChangeHistory(int id)
-            => Redirect((await _establishmentReadService.GetChangeHistoryDownloadAsync(id, eFileFormat.XLSX, User)).Url);
-
-        [HttpGet, Route("Download/xlsx/{id}")]
-        public async Task<ActionResult> DownloadXlsx(int id)
-            => Redirect((await _establishmentReadService.GetDownloadAsync(id, eFileFormat.XLSX, User)).Url);
-
-        [HttpGet, Route("Download/csv/{id}")]
-        public async Task<ActionResult> DownloadCsv(int id)
-            => Redirect((await _establishmentReadService.GetDownloadAsync(id, eFileFormat.CSV, User)).Url);
 
         private async Task PopulateSelectLists(ViewModel viewModel)
         {
@@ -655,8 +691,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
         }
-
-        
 
         private GroupModel GetLegalParent(int establishmentUrn, IEnumerable<GroupModel> parentGroups, IPrincipal principal)
         {
@@ -743,87 +777,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 vm.LocalAuthorityCode = la?.Code;
             }
         }
-
-        [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
-        public async Task<ActionResult> Create()
-        {
-            var viewModel = new CreateChildrensCentreViewModel
-            {
-                CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
-                Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
-                Address = new AddressViewModel(),
-            };
-            await PopulateCCSelectLists(viewModel);
-            return View(viewModel);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
-        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel)
-        {
-            viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
-            viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
-
-            if (viewModel.EstablishmentTypeId == 41)
-                return await CreateChildrensCentre(viewModel);
-
-            if (ModelState.IsValid)
-            {
-                var response = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
-                {
-                    EducationPhaseId = viewModel.EducationPhaseId,
-                    EstablishmentNumber = viewModel.EstablishmentNumber,
-                    EstablishmentTypeId = viewModel.EstablishmentTypeId,
-                    GenerateEstabNumber = viewModel.GenerateEstabNumber ?? false,
-                    LocalAuthorityId = viewModel.LocalAuthorityId,
-                    Name = viewModel.Name
-                }, User);
-
-                if (response.Success)
-                {
-                    return RedirectToAction(nameof(Details), new {id = response.Response});
-                }
-                else
-                {
-                    foreach (var error in response.Errors)
-                    {
-                        ModelState.AddModelError(error.Fields, error.Message);
-                    }
-                }
-            }
-
-            await PopulateCCSelectLists(viewModel);
-            return View(viewModel);
-        }
-
-        [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
-        public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn)
-        {
-            await _establishmentWriteService.ConfirmAsync(urn, User);
-            return RedirectToRoute("EstabDetails", new { id = urn });
-        }
-
-        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate")]
-        public async Task<ActionResult> EstablishmentGovernanceConfirmUpToDateAsync(int urn)
-        {
-            await _establishmentWriteService.ConfirmGovernanceAsync(urn, User);
-            return RedirectToRoute("EstabDetails", new { id = urn });
-        }
-
-        //[HttpGet, EdubaseAuthorize, Route("CreateChildrensCentre", Name = "CreateChildrensCentre")]
-        //public async Task<ActionResult> CreateChildrensCentre()
-        //{
-        //    var model = new CreateChildrensCentreViewModel
-        //    {
-        //        CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
-        //        Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts(),
-        //        Address = new AddressViewModel(),
-        //        EducationPhaseId = 1
-        //    };
-
-        //    await PopulateCCSelectLists(model);
-
-        //    return View(model);
-        //}
 
         private async Task<ActionResult> CreateChildrensCentre(CreateChildrensCentreViewModel model)
         {
