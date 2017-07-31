@@ -1,0 +1,45 @@
+﻿@using Edubase.Services.Domain
+@model GroupEditorViewModel
+
+@if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))
+{
+    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND);
+    <div style="border:2px solid #9a0303; padding:10px;">
+        <h1>Similar name</h1>
+        <p>There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, UID: @warning.MessageParameters[1]</p>
+    </div>
+}
+
+@if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION_CC_CLOSE))
+{
+    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_CC_CLOSE);
+    <div style="border:2px solid #9a0303; padding:10px;">
+        <h1>Confirmation</h1>
+        <p>I confirm that:</p>
+        <p>
+            <ul class="list-bullet">
+                <li>I have read the DfE's short guide for LAs document, and</li>
+                <li>by closing this children's centres group all linked children's centre establishments will have their links removed from this group.</li>
+            </ul>
+        </p>
+    </div>
+}
+
+@if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED))
+{
+    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED);
+    <div style="border:2px solid #9a0303; padding:10px;">
+        <h1>Establishment removal</h1>
+        <p>All establishments will be removed from this federation.</p>
+    </div>
+}
+
+@if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE))
+{
+    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE);
+    <div style="border:2px solid #9a0303; padding:10px;">
+        <h1>Federation closure</h1>
+        <p>This federation has no linked establishments, so it will be set as closed once you save the record. Do you wish to proceed?</p>
+    </div>
+}
+

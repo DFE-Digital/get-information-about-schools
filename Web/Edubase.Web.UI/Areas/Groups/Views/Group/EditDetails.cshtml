@@ -143,15 +143,12 @@
             @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
             <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
             
-            @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION_CC_CLOSE))
-            {
-                <div>
-                    I confirm that:
-                    * I have read the DfE's short guide for LAs document, and
-                    * by closing this children's centres group all linked children's centre establishments will have their links removed from this group.
-                </div>
-            }
+        </div>
+    </div>
 
+    <div class="grid-row">
+        <div class="column-full">
+            @Html.Partial("Warnings")
         </div>
     </div>
 

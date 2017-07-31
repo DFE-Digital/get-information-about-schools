@@ -143,7 +143,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             await ValidateAsync(viewModel);
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;

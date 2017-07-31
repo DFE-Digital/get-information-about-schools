@@ -38,8 +38,14 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public const string ActionLinkedEstablishmentSave = "savejoineddate";
         public const string ActionLinkedEstablishmentSearch = "search";
 
-        public string[] RecognisedWarningCodes { get; set; } = new[] { ApiWarningCodes.CONFIRMATION_CC_CLOSE };
-
+        public string[] RecognisedWarningCodes { get; set; } = new[] 
+        {
+            ApiWarningCodes.CONFIRMATION_CC_CLOSE,
+            ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND,
+            ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE,
+            ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED
+        };
+        
         public string Action { get; set; }
         public int ActionUrn => int.Parse(Action.Split('-')[1]);
         public eSaveMode SaveMode { get; set; }
@@ -111,7 +117,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             {
                 var warnings = envelope.Warnings;
                 warnings = warnings ?? new List<ApiWarning>();
-                warnings = warnings.Where(x => RecognisedWarningCodes.Contains(x.Code) == true).Distinct().ToList();
+                warnings = warnings.Where(x => RecognisedWarningCodes.Contains(x.Code) == true).ToList();
                 WarningsToProcess = warnings;
                 ProcessedWarnings = true;
             }
