@@ -1,6 +1,6 @@
 ﻿(function () {
     var filterLimit = 200;
-    var $filters = $('#filter-form').find(':checkbox, select > option');
+    var $filters = $('#filter-form').find(':checkbox, select');
     var searchType = DfE.Util.QueryString.get('searchtype');
     var errorSummary = $('#js-filter-error-summary');
     var selectedLas = [];
@@ -111,6 +111,20 @@
     }
 
     $(function () {
+        function disableFilters() {
+            $filters.prop('disabled', true);
+            $('#filter-form').find('.active-clear').addClass('clear-disabled');
+            $('#filter-form').find('input[type="text"]').prop('disabled', true);
+            $('#filter-addtional-controls a').addClass('hidden');
+        }
+
+        function enableFilters() {
+            $filters.prop('disabled', false);
+            $('#filter-form').find('.active-clear').removeClass('clear-disabled');
+            $('#filter-form').find('input[type="text"]').prop('disabled', false);
+            $('#filter-addtional-controls a').removeClass('hidden');
+        }
+
         var $resultsElement = $("#results-container");
         if ($resultsElement.length === 0) {
             return;
@@ -123,15 +137,18 @@
         var downloadUrl = "search/preparedownload?";
 
         var ci = null;
+        var filterIntent = null;
+
         var refreshResults = function (queryString, suppressPushState) { // suppressPushState == when popping state/clicking browser->back
             errorSummary.addClass('hidden');
-            $resultsElement.html(progressHtml);
-            $blanket.show();
+            $resultsElement.removeClass('pending-results-update').html(progressHtml);
             
             captureFormState();
+
             queryString = queryString ? queryString : $("form").serialize();
 
-    
+            disableFilters();
+
             $.get("Search/results-js?" + queryString, function (html, textStatus, jqXHR) {
                 var count = jqXHR.getResponseHeader("x-count");
                 $(window).trigger({
@@ -147,9 +164,9 @@
                     $("a.download-link").removeClass('hidden');
                 }
 
+                enableFilters();
 
-                    $blanket.hide();
-                    $resultsElement.html(html);
+                $resultsElement.html(html);
 
                 if (!suppressPushState && GOVUK.support.history()) {
                         window.history.pushState({ queryString: queryString, formState: captureFormState() }, null, window.location.href.split('?')[0] + "?" + queryString);
@@ -159,6 +176,18 @@
 
             });
         };
+
+        $('#filter-form').on('focus', 'input[type="text"]', function(e) {
+            window.clearTimeout(filterIntent);
+            $resultsElement.removeClass('pending-results-update');
+        });
+
+        $('#filter-form').on('click', '.child-option-toggle, .js-container-head', function () {
+            $resultsElement.removeClass('pending-results-update');
+            window.clearTimeout(filterIntent);
+        });
+        
+
         $(document).on("change", ".trigger-result-update", function () {
             var filterCount = $filters.filter(':checked, :selected').length;
             if (filterCount >= filterLimit) {
@@ -176,18 +205,23 @@
                 $(this).prop('checked', false);
 
             } else {
-                if (ci) window.clearTimeout(ci);
-                ci = setTimeout(refreshResults, 200); // when the clear button is clicked on the filters, multiple events come through; so using timer to prevent extraneous requests
-                if (searchType === 'ByLocalAuthority') {
-                    updateSearchedLas();
+                if (ci) {
+                    window.clearTimeout(ci);
                 }
-                if (searchType === 'Governor') {
-                    updateGovernorRoles();
+                if (filterIntent) {
+                    window.clearTimeout(filterIntent);
                 }
-
-            }
-           
-           
+                $resultsElement.addClass('pending-results-update');
+                filterIntent = window.setTimeout(function() {
+                    ci = setTimeout(refreshResults, 200); // when the clear button is clicked on the filters, multiple events come through; so using timer to prevent extraneous requests
+                    if (searchType === 'ByLocalAuthority') {
+                        updateSearchedLas();
+                    }
+                    if (searchType === 'Governor') {
+                        updateGovernorRoles();
+                    }
+                }, 1500);
+            }                      
         });
 
         function validateAgeFilters() {
@@ -301,6 +335,7 @@
 
         $('#clear-filters').on('click', function(e) {
             e.preventDefault();
+            window.clearTimeout(filterIntent);
             $('#filter-form').find('input[type="text"]').val('');
             $('#filter-form').find('.clear-selections').click();
         });

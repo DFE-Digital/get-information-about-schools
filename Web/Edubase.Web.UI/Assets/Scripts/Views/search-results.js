@@ -92,25 +92,26 @@
     $clearLinks.on('click',
         function (e) {
             e.preventDefault();
-            var $govUkSelect = $(this).parents('.govuk-option-select');
-            if ($govUkSelect.hasClass('date-filters') || $govUkSelect.hasClass('age-filter')) {
-                $govUkSelect.find('input[type="text"]').val('');
+            if (!$(this).hasClass('clear-disabled')) {
+                var $govUkSelect = $(this).parents('.govuk-option-select');
+                if ($govUkSelect.hasClass('date-filters') || $govUkSelect.hasClass('age-filter')) {
+                    $govUkSelect.find('input[type="text"]').val('');
 
-            } else {
-                var selectedFilters = $(this)
-                .next('.options-container')
-                .find('input')
-                .filter(function (n, item) {
-                    return $(item).prop('checked');
-                });
+                } else {
+                    var selectedFilters = $(this)
+                    .next('.options-container')
+                    .find('input')
+                    .filter(function (n, item) {
+                        return $(item).prop('checked');
+                    });
 
-                selectedFilters.click();
-                $(this).removeClass('active-clear');
-                if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
-                    selectedFilters.prop('checked', false);
+                    selectedFilters.click();
+                    $(this).removeClass('active-clear');
+                    if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
+                        selectedFilters.prop('checked', false);
+                    }
                 }
             }
-
         });
 
     $additionalFilterClear.on('click', function(e) {
