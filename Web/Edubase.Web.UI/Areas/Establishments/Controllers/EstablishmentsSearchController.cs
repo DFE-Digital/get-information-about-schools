@@ -115,10 +115,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private ActionResult RedirectToEstabDetail(int urn)
             => new RedirectToRouteResult(null, new RouteValueDictionary
             {
-                {"action", "Details"},
-                {"controller", "Establishment"},
-                {"id", urn},
-                {"area", string.Empty}
+                { "action", "Details" },
+                { "controller", "Establishment" },
+                { "id", urn },
+                { "area", "Establishments" }
             });
 
 
