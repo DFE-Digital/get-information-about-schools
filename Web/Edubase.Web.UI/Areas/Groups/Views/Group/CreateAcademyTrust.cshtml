@@ -1,4 +1,5 @@
-﻿@model CreateAcademyTrustViewModel
+﻿@using Edubase.Services.Enums;
+@model CreateAcademyTrustViewModel
 @{
     ViewBag.bodyClasses = "create-edit-school create-academy-trust";
     ViewBag.hideLogo = true;
@@ -30,7 +31,7 @@
             {
                 <div class="error-summary">
                     <h2 class="heading-medium error-summary-heading">Duplicate record found</h2>
-                    Company is already a multi-academy trust. To complete the record:
+                    Company is already a @(Model.TypeId == (int)eLookupGroupType.MultiacademyTrust? "multi-academy trust" : "single-academy trust"). To complete the record:
                     <ul class="error-summary-list">
                         <li class="error-message"><a href="#company">Please select a different company</a></li>
                     </ul>
