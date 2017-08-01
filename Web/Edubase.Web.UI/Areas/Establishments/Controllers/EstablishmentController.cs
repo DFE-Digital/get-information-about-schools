@@ -404,13 +404,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return RedirectToRoute("EstabDetails", new { id = urn });
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate")]
-        public async Task<ActionResult> EstablishmentGovernanceConfirmUpToDateAsync(int urn)
-        {
-            await _establishmentWriteService.ConfirmGovernanceAsync(urn, User);
-            return RedirectToRoute("EstabDetails", new { id = urn });
-        }
-
         private void ReplaceAddressFromUrlToken(string addrtok, ViewModel viewModel)
         {
             var replaceAddressViewModel = UriHelper.TryDeserializeUrlToken<ReplaceAddressViewModel>(addrtok);

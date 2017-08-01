@@ -89,13 +89,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{uid:int}", Name = "GroupGovernanceConfirmUpToDate")]
-        public async Task<ActionResult> GroupGovernanceConfirmUpToDateAsync(int uid)
-        {
-            await _groupWriteService.ConfirmGovernanceAsync(uid, User);
-            return RedirectToRoute("GroupDetails", new { id = uid });
-        }
-
         [HttpGet]
         [Route("Create/{type}")]
         public async Task<ActionResult> CreateNewGroup(string type)
@@ -261,7 +254,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
         
-
         [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
@@ -278,7 +270,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             return View(viewModel);
         }
-
 
         [HttpGet, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
         public async Task<ActionResult> CreateAcademyTrust(string companiesHouseNumber)
