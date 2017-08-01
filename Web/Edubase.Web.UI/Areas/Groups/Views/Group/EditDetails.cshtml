@@ -141,7 +141,7 @@
             <br />
 
             @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
-            <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
+            <button type="submit" name="action" class="button mobile-full-width" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
             
         </div>
     </div>
@@ -168,5 +168,21 @@
 
         });
 
+        (function () {
+            var mask = $('#warning-modal-overlay');
+            var modal = $('#warning-modal-content');
+
+            $('#warning-exit-overlay, #overlay-cancel').on('click',
+                function (e) {
+                    e.preventDefault();
+                    mask.addClass('hidden');
+                    modal.addClass('hidden');
+                });
+
+            $('#overlay-proceed').on('click',
+                function (e) {
+                    $('#edit-submit').click();
+                });
+        }());
     </script>
 }
