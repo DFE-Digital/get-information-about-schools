@@ -9,7 +9,7 @@
 <div id="" class="tab-content">
     <div class="column-two-thirds">
         <h1 class="heading-medium tab-lead">Governance</h1>
-        @using (Html.BeginForm("GroupEditDelegation", "Governor", FormMethod.Post))
+        @using (Html.BeginForm("GroupEditDelegation", "GovernanceDelegation", FormMethod.Post))
         {
             @Html.HiddenFor(m => m.GroupUId)
             <h2 class="heading-small">Delegated authority of local governing body</h2>

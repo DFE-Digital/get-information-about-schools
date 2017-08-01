@@ -19,12 +19,9 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Castle.Core.Internal;
 using Edubase.Services.Domain;
-using Edubase.Services.Groups.Models;
-using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
-using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -45,14 +42,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         const string VIEW_EDIT_GOV_VIEW_NAME = "~/Areas/Governors/Views/Governor/ViewEdit.cshtml";
 
-        private const string GROUP_EDIT_DELEGATION = "~/Groups/Group/Edit/{groupUId:int}/Governance/Delegation";
-
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGovernorsReadService _governorsReadService;
         private readonly NomenclatureService _nomenclatureService;
         private readonly IGovernorsWriteService _governorsWriteService;
         private readonly IGroupReadService _groupReadService;
-        private readonly IGroupsWriteService _groupWriteService;
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly LayoutHelper _layoutHelper;
 
@@ -62,7 +56,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             ICachedLookupService cachedLookupService,
             IGovernorsWriteService governorsWriteService,
             IGroupReadService groupReadService,
-            IGroupsWriteService groupWriteService,
             IEstablishmentReadService establishmentReadService,
             LayoutHelper layoutHelper)
         {
@@ -71,7 +64,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _cachedLookupService = cachedLookupService;
             _governorsWriteService = governorsWriteService;
             _groupReadService = groupReadService;
-            _groupWriteService = groupWriteService;
             _establishmentReadService = establishmentReadService;
             _layoutHelper = layoutHelper;
         }
@@ -470,49 +462,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await PopulateSelectLists(model.NewLocalGovernor);
             await _layoutHelper.PopulateLayoutProperties(model, model.Urn, null, User);
 
-            return View(model);
-        }
-
-        [HttpGet, EdubaseAuthorize]
-        [Route(GROUP_EDIT_DELEGATION, Name = "GroupEditDelegation")]
-        public async Task<ActionResult> GroupEditDelegation(int groupUId)
-        {
-            var group = await _groupReadService.GetAsync(groupUId, User);
-            if (group.Success)
-            {
-                var model = new EditGroupDelegationInformationViewModel
-                {
-                    DelegationInformation = group.ReturnValue.DelegationInformation
-                };
-
-                await _layoutHelper.PopulateLayoutProperties(model, null, groupUId, User);
-
-                return View(model);
-            }
-            return RedirectToRoute("GroupEditGovernance", new { GroupUId = groupUId });
-        }
-
-        [HttpPost, EdubaseAuthorize]
-        [Route(GROUP_EDIT_DELEGATION)]
-        public async Task<ActionResult> GroupEditDelegation(EditGroupDelegationInformationViewModel model)
-        {
-            var result = await new EditGroupDelegationInformationViewModelValidator().ValidateAsync(model);
-
-            if (ModelState.IsValid)
-            {
-                var groupResult = await _groupReadService.GetAsync(model.GroupUId.Value, User);
-                if (groupResult.Success)
-                {
-                    var group = groupResult.ReturnValue;
-                    group.DelegationInformation = model.DelegationInformation;
-                    var updatedGroup = new SaveGroupDto(group);
-                    await _groupWriteService.SaveAsync(updatedGroup, User);
-                }
-                return RedirectToRoute("GroupEditGovernance", new { GroupUId = model.GroupUId });
-            }
-
-            result.EduBaseAddToModelState(ModelState, null);
-            await _layoutHelper.PopulateLayoutProperties(model, null, model.GroupUId, User); 
             return View(model);
         }
 
