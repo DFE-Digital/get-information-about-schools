@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
 
         [Route(nameof(Details) + "/{id:int}", Name ="GroupDetails"), HttpGet]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups, int skip = 0)
         {
             var model = (await _groupReadService.GetAsync(id, User)).GetResult();
 
@@ -81,7 +81,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (viewModel.IsUserLoggedOn)
             {
                 using (MiniProfiler.Current.Step("Retrieving change history"))
-                    viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, 20, User);
+                {
+                    viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, skip, 100, User);
+                }
             }
 
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value, true);

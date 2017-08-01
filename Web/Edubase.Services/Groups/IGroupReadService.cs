@@ -1,4 +1,5 @@
 ﻿using Edubase.Data.Entity;
+using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
@@ -10,8 +11,6 @@ namespace Edubase.Services.Groups
 {
     public interface IGroupReadService
     {
-        Task<GroupModel> GetByEstablishmentUrnAsync(int urn, IPrincipal principal);
-
         Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10);
 
         Task<ApiSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal);
@@ -33,6 +32,6 @@ namespace Edubase.Services.Groups
 
         Task<bool> ExistsAsync(IPrincipal principal, CompaniesHouseNumber? companiesHouseNumber = null, string groupId = null, int? existingGroupUId = null, string name = null, int? localAuthorityId = null);
 
-        Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal user);
+        Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, IPrincipal principal);
     }
 }

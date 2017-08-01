@@ -7,6 +7,7 @@ using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
 using System.Collections.Generic;
 using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Services.Core;
 
 namespace Edubase.Web.UI.Models
 {
@@ -46,7 +47,7 @@ namespace Edubase.Web.UI.Models
 
         public IEnumerable<GroupModel> Groups { get; set; }
 
-        public IEnumerable<EstablishmentChangeDto> ChangeHistory { get; set; }
+        public PaginatedResult<EstablishmentChangeDto> ChangeHistory { get; set; }
 
         public IEnumerable<LinkedEstabViewModel> LinkedEstablishments { get; set; }
 

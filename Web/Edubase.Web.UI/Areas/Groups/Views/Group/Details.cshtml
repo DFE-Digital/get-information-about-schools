@@ -253,10 +253,10 @@
                 </div>
 
                 @if (Model.IsUserLoggedOn)
-            {
+                {
                     <div id="change-history" class="tab-content">
                         <h2 class="bold-small">Change History</h2>
-                        @if (!Model.ChangeHistory.Any())
+                        @if (!Model.ChangeHistory.Items.Any())
                         {
                             <p>There are no change records available at the moment</p>
                         }
@@ -268,21 +268,24 @@
                                 <br />
                             </p>
 
+                            if (Model.ChangeHistory.PageCount > 1)
+                            {
+                                <div class="top-pagination">
+                                    @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+                                </div>
+                            }
+
                             <table class="edubase-table">
                                 <thead>
                                 <tr>
-                                    <!-- We have 2 different fields, but the UED calls for one. Also, Date changed seems to be null most of the time -->
                                     <th>Date changed</th>
                                     <th>Request type</th>
-                                    @*<th>Date requested</th>*@
-                                    @*<th>Group UID</th>
-                                    <th>Group name</th>*@
                                     <th>Change</th>
                                     <th>Suggested by</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.ChangeHistory)
+                                    @foreach (var item in Model.ChangeHistory.Items)
                                     {
                                         <tr>
                                             <td aria-label="Date changed">@(item.RequestedDateUtc.Value.ToString("dd/MM/yyyy"))</td>
@@ -303,18 +306,17 @@
                                                 </dl>
                                             </td>
                                             <td aria-label="Suggested by">@item.OriginatorUserName</td>
-                                            @*<td aria-label="Group UID">@item.GroupUId</td>
-                                            <td aria-label="Group name">@item.Name</td>*@
-                                            @*<td aria-label="updated field">@item.Name</td>
-                                            <td aria-label="Old value">@item.OldValue</td>
-                                            <td aria-label="New value">@item.NewValue</td>
-                                            <td aria-label="Suggested from">@item.OriginatorUserName</td>
-                                            <td aria-label="Approved by">@(item.ApproverUserName ?? "--")</td>
-                                            <td aria-label="Reason">--</td>*@<!-- Reason field will be implemented by Texuna -->
                                         </tr>
                                     }
                                 </tbody>
                             </table>
+
+                            if (Model.ChangeHistory.PageCount > 1)
+                            {
+                                <div class="lower-pagination">
+                                    @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+                                </div>
+                            }
 
                         }
                     </div>

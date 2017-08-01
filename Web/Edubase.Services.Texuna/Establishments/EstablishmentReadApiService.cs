@@ -14,6 +14,7 @@ using Edubase.Common.Reflection;
 using Edubase.Services.Lookup;
 using Edubase.Common;
 using Edubase.Services.Enums;
+using Edubase.Services.Core;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -45,8 +46,11 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
             => new ServiceResultDto<EstablishmentModel>((await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}", principal, false)).Response);
 
-        public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
-            => (await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes?take={take}&skip=0", user)).GetResponse();
+        public async Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, IPrincipal user)
+        {
+            var changes = (await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes?take=10000&skip=0", user)).GetResponse(); // TODO: TEXCHANGE: when Texuna provide the total count, change this to use their paging
+            return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Skip(skip).Take(take).ToList());
+        }
 
         public async Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user)
             => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/display-policy", user)).GetResponse().Initialise(establishment);

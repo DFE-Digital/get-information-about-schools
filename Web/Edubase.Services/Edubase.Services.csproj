@@ -178,6 +178,8 @@
     <Compile Include="Approvals\Models\PendingApprovalsResult.cs" />
     <Compile Include="Approvals\Models\PendingChangeRequestAction.cs" />
     <Compile Include="BlobService.cs" />
+    <Compile Include="Core\Pagination.cs" />
+    <Compile Include="Core\IPagination.cs" />
     <Compile Include="DataQuality\DataQualityReadService.cs" />
     <Compile Include="DataQuality\DataQualityWriteService.cs" />
     <Compile Include="DataQuality\IDataQualityReadService.cs" />
@@ -354,9 +356,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

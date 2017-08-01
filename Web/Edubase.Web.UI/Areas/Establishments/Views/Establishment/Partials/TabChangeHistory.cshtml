@@ -4,7 +4,7 @@
 
 <div id="school-change-history" class="tab-content approval-data">
     <h2 class="bold-small">Change History</h2>
-    @if (!Model.ChangeHistory.Any())
+    @if (!Model.ChangeHistory.Items.Any())
     {
         <p>There are no change records available at the moment</p>
     }
@@ -15,12 +15,12 @@
             @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.xlsx }, null)
             <br />
         </p>
-        @*if (Model.PageCount > 1)
+        if (Model.ChangeHistory.PageCount > 1)
         {
             <div class="top-pagination">
-                @Html.Partial("_GenericPagination")
+                @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
             </div>
-        }*@
+        }
         <table class="approval-changes edubase-table">
             <thead>
             <tr>
@@ -35,7 +35,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var item in Model.ChangeHistory)
+            @foreach (var item in Model.ChangeHistory.Items)
             {
                 <tr>
                     <td aria-label="Date changed">@item.EffectiveDateUtc</td>
@@ -45,17 +45,17 @@
                     <td aria-label="Date requested">@item.RequestedDateUtc</td>
                     <td aria-label="Suggested from">@item.OriginatorUserName</td>
                     <td aria-label="Approved by">@(item.ApproverUserName ?? "--")</td>
-                    <td aria-label="Reason">--</td><!-- Reason field will be implemented by Texuna -->
+                    <td aria-label="Reason">--</td>
                 </tr>
             }
             </tbody>
         </table>
-        @*@if (Model.Pagination.PageCount > 1)
-         {
-             <div class="lower-pagination">
-                 @Html.Partial("_GenericPagination", Model.Pagination)
-             </div>
-         }*@
+        if (Model.ChangeHistory.PageCount > 1)
+        {
+            <div class="lower-pagination">
+                @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+            </div>
+        }
         
     }
 </div>

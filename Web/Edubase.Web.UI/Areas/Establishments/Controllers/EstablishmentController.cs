@@ -312,7 +312,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("Details/{id}", Name = "EstabDetails")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, int skip = 0)
         {
             ViewBag.ShowApproved = approved;
             var viewModel = new EstablishmentDetailViewModel
@@ -331,7 +331,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             await Task.WhenAll(
                 PopulateLinkedEstablishments(id, viewModel),
-                PopulateChangeHistory(id, viewModel),
+                PopulateChangeHistory(id, viewModel, skip, 100),
                 PopulateGroups(id, viewModel),
                 PopulateDisplayPolicies(viewModel),
                 PopulateEditPermissions(viewModel),
@@ -628,9 +628,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.LegalParentGroup = GetLegalParent(id, viewModel.Groups, User);
         }
 
-        private async Task PopulateChangeHistory(int id, EstablishmentDetailViewModel viewModel)
+        private async Task PopulateChangeHistory(int id, EstablishmentDetailViewModel viewModel, int skip, int take)
         {
-            if (User.Identity.IsAuthenticated) viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, 1000, User);
+            if (User.Identity.IsAuthenticated)
+            {
+                viewModel.ChangeHistory = await _establishmentReadService.GetChangeHistoryAsync(id, skip, take, User);
+            }
         }
 
         private async Task PopulateLinkedEstablishments(int id, EstablishmentDetailViewModel viewModel)

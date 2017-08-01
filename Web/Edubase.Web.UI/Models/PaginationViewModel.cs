@@ -20,7 +20,7 @@ namespace Edubase.Web.UI.Models
 
         public PaginationViewModel(int skip, int take, int total)
         {
-            StartIndex = skip * take;
+            StartIndex = skip / take;
             PageSize = take;
             Count = total;
         }

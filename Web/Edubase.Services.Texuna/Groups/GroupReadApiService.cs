@@ -8,6 +8,7 @@ using Edubase.Services.Groups.Search;
 using System.Security.Principal;
 using Edubase.Services.Texuna.Models;
 using System.Linq;
+using Edubase.Services.Core;
 
 namespace Edubase.Services.Texuna.Groups
 {
@@ -51,14 +52,12 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<bool> CanEditAsync(int uid, IPrincipal principal) => (await _httpClient.GetAsync<BoolResult>($"group/{uid}/canedit", principal)).GetResponse().Value;
 
-        public Task<GroupModel> GetByEstablishmentUrnAsync(int urn, IPrincipal principal)
+        public async Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, IPrincipal principal)
         {
-            throw new NotImplementedException($"NOT REQUIRED; {nameof(GroupReadApiService)}::{nameof(GetByEstablishmentUrnAsync)}");
+            var changes = (await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal)).GetResponse(); // TODO: TEXCHANGE: when Texuna provide the total count, change this to use their paging
+            return new PaginatedResult<GroupChangeDto>(skip, take, changes.Count, changes.Skip(skip).Take(take).ToList());
         }
-
-        public async Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal principal) =>
-            (await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal)).GetResponse();
-
+            
         public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal, bool includeFutureDated = false) 
             => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments?editMode={includeFutureDated}", principal)).GetResponse();
 
