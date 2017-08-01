@@ -8,7 +8,7 @@
 
 <div id="edit-shared-governor" class="tab-content">
     <div class="column-two-thirds">
-        @using (Html.BeginForm("EditSharedGovernor", "Governor", FormMethod.Post))
+        @using (Html.BeginForm("EditSharedGovernor", "SharedGovernor", FormMethod.Post))
         {
             @Html.HiddenFor(m => m.Governor.Id)
             @Html.HiddenFor(m => m.Urn)

@@ -271,6 +271,7 @@
     <Compile Include="Areas\Establishments\Controllers\BulkUpdateController.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
+    <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
@@ -460,8 +461,8 @@
     <Content Include="App_Data\edubase3.pfx" />
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
     <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\SelectSharedGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\EditSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\SharedGovernor\SelectSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\SharedGovernor\EditSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\GroupEditDelegation.cshtml" />
     <Content Include="Assets\Sass\elements\forms\_fileupload.scss" />
