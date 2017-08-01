@@ -9,7 +9,7 @@
 <div id="select-shared-governor" class="tab-content">
     <div class="grid-row">
         <div class="column-two-thirds">
-            @using (Html.BeginForm("SelectSharedGovernor", "Governor", FormMethod.Post))
+            @using (Html.BeginForm("SelectSharedGovernor", "SharedGovernor", FormMethod.Post))
             {
                 @Html.HiddenFor(x => x.GovernorType);
                 if (Model.Governors.Any())

@@ -270,6 +270,10 @@
     <Compile Include="Areas\Establishments\Controllers\AcademyOpeningsController.cs" />
     <Compile Include="Areas\Establishments\Controllers\BulkUpdateController.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
+    <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
+    <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
+    <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
+    <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
@@ -450,7 +454,6 @@
     <Content Include="Areas\Governors\Views\Governor\AddEditOrReplace.cshtml" />
     <Content Include="Assets\Sass\views\_change-approvals.scss" />
     <Content Include="Assets\Sass\views\_academy-openings.scss" />
-    <Content Include="Areas\Governors\Views\Governor\EditGovernanceMode.cshtml" />
     <Content Include="Assets\Sass\elements\_tooltips.scss" />
     <Content Include="Assets\Sass\elements\_modal.scss" />
     <Content Include="App_Data\sa-dev.education.gov.uk-certificate.cer" />
@@ -459,10 +462,10 @@
     <Content Include="App_Data\edubase3.pfx" />
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
     <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\SelectSharedGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\EditSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\SharedGovernor\SelectSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\SharedGovernor\EditSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\GroupEditDelegation.cshtml" />
+    <Content Include="Areas\Governors\Views\GovernanceDelegation\GroupEditDelegation.cshtml" />
     <Content Include="Assets\Sass\elements\forms\_fileupload.scss" />
     <Content Include="Assets\Sass\elements\_autosuggest.scss" />
     <Content Include="App_Data\wildcard-dfe.pfx" />
@@ -900,6 +903,7 @@
     <Content Include="Assets\Scripts\JSON\localauthorities.js" />
     <Content Include="Assets\Scripts\JSON\academyOpenings.stub.js" />
     <Content Include="Assets\Sass\views\_search-changes.scss" />
+    <Content Include="Areas\Governors\Views\Governance\EditGovernanceMode.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />

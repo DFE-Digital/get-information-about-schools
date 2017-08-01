@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Edubase.Services.Enums;
+using Edubase.Services.Governors.Models;
+using Edubase.Services.Lookup;
 using Edubase.Web.UI.Models;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
@@ -28,6 +33,40 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             public int Urn { get; set; }
             public string EstablishmentName { get; set; }
+        }
+
+        public static async Task<SharedGovernorViewModel> MapFromGovernor(GovernorModel governor, int establishmentUrn, ICachedLookupService cachedLookupService)
+        {
+            var dateNow = DateTime.Now.Date;
+            var appointment = governor.Appointments?.SingleOrDefault(g => g.EstablishmentUrn == establishmentUrn);
+            var sharedWith = governor.Appointments?
+                .Where(a => a.AppointmentStartDate < dateNow && (a.AppointmentEndDate == null || a.AppointmentEndDate > dateNow))
+                .Select(a => new SharedGovernorViewModel.EstablishmentViewModel { Urn = a.EstablishmentUrn.Value, EstablishmentName = a.EstablishmentName })
+                .ToList();
+
+            var appointingBodies = await cachedLookupService.GovernorAppointingBodiesGetAllAsync();
+            var nationalities = await cachedLookupService.NationalitiesGetAllAsync();
+
+            return new SharedGovernorViewModel
+            {
+                AppointingBodyName = appointingBodies.Single(g => g.Id == governor.AppointingBodyId).Name,
+                AppointmentStartDate = appointment?.AppointmentStartDate != null ? new DateTimeViewModel(appointment.AppointmentStartDate) : new DateTimeViewModel(),
+                AppointmentEndDate = appointment?.AppointmentEndDate != null ? new DateTimeViewModel(appointment.AppointmentEndDate) : new DateTimeViewModel(),
+                DOB = governor.DOB,
+                FullName = governor.GetFullName(),
+                Id = governor.Id.Value,
+                Nationality = nationalities.Single(n => n.Id == governor.NationalityId).Name,
+                PostCode = governor.PostCode,
+                Selected = appointment != null,
+                PreExisting = appointment != null,
+                SharedWith = sharedWith ?? new List<SharedGovernorViewModel.EstablishmentViewModel>(),
+                MultiSelect = IsSharedGovernorRoleMultiSelect((eLookupGovernorRole)governor.RoleId)
+            };
+        }
+
+        private static bool IsSharedGovernorRoleMultiSelect(eLookupGovernorRole role)
+        {
+            return role == eLookupGovernorRole.Group_SharedLocalGovernor;
         }
     }
 }
