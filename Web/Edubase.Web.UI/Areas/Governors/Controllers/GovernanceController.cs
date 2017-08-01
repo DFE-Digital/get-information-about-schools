@@ -33,14 +33,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _layoutHelper = layoutHelper;
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate")]
+        [HttpPost, EdubaseAuthorize, Route("Governance/ConfirmEstabishment/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate")]
         public async Task<ActionResult> EstablishmentGovernanceConfirmUpToDateAsync(int urn)
         {
             await _establishmentWriteService.ConfirmGovernanceAsync(urn, User);
             return RedirectToRoute("EstabDetails", new { id = urn });
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{uid:int}", Name = "GroupGovernanceConfirmUpToDate")]
+        [HttpPost, EdubaseAuthorize, Route("Governance/ConfirmGroup/{uid:int}", Name = "GroupGovernanceConfirmUpToDate")]
         public async Task<ActionResult> GroupGovernanceConfirmUpToDateAsync(int uid)
         {
             await _groupWriteService.ConfirmGovernanceAsync(uid, User);
