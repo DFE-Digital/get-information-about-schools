@@ -6,6 +6,7 @@
             groupType: '8',
             groupName: '',
             groupNameError: false,
+            groupNameWarningMessage: '',
 
             groupStatus: 'Open',
             groupLead: '',
@@ -411,6 +412,23 @@
             step1Continue: function () {
                 var self = this;
                 $.when(this.validateDate('openDate')).done(function () {
+                    var validationObj = {
+                        'groupTypeId': self.groupType,
+                        'name': self.groupName,
+                        'openDate': [self.openDateYear, self.openDateMonth, self.openDateDay].join('-'),
+                        'localAuthorityId': self.la,
+                        "establishments": []
+                    };
+                    $.ajax({
+                        url: self.validateUrl,
+                        method: 'post',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: JSON.stringify(validationObj),
+                        success: function(data) {
+                            console.log(JSON.stringify(data));
+                        }
+                    });
                     self.groupNameError = $.trim(self.groupName) === '';
                     self.laError = self.la === '';
 

@@ -1,4 +1,5 @@
 ﻿@using Edubase.Common;
+@using Edubase.Services.Domain
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @model VM
@@ -353,7 +354,7 @@
             
             @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
             {
-                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
+                <button type="submit" name="action" class="button mobile-full-width" id="create-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
             }
         </div>
     </div>
@@ -405,6 +406,29 @@
 
         });
     </script>
+
     
 }
+
+    @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))
+    {
+        <script>
+            (function() {
+                var mask = $('#warning-modal-overlay');
+                var modal = $('#warning-modal-content');
+
+                $('#warning-exit-overlay, #overlay-cancel').on('click',
+                    function(e) {
+                        e.preventDefault();
+                        mask.addClass('hidden');
+                        modal.addClass('hidden');
+                    });
+
+                $('#overlay-proceed').on('click',
+                    function(e) {
+                        $('#create-submit').click();
+                    });
+            }());
+        </script>
+    }
 }

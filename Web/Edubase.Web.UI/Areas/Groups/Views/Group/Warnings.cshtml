@@ -4,10 +4,20 @@
 @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND);
-    <div style="border:2px solid #9a0303; padding:10px;">
-        <h1>Similar name</h1>
-        <p>There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, UID: @warning.MessageParameters[1]</p>
+    
+    <div class="modal-overlay" id="warning-modal-overlay"></div>
+    <div class="modal-content" id="warning-modal-content">
+        <div class="modal-inner">
+            <a href="#" id="warning-exit-overlay" class="modal-exit">Close</a>
+            <h3 class="heading-large">Similar name</h3>
+            <p>There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, UID: @warning.MessageParameters[1]</p>
+        </div>
+        <div class="button-row">
+            <a href="#" class="button mobile-full-width" id="overlay-proceed">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel">Cancel</a>
+        </div>        
     </div>
+
 }
 
 @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION_CC_CLOSE))
