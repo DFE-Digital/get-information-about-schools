@@ -1,4 +1,5 @@
 ﻿@using Edubase.Common;
+@using Edubase.Services.Domain
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @model VM
@@ -14,6 +15,7 @@
     @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.GroupTypeMode)
     @Html.HiddenFor(x => x.SaveMode)
+    @Html.HiddenFor(x => x.ProcessedWarnings)
 
     <div class="grid-row">
         <div class="column-full">
@@ -28,26 +30,6 @@
             @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
         </div>
         
-        @*@if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre && !Model.InEditMode)
-        {
-            <div class="column-two-thirds">
-                <fieldset class="radio-wrap stacked-controls">
-                    <legend class="bold-medium">Select the process that you are interested in</legend>
-                    <div class="form-group">
-                        @foreach (var groupType in Model.CCGroupTypes)
-                        {
-                            var inputId = "grouptypeid-" + groupType.Value;
-                            <span class="radio-button-wrap">
-                                @Html.RadioButtonFor(x => x.GroupTypeId, groupType.Value, new { id = inputId })
-                                <label class="edubase-button-radio" for="@inputId">
-                                    @groupType.Text
-                                </label>
-                            </span>
-                        }
-                    </div>                   
-                </fieldset>
-            </div>
-        }*@
         <div class="column-half">
                
             <div class="form-group @Html.ValidationCssClassFor(x=>x.GroupName)">
@@ -167,7 +149,7 @@
                 }
 
     </div>        
-</div>
+    </div>
     
     if (Model.SaveEstabLinks)
     {
@@ -225,9 +207,7 @@
                 @if (Model.LinkedEstablishments.Establishments.Count > 0)
                 {
                     <h2 class="heading-medium">Childrens centres to add to the group.</h2>
-
-
-                @*<ul class="school-results-listing establishment-list">*@
+                    
                     <p class="table-caption">Showing 1 - @Model.LinkedEstablishments.Establishments.Count of @Model.LinkedEstablishments.Establishments.Count</p>
                     <table class="edubase-table childrens-centre-listing">
                         <thead>
@@ -374,10 +354,17 @@
             
             @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
             {
-                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
+                <button type="submit" name="action" class="button mobile-full-width" id="create-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
             }
         </div>
     </div>
+
+    <div class="grid-row">
+        <div class="column-full">
+            @Html.Partial("Warnings")
+        </div>
+    </div>
+
 }
 
 
@@ -419,6 +406,29 @@
 
         });
     </script>
+
     
 }
+
+    @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))
+    {
+        <script>
+            (function() {
+                var mask = $('#warning-modal-overlay');
+                var modal = $('#warning-modal-content');
+
+                $('#warning-exit-overlay, #overlay-cancel').on('click',
+                    function(e) {
+                        e.preventDefault();
+                        mask.addClass('hidden');
+                        modal.addClass('hidden');
+                    });
+
+                $('#overlay-proceed').on('click',
+                    function(e) {
+                        $('#create-submit').click();
+                    });
+            }());
+        </script>
+    }
 }

@@ -429,6 +429,7 @@
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Areas\Groups\Views\Group\Warnings.cshtml" />
     <Content Include="public\assets\scripts\**\*.*" />
     <Content Include="public\assets\stylesheets\**\*.*" />
     <Content Include="App_Data\sa-dev.education.gov.uk-metadata.xml" />

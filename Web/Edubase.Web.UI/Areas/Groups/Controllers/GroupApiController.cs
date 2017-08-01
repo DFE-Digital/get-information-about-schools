@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             };
 
             var validation = await groupsWriteService.ValidateAsync(dto, User);
-            return Json(validation.Errors.Select(e => new {e.Fields, e.Message}));
+            return Json(validation);
         }
     }
 }

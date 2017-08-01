@@ -143,7 +143,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             await ValidateAsync(viewModel);
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
@@ -203,7 +203,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             await ValidateAsync(viewModel);
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
@@ -212,6 +212,24 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             return View("EditDetails", viewModel);
+        }
+
+
+        /// <summary>
+        /// Does 2nd-level validation
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
+        private async Task ValidateAsync(GroupEditorViewModel viewModel)
+        {
+            if (viewModel.Action == ActionSave && ModelState.IsValid)
+            {
+                var dto = CreateSaveDto(viewModel);
+                var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                viewModel.SetWarnings(validationEnvelope);
+                ModelState.Remove(nameof(viewModel.ProcessedWarnings));
+            }
         }
 
         [HttpGet]
@@ -485,20 +503,5 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
         }
 
-        /// <summary>
-        /// Does 2nd-level validation
-        /// </summary>
-        /// <param name="viewModel"></param>
-        /// <returns></returns>
-        private async Task ValidateAsync(GroupEditorViewModel viewModel)
-        {
-            if (viewModel.Action == ActionSave && ModelState.IsValid)
-            {
-                var dto = CreateSaveDto(viewModel);
-                var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
-                //validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
-            }
-        }
     }
 }

@@ -329,6 +329,9 @@ namespace Edubase.Web.UI.Models
 
         public Dictionary<int, int[]> Type2PhaseMap { get; set; }
 
+        public bool CCIsDemoting { get; set; }
+        public bool CCIsPromoting { get; set; }
+
         public EditEstablishmentModel()
         {
 

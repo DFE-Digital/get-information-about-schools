@@ -15,27 +15,44 @@
 
 <div class="grid-row">
     <div class="column-full edit-changes-summary">
-        @if (Model.IsAcademy || Model.IsLAMaintained)
+        @if (Model.IsAcademy || Model.IsLAMaintained || Model.CCIsDemoting || Model.CCIsPromoting)
         {
-            if (Model.IsAcademy)
-            {
-                <div class="warning-message">
+            <div class="warning-message">
+                @if (Model.IsAcademy)
+                {
                     <p>
                         I confirm that in making these changes the academy has followed the
                         <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
                         and have submitted a deed of variation to the funding agreement where required.
                     </p>
-                </div>
-            }
-            else if (Model.IsLAMaintained)
-            {
-                <div class="warning-message">
+                }
+                else if (Model.IsLAMaintained)
+                {
                     <p>
                         I confirm that in making prescribed alterations the governing body or local authority has followed and completed the
                         <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process</a>.
                     </p>
-                </div>
-            }
+                }
+
+                @if (Model.CCIsDemoting)
+                {
+                    <h3>I confirm that:</h3>
+                    <ul class="list-bullet">
+                        <li>I have read the DfE's short guide for LAs document, and</li>
+                        <li>I have demoted this children's centre record because it's no longer a children's centre in its own right but continues to contribute to our children's centre provision.</li>
+                    </ul>
+                    
+                <p>Before you save this record, please link this linked site centre to a children's centre using the links tab. If you don't make this link, the children's centre linked site will be automatically deleted.</p>
+                }
+                else if (Model.CCIsPromoting)
+                {
+                    <h3>I confirm that:</h3>
+                    <ul class="font-small list list-bullet">
+                        <li>I have read the DfE's short guide for LAs document, and</li>
+                        <li>I have promoted this linked site record because it fulfils the legal definition of a children's centre in its own right.</li>
+                    </ul>
+                }
+            </div>
         }
 
         <h1 class="heading-large">Confirm updates to establishment</h1>
