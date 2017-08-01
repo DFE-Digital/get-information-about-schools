@@ -7,6 +7,7 @@ using System.Web.Routing;
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using Edubase.Services.Establishments.Models;
+    using Edubase.Web.UI.Helpers;
     using Models.Search;
     using Services.Domain;
     using Services.Enums;
@@ -253,6 +254,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {"SearchType", model.SearchType}
             };
 
+            string queryStringToAppend = string.Empty;
+
             switch (model.SearchType)
             {
                 case eSearchType.Text:
@@ -264,16 +267,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     routeDictionary.Add("NoResultsForLocation", true);
                     break;
                 case eSearchType.ByLocalAuthority:
-                    foreach (var id in model.SelectedLocalAuthorityIds)
-                    {
-                        routeDictionary.Add("SelectedLocalAuthorityIds", id);
-                    }
+                    queryStringToAppend = string.Concat("&", QueryStringHelper.ToQueryString(EstablishmentSearchViewModel.BIND_ALIAS_LAIDS, model.SelectedLocalAuthorityIds.ToArray()));
                     routeDictionary.Add("NoResultsForLA", true);
                     break;
-
             }
-
-            return new RedirectToRouteResult(null, routeDictionary);
+            
+            return new RedirectResult(string.Concat(Url.RouteUrl(routeDictionary), queryStringToAppend));
         }
 
         private async Task<ActionResult> ProcessEstablishmentsSearch(EstablishmentSearchViewModel model,
