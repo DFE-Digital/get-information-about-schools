@@ -31,7 +31,7 @@
             <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
                 @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box" })
-                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-submit">Find establishment</button>
+                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-submit">Find</button>
             </div>
             @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
             {
