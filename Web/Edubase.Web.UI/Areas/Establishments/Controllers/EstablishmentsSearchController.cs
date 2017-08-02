@@ -7,6 +7,7 @@ using System.Web.Routing;
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using Edubase.Services.Establishments.Models;
+    using Edubase.Services.Security;
     using Edubase.Web.UI.Helpers;
     using Models.Search;
     using Services.Domain;
@@ -22,6 +23,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     using UI.Controllers;
     using UI.Models.Search;
     using EM = Services.Establishments.Models.EstablishmentModel;
+    using R = Services.Security.EdubaseRoles;
 
     [RouteArea("Establishments"), RoutePrefix("Search"), Route("{action=index}")]
     public class EstablishmentsSearchController : EduBaseController
@@ -67,7 +69,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Establishments;
-
+            viewModel.AllowIncludeEmailAddresses = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.APT, R.AP_AOS, R.EFADO, R.FST, R.IEBT, R.ISI, R.OFSTED, R.SOU, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EDUBASE_LACCDO, R.EFAHNS, R.edubase_ddce, R.SFC, R.DUGE);
+            viewModel.AllowIncludeIEBTFields = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.IEBT, R.ISI, R.OFSTED);
+            viewModel.AllowIncludeBringUpFields = User.InRole(R.IEBT);
+            viewModel.AllowIncludeChildrensCentreFields = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EDUBASE_LACCDO);
+            
             if (!viewModel.Dataset.HasValue)
             {
                 viewModel.SearchQueryString = Request.QueryString.ToString();
@@ -82,8 +88,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     SearchPayload = (await GetEstablishmentSearchPayload(viewModel)).Object,
                     DataSet = viewModel.Dataset.Value,
-                    FileFormat = viewModel.FileFormat.Value
+                    FileFormat = viewModel.FileFormat.Value,
+                    IncludeBringUpFields = viewModel.IncludeBringUpFields,
+                    IncludeChildrensCentreFields = viewModel.IncludeChildrensCentreFields,
+                    IncludeEmailAddresses = viewModel.IncludeEmailAddresses,
+                    IncludeIEBTFields = viewModel.IncludeIEBTFields
                 }, User);
+
             return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
         }
 
