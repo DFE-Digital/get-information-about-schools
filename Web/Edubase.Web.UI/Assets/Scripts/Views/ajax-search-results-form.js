@@ -125,6 +125,15 @@
             $('#filter-addtional-controls a').removeClass('hidden');
         }
 
+        function currentSelection() {
+            var optSelects = $('#filter-form').find('.govuk-option-select').not('.hidden');
+            var searchParams = $('#filter-form').find('input[type="hidden"]').serialize();
+            optSelects.each(function(n, os) {
+                searchParams += '&' + $(os).find(':input').serialize();
+            });
+            return searchParams;
+        }
+
         var $resultsElement = $("#results-container");
         if ($resultsElement.length === 0) {
             return;
@@ -133,7 +142,6 @@
         $("#filter-submit").hide();
         var initialState = captureInitialState();
         var progressHtml = '<br/><br/><br/><div class="progress-indicator"><span class="visually-hidden">Please wait</span></div>';
-        var $blanket = $("div.blanket");
         var downloadUrl = "search/preparedownload?";
 
         var ci = null;

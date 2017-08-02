@@ -58,13 +58,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public const string BIND_ALIAS_SELECTED_SEARCH_FILTERS = "y";
         public const string BIND_ALIAS_SORT_BY = "z";
         public const string BIND_ALIAS_RADIUS = "aa";
-        public const string BIND_ALIAS_CLOSE_DATE_FROM = "ab";
-        public const string BIND_ALIAS_CLOSE_DATE_TO = "ac";
-        public const string BIND_ALIAS_AGE_RANGE_LOW_FROM = "ad";
-        public const string BIND_ALIAS_AGE_RANGE_HIGH_FROM = "af";
-        public const string BIND_ALIAS_OFSTEDRATINGS = "ag";
-        public const string BIND_ALIAS_OPEN_DATE_FROM = "ah";
-        public const string BIND_ALIAS_OPEN_DATE_TO = "ai";
+        public const string BIND_ALIAS_CLOSE_DATE_FROM = "1";
+        public const string BIND_ALIAS_CLOSE_DATE_TO = "2";
+        public const string BIND_ALIAS_AGE_RANGE_LOW_FROM = "3";
+        public const string BIND_ALIAS_AGE_RANGE_HIGH_FROM = "4";
+        public const string BIND_ALIAS_OFSTEDRATINGS = "5";
+        public const string BIND_ALIAS_OPEN_DATE_FROM = "6";
+        public const string BIND_ALIAS_OPEN_DATE_TO = "7";
         #endregion
 
         public enum eTextSearchType

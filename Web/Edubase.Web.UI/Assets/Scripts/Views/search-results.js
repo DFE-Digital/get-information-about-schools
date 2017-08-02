@@ -7,14 +7,15 @@
         $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear'),
         $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]'),
         $extraFiltersLink = $('#EditSearchCollapse').find('.add-filters-link'),
-        optionTemplate = '<div class="filter-wrap"><input type="checkbox" value="#{0}" id="ctrl-{0}" class="additional-filter-type filter-input" /><label  for="ctrl-{0}" class="filter-radio">{1}</label></div>',
+        optionTemplate = '<div class="filter-wrap"><input type="checkbox" value="#{0}" data-alias="{2}" id="ctrl-{0}" class="additional-filter-type filter-input" /><label  for="ctrl-{0}" class="filter-radio">{1}</label></div>',
         optionsFragment = '';
         
        
         $additionalFilters.each(function (n, elem) {
             var elemId = $(elem).prop('id'),
-                elemText = $(elem).find('.option-select-label').text();
-            optionsFragment += optionTemplate.replace(/\{0\}/g, elemId).replace('{1}', elemText);
+                elemText = $(elem).find('.option-select-label').text(),
+                dataAlias = $(elem).data().bindAlias;
+            optionsFragment += optionTemplate.replace(/\{0\}/g, elemId).replace('{1}', elemText).replace('{2}', dataAlias);
 
         });
 
@@ -147,5 +148,13 @@
                     $(this).find('.filter-clear, .additional-filter-clear').removeClass('active-clear');
                 }
             });
+
+    var aliases = $('#selected-search-filters').val().split('');
+    $.each(aliases,
+        function(n, alias) {
+            $('.additional-search-critera[data-bind-alias="' + alias + '"]').removeClass('hidden');
+            $('#filter-type-target').find('[data-alias="' + alias + '"]').prop('checked', true);
+        });
+
 
 }());
