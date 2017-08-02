@@ -429,6 +429,7 @@
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
     <Content Include="public\assets\scripts\**\*.*" />
     <Content Include="public\assets\stylesheets\**\*.*" />
@@ -972,7 +973,7 @@
     <Content Include="Areas\Establishments\Views\Establishment\Partials\TabChangeHistory.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\Header.cshtml" />
     <Content Include="Views\Shared\Downloads\SelectFormat.cshtml" />
-    <Content Include="Views\Shared\Downloads\SelectDataset.cshtml" />
+    <Content Include="Areas\Governors\Views\GovernorSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Views\Shared\Downloads\PreparingFilePleaseWait.cshtml" />
     <Content Include="Views\Shared\Downloads\ReadyToDownload.cshtml" />
     <Content Include="Views\Search\LocalAuthorityDisambiguation.cshtml" />

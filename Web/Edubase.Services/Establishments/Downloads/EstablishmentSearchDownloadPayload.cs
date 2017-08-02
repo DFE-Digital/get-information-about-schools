@@ -10,5 +10,10 @@ namespace Edubase.Services.Establishments.Downloads
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public eDataSet DataSet { get; set; }
+
+        public bool IncludeEmailAddresses { get; set; }
+        public bool IncludeIEBTFields { get; set; }
+        public bool IncludeBringUpFields { get; set; }
+        public bool IncludeChildrensCentreFields { get; set; }
     }
 }

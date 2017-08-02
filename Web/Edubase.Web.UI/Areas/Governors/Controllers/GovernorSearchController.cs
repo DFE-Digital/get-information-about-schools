@@ -15,6 +15,7 @@ using System.Web.Routing;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Services.Governors.Search;
+using Edubase.Services.Security;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -56,29 +57,40 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> PrepareDownload(GovernorSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Governors;
-            viewModel.SearchQueryString = Request.QueryString.ToString();
+            if(viewModel.SearchQueryString == null) viewModel.SearchQueryString = Request.QueryString.ToString();
+
+            var allowNonPublicDataDownload = User.InRole(EdubaseRoles.EDUBASE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.EFADO, EdubaseRoles.edubase_ddce, EdubaseRoles.SFC);
+            viewModel.TotalSteps = allowNonPublicDataDownload ? 4 : 3;
+            viewModel.Step++;
+
+            if (allowNonPublicDataDownload && !viewModel.IncludeNonPublicData.HasValue)
+                return View("Downloads/SelectDataset", viewModel);
 
             if (!viewModel.FileFormat.HasValue)
                 return View("Downloads/SelectFormat", viewModel);
 
             var progressId = await _governorDownloadService.SearchWithDownloadGenerationAsync(
-                new Services.Domain.SearchDownloadDto<GovernorSearchPayload>
+                new GovernorSearchDownloadPayload
                 {
                     SearchPayload = CreateSearchPayload(viewModel),
-                    FileFormat = viewModel.FileFormat.Value
+                    FileFormat = viewModel.FileFormat.Value,
+                    IncludeNonPublicData = allowNonPublicDataDownload && viewModel.IncludeNonPublicData.GetValueOrDefault()
                 }, User);
-            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
+
+            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, step = viewModel.Step + 1, viewModel.TotalSteps, viewModel.SearchQueryString, viewModel.SearchSource });
         }
 
         [HttpGet, Route("Download")]
-        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, int step, int totalSteps, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
             var model = await _governorDownloadService.GetDownloadGenerationProgressAsync(id, User);
-            var viewModel = new GovernorSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 3 : 2)
+            var viewModel = new GovernorSearchDownloadGenerationProgressViewModel(model)
             {
                 FileFormat = fileFormat,
                 SearchSource = searchSource,
-                SearchQueryString = searchQueryString
+                SearchQueryString = searchQueryString,
+                Step = step,
+                TotalSteps = totalSteps
             };
 
             if (model.HasErrored)
@@ -86,6 +98,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (!model.IsComplete)
                 return View("Downloads/PreparingFilePleaseWait", viewModel);
+
+            viewModel.Step++;
 
             return View("Downloads/ReadyToDownload", viewModel);
         }
