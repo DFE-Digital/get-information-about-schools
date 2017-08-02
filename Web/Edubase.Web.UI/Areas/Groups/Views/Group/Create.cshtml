@@ -1,4 +1,5 @@
 ﻿@using Edubase.Common;
+@using Edubase.Common.Text
 @using Edubase.Services.Domain
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
@@ -30,8 +31,12 @@
             @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
         </div>
         
+        <div class="column-two-thirds">
+            Use this tool to create a @Model.EntityName
+        </div>
+
         <div class="column-half">
-               
+            <h2 class="heading-medium">@Model.EntityName.ToSentenceCase() details</h2>
             <div class="form-group @Html.ValidationCssClassFor(x=>x.GroupName)">
                 <label for="name" class="form-label">@Model.FieldNamePrefix name</label>
                 @Html.ValidationMessageFor(x => x.GroupName)
@@ -263,73 +268,7 @@
                                     </td>
 
                                 }
-                            @*else if (Model.LinkedEstablishments.Establishments[i].EditMode)
-                            {
-                                <td><button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit">Cancel</button></td>
-                                    <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
-                                </div>
-                            }*@</tr>
-                        @*<li>
-                            <h2>@Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new {id = Model.LinkedEstablishments.Establishments[i].Urn}, new {@class = "bold-small", target = "_blank"})</h2>
-                            <dl>
-                                <dt>Address:</dt>
-                                <dd>@Model.LinkedEstablishments.Establishments[i].Address</dd>
-                                <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                                <dd>@Model.LinkedEstablishments.Establishments[i].Urn</dd>
-                                <dt>School type:</dt>
-                                <dd>@Model.LinkedEstablishments.Establishments[i].TypeName</dd>
-                                <dt>Headteacher name:</dt>
-                                <dd>@Model.LinkedEstablishments.Establishments[i].HeadFullName</dd>
-
-                                @if (!Model.LinkedEstablishments.Establishments[i].EditMode)
-                                {
-                                    <dt>Joined date:</dt>
-                                    <dd>@(Model.LinkedEstablishments.Establishments[i].JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
-                                    @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
-                                }
-
-                            </dl>
-
-                            @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
-                            {
-                                <div class="form-radio cc-lead-centre">
-                                    <label>
-                                        @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new {@class = ""})
-                                        Make this children's centre a lead centre
-                                    </label>
-                                </div>
-
-                            }
-
-                            @if (Model.LinkedEstablishments.Establishments[i].EditMode)
-                            {
-                                @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new {title = "Joined date"})
-                            }
-
-                            @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                            {
-                                <div class="form-group">
-                                    <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
-                                    <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-grey">Edit</button>
-                                </div>
-                            }
-                            else if (Model.LinkedEstablishments.Establishments[i].EditMode)
-                            {
-                                <div class="form-group">
-                                    <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit">Cancel</button>
-                                    <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
-                                </div>
-                            }
-
-
-                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
-                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Name)
-                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Urn)
-                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Address)
-                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].TypeName)
-                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].HeadFullName)
-                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].EditMode)
-                        </li>*@
+                            </tr>   
                         }
                         </tbody>
                     </table>
@@ -340,8 +279,12 @@
     }
 
     <div class="grid-row">
-        <div class="column-full">
-
+        <div class="column-full submit-cancel-panel">
+            @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+            {
+                <button type="submit" name="action" class="button mobile-full-width" id="create-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create")</button>
+            }
+            
 
             @if (Model.InEditMode)
             {
@@ -350,11 +293,6 @@
             else
             {
                 @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
-            }
-            
-            @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-            {
-                <button type="submit" name="action" class="button mobile-full-width" id="create-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
             }
         </div>
     </div>
