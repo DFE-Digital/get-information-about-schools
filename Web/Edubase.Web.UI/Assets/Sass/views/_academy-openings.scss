@@ -29,14 +29,14 @@
 
     .academy-openings + .pagination {
         border-bottom: 0;
-        border-top: 2px solid $black;
+        
     }
 
 
     .academy-openings {
         table-layout: fixed;
         display: table;
-
+        border-bottom: 2px solid $black;
         thead {
             tr {
                 border-bottom: 4px solid $black;
