@@ -237,21 +237,23 @@
 
 
                 </div>
-                <div id="governance" class="tab-content">
+                
+                @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                {
+                    <div id="governance" class="tab-content">
 
-                    @if (Model.CanUserEdit)
-                    {
-                        <div class="button-wrap">
-                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
-                        </div>
+                        @if (Model.CanUserEdit)
+                        {
+                            <div class="button-wrap">
+                                @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
+                            </div>
 
-                    }
+                        }
 
-                    @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUId, viewModel = null as Edubase.Web.UI.Areas.Governors.Models.GovernorsGridViewModel, area = "Governors" });}
-
-
-                </div>
-
+                        @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUId, viewModel = null as Edubase.Web.UI.Areas.Governors.Models.GovernorsGridViewModel, area = "Governors" });}
+                    </div>
+                }
+                
                 @if (Model.IsUserLoggedOn)
                 {
                     <div id="change-history" class="tab-content">
