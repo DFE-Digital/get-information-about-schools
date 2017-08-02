@@ -3,7 +3,7 @@
 @using Edubase.Web.UI.Areas.Establishments.Models.Search
 @model EstablishmentSearchDownloadViewModel
 @{
-    ViewBag.bodyClasses = "schools-search-page search-page";
+    ViewBag.bodyClasses = " search-page";
     ViewBag.hideLogo = true;
 }
 
@@ -40,20 +40,23 @@
                     <div class="form-group">
                         <fieldset>
                             <legend class="visually-hidden">Select a data set</legend>
-                            <label class="block-label selection-button-radio" for="radio-1">
-                                <input id="radio-1" type="radio" name="dataset" value="core" checked="checked">
-                                Core set of data
-                            </label>
-
-
-                            <label class="block-label selection-button-radio" for="radio-2">
-                                <input id="radio-2" type="radio" name="dataset" value="full">
-                                Full set of data
-                            </label>
+                            <div class="block-radio-button-wrap">
+                                <label class="block-label selection-button-radio" for="radio-1">
+                                    <input id="radio-1" type="radio" name="dataset" value="core" checked="checked" class="core-full">
+                                    Core set of data
+                                </label>
+                            </div>
+                            
+                            <div class="block-radio-button-wrap">
+                                <label class="block-label selection-button-radio" for="radio-2">
+                                    <input id="radio-2" type="radio" name="dataset" value="full" class="core-full">
+                                    Full set of data
+                                </label>
+                            </div>
 
                             @if (Model.AllowAnyExtraFields)
                             {
-                                <div class="panel-indent">
+                                <div class="panel-indent shift-panel" id="data-download-options">
                                     <fieldset>
                                         <legend class="bold">Include non-public data:</legend>
 
@@ -105,4 +108,24 @@
         </div>
     </div>
 </div>
+
+@section ViewScripts
+{
+    <script>
+        (function() {
+            var $radios = $('#full-content').find('.core-full');
+            var $panel = $('#data-download-options');
+            if ($panel.length > 0) {
+                $radios.on('change', function () {
+                    $panel.detach().insertAfter($(this).parents('.block-radio-button-wrap'));
+                });
+
+                $panel.detach().insertAfter(
+                    $radios.filter(function(n, rad) {
+                        return rad.checked;
+                    }).parents('.block-radio-button-wrap'));
+            }
+        }());
+    </script>
+}
 
