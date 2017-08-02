@@ -27,7 +27,7 @@
             },
             methods: {
                 detailUrl: function (urn) {
-                    return '/Establishment/Details/' + urn;
+                    return '/Establishments/Establishment/Details/' + urn;
                 },
                 formatDate: function (utcDate) {
                     if (utcDate === null) {
