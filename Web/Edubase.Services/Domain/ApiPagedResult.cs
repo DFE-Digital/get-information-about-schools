@@ -6,19 +6,23 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.Domain
 {
-    public class ApiSearchResult<T> where T : class
+    /// <summary>
+    /// Represents a page of a larger resultset.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class ApiPagedResult<T> where T : class
     {
         public List<T> Items { get; set; }
 
-        public long Count { get; set; }
+        public int Count { get; set; }
         
-        public ApiSearchResult(long count, List<T> items)
+        public ApiPagedResult(int count, List<T> items)
         {
             Count = count;
             Items = items;
         }
 
-        public ApiSearchResult()
+        public ApiPagedResult()
         {
 
         }

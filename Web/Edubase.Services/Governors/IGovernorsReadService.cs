@@ -11,7 +11,7 @@ namespace Edubase.Services.Governors
 {
     public interface IGovernorsReadService
     {
-        Task<ApiSearchResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal);
+        Task<ApiPagedResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal);
         Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = null, int? groupUId = null, IPrincipal principal = null);
         Task<GovernorDisplayPolicy> GetEditorDisplayPolicyAsync(eLookupGovernorRole role, bool isGroup, IPrincipal principal);
         Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal);

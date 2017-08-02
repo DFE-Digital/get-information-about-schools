@@ -13,9 +13,9 @@ namespace Edubase.Services.Groups
     {
         Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10);
 
-        Task<ApiSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal);
+        Task<ApiPagedResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal);
 
-        Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal);
+        Task<ApiPagedResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal);
 
         Task<IEnumerable<GroupModel>> GetAllByEstablishmentUrnAsync(int urn, IPrincipal principal);
 

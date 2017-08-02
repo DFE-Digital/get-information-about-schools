@@ -54,22 +54,22 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, IPrincipal principal)
         {
-            var changes = (await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal)).GetResponse(); // TODO: TEXCHANGE: when Texuna provide the total count, change this to use their paging
-            return new PaginatedResult<GroupChangeDto>(skip, take, changes.Count, changes.Skip(skip).Take(take).ToList());
+            var changes = (await _httpClient.GetAsync<ApiPagedResult<GroupChangeDto>>($"group/{uid}/changes?skip={skip}&take={take}", principal)).GetResponse(); 
+            return new PaginatedResult<GroupChangeDto>(skip, take, changes.Count, changes.Items);
         }
             
         public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal, bool includeFutureDated = false) 
             => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments?editMode={includeFutureDated}", principal)).GetResponse();
 
 
-        public async Task<ApiSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
+        public async Task<ApiPagedResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {
-            return (await _httpClient.PostAsync<ApiSearchResult<SearchGroupDocument>>("group/search", payload, principal)).GetResponse();
+            return (await _httpClient.PostAsync<ApiPagedResult<SearchGroupDocument>>("group/search", payload, principal)).GetResponse();
         }
 
-        public async Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
+        public async Task<ApiPagedResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
         {
-            return (await _httpClient.GetAsync<ApiSearchResult<SearchGroupDocument>>(string.Concat("group/searchbyids?",
+            return (await _httpClient.GetAsync<ApiPagedResult<SearchGroupDocument>>(string.Concat("group/searchbyids?",
                 groupId.UrlTokenize("groupId"), 
                 groupUId.UrlTokenize("groupUId"), 
                 companiesHouseNumber.UrlTokenize("companiesHouseNumber")), principal)).GetResponse();

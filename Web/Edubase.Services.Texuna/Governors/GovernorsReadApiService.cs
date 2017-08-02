@@ -28,8 +28,8 @@ namespace Edubase.Services.Texuna.Governors
         public async Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null) 
             => (await _httpClient.GetAsync<GovernorsDetailsTexunaDto>($"governors?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}", principal)).GetResponse();
 
-        public async Task<ApiSearchResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal) 
-            => (await _httpClient.PostAsync<ApiSearchResult<SearchGovernorModel>>("governor/search", payload, principal)).GetResponse();
+        public async Task<ApiPagedResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal) 
+            => (await _httpClient.PostAsync<ApiPagedResult<SearchGovernorModel>>("governor/search", payload, principal)).GetResponse();
         
         public async Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal)
             => (await _httpClient.GetAsync<GovernorModel[]>($"governors/shared/{establishmentUrn}", principal)).GetResponse();

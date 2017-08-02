@@ -43,7 +43,7 @@ namespace Edubase.Services.Establishments
         ///     There's a chance that when you pass in a large query with 100s of filters
         ///     you'll get a SearchQueryTooLargeException.  There is no work-around; the size of the query needs to be reduced; this is due to a limitation in Azure Search.
         /// </exception>
-        Task<ApiSearchResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
+        Task<ApiPagedResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
         Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal);
 
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal);

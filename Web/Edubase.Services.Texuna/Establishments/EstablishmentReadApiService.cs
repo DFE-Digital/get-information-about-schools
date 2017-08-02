@@ -48,8 +48,8 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, IPrincipal user)
         {
-            var changes = (await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes?take=10000&skip=0", user)).GetResponse(); // TODO: TEXCHANGE: when Texuna provide the total count, change this to use their paging
-            return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Skip(skip).Take(take).ToList());
+            var changes = (await _httpClient.GetAsync<ApiPagedResult<EstablishmentChangeDto>>($"establishment/{urn}/changes?skip={skip}&take={take}", user)).GetResponse();
+            return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Items);
         }
 
         public async Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user)
@@ -70,8 +70,8 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)
             => (await _httpClient.GetAsync<List<LookupDto>>("establishment/permittedstatuses", principal)).GetResponse().Select(x => x.Id).ToArray();
 
-        public async Task<ApiSearchResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
-            => (await _httpClient.PostAsync<ApiSearchResult<EstablishmentModel>>("establishment/search", payload, principal)).GetResponse();
+        public async Task<ApiPagedResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
+            => (await _httpClient.PostAsync<ApiPagedResult<EstablishmentModel>>("establishment/search", payload, principal)).GetResponse();
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10) 
             => (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();

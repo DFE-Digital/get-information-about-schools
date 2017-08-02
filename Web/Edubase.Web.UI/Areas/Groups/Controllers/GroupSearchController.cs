@@ -102,7 +102,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
                 using (MiniProfiler.Current.Step("Searching groups..."))
                 {
-                    ApiSearchResult<SearchGroupDocument> results = null;
+                    ApiPagedResult<SearchGroupDocument> results = null;
                     if (text != null) results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
 
                     if (results != null && results.Count > 0)
