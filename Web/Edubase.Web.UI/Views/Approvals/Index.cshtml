@@ -38,9 +38,10 @@
 
             <div class="approve-reject" v-show="!isProcessing">
                 <form>
-                    <div class="error-summary" v-show="approvalError || noneSelectedError">
+                    <div class="error-summary" v-show="approvalError || noneSelectedError || apiError.length > 0">
                         <p class="error-message" v-show="approvalError">Please select some changes to approve</p>
                         <p class="error-message" v-show="noneSelectedError">Please select some changes to reject</p>
+                        <p class="error-message" v-show="apiError.length > 0" v-html="apiError"></p>
                     </div>
                     <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
                         <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
@@ -58,7 +59,7 @@
                         <div class="submit-cancel-panel">
                             <button type="submit" name="action" class="button" v-on:click.prevent="confirmRejection">Confirm</button>
                             <button type="submit" name="action" class="button button-grey cancel mobile-full-width"
-                                     v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false">Cancel</button>
+                                     v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false, apiError = false">Cancel</button>
                         </div>
                     </div>
 

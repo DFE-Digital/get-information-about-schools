@@ -1,8 +1,6 @@
-﻿@using Edubase.Services.Enums
-@using Edubase.Common;
+﻿@using Edubase.Common;
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
-@using Edubase.Services.Domain;
 @model VM
 @{
     ViewBag.hideLogo = true;
@@ -10,7 +8,7 @@
     Layout = "_EditLayoutPage.cshtml";
 }
 
-@using (Html.BeginForm("EditGroup", "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.GroupTypeMode)
