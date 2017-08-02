@@ -149,12 +149,15 @@
                 }
             });
 
-    var aliases = $('#selected-search-filters').val().split('');
-    $.each(aliases,
-        function(n, alias) {
-            $('.additional-search-critera[data-bind-alias="' + alias + '"]').removeClass('hidden');
-            $('#filter-type-target').find('[data-alias="' + alias + '"]').prop('checked', true);
-        });
+    if (document.getElementById('selected-search-filters')) {
+        var aliases = $('#selected-search-filters').val().split('');
+        $.each(aliases,
+            function(n, alias) {
+                $('.additional-search-critera[data-bind-alias="' + alias + '"]').removeClass('hidden');
+                $('#filter-type-target').find('[data-alias="' + alias + '"]').prop('checked', true);
+            });
+    }
+   
 
 
 }());
