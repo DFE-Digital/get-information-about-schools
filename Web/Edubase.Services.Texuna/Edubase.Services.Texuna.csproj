@@ -70,6 +70,7 @@
       <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -93,6 +94,9 @@
     <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />
     <Compile Include="Establishments\EstablishmentReadApiService.cs" />
     <Compile Include="Establishments\EstablishmentWriteApiService.cs" />
+    <Compile Include="Glimpse\ApiTrace.cs" />
+    <Compile Include="Glimpse\ApiTraceData.cs" />
+    <Compile Include="Glimpse\ApiTraceList.cs" />
     <Compile Include="Governors\GovernorDownloadApiService.cs" />
     <Compile Include="Governors\GovernorsReadApiService.cs" />
     <Compile Include="Governors\GovernorsWriteApiService.cs" />

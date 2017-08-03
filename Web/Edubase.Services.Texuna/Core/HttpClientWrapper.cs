@@ -1,4 +1,8 @@
 ﻿
+using System.Web;
+using Edubase.Services.Texuna.Glimpse;
+using Microsoft.AspNet.Identity;
+
 namespace Edubase.Services
 {
     using Common.IO;
@@ -45,8 +49,8 @@ namespace Edubase.Services
         //TODO: tidy up the "throwOnNotFound" stuff
         public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal, bool throwOnNotFound = true)
         {
-
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
+            
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync<TResponse>(result, throwOnNotFound);
 
@@ -325,14 +329,48 @@ namespace Edubase.Services
 
         private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
         {
+            var startTime = DateTime.UtcNow;
+            HttpResponseMessage response = null;
+
             try
             {
-                return await _httpClient.SendAsync(requestMessage);
+                response = await _httpClient.SendAsync(requestMessage);
+                return response;
             }
-            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
+            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested
+            ) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
             {
                 throw new TexunaApiSystemException(
-                    $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})", GetRequestJsonBody(requestMessage));
+                    $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})",
+                    GetRequestJsonBody(requestMessage));
+            }
+            finally
+            {
+#if DEBUG
+                var responseMessage = "";
+                if (response != null)
+                {
+                    responseMessage = await response.Content.ReadAsStringAsync();
+                }
+
+                var context = HttpContext.Current;
+
+                var data = new ApiTraceData
+                {
+                    StartTime = startTime,
+                    DurationMillis = (int)Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
+                    Method = requestMessage.Method.Method,
+                    Url = requestMessage.RequestUri.ToString(),
+                    Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}" ,
+                    Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
+                    ResponseCode = response != null ? (int) response.StatusCode : 0,
+                    ClientIpAddress = context?.Request?.UserHostAddress,
+                    UserId = context?.User?.Identity?.GetUserId(),
+                    UserName = context?.User?.Identity?.GetUserName()
+                };
+
+                ApiTrace.Data.Add(data);
+#endif
             }
         }
 
