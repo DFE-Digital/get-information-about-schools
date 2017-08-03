@@ -81,8 +81,10 @@ namespace Edubase.Web.UI
                 .As<IMessageLoggingService>()
                 .As<IExceptionLogger>()
                 .SingleInstance();
-            
-            builder.RegisterInstance(new JsonConverterCollection() { new DbGeographyConverter() });
+
+            var dbGeographyConverter = new DbGeographyConverter();
+            var jsonConverterCollection = new JsonConverterCollection() { dbGeographyConverter };
+            builder.RegisterInstance(jsonConverterCollection);
 
             builder.RegisterType<CacheAccessor>()
                 .SingleInstance().As<ICacheAccessor>()
