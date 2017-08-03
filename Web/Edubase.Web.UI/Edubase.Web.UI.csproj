@@ -86,6 +86,15 @@
       <HintPath>..\packages\FluentValidation.MVC5.6.2.1.0\lib\Net45\FluentValidation.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Glimpse.AspNet, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Glimpse.AspNet.1.8.0\lib\net45\Glimpse.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Core, Version=1.8.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Glimpse.1.8.6\lib\net45\Glimpse.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Mvc5, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Glimpse.Mvc5.1.5.3\lib\net45\Glimpse.Mvc5.dll</HintPath>
+    </Reference>
     <Reference Include="HttpAuthModule, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HttpAuthModule.2.2.2.0\lib\net45\HttpAuthModule.dll</HintPath>
       <Private>True</Private>
@@ -263,6 +272,7 @@
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
+    <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
