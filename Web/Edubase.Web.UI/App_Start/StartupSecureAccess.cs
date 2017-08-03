@@ -38,6 +38,24 @@ namespace Edubase.Web.UI
             }
         }
 
+        private static string SaCertificate
+        {
+            get
+            {
+                var configuredValue = ConfigurationManager.AppSettings["SaCertificate"];
+                return configuredValue ?? "wildcard-dfe.pfx";
+            }
+        }
+
+        private static string SaCertificatePassword
+        {
+            get
+            {
+                var configuredValue = ConfigurationManager.AppSettings["SaCertificatePassword"];
+                return configuredValue ?? "test";
+            }
+        }
+
         public void ConfigureAuth(IAppBuilder app)
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions
@@ -92,7 +110,7 @@ namespace Edubase.Web.UI
 //#endif
         }
 
-        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath("~/app_data/wildcard-dfe.pfx"), "test", X509KeyStorageFlags.MachineKeySet);
+        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath($"~/app_data/{SaCertificate}"), SaCertificatePassword, X509KeyStorageFlags.MachineKeySet);
 
         // TODO: one day get rid of this
         //private static X509Certificate2 GetSPCertificateFromCertStore()

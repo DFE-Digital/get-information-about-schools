@@ -115,6 +115,16 @@
         }
     }
 }
+.block-radio-button-wrap {
+    display: block;
+    margin: 12px 0;
+
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
 
 .stacked-controls {
     .radio-button-wrap,
