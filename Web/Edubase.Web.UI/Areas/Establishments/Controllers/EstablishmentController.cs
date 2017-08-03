@@ -205,6 +205,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.Street = address.Street;
                 viewModel.Town = address.Town;
                 viewModel.PostCode = address.PostCode;
+                viewModel.Easting = address.Easting;
+                viewModel.Northing = address.Northing;
                 viewModel.Step = "editaddress";
             }
             else if (viewModel.ActionName == "replace-address")
@@ -415,6 +417,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     viewModel.Address_Line3 = replaceAddressViewModel.Address3;
                     viewModel.Address_PostCode = replaceAddressViewModel.PostCode;
                     viewModel.Address_UPRN = replaceAddressViewModel.SelectedUPRN;
+                    viewModel.Northing = replaceAddressViewModel.Northing;
+                    viewModel.Easting = replaceAddressViewModel.Easting;
                 }
                 else if (replaceAddressViewModel.Target == "alt")
                 {

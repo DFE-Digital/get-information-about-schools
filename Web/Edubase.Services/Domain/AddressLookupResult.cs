@@ -11,6 +11,8 @@ namespace Edubase.Services.Domain
             Town = result.PostTown?.ToLower()?.ToTitleCase();
             UPRN = result.UPRN;
             PostCode = result.Postcode;
+            Easting = result.xCoordinate.ToInteger();
+            Northing = result.yCoordinate.ToInteger();
         }
 
         public AddressLookupResult()
@@ -22,6 +24,8 @@ namespace Edubase.Services.Domain
         public string Town { get; set; }
         public string UPRN { get; set; }
         public string PostCode { get; set; }
+        public int? Easting { get; set; }
+        public int? Northing { get; set; }
 
         public override string ToString() => Street + ", " + Town;
     }

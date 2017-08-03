@@ -32,6 +32,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         [JsonProperty]
         public int? CountryId { get; set; }
 
+        [JsonProperty]
+        public int? Easting { get; set; }
+
+        [JsonProperty]
+        public int? Northing { get; set; }
+
         public string TownLabel => CountryId.GetValueOrDefault() == Constants.COUNTRY_ID_UK ? "Town" : "Town / City";
 
         public string PostCodeLabel => CountryId.GetValueOrDefault() == Constants.COUNTRY_ID_UK ? "Postcode" : "Postcode / Zipcode";

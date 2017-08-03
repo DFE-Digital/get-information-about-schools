@@ -81,6 +81,8 @@
                     </div>
 
                     @Html.HiddenFor(x => x.Address_UPRN)
+                    @Html.HiddenFor(x => x.Northing)
+                    @Html.HiddenFor(x => x.Easting)
 
                     @if (Model.EditPolicy.AltSiteName.GetValueOrDefault(true))
                     {

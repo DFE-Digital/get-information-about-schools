@@ -45,10 +45,13 @@ namespace Edubase.Common
 
         public static int? ToInteger(this string text)
         {
-            int retVal;
             text = text.Clean();
-            if (!text.IsNullOrEmpty() && int.TryParse(text, out retVal)) return retVal;
-            else return null;
+            if (!text.IsNullOrEmpty())
+            {
+                if (text.IndexOf('.') > -1 && decimal.TryParse(text, out decimal d)) return Convert.ToInt32(d);
+                else if (int.TryParse(text, out int i)) return i;
+            }
+            return null;
         }
 
         /// <summary>

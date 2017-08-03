@@ -36,6 +36,9 @@ namespace Edubase.Services.Texuna.Establishments
                 [nameof(effectiveDate)] = effectiveDate?.ToString("yyyy-MM-dd")
             };
             var queryString = string.Join("&", parameters.Where(x => x.Value != null).Select(x => $"{x.Key}={x.Value}"));
+
+            model.Location = null; // always set to null just in case the easting/northing values have been changed - apparently by setting this to null, it signifies to Texuna, they should re-calc the lat/long values.
+            
             await _httpClient.PutAsync($"establishment?{queryString}", model, principal);
         }
 
