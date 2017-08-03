@@ -17,18 +17,17 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Filters;
     using Models.CreateEdit;
     using Models.Validators;
+    using MoreLinq;
     using Services.Domain;
+    using Services.Enums;
+    using Services.Exceptions;
     using Services.Groups.Models;
     using Services.IntegrationEndPoints.CompaniesHouse;
-    using StackExchange.Profiling;
-    using UI.Models;
-    using GT = Services.Enums.eLookupGroupType;
-    using Services.Exceptions;
-    using static Models.CreateEdit.GroupEditorViewModelBase;
-    using static Models.CreateEdit.GroupEditorViewModel;
-    using Services.Enums;
     using Services.Nomenclature;
-    using MoreLinq;
+    using UI.Models;
+    using static Models.CreateEdit.GroupEditorViewModel;
+    using static Models.CreateEdit.GroupEditorViewModelBase;
+    using GT = Services.Enums.eLookupGroupType;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -80,10 +79,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (viewModel.IsUserLoggedOn)
             {
-                using (MiniProfiler.Current.Step("Retrieving change history"))
-                {
-                    viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, skip, 100, User);
-                }
+                viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, skip, 100, User);
             }
 
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value, true);

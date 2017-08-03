@@ -5,17 +5,14 @@ using Edubase.Services;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.Admin;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web.Hosting;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Admin"), Route("{action=dashboard}"), MvcAuthorizeRoles(EdubaseRoles.ROLE_BACKOFFICE)]
+    [RoutePrefix("Admin"), Route("{action=Logs}"), MvcAuthorizeRoles(EdubaseRoles.ROLE_BACKOFFICE)]
     public class AdminController : EduBaseController
     {
-
         [Route("Logs")]
         public async Task<ActionResult> Logs(string date, string skipToken)
         {
@@ -32,8 +29,6 @@ namespace Edubase.Web.UI.Controllers
             return View(message);
         }
         
-        public ActionResult DoException() { throw new System.Exception("This is a test exception"); }
-
         [HttpGet, Route("GetPendingErrors")]
         public ActionResult GetPendingErrors(string pwd)
         {
@@ -56,14 +51,10 @@ namespace Edubase.Web.UI.Controllers
             {
                 await scope.Resolve<ICacheAccessor>().ClearAsync();
             }
-            return RedirectToAction("Dashboard", new { message = "Redis cache and MemoryCache cleared successfully." });
+            return Content("Redis cache and MemoryCache cleared successfully.", "text/plain");
         }
         
-
         public async Task FlushErrors() => await DependencyResolver.Current
                 .GetService<IMessageLoggingService>().FlushAsync();
-
-        
-
     }
 }

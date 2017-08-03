@@ -4,7 +4,6 @@ namespace Edubase.Services
     using Common.IO;
     using Exceptions;
     using Newtonsoft.Json;
-    using StackExchange.Profiling;
     using System;
     using System.Configuration;
     using System.IO;
@@ -35,7 +34,7 @@ namespace Edubase.Services
         {
             _httpClient = httpClient;
             _httpClient.Timeout = TimeSpan.FromSeconds(180); // API is slooooow
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(ApiUsername, ApiPassword).ToString()); 
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(ApiUsername, ApiPassword).ToString());
             _formatter.SerializerSettings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
@@ -46,54 +45,43 @@ namespace Edubase.Services
         //TODO: tidy up the "throwOnNotFound" stuff
         public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal, bool throwOnNotFound = true)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: GET {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
-                var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync<TResponse>(result, throwOnNotFound);
-            }
+
+            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
+            var result = await SendAsync(requestMessage);
+            return await ParseHttpResponseMessageAsync<TResponse>(result, throwOnNotFound);
+
         }
 
         public async Task<ApiResponse> PatchAsync(string uri, object data, IPrincipal principal)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
-                var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync(result);
-            }
+
+            var requestMessage = await CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
+            var result = await SendAsync(requestMessage);
+            return await ParseHttpResponseMessageAsync(result);
         }
 
         public async Task DeleteAsync(string uri, object data, IPrincipal principal)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: DELETE {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
-                var result = await SendAsync(requestMessage);
-                await ParseHttpResponseMessageAsync(result);
-            }
+            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
+            var result = await SendAsync(requestMessage);
+            await ParseHttpResponseMessageAsync(result);
+
         }
 
         #region PUT methods
 
         public async Task<ApiResponse<T>> PutAsync<T>(string uri, object data, IPrincipal principal)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
-                var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync<T>(result);
-            }
+            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
+            var result = await SendAsync(requestMessage);
+            return await ParseHttpResponseMessageAsync<T>(result);
         }
 
         public async Task<ApiResponse> PutAsync(string uri, object data, IPrincipal principal)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: PUT {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
-                var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync(result);
-            }
+            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
+            var result = await SendAsync(requestMessage);
+            return await ParseHttpResponseMessageAsync(result);
         }
 
         #endregion
@@ -102,44 +90,39 @@ namespace Edubase.Services
 
         public async Task<ApiResponse<T>> PostAsync<T>(string uri, object data, IPrincipal principal)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
-                var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync<T>(result);
-            }
+
+            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
+            var result = await SendAsync(requestMessage);
+            return await ParseHttpResponseMessageAsync<T>(result);
+
         }
 
         public async Task<ApiResponse> PostAsync(string uri, object data, IPrincipal principal)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
-                var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync(result);
-            }
+
+            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
+            var result = await SendAsync(requestMessage);
+            return await ParseHttpResponseMessageAsync(result);
+
         }
 
-        public async Task<ApiResponse<TSuccess, TValidationEnvelope>> PostAsync<TSuccess, TValidationEnvelope>(string uri, object payload, IPrincipal principal) 
+        public async Task<ApiResponse<TSuccess, TValidationEnvelope>> PostAsync<TSuccess, TValidationEnvelope>(string uri, object payload, IPrincipal principal)
             where TValidationEnvelope : class
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, payload);
-                var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
-            }
+
+            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, payload);
+            var result = await SendAsync(requestMessage);
+            return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
+
         }
 
         public async Task<ApiResponse<TSuccess, TValidationEnvelope>> PutAsync<TSuccess, TValidationEnvelope>(string uri, object payload, IPrincipal principal)
             where TValidationEnvelope : class
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: POST {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, payload);
-                var result = await SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
-            }
+            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, payload);
+            var result = await SendAsync(requestMessage);
+            return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
+
         }
 
         /// <summary>
@@ -156,43 +139,41 @@ namespace Edubase.Services
         /// </remarks>
         public async Task<ApiResponse<T>> PostMultipartAsync<T>(string uri, object data, string fileName, IPrincipal principal)
         {
-            using (MiniProfiler.Current.Step($"TEXAPI: POST (multipart) {uri}"))
-            {
-                var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal);
+            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal);
 
-                var content = new MultipartContent("form-data", Guid.NewGuid().ToString());
+            var content = new MultipartContent("form-data", Guid.NewGuid().ToString());
 
-                var fileContent = new ByteArrayContent(File.ReadAllBytes(fileName));
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue(new FileHelper().GetMimeType(fileName));
-                fileContent.Headers.ContentDisposition =
-                    new ContentDispositionHeaderValue("form-data")
-                    {
-                        Name = "bulkfile", // shouldn't be necessary, but it is.
+            var fileContent = new ByteArrayContent(File.ReadAllBytes(fileName));
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(new FileHelper().GetMimeType(fileName));
+            fileContent.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "bulkfile", // shouldn't be necessary, but it is.
                         FileName = Path.GetFileName(fileName) // shouldn't be necessary
                     };
-               
-                content.Add(fileContent);
 
-                if (data != null)
-                {
-                    var jsonPayload = new ObjectContent<object>(data, _formatter);
-                    jsonPayload.Headers.ContentDisposition =
-                        new ContentDispositionHeaderValue("form-data")
-                        {
-                            Name = "payload" // shouldn't be necessary, but it is.
+            content.Add(fileContent);
+
+            if (data != null)
+            {
+                var jsonPayload = new ObjectContent<object>(data, _formatter);
+                jsonPayload.Headers.ContentDisposition =
+                    new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = "payload" // shouldn't be necessary, but it is.
                     };
 
-                    jsonPayload.Headers.ContentType.MediaType = "text/plain"; // should be application/json, but for some reason we have to use text/plain
-                    content.Add(jsonPayload);
-                }
-
-                requestMessage.Content = content;
-
-                var result = await _httpClient.SendAsync(requestMessage);
-                return await ParseHttpResponseMessageAsync<T>(result);
+                jsonPayload.Headers.ContentType.MediaType = "text/plain"; // should be application/json, but for some reason we have to use text/plain
+                content.Add(jsonPayload);
             }
+
+            requestMessage.Content = content;
+
+            var result = await _httpClient.SendAsync(requestMessage);
+            return await ParseHttpResponseMessageAsync<T>(result);
+
         }
-        
+
         #endregion
 
         #region ParseHttpResponseMessageAsync
@@ -212,7 +193,7 @@ namespace Edubase.Services
             if (message.IsSuccessStatusCode) return response;
             else return await ProcessApiErrorAsync(message, response);
         }
-        
+
         private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message)
             where TValidationEnvelope : class
         {
@@ -245,7 +226,7 @@ namespace Edubase.Services
             return response;
         }
 
-        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ProcessApiErrorAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message, ApiResponse<TSuccess, TValidationEnvelope> response, bool throwOnNotFound = true) 
+        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ProcessApiErrorAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message, ApiResponse<TSuccess, TValidationEnvelope> response, bool throwOnNotFound = true)
             where TValidationEnvelope : class
         {
             ValidateGenericHttpErrors(message);
@@ -276,7 +257,7 @@ namespace Edubase.Services
         {
             var error = TryDeserializeAsync<ApiError>(json);
             if (error != null && !error.IsEmpty) return new[] { error };
-            
+
             var errors = TryDeserializeAsync<ApiError[]>(json);
             if (errors != null) return errors.Where(x => !x.IsEmpty).ToArray();
 
@@ -305,7 +286,7 @@ namespace Edubase.Services
                 }
             }
         }
-        
+
         private void AssertJsonContent(HttpResponseMessage message)
         {
             if (message?.Content?.Headers?.ContentType?.MediaType != "application/json")
@@ -335,7 +316,7 @@ namespace Edubase.Services
             if (typeof(T) == typeof(string)) return (T)(object)await message.Content.ReadAsStringAsync();
             else return await message.Content.ReadAsAsync<T>(new[] { _formatter });
         }
-        
+
         private T TryDeserializeAsync<T>(string json) where T : class
         {
             try { return JsonConvert.DeserializeObject<T>(json); }

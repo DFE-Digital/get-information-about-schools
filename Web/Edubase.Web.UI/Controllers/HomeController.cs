@@ -42,7 +42,7 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
-
+        
         [Route("~/news")]
         public async Task<ActionResult> News()
         {

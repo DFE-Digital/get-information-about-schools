@@ -29,7 +29,6 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using MoreLinq;
-using StackExchange.Profiling;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
@@ -311,7 +310,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        [HttpGet, Route("Details/{id}", Name = "EstabDetails")]
+        [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, int skip = 0)
         {
             ViewBag.ShowApproved = approved;
@@ -322,13 +321,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 SearchSource = searchSource
             };
 
-            using (MiniProfiler.Current.Step("Retrieving establishment"))
-            {
-                var result = await _establishmentReadService.GetAsync(id, User);
-                if (result.ReturnValue == null) return HttpNotFound();
-                viewModel.Establishment = result.ReturnValue;
-            }
-
+            var result = await _establishmentReadService.GetAsync(id, User);
+            if (result.ReturnValue == null) return HttpNotFound();
+            viewModel.Establishment = result.ReturnValue;
+            
             await Task.WhenAll(
                 PopulateLinkedEstablishments(id, viewModel),
                 PopulateChangeHistory(id, viewModel, skip, 100),

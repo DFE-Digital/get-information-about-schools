@@ -11,7 +11,6 @@ using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Models;
-using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,49 +81,48 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             Guard.IsTrue(groupUId.HasValue || establishmentUrn.HasValue, () => new InvalidParameterException($"Both parameters '{nameof(groupUId)}' and '{nameof(establishmentUrn)}' are null."));
 
-            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
+            
+            var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
+            var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService, 
+                (await _cachedLookupService.NationalitiesGetAllAsync()), 
+                (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
+                
+            // TODO: remove the where once shared gov is fixed
+            var applicableRoles = domainModel.ApplicableRoles.Where(r => !EnumSets.eSharedGovernorRoles.Contains(r)).Cast<int>();
+            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
+
+            await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User, x => viewModel.GovernanceMode = x.GovernanceMode, x=>
             {
-                var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
-                var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService, 
-                    (await _cachedLookupService.NationalitiesGetAllAsync()), 
-                    (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
-                
-                // TODO: remove the where once shared gov is fixed
-                var applicableRoles = domainModel.ApplicableRoles.Where(r => !EnumSets.eSharedGovernorRoles.Contains(r)).Cast<int>();
-                viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
+                viewModel.ShowDelegationInformation = x.GroupTypeId.GetValueOrDefault() == (int)eLookupGroupType.MultiacademyTrust;
+                viewModel.DelegationInformation = x.DelegationInformation;
+            });
 
-                await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User, x => viewModel.GovernanceMode = x.GovernanceMode, x=>
+            viewModel.RemovalGid = removalGid;
+            viewModel.GovernorShared = false;
+            if (removalGid.HasValue)
+            {
+                var govToBeRemoved = domainModel.CurrentGovernors.SingleOrDefault(g => g.Id == removalGid.Value);
+                if (govToBeRemoved != null && EnumSets.SharedGovernorRoles.Contains(govToBeRemoved.RoleId.Value))
                 {
-                    viewModel.ShowDelegationInformation = x.GroupTypeId.GetValueOrDefault() == (int)eLookupGroupType.MultiacademyTrust;
-                    viewModel.DelegationInformation = x.DelegationInformation;
-                });
-
-                viewModel.RemovalGid = removalGid;
-                viewModel.GovernorShared = false;
-                if (removalGid.HasValue)
-                {
-                    var govToBeRemoved = domainModel.CurrentGovernors.SingleOrDefault(g => g.Id == removalGid.Value);
-                    if (govToBeRemoved != null && EnumSets.SharedGovernorRoles.Contains(govToBeRemoved.RoleId.Value))
-                    {
-                        viewModel.GovernorShared = true;
-                    }
+                    viewModel.GovernorShared = true;
                 }
-
-                if (duplicateGovernorId.HasValue)
-                {
-
-                    var duplicate = await _governorsReadService.GetGovernorAsync(duplicateGovernorId.Value, User);
-                    ViewData.Add("DuplicateGovernor", duplicate);
-                }
-
-                if (roleAlreadyExists)
-                {
-                    ModelState.AddModelError("role", "The selected role already contains an appointee.");
-                }
-                
-
-                return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
             }
+
+            if (duplicateGovernorId.HasValue)
+            {
+
+                var duplicate = await _governorsReadService.GetGovernorAsync(duplicateGovernorId.Value, User);
+                ViewData.Add("DuplicateGovernor", duplicate);
+            }
+
+            if (roleAlreadyExists)
+            {
+                ModelState.AddModelError("role", "The selected role already contains an appointee.");
+            }
+                
+
+            return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
+            
         }
 
         [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupDeleteOrRetireGovernor"), Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabDeleteOrRetireGovernor"), HttpPost]
@@ -201,11 +199,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 // Need to use ASP.NET Core really now; that supports ViewComponents which are apparently the solution.
                 return Task.Run(async () =>
                 {
-                    using (MiniProfiler.Current.Step("Retrieving Governors Details"))
-                    {
-                        viewModel = await CreateGovernorsViewModel(groupUId, establishmentUrn);
-                        return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
-                    }
+                    viewModel = await CreateGovernorsViewModel(groupUId, establishmentUrn);
+                    return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
+                    
                 }).Result;
             }
         }  

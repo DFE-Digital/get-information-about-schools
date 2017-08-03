@@ -1,21 +1,20 @@
 ﻿using Edubase.Common;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
-using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Governors;
+using Edubase.Services.Governors.Downloads;
+using Edubase.Services.Governors.Search;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
+using Edubase.Services.Security;
+using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Models;
-using StackExchange.Profiling;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Edubase.Services.Enums;
-using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Services.Governors.Search;
-using Edubase.Services.Security;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -117,16 +116,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(g => !EnumSets.SharedGovernorRoles.Contains(g.Id)).Select(x => new LookupItemViewModel(x)).ToList();
             model.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
 
-            using (MiniProfiler.Current.Step("Searching governors..."))
-            {
-                var payload = CreateSearchPayload(model);
-                using (MiniProfiler.Current.Step("Searching governors (in text mode)..."))
-                {
-                    var results = await _governorsReadService.SearchAsync(payload, User);
-                    model.Results = results.Items;
-                    if (model.StartIndex == 0) model.Count = results.Count;
-                }
-            }
+            var payload = CreateSearchPayload(model);
+            var results = await _governorsReadService.SearchAsync(payload, User);
+            model.Results = results.Items;
+
+            if (model.StartIndex == 0) model.Count = results.Count;
             
             return View("Index", model);
         }

@@ -10,7 +10,6 @@ using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
-using StackExchange.Profiling;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -56,19 +55,17 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> EditGovernanceMode(int? establishmentUrn, bool failed = false)
         {
             Guard.IsTrue(establishmentUrn.HasValue, () => new InvalidParameterException($"Parameter '{nameof(establishmentUrn)}' is null."));
+            
+            if (failed) ModelState.AddModelError("", "Unable to update Governance");
 
-            using (MiniProfiler.Current.Step("Retrieving Governors Details"))
+            var viewModel = new EditGovernanceModeViewModel
             {
-                if (failed) ModelState.AddModelError("", "Unable to update Governance");
-
-                var viewModel = new EditGovernanceModeViewModel
-                {
-                    Urn = establishmentUrn.Value,
-                    PermissibleGovernanceModes = (await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, User)).Select(x => (eGovernanceMode)x.Id).ToArray()
-                };
-                await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, null, User, x => viewModel.GovernanceMode = x.GovernanceMode ?? eGovernanceMode.LocalGovernors);
-                return View(viewModel);
-            }
+                Urn = establishmentUrn.Value,
+                PermissibleGovernanceModes = (await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, User)).Select(x => (eGovernanceMode)x.Id).ToArray()
+            };
+            await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, null, User, x => viewModel.GovernanceMode = x.GovernanceMode ?? eGovernanceMode.LocalGovernors);
+            return View(viewModel);
+            
         }
 
         /// <summary>
