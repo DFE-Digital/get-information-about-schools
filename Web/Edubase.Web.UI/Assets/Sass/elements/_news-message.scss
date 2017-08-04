@@ -38,3 +38,38 @@
         }
     }
 }
+
+
+.news-page {
+    div.grid-row.news {
+        > div {
+        }
+
+        div.column-two-thirds.news-blog {
+            h2 {
+                margin-top: 0.7em;
+                margin-bottom: 0.7em;
+            }
+        }
+
+        div.column-third.about {
+            hr {
+                background-color: black;
+            }
+
+            h2 {
+                margin-top: 0.7em;
+                margin-bottom: 0.7em;
+            }
+        }
+
+        p.date {
+            color: #6F777B;
+        }
+
+        h1 {
+            margin-bottom: 0;
+        }
+    }
+}
+

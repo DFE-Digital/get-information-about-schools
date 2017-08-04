@@ -1,0 +1,110 @@
+﻿@model IHtmlString
+@{
+    ViewBag.Title = "Edubase";
+    ViewBag.bodyClasses = "news-page";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("News", "News", "Home")
+                </li>
+            </ul>
+        </div>
+        <h1 class="heading-xlarge">Areas with known issues</h1>
+    </div>
+</div>
+<div class="grid-row news">
+    <div class="column-full">
+
+        @*<table class="edubase-table no-pagination">
+            <thead>
+                <tr>
+                    <th>Area</th>
+                    <th>Sub area</th>
+                    <th>Feature</th>
+                    <th>Expected fix date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Search</td>
+                    <td>Find an establishment by name</td>
+                    <td>Search for a closed establishment by partial name</td>
+                    <td>01/08/2017</td>
+                </tr>
+                <tr>
+                    <td class="no-border"></td>
+                    <td class="no-border"></td>
+                    <td>Search for an open establishment by LAESTAB</td>
+                    <td>01/08/2017</td>
+                </tr>
+                <tr>
+                    <td class="no-border"></td>
+                    <td class="no-border"></td>
+                    <td>Search for an open establishment by UKPRN</td>
+                    <td>01/08/2017</td>
+                </tr>
+                <tr>
+                    <td class="no-border"></td>
+                    <td class="no-border"></td>
+                    <td>Search for a closed establishment by LAESTAB</td>
+                    <td>01/08/2017</td>
+                </tr>
+                <tr>
+                    <td class="no-border"></td>
+                    <td></td>
+                    <td>Search for a closed establishment by UKPRN</td>
+                    <td>01/08/2017</td>
+                </tr>
+
+                <tr>
+                    <td class="no-border"></td>
+                    <td rowspan="2">Find an establishment<br />by local authority</td>
+                    <td>Search for one local authority</td>
+                    <td>08/08/2017</td>
+                </tr>
+                <tr>
+                    <td class="no-border"></td>
+                    <td>Search for multiple local authorities</td>
+                    <td>08/08/2017</td>
+                </tr>
+
+                <tr>
+                    <td class="no-border"></td>
+                    <td>Find an establishment group</td>
+                    <td>Search for an establishment group by partial name and select from results</td>
+                    <td>08/08/2017</td>
+                </tr>
+
+                <tr>
+                    <td>Search results</td>
+                    <td>Establishment search results</td>
+                    <td>Filter by numeric filter</td>
+                    <td>15/08/2017</td>
+                </tr>
+                <tr>
+                    <td class="no-border"></td>
+                    <td class="no-border"></td>
+                    <td>Filter by date filter</td>
+                    <td>15/08/2017</td>
+                </tr>
+                <tr>
+                    <td class="no-border"></td>
+                    <td>Governance search results</td>
+                    <td>Go back to search</td>
+                    <td>01/08/2017</td>
+                </tr>
+
+            </tbody>
+        </table>*@
+
+        @Model
+
+    </div>
+</div>

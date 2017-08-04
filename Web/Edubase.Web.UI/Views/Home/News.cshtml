@@ -1,6 +1,7 @@
 ﻿@model IHtmlString
 @{
     ViewBag.Title = "Edubase";
+    ViewBag.bodyClasses = "news-page";
 }
 
 <div class="grid-row">
@@ -16,7 +17,28 @@
     </div>
 </div>
 <div class="grid-row news">
-    @Model
+
+    <div class="column-two-thirds news-blog">
+        <hr />
+        @Model
+    </div>
+
+    <div class="column-third about">
+        <hr />
+
+        <h2 class="bold-medium">About the Get information about schools news</h2>
+        <p>
+            Welcome to the Get information about schools service which will replace the current EduBase system. This service is now available for familiarisation and testing purposes and contains 
+            test and/or historic data only. You should not rely on the data contained in this service, so please continue to make all required changes to live data on the existing EduBase system until we advise otherwise.
+        </p>
+
+        <hr />
+        <h2 class="bold-medium">Development update</h2>
+        <a href="/known-issues">Areas with known issues</a>
+        <br /><br /><hr />
+
+    </div>
+
 </div>
 
 @section ViewScripts {

@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -1024,6 +1024,7 @@
     <Content Include="Views\Shared\FullErrorDetail.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AgeRangeFilterViewModel.cshtml" />
     <Content Include="Views\Shared\_GenericPaginationV2.cshtml" />
+    <Content Include="Views\Home\KnownIssues.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">
