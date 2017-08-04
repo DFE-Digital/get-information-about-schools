@@ -22,7 +22,7 @@ else if (Model.Results.Count > 0)
         @foreach (var result in Model.Results)
                 {
             <li>
-                <h2>@Html.ActionLink(result.Name.Clean() ?? "(name not recorded)", "Details", "Establishment", new { id = result.Urn, area = "", searchQueryString = Model.SearchQueryString }, new { @class = "bold-small" })</h2>
+                <h2>@Html.ActionLink(result.Name.Clean() ?? "(name not recorded)", "Details", "Establishment", new { id = result.Urn, area = "Establishments", searchQueryString = Model.SearchQueryString }, new { @class = "bold-small" })</h2>
                 @if (Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId).Name == "Closed")
                 {
                     <p class="additional-closed">Closed</p>

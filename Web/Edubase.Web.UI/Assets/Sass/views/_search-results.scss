@@ -347,15 +347,25 @@ ul.approval-items{
 }
 
 .clear-selections {
-    display: none;
+    display: none;        
     position: absolute;
-    right: 30px;
-    top: 9px;
-    z-index: 98;
+    top: 36px;
+    left: 82px;
+    z-index: 100;
     font-size: 14px;
 
     &.active-clear {
-        display: block;
+        display: inline-block;
+    }
+
+    &.clear-disabled {
+        color: $grey-1;
+        text-decoration: none;
+    }
+
+    .age-filter & , 
+    .date-filters & {
+        left: 94px;
     }
 }
 
@@ -364,11 +374,21 @@ ul.approval-items{
 
 }
 
+.add-clear-filters {
+    font-size: 14px;
+    display: block;
+    float: left;
+}
 .add-filters-link {
+    margin-bottom: 2em;
+    float: right;
+}
+#filter-addtional-controls {
     display: none;
+
     .js-enabled & {
         display: block;
-        margin-bottom: 2em
+       
     }
 
     &.hidden {
@@ -388,4 +408,14 @@ ul.approval-items{
 
 .govenors-results {
     padding-left: 15px;
+}
+
+.error-summary-list {
+    .hidden {
+        display: none;
+    }
+}
+
+.pending-results-update {
+    @include opacity(0.6);
 }

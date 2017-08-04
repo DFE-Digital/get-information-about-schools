@@ -9,7 +9,8 @@
      */
 
     this.$optionSelect = options.$el;
-    this.$options = this.$optionSelect.find("input[type='checkbox']");
+    this.$options = this.$optionSelect.find(".trigger-result-update").not('.filter-group-title');
+
     this.$labels = this.$optionSelect.find("label");
     this.$optionsContainer = this.$optionSelect.find('.options-container');
     this.$optionList = this.$optionsContainer.children('.js-auto-height-inner');
@@ -68,15 +69,15 @@
   OptionSelect.prototype.attachCheckedCounter = function attachCheckedCounter(){
       if (this.$options.filter(":checked").size() > 0) {
           this.updateCheckedCount();
-          //this.$optionSelect.trigger('countUpdated', { selectedCount: this.$options.filter(":checked").size() });
+          this.$optionSelect.trigger('countUpdated', { selectedCount: this.$options.filter(":checked").size() });
       }
   };
 
   OptionSelect.prototype.updateCheckedCount = function updateCheckedCount(){
-    this.$optionSelect.find('.js-selected-counter').text(this.checkedString());
+    this.$optionSelect.find('.js-selected-counter-text').text(this.checkedString());
   };
 
-  OptionSelect.prototype.checkedString = function checkedString(){
+  OptionSelect.prototype.checkedString = function checkedString() {
     var count = this.$options.filter(":checked").size();
     var checkedString = "";
     if (count > 0){
@@ -100,10 +101,7 @@
   OptionSelect.prototype.open = function open(){
     if (this.isClosed()) {
       this.$optionSelect.find('.js-container-head').attr('aria-expanded', true);
-      this.$optionSelect.removeClass('js-closed');
-      if (!this.$optionsContainer.prop('style').height) {
-        this.setupHeight();
-      }
+      this.$optionSelect.removeClass('js-closed');      
     }
   };
 
@@ -116,7 +114,8 @@
     return this.$optionSelect.hasClass('js-closed');
   };
 
-  OptionSelect.prototype.setContainerHeight = function setContainerHeight(height){
+  OptionSelect.prototype.setContainerHeight = function setContainerHeight(height) {
+
     this.$optionsContainer.css({
       'max-height': 'none', // Have to clear the 'max-height' set by the CSS in order for 'height' to be applied
       'height': height

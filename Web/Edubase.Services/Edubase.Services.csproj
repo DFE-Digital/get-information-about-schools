@@ -125,17 +125,11 @@
       <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MiniProfiler, Version=3.2.0.157, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
-      <HintPath>..\packages\MiniProfiler.3.2.0.157\lib\net40\MiniProfiler.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MoreLinq, Version=2.6.20831.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.2.6.0\lib\net40\MoreLinq.dll</HintPath>
     </Reference>
-    <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
-      <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Linq, Version=1.13.183.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.1.13.183.0\lib\net35\Remotion.Linq.dll</HintPath>
@@ -164,6 +158,9 @@
       <HintPath>..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -178,6 +175,8 @@
     <Compile Include="Approvals\Models\PendingApprovalsResult.cs" />
     <Compile Include="Approvals\Models\PendingChangeRequestAction.cs" />
     <Compile Include="BlobService.cs" />
+    <Compile Include="Core\Pagination.cs" />
+    <Compile Include="Core\IPagination.cs" />
     <Compile Include="DataQuality\DataQualityReadService.cs" />
     <Compile Include="DataQuality\DataQualityWriteService.cs" />
     <Compile Include="DataQuality\IDataQualityReadService.cs" />
@@ -186,13 +185,15 @@
     <Compile Include="Domain\AddressDto.cs" />
     <Compile Include="Domain\AddressLookupResult.cs" />
     <Compile Include="Domain\ApiResponse.cs" />
-    <Compile Include="Domain\ApiSearchResult.cs" />
+    <Compile Include="Domain\ApiPagedResult.cs" />
     <Compile Include="Domain\ApiResultDto.cs" />
+    <Compile Include="Domain\ApiWarningCodes.cs" />
     <Compile Include="Domain\BulkUpdateProgressModel.cs" />
     <Compile Include="Domain\CreateEstablishmentPermissionDto.cs" />
     <Compile Include="Domain\CreateGroupPermissionDto.cs" />
     <Compile Include="Domain\ApiError.cs" />
     <Compile Include="Domain\DownloadDto.cs" />
+    <Compile Include="Domain\EstablishmentLookupDto.cs" />
     <Compile Include="Domain\GroupChangeDto.cs" />
     <Compile Include="Domain\FileDownloadDto.cs" />
     <Compile Include="Domain\NumericResultDto.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
+    <Compile Include="Governors\Downloads\GovernorSearchDownloadPayload.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorAppointment.cs" />
     <Compile Include="Governors\Models\GovernorBulkUpdateValidationResult.cs" />
@@ -242,7 +244,6 @@
     <Compile Include="Domain\CompaniesHouseNumber.cs" />
     <Compile Include="Domain\OfstedRatingUrl.cs" />
     <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
-    <Compile Include="Exceptions\SearchQueryTooLargeException.cs" />
     <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
     <Compile Include="Governors\IGovernorsReadService.cs" />
     <Compile Include="Governors\Models\GovernorModel.cs" />
@@ -353,9 +354,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

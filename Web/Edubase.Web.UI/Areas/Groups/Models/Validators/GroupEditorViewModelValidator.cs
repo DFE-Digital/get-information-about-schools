@@ -48,21 +48,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     {
                         return (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue != null;
                     }).WithMessage("The establishment was not found").WithSummaryMessage("The establishment was not found");
-
-                //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
-                //    .GetResult().EstablishmentTypeGroupId == (int)EG.LAMaintainedSchools)
-                //.WithMessage("Establishment is not LA maintained, please select another one.")
-                //.When(m => m.GroupType == GT.Federation || m.GroupType == GT.Trust, ApplyConditionTo.CurrentValidator)
-
-                //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
-                //    .GetResult().EstablishmentTypeGroupId == (int)EG.Academies)
-                //.WithMessage("Establishment is not an academy, please select another one.")
-                //.When(m => m.GroupType == GT.SchoolSponsor, ApplyConditionTo.CurrentValidator)
-
-                //.MustAsync(async (x, ct) => (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false))
-                //    .GetResult().EstablishmentTypeGroupId.Equals((int)EG.ChildrensCentres))
-                //.WithMessage("Establishment is not a children's centre, please select another one.")
-                //.When(m => m.GroupType == GT.ChildrensCentresCollaboration || m.GroupType == GT.ChildrensCentresGroup, ApplyConditionTo.CurrentValidator);
             });
 
             // Having found an establishment to link, validate the joined date if supplied...
@@ -90,17 +75,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                         .WithMessage("This field is mandatory")
                         .WithSummaryMessage("Please select a local authority for the group")
                         .When(x => x.SaveGroupDetail);
-
-                    // DISABLED RULE: See: https://trello.com/c/dritr0Yx/38-edit-group-childrens-centre-or-collaboration
-                    //RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                    //    .Must((model, x) => model.LinkedEstablishments.Establishments.Count >= 2)
-                    //    .WithMessage("This group requires two or more centres, please add at least two centres")
-                    //    .When(x => x.SaveEstabLinks);
-
-                    //RuleFor(x => x)
-                    //    .Must(x => x.CCLeadCentreUrn.HasValue)
-                    //    .WithMessage("Please select one children's centre to be a group lead")
-                    //    .When(x => x.LinkedEstablishments.Establishments.Count > 0 && x.SaveEstabLinks);
                 });
 
                 RuleFor(x => x.GroupTypeId).NotNull().WithMessage("Group Type must be supplied");
@@ -132,20 +106,14 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
 
                 RuleFor(x => x.GroupId)
+                    .Cascade(CascadeMode.StopOnFirstFailure)
                     .NotEmpty()
                     .WithMessage("This field is mandatory")
                     .WithSummaryMessage("Please enter a Group ID")
-                    .When(x => x.SaveGroupDetail)
-                    
                     .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId: groupId, existingGroupUId: model.GroupUId)))
                     .WithMessage("Group ID already exists. Enter a different group ID.")
-                    .When(x => x.GroupTypeMode.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
+                    .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
 
-                RuleFor(x => x.GroupId)
-                    .Must(x => !string.IsNullOrWhiteSpace(x))
-                    .WithMessage("This field is mandatory")
-                    .WithSummaryMessage("Please enter a Group ID")
-                    .When(x => x.GroupTypeMode == eGroupTypeMode.Sponsor, ApplyConditionTo.CurrentValidator);
             });
         }
 

@@ -1,0 +1,32 @@
+﻿@model AgeRangeFilterViewModel
+
+<div class="govuk-option-select age-filter js-collapsible no-scroll additional-search-critera hidden" data-closed-on-load="false" id="@($"option-select-{ViewData.ModelMetadata.PropertyName}")" data-bind-alias="@(ViewData["bindalias"])">
+
+    <div class="container-head js-container-head">
+        <div class="option-select-label">@(ViewData["title"] ?? "Age range")</div>        
+            <div class="js-selected-counter">
+                <span class="js-selected-counter-text">Age selected</span>
+            </div>
+    </div>
+    <a href="#" class="clear-selections filter-clear">Clear</a>
+    <div class="options-container" id="">
+        <div class="js-auto-height-inner">
+            <div class="form-group date-group">
+                <fieldset class="range-group">
+                    <span class="error-message hidden">Please check the age(s) you have entered</span>
+                    <span class="inline-form-control">
+                        @Html.LabelFor(m => m.From)
+                        @Html.TextBoxFor(m => m.From, new { @class = "form-control", maxlength="2"})
+                    </span>
+                    <span class="inline-form-control">
+                        @Html.LabelFor(m => m.To)
+                        @Html.TextBoxFor(m => m.To, new { @class = "form-control", maxlength="2"})
+                    </span>
+                </fieldset>
+            </div>
+            <div class="form-group">
+                <a href="#" class="button button-grey filter-button">Apply</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -22,14 +22,11 @@
                 width: 12px;
                 text-align: center;
             }
-             *:first-child {
-                margin-left: 1em;
+             .form-control {
+                margin-left: 1.5em;
                 padding-top:4px;
                 display: inline-block;
             }
-        }
-        .form-control {
-            margin-left: 1em;
         }
         strong {
             font-weight: bold;

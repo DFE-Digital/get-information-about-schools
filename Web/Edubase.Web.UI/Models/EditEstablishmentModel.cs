@@ -1,10 +1,10 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Establishments.DisplayPolicies;
-using Edubase.Web.UI.Models.Establishments;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using Edubase.Web.UI.Areas.Establishments.Models;
 
 namespace Edubase.Web.UI.Models
 {
@@ -328,6 +328,9 @@ namespace Edubase.Web.UI.Models
         public int? HelpdeskPreviousEstablishmentNumber { get; set; }
 
         public Dictionary<int, int[]> Type2PhaseMap { get; set; }
+
+        public bool CCIsDemoting { get; set; }
+        public bool CCIsPromoting { get; set; }
 
         public EditEstablishmentModel()
         {

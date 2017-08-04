@@ -30,8 +30,8 @@ namespace Edubase.Services.Texuna.ChangeHistory
             return retVal.ToList();
         }
 
-        public async Task<ApiSearchResult<ChangeHistorySearchItem>> SearchAsync(SearchChangeHistoryBrowsePayload payload, IPrincipal principal)
-            => (await _httpClient.PostAsync<ApiSearchResult<ChangeHistorySearchItem>>("change-history", payload, principal)).GetResponse();
+        public async Task<ApiPagedResult<ChangeHistorySearchItem>> SearchAsync(SearchChangeHistoryBrowsePayload payload, IPrincipal principal)
+            => (await _httpClient.PostAsync<ApiPagedResult<ChangeHistorySearchItem>>("change-history", payload, principal)).GetResponse();
 
         public async Task<List<UserGroupModel>> GetSuggesterGroupsAsync(IPrincipal principal)
             => (await _httpClient.GetAsync<List<UserGroupModel>>("groups/suggesters", principal)).GetResponse();

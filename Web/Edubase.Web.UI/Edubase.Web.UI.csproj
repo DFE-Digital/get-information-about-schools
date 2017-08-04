@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -50,9 +50,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Autofac, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.0.0\lib\net451\Autofac.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Integration.Mvc">
       <HintPath>..\packages\Autofac.Mvc5.4.0.0\lib\net451\Autofac.Integration.Mvc.dll</HintPath>
@@ -85,6 +84,15 @@
     <Reference Include="FluentValidation.Mvc, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.MVC5.6.2.1.0\lib\Net45\FluentValidation.Mvc.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Glimpse.AspNet, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Glimpse.AspNet.1.8.0\lib\net45\Glimpse.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Core, Version=1.8.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Glimpse.1.8.6\lib\net45\Glimpse.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Mvc5, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Glimpse.Mvc5.1.5.3\lib\net45\Glimpse.Mvc5.dll</HintPath>
     </Reference>
     <Reference Include="HttpAuthModule, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HttpAuthModule.2.2.2.0\lib\net45\HttpAuthModule.dll</HintPath>
@@ -147,10 +155,6 @@
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.314.76\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -159,21 +163,11 @@
       <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MiniProfiler, Version=3.2.0.157, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
-      <HintPath>..\packages\MiniProfiler.3.2.0.157\lib\net40\MiniProfiler.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MoreLinq, Version=2.6.20831.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.2.6.0\lib\net40\MoreLinq.dll</HintPath>
     </Reference>
-    <Reference Include="MiniProfiler.Mvc, Version=3.0.11.0, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
-      <HintPath>..\packages\MiniProfiler.MVC4.3.0.11\lib\net40\MiniProfiler.Mvc.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MoreLinq, Version=1.4.18916.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
-      <HintPath>..\packages\morelinq.1.4.0\lib\net35\MoreLinq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -181,10 +175,6 @@
     </Reference>
     <Reference Include="RouteDebugger, Version=2.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\routedebugger.2.1.5\lib\net40\RouteDebugger.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="StackExchange.Profiling.DeepProfiling.Autofac, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MiniProfiler.DeepProfiling.Autofac.2.1.0.8\lib\NET40\StackExchange.Profiling.DeepProfiling.Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -202,6 +192,9 @@
     <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -274,6 +267,14 @@
     <Compile Include="Areas\Establishments\Controllers\AcademyOpeningsController.cs" />
     <Compile Include="Areas\Establishments\Controllers\BulkUpdateController.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
+    <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
+    <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
+    <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
+    <Compile Include="GlimpseSecurityPolicy.cs" />
+    <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
+    <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
+    <Compile Include="Helpers\LayoutHelper.cs" />
+    <Compile Include="Models\AgeRangeFilterViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkUpdateViewModelValidator.cs" />
@@ -331,8 +332,7 @@
     <Compile Include="Controllers\DataQualityController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EduBaseController.cs" />
-    <Compile Include="Controllers\EstablishmentController.cs" />
-    <Compile Include="Controllers\PrototypeController.cs" />
+    <Compile Include="Areas\Establishments\Controllers\EstablishmentController.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IocConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -366,24 +366,24 @@
     <Compile Include="Models\DataQuality\FullDataQualityStatusViewModel.cs" />
     <Compile Include="Models\DataQuality\Validators\DataQualityStatusItemValidator.cs" />
     <Compile Include="Models\DownloadsViewModel.cs" />
-    <Compile Include="Models\Establishments\CreateChildrensCentreViewModel.cs" />
-    <Compile Include="Models\Establishments\CreateEstablishmentViewModel.cs" />
-    <Compile Include="Models\Establishments\EditEstablishmentLinksViewModel.cs" />
-    <Compile Include="Models\Establishments\IEstablishmentPageViewModel.cs" />
-    <Compile Include="Models\Establishments\ReplaceAddressViewModel.cs" />
-    <Compile Include="Models\Establishments\SearchForEstablishmentViewModel.cs" />
-    <Compile Include="Models\Establishments\Validators\CreateEstablishmentViewModelValidator.cs" />
-    <Compile Include="Models\Establishments\Validators\SearchForEstablishmentViewModelValidator.cs" />
-    <Compile Include="Models\Establishments\Validators\EditEstablishmentLinksViewModelValidator.cs" />
+    <Compile Include="Areas\Establishments\Models\CreateChildrensCentreViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\CreateEstablishmentViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\EditEstablishmentLinksViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\IEstablishmentPageViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\ReplaceAddressViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\SearchForEstablishmentViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\Validators\CreateEstablishmentViewModelValidator.cs" />
+    <Compile Include="Areas\Establishments\Models\Validators\SearchForEstablishmentViewModelValidator.cs" />
+    <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentLinksViewModelValidator.cs" />
     <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
     <Compile Include="Models\Grid\GridViewModel.cs" />
+    <Compile Include="Models\HeirarchicalLookupItemViewModel.cs" />
     <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="Models\Validators\ChangeHistoryViewModelValidator.cs" />
-    <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />
     <Compile Include="Validation\AutofacValidatorFactory.cs" />
     <Compile Include="Helpers\FormatHelpers.cs" />
@@ -403,7 +403,7 @@
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
     <Compile Include="Models\EditEstablishmentModel.cs" />
-    <Compile Include="Models\Establishments\TabDisplayPolicy.cs" />
+    <Compile Include="Areas\Establishments\Models\TabDisplayPolicy.cs" />
     <Compile Include="Models\LookupItemViewModel.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\SearchCompaniesHouseModel.cs" />
     <Compile Include="Models\DateTimeViewModel.cs" />
@@ -419,7 +419,7 @@
     <Compile Include="Models\Search\SearchPayloadViewModel.cs" />
     <Compile Include="Models\Search\SearchViewModel.cs" />
     <Compile Include="Models\ToolsViewModel.cs" />
-    <Compile Include="Models\Establishments\Validators\EditEstablishmentModelValidator.cs" />
+    <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentModelValidator.cs" />
     <Compile Include="Models\Validators\DateTimeViewModelValidator.cs" />
     <Compile Include="MvcResult\ChallengeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -428,6 +428,14 @@
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="500.aspx" />
+    <Content Include="500.html" />
+    <Content Include="404.html" />
+    <Content Include="404.aspx" />
+    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
+    <Content Include="public\assets\scripts\**\*.*" />
+    <Content Include="public\assets\stylesheets\**\*.*" />
     <Content Include="App_Data\sa-dev.education.gov.uk-metadata.xml" />
     <Content Include="App_Data\sa-uat.education.gov.uk-metadata.xml" />
     <Content Include="App_Data\sa.education.gov.uk-metadata.xml" />
@@ -451,7 +459,6 @@
     <Content Include="Areas\Governors\Views\Governor\AddEditOrReplace.cshtml" />
     <Content Include="Assets\Sass\views\_change-approvals.scss" />
     <Content Include="Assets\Sass\views\_academy-openings.scss" />
-    <Content Include="Areas\Governors\Views\Governor\EditGovernanceMode.cshtml" />
     <Content Include="Assets\Sass\elements\_tooltips.scss" />
     <Content Include="Assets\Sass\elements\_modal.scss" />
     <Content Include="App_Data\sa-dev.education.gov.uk-certificate.cer" />
@@ -459,12 +466,11 @@
     <Content Include="App_Data\sa.education.gov.uk-certificate.cer" />
     <Content Include="App_Data\edubase3.pfx" />
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
-    <Content Include="App_Data\Kentor.AuthServices.Tests.pfx" />
     <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\SelectSharedGovernor.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\EditSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\SharedGovernor\SelectSharedGovernor.cshtml" />
+    <Content Include="Areas\Governors\Views\SharedGovernor\EditSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
-    <Content Include="Areas\Governors\Views\Governor\GroupEditDelegation.cshtml" />
+    <Content Include="Areas\Governors\Views\GovernanceDelegation\GroupEditDelegation.cshtml" />
     <Content Include="Assets\Sass\elements\forms\_fileupload.scss" />
     <Content Include="Assets\Sass\elements\_autosuggest.scss" />
     <Content Include="App_Data\wildcard-dfe.pfx" />
@@ -477,11 +483,15 @@
     <Content Include="Assets\Sass\views\_cookies.scss" />
     <Content Include="Assets\Sass\elements\_news-message.scss" />
     <Content Include="Assets\Sass\views\_create-academy-trust.scss" />
-    <None Include="Assets\Sass\views\_create-edit-establishment.scss" />
+    <Content Include="Assets\Sass\elements\_filter-form-controls.scss" />
+    <Content Include="Assets\Sass\elements\_filter-radios.scss" />
+    <Content Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
     <Content Include="Assets\Scripts\Elements\expanding-content.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\textCounter.js" />
     <Content Include="Assets\Scripts\Elements\news-message.js" />
+    <Content Include="Assets\Scripts\Elements\Forms\nested-filters.js" />
     <Content Include="Assets\Scripts\Elements\truncated-text.js" />
     <Content Include="Assets\Scripts\standalone\approvals.js" />
     <Content Include="Assets\Scripts\standalone\bulk-create-academies.js" />
@@ -518,7 +528,6 @@
     <Content Include="Assets\Scripts\Views\school-search-form.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -565,6 +574,7 @@
     <Content Include="public\assets\images\ofsted-logo-sm.jpeg" />
     <Content Include="public\assets\images\ofsted-logo-x-small.jpeg" />
     <Content Include="public\assets\images\ofsted-logo.jpg" />
+    <Content Include="public\assets\images\option-select-toggle-child-sprite.png" />
     <Content Include="public\assets\images\option-select-toggle-sprite.png" />
     <Content Include="public\c3\c3.css" />
     <Content Include="public\c3\c3.js" />
@@ -898,6 +908,8 @@
     <Content Include="Assets\Scripts\JSON\localauthorities.js" />
     <Content Include="Assets\Scripts\JSON\academyOpenings.stub.js" />
     <Content Include="Assets\Sass\views\_search-changes.scss" />
+    <Content Include="Areas\Governors\Views\Governance\EditGovernanceMode.cshtml" />
+    <Content Include="fb6k7l-throwex.aspx" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
@@ -912,15 +924,6 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="SqlServerTypes\readme.htm" />
-    <Content Include="SqlServerTypes\x64\msvcr120.dll" />
-    <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll" />
-    <Content Include="SqlServerTypes\x86\msvcr120.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -947,50 +950,48 @@
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
-    <Content Include="Views\Establishment\EditDetails.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditDetails.cshtml" />
     <Content Include="Views\Prototype\Placeholder.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
-    <Content Include="Views\Establishment\Create.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Create.cshtml" />
     <Content Include="Views\Admin\Logs.cshtml" />
     <Content Include="Views\Admin\LogDetail.cshtml" />
-    <Content Include="Views\Shared\Secure.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\Downloads\PreparingScheduledExtractPleaseWait.cshtml" />
     <Content Include="Views\Downloads\ReadyToDownloadScheduledExtract.cshtml" />
     <Content Include="Views\ChangeHistory\Index.cshtml" />
     <Content Include="Views\ChangeHistory\ReadyToDownload.cshtml" />
     <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
-    <Content Include="Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
-    <Content Include="Views\Establishment\ReplaceAddress.cshtml" />
-    <None Include="Views\Establishment\Details.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\AddEditLink_FindEstablishment.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\ReplaceAddress.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\GroupResults.cshtml" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Index.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabDetails.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabIEBT.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabLinks.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabGovernance.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabLocation.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabChangeHistory.cshtml" />
-    <Content Include="Views\Establishment\Partials\Header.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabDetails.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabIEBT.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabLinks.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabGovernance.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabLocation.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabChangeHistory.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\Header.cshtml" />
     <Content Include="Views\Shared\Downloads\SelectFormat.cshtml" />
-    <Content Include="Views\Shared\Downloads\SelectDataset.cshtml" />
+    <Content Include="Areas\Governors\Views\GovernorSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Views\Shared\Downloads\PreparingFilePleaseWait.cshtml" />
     <Content Include="Views\Shared\Downloads\ReadyToDownload.cshtml" />
     <Content Include="Views\Search\LocalAuthorityDisambiguation.cshtml" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_EstablishmentSearchResults.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\Partials\_GroupSearchResults.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
-    <Content Include="Views\Shared\Placeholder.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_GenericPagination.cshtml" />
     <Content Include="Views\Tools\Index.cshtml" />
     <Content Include="Views\Shared\DomainError.cshtml" />
-    <Content Include="Views\Establishment\_EditLayoutPage.cshtml" />
-    <Content Include="Views\Establishment\Partials\_ConfirmChanges.cshtml" />
-    <Content Include="Views\Establishment\EditIEBT.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\_EditLayoutPage.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\_ConfirmChanges.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditIEBT.cshtml" />
     <Content Include="Views\Tools\BulkAcademies.cshtml" />
-    <Content Include="Views\Establishment\EditLocation.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditLocation.cshtml" />
     <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
     <Content Include="Views\Approvals\Index.cshtml" />
@@ -1012,21 +1013,34 @@
     <Content Include="Views\DataQuality\Status.cshtml" />
     <Content Include="Views\DataQuality\EditStatus.cshtml" />
     <Content Include="Views\DataQuality\ViewStatus.cshtml" />
-    <Content Include="Views\Establishment\Partials\TabHelpdesk.cshtml" />
-    <Content Include="Views\Establishment\EditHelpdesk.cshtml" />
-    <Content Include="Views\Establishment\EditLinks.cshtml" />
-    <Content Include="Views\Establishment\AddEditLink.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\TabHelpdesk.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditHelpdesk.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditLinks.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\AddEditLink.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Views\Home\Guidance.cshtml" />
     <Content Include="Views\Home\Cookies.cshtml" />
     <Content Include="Views\Home\News.cshtml" />
     <Content Include="Views\Shared\FullErrorDetail.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\AgeRangeFilterViewModel.cshtml" />
+    <Content Include="Views\Shared\_GenericPaginationV2.cshtml" />
+    <Content Include="Views\Home\KnownIssues.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
+    <None Include="Web.Debug %28QA%29.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Debug-TexunaAPI.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.ReleaseTexunaAPI.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
+    <Folder Include="public\html\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
     <Folder Include="Views\UserRoles\" />
   </ItemGroup>

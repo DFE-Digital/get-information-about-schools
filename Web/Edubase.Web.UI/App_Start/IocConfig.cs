@@ -40,6 +40,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using Edubase.Data.Repositories;
 using Edubase.Services.DataQuality;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI
 {
@@ -81,7 +82,9 @@ namespace Edubase.Web.UI
                 .As<IExceptionLogger>()
                 .SingleInstance();
 
-            builder.RegisterInstance(new JsonConverterCollection() { new DbGeographyConverter() });
+            var dbGeographyConverter = new DbGeographyConverter();
+            var jsonConverterCollection = new JsonConverterCollection() { dbGeographyConverter };
+            builder.RegisterInstance(jsonConverterCollection);
 
             builder.RegisterType<CacheAccessor>()
                 .SingleInstance().As<ICacheAccessor>()
@@ -100,7 +103,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
             builder.RegisterType<GroupDownloadApiService>().As<IGroupDownloadService>();
             builder.RegisterType<LookupApiService>().As<ILookupService>();
-            builder.RegisterInstance(new HttpClient(new HttpClientHandler { UseCookies = false /*, Proxy = new WebProxy(new Uri("http://127.0.0.1:8888"))*/}) { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) }).SingleInstance().AsSelf();
+            builder.RegisterInstance(new HttpClient(new HttpClientHandler { UseCookies = false /*, Proxy = new WebProxy(new Uri("http://127.0.0.1:8888"))*/ }) { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) }).SingleInstance().AsSelf();
             builder.RegisterType<HttpClientWrapper>().SingleInstance().AsSelf();
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
@@ -121,6 +124,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
 
             builder.RegisterType<BlobService>().As<IBlobService>();
+
+            builder.RegisterType<LayoutHelper>();
         }
     }
 }

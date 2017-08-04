@@ -6,6 +6,8 @@
             groupType: '8',
             groupName: '',
             groupNameError: false,
+            groupNameWarningMessage: '',
+            groupNameApiError: '',
 
             groupStatus: 'Open',
             groupLead: '',
@@ -170,8 +172,8 @@
                         dataType: 'json',
                         data: JSON.stringify(validationObj),
                         success: function (data) {
-                            if (data.length > 0) {
-                                $(data).each(function (n, error) {
+                            if (data.HasErrors) {
+                                $(data.Errors).each(function (n, error) {
                                     var o = {};
                                     /// if error.Fields contains a digit, it's a problem with an estab -> look up URN
                                     if (/\d/.test(error.Fields)) {
@@ -194,6 +196,7 @@
                 $.when(validate()).done(function () {
                    
                     if (self.apiErrors.length === 0) {
+                        $('#processed-warnings').val(true);
                         for (i = 0; i < len; i++) {
                             var centre = centres[i];
                             for (var j = 0, fLen = fields.length; j < fLen; j++) {
@@ -323,8 +326,8 @@
                     dataType: 'json',
                     data: JSON.stringify(validationObj),
                     success: function (data) {
-                        if (data.length > 0) {
-                            $(data).each(function(n, error) {
+                        if (data.HasErrors > 0) {
+                            $(data.Errors).each(function(n, error) {
                                 var o = {};
                                 // ensure that only URN errors are included 
                                 // and ignore the message about the number of establishments in the group - this validation of a single URN
@@ -413,9 +416,41 @@
                 $.when(this.validateDate('openDate')).done(function () {
                     self.groupNameError = $.trim(self.groupName) === '';
                     self.laError = self.la === '';
-
+                    self.groupNameApiError = '';
                     if (!self.groupNameError && !self.laError && !self.openDateError) {
-                        self.appState = 'addCentre';
+                        self.isProcessing = true;
+                        var validationObj = {
+                            'groupTypeId': self.groupType,
+                            'name': self.groupName,
+                            'openDate': [self.openDateYear, self.openDateMonth, self.openDateDay].join('-'),
+                            'localAuthorityId': self.la,
+                            "establishments": []
+                        };
+                        $.ajax({
+                            url: self.validateUrl,
+                            method: 'post',
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            data: JSON.stringify(validationObj),
+                            success: function(data) {
+                                //
+                                console.log(JSON.stringify(data));
+                                if (data.HasErrors) {
+                                    self.groupNameApiError = data.Errors[0].Message;
+                                } else if (data.HasWarnings) {
+                                    self.groupNameWarningMessage =
+                                        " <strong>There is already a group with a similar name:</strong><br> " +
+                                        data.Warnings[0].MessageParameters[0] +
+                                        ', <strong>UID:</strong> ' +
+                                        data.Warnings[0].MessageParameters[1];
+                                }
+
+                                if (!data.HasErrors) {
+                                    self.appState = 'addCentre';
+                                }
+                                self.isProcessing = false;
+                            }
+                        });
                     }
                 });
 

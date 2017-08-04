@@ -1,16 +1,14 @@
-﻿@using Edubase.Services.Enums
-@using Edubase.Common;
+﻿@using Edubase.Common;
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @model VM
 @{
-    //ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
     ViewBag.Title = Model.PageTitle;
     Layout = "_EditLayoutPage.cshtml";
 }
 
-@using (Html.BeginForm("EditGroup", "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.GroupTypeMode)
@@ -18,6 +16,7 @@
     @Html.HiddenFor(x => x.SelectedTabName)
     @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
     @Html.HiddenFor(x => x.AddressJsonToken)
+    @Html.HiddenFor(x => x.ProcessedWarnings)
 
     <div class="grid-row">
         <div class="column-full">
@@ -122,8 +121,9 @@
 
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SchoolSponsor))
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.GroupId)">
                         <label for="groupid">Group ID</label>
+                        @Html.ValidationMessageFor(x => x.GroupId)
                         @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
                     </div>
                 }
@@ -139,10 +139,19 @@
             <br />
 
             @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
-            <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
+            <button type="submit" name="action" class="button mobile-full-width" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
             
         </div>
     </div>
+
+    <div class="grid-row">
+        <div class="column-full">
+            @Html.Partial("Warnings")
+        </div>
+    </div>
+
+
+
 }
 @section ViewScripts
 {
@@ -157,5 +166,21 @@
 
         });
 
+        (function () {
+            var mask = $('#warning-modal-overlay');
+            var modal = $('#warning-modal-content');
+
+            $('#warning-exit-overlay, #overlay-cancel').on('click',
+                function (e) {
+                    e.preventDefault();
+                    mask.addClass('hidden');
+                    modal.addClass('hidden');
+                });
+
+            $('#overlay-proceed').on('click',
+                function (e) {
+                    $('#edit-submit').click();
+                });
+        }());
     </script>
 }

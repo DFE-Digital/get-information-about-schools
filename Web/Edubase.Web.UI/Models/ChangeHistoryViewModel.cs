@@ -38,7 +38,7 @@ namespace Edubase.Web.UI.Models
         public string SearchType { get; set; }
         public bool IsGroupSearch => SearchType == "group";
         public bool IsEstablishmentSearch => SearchType == "establishment";
-        public ApiSearchResult<ChangeHistorySearchItem> Results { get; internal set; }
+        public ApiPagedResult<ChangeHistorySearchItem> Results { get; internal set; }
         public long Count => (Results?.Count).GetValueOrDefault();
         public int PageSize { get; set; } = 100;
         public int StartIndex { get; set; }

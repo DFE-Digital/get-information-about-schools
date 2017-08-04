@@ -9,7 +9,6 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Models;
-using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,36 +99,32 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
                 model.GroupStatuses = (await _lookupService.GroupStatusesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
 
-                using (MiniProfiler.Current.Step("Searching groups..."))
-                {
-                    ApiSearchResult<SearchGroupDocument> results = null;
-                    if (text != null) results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
+                ApiPagedResult<SearchGroupDocument> results = null;
+                if (text != null) results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
 
-                    if (results != null && results.Count > 0)
-                    {
-                        model.Results.Add(results.Items[0]);
-                        model.Count = 1;
-                    }
-                    else
-                    {
-                        var payload = CreateSearchPayload(model);
-                        using (MiniProfiler.Current.Step("Searching groups (in text mode)..."))
-                        {
-                            results = await _groupReadService.SearchAsync(payload, User);
-                            model.Results = results.Items;
-                            if (model.StartIndex == 0) model.Count = results.Count;
-                        }
-                    }
+                if (results != null && results.Count > 0)
+                {
+                    model.Results.Add(results.Items[0]);
+                    model.Count = 1;
+                }
+                else
+                {
+                    var payload = CreateSearchPayload(model);
+                    results = await _groupReadService.SearchAsync(payload, User);
+                    model.Results = results.Items;
+                    if (model.StartIndex == 0) model.Count = results.Count;
+
                 }
 
-                if (model.Count == 1)  return RedirectToDetailPage(model.Results.Single().GroupUId);
+
+                if (model.Count == 1) return RedirectToDetailPage(model.Results.Single().GroupUId);
 
                 return View("GroupResults", model);
 
             }
         }
 
-        private ActionResult RedirectToDetailPage(int id) 
+        private ActionResult RedirectToDetailPage(int id)
             => new RedirectToRouteResult(null, new RouteValueDictionary { { "action", "Details" }, { "controller", "Group" }, { "id", id }, { "area", "Groups" } });
 
         private GroupSearchPayload CreateSearchPayload(GroupSearchViewModel model) => new GroupSearchPayload(model.StartIndex, model.PageSize)

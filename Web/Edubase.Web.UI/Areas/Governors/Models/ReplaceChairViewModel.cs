@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Edubase.Services.Enums;
+using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models;
-using Edubase.Web.UI.Models.Establishments;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {

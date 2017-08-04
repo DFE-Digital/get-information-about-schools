@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Edubase.Services.Groups.Downloads;
-using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
@@ -19,21 +17,17 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Filters;
     using Models.CreateEdit;
     using Models.Validators;
+    using MoreLinq;
     using Services.Domain;
-    using Services.Governors;
+    using Services.Enums;
+    using Services.Exceptions;
     using Services.Groups.Models;
     using Services.IntegrationEndPoints.CompaniesHouse;
-    using StackExchange.Profiling;
-    using UI.Models;
-    using GT = Services.Enums.eLookupGroupType;
-    using Services.Exceptions;
-    using static Models.CreateEdit.GroupEditorViewModelBase;
-    using static Models.CreateEdit.GroupEditorViewModel;
-    using Services.Enums;
-    using Governors.Models;
     using Services.Nomenclature;
-    using Services.Governors.Models;
-    using MoreLinq;
+    using UI.Models;
+    using static Models.CreateEdit.GroupEditorViewModel;
+    using static Models.CreateEdit.GroupEditorViewModelBase;
+    using GT = Services.Enums.eLookupGroupType;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -42,10 +36,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
         private readonly ISecurityService _securityService;
-        private readonly IGovernorsReadService _governorsReadService;
         private readonly IGroupsWriteService _groupWriteService;
         private readonly ICompaniesHouseService _companiesHouseService;
-        private readonly IGroupDownloadService _groupDownloadService;
         private readonly NomenclatureService _nomenclatureService;
         
         public GroupController(
@@ -53,26 +45,22 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             ISecurityService securityService,
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
-            IGovernorsReadService governorsReadService,
             IGroupsWriteService groupWriteService,
             ICompaniesHouseService companiesHouseService,
-            IGroupDownloadService groupDownloadService,
             NomenclatureService nomenclatureService)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
             _groupReadService = groupReadService;
             _establishmentReadService = establishmentReadService;
-            _governorsReadService = governorsReadService;
             _groupWriteService = groupWriteService;
             _companiesHouseService = companiesHouseService;
             _nomenclatureService = nomenclatureService;
-            _groupDownloadService = groupDownloadService;
         }
 
 
         [Route(nameof(Details) + "/{id:int}", Name ="GroupDetails"), HttpGet]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups, int skip = 0)
         {
             var model = (await _groupReadService.GetAsync(id, User)).GetResult();
 
@@ -91,20 +79,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (viewModel.IsUserLoggedOn)
             {
-                using (MiniProfiler.Current.Step("Retrieving change history"))
-                    viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, 20, User);
+                viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, skip, 100, User);
             }
 
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value, true);
             
             return View(viewModel);
-        }
-
-        [HttpPost, EdubaseAuthorize, Route("Governance/Confirm/{uid:int}", Name = "GroupGovernanceConfirmUpToDate")]
-        public async Task<ActionResult> GroupGovernanceConfirmUpToDateAsync(int uid)
-        {
-            await _groupWriteService.ConfirmGovernanceAsync(uid, User);
-            return RedirectToRoute("GroupDetails", new { id = uid });
         }
 
         [HttpGet]
@@ -159,7 +139,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             await ValidateAsync(viewModel);
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
@@ -219,7 +199,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             await ValidateAsync(viewModel);
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
@@ -229,6 +209,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             return View("EditDetails", viewModel);
         }
+
 
         /// <summary>
         /// Does 2nd-level validation
@@ -241,8 +222,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var dto = CreateSaveDto(viewModel);
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
-                //validationEnvelope.Warnings.ForEach(x => ModelState.AddModelError(x.Fields, x.Message));
                 validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                viewModel.SetWarnings(validationEnvelope);
+                ModelState.Remove(nameof(viewModel.ProcessedWarnings));
             }
         }
 
@@ -288,7 +270,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
         
-
         [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
@@ -305,7 +286,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             return View(viewModel);
         }
-
 
         [HttpGet, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
         public async Task<ActionResult> CreateAcademyTrust(string companiesHouseNumber)
@@ -510,17 +490,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     TypeName = establishmentGroup.TypeName,
                     HeadTitleName = establishmentGroup.HeadTitle,
                     JoinedDate = establishmentGroup.JoinedDate,
-                    CCIsLeadCentre = establishmentGroup.CCIsLeadCentre ?? false
+                    CCIsLeadCentre = establishmentGroup.CCIsLeadCentre ?? false,
+                    LAESTAB = establishmentGroup.LAESTAB,
+                    LocalAuthorityName = establishmentGroup.LocalAuthorityName,
+                    PhaseName = establishmentGroup.PhaseName,
+                    StatusName = establishmentGroup.StatusName
                 });
             }
         }
 
-
-        [HttpGet, EdubaseAuthorize, Route("Download/ChangeHistory/{downloadType}/{id}")]
-        public async Task<ActionResult> DownloadChangeHistory(int id, DownloadType downloadType)
-        {
-            var response = await _groupDownloadService.DownloadGroupHistory(id, downloadType, User);
-            return Redirect(response.Url);
-        }
     }
 }

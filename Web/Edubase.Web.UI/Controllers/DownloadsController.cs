@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.WindowsAzure.Storage;
-using System.Configuration;
 using Edubase.Services.Downloads;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 using Edubase.Web.UI.Models;
 using Newtonsoft.Json;
 using Edubase.Services.Domain;
+using Edubase.Services.Enums;
+using Edubase.Services.Establishments;
+using Edubase.Services.Groups.Downloads;
+using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -18,21 +17,25 @@ namespace Edubase.Web.UI.Controllers
     public class DownloadsController : Controller
     {
         private readonly IDownloadsService _downloadsService;
+        private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly IGroupDownloadService _groupDownloadService;
 
-        public DownloadsController(IDownloadsService downloadsService)
+        public DownloadsController(IDownloadsService downloadsService, IEstablishmentReadService establishmentReadService, IGroupDownloadService groupDownloadService)
         {
             _downloadsService = downloadsService;
+            _establishmentReadService = establishmentReadService;
+            _groupDownloadService = groupDownloadService;
         }
         
         public async Task<ActionResult> Index(int? startIndex)
         {
-            const int PAGE_SIZE = 100;
+            const int pageSize = 100;
             var viewModel = new DownloadsViewModel
             {
                 Downloads = await _downloadsService.GetListAsync(User),
-                ScheduledExtracts = await _downloadsService.GetScheduledExtractsAsync((startIndex.GetValueOrDefault() / PAGE_SIZE), PAGE_SIZE, User),
-                Skip = startIndex.GetValueOrDefault() / PAGE_SIZE,
-                Take = PAGE_SIZE
+                ScheduledExtracts = await _downloadsService.GetScheduledExtractsAsync((startIndex.GetValueOrDefault() / pageSize), pageSize, User),
+                Skip = startIndex.GetValueOrDefault() / pageSize,
+                Take = pageSize
             };
 
             return View(viewModel);
@@ -65,6 +68,27 @@ namespace Edubase.Web.UI.Controllers
                 return View("PreparingScheduledExtractPleaseWait", model);
 
             return View("ReadyToDownloadScheduledExtract", model);
+        }
+
+        [HttpGet, Route("Download/{downloadType}/{id}")]
+        public async Task<ActionResult> DownloadEstablishmentData(int id, DownloadType downloadType)
+            => Redirect((await _establishmentReadService.GetDownloadAsync(id, downloadType, User)).Url);
+
+        [HttpGet, EdubaseAuthorize]
+        [Route("Download/ChangeHistory/{downloadType}")]
+        public async Task<ActionResult> DownloadChangeHistory(int? groupId, int? establishmentUrn, DownloadType downloadType)
+        {
+            if (groupId != null)
+            {
+                return Redirect((await _groupDownloadService.DownloadGroupHistory(groupId.Value, downloadType, User)).Url);
+            }
+
+            if (establishmentUrn != null)
+            {
+                return Redirect((await _establishmentReadService.GetChangeHistoryDownloadAsync(establishmentUrn.Value, downloadType, User)).Url);
+            }
+
+            return null;
         }
     }
 }

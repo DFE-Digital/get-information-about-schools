@@ -58,6 +58,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public const string BIND_ALIAS_SELECTED_SEARCH_FILTERS = "y";
         public const string BIND_ALIAS_SORT_BY = "z";
         public const string BIND_ALIAS_RADIUS = "aa";
+        public const string BIND_ALIAS_CLOSE_DATE_FROM = "1";
+        public const string BIND_ALIAS_CLOSE_DATE_TO = "2";
+        public const string BIND_ALIAS_AGE_RANGE_LOW_FROM = "3";
+        public const string BIND_ALIAS_AGE_RANGE_HIGH_FROM = "4";
+        public const string BIND_ALIAS_OFSTEDRATINGS = "5";
+        public const string BIND_ALIAS_OPEN_DATE_FROM = "6";
+        public const string BIND_ALIAS_OPEN_DATE_TO = "7";
         #endregion
 
         public enum eTextSearchType
@@ -133,7 +140,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         [BindAlias(BIND_ALIAS_SELECTED_SEARCH_FILTERS)]
         public string SelectedExtraSearchFilters { get; set; }
 
-        public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; }
+        public IEnumerable<HeirarchicalLookupItemViewModel> EstablishmentTypes { get; set; }
 
         [BindAlias(BIND_ALIAS_TYPEIDS)]
         public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();
@@ -240,14 +247,35 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public List<int> SelectedUrbanRuralIds { get; set; } = new List<int>();
         public IEnumerable<LookupItemViewModel> UrbanRuralDesignations { get; set; }
 
-        
+        [BindAlias(BIND_ALIAS_OFSTEDRATINGS)]
+        public List<int> SelectedOfstedRatingIds { get; set; } = new List<int>();
+        public IEnumerable<LookupItemViewModel> OfstedRatings { get; set; }
 
-        
+
+
         /// <summary>
         /// When one result is found, whether to redirect the user to the detail page
         /// </summary>
         [BindAlias(BIND_ALIAS_GOONERES)]
         public bool GoToDetailPageOnOneResult { get; set; }
+
+        [BindAlias(BIND_ALIAS_CLOSE_DATE_FROM)]
+        public DateTimeViewModel CloseDateFrom { get; set; }
+
+        [BindAlias(BIND_ALIAS_CLOSE_DATE_TO)]
+        public DateTimeViewModel CloseDateTo { get; set; }
+
+        [BindAlias(BIND_ALIAS_OPEN_DATE_FROM)]
+        public DateTimeViewModel OpenDateFrom { get; set; }
+
+        [BindAlias(BIND_ALIAS_OPEN_DATE_TO)]
+        public DateTimeViewModel OpenDateTo { get; set; }
+
+        [BindAlias(BIND_ALIAS_AGE_RANGE_LOW_FROM)]
+        public AgeRangeFilterViewModel AgeRangeLow { get; set; }
+
+        [BindAlias(BIND_ALIAS_AGE_RANGE_HIGH_FROM)]
+        public AgeRangeFilterViewModel AgeRangeHigh { get; set; }
 
         #endregion
 

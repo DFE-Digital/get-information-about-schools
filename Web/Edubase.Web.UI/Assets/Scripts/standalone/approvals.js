@@ -27,7 +27,7 @@
             },
             methods: {
                 detailUrl: function (urn) {
-                    return '/Establishment/Details/' + urn;
+                    return '/Establishments/Establishment/Details/' + urn;
                 },
                 formatDate: function (utcDate) {
                     if (utcDate === null) {
@@ -57,11 +57,13 @@
                 pendingRejection: false,
                 itemsConfirmedRemoved: false,
                 itemsConfirmedRejected: false,
-                isProcessing: true
+                isProcessing: true,
+                apiError: ''
 
             },
             created: function() {
                 this.getChangesData();
+                
             },
             computed: {
                 pageCount: function () {
@@ -84,7 +86,9 @@
                 getChangesData: function (skip, callback) {
                     var self = this;
                     this.isProcessing = true;
+
                     $('#changes-table').find(':checkbox').prop('checked', false);
+                    
                     $.ajax({
                         url: defaults.apiUrl,
                         data: {
@@ -110,7 +114,11 @@
                 rejectSuccessCallBack: function() {
                     this.pendingRejection = false;
                     this.itemsConfirmedRejected = true;
-                    document.getElementById('reason').value = '';
+                    this.reason = '';
+                    window.setTimeout(function() {
+                        $("#reason").data().textCount.setCount();
+                    },0);
+                    
                 },
                 updateCount: function (removedCount) {
                     this.currentCount = this.currentCount - removedCount;
@@ -122,8 +130,9 @@
                 },
                 confirmRejection: function () {
                     var self = this;
+                    this.apiError = '';
                     this.invalidReason = $('#reason').val().length < 1;
-                    this.reasonLength = $('#reason').val().length > 1000;
+                    this.reasonLength = $('#reason').val().length > 1024;
 
                     var selectedItems = $('#changes-table').find('.boldened-checkbox')
                         .filter(':checked');
@@ -153,16 +162,20 @@
                                 self.getChangesData(0, self.rejectSuccessCallBack);
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                alert('There was an error rejecting the changes - see the console for details');                              
-                                console.log('textStatus== ' + textStatus + '\n\n');
-                                console.log('errorThrown==' + errorThrown + '\n\n');
-                                console.log(jqXHR.responseText + '\n\n');
+                                var responses = JSON.parse(jqXHR.responseText);
+                                var messages = [];
+                                for (var i = 0, len = responses.length; i < len; i++) {
+                                    messages.push(responses[i].message);
+                                }
+                                self.apiError = messages.join('<br>');
+                                self.isProcessing = false;
                             }
                         });                       
                     }
                 },
                 approveSelection: function () {
                     var self = this;
+                    this.apiError = '';
                     var selectedItems = $('#changes-table').find('.boldened-checkbox')
                         .filter(':checked');
 
@@ -194,11 +207,13 @@
                                 
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                alert('There was an error approving the changes - see the console for details');
-                                console.log('textStatus== '+textStatus);
-                                console.log('errorThrown=='+ errorThrown);
-                                console.log(jqXHR);
-
+                                var responses = JSON.parse(jqXHR.responseText);
+                                var messages =[];
+                                for (var i = 0, len = responses.length; i < len; i++) {
+                                    messages.push(responses[i].message);
+                                }
+                                self.apiError = messages.join('<br>');
+                                self.isProcessing = false;
                             }
                         });                      
                     }
@@ -206,4 +221,6 @@
             }
         });
 
+
+    $('#reason').textCount({ maxLength: 1024 });
 }());

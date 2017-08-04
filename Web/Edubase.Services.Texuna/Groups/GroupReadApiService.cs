@@ -8,6 +8,7 @@ using Edubase.Services.Groups.Search;
 using System.Security.Principal;
 using Edubase.Services.Texuna.Models;
 using System.Linq;
+using Edubase.Services.Core;
 
 namespace Edubase.Services.Texuna.Groups
 {
@@ -51,43 +52,27 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<bool> CanEditAsync(int uid, IPrincipal principal) => (await _httpClient.GetAsync<BoolResult>($"group/{uid}/canedit", principal)).GetResponse().Value;
 
-        public Task<GroupModel> GetByEstablishmentUrnAsync(int urn, IPrincipal principal)
+        public async Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, IPrincipal principal)
         {
-            throw new NotImplementedException($"NOT REQUIRED; {nameof(GroupReadApiService)}::{nameof(GetByEstablishmentUrnAsync)}");
+            var changes = (await _httpClient.GetAsync<ApiPagedResult<GroupChangeDto>>($"group/{uid}/changes?skip={skip}&take={take}", principal)).GetResponse(); 
+            return new PaginatedResult<GroupChangeDto>(skip, take, changes.Count, changes.Items);
         }
-
-        public async Task<IEnumerable<GroupChangeDto>> GetChangeHistoryAsync(int uid, int take, IPrincipal principal) =>
-            (await _httpClient.GetAsync<List<GroupChangeDto>>($"group/{uid}/changes?take={take}", principal)).Response;
-
+            
         public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal, bool includeFutureDated = false) 
             => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments?editMode={includeFutureDated}", principal)).GetResponse();
 
-        public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model)
+
+        public async Task<ApiPagedResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {
-            throw new NotImplementedException($"{nameof(GroupReadApiService)}::{nameof(GetModelChangesAsync)}");
+            return (await _httpClient.PostAsync<ApiPagedResult<SearchGroupDocument>>("group/search", payload, principal)).GetResponse();
         }
 
-        public Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel original, GroupModel model)
+        public async Task<ApiPagedResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
         {
-            throw new NotImplementedException($"{nameof(GroupReadApiService)}::{nameof(GetModelChangesAsync)}");
-        }
-
-        public Task<int[]> GetParentGroupIdsAsync(int establishmentUrn, IPrincipal principal)
-        {
-            throw new NotImplementedException($"NOT REQUIRED POST INT: {nameof(GroupReadApiService)}::{nameof(GetParentGroupIdsAsync)}");
-        }
-
-        public async Task<ApiSearchResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
-        {
-            return (await _httpClient.PostAsync<ApiSearchResult<SearchGroupDocument>>("group/search", payload, principal)).Response;
-        }
-
-        public async Task<ApiSearchResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, IPrincipal principal)
-        {
-            return (await _httpClient.GetAsync<ApiSearchResult<SearchGroupDocument>>(string.Concat("group/searchbyids?",
+            return (await _httpClient.GetAsync<ApiPagedResult<SearchGroupDocument>>(string.Concat("group/searchbyids?",
                 groupId.UrlTokenize("groupId"), 
                 groupUId.UrlTokenize("groupUId"), 
-                companiesHouseNumber.UrlTokenize("companiesHouseNumber")), principal)).Response;
+                companiesHouseNumber.UrlTokenize("companiesHouseNumber")), principal)).GetResponse();
         }
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)

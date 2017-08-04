@@ -1,0 +1,290 @@
+﻿@model CreateChildrensCentreViewModel
+@{
+    ViewBag.Title = "Edubase: Create a new establishment";
+    ViewBag.bodyClasses = "create-establishment";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+<div id="create-establishment">
+    <div class="grid-row">
+        <div class="column-full">
+            <h1 class="heading-intro" id="title">
+                Create an establishment
+            </h1>
+
+            @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="column-full top-button-panel">
+                <div class="submit-cancel-panel">
+                    <button type="submit" name="action" value="" class="button mobile-full-width">Create</button>
+                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width">Cancel</button>
+                </div>
+            </div>
+
+            <div class="column-half">
+                <h2 class="heading-medium">New establishment</h2>
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.Name)">
+                    @Html.LabelFor(x => x.Name, "Establishment name")
+                    @Html.ValidationMessageFor(x => x.Name)
+                    @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                </div>
+
+                <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                    @Html.LabelFor(x => x.LocalAuthorityId, "Local authority", new { @class = "form-label" })
+                    @Html.ValidationMessageFor(x => x.LocalAuthorityId)
+                    @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "form-control" })
+                </div>
+                
+                <div id="establishment-type-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
+                    @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "form-label" })
+                    @Html.ValidationMessageFor(x => x.EstablishmentTypeId)
+                    @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
+                </div>
+                
+                <div id="establishment-phase-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                    @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "form-label" })
+                    @Html.ValidationMessageFor(x => x.EducationPhaseId)
+                    @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "form-control" })
+                </div>
+
+                <div class="childrens-centre-fields" style="display:none">
+                    @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)"})
+                
+                    @Html.EditorFor(m => m.Address)
+                
+                    <h2 class="heading-medium">Contact details</h2>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.ManagerFirstName)">
+                        @Html.LabelFor(x => x.ManagerFirstName)
+                        @Html.ValidationMessageFor(x => x.ManagerFirstName)
+                        @Html.TextBoxFor(x => x.ManagerFirstName, new { @class = "form-control" })
+                    </div>
+                
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.ManagerLastName)">
+                        @Html.LabelFor(x => x.ManagerLastName)
+                        @Html.ValidationMessageFor(x => x.ManagerLastName)
+                        @Html.TextBoxFor(x => x.ManagerLastName, new { @class = "form-control" })
+                    </div>
+                
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.CentreEmail)">
+                        @Html.LabelFor(x => x.CentreEmail)
+                        @Html.ValidationMessageFor(x => x.CentreEmail)
+                        @Html.TextBoxFor(x => x.CentreEmail, new { @class = "form-control" })
+                    </div>
+                
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.Telephone)">
+                        @Html.LabelFor(x => x.Telephone)
+                        @Html.ValidationMessageFor(x => x.Telephone)
+                        @Html.TextBoxFor(x => x.Telephone, new { @class = "form-control" })
+                    </div>
+                
+                    <h2 class="heading-medium">Further details</h2>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.OperationalHoursId)">
+                        @Html.LabelFor(x => x.OperationalHoursId, new { @class = "form-label" })
+                        @Html.ValidationMessageFor(x => x.OperationalHoursId)
+                        @Html.DropDownListFor(x => x.OperationalHoursId, Model.OperationalHoursOptions, "Please select", new { @class = "form-control" })
+                    </div>
+                
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.NumberOfUnderFives)">
+                        @Html.LabelFor(x => x.NumberOfUnderFives)
+                        @Html.ValidationMessageFor(x => x.NumberOfUnderFives)
+                        @Html.TextBoxFor(x => x.NumberOfUnderFives, new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.GovernanceId)">
+                        @Html.LabelFor(x => x.GovernanceId, new { @class = "form-label" })
+                        @Html.ValidationMessageFor(x => x.GovernanceId)
+                        @Html.DropDownListFor(x => x.GovernanceId, Model.GovernanceOptions, "Please select", new { @class = "form-control" })
+                    </div>
+                
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.GovernanceDetail)">
+                        @Html.LabelFor(x => x.GovernanceDetail)
+                        @Html.ValidationMessageFor(x => x.GovernanceDetail)
+                        @Html.TextBoxFor(x => x.GovernanceDetail, new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.PhaseId)">
+                        @Html.LabelFor(x => x.PhaseId)
+                        @Html.ValidationMessageFor(x => x.PhaseId)
+                        @Html.DropDownListFor(x => x.PhaseId, Model.Phases, "Please select", new { @class = "form-control", disabled="disabled" })
+                    </div>
+
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.DisadvantagedAreaId)">
+                        @Html.LabelFor(x => x.DisadvantagedAreaId, new { @class = "form-label" })
+                        @Html.ValidationMessageFor(x => x.DisadvantagedAreaId)
+                        @Html.DropDownListFor(x => x.DisadvantagedAreaId, Model.DisadvantagedAreaOptions, "Please select", new { @class = "form-control" })
+                    </div>
+                
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.DirectProvisionOfEarlyYears)">
+                        @Html.LabelFor(x => x.DirectProvisionOfEarlyYears, new { @class = "form-label" })
+                        @Html.ValidationMessageFor(x => x.DirectProvisionOfEarlyYears)
+                        @Html.DropDownListFor(x => x.DirectProvisionOfEarlyYears, Model.DirectProvisionOfEarlyYearsOptions, "Please select", new { @class = "form-control" })
+                    </div>
+                
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentStatusId)">
+                        @Html.LabelFor(x => x.EstablishmentStatusId, new { @class = "form-label" })
+                        @Html.ValidationMessageFor(x => x.EstablishmentStatusId)
+                        @Html.DropDownListFor(x => x.EstablishmentStatusId, Model.EstablishmentStatusOptions, "Please select", new { @class = "form-control" })
+                    </div>
+                </div>
+
+            </div>
+            <div class="column-full" id="number-gen-options">
+                <fieldset class="inline create-estab-number-gen">
+                    <legend class="bold-small">Establishment number</legend>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
+                        @Html.ValidationMessageFor(x => x.GenerateEstabNumber)
+                        <label class="block-label selection-button-radio" for="generate-number-radio">
+                            @Html.RadioButtonFor(x => x.GenerateEstabNumber, true, new { id = "generate-number-radio" })
+                            Generate number
+                        </label>
+
+                        <label class="block-label selection-button-radio" for="enter-number-radio">
+                            @Html.RadioButtonFor(x => x.GenerateEstabNumber, false, new { id = "enter-number-radio" })
+                            Enter number
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div id="enter-number" class="column-half">
+                <div id="enter-number-form-group" class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                    @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number")
+                    @Html.ValidationMessageFor(x => x.EstablishmentNumber)
+                    @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="column-full">
+                <div class="submit-cancel-panel">
+                    <button type="submit" name="action" value="" class="button mobile-full-width">Create</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-grey cancel mobile-full-width" })
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section ViewScripts {
+    <script type="text/javascript">
+
+        var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
+        var phases = @Html.Json(Model.EducationPhases);
+        var $typeSelector = $("#EstablishmentTypeId");
+        var $phaseSelector = $("#EducationPhaseId");
+
+        $(function() {
+            var $radios = $('#number-gen-options').find(':radio');
+            var $enterNumber = $("#enter-number");
+
+            var func = function() {
+                if ($radios.filter(':checked').val() === 'False') {
+                    $enterNumber.show();
+                } else {
+                    $enterNumber.hide();
+                }
+            };
+
+            $radios.on('change', func);
+
+            func();
+
+            filterEstablishmentPhaseList();
+            $("select#EstablishmentTypeId").on("change keyup", filterEstablishmentPhaseList);
+        });
+
+
+        var $fields = $('#content').find('.form-control');
+        var exitAttached = false;
+
+        $fields.on('change',
+            function() {
+                if (!exitAttached) {
+                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                    exitAttached = true;
+                }
+            });
+
+        if ($typeSelector.val() == "") $phaseSelector.prop('disabled', 'disabled');
+        $typeSelector.on('change',
+            function() {
+                $phaseSelector.removeAttr('disabled');
+            });
+
+        function filterEstablishmentPhaseList() {
+
+            var optionList = '<option value="">Please select</option>';
+            var typeId = $typeSelector.val();
+            var previousSelValue = (typeId === "41" ? "1" : $phaseSelector.val());
+            if (!isNaN(typeId)) {
+                var applicablePhases = type2PhaseMap[typeId];
+                if (applicablePhases && applicablePhases.length > 0) {
+                    for (var i = 0; i < applicablePhases.length; i++) {
+                        var filtered = $.grep(phases,
+                            function(ele, y) { return parseInt(ele.value, 10) == applicablePhases[i]; });
+                        if (filtered != null && filtered.length > 0) {
+                            optionList += '<option value="' +
+                                filtered[0].value +
+                                '" ' +
+                                (previousSelValue == filtered[0].value ? "selected" : "") +
+                                '>' +
+                                filtered[0].text +
+                                '</option>';
+                        }
+                    }
+                }
+
+                if (typeId === "41") {
+                    createChildrensCentre();
+                } else {
+                    createOther();
+                }
+            }
+            $phaseSelector.html(optionList);
+        }
+
+        function createOther() {
+            $("#establishment-phase-form-group").show();
+            $("#number-gen-options").show();
+            $phaseSelector.removeAttr('disabled');
+            $(".childrens-centre-fields").hide();
+        }
+
+        function createChildrensCentre() {
+            //$("#title").text("Create a children's centre");
+            //$("#establishment-type-form-group").hide();
+            $("#establishment-phase-form-group").hide();
+            $("#number-gen-options").hide();
+            $("#enter-number").hide();
+            $phaseSelector.prop('disabled', 'disabled');
+            $(".childrens-centre-fields").show();
+        }
+
+        $(document).ready(function() {
+            if ($('.validation-summary-errors').length === 0) {
+                $("#number-gen-options").hide();
+                $("#establishment-phase-form-group").hide();
+                $("#enter-number").hide();
+            }   
+        });
+            
+        
+       
+
+    </script>
+}

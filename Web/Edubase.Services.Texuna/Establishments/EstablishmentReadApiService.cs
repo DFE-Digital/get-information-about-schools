@@ -14,6 +14,7 @@ using Edubase.Common.Reflection;
 using Edubase.Services.Lookup;
 using Edubase.Common;
 using Edubase.Services.Enums;
+using Edubase.Services.Core;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -45,8 +46,11 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
             => new ServiceResultDto<EstablishmentModel>((await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}", principal, false)).Response);
 
-        public async Task<IEnumerable<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int take, IPrincipal user)
-            => (await _httpClient.GetAsync<List<EstablishmentChangeDto>>($"establishment/{urn}/changes?take={take}", user)).GetResponse();
+        public async Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, IPrincipal user)
+        {
+            var changes = (await _httpClient.GetAsync<ApiPagedResult<EstablishmentChangeDto>>($"establishment/{urn}/changes?skip={skip}&take={take}", user)).GetResponse();
+            return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Items);
+        }
 
         public async Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user)
             => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/display-policy", user)).GetResponse().Initialise(establishment);
@@ -66,8 +70,8 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)
             => (await _httpClient.GetAsync<List<LookupDto>>("establishment/permittedstatuses", principal)).GetResponse().Select(x => x.Id).ToArray();
 
-        public async Task<ApiSearchResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
-            => (await _httpClient.PostAsync<ApiSearchResult<EstablishmentModel>>("establishment/search", payload, principal)).GetResponse();
+        public async Task<ApiPagedResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
+            => (await _httpClient.PostAsync<ApiPagedResult<EstablishmentModel>>("establishment/search", payload, principal)).GetResponse();
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10) 
             => (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
@@ -100,10 +104,10 @@ namespace Edubase.Services.Texuna.Establishments
             return retVal;
         }
 
-        public async Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, eFileFormat format, IPrincipal principal) 
+        public async Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, DownloadType format, IPrincipal principal) 
             => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/changes/download?format={format.ToString().ToLower()}", principal)).GetResponse();
 
-        public async Task<FileDownloadDto> GetDownloadAsync(int urn, eFileFormat format, IPrincipal principal)
+        public async Task<FileDownloadDto> GetDownloadAsync(int urn, DownloadType format, IPrincipal principal)
             => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/download?format={format.ToString().ToLower()}", principal)).GetResponse();
 
         public Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap()

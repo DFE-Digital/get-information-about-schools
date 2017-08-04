@@ -57,7 +57,6 @@
                             <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
                         </select>
                     </div>
-                    <div class="filter-divider"></div>
 
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-group-type">
@@ -66,23 +65,25 @@
                             <div class="js-selected-counter"></div>
                         </div>
                         <a href="#" class="clear-selections">Clear</a>
-                        <div class="options-container" id="">
+                        <div class="options-container">
                             <div class="js-auto-height-inner">
                                 <fieldset>
+                                    <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
                                     @foreach (var item in Model.GroupTypes)
                                     {
-                                        <label for="group-type_@item.Id">
-                                            <input name="t" value="@item.Id" class="trigger-result-update" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
-                                            @item
-                                            <span class="visuallyhidden">- changing the selection will refresh the results</span>
-                                        </label>
+                                        <div class="filter-wrapper">
+                                            <input name="t" value="@item.Id" class="trigger-result-update filter-input" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
+                                            <label for="group-type_@item.Id" class="filter-radio">
+                                                @item
+                                            </label>
+                                        </div>                                        
                                     }
                                 </fieldset>
                             </div>
                         </div>
                     </div>
-                    <div class="filter-divider"></div>
+
                     @if (User.Identity.IsAuthenticated)
                     {
                         <div class="govuk-option-select js-collapsible" id="option-select-group-status">
@@ -93,16 +94,17 @@
                             <a href="#" class="clear-selections">Clear</a>
                             <div class="options-container" id="">
                                 <div class="js-auto-height-inner">
-                                    <fieldset>
+                                    <fieldset><span class="visuallyhidden">- changing the selection will refresh the results</span>
                                         <legend class="visuallyhidden">Select an option below to filter the results</legend>
                                         @foreach (var item in Model.GroupStatuses)
                                         {
-                                            <label for="group-status_@item.Id">
-                                                <input name="s" value="@item.Id" class="trigger-result-update" id="group-status_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupStatusIds.Contains(item.Id), "checked")/>
-                                                @item
-                                                <span class="visuallyhidden">- changing the selection will refresh the results</span>
-                                            </label>
-                                        }
+                                            <div class="filter-wrapper">
+                                                <input name="s" value="@item.Id" class="trigger-result-update filter-input" id="group-status_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupStatusIds.Contains(item.Id), "checked") />
+                                                <label for="group-status_@item.Id" class="filter-radio">
+                                                    @item
+                                                </label>
+                                            </div>
+                                        }                                            
                                     </fieldset>
                                 </div>
                             </div>

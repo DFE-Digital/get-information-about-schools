@@ -37,7 +37,8 @@ namespace Edubase.Web.UI.Filters
             }
             else // unhandled/unexpected exception; log it and tell the user.
             {
-                var msg = Log(filterContext.HttpContext, filterContext.Exception);
+                var ctx = filterContext.HttpContext;
+                var msg = Log(ctx, filterContext.Exception);
 
                 if (StringUtil.Boolify(ConfigurationManager.AppSettings["EnableFriendlyErrorPage"], true))
                 {
@@ -57,6 +58,9 @@ namespace Edubase.Web.UI.Filters
                         ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id }
                     };
 
+                    ctx.Response.Clear();
+                    ctx.Response.TrySkipIisCustomErrors = true;
+                    ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
                     filterContext.ExceptionHandled = true;
                 }
             }

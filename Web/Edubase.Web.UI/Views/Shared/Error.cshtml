@@ -5,13 +5,26 @@
     ViewBag.Title = "Edubase";
     ViewBag.pageDescription = "";
     ViewBag.pageClass = "error-page";
-    ViewBag.suppressHomeLink = true;
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+            </ul>
 
-@if (ViewBag.ErrorCode != null)
-{
-    <p style="color:#ddd;">Error code: @ViewBag.ErrorCode</p>
-}
+        </div>
+        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+    </div>
+    <div class="column-two-thirds">
+        <p>Please try again later.</p>
+        <p>A report of the error has been sent to our technical team.</p>
+        @if (ViewBag.ErrorCode != null)
+        {
+            <p style="color:#ddd;">Error code: @ViewBag.ErrorCode</p>
+        }
+    </div>
+</div>

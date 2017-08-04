@@ -1,0 +1,78 @@
+﻿
+
+.filter-radio {
+    position: relative;
+    display: block;
+    float: left;   
+    cursor: pointer;
+    padding-left: 44px;
+    padding-top: 10px;
+
+    &::before {
+      content: "";
+      border: 2px solid;
+      background: transparent;
+      width: 12px;
+      height: 12px;
+      position: absolute;
+      top: 8px;
+      left: 6px;
+    }
+
+    &::after {
+      content: "";
+      border: solid;
+      border-width: 0 0 2px 2px;
+      background: transparent;
+      width: 8px;
+      height: 3px;
+      position: absolute;
+      top: 12px;
+      left: 9px;
+      -moz-transform: rotate(-45deg); // Firefox 15 compatibility
+      -o-transform: rotate(-45deg); // Opera 12.0 compatibility
+      -webkit-transform: rotate(-45deg); // Safari 8 compatibility
+      -ms-transform: rotate(-45deg); // IE9 compatibility
+      transform: rotate(-45deg);
+      @include opacity(0);
+    }
+
+    &.partial-selection::after {
+       -moz-transform: none; // Firefox 15 compatibility
+      -o-transform: none; // Opera 12.0 compatibility
+      -webkit-transform: none; // Safari 8 compatibility
+      -ms-transform: none; // IE9 compatibility
+      transform:none;
+      border-left: 0;
+      left: 10px;
+    }
+}
+input:disabled + .filter-radio {
+    color: $grey-1;
+        &:before, &:after {
+            border-color: $grey-3;
+        }
+    }
+
+ .filter-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+ .nested-items {
+     dt {
+         overflow: hidden;
+         position: relative;
+     }
+ }
+input:checked + .filter-radio:after {
+    @include opacity(1);
+}
+
+.filter-group-title {
+
+}
+
+.filter-group {
+
+}

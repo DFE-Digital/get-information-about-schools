@@ -12,11 +12,13 @@ table {
 table th,
 table td {
   @include core-14;
-  //padding: 0.7em 1em 0.7em 1em;
   padding: 6px 10px 6px 8px;
   color: #0b0c0c;
   border-bottom: 1px solid $border-colour;
   vertical-align: top;
+  &.no-border {
+      border-bottom:none;
+  }
 }
 
 thead tr.collapsible-data th.first-column{

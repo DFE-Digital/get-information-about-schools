@@ -31,7 +31,7 @@
             <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
                 @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box" })
-                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-submit">Find establishment</button>
+                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-submit">Find</button>
             </div>
             @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
             {
@@ -55,33 +55,49 @@
             <ul class="school-results-listing establishment-list">
                 @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
                 {
+                    var e = Model.LinkedEstablishments.Establishments[i];
                     <li>
-                        <h2>@Html.ActionLink( Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn, area = "" }, new { @class = "bold-small" })</h2>
+                        <h2>@Html.ActionLink( Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments" }, new { @class = "bold-small" })</h2>
                         @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
                         {
                             <div class="error">@Html.ValidationMessage("linkedEstablishments[" + i + "].id")</div>
                         }
                         <dl>
                             <dt>Address:</dt>
-                            <dd>@Model.LinkedEstablishments.Establishments[i].Address</dd>
+                            <dd>@e.Address</dd>
+
+                            <dt>Phase / type:</dt>
+                            <dd>
+                                @(e.PhaseName ?? "Not recorded"),
+                                @(e.TypeName ?? "Not recorded")
+                            </dd>
+
                             <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                            <dd>@Model.LinkedEstablishments.Establishments[i].Urn</dd>
-                            <dt>School type:</dt>
-                            <dd>@Model.LinkedEstablishments.Establishments[i].TypeName</dd>
-                            <dt>Headteacher name:</dt>
-                            <dd>@Model.LinkedEstablishments.Establishments[i].HeadFullName</dd>
+                            <dd>@e.Urn</dd>
+
+                            <dt class="inline-details">
+                                <abbr title="Local authority - Establishment number">LAESTAB</abbr>:
+                            </dt>
+                            <dd>@(e.LAESTAB ?? "Not recorded")</dd>
+
+                            <dt>Status:</dt>
+                            <dd>@(e.StatusName ?? "Not recorded")</dd>
+
+                            <dt>Local authority name:</dt>
+                            <dd>@(e.LocalAuthorityName ?? "Not recorded")</dd>
+
 
                             @if (!Model.LinkedEstablishments.Establishments[i].EditMode)
-                                {
+                            {
                                 <dt>Joined date:</dt>
-                                <dd>@(Model.LinkedEstablishments.Establishments[i].JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                                <dd>@(e.JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
                                 @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
-                                }
+                            }
 
                         </dl>
 
                         @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
-                            {
+                        {
                             <div class="form-radio cc-lead-centre">
                                 <label>
                                     @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { @class = "" })
@@ -89,29 +105,27 @@
                                 </label>
                             </div>
 
-                            }
+                        }
 
                         @if (Model.LinkedEstablishments.Establishments[i].EditMode)
                         {
                             @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new {title = "Joined date"})
-                        
                         }
 
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                            {
+                        {
                             <div class="button-row">
-                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
+                                <button type="submit" class="button button-grey button-remove" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
                                 <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-grey">Edit</button>
                             </div>
-                            }
-                            else if (Model.LinkedEstablishments.Establishments[i].EditMode)
-                            {
-                                <div class="form-group">
-                                    @Html.ActionLink("Cancel", "EditLinks","Group", new { area = "Groups"}, new {@class= "button button-grey allow-exit" })
-                                    @*<button type="submit" class="button button-grey allow-exit" name="action" value="@VM.ActionLinkedEstablishmentCancelEdit">Cancel</button>*@
-                                    <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
-                                </div>
-                            }
+                        }
+                        else if (Model.LinkedEstablishments.Establishments[i].EditMode)
+                        {
+                            <div class="form-group">
+                                @Html.ActionLink("Cancel", "EditLinks","Group", new { area = "Groups"}, new {@class= "button button-grey allow-exit" })
+                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
+                            </div>
+                        }
 
 
                         @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
@@ -126,7 +140,7 @@
             </ul>
         </div>
 
-    <div class="column-half">
+        <div class="column-half">
 
             @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
 
@@ -154,7 +168,23 @@
 
         </script>
     }
-    
+    @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+    {
+        <script>
+            $('#content').find('.button-remove').okCancel({
+                triggerEvent: 'click',
+                title: 'Are you sure you want to remove this academy?',
+                content: 'All governor information associated with this academy will be removed too.',
+                idPrefix: 'remove-',
+                ok: function () {
+                    $(this.el).data().okCancel.unbind();
+                    $(this.el).click();
+                }
+            })
+        </script>
+    }
+
+
     @if (Request.HttpMethod == "POST" && Model.Action != "cancel" )
     {
         <script>

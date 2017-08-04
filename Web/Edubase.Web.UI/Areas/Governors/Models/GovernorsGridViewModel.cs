@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Edubase.Common;
 using Edubase.Common.Text;
+using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
-    using UI.Models.Establishments;
     using Services.Governors.DisplayPolicies;
     using Services.Nomenclature;
     using UI.Models;

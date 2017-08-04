@@ -5,26 +5,42 @@
     var $clearLinks = $('#EditSearchCollapse').find('.filter-clear'),
         $additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera'),
         $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear'),
+        $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]'),
         $extraFiltersLink = $('#EditSearchCollapse').find('.add-filters-link'),
-        optionTemplate = '<label><input type="checkbox" value="#{0}" class="additional-filter-type" />{1}</label>',
+        optionTemplate = '<div class="filter-wrap"><input type="checkbox" value="#{0}" data-alias="{2}" id="ctrl-{0}" class="additional-filter-type filter-input" /><label  for="ctrl-{0}" class="filter-radio">{1}</label></div>',
         optionsFragment = '';
         
        
         $additionalFilters.each(function (n, elem) {
             var elemId = $(elem).prop('id'),
-                elemText = $(elem).find('.option-select-label').text();
-            optionsFragment += optionTemplate.replace('{0}', elemId).replace('{1}', elemText);
+                elemText = $(elem).find('.option-select-label').text(),
+                dataAlias = $(elem).data().bindAlias;
+            optionsFragment += optionTemplate.replace(/\{0\}/g, elemId).replace('{1}', elemText).replace('{2}', dataAlias);
 
         });
 
     $('#filter-type-target').append(optionsFragment);
 
+    $textFieldFilters.on('change', function () {
+        var $govUkSelect = $(this).parents('.govuk-option-select');
+        var siblings = $govUkSelect.find('input');
+        var hasValues = siblings.filter(function(n, field) {
+                if (field.value.trim() !== '') {
+                    return field.value;
+                }
+        }).length > 0;
 
+        if (hasValues) {
+            $govUkSelect.find('.clear-selections').addClass('active-clear');
+        } else {
+            $govUkSelect.find('.clear-selections').removeClass('active-clear');
+        }
+    });
 
     $extraFiltersLink.on('click', function(e) {
         e.preventDefault();
         $('#additional-filter-wrap').removeClass('hidden');
-        $extraFiltersLink.addClass('hidden');
+        $('#filter-addtional-controls').addClass('hidden');
         $('#filter-submit').addClass('hidden');
     });
 
@@ -37,7 +53,7 @@
 
         $selectedFilters.length === $additionalFilters.length
             ? $extraFiltersLink.text('Remove addtional filters')
-            : $extraFiltersLink.text('Add filters');
+            : $extraFiltersLink.text('+ Add filters');
 
         $additionalFilters.addClass('hidden');
 
@@ -51,7 +67,14 @@
             var specifier = $ele.val() + bindAlias;
             $ele.val(specifier); 
         });
+        $('#filter-addtional-controls').removeClass('hidden');
+    });
 
+    $('#add-filter-cancel').on('click', function(e) {
+        e.preventDefault();
+        $('#additional-filter-wrap').addClass('hidden');
+        $('#filter-addtional-controls').removeClass('hidden');
+        $('#filter-submit').removeClass('hidden');
     });
 
 
@@ -62,23 +85,34 @@
 
     $('.govuk-option-select')
         .each(function() {
-            if ($(this).find('.js-selected-counter').text().length) {
-                $(this).find('.filter-clear, .additional-filter-clear').addClass('active-clear');
+            if ($(this).find('.js-selected-counter-text').text().length && !$(this).hasClass('age-filter') && !$(this).hasClass('date-filters')) {
+                $(this).find('.clear-selections').addClass('active-clear');
             }
         });
 
     $clearLinks.on('click',
-        function(e) {
+        function (e) {
             e.preventDefault();
-            var selectedFilters = $(this)
-                .next('.options-container')
-                .find('input')
-                .filter(function(n, item) {
-                    return $(item).prop('checked');
-                });
+            if (!$(this).hasClass('clear-disabled')) {
+                var $govUkSelect = $(this).parents('.govuk-option-select');
+                if ($govUkSelect.hasClass('date-filters') || $govUkSelect.hasClass('age-filter')) {
+                    $govUkSelect.find('input[type="text"]').val('');
 
-            selectedFilters.click();
-            $(this).removeClass('active-clear');
+                } else {
+                    var selectedFilters = $(this)
+                    .next('.options-container')
+                    .find('input')
+                    .filter(function (n, item) {
+                        return $(item).prop('checked');
+                    });
+
+                    selectedFilters.click();
+                    $(this).removeClass('active-clear');
+                    if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
+                        selectedFilters.prop('checked', false);
+                    }
+                }
+            }
         });
 
     $additionalFilterClear.on('click', function(e) {
@@ -114,4 +148,16 @@
                     $(this).find('.filter-clear, .additional-filter-clear').removeClass('active-clear');
                 }
             });
+
+    if (document.getElementById('selected-search-filters')) {
+        var aliases = $('#selected-search-filters').val().split('');
+        $.each(aliases,
+            function(n, alias) {
+                $('.additional-search-critera[data-bind-alias="' + alias + '"]').removeClass('hidden');
+                $('#filter-type-target').find('[data-alias="' + alias + '"]').prop('checked', true);
+            });
+    }
+   
+
+
 }());

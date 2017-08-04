@@ -42,23 +42,26 @@ namespace Edubase.Web.UI.Controllers
         {
             return View();
         }
-
+        
         [Route("~/news")]
-        public async Task<ActionResult> News()
-        {
-            var blob = _blobService.GetBlobReference("content", "news.html");
-            var html = await _cacheAccessor.GetAsync<string>("news");
-            if (html == null)
-            {
-                html = await blob.DownloadTextAsync();
-                await _cacheAccessor.SetAsync("news", html, TimeSpan.FromHours(1));
-            }
-            return View(new MvcHtmlString(html));
-        }
+        public async Task<ActionResult> News() => View(new MvcHtmlString(await GetHtmlBlob("newsblog.html")));
+
+        [Route("~/known-issues")]
+        public async Task<ActionResult> KnownIssues() => View(new MvcHtmlString(await GetHtmlBlob("knownissues.html")));
 
         [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
         public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
-        
 
+        private async Task<string> GetHtmlBlob(string name)
+        {
+            var blob = _blobService.GetBlobReference("content", name);
+            var html = await _cacheAccessor.GetAsync<string>(name);
+            if (html == null && await blob.ExistsAsync())
+            {
+                html = await blob.DownloadTextAsync();
+                await _cacheAccessor.SetAsync(name, html, TimeSpan.FromHours(1));
+            }
+            return html;
+        }
     }
 }

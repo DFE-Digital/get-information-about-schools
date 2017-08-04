@@ -3,8 +3,21 @@
     ViewBag.Title = "Edubase";
     ViewBag.pageDescription = "";
     ViewBag.pageClass = "error-page";
-    ViewBag.suppressHomeLink = true;
 }
 
-<h1 class="text-danger bold-large">Error</h1><br />
-<h2 class="text-danger">@FormatHelpers.HtmlizeNewLines(ViewBag.PublicErrorMessage)</h2>
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+            </ul>
+
+        </div>
+        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+    </div>
+    <div class="column-two-thirds">
+        @FormatHelpers.HtmlizeNewLines(ViewBag.PublicErrorMessage)
+    </div>
+</div>

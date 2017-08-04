@@ -5,8 +5,9 @@ using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Models.Establishments;
 using System.Collections.Generic;
+using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Services.Core;
 
 namespace Edubase.Web.UI.Models
 {
@@ -46,7 +47,7 @@ namespace Edubase.Web.UI.Models
 
         public IEnumerable<GroupModel> Groups { get; set; }
 
-        public IEnumerable<EstablishmentChangeDto> ChangeHistory { get; set; }
+        public PaginatedResult<EstablishmentChangeDto> ChangeHistory { get; set; }
 
         public IEnumerable<LinkedEstabViewModel> LinkedEstablishments { get; set; }
 
@@ -141,7 +142,7 @@ namespace Edubase.Web.UI.Models
             Establishment.Address_Locality, 
             Establishment.Address_Line3,
             Establishment.Address_CityOrTown, 
-            AddressCountyName, 
+            AddressCountyName.Replace("Not recorded", string.Empty), 
             Establishment.Address_PostCode);
 
         public string GetAltAddress() => StringUtil.ConcatNonEmpties(", ",
@@ -149,7 +150,7 @@ namespace Edubase.Web.UI.Models
             Establishment.AltLocality,
             Establishment.AltAddress3,
             Establishment.AltTown,
-            AltAddressCountyName,
+            AltAddressCountyName.Replace("Not recorded", string.Empty),
             Establishment.AltPostCode);
 
         public string GetProprietorsAddress() => StringUtil.ConcatNonEmpties(", ",
@@ -157,7 +158,7 @@ namespace Edubase.Web.UI.Models
             Establishment.IEBTModel.ProprietorsLocality,
             Establishment.IEBTModel.ProprietorsAddress3,
             Establishment.IEBTModel.ProprietorsTown,
-            IEBTProprietorsAddressCountyName,
+            IEBTProprietorsAddressCountyName.Replace("Not recorded", string.Empty),
             Establishment.IEBTModel.ProprietorsPostcode);
 
         public string GetChairOfProprietorsBodyAddress() => StringUtil.ConcatNonEmpties(", ",
@@ -165,7 +166,7 @@ namespace Edubase.Web.UI.Models
             Establishment.IEBTModel.ChairOfProprietorsBodyLocality,
             Establishment.IEBTModel.ChairOfProprietorsBodyAddress3,
             Establishment.IEBTModel.ChairOfProprietorsBodyTown,
-            IEBTChairOfProprietorsBodyAddressCountyName,
+            IEBTChairOfProprietorsBodyAddressCountyName.Replace("Not recorded", string.Empty),
             Establishment.IEBTModel.ChairOfProprietorsBodyPostcode);
 
         public GovernorsGridViewModel GovernorsGridViewModel { get; set; }

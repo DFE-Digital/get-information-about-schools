@@ -71,10 +71,10 @@
     <script type="text/javascript">
         var jScriptVersion;
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
-        
-        (function ($) {
+
+        (function($) {
             var defaults = {
-                suggestionTemplate: function (suggestion) {
+                suggestionTemplate: function(suggestion) {
                     return '<div><a href="#">' + suggestion + '</a></div>';
                 },
                 logoUrl: 'https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3.png',
@@ -93,7 +93,7 @@
             var predictionsOld;
 
             Gplaces.prototype = {
-                init: function () {
+                init: function() {
                     var $el = $(this.el),
                         opts = this.opts,
                         self = this;
@@ -121,46 +121,50 @@
                             }
                         });
 
-                    $el.on('typeahead:selected', function (e, address) {
-                        self.itemSelect(e, address);
-                    });
+                    $el.on('typeahead:selected',
+                        function(e, address) {
+                            self.itemSelect(e, address);
+                        });
 
-                    $el.on('typeahead:open', function (e) {
-                            $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');                       
-                    });
+                    $el.on('typeahead:open',
+                        function(e) {
+                            $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
+                        });
 
-                    $el.on('typeahead:render', function() {
-                        $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
-                    });
+                    $el.on('typeahead:render',
+                        function() {
+                            $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
+                        });
 
-                    $el.on('keydown', function (e) {
-                        var $field = $(this);
-                        if (e.which === 13) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                
-                            if ($(this).nextAll('.tt-menu').find('.tt-suggestion').length > 0) {
-                                $(this).nextAll('.tt-menu').find('.tt-cursor').click();                       
+                    $el.on('keydown',
+                        function(e) {
+                            var $field = $(this);
+                            if (e.which === 13) {
+                                e.preventDefault();
+                                e.stopPropagation();
 
-                            } else {
-                                $field.parents('form').find('.search-button').click();
+                                if ($(this).nextAll('.tt-menu').find('.tt-suggestion').length > 0) {
+                                    $(this).nextAll('.tt-menu').find('.tt-cursor').click();
+
+                                } else {
+                                    $field.parents('form').find('.search-button').click();
+                                }
                             }
-                        }
-                    });
+                        });
                 },
-                places: function (q, cb, fc) {
+                places: function(q, cb, fc) {
                     var c = new Array();
                     var filteredPredictions;
                     autocompleteService.getPlacePredictions(
                         { input: q, types: ['geocode'], componentRestrictions: { country: 'GB' } },
-                        function (predictions, status) {
+                        function(predictions, status) {
                             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                                filteredPredictions =  predictions.filter(function(p) {
-                                   if ($.inArray('premise', p.types) === -1) {
+                                filteredPredictions = predictions.filter(function(p) {
+                                    if ($.inArray('premise', p.types) === -1) {
                                         return p;
                                     }
                                 });
-                               predictionsOld = filteredPredictions;
+                                predictionsOld = filteredPredictions;
                             }
                             if (!filteredPredictions) {
                                 $(window).trigger({
@@ -171,27 +175,27 @@
                             } else {
                                 $('#searchby-location-ref').find('.warning-message').remove();
                                 $.map(filteredPredictions,
-                                function (prediction) {                                    
-                                    c.push(prediction.description);
-                                });
+                                    function(prediction) {
+                                        c.push(prediction.description);
+                                    });
                                 fc(c);
                             }
-                            
+
                         });
                 },
-                itemSelect: function (e, address) {
+                itemSelect: function(e, address) {
                     var self = this;
                     var ref = $.grep(predictionsOld,
-                        function (prediction) {
+                        function(prediction) {
                             return prediction.description === address;
                         })[0].reference;
 
                     placesService.getDetails({ reference: ref },
-                        function (result, status) {
+                        function(result, status) {
                             self.detailCallback(result, status);
                         });
                 },
-                detailCallback: function (result, status) {
+                detailCallback: function(result, status) {
                     document.getElementById(this.opts.locationInput).value = result.geometry.location.lat() +
                         ',' +
                         result.geometry.location.lng();
@@ -200,8 +204,8 @@
 
             };
 
-            $.fn.gPlaces = function (options) {
-                return this.each(function () {
+            $.fn.gPlaces = function(options) {
+                return this.each(function() {
                     if (!$.data(this, 'gplaces')) {
                         $.data(this, 'gplaces', new Gplaces(this, options));
                     }
@@ -209,9 +213,10 @@
                 });
             }
         }($));
-
-        $('#LocationSearchModel_Text').gPlaces();
+        if (!$('html').hasClass('lt-ie9')) {
+            $('#LocationSearchModel_Text').gPlaces();
+        }
     </script>
-   
+
 }
 

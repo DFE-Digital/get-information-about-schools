@@ -1,6 +1,6 @@
 ﻿using Edubase.Services.Enums;
+using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
-using Edubase.Web.UI.Models.Establishments;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {

@@ -1,7 +1,4 @@
-﻿using Edubase.Services.Enums;
-using Edubase.Common;
-using System;
-using Edubase.Data.Entity;
+﻿using Edubase.Common;
 
 namespace Edubase.Services.Domain
 {
@@ -12,12 +9,6 @@ namespace Edubase.Services.Domain
         public int? DisplayOrder { get; set; }
         public string Code { get; set; }
         public int? CodeAsInt => Code.ToInteger();
-
-
-        public LookupDto()
-        {
-
-        }
 
         public override string ToString() => Name;
     }
