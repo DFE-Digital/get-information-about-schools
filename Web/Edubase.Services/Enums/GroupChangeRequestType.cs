@@ -7,16 +7,16 @@ namespace Edubase.Services.Enums
     [JsonConverter(typeof(StringEnumConverter))]
     public enum GroupChangeRequestType
     {
-        [EnumMember(Value = "Group Change")]
+        [EnumMember(Value = "Group change")]
         GroupChange,
 
-        [EnumMember(Value = "New Link")]
+        [EnumMember(Value = "New link")]
         NewLink,
 
-        [EnumMember(Value = "Remove Link")]
+        [EnumMember(Value = "Remove link")]
         RemoveLink,
 
-        [EnumMember(Value = "New Group")]
+        [EnumMember(Value = "New group")]
         NewGroup
     }
 }
