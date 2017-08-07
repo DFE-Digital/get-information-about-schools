@@ -90,7 +90,7 @@ namespace Edubase.Services.Texuna.Glimpse
             while (_data.Count > _sessionRetentionCount)
             {
                 var minStartTime = _data.Min(d => d.StartTime);
-                var oldest = _data.Single(d => d.StartTime == minStartTime);
+                var oldest = _data.First(d => d.StartTime == minStartTime);
                 _data.Remove(oldest);
             }
         }
