@@ -133,9 +133,22 @@ nav.tabs {
     position: relative;
     top: 1px;
 
-
-    .tab-count-6 &, 
     .tab-count-5 & {
+        @include media($max-width: 841px) {
+            li {
+               margin-right: 0.7em;
+            }
+        }
+
+        @include media($max-width: 792px) {
+            li {
+                font-size: 14px;
+                min-width: 106px;;
+            }
+        }
+    }
+
+    .tab-count-6 & {
         @include media($max-width: 1012px) {
             li {
                 min-width: 120px;
