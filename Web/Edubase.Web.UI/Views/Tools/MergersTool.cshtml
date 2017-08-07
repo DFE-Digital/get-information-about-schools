@@ -160,7 +160,7 @@
                 <dt>Establishments to be merged</dt>
                 <dd>
                     <ol class="linked-establishments">
-                        <li v-for="(school, index) in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
+                        <li v-for="(school, index) in mergerEstabs" v-if="school.urn !=leadEstab"><span>{{school.urn}} - {{school.name}}</span></li>
                     </ol>
                     @*<strong v-if="school.urn !=leadEstab">{{school.urn}} {{school.name}}</strong>*@
                 </dd>
