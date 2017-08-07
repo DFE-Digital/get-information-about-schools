@@ -9,4 +9,8 @@
 
     @{Html.RenderAction("View", "Governor", new { viewModel = Model.GovernorsGridViewModel, area = "Governors" });}
 
+    @if (Model.UserCanEdit)
+    {
+        @Html.ActionLink("Edit", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
+    }
 </div>

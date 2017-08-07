@@ -28,7 +28,7 @@
     <div class="column-half">
             <span class="bold-xsmall">Add establishment</span>
             <p class="font-xsmall">Enter the establishment <abbr title="Unique Reference Number">URN</abbr></p>
-            <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
+            <div class="form-group add-establishment-link @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
                 @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box" })
                 <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-submit">Find</button>
