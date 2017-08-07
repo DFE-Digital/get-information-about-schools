@@ -21,30 +21,19 @@
                 opts = this.opts,
                 $tabs = $el.find('.' + opts.tabClass),
                 $tabbedContent = $el.find('.' + opts.tabContentClass),
+
                 validHashes = $.map($tabs, function (elem) {
                     if ($(elem).attr('href').indexOf('#') === 0) {
                         return $(elem).attr('href').split('#')[1];
                     }                    
                 }),
-                intialTabSelection = $.inArray(window.location.hash.replace('#', ''), validHashes);
-            
-            
-            function setTabHeight() {
-                var maxHeight = 0;
-                $tabs.each(function() {
-                    var tabHeight = $(this).outerHeight();
-                    if (tabHeight > maxHeight) {
-                        maxHeight = tabHeight;
-                    }
-                });
-                return maxHeight-1;
-            }
 
-            if ($(window).width() > 641 && $el.find('.horizontal-tabs').hasClass('trio-tabs')) {
-                $tabs.height(setTabHeight());
-            }
+            intialTabSelection = $.inArray(window.location.hash.replace('#', ''), validHashes);
+            
             
 
+            $el.addClass('tab-count-' + $tabs.length);
+            
             if (typeof validHashes === 'undefined' || validHashes.length === 0) {
                 return;
             }
