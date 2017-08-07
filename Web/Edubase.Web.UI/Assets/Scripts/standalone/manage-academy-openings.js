@@ -62,7 +62,8 @@
             presentDetail: false,
             isProcessing: true,
             userHasEdited: false,
-            presentExitWarning: false
+            presentExitWarning: false,
+            loadDataError: false
 
         },
         created: function () {
@@ -170,9 +171,15 @@
                                 self.buildPages(data.items, self.pageSize);
                                 self.buildDateDropDown();
                             }
-                        );
+                        ).fail(function() {
+                            self.loadDataError = true;
+                            self.isProcessing = false;
+                        });
                     }
-                );
+                ).fail(function() {
+                    self.loadDataError = true;
+                    self.isProcessing = false;
+                });
             },
             setCurrentPage: function (pageIndex) {
                 this.currentPage = pageIndex;

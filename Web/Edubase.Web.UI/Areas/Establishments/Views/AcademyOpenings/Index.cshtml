@@ -17,8 +17,14 @@
 <div id="academy-opening-app" v-cloak>
     <div class="grid-row" v-show="!editRecord">
         <div class="column-full">
+            <div v-show="loadDataError" class="error-summary">
+                <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
+                <p class="error-message">Please reload the page to try again.</p>
+            </div>
             <h1 class="heading-xlarge">Manage academy openings</h1>
-            <div aria-live="polite" class="wait-spinner" v-show="isProcessing"><p class="visually-hidden">Please wait</p></div>
+            <div aria-live="polite" class="wait-spinner" v-show="isProcessing">
+                <p class="visually-hidden">Please wait</p>
+            </div>
             <div class="error-summary" v-show="searchError" v-cloak>
                 <h2 class="heading-medium error-summary-heading" v-show="searchError">No matching establishment</h2>
                 <div v-show="searchError">
