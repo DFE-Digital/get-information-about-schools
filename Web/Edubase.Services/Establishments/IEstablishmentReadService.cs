@@ -39,7 +39,7 @@ namespace Edubase.Services.Establishments
         /// <param name="payload"></param>
         /// <param name="principal"></param>
         /// <returns></returns>
-        Task<ApiPagedResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
+        Task<ApiPagedResult<EstablishmentSearchResultModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
         Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal);
 
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal);

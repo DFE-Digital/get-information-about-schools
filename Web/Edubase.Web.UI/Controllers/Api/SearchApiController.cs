@@ -17,7 +17,7 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         [Route("api/establishment-search"), HttpPost]
-        public async Task<ApiPagedResult<EstablishmentModel>> ProcessRequestAsync(EstablishmentSearchPayload payload) 
+        public async Task<ApiPagedResult<EstablishmentSearchResultModel>> ProcessRequestAsync(EstablishmentSearchPayload payload) 
             => await _establishmentReadService.SearchAsync(payload, User);
     }
 }

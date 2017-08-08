@@ -76,7 +76,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
             UKPRN
         }
 
-        public IList<EstablishmentModel> Results { get; set; }
+        public IList<EstablishmentSearchResultModel> Results { get; set; }
         public string Error { get; set; }
 
         public eTextSearchType TextSearchType
