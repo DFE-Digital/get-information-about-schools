@@ -42,7 +42,8 @@ namespace Edubase.Services
             _formatter.SerializerSettings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
-                ContractResolver = new TexunaCamelCasePropertyNamesContractResolver()
+                ContractResolver = new TexunaCamelCasePropertyNamesContractResolver(),
+                DateTimeZoneHandling = DateTimeZoneHandling.Unspecified
             };
         }
 

@@ -1,6 +1,7 @@
 ﻿@using Edubase.Common;
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
+@using S = Edubase.Services.Enums.eLookupGroupStatus;
 @model VM
 @{
     ViewBag.hideLogo = true;
@@ -17,6 +18,8 @@
     @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
     @Html.HiddenFor(x => x.AddressJsonToken)
     @Html.HiddenFor(x => x.ProcessedWarnings)
+    @Html.HiddenFor(x => x.StatusId)
+    @Html.HiddenFor(x => x.CanUserCloseMATAndMarkAsCreatedInError)
 
     <div class="grid-row">
         <div class="column-full">
@@ -73,6 +76,12 @@
                 {
                     @Html.EditorFor(x => x.ClosedDate, new { title = "Closed date" })
                 }
+                else
+                {
+                    @Html.HiddenFor(x => x.ClosedDate.Day)
+                    @Html.HiddenFor(x => x.ClosedDate.Month)
+                    @Html.HiddenFor(x => x.ClosedDate.Year)
+                }
 
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
                 {
@@ -125,6 +134,17 @@
                         <label for="groupid">Group ID</label>
                         @Html.ValidationMessageFor(x => x.GroupId)
                         @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
+                    </div>
+                }
+
+                @if (Model.CanUserCloseMATAndMarkAsCreatedInError)
+                {
+                    <br />
+                    <div class="form-group">
+                        <span class="checkbox-wrap">
+                            @Html.CheckBoxFor(x => x.CloseMATAndMarkAsCreatedInError)
+                            @Html.LabelFor(x => x.CloseMATAndMarkAsCreatedInError, "Close this trust and mark as 'created in error'", new { @class = "edubase-button-checkbox" })
+                        </span>
                     </div>
                 }
 

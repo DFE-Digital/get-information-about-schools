@@ -28,6 +28,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using static Models.CreateEdit.GroupEditorViewModel;
     using static Models.CreateEdit.GroupEditorViewModelBase;
     using GT = Services.Enums.eLookupGroupType;
+    using GS = Services.Enums.eLookupGroupStatus;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -172,7 +173,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CompaniesHouseNumber = domainModel.CompaniesHouseNumber,
                 GroupUId = domainModel.GroupUId,
                 GroupId = domainModel.GroupId,
-                SelectedTabName = "details"
+                SelectedTabName = "details",
+                StatusId = domainModel.StatusId
             };
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
@@ -183,6 +185,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.DeriveCCLeadCentreUrn();
 
             if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+
+            viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust) 
+                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed) 
+                && User.InRole(EdubaseRoles.ROLE_BACKOFFICE);
 
             return View("EditDetails", viewModel);
         }
@@ -436,6 +442,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else if (viewModel.SaveMode == eSaveMode.DetailsAndLinks) dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
             else if (viewModel.SaveMode == eSaveMode.Links) dto = new SaveGroupDto(viewModel.GroupUId.Value, createLinksDomainModel());
             else throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
+
+            if (viewModel.CanUserCloseMATAndMarkAsCreatedInError
+                && viewModel.CloseMATAndMarkAsCreatedInError
+                && dto.Group != null)
+            {
+                dto.Group.StatusId = (int)GS.CreatedInError;
+            }
+
             return dto;
         }
 
