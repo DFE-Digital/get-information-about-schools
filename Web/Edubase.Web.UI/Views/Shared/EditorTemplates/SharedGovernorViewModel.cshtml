@@ -1,5 +1,12 @@
 ﻿@model Edubase.Web.UI.Areas.Governors.Models.SharedGovernorViewModel
-    
+@{
+    bool disableStartDate;
+    if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out disableStartDate))
+    {
+        disableStartDate = false;
+    }
+}
+
 <li>
     <div class="expander-panel @(Model.Selected ? "open-expander" : "")">
         <div class="form-group gov-radio-wrap">
@@ -61,7 +68,7 @@
                         <dd>@Model.Nationality</dd>
                     </dl>
 
-                    @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting })
+                    @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date" })
                     @Html.EditorFor(x => x.AppointmentEndDate, new { @readonly = Model.PreExisting })
                 </div>
             }

@@ -301,16 +301,19 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private async Task<bool> RoleAllowed(eLookupGovernorRole roleId, int? groupUId, int? establishmentUrn, IPrincipal user)
         {
-            var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
-            if (EnumSets.eSingularGovernorRoles.Contains(roleId) &&
-                existingGovernors.CurrentGovernors.Any(g => g.RoleId == (int) roleId))
+            var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
+
+            if (EnumSets.eSingularGovernorRoles.Contains(roleId))
             {
-                if (groupUId.HasValue && roleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody)
+                if (roleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
+                    roleId == eLookupGovernorRole.ChairOfLocalGoverningBody)
                 {
-                    return true;
+                    return !existingGovernors.CurrentGovernors.Any(
+                        g => g.RoleId == (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
+                             g.RoleId == (int) eLookupGovernorRole.ChairOfLocalGoverningBody);
                 }
 
-                return false;
+                return existingGovernors.CurrentGovernors.All(g => g.RoleId != (int) roleId);
             }
 
             return true;
@@ -391,7 +394,25 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> ReplaceChair(int establishmentUrn, int gid)
         {
             var governor = await _governorsReadService.GetGovernorAsync(gid, User);
-            var governors = (await _governorsReadService.GetSharedGovernorsAsync(establishmentUrn, User)).Where(g => g.RoleId == governor.RoleId && g.Id != gid).ToList();
+            var roles = new List<eLookupGovernorRole>
+            {
+                (eLookupGovernorRole)governor.RoleId
+            };
+
+            if (EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value))
+            {
+                var localEquivalent =
+                    RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId);
+                if (localEquivalent != null)
+                    roles.Add(localEquivalent.Value);
+
+            }
+            else
+            {
+                roles.AddRange(RoleEquivalence.GetEquivalentToLocalRole((eLookupGovernorRole)governor.RoleId));
+            }
+            
+            var governors = (await _governorsReadService.GetSharedGovernorsAsync(establishmentUrn, User)).Where(g => roles.Contains((eLookupGovernorRole)g.RoleId) && g.Id != gid).ToList();
 
             var model = new ReplaceChairViewModel
             {

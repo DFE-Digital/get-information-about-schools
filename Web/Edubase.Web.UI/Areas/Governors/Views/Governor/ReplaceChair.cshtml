@@ -51,7 +51,7 @@
                                         <ul>
                                             @for (var index = 0; index < Model.SharedGovernors.Count; index++)
                                             {
-                                                @Html.EditorFor(x => x.SharedGovernors[index])
+                                                @Html.EditorFor(x => x.SharedGovernors[index], new { disableStartDate = true })
                                             }
                                         </ul>
                                     }
@@ -83,9 +83,9 @@
             if (Number($day.val()) > 0 && Number($month.val()) > 0 && Number($year.val()) > 0) {
                 var date = new Date($year.val(), $month.val() - 1, $day.val(), 0, 0, 0, 0);
                 date.setDate(date.getDate() + 1);
-                $('#NewLocalGovernor_AppointmentStartDate_Day').val(date.getDate());
-                $('#NewLocalGovernor_AppointmentStartDate_Month').val(date.getMonth() + 1);
-                $('#NewLocalGovernor_AppointmentStartDate_Year').val(date.getFullYear());
+                $('.start-date-day').val(date.getDate());
+                $('.start-date-month').val(date.getMonth() + 1);
+                $('.start-date-year').val(date.getFullYear());
             }
         }
 
