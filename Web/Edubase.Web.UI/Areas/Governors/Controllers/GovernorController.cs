@@ -87,9 +87,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 (await _cachedLookupService.NationalitiesGetAllAsync()), 
                 (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
                 
-            // TODO: remove the where once shared gov is fixed
-            var applicableRoles = domainModel.ApplicableRoles.Where(r => !EnumSets.eSharedGovernorRoles.Contains(r)).Cast<int>();
-            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
+                var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
+                viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User, x => viewModel.GovernanceMode = x.GovernanceMode, x=>
             {
