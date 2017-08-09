@@ -10,6 +10,7 @@ using Edubase.Web.UI.Validation;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
+    [RouteArea("Governors"), RoutePrefix("SharedGovernor")]
     public class SharedGovernorController : Controller
     {
         private const string EstabSelectSharedGovernor = "~/Establishment/Edit/{establishmentUrn:int}/Governance/SelectSharedGovernor";

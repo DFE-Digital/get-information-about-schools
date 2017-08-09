@@ -55,7 +55,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 DOB = governor.DOB,
                 FullName = governor.GetFullName(),
                 Id = governor.Id.Value,
-                Nationality = nationalities.Single(n => n.Id == governor.NationalityId).Name,
+                Nationality = nationalities.SingleOrDefault(n => n.Id == governor.NationalityId)?.Name,
                 PostCode = governor.PostCode,
                 Selected = appointment != null,
                 PreExisting = appointment != null,
