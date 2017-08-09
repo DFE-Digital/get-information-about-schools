@@ -14,6 +14,7 @@ using Edubase.Web.UI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Castle.Core.Internal;
@@ -224,9 +225,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (role.HasValue)
             {
-                var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
-                
-                if (EnumSets.eSingularGovernorRoles.Contains(role.Value) && existingGovernors.CurrentGovernors.Any(g => g.RoleId == (int)role.Value))
+                if (!await RoleAllowed(role.Value, groupUId, establishmentUrn, User))
                 {
                     return RedirectToRoute(establishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn, groupUId, roleAlreadyExists = true });
                 }
@@ -298,6 +297,23 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             ModelState.Clear();
 
             return View(viewModel);
+        }
+
+        private async Task<bool> RoleAllowed(eLookupGovernorRole roleId, int? groupUId, int? establishmentUrn, IPrincipal user)
+        {
+            var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
+            if (EnumSets.eSingularGovernorRoles.Contains(roleId) &&
+                existingGovernors.CurrentGovernors.Any(g => g.RoleId == (int) roleId))
+            {
+                if (groupUId.HasValue && roleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return true;
         }
 
         [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR), 
