@@ -32,7 +32,34 @@
                         }
                         
                     </li>
-                        
+                    
+                    @if (Model.TabDisplayPolicy.Governance)
+                    {
+                        <li>
+                            @if (string.Equals(Model.SelectedTab, "governance"))
+                            {
+                                <a href="@Url.Action("Edit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors" })" class="horizontal-tab selected-tab">Governance</a>
+                            }
+                            else
+                            {
+                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-governance")" class="horizontal-tab">Governance</a>
+                            }
+                        </li>
+                    }
+
+                    @if (Model.TabDisplayPolicy.IEBT)
+                    {
+                        <li>
+                            @if (string.Equals(Model.SelectedTab, "iebt"))
+                            {
+                                <a href="@Url.Action("EditIEBT", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">IEBT</a>
+                            }
+                            else
+                            {
+                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-iebt")" class="horizontal-tab">IEBT</a>
+                            }
+                        </li>
+                    }
                     
                     <li>
                         @if (string.Equals(Model.SelectedTab, "links"))
@@ -56,34 +83,6 @@
                             else
                             {
                                 <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-location")" class="horizontal-tab">Location</a>
-                            }
-                        </li>
-                    }
-
-                    @if (Model.TabDisplayPolicy.IEBT)
-                    {
-                        <li>
-                            @if (string.Equals(Model.SelectedTab, "iebt"))
-                            {
-                                <a href="@Url.Action("EditIEBT", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">IEBT</a>
-                            }
-                            else
-                            {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-iebt")" class="horizontal-tab">IEBT</a>
-                            }
-                        </li>
-                    }
-
-                    @if (Model.TabDisplayPolicy.Governance)
-                    {
-                        <li>
-                            @if (string.Equals(Model.SelectedTab, "governance"))
-                            {
-                                <a href="@Url.Action("Edit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors" })" class="horizontal-tab selected-tab">Governance</a>
-                            }
-                            else
-                            {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-governance")" class="horizontal-tab">Governance</a>
                             }
                         </li>
                     }

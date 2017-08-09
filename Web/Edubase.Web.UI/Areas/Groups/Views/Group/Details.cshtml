@@ -63,12 +63,13 @@
             <div class="tab-wrap">
                 <ul class="horizontal-tabs">
                     <li><a href="#details" class="horizontal-tab">Details</a></li>
-                    <li><a href="#list" class="horizontal-tab">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a></li>
-
+                    
                     @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li><a href="#governance" class="horizontal-tab">Governance</a></li>
                     }
+
+                    <li><a href="#list" class="horizontal-tab">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a></li>
 
                     @if (Model.IsUserLoggedOn)
                     {

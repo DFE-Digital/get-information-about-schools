@@ -5,14 +5,21 @@ using Edubase.Services.Governors;
 using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Governors.Search;
 using Edubase.Services.Groups;
+using Edubase.Services.Groups.Downloads;
+using Edubase.Services.Groups.Models;
+using Edubase.Services.Groups.Search;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Governors.Models;
+using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -113,7 +120,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             }
 
             model.SearchQueryString = Request.QueryString.ToString();
-            model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(g => !EnumSets.SharedGovernorRoles.Contains(g.Id)).Select(x => new LookupItemViewModel(x)).ToList();
+            model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
             model.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
 
             var payload = CreateSearchPayload(model);

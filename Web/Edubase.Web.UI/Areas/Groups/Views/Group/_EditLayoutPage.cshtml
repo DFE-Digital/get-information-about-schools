@@ -15,7 +15,7 @@
 
 @if (ViewData.ContainsKey("DuplicateGovernor"))
 {
-    @Html.Partial("_DuplicateGovernor", ViewData["DuplicateGovernor"])
+    @Html.Partial("../../../Governors/Views/Governor/_DuplicateGovernor", ViewData["DuplicateGovernor"])
 }
 
 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
@@ -35,16 +35,6 @@
                             <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#details")" class="horizontal-tab">Details</a>
                         }
                     </li>
-                    <li>
-                        @if (string.Equals(Model.SelectedTabName, "links"))
-                        {
-                            <a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" class="horizontal-tab selected-tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
-                        }
-                        else
-                        {
-                            <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#list")" class="horizontal-tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
-                        }
-                    </li>
                     @if (Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li>
@@ -58,6 +48,16 @@
                             }
                         </li>
                     }
+                    <li>
+                        @if (string.Equals(Model.SelectedTabName, "links"))
+                        {
+                            <a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" class="horizontal-tab selected-tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                        }
+                        else
+                        {
+                            <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#list")" class="horizontal-tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                        }
+                    </li>
                 </ul>
             </div>
             <div class="tab-content-wrapper horizontal-tabs-content">
