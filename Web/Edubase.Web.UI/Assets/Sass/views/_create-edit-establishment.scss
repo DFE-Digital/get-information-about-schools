@@ -125,10 +125,16 @@ legend {
     
 }
 
+.sen-provision {
+    legend {
+        margin-bottom: 8px;
+    }
+}
+
 .create-edit-school {
 
     .form-group.first {
-        padding-top:16px;
+        padding-top: 16px;
     }
 
     label {
@@ -139,8 +145,8 @@ legend {
     .edubase-button-radio {
         font-size: 19px;
     }
-    
-    
+
+
     .hint-text, .form-hint {
         font-size: 19px;
     }
@@ -156,29 +162,32 @@ legend {
 
     .ofstead-rating {
         overflow: hidden;
+
         span {
             display: block;
             color: #fff;
             background-color: $govuk-blue;
             float: left;
-            padding:2px 6px;
+            padding: 2px 6px;
             margin-top: 0.15em;
             margin-right: 1.5%;
             font-size: 16px;
-            @include media(mobile)  {
+
+            @include media(mobile) {
                 font-size: 14px;
             }
         }
+
         .form-control {
             max-width: 92%;
             float: right;
 
-            @include media(mobile)  {
+            @include media(mobile) {
                 max-width: 89%;
             }
         }
     }
-    
+
 
     .grey-bar {
         border-top: $grey-3 3px solid;
@@ -186,7 +195,7 @@ legend {
         border-right: 0;
         //padding: 12px 0;
         margin: 12px 0;
-	}
+    }
 
     .additional-address-wrapper {
         border: $grey-3 3px solid;
@@ -207,25 +216,28 @@ legend {
 
     .change-list {
         @extend .school-results-listing;
+
         dl {
-            font-size:16px;
+            font-size: 16px;
+
             dd {
-                font-weight:bold;
+                font-weight: bold;
             }
+
             &.border {
-                padding-bottom:15px;
-                border-bottom:3px solid $grey-3;
+                padding-bottom: 15px;
+                border-bottom: 3px solid $grey-3;
             }
+
             &.last {
-                margin-bottom:0;
+                margin-bottom: 0;
             }
         }
     }
 
     legend.effective-date {
-        font-weight:bold;
+        font-weight: bold;
     }
-
 }
 
 
@@ -439,10 +451,6 @@ div.shared-governor-list {
     h3 {
         font-size: 16px;
     }
-}
-
-.create-estab-number-gen {
-    padding-top: 16px;
 }
 
 

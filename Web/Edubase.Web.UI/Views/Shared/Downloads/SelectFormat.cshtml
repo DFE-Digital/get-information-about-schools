@@ -1,5 +1,6 @@
 ﻿@using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
+@using Edubase.Web.UI.Helpers
 @model IDownloadGenerationProgressModel
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
@@ -48,18 +49,10 @@
                 @Html.HiddenFor(x => x.SearchQueryString)
                 <div class="download-step">
                     <div class="form-group">
-                        <fieldset>
+                        <fieldset class="stacked-controls">
                             <legend class="visually-hidden">Select your prefered format</legend>
-
-                            <label class="block-label selection-button-radio" for="radio-1">
-                                <input id="radio-1" type="radio" name="fileformat" value="csv" checked="checked">
-                                Data in CSV format
-                            </label>
-                            <label class="block-label selection-button-radio" for="radio-2">
-                                <input id="radio-2" type="radio" name="fileformat" value="xlsx">
-                                Data in XLSX (Excel) format
-                            </label>
-
+                            @FormHelpers.GiasRadio("csv", "fileformat", "Data in CSV format", new { @checked = "checked"})
+                            @FormHelpers.GiasRadio("xlsx", "fileformat", "Data in XLSX (Excel) format")
                         </fieldset>
                     </div>
                 </div>

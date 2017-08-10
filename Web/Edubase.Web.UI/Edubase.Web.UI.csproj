@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -273,6 +273,7 @@
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
     <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
+    <Compile Include="Helpers\FormHelpers.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
@@ -807,7 +808,6 @@
     <Content Include="Assets\Sass\elements\forms\feedback\_feedback.scss" />
     <Content Include="Assets\Sass\elements\forms\filter-form\_option-select.scss" />
     <Content Include="Assets\Sass\elements\forms\filter-form\_text-filter.scss" />
-    <Content Include="Assets\Sass\elements\forms\_form-block-labels.scss" />
     <Content Include="Assets\Sass\elements\forms\_form-date.scss" />
     <Content Include="Assets\Sass\elements\forms\_form-questions.scss" />
     <Content Include="Assets\Sass\elements\forms\_form-validation.scss" />

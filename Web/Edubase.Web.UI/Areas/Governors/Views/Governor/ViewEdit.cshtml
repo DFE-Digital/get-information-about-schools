@@ -1,5 +1,6 @@
 ﻿@using Edubase.Services.Enums;
 @using Edubase.Web.UI.Models.Grid
+@using Edubase.Web.UI.Helpers
 @model GovernorsGridViewModel
 @{
     Layout = Model.Layout;
@@ -263,14 +264,10 @@ else
                                             <div class="form-group">
                                                 <fieldset class="inline toggle-panels">
                                                     <legend class="visually-hidden">Do you wish to retire or remove this person?</legend>
-                                                    <label class="block-label selection-button-radio" for="removal-mode-1">
-                                                        <input type="radio" name="removal-mode" id="removal-mode-1" value="1" checked="checked" data-toggle-panel=".retire-governor" />
-                                                        This person has completed their term
-                                                    </label>
-                                                    <label class="block-label selection-button-radio" for="removal-mode-2">
-                                                        <input type="radio" name="removal-mode" id="removal-mode-2" value="2" data-toggle-panel=".remove-governor" />
-                                                        Remove person
-                                                    </label>
+                                                    @FormHelpers.GiasRadio("1","removal-mode", "This person has completed their term",null, new { data_toggle_panel =".retire-governor", @checked="checked" })
+                                                    
+                                                    @FormHelpers.GiasRadio("2", "removal-mode", "Remove person", null, new { data_toggle_panel = ".remove-governor" })
+                                                    
                                                 </fieldset>
                                             </div>
 

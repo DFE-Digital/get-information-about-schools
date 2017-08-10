@@ -39,18 +39,14 @@
                 @Html.HiddenFor(x => x.TotalSteps)
                 <div class="download-step">
                     <div class="form-group">
-                        <fieldset>
+                        <fieldset class="stacked-controls">
                             <legend class="visually-hidden">Select a data set</legend>
-                            <label class="block-label selection-button-radio" for="radio-1">
-                                <input id="radio-1" type="radio" name="@nameof(Model.IncludeNonPublicData)" value="false" checked="checked">
-                                Public data
-                            </label>
-
-
-                            <label class="block-label selection-button-radio" for="radio-2">
-                                <input id="radio-2" type="radio" name="@nameof(Model.IncludeNonPublicData)" value="true">
-                                Public and non-public data
-                            </label>
+                            @{
+                                var inputName = Model.IncludeNonPublicData;
+                            }
+                            @Html.GiasRadioFor(m => m.IncludeNonPublicData, "false", "Public data", null, new {@checked="checked"} )
+                           
+                            @Html.GiasRadioFor(m => m.IncludeNonPublicData, "true", "Public and non-public data")
 
                         </fieldset>
                     </div>
@@ -58,7 +54,7 @@
 
                 @Html.HiddenFieldsFromQueryString()
 
-                <input class="button button-next" type="submit" value="Select and continue">
+                <input class="button" type="submit" value="Select and continue">
             }
 
         </div>

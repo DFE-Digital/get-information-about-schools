@@ -10,12 +10,11 @@
         <li class="search-type-wrapper">
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
             {
+                @Html.HiddenFor(m => m.SelectedTab)
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by name of reference number</legend>
-                    <span class="radio-button-wrap">
-                        @Html.HiddenFor(m => m.SelectedTab)
+                    <span class="radio-button-wrap">                        
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
-                        @*<input id="searchtype-name" name="search-by" value="establishment" type="radio" data-toggle-panel="#searchby-name-ref">*@
                         <label class="edubase-button-radio" for="searchtype-name">
                             Name or reference number
                         </label>
@@ -46,9 +45,7 @@
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                         <div class="form-group">
                             <button type="submit" class="button mobile-full-width search-button" id="name-search-submit">Search</button>
-                            @*<button type="submit" class="button mobile-full-width search-button" name="searchtype" value="@eSearchType.Text">Search</button>*@
                         </div>
-
                         <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                     </div>
                 </fieldset>
@@ -64,7 +61,6 @@
                     <span class="radio-button-wrap">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Location, new { id = "searchtype-location", data_toggle_panel = "#searchby-location-ref" })
-                        @*<input id="searchtype-location" name="search-by" value="location" type="radio" data-toggle-panel="#searchby-location-ref">*@
                         <label class="edubase-button-radio" for="searchtype-location">
                             Location
                         </label>
@@ -90,7 +86,6 @@
                             </span>
                         </div>
                         <div class="form-group">
-                            @*<button type="submit" class="button mobile-full-width search-button" name="searchtype" value="@eSearchType.Location">Search</button>*@
                             <button type="submit" class="button mobile-full-width search-button" id="location-search-submit" name="searchtype" value="@eSearchType.Location">Search</button>
                         </div>
                     </div>
@@ -107,8 +102,7 @@
                     <span class="radio-button-wrap">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.ByLocalAuthority, new { id = "searchtype-la", data_toggle_panel = "#searchby-la-ref" })
-                        @*<input id="searchtype-la" name="search-by" value="la" type="radio" data-toggle-panel="#searchby-la-ref"
-                            @Html.Conditional(Model.SelectedLocalAuthorityIds.Any(), "checked")>*@
+                        
                         <label class="edubase-button-radio" for="searchtype-la">
                             Local authority
                         </label>
@@ -153,7 +147,6 @@
                         @Html.HiddenFieldsFromQueryString(new[] { "NoResultsForName", "NoResultsForLocation", "NoResultsForLA" })
                         <div class="form-group">
                             <button type="submit" class="button mobile-full-width button-below search-button" id="la-search-submit">Search</button>
-                            @*<button type="submit" class="button mobile-full-width button-below search-button" name="searchtype" value="@eSearchType.ByLocalAuthority">Search</button>*@
                         </div>
                     </div>
                 }
@@ -173,7 +166,6 @@
                     <span class="radio-button-wrap">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })
-                        @*<input id="searchtype-name" name="search-by" value="establishment" type="radio" data-toggle-panel="#searchby-name-ref">*@
                         <label class="edubase-button-radio" for="searchtype-all">
                             All establishments
                         </label>
@@ -189,7 +181,6 @@
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                         <div class="form-group">
                             <button type="submit" class="button mobile-full-width search-button" id="all-search-submit">Search</button>
-                            @*<button type="submit" class="button mobile-full-width search-button" name="searchtype" value="@eSearchType.Text">Search</button>*@
                         </div>
 
                         <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />

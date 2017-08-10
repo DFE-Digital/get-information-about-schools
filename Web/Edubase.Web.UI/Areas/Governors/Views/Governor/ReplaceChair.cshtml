@@ -26,15 +26,19 @@
 
                 @Html.EditorFor(m => m.DateTermEnds)
                 <div class="form-group inline toggle-panels">
-                    <label class="block-label">
-                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.LocalChair, new { id = "newChair", @class = "panel-trigger", data_toggle_panel = "#newChairDetails" })
-                        New Chair
-                    </label>
-                
-                    <label class="block-label ">
-                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.SharedChair, new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#sharedChairDetails" })
-                        Shared Chair
-                    </label>
+                    @Html.GiasRadioFor(m =>m.NewChairType,
+                        ReplaceChairViewModel.ChairType.LocalChair,
+                        "New Chair",
+                        null,
+                        new { id = "newChair", @class = "panel-trigger", data_toggle_panel = "#newChairDetails" })
+
+                    
+                    @Html.GiasRadioFor(m => m.NewChairType,
+                        ReplaceChairViewModel.ChairType.SharedChair,
+                        "Shared Chair",
+                        null,
+                        new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#sharedChairDetails" })
+
                 </div>
                 <div id="replacement-chair-details" class="exapanding-list-wrap chair-replace governor-toggles">
                     <div class="column-two-thirds">

@@ -278,6 +278,8 @@ category: Forms
         float: right;
         right: 5px;
         top:  0;
+
+
         &:after {
             content: "";
             background-image: file-url('option-select-toggle-child-sprite.png');
