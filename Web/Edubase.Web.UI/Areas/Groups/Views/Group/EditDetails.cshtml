@@ -158,9 +158,8 @@
             <br />
             <br />
 
-            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
             <button type="submit" name="action" class="button mobile-full-width" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
-            
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
         </div>
     </div>
 
@@ -201,6 +200,14 @@
                 function (e) {
                     $('#edit-submit').click();
                 });
+
+            if (modal.length === 1) {
+                $('#edit-submit').on('click', function(e) {
+                    e.preventDefault();
+                    mask.removeClass('hidden');
+                    modal.removeClass('hidden');
+                });
+            }
         }());
     </script>
 }
