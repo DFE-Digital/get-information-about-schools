@@ -51,7 +51,7 @@
                     <div class="form-group">
                         <fieldset class="stacked-controls">
                             <legend class="visually-hidden">Select your prefered format</legend>
-                            @FormHelpers.GiasRadio("csv", "fileformat", "Data in CSV format", new { @checked = "checked"})
+                            @FormHelpers.GiasRadio("csv", "fileformat", "Data in CSV format",null,  new { @checked = "checked"})
                             @FormHelpers.GiasRadio("xlsx", "fileformat", "Data in XLSX (Excel) format")
                         </fieldset>
                     </div>
