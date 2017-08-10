@@ -132,7 +132,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 if (viewModel.Action == "Save") // retire selected governor with the chosen appt. end date
                 {
-                    if (viewModel.GovernorShared.HasValue && viewModel.GovernorShared.Value)
+                    if (viewModel.GovernorShared.HasValue && viewModel.GovernorShared.Value && viewModel.EstablishmentUrn.HasValue)
                     {
                         var sharedGovernor = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value, User);
                         var appointment = sharedGovernor.Appointments.Single(a => a.EstablishmentUrn == viewModel.EstablishmentUrn.Value);
