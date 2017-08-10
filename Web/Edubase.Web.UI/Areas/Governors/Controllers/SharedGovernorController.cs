@@ -44,7 +44,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var viewModel = new SelectSharedGovernorViewModel
             {
                 Governors = (await Task.WhenAll(sharedGovernors)).ToList(),
-                GovernorType = roleName.ToLowerInvariant()
+                GovernorType = roleName.ToLowerInvariant(),
+                
             };
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, null, User);

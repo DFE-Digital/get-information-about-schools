@@ -66,7 +66,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         private static bool IsSharedGovernorRoleMultiSelect(eLookupGovernorRole role)
         {
-            return role == eLookupGovernorRole.Group_SharedLocalGovernor;
+            return role == eLookupGovernorRole.Establishment_SharedLocalGovernor;
         }
     }
 }
