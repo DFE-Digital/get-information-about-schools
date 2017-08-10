@@ -42,9 +42,9 @@
                         <fieldset class="stacked-controls">
                             <legend class="visually-hidden">Select a data set</legend>
                             
-                            @Html.GiasRadioFor(m=>m.Dataset, "core", "Core set of data", new { @checked="checked", @class="core-full" })
+                            @Html.GiasRadioFor(m=>m.Dataset, "core", "Core set of data",null,  new { @checked="checked", @class="core-full" })
                             
-                            @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data", new { @class = "core-full" })
+                            @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data",null, new { @class = "core-full" })
 
                             @if (Model.AllowAnyExtraFields)
                             {
