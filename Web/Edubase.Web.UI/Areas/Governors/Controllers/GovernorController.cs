@@ -145,13 +145,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     }
                     else
                     {
-                        var domainModel = await _governorsReadService.GetGovernorAsync(viewModel.RemovalGid.Value, User);
-                        domainModel.AppointmentEndDate = viewModel.RemovalAppointmentEndDate.ToDateTime().Value;
-                        var response = await _governorsWriteService.UpdateDatesAsync(viewModel.RemovalGid.Value,
-                            domainModel.AppointmentStartDate.Value,
-                            viewModel.RemovalAppointmentEndDate.ToDateTime().Value, User);
+                        var response = await _governorsWriteService.UpdateDatesAsync(viewModel.RemovalGid.Value, viewModel.RemovalAppointmentEndDate.ToDateTime().Value, User);
 
-                        //var response = await _governorsWriteService.SaveAsync(domainModel, User);
                         if (!response.Success)
                         {
                             if (response.Errors.Length == 0)
@@ -356,8 +351,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!viewModel.EstablishmentUrn.HasValue &&
-                    EnumSets.eSharedGovernorRoles.Contains(viewModel.GovernorRole))
+                if (!viewModel.EstablishmentUrn.HasValue 
+                    && !viewModel.GID.HasValue 
+                    && EnumSets.eSharedGovernorRoles.Contains(viewModel.GovernorRole))
                 {
                     var existingGovernors = await _governorsReadService.GetGovernorListAsync(null, viewModel.GroupUId, User);
                     var duplicates = existingGovernors.CurrentGovernors.Where(g => g.RoleId == (int) viewModel.GovernorRole

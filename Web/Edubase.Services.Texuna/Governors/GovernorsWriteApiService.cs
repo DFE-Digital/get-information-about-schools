@@ -29,7 +29,15 @@ namespace Edubase.Services.Texuna.Governors
                 AppointmentEndDate = appointmentEndDate
             }, principal);
         }
-        
+
+        public async Task<ApiResponse> UpdateDatesAsync(int governorId, DateTime appointmentEndDate, IPrincipal principal)
+        {
+            return await _httpClient.PatchAsync($"governor/{governorId}", new
+            {
+                AppointmentEndDate = appointmentEndDate
+            }, principal);
+        }
+
         public async Task<ApiResponse<int>> SaveAsync(GovernorModel model, IPrincipal principal)
         {
             if (model.IsNewEntity)
