@@ -190,6 +190,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed) 
                 && User.InRole(EdubaseRoles.ROLE_BACKOFFICE);
 
+            viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup) 
+                && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(EdubaseRoles.ROLE_BACKOFFICE);
+
             return View("EditDetails", viewModel);
         }
 
