@@ -131,50 +131,44 @@
     }
 </div>
 
-<div class="grid-row">
-    <div class="column-full section-break">
-        <h2 class="heading-medium">Update</h2>
+@if (Model.UserCanBulkUpdateEstablishments || Model.UserCanBulkUpdateGovernors)
+{
+    <div class="grid-row">
+        <div class="column-full section-break">
+            <h2 class="heading-medium">Update</h2>
+        </div>
     </div>
-</div>
 
-<div class="grid-row">
+    <div class="grid-row">
 
-    @if (Model.UserCanBulkUpdateEstablishments)
-    {
-        <div class="column-half">
-            <h3>
-                @Html.RouteLink("Bulk update establishments", "EstabBulkUpdate")
-            </h3>
-            <p>
-                Update establishment data as a collection,
-                rather than by individual entries.
-            </p>
-        </div>
-    }
+        @if (Model.UserCanBulkUpdateEstablishments)
+        {
+            <div class="column-half">
+                <h3>
+                    @Html.RouteLink("Bulk update establishments", "EstabBulkUpdate")
+                </h3>
+                <p>
+                    Update establishment data as a collection,
+                    rather than by individual entries.
+                </p>
+            </div>
+        }
 
-    @if (Model.UserCanBulkUpdateGovernors)
-    {
-        <div class="column-half">
-            <h3>
-                @Html.RouteLink("Bulk update governance", "GovernorsBulkUpdate")
-            </h3>
-            <p>
-                Update your governance data as a collection,
-                rather than by individual entries.
-            </p>
-        </div>
-    }
+        @if (Model.UserCanBulkUpdateGovernors)
+        {
+            <div class="column-half">
+                <h3>
+                    @Html.RouteLink("Bulk update governance", "GovernorsBulkUpdate")
+                </h3>
+                <p>
+                    Update your governance data as a collection,
+                    rather than by individual entries.
+                </p>
+            </div>
+        }
 
-    @* This is NON-MVP <div class="column-half">
-        <h3>
-            <a href="#">Bulk update groups</a>
-        </h3>
-        <p>
-            Update group data as a collection, rather than
-            by individual entries.
-        </p>
-    </div>*@
-</div>
+    </div>
+}
 
 <div class="grid-row">
     <div class="column-full section-break">
@@ -183,22 +177,29 @@
 </div>
 
 <div class="grid-row">
-    <div class="column-half">
-        <h3>
-            @Html.RouteLink("Approvals", "PendingApprovals")
-        </h3>
-        <p>
-            View your pending changes and approve or reject.
-        </p>
-    </div>
+
+    @if (Model.UserCanApprove)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.RouteLink("Approvals", "PendingApprovals")
+            </h3>
+            <p>
+                View your pending changes and approve or reject.
+            </p>
+        </div>
+    }
     
-    <div class="column-half">
-        <h3>@Html.RouteLink("Change history", "ChangeHistoryCriteria")</h3>
-        <p>
-            View changes in the data relating to
-            establishments and groups.
-        </p>
-    </div>
+    @if (Model.UserCanSearchChangeHistory)
+    {
+        <div class="column-half">
+            <h3>@Html.RouteLink("Change history", "ChangeHistoryCriteria")</h3>
+            <p>
+                View changes in the data relating to
+                establishments and groups.
+            </p>
+        </div>
+    }
 
     @if (Model.UserCanManageAcademyOpenings)
     {
@@ -222,5 +223,6 @@
             You can also confirm that your team's data is up to date.
         </p>
     </div>
+
 </div>
 

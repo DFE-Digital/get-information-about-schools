@@ -26,5 +26,7 @@
         public const string edubase_ddce = "edubase_ddce";
         public const string SFC = "SFC";
         public const string DUGE = "DUGE";
+        public const string LSU = "LSU";
+        public const string UKRLP = "UKRLP";
     }
 }

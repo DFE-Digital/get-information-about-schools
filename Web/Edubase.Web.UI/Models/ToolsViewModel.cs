@@ -22,5 +22,7 @@ namespace Edubase.Web.UI.Models
         public bool UserCanBulkCreateAcademies { get; internal set; }
         public bool UserCanBulkUpdateGovernors { get; internal set; }
         public bool UserCanBulkUpdateEstablishments { get; internal set; }
+        public bool UserCanApprove { get; internal set; }
+        public bool UserCanSearchChangeHistory { get; internal set; }
     }
 }
