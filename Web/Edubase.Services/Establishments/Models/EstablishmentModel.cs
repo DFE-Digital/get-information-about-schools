@@ -291,6 +291,12 @@ namespace Edubase.Services.Establishments.Models
         public string HelpdeskTrigger1 { get; set; }
         public int? HelpdeskPreviousLocalAuthorityId { get; set; }
         public int? HelpdeskPreviousEstablishmentNumber { get; set; }
+        
+        [DisplayName("Number of pupils eligible for free school meals")]
+        public int? FreeSchoolMealsNumber { get; set; }
+
+        [DisplayName("Percentage of children eligible for free school meals")]
+        public double? FreeSchoolMealsPercentage { get; set; }
 
         public bool ConfirmationUpToDateRequired { get; set; }
         public bool ConfirmationUpToDateGovernanceRequired { get; set; }

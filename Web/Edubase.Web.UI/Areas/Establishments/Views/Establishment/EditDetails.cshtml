@@ -441,6 +441,22 @@
                         </div>
                     }
 
+                    @* TODO: need to check the edit policy for this item *@
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsNumber)">
+                        @Html.LabelFor(x => x.FreeSchoolMealsNumber)
+                        @Html.ValidationMessageFor(x => x.FreeSchoolMealsNumber)
+                        @Html.TextBoxFor(x => x.FreeSchoolMealsNumber, new { @class = "form-control" })
+                    </div>
+                    
+                    @* TODO: need to check the edit policy for this item *@
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsPercentage)">
+                        @Html.LabelFor(x => x.FreeSchoolMealsPercentage)
+                        @Html.ValidationMessageFor(x => x.FreeSchoolMealsPercentage)
+                        @Html.TextBoxFor(x => x.FreeSchoolMealsPercentage, new { @class = "form-control" })
+                    </div>
+
+
+
                     @if (Model.EditPolicy.SENStat)
                     {
                         <div class="form-group">

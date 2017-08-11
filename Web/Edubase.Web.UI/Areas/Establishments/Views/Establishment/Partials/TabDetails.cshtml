@@ -242,6 +242,18 @@
             </tr>
         }
 
+        @* TODO: need to check the display policy for this item *@
+        <tr>
+            <th scope="row">Percentage of children eligible for free school meals:</th>
+            <td>@(Model.Establishment.FreeSchoolMealsPercentage?.ToString() ?? "Not recorded")</td>
+        </tr>
+
+        @* TODO: need to check the display policy for this item *@
+        <tr>
+            <th scope="row">Number of pupils eligible for free school meals:</th>
+            <td>@(Model.Establishment.FreeSchoolMealsNumber?.ToString() ?? "Not recorded")</td>
+        </tr>
+
 
         @if (Model.DisplayPolicy.SENStat)
         {

@@ -207,5 +207,8 @@ namespace Edubase.Services.Establishments.Models
         public bool? AltCountyId { get; set; }
         public bool? AltPostCode { get; set; }
 
+        public bool FreeSchoolMealsNumber { get; set; }
+        public bool FreeSchoolMealsPercentage { get; set; }
+
     }
 }
