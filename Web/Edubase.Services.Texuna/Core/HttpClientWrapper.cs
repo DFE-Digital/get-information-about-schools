@@ -319,6 +319,7 @@ namespace Edubase.Services
         {
             AssertJsonContent(message);
             if (typeof(T) == typeof(string)) return (T)(object)await message.Content.ReadAsStringAsync();
+            else if (typeof(T) == typeof(int?)) return (T)(object) (await message.Content.ReadAsStringAsync()).ToInteger();
             else return await message.Content.ReadAsAsync<T>(new[] { _formatter });
         }
 

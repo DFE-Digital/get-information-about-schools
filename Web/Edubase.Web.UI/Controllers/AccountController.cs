@@ -11,9 +11,11 @@ using System.Web;
 using System.Web.Mvc;
 using System;
 using Edubase.Services.Enums;
+using Edubase.Web.UI.Areas.Establishments.Models.Search;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using ET = eLookupEstablishmentType;
     [RoutePrefix("Account")]
     public class AccountController : Controller
     {
@@ -49,28 +51,29 @@ namespace Edubase.Web.UI.Controllers
             
             AuthenticationManager.SignIn(id);
 
-            return GetLandingPage(principal);
+            return await GetLandingPage(principal);
         }
 
-        private ActionResult GetLandingPage(ClaimsPrincipal principal)
+        private async Task<ActionResult> GetLandingPage(ClaimsPrincipal principal)
         {
             if (principal.IsInRole(EdubaseRoles.ESTABLISHMENT))
             {
-                var urn = _securityService.GetMyEstablishmentUrn(principal);
-                return RedirectToRoute("EstabDetails", new { id = urn });
+                var urn = await _securityService.GetMyEstablishmentUrn(principal);
+                if (urn.HasValue) return RedirectToRoute("EstabDetails", new { id = urn });
             }
             else if (principal.IsInRole(EdubaseRoles.EDUBASE_GROUP_MAT))
             {
-                var uid = _securityService.GetMyMATUId(principal);
-                return RedirectToRoute("GroupDetails", new { id = uid });
+                var uid = await _securityService.GetMyMATUId(principal);
+                if (uid.HasValue) return RedirectToRoute("GroupDetails", new { id = uid });
             }
             else if (principal.IsInRole(EdubaseRoles.IEBT))
             {
-                var types = new[]{eLookupEstablishmentType.NonmaintainedSpecialSchool
-
-                return Redirect("/Establishments/Search?a=31&a=5&a=10&a=7");
+                var searchQueryString = string.Join("&", new[] { ET.NonmaintainedSpecialSchool, ET.BritishSchoolsOverseas, ET.CityTechnologyCollege, ET.OtherIndependentSchool }
+                    .Select(x => $"{EstablishmentSearchViewModel.BIND_ALIAS_TYPEIDS}={(int)x}"));
+                return Redirect(string.Concat(Url.RouteUrl("EstabSearch"), "?", searchQueryString));
             }
-            else return RedirectToAction("Index", "Search");
+
+            return RedirectToAction("Index", "Search");
         }
 
         [Route(nameof(LogOff)), HttpGet]
