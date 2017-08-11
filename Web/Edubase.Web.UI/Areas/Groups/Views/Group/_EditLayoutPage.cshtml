@@ -15,7 +15,7 @@
 
 @if (ViewData.ContainsKey("DuplicateGovernor"))
 {
-    @Html.Partial("../../../Governors/Views/Governor/_DuplicateGovernor", ViewData["DuplicateGovernor"])
+    @Html.Partial("~/Areas/Governors/Views/Governor/_DuplicateGovernor.cshtml", ViewData["DuplicateGovernor"])
 }
 
 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
