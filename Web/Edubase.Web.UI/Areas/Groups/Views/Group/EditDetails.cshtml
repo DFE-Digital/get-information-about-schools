@@ -188,6 +188,7 @@
         (function () {
             var mask = $('#warning-modal-overlay');
             var modal = $('#warning-modal-content');
+            var canProceed = false;
 
             $('#warning-exit-overlay, #overlay-cancel').on('click',
                 function (e) {
@@ -198,14 +199,18 @@
 
             $('#overlay-proceed').on('click',
                 function (e) {
+                    canProceed = true;
                     $('#edit-submit').click();
                 });
 
             if (modal.length === 1) {
                 $('#edit-submit').on('click', function(e) {
-                    e.preventDefault();
-                    mask.removeClass('hidden');
-                    modal.removeClass('hidden');
+                    if (!canProceed) {
+                        e.preventDefault();
+                        mask.removeClass('hidden');
+                        modal.removeClass('hidden');
+                    }
+                    
                 });
             }
         }());
