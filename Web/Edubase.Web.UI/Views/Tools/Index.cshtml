@@ -26,6 +26,19 @@
 </div>
 
 <div class="grid-row">
+    
+    @if (Model.UserCanConvertAcademyTrusts)
+    {
+        <div class="column-half">
+            <h3>
+                @Html.RouteLink("Convert academy trusts", "GroupConvertSAT2MAT")
+            </h3>
+            <p>
+                
+            </p>
+        </div>
+    }
+
     @if (Model.UserCanBulkCreateAcademies)
     {
         <div class="column-half">

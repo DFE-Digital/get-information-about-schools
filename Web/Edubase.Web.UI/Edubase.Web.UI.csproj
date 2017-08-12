@@ -270,6 +270,7 @@
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
+    <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
     <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
@@ -911,6 +912,7 @@
     <Content Include="Areas\Governors\Views\Governance\EditGovernanceMode.cshtml" />
     <Content Include="fb6k7l-throwex.aspx" />
     <Content Include="Assets\Sass\views\_edit-links.scss" />
+    <Content Include="Areas\Groups\Views\Group\Convert.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
