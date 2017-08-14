@@ -42,15 +42,18 @@
                 <p class="bold-xsmall">Already shared with this establishment</p>
             }
             <dl class="key-value-list">
-                <dt>Shared with:</dt>
-                <dd>
-                    @foreach (var establishment in Model.SharedWith)
-                    {
-                        <div>
-                            @establishment.EstablishmentName, URN: @establishment.Urn
-                        </div>
-                    }
-                </dd>
+                @if (Model.SharedWith.Any())
+                {
+                    <dt>Shared with:</dt>
+                    <dd>
+                        @foreach (var establishment in Model.SharedWith)
+                        {
+                            <div>
+                                @establishment.EstablishmentName, URN: @establishment.Urn
+                            </div>
+                        }
+                    </dd>
+                }
                 <dt>Postcode:</dt>
                 <dd>@Model.PostCode</dd>
             </dl>
