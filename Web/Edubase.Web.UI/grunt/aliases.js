@@ -2,7 +2,7 @@ module.exports = {
   "compile-dev-assets": [
     "compile-dev-css",
     "compile-dev-js"
-  ],
+    ],
   "compile-dev-js": [
     "clean:elements-js",
     "uglify:bundle-elements-dev",
