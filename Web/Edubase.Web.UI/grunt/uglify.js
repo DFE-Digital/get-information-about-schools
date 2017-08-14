@@ -31,7 +31,7 @@
         "process-standalone": {
             options: {
                 sourceMap: false,
-                beautify: true,
+                beautify: false,
                 compress: true,
                 mangle: true
             },
