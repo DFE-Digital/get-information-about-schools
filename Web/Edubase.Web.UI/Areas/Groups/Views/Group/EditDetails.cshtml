@@ -9,7 +9,7 @@
     Layout = "_EditLayoutPage.cshtml";
 }
 
-@using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post, new { @id="edit-group-details" } ))
 {
     @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.GroupTypeMode)
@@ -139,12 +139,11 @@
 
                 @if (Model.CanUserCloseMATAndMarkAsCreatedInError)
                 {
-                    <br />
                     <div class="form-group">
-                        <span class="checkbox-wrap">
-                            @Html.CheckBoxFor(x => x.CloseMATAndMarkAsCreatedInError)
-                            @Html.LabelFor(x => x.CloseMATAndMarkAsCreatedInError, "Close this trust and mark as 'created in error'", new { @class = "edubase-button-checkbox" })
-                        </span>
+                        @Html.GiasCheckboxFor(x => x.CloseMATAndMarkAsCreatedInError,
+                            "Close this trust and mark as 'created in error'", 
+                            null,
+                            new { id="close-created-in-error"})                        
                     </div>
                 }
 
@@ -214,5 +213,31 @@
                 });
             }
         }());
+        (function() {
+            if (document.getElementById('close-created-in-error')) {
+                var form = $('#edit-group-details');
+                var canCloseImmediately = false;
+                var closeCheckbox = document.getElementById('close-created-in-error');
+                form.on('submit', function (e) {                    
+                    if (closeCheckbox.checked && !canCloseImmediately) {
+                        e.preventDefault();
+                        $(this).okCancel({
+                            ok: function () {
+                                canCloseImmediately = true;
+                                $('#edit-submit').click();
+                            },
+                            immediate: true,
+                            idPrefix: 'close-continue',
+                            title: 'Are you sure you want to close this trust?',
+                            content:
+                            'All academies and shared governors will be removed on closure.'
+                        });
+                        $(this).removeData('okCancel');
+                    }
+                    
+                });
+            }
+        }());
+        
     </script>
 }
