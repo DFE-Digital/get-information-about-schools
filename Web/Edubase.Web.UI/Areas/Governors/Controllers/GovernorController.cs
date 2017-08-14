@@ -160,7 +160,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 }
                 else if (viewModel.Action == "Remove") // mark the governor record as deleted
                 {
-                    if (viewModel.GovernorShared.HasValue && viewModel.GovernorShared.Value)
+                    if (viewModel.GovernorShared.GetValueOrDefault() && viewModel.EstablishmentUrn.HasValue)
                     {
                         await _governorsWriteService.DeleteSharedGovernorAppointmentAsync(viewModel.RemovalGid.Value, viewModel.EstablishmentUrn.Value, User);
                     }
