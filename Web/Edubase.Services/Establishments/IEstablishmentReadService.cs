@@ -49,5 +49,6 @@ namespace Edubase.Services.Establishments
         Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap();
         Task<IEnumerable<LookupDto>> GetPermissibleLocalGovernorsAsync(int urn, IPrincipal principal);
         Task<IEnumerable<AddressLookupResult>> GetAddressesByPostCodeAsync(string postCode, IPrincipal principal);
+        Task<string> GetEstablishmentNameAsync(int urn, IPrincipal principal);
     }
 }

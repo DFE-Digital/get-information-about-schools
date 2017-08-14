@@ -182,5 +182,7 @@ namespace Edubase.Services.Texuna.Establishments
             }
             
         }
+
+        public async Task<string> GetEstablishmentNameAsync(int urn, IPrincipal principal) => (await GetAsync(urn, principal)).GetResult().Name;
     }
 }
