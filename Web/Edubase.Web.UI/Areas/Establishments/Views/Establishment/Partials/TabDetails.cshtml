@@ -245,7 +245,7 @@
         @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
         {
             <tr>
-                <th scope="row">Percentage of children eligible for free school meals:</th>
+                <th scope="row">Percentage of children eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></th>
                 <td>@(Model.Establishment.FreeSchoolMealsPercentage?.ToString() ?? "Not recorded")</td>
             </tr>
         }
@@ -253,7 +253,7 @@
         @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
         {
             <tr>
-                <th scope="row">Number of pupils eligible for free school meals:</th>
+                <th scope="row">Number of pupils eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></th>
                 <td>@(Model.Establishment.FreeSchoolMealsNumber?.ToString() ?? "Not recorded")</td>
             </tr>
         }
