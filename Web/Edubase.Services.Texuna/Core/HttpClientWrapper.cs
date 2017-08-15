@@ -1,16 +1,18 @@
 ﻿
-using System.Web;
 using Edubase.Services.Texuna.Glimpse;
 using Microsoft.AspNet.Identity;
+using System.Web;
 
 namespace Edubase.Services
 {
     using Common.IO;
+    using Domain;
+    using Edubase.Common;
     using Exceptions;
     using Newtonsoft.Json;
     using System;
-    using System.Configuration;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Formatting;
@@ -20,9 +22,6 @@ namespace Edubase.Services
     using Texuna;
     using Texuna.Core;
     using Texuna.Serialization;
-    using Domain;
-    using System.Linq;
-    using Edubase.Common;
 
     public class HttpClientWrapper
     {
@@ -30,15 +29,15 @@ namespace Edubase.Services
         private readonly JsonMediaTypeFormatter _formatter = new JsonMediaTypeFormatter();
         private const string HEADER_SA_USER_ID = "sa_user_id";
         private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
-
-        private string ApiUsername => ConfigurationManager.AppSettings["api:Username"];
-        private string ApiPassword => ConfigurationManager.AppSettings["api:Password"];
-
-        public HttpClientWrapper(HttpClient httpClient)
+        
+        public HttpClientWrapper(HttpClient httpClient, string apiUsername, string apiPassword)
         {
             _httpClient = httpClient;
             _httpClient.Timeout = TimeSpan.FromSeconds(180); // API is slooooow
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(ApiUsername, ApiPassword).ToString());
+
+            if (apiUsername != null && apiPassword != null)
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+
             _formatter.SerializerSettings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
@@ -47,11 +46,16 @@ namespace Edubase.Services
             };
         }
 
-        //TODO: tidy up the "throwOnNotFound" stuff
-        public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal, bool throwOnNotFound = true)
+        public HttpClientWrapper(HttpClient httpClient) : this(httpClient, null, null)
+        {
+
+        }
+
+        public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal) => await GetAsync<TResponse>(uri, principal, true);
+
+        public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal, bool throwOnNotFound)
         {
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
-            
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync<TResponse>(result, throwOnNotFound);
 
@@ -59,7 +63,6 @@ namespace Edubase.Services
 
         public async Task<ApiResponse> PatchAsync(string uri, object data, IPrincipal principal)
         {
-
             var requestMessage = await CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync(result);
@@ -319,8 +322,14 @@ namespace Edubase.Services
         {
             AssertJsonContent(message);
             if (typeof(T) == typeof(string)) return (T)(object)await message.Content.ReadAsStringAsync();
-            else if (typeof(T) == typeof(int?)) return (T)(object) (await message.Content.ReadAsStringAsync()).ToInteger();
-            else return await message.Content.ReadAsAsync<T>(new[] { _formatter });
+            else if (typeof(T) == typeof(int?)) return (T)(object)(await message.Content.ReadAsStringAsync()).ToInteger();
+            else
+            {
+                var errorLogger = new FormatterErrorLogger();
+                var retVal = await message.Content.ReadAsAsync<T>(new[] { _formatter }, errorLogger);
+                if (errorLogger.Errors.Any()) throw new TexunaApiSystemException($"Error parsing the JSON returned by the API; details: {errorLogger.Errors.First().ErrorMessage}");
+                return retVal;
+            }
         }
 
         private T TryDeserializeAsync<T>(string json) where T : class
@@ -350,9 +359,9 @@ namespace Edubase.Services
             {
 #if DEBUG
                 var responseMessage = "";
-                if (response != null)
+                if (response?.Content != null)
                 {
-                    responseMessage = await response.Content.ReadAsStringAsync();
+                    responseMessage = await response.Content?.ReadAsStringAsync();
                 }
 
                 var context = HttpContext.Current;

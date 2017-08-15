@@ -89,6 +89,8 @@
     <Compile Include="ChangeHistory\Models\SearchChangeHistoryPayload.cs" />
     <Compile Include="ChangeHistory\Models\UserGroupModel.cs" />
     <Compile Include="Core\BasicAuthCredentials.cs" />
+    <Compile Include="Core\FormatterError.cs" />
+    <Compile Include="Core\FormatterErrorLogger.cs" />
     <Compile Include="Core\HttpClientWrapper.cs" />
     <Compile Include="Downloads\DownloadsApiService.cs" />
     <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />

@@ -63,7 +63,7 @@ namespace Edubase.IntegrationTest.Establishment
             var id = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
             var p = new ClaimsPrincipal(id);
             
-            var client = new Services.HttpClientWrapper(new HttpClient(new HttpClientHandler { UseCookies = false}) { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) });
+            var client = new Services.HttpClientWrapper(new HttpClient(new HttpClientHandler { UseCookies = false}) { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) }, ConfigurationManager.AppSettings["api:Username"], ConfigurationManager.AppSettings["api:Password"]);
             var svc = new EstablishmentReadApiService(client, new CachedLookupService(new LookupApiService(client, new SecurityApiService(client)), new CacheAccessor(new JsonConverterCollection() { new DbGeographyConverter() })));
 
             var excel = new ExcelQueryFactory(System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, "Establishment Field Display Rules v1.0.xlsx"));
