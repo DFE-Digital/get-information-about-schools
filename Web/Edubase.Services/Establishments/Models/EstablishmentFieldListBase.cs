@@ -196,7 +196,7 @@ namespace Edubase.Services.Establishments.Models
         public bool HelpdeskTrigger1 { get; set; }
         public bool HelpdeskPreviousLocalAuthorityId { get; set; }
         public bool HelpdeskPreviousEstablishmentNumber { get; set; }
-
+        
         public bool? AltSiteName { get; set; }
         public bool? AltCountryId { get; set; }
         public bool? AltUPRN { get; set; }
