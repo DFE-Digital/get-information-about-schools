@@ -136,14 +136,50 @@ nav.tabs {
     .tab-count-5 & {
         @include media($max-width: 841px) {
             li {
-               margin-right: 0.7em;
+                margin-right: 0.7em;
             }
         }
 
         @include media($max-width: 792px) {
             li {
                 font-size: 14px;
-                min-width: 106px;;
+                min-width: 106px;
+            }
+        }
+    }
+
+    .tab-count-7 & {
+        li {
+            margin-right: 0.08em;
+        }
+
+        @include media($max-width: 1050px) {
+            li {
+                font-size: 16px;
+                min-width: 120px;
+            }
+        }
+
+        @include media($max-width: 926px) {
+            li {
+                font-size: 14px;
+                min-width: 88px;
+            }
+        }
+
+        @include media($max-width: 720px ) {
+            li {
+                width: 100%;
+                border: $grey-2 1px solid;
+                text-align: center;
+                padding: 0;
+                float: none;
+                max-width: 100%;
+                font-size: 16px;
+                
+                .selected-tab {
+                    border: 0;
+                }
             }
         }
     }
@@ -161,15 +197,18 @@ nav.tabs {
                 padding-left: 0.5em;
             }
         }
+
         @include media ($max-width: 830px) {
             li {
                 font-size: 14px;
                 margin-right: 0.25em;
             }
+
             a {
-                padding: 0.75em 0.25em 0.1em;              
+                padding: 0.75em 0.25em 0.1em;
             }
         }
+
         @include media($max-width: 804px) {
             li {
                 width: 100%;
@@ -180,13 +219,16 @@ nav.tabs {
                 max-width: 100%;
                 font-size: 16px;
             }
+
             .horizontal-tab {
                 padding: 1em 0 0.5em;
             }
+
             .selected-tab {
                 border: 0;
             }
         }
+
         @include media(tablet) {
             .horizontal-tab {
                 padding: 0.5em 1em 0.25em;
@@ -196,12 +238,13 @@ nav.tabs {
 
 
     .search-tabs & {
-        @include media($max-width: 840px){
+        @include media($max-width: 840px) {
             li {
                 font-size: 16px;
                 margin-right: 0.75em;
-            }            
+            }
         }
+
         @include media($max-width: 666px) {
             li {
                 font-size: 14px;
@@ -216,6 +259,7 @@ nav.tabs {
                 margin-right: 1em;
             }
         }
+
         @include media($max-width: 657px) {
             li {
                 margin-right: 0.7em;
