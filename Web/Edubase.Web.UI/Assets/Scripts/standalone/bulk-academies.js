@@ -105,10 +105,10 @@
                 );
             },
             schoolDetailUrl: function () {
-                return "/Establishment/Details/" + this.leadEstab;
+                return "/Establishments/Establishment/Details/" + this.leadEstab;
             },
             amalgUrl: function () {
-                return '/Establishment/Details/' + this.amalgUrn;
+                return '/Establishments/Establishment/Details/' + this.amalgUrn;
             },
             showGlobalError: function () {
                 return false;

@@ -37,7 +37,7 @@ Vue.component('changes-table',
     },
     methods: {
         detailUrl: function (urn) {
-            return '/Establishment/Details/' + urn;
+            return '/Establishments/Establishment/Details/' + urn;
         }
     }
 });

@@ -32,7 +32,7 @@
            },
            methods: {
                detailUrl: function (urn) {
-                   return '/Establishment/Details/' + urn;
+                   return '/Establishments/Establishment/Details/' + urn;
                }
            }
        });
@@ -72,7 +72,7 @@
         },
         methods: {
             detailUrl: function (urn) {
-                return '/Establishment/Details/' + urn;
+                return '/Establishments/Establishment/Details/' + urn;
             },
             formatDate: function (date, separator) {
                 if (!date) {
