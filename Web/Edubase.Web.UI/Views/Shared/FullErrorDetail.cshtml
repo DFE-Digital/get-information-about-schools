@@ -1,7 +1,7 @@
 ﻿@model Exception
-
 @{
-    Layout = "../dfe/layouts/template.cshtml";
+    var isPartialView = ((bool?)ViewBag.IsPartialView).GetValueOrDefault();
+    Layout = isPartialView ? null as string : "../dfe/layouts/template.cshtml";
     ViewBag.Title = "Edubase";
     ViewBag.pageDescription = "";
     ViewBag.pageClass = "error-page view-logs";
@@ -9,14 +9,17 @@
 
 <div class="grid-row">
     <div class="column-full">
-        <div class="breadcrumbs">
-            <ul>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-            </ul>
+        @if (!isPartialView)
+        {
+            <div class="breadcrumbs">
+                <ul>
+                    <li>
+                        @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                    </li>
+                </ul>
 
-        </div>
+            </div>
+        }
         <h1 class="heading-xlarge">Sorry, something went wrong</h1>
     </div>
     <div class="column-full">

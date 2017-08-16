@@ -45,24 +45,22 @@ namespace Edubase.Web.UI.Filters
                     filterContext.Result = new ViewResult
                     {
                         ViewName = "~/Views/Shared/Error.cshtml",
-                        ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id }
+                        ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
                     };
-
-                    filterContext.ExceptionHandled = true;
                 }
                 else // show full technical error detail
                 {
                     filterContext.Result = new ViewResult
                     {
                         ViewName = "~/Views/Shared/FullErrorDetail.cshtml",
-                        ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id }
+                        ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
                     };
-
-                    ctx.Response.Clear();
-                    ctx.Response.TrySkipIisCustomErrors = true;
-                    ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
-                    filterContext.ExceptionHandled = true;
                 }
+
+                ctx.Response.Clear();
+                ctx.Response.TrySkipIisCustomErrors = true;
+                ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
+                filterContext.ExceptionHandled = true;
             }
         }
 
