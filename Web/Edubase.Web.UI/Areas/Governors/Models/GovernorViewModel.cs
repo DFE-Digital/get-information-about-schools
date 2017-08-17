@@ -70,6 +70,5 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public IEnumerable<SelectListItem> PreviousTitles { get; set; }
         public IEnumerable<SelectListItem> AppointingBodies { get; set; }
         public IEnumerable<SelectListItem> Nationalities { get; set; }
-        //public async Task<IEnumerable<SelectListItem>> GetTitles() => (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.HeadTitleId);
     }
 }
