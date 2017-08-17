@@ -192,6 +192,7 @@
             $modalCancels.on('click',
                 function (e) {
                     e.preventDefault();
+                    console.log('cancel');
                     var idInt = $(this).attr('id').split('-').slice(-1);
                     $('#warning-modal-overlay-'+ idInt).addClass('hidden');
                     $('#warning-modal-content-' + idInt).addClass('hidden');
@@ -199,16 +200,19 @@
 
             $modalProceeds.on('click',
                 function (e) {
+                    console.log('proceed');
                     canProceed = true;
                     $('#edit-submit').click();
                 });
 
-            if ($("[id|='warning-modal-overlay-']").length > 0) {
+            if ($modalProceeds.length > 0) {
+                console.log('there are some procced buttons');
                 $('#edit-submit').on('click', function(e) {
                     if (!canProceed) {
+                        console.log('submit click');
                         e.preventDefault();
-                        $("[id|='warning-modal-overlay-']").removeClass('hidden');
-                        $("[id|='warning-modal-content-']").removeClass('hidden');
+                        $("[id|='warning-modal-overlay']").removeClass('hidden');
+                        $("[id|='warning-modal-content']").removeClass('hidden');
                     }
                     
                 });
