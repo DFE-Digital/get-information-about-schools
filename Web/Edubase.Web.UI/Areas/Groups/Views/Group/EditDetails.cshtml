@@ -188,26 +188,29 @@
             var mask = $('#warning-modal-overlay');
             var modal = $('#warning-modal-content');
             var canProceed = false;
+            var $modalCancels = $("[id|='warning-exit-overlay'], [id|='overlay-cancel']");
+            var $modalProceeds = $("[id|='overlay-proceed']");
 
-            $('#warning-exit-overlay, #overlay-cancel').on('click',
+            $modalCancels.on('click',
                 function (e) {
                     e.preventDefault();
-                    mask.addClass('hidden');
-                    modal.addClass('hidden');
+                    var idInt = $(this).attr('id').split('-').slice(-1);
+                    $('#warning-modal-overlay-'+ idInt).addClass('hidden');
+                    $('#warning-modal-content-' + idInt).addClass('hidden');
                 });
 
-            $('#overlay-proceed').on('click',
+            $modalProceeds.on('click',
                 function (e) {
                     canProceed = true;
                     $('#edit-submit').click();
                 });
 
-            if (modal.length === 1) {
+            if (modal.length > 0) {
                 $('#edit-submit').on('click', function(e) {
                     if (!canProceed) {
                         e.preventDefault();
-                        mask.removeClass('hidden');
-                        modal.removeClass('hidden');
+                        $("[id|='warning-modal-overlay-']").removeClass('hidden');
+                        $("[id|='warning-modal-content-']").removeClass('hidden');
                     }
                     
                 });

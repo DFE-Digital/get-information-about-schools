@@ -5,16 +5,16 @@
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND);
 
-    <div class="modal-overlay" id="warning-modal-overlay"></div>
-    <div class="modal-content" id="warning-modal-content">
+    <div class="modal-overlay" id="warning-modal-overlay-0"></div>
+    <div class="modal-content" id="warning-modal-content-0">
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay" class="modal-exit allow-exit">Close</a>
+            <a href="#" id="warning-exit-overlay-0" class="modal-exit allow-exit">Close</a>
             <h3 class="heading-large">Similar name</h3>
             <p>There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, UID: @warning.MessageParameters[1]</p>
         </div>
         <div class="button-row">
-            <a href="#" class="button mobile-full-width" id="overlay-proceed">Proceed</a>
-            <a href="#" class="button button-grey mobile-full-width allow-exit" id="overlay-cancel">Cancel</a>
+            <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
         </div>
     </div>
 
@@ -23,10 +23,10 @@
 @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION_CC_CLOSE))
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_CC_CLOSE);
-    <div class="modal-overlay" id="warning-modal-overlay"></div>
-    <div class="modal-content" id="warning-modal-content">
+    <div class="modal-overlay" id="warning-modal-overlay-1"></div>
+    <div class="modal-content" id="warning-modal-content-1">
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay" class="modal-exit">Close</a>
+            <a href="#" id="warning-exit-overlay-1" class="modal-exit">Close</a>
             <h3 class="heading-large">Confirmation</h3>
             <p>I confirm that:</p>
             <ul class="font-small list list-bullet">
@@ -35,8 +35,8 @@
             </ul>            
         </div>
         <div class="button-row">
-            <a href="#" class="button mobile-full-width" id="overlay-proceed">Proceed</a>
-            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel">Cancel</a>
+            <a href="#" class="button mobile-full-width" id="overlay-proceed-1">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel-1">Cancel</a>
         </div>
 
     </div>
@@ -45,16 +45,16 @@
 @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED))
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED);
-    <div class="modal-overlay" id="warning-modal-overlay"></div>
-    <div class="modal-content" id="warning-modal-content">
+    <div class="modal-overlay" id="warning-modal-overlay-2"></div>
+    <div class="modal-content" id="warning-modal-content-2">
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay" class="modal-exit">Close</a>
+            <a href="#" id="warning-exit-overlay-2" class="modal-exit">Close</a>
             <h3 class="heading-medium">Establishment removal</h3>
             <p>All establishments will be removed from this federation.</p>
         </div>
         <div class="button-row">
-            <a href="#" class="button mobile-full-width" id="overlay-proceed">Proceed</a>
-            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel">Cancel</a>
+            <a href="#" class="button mobile-full-width" id="overlay-proceed-2">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel-2">Cancel</a>
         </div>
     </div>
 }
@@ -62,16 +62,16 @@
 @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE))
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE);
-    <div class="modal-overlay" id="warning-modal-overlay"></div>
-    <div class="modal-content" id="warning-modal-content">
+    <div class="modal-overlay" id="warning-modal-overlay-3"></div>
+    <div class="modal-content" id="warning-modal-content-3">
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay" class="modal-exit">Close</a>
+            <a href="#" id="warning-exit-overlay-3" class="modal-exit">Close</a>
             <h3 class="heading-medium">Federation closure</h3>
             <p>This federation has no linked establishments, so it will be set as closed once you save the record.</p>
         </div>
         <div class="button-row">
-            <a href="#" class="button mobile-full-width" id="overlay-proceed">Proceed</a>
-            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel">Cancel</a>
+            <a href="#" class="button mobile-full-width" id="overlay-proceed-3">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel-3">Cancel</a>
         </div>
     </div>
 }
