@@ -57,14 +57,16 @@ else
             <p class="bold-small">Existing trust details</p>
         </div>
     </div>
-    
+
+    @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+
     using (Html.BeginRouteForm("PostGroupConvertSAT2MAT", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(x => x.Token)
         @Html.HiddenFor(x => x.CountryName)
         @Html.HiddenFor(x => x.CountyName)
-
+        @Html.HiddenFor(x => x.Text)
         <div class="grid-row">
             <div class="column-two-thirds">
                 <table class="borderless">

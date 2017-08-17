@@ -98,7 +98,6 @@ namespace Edubase.Services
 
         public async Task<ApiResponse<T>> PostAsync<T>(string uri, object data, IPrincipal principal)
         {
-
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync<T>(result);
@@ -387,6 +386,8 @@ namespace Edubase.Services
 
         private async Task<HttpRequestMessage> CreateHttpRequestMessage(HttpMethod method, string uri, IPrincipal principal, object requestBodyData = null)
         {
+            if (uri.StartsWith("/")) throw new Exception($"{nameof(uri)} parameter value starts with a forward-slash.  You didn't want to do that.");
+
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(HEADER_SA_USER_ID, principal.GetUserId() ?? string.Empty);
             if (requestBodyData != null)
