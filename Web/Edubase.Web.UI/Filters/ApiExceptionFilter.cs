@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Exceptions;
+﻿using Edubase.Data.Entity;
+using Edubase.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,32 +14,46 @@ namespace Edubase.Web.UI.Filters
 {
     public class ApiExceptionFilter: ExceptionFilterAttribute
     {
-        public override async Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+        public class SystemErrorMessage
         {
-            if (actionExecutedContext.Exception is TexunaApiNotFoundException)
-            {
-                var msg = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new StringContent("Entity was not found"),
-                    ReasonPhrase = "Not Found"
-                };
-                actionExecutedContext.Response = msg;
-            }
-            else await base.OnExceptionAsync(actionExecutedContext, cancellationToken);
+            public string Message { get; set; } = "Sorry, something went wrong. A report of the error has been sent to our technical team.";
+            public string ErrorCode { get; set; }
+            public string TechnicalDetails { get; set; }
+        }
+
+        public override Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+        {
+            OnException(actionExecutedContext);
+            return Task.CompletedTask;
         }
 
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
-            if (actionExecutedContext.Exception is TexunaApiNotFoundException)
-            {
-                var msg = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new StringContent("Entity was not found"),
-                    ReasonPhrase = "Not Found"
-                };
-                actionExecutedContext.Response = msg;
-            }
-            else base.OnException(actionExecutedContext);
+            if (actionExecutedContext.Exception is TexunaApiNotFoundException) actionExecutedContext.Response = CreateNotFoundMessage();
+            else actionExecutedContext.Response = GetResponseMessage(actionExecutedContext);
         }
+
+        private static HttpResponseMessage CreateNotFoundMessage()
+        {
+            return new HttpResponseMessage(HttpStatusCode.NotFound)
+            {
+                Content = new StringContent("Entity was not found"),
+                ReasonPhrase = "Not Found"
+            };
+        }
+
+        private HttpResponseMessage GetResponseMessage(HttpActionExecutedContext actionExecutedContext)
+        {
+            if (actionExecutedContext == null) throw new ArgumentNullException(nameof(actionExecutedContext));
+            var msg = new ExceptionHandler().Log(actionExecutedContext.Request.Properties["MS_HttpContext"] as HttpContextWrapper, actionExecutedContext.Exception);
+            var error = new SystemErrorMessage
+            {
+                ErrorCode = msg.Id,
+                TechnicalDetails = ExceptionHandler.EnableFriendlyErrorPage ? "(not supplied)" : actionExecutedContext.Exception.ToString()
+            };
+            return actionExecutedContext.Request.CreateResponse(HttpStatusCode.InternalServerError, error);
+        } 
+
+        
     }
 }
