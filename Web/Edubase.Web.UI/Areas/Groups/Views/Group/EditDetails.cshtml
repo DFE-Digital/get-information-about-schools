@@ -185,9 +185,7 @@
         });
 
         (function () {
-            var mask = $('#warning-modal-overlay');
-            var modal = $('#warning-modal-content');
-            var canProceed = false;
+           var canProceed = false;
             var $modalCancels = $("[id|='warning-exit-overlay'], [id|='overlay-cancel']");
             var $modalProceeds = $("[id|='overlay-proceed']");
 
@@ -205,7 +203,7 @@
                     $('#edit-submit').click();
                 });
 
-            if (modal.length > 0) {
+            if ($("[id|='warning-modal-overlay-']").length > 0) {
                 $('#edit-submit').on('click', function(e) {
                     if (!canProceed) {
                         e.preventDefault();
