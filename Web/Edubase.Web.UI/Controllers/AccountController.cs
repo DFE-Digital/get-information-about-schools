@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using System;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
+using Edubase.Services.Exceptions;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -33,13 +34,14 @@ namespace Edubase.Web.UI.Controllers
         {
             return new ChallengeResult(AuthenticationManager.GetExternalAuthenticationTypes()
                 .First().AuthenticationType, 
-                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl.Clean() ?? "/Search" }));
+                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl.Clean() ?? "/" }));
         }
 
         [Route(nameof(ExternalLoginCallback)), AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null) throw new EdubaseException("No external login information was obtainable.");
             var id = loginInfo.ExternalIdentity;
 
             if (ConfigurationManager.AppSettings["owin:appStartup"] == "SASimulatorConfiguration") id = new StubClaimsIdConverter().Convert(id);

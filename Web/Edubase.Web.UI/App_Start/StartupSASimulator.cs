@@ -112,7 +112,8 @@ namespace Edubase.Web.UI
             var spOptions = new SPOptions
             {
                 EntityId = new EntityId("http://edubase.gov"),
-                Organization = organization
+                Organization = organization,
+                ReturnUrl = AuthConfig.ExternalAuthDefaultCallbackUrl
             };
 
             var techContact = new ContactPerson
