@@ -261,7 +261,7 @@ else
                                             @Html.HiddenFor(x => x.GroupUId)
                                             @Html.HiddenFor(x => x.GovernorShared)
 
-                                            if (!EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
+                                            if (!EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value) || Model.EstablishmentUrn.HasValue)
                                             {
                                                 <div class="form-group">
                                                     <fieldset class="inline toggle-panels">
