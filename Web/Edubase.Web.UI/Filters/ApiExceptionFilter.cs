@@ -49,7 +49,7 @@ namespace Edubase.Web.UI.Filters
             var error = new SystemErrorMessage
             {
                 ErrorCode = msg.Id,
-                TechnicalDetails = ExceptionHandler.EnableFriendlyErrorPage ? "(not supplied)" : actionExecutedContext.Exception.ToString()
+                TechnicalDetails = ExceptionHandler.EnableFriendlyErrorPage ? null : actionExecutedContext.Exception.ToString()
             };
             return actionExecutedContext.Request.CreateResponse(HttpStatusCode.InternalServerError, error);
         } 
