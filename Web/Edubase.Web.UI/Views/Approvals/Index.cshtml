@@ -1,20 +1,34 @@
 ﻿@{
-    ViewBag.Title = "Edubase: review and approve changes";
+    ViewBag.Title = "Review and approve changes";
     ViewBag.bodyClasses = "change-approvals";
 }
 
-<div class="breadcrumbs">
-    <ul>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-    </ul>
-</div>
+
 
 <div id="change-approvals" v-cloak>
+<div v-show="Object.keys(apiBork).length> 0">
+    <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+    <p>Please try again later.</p>
+    <p>A report of the error has been sent to our technical team.</p>
+
+    <p class="api-error-code" v-show="apiBork.hasOwnProperty('errorCode')">Error code: {{apiBork.errorCode}}</p>
+    <div v-show="apiBork.hasOwnProperty('technicalDetails')">
+        <code>
+            {{apiBork.technicalDetails}}
+        </code>
+    </div>
+</div>
+<div v-show="Object.keys(apiBork).length === 0">
+    <div class="breadcrumbs">
+        <ul>
+            <li>
+                @Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)
+            </li>
+            <li>
+                @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)
+            </li>
+        </ul>
+    </div>
     <div class="grid-row">
         <div class="column-full">
             <div class="wait-spinner" v-show="isProcessing" aria-live="polite">
@@ -26,7 +40,7 @@
                 <p>Items approved. The editor has been notified by email.</p>
                 <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false"><span class="visually-hidden">Dismiss notification</span></a>
             </div>
-            
+
             <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRejected">
                 <div class="tick"></div>
                 <p>Items rejected. The editor has been notified by email.</p>
@@ -45,7 +59,7 @@
                     </div>
                     <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
                         <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
-                        <button type="submit" name="action" value="" class="button" 
+                        <button type="submit" name="action" value="" class="button"
                                 v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false, reason=''">Reject</button>
                     </div>
 
@@ -59,7 +73,7 @@
                         <div class="submit-cancel-panel">
                             <button type="submit" name="action" class="button" v-on:click.prevent="confirmRejection">Confirm</button>
                             <button type="submit" name="action" class="button button-grey cancel mobile-full-width"
-                                     v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false, apiError = false">Cancel</button>
+                                    v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false, apiError = false">Cancel</button>
                         </div>
                     </div>
 
@@ -82,15 +96,16 @@
                                 <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(item -1)">{{ item }}</a>
                             </li>
                             <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
-                        </ul>                       
+                        </ul>
                     </div>
                 </div>
-                <div class="changes-list-wrapper"  v-show="!isProcessing">
+                <div class="changes-list-wrapper" v-show="!isProcessing">
                     <changes-table :pages="changes" :current-page="currentPage"></changes-table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 
@@ -147,6 +162,7 @@
 
 </script>
 
-<script src="/public/assets/scripts/standalone/approvals.js"></script>
+@*<script src="/public/assets/scripts/standalone/approvals.js"></script>*@
+<script src="/Assets/Scripts/standalone/approvals.js"></script>
 
 }
