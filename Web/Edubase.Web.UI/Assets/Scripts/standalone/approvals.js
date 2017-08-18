@@ -58,7 +58,8 @@
                 itemsConfirmedRemoved: false,
                 itemsConfirmedRejected: false,
                 isProcessing: true,
-                apiError: ''
+                apiError: '',
+                apiBork: {}
 
             },
             created: function() {
@@ -103,8 +104,10 @@
                                 callback.call(self);                                
                             }
                         },
-                        error: function () {
-                            console.log("Error loading changes data");
+                        error: function (jqxhr) {
+                            if (jqxhr.hasOwnProperty('responseJSON')) {
+                                self.apiBork = jqxhr.responseJSON;
+                            }
                         }
                     });
                 },
@@ -169,6 +172,10 @@
                                 }
                                 self.apiError = messages.join('<br>');
                                 self.isProcessing = false;
+
+                                if (jqXHR.hasOwnProperty('responseJSON')) {
+                                    self.apiBork = jqXHR.responseJSON;
+                                }
                             }
                         });                       
                     }
@@ -214,6 +221,10 @@
                                 }
                                 self.apiError = messages.join('<br>');
                                 self.isProcessing = false;
+
+                                if (jqXHR.hasOwnProperty('responseJSON')) {
+                                    self.apiBork = jqXHR.responseJSON;
+                                }
                             }
                         });                      
                     }

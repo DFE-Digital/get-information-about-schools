@@ -43,7 +43,8 @@
                 createdAcademies: [],
                 pendingDelete: false,
                 pendingDeleteItem: '',
-                validTypes: [] 
+                validTypes: [],
+                apiError: {}
 
 
             },
@@ -227,8 +228,13 @@
                         success: function(data) {
                             return data;
                         },
-                        error: function () {
-                            self.invalidUrn = true;
+                        error: function (jqxhr) {
+                            if (jqxhr.hasOwnProperty('responseJSON')) {
+                                self.apiError = jqxhr.responseJSON;
+                            } else {
+                                self.invalidUrn = true;
+                            }
+                            
                             self.isProcessing = false;
                             self.isSearching = false;
                         }
@@ -253,8 +259,13 @@
                                 self.isProcessing = false;
 
                             },
-                            error: function(jqXHR) {
-                                self.urnLookUpError = "The urn in is invalid";
+                            error: function (jqXHR) {
+                                if (jqXHR.hasOwnProperty('responseJSON')) {
+                                    self.apiError = jqXHR.responseJSON;
+                                } else {
+                                    self.urnLookUpError = "The urn in is invalid";
+                                }
+                                
                                 self.isProcessing = false;
                             }
                         });
@@ -388,8 +399,13 @@
                             self.isProcessing = false;
                             self.isSearching = false;
                         },
-                        error: function(jqXHR) {
-                            self.apiValidationError = "Something went wrong checking the establishment.";
+                        error: function (jqXHR) {
+                            if (jqXHR.hasOwnProperty('responseJSON')) {
+                                self.apiError = jqXHR.responseJSON;
+                            } else {
+                                self.apiValidationError = "Something went wrong checking the establishment.";
+                            }
+                            
                             self.isProcessing = false;
                             self.isSearching = false;
                         }
@@ -411,8 +427,7 @@
                 this.openDateMonth = openingDate[1];
                 this.openDateYear = openingDate[2];
             },
-            cancelAddEdit: function () {
-               
+            cancelAddEdit: function () {               
                 this.pendingEdit = false;
                 this.pendingEstab = {};
                 this.searchUrn = '';
@@ -519,6 +534,9 @@
                                 },
                                 error: function(jqXHR, textStatus, errorThrown) {
                                     window.clearInterval(doneYet);
+                                    if (jqXHR.hasOwnProperty('responseJSON')) {
+                                        self.apiError = jqXHR.responseJSON;
+                                    }
                                     self.isProcessing = false;
                                 }
                             });
@@ -528,7 +546,7 @@
                     error: function (jqXHR) {
                         var res = JSON.parse(jqXHR.responseText);
                         var errMessage = [];
-                       
+                        console.log(jqXHR.hasOwnProperty('responseJSON'));
                         for (var i = 0, len = res.validationEnvelope.length; i < len; i++) {
                             var er = res.validationEnvelope[i];
                             errMessage.push(er.urn + ': ');
