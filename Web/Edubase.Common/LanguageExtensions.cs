@@ -270,12 +270,15 @@ namespace Edubase.Common
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static string CleanOfNonChars(this string text, bool allowSpaces = false)
+        public static string CleanOfNonChars(this string text, bool allowSpaces = false, string replacement = null)
         {
             if (string.IsNullOrWhiteSpace(text)) return null;
             var sb = new StringBuilder();
             foreach (var c in text)
+            {
                 if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || (allowSpaces && c == ' ')) sb.Append(c);
+                else if (replacement != null) sb.Append(replacement);
+            }
             return sb.ToString();
         }
 

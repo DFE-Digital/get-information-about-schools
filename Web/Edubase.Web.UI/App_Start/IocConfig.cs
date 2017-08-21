@@ -41,6 +41,12 @@ using System.Web.Mvc;
 using Edubase.Data.Repositories;
 using Edubase.Services.DataQuality;
 using Edubase.Web.UI.Helpers;
+using Edubase.Services.Core;
+using System.Net.Http.Formatting;
+using Edubase.Services.Texuna.Serialization;
+using System.Net.Http.Headers;
+using Edubase.Services.Texuna.Core;
+using System.Web;
 
 namespace Edubase.Web.UI
 {
@@ -97,16 +103,17 @@ namespace Edubase.Web.UI
             builder.RegisterType<GooglePlacesService>().As<IGooglePlacesService>();
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
             builder.RegisterInstance(new NomenclatureService()).AsSelf();
-            
+
             builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
             builder.RegisterType<EstablishmentDownloadApiService>().As<IEstablishmentDownloadService>();
             builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
             builder.RegisterType<GroupDownloadApiService>().As<IGroupDownloadService>();
             builder.RegisterType<LookupApiService>().As<ILookupService>();
-            builder.RegisterInstance(new HttpClient(new HttpClientHandler { UseCookies = false }) { BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]) }).SingleInstance().AsSelf();
-            builder.RegisterType<HttpClientWrapper>()
-                .WithParameter("apiUsername", ConfigurationManager.AppSettings["api:Username"])
-                .WithParameter("apiPassword", ConfigurationManager.AppSettings["api:Password"]).SingleInstance().AsSelf();
+
+            builder.RegisterInstance(CreateJsonMediaTypeFormatter()).SingleInstance().AsSelf();
+
+            builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
+            builder.RegisterType<HttpClientWrapper>().AsSelf();
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
@@ -128,6 +135,43 @@ namespace Edubase.Web.UI
             builder.RegisterType<BlobService>().As<IBlobService>();
 
             builder.RegisterType<LayoutHelper>();
+
+            builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>().InstancePerRequest();
+            builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();
+
+            builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf();
         }
+
+        private static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
+        {
+            return new JsonMediaTypeFormatter
+            {
+                SerializerSettings = new JsonSerializerSettings
+                {
+                    Formatting = Formatting.Indented,
+                    ContractResolver = new TexunaCamelCasePropertyNamesContractResolver(),
+                    DateTimeZoneHandling = DateTimeZoneHandling.Unspecified
+                }
+            };
+        }
+
+        private static HttpClient CreateHttpClient()
+        {
+            var client = new HttpClient(new HttpClientHandler { UseCookies = false })
+            {
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]),
+                Timeout = TimeSpan.FromSeconds(180),
+            };
+
+            var apiUsername = ConfigurationManager.AppSettings["api:Username"];
+            var apiPassword = ConfigurationManager.AppSettings["api:Password"];
+
+            if (apiUsername != null && apiPassword != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+
+            return client;
+        }
+
+
     }
 }

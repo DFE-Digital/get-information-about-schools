@@ -158,11 +158,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbGeographyConverter.cs" />
+    <Compile Include="Entity\ApiRecorderSessionItem.cs" />
     <Compile Include="Entity\DataQualityStatus.cs" />
     <Compile Include="Entity\LogMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DataQualityStatusRepository.cs" />
     <Compile Include="Repositories\IDataQualityStatusRepository.cs" />
+    <Compile Include="Repositories\ApiRecorderSessionItemRepository.cs" />
     <Compile Include="Repositories\LogMessageRepository.cs" />
     <Compile Include="Repositories\TableStorage\TableStorageBase.cs" />
   </ItemGroup>

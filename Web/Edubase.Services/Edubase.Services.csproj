@@ -175,6 +175,7 @@
     <Compile Include="Approvals\Models\PendingApprovalsResult.cs" />
     <Compile Include="Approvals\Models\PendingChangeRequestAction.cs" />
     <Compile Include="BlobService.cs" />
+    <Compile Include="Core\IClientStorage.cs" />
     <Compile Include="Core\Pagination.cs" />
     <Compile Include="Core\IPagination.cs" />
     <Compile Include="DataQuality\DataQualityReadService.cs" />
