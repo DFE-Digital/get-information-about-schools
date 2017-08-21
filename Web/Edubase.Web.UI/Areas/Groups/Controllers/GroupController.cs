@@ -375,7 +375,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else if (viewModel.ActionName == "confirm") 
             {
                 viewModel.Details = UriHelper.DeserializeUrlToken<SearchGroupDocument>(viewModel.Token);
-                var apiResponse = await _groupWriteService.ConvertSAT2MAT(viewModel.Details.GroupUId, User);
+                var apiResponse = await _groupWriteService.ConvertSAT2MAT(viewModel.Details.GroupUId, viewModel.CopyGovernanceInfo, User);
                 if (apiResponse.HasErrors) apiResponse.Errors.ForEach(x => ModelState.AddModelError("", x.GetMessage()));
                 else return RedirectToRoute("GroupDetails", new { id = apiResponse.GetResponse().Value });
             }

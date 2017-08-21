@@ -19,6 +19,6 @@ namespace Edubase.Services.Groups
         Task<ApiResponse<NumericResultDto>> SaveNewAsync(SaveGroupDto dto, IPrincipal principal);
         Task<ValidationEnvelopeDto> ValidateAsync(SaveGroupDto dto, IPrincipal principal);
         Task<ApiResponse> ConfirmGovernanceAsync(int uid, IPrincipal principal);
-        Task<ApiResponse<NumericResultDto>> ConvertSAT2MAT(int uid, IPrincipal principal);
+        Task<ApiResponse<NumericResultDto>> ConvertSAT2MAT(int uid, bool copyGovernanceInfo, IPrincipal principal);
     }
 }

@@ -98,6 +98,9 @@ else
         <div class="grid-row">
             <div class="column-full">
                 <br />
+                @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy trust governance to academy")
+                <br />
+                <br />
                 @Html.RouteLink("Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-grey cancel mobile-full-width" })
                 <button type="submit" name="actionname" class="button mobile-full-width" value="confirm">Convert</button>
                 @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })

@@ -19,6 +19,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string CountryName { get; set; }
         public string CountyName { get; set; }
 
+        public bool CopyGovernanceInfo { get; set; }
+
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ",
             Details.Address.Line1,
             Details.Address.Line2,
