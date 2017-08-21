@@ -41,7 +41,7 @@ category: Components
 ```
 */
 
-.pagination-container {
+/*.pagination-container {
   padding: $gutter-half 0;
 
   .pagination-links {
@@ -87,7 +87,7 @@ category: Components
         > a,
         > span {
         }
-      }*/
+      }
     }
 
     > li > a,
@@ -121,7 +121,7 @@ category: Components
         border-color: $pagination-disabled-border;
         cursor: $cursor-disabled;
       }
-    }*/
+    }
 
     > .pagination-index {
       display: none;
@@ -130,4 +130,4 @@ category: Components
       }
     }
   }
-}
+}*/

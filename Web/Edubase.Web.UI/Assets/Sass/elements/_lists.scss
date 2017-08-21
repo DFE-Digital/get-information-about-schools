@@ -67,10 +67,6 @@ ol {
         margin-left: $gutter-half*-1;
       }
     }
-
-    @include media(desktop) {
-      /*padding-top: $gutter-one-sixth;*/
-    }
   }
 
   a {

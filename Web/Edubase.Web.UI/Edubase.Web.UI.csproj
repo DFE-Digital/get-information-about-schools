@@ -738,7 +738,6 @@
     <Content Include="Assets\Sass\elements\_buttons.scss" />
     <Content Include="Assets\Sass\elements\_details.scss" />
     <Content Include="Assets\Sass\elements\_elements-typography.scss" />
-    <Content Include="Assets\Sass\elements\_footer.scss" />
     <Content Include="Assets\Sass\elements\_forms.scss" />
     <Content Include="Assets\Sass\elements\_helpers.scss" />
     <Content Include="Assets\Sass\elements\_helpicon.scss" />
@@ -752,8 +751,6 @@
     <Content Include="Assets\Sass\elements\_reset.scss" />
     <Content Include="Assets\Sass\elements\_tables.scss" />
     <Content Include="Assets\Sass\elements\_tabs.scss" />
-    <Content Include="Assets\Sass\main-ie6.scss" />
-    <Content Include="Assets\Sass\main-ie7.scss" />
     <Content Include="Assets\Sass\main-ie8.scss" />
     <Content Include="Assets\Sass\main.scss" />
     <Content Include="Assets\Sass\prism.scss" />
@@ -960,6 +957,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />
+    <Folder Include="grunt\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="public\html\" />
     <Folder Include="Views\GOVUK\Views\errors\" />

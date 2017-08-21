@@ -198,19 +198,19 @@ category: Forms
 
     .error-summary-list, ul {
         padding-left: 0;
+    }
 
-        li {
-            font-weight: bold;
+    li {
+        font-weight: bold;
 
-            @include media(tablet) {
-                margin-bottom: 5px;
-            }
+        @include media(tablet) {
+            margin-bottom: 5px;
         }
+    }
 
-        a {
-            color: $error-colour;
-            font-weight: bold;
-            text-decoration: underline;
-        }
+    a {
+        color: $error-colour;
+        font-weight: bold;
+        text-decoration: underline;
     }
 }

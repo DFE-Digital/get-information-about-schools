@@ -1,73 +1,8 @@
 ﻿/* global form control styles */
 
-/*legend {
-  @include bold-19;
-  float: left;
-  width: 100%;
-  margin-bottom: 1em;
-
-  &.paragraph {
-    font-weight: normal;
-  }
-}*/
 
 /* field modules */
 
-.optional-section,
-.help-content {
-  & :last-child {
-    margin-bottom: 0;
-  }
-}
 
-fieldset {
-  @extend %contain-floats;
-  margin-left: 0;
-}
 
-.optional-section,
-.help-content {
-  border-left: $grey-2 solid 4px;
-  padding: 14px 0 14px 14px;
-  margin-bottom: 0.5em !important;
-  clear: both;
-  @extend %contain-floats;
-}
 
-.optional-section {
-  h2, h3 {
-    @include bold-19;
-  }
-
-  h2 {
-    margin-bottom: 1em;
-  }
-}
-
-/* call to action buttons */
-.next,
-.search {
-  box-sizing: border-box;
-  font-size: 19px;
-  text-align: center;
-  clear: both;
-  margin: 2em 0;
-  width: 100%;
-
-  @include media(tablet) {
-    width: auto;
-  }
-}
-
-.next {
-  @include core-19;
-  padding: 0.6em 0.8em 0.5em 0.8em;
-
-  @include media(mobile) {
-    font-size: 19px;
-  }
-  /* overwrite for matching :last-child */
-  #found-addresses & {
-    margin-bottom: 2em;
-  }
-}
