@@ -446,7 +446,6 @@
     <Content Include="App_Data\sa.education.gov.uk-metadata.xml" />
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
     <Content Include="Assets\Sass\elements\_mobile-nav.scss" />
-    <Content Include="Assets\Sass\elements\forms\_clear-fields.scss" />
     <Content Include="Areas\Establishments\Views\Web.config" />
     <Content Include="Areas\Establishments\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Groups\Views\Web.config" />
@@ -725,18 +724,9 @@
     <Content Include="ci\unit-tests.cmd" />
     <Content Include="Assets\Sass\docs\resources.md" />
     <Content Include="Assets\Sass\elements\box\_box.scss" />
-    <Content Include="Assets\Sass\elements\collapsible\_collapsible.scss" />
-    <Content Include="Assets\Sass\elements\forms\feedback\_feedback.scss" />
     <Content Include="Assets\Sass\elements\forms\filter-form\_option-select.scss" />
-    <Content Include="Assets\Sass\elements\forms\filter-form\_text-filter.scss" />
-    <Content Include="Assets\Sass\elements\forms\_form-date.scss" />
-    <Content Include="Assets\Sass\elements\forms\_form-questions.scss" />
     <Content Include="Assets\Sass\elements\forms\_form-validation.scss" />
-    <Content Include="Assets\Sass\elements\rating\_rating.scss" />
-    <Content Include="Assets\Sass\elements\_breadcrumbs.scss" />
-    <Content Include="Assets\Sass\elements\_browse.scss" />
     <Content Include="Assets\Sass\elements\_buttons.scss" />
-    <Content Include="Assets\Sass\elements\_details.scss" />
     <Content Include="Assets\Sass\elements\_elements-typography.scss" />
     <Content Include="Assets\Sass\elements\_forms.scss" />
     <Content Include="Assets\Sass\elements\_helpers.scss" />
@@ -745,7 +735,6 @@
     <Content Include="Assets\Sass\elements\_layout.scss" />
     <Content Include="Assets\Sass\elements\_links.scss" />
     <Content Include="Assets\Sass\elements\_lists.scss" />
-    <Content Include="Assets\Sass\elements\_pagination.scss" />
     <Content Include="Assets\Sass\elements\_panels.scss" />
     <Content Include="Assets\Sass\elements\_related-box.scss" />
     <Content Include="Assets\Sass\elements\_reset.scss" />
