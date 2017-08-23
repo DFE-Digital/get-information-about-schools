@@ -12,7 +12,12 @@ namespace Edubase.Data.Entity
         public string ResponseHeaders { get; set; }
         public string RawRequestBody { get; set; }
         public string RawResponseBody { get; set; }
-        
+        public string ElapsedTimeSpan { get; set; }
+        /// <summary>
+        /// Elapsed milliseconds
+        /// </summary>
+        public double ElapsedMS { get; set; }
+
         public ApiRecorderSessionItem(string sessionId, string requestPath)
         {
             PartitionKey = sessionId;

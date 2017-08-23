@@ -14,6 +14,7 @@ namespace Edubase.Services
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -337,6 +338,7 @@ namespace Edubase.Services
         {
             var startTime = DateTime.UtcNow;
             HttpResponseMessage response = null;
+            var stopwatch = Stopwatch.StartNew();
 
             try
             {
@@ -352,6 +354,7 @@ namespace Edubase.Services
             }
             finally
             {
+                stopwatch.Stop();
                 string responseMessage = null;
 #if DEBUG
                 if (response?.Content != null)
@@ -377,12 +380,12 @@ namespace Edubase.Services
 
                 ApiTrace.Data.Add(data);
 #endif
-
-                await LogApiInteraction(requestMessage, response, responseMessage);
+                
+                await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed);
             }
         }
 
-        private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage)
+        private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed)
         {
             var apiSessionId = _clientStorage.Get("ApiSessionId");
             if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
@@ -398,7 +401,9 @@ namespace Edubase.Services
                     RawRequestBody = GetRequestJsonBody(requestMessage),
                     RawResponseBody = responseMessage.Ellipsis(32000),
                     RequestHeaders = ToJsonIndented(requestMessage.Headers),
-                    ResponseHeaders = ToJsonIndented(response.Headers)
+                    ResponseHeaders = ToJsonIndented(response.Headers),
+                    ElapsedTimeSpan = elapsed.ToString(),
+                    ElapsedMS = elapsed.TotalMilliseconds
                 });
             }
         }
