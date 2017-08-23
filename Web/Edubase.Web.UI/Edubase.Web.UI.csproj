@@ -27,6 +27,7 @@
     </NuGetPackageImportStamp>
     <WebProject_DirectoryAccessLevelKey>1</WebProject_DirectoryAccessLevelKey>
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -274,6 +275,7 @@
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
     <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
+    <Compile Include="Helpers\BrowserClientStorage.cs" />
     <Compile Include="Helpers\FormHelpers.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
@@ -360,6 +362,7 @@
     <Compile Include="Helpers\RoleEquivalence.cs" />
     <Compile Include="Helpers\ValidationExtensions.cs" />
     <Compile Include="Helpers\WebHelpers.cs" />
+    <Compile Include="Models\ApiSessionRecorderViewModel.cs" />
     <Compile Include="Models\ChangeHistoryViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityStatusItem.cs" />
     <Compile Include="Models\DataQuality\DataQualityStatusViewModel.cs" />
@@ -942,6 +945,7 @@
     <Content Include="Views\Shared\_GenericPaginationV2.cshtml" />
     <Content Include="Views\Home\KnownIssues.cshtml" />
     <Content Include="Views\Prototype\TabsTestPage.cshtml" />
+    <Content Include="Views\Tools\ApiSessionRecorder.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">

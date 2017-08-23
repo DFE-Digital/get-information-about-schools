@@ -6,12 +6,14 @@ using System.Web.Mvc;
 namespace Edubase.Web.UI.Controllers
 {
     using Edubase.Services;
+    using Edubase.Services.Core;
     using Edubase.Services.Establishments;
     using Edubase.Services.Lookup;
     using Filters;
     using Helpers;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
+    using System;
     using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
     using R = EdubaseRoles;
@@ -22,12 +24,14 @@ namespace Edubase.Web.UI.Controllers
         private readonly ISecurityService _securityService;
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly ICachedLookupService _lookup;
+        private readonly IClientStorage _clientStorage;
 
-        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, ICachedLookupService lookup)
+        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, ICachedLookupService lookup, IClientStorage clientStorage)
         {
             _securityService = securityService;
             _establishmentReadService = establishmentReadService;
             _lookup = lookup;
+            _clientStorage = clientStorage;
         }
         
         public async Task<ActionResult> Index()
@@ -83,5 +87,22 @@ namespace Edubase.Web.UI.Controllers
 
             return View();
         }
+
+        [HttpGet, Route("ApiSessionRecorder", Name = "ApiSessionRecorder"), EdubaseAuthorize]
+        public ActionResult ApiSessionRecorder()
+        {
+            ViewBag.SessionId = _clientStorage.Get("ApiSessionId");
+            return View();
+        }
+
+        [HttpPost, EdubaseAuthorize, Route("ApiSessionRecorder", Name = "PostApiSessionRecorder"), ValidateAntiForgeryToken]
+        public ActionResult ApiSessionRecorderToggle()
+        {
+            ViewBag.LastSessionId = _clientStorage.Get("ApiSessionId");
+            if (_clientStorage.Get("ApiSessionId") == null) ViewBag.SessionId = _clientStorage.Save("ApiSessionId", Guid.NewGuid().ToString("N"));
+            else ViewBag.SessionId = _clientStorage.Save("ApiSessionId", null);
+            return View("ApiSessionRecorder");
+        }
+
     }
 }
