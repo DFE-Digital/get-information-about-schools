@@ -1,4 +1,6 @@
-﻿@model EstablishmentDetailViewModel
+﻿
+@using Edubase.Common;
+@model EstablishmentDetailViewModel
 
 <div id="school-dashboard" class="tab-content">
     @if (Model.UserCanEdit)
@@ -254,7 +256,7 @@
         {
             <tr>
                 <th scope="row">Percentage of children eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></th>
-                <td>@(Model.Establishment.FreeSchoolMealsPercentage?.ToString() ?? "Not recorded")</td>
+                <td>@(Model.Establishment.FreeSchoolMealsPercentage?.ToString().Append("%") ?? "Not recorded")</td>
             </tr>
         }       
 

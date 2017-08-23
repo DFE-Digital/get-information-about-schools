@@ -1,12 +1,11 @@
-﻿namespace Edubase.Services.Texuna.Glimpse
+﻿using System;
+
+namespace Edubase.Services.Texuna.Glimpse
 {
     public static class ApiTrace
     {
-        static ApiTrace()
-        {
-            Data = new ApiTraceList();
-        }
+        private static readonly Lazy<ApiTraceList> LazyData = new Lazy<ApiTraceList>();
 
-        public static ApiTraceList Data { get; set; }
+        public static ApiTraceList Data => LazyData.Value;
     }
 }

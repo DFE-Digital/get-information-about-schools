@@ -192,7 +192,6 @@
             $modalCancels.on('click',
                 function (e) {
                     e.preventDefault();
-                    console.log('cancel');
                     var idInt = $(this).attr('id').split('-').slice(-1);
                     $('#warning-modal-overlay-'+ idInt).addClass('hidden');
                     $('#warning-modal-content-' + idInt).addClass('hidden');
@@ -206,7 +205,6 @@
                 });
 
             if ($modalProceeds.length > 0) {
-                console.log('there are some procced buttons');
                 $('#edit-submit').on('click', function(e) {
                     if (!canProceed) {
                         console.log('submit click');

@@ -55,6 +55,9 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
         public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
 
+        [Route("~/service-wsdl")]
+        public ActionResult ServiceWSDL() => Content(new System.Net.WebClient().DownloadString("http://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl"), "text/xml");
+        
         private async Task<string> GetHtmlBlob(string name)
         {
             var blob = _blobService.GetBlobReference("content", name);

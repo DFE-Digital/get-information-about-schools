@@ -352,17 +352,18 @@
     {
         <script>
             (function() {
-                var mask = $('#warning-modal-overlay');
-                var modal = $('#warning-modal-content');
+                var mask = $('#warning-modal-overlay-0');
+                var modal = $('#warning-modal-content-0');
 
-                $('#warning-exit-overlay, #overlay-cancel').on('click',
+
+                $('#warning-exit-overlay-0, #overlay-cancel-0').on('click',
                     function(e) {
                         e.preventDefault();
                         mask.addClass('hidden');
                         modal.addClass('hidden');
                     });
 
-                $('#overlay-proceed').on('click',
+                $('#overlay-proceed-0').on('click',
                     function(e) {
                         $('#create-submit').click();
                     });
