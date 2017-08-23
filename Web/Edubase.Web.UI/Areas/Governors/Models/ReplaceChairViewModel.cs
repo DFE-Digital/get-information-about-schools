@@ -15,7 +15,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public eLookupGovernorRole Role { get; set; }
 
         [Display(Name = "Date term ends")]
-        public DateTimeViewModel DateTermEnds { get; set; }
+        public DateTimeViewModel DateTermEnds { get; set; } = new DateTimeViewModel();
 
         public List<SharedGovernorViewModel> SharedGovernors { get; set; }
         public GovernorViewModel NewLocalGovernor { get; set; }

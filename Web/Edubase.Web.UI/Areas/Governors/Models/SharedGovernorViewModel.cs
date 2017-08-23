@@ -24,10 +24,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public List<EstablishmentViewModel> SharedWith { get; set; }
 
         [DisplayName("Date of appointment")]
-        public DateTimeViewModel AppointmentStartDate { get; set; }
+        public DateTimeViewModel AppointmentStartDate { get; set; } = new DateTimeViewModel();
 
         [DisplayName("Date term ends")]
-        public DateTimeViewModel AppointmentEndDate { get; set; }
+        public DateTimeViewModel AppointmentEndDate { get; set; } = new DateTimeViewModel();
 
         public class EstablishmentViewModel
         {
@@ -41,7 +41,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             var appointment = governor.Appointments?.SingleOrDefault(g => g.EstablishmentUrn == establishmentUrn);
             var sharedWith = governor.Appointments?
                 .Where(a => a.AppointmentStartDate < dateNow && (a.AppointmentEndDate == null || a.AppointmentEndDate > dateNow))
-                .Select(a => new SharedGovernorViewModel.EstablishmentViewModel { Urn = a.EstablishmentUrn.Value, EstablishmentName = a.EstablishmentName })
+                .Select(a => new EstablishmentViewModel { Urn = a.EstablishmentUrn.Value, EstablishmentName = a.EstablishmentName })
                 .ToList();
 
             var appointingBodies = await cachedLookupService.GovernorAppointingBodiesGetAllAsync();
@@ -55,18 +55,18 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 DOB = governor.DOB,
                 FullName = governor.GetFullName(),
                 Id = governor.Id.Value,
-                Nationality = nationalities.Single(n => n.Id == governor.NationalityId).Name,
+                Nationality = nationalities.SingleOrDefault(n => n.Id == governor.NationalityId)?.Name,
                 PostCode = governor.PostCode,
                 Selected = appointment != null,
                 PreExisting = appointment != null,
-                SharedWith = sharedWith ?? new List<SharedGovernorViewModel.EstablishmentViewModel>(),
+                SharedWith = sharedWith ?? new List<EstablishmentViewModel>(),
                 MultiSelect = IsSharedGovernorRoleMultiSelect((eLookupGovernorRole)governor.RoleId)
             };
         }
 
         private static bool IsSharedGovernorRoleMultiSelect(eLookupGovernorRole role)
         {
-            return role == eLookupGovernorRole.Group_SharedLocalGovernor;
+            return role == eLookupGovernorRole.Establishment_SharedLocalGovernor;
         }
     }
 }

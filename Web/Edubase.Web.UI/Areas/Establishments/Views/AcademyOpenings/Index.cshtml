@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Edubase: Manage academy openings";
+    ViewBag.Title = "Manage academy openings";
     ViewBag.bodyClasses = "manage-academy-openings";
 }
 <div class="breadcrumbs">
@@ -15,45 +15,86 @@
 </div>
 
 <div id="academy-opening-app" v-cloak>
-    <div class="grid-row" v-show="!editRecord">
-        <div class="column-full">
-            <h1 class="heading-xlarge">Manage academy openings</h1>
-            <div aria-live="polite" class="wait-spinner" v-show="isProcessing"><p class="visually-hidden">Please wait</p></div>
-            <div class="error-summary" v-show="searchError" v-cloak>
-                <h2 class="heading-medium error-summary-heading" v-show="searchError">No matching establishment</h2>
-                <div v-show="searchError">
-                    <p>You have entered an invalid URN</p>
-                    <ul>
-                        <li class="error-message">
-                            <a href="#academy-search-field">Please correct the URN to continue</a>
-                        </li>
-                    </ul>
-                </div>
+<div v-show="Object.keys(apiError).length>0">
+    <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+    <p>Please try again later.</p>
+    <p>A report of the error has been sent to our technical team.</p>
+    
+    <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
+    <div v-show="apiError.hasOwnProperty('technicalDetails')">
+        <code>
+            {{apiError.technicalDetails}}
+        </code>
+    </div>
+   
 
+</div>
+    <div v-show="Object.keys(apiError).length === 0">
+        <div class="grid-row" v-show="!editRecord">
+            <div class="column-full">
+                <div v-show="loadDataError" class="error-summary">
+                    <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
+                    <p class="error-message">Please reload the page to try again.</p>
+                </div>
+                <h1 class="heading-xlarge">Manage academy openings</h1>
+                <div aria-live="polite" class="wait-spinner" v-show="isProcessing">
+                    <p class="visually-hidden">Please wait</p>
+                </div>
+                <div class="error-summary" v-show="searchError" v-cloak>
+                    <h2 class="heading-medium error-summary-heading" v-show="searchError">No matching establishment</h2>
+                    <div v-show="searchError">
+                        <p>You have entered an invalid URN</p>
+                        <ul>
+                            <li class="error-message">
+                                <a href="#academy-search-field">Please correct the URN to continue</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
             </div>
-        </div>
-        <div class="column-full" v-show="!isProcessing">
-            <div class="horizontal-tabs-wrapper">
-                <div class="tab-wrap">
-                    <ul class="horizontal-tabs">
-                        <li><a href="#calendar" class="horizontal-tab">Opening calendar</a></li>
-                        <li><a href="#academy-search" class="horizontal-tab">Academy search</a></li>
-                    </ul>
-                </div>
+            <div class="column-full" v-show="!isProcessing">
+                <div class="horizontal-tabs-wrapper">
+                    <div class="tab-wrap">
+                        <ul class="horizontal-tabs">
+                            <li><a href="#calendar" class="horizontal-tab">Opening calendar</a></li>
+                            <li><a href="#academy-search" class="horizontal-tab">Academy search</a></li>
+                        </ul>
+                    </div>
 
-                <div class="tab-content-wrapper horizontal-tabs-content" v-cloak>
-                    <div id="calendar" class="tab-content">
-                        <div id="academy-listing-app">
-                            <div class="form-group month-selector">
-                                <label class="form-label">
-                                    Opening date
-                                </label>
-                                <select class="form-control" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter">
-                                    
-                                </select>
-                            </div>
+                    <div class="tab-content-wrapper horizontal-tabs-content" v-cloak>
+                        <div id="calendar" class="tab-content">
+                            <div id="academy-listing-app">
+                                <div class="form-group month-selector">
+                                    <label class="form-label">
+                                        Opening date
+                                    </label>
+                                    <select class="form-control" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter"></select>
+                                </div>
 
-                            <div>
+                                <div>
+                                    <div class="pagination">
+                                        <p class="pagination-info">
+                                            Showing
+                                            <span class="pagination-range">
+                                                {{ paginationDescription }}
+                                            </span>
+                                            of
+                                            <span class="result-count">{{currentCount}}</span>
+                                        </p>
+                                        <ul class="pagination-links">
+                                            <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
+                                            <li v-for="(page, index) in pages">
+                                                <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
+                                                <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
+                                            </li>
+                                            <li v-if="currentPage < pages.length -1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <openings-table :pages="pages" :current-page="currentPage" :edit-estab="editEstab"></openings-table>
+
                                 <div class="pagination">
                                     <p class="pagination-info">
                                         Showing
@@ -72,64 +113,43 @@
                                         <li v-if="currentPage < pages.length -1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
                                     </ul>
                                 </div>
+
                             </div>
-
-                            <openings-table :pages="pages" :current-page="currentPage" :edit-estab="editEstab"></openings-table>
-
-                            <div class="pagination">
-                                <p class="pagination-info">
-                                    Showing
-                                    <span class="pagination-range">
-                                        {{ paginationDescription }}
-                                    </span>
-                                    of
-                                    <span class="result-count">{{currentCount}}</span>
-                                </p>
-                                <ul class="pagination-links">
-                                    <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                                    <li v-for="(page, index) in pages">
-                                        <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
-                                        <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
-                                    </li>
-                                    <li v-if="currentPage < pages.length -1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
-                                </ul>
-                            </div>
-
                         </div>
-                    </div>
-                    <div id="academy-search" class="tab-content">
-                        <!-- search app -->
-                        <div id="academy-search-app">
-                            <form>
-                                <div v-bind:class="['form-group', searchError? 'error' : '']">
-                                    <label class="form-label" for="academy-search-field">
-                                        Enter establishment URN
-                                    </label>
-                                    <span class="error-message" v-show="searchError">Please correct the URN</span>
-                                    <input type="text" class="form-control  desktop-inline" id="academy-search-field" v-model.trim="searchUrn" />
+                        <div id="academy-search" class="tab-content">
+                            <!-- search app -->
+                            <div id="academy-search-app">
+                                <form>
+                                    <div v-bind:class="['form-group', searchError? 'error' : '']">
+                                        <label class="form-label" for="academy-search-field">
+                                            Enter establishment URN
+                                        </label>
+                                        <span class="error-message" v-show="searchError">Please correct the URN</span>
+                                        <input type="text" class="form-control  desktop-inline" id="academy-search-field" v-model.trim="searchUrn" />
 
-                                    <input type="submit" class="button inline-submit" value="Find establishment" v-on:click.prevent="validateUrn" />
-                                </div>
+                                        <input type="submit" class="button inline-submit" value="Find establishment" v-on:click.prevent="validateUrn" />
+                                    </div>
 
-                            </form>
+                                </form>
 
-                            <div v-show="presentDetail" class="openings-single-result">
-                                <h2 class="heading-small">Establishment Found</h2>
-                                <div class="urn-result">
-                                    <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
-                                    <dl>
-                                        <dt>URN:</dt>
-                                        <dd><a v-bind:href="detailUrl(od.urn )">{{ od.urn }}</a></dd>
-                                        <dt>Establishment name:</dt>
-                                        <dd>{{updateName}}</dd>
-                                        <dt>Establishment type:</dt>
-                                        <dd>{{ od.establishmentType }}</dd>
-                                        <dt>Predecessor URN:</dt>
-                                        <dd><a v-bind:href="detailUrl(od.predecessorUrn )">{{ od.predecessorUrn }}</a></dd>
-                                        <dt>Predecessor name:</dt>
-                                        <dd>{{ od.predecessorName }}</dd>
-                                    </dl>
-                                    <a href="#" class="button button-grey" v-on:click.prevent="editEstab(od.urn)">Edit</a>
+                                <div v-show="presentDetail" class="openings-single-result">
+                                    <h2 class="heading-small">Establishment Found</h2>
+                                    <div class="urn-result">
+                                        <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
+                                        <dl>
+                                            <dt>URN:</dt>
+                                            <dd><a v-bind:href="detailUrl(od.urn )">{{ od.urn }}</a></dd>
+                                            <dt>Establishment name:</dt>
+                                            <dd>{{updateName}}</dd>
+                                            <dt>Establishment type:</dt>
+                                            <dd>{{ od.establishmentType }}</dd>
+                                            <dt>Predecessor URN:</dt>
+                                            <dd><a v-bind:href="detailUrl(od.predecessorUrn )">{{ od.predecessorUrn }}</a></dd>
+                                            <dt>Predecessor name:</dt>
+                                            <dd>{{ od.predecessorName }}</dd>
+                                        </dl>
+                                        <a href="#" class="button button-grey" v-on:click.prevent="editEstab(od.urn)">Edit</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -137,82 +157,82 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="grid-row" v-show="editRecord" v-cloak>
-        <div class="column-full">
-            <h1 class="heading-large">Edit opening detail</h1>
+        <div class="grid-row" v-show="editRecord" v-cloak>
+            <div class="column-full">
+                <h1 class="heading-large">Edit opening detail</h1>
+            </div>
+            <div class="column-half">
+                <div class="button-row">
+                    <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
+                    <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">URN</label>
+                    <input class="form-control" type="text" :value="od.urn" disabled="disabled" />
+                </div>
+
+                <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
+                    <label class="form-label">Establishment name </label>
+                    <span class="error-message" v-show="updateNameError">Please check the new establishment name</span>
+                    <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Establishment type</label>
+                    <input class="form-control" type="text" :value="od.establishmentType" disabled="disabled" />
+                </div>
+
+                <div v-bind:class="['form-group range-group', openDateError ? 'error' : '' ]">
+                    <fieldset id="merger-date">
+                        <span v-bind:class="['error-message']" v-show="openDateError">Please enter the establishment opening date</span>
+                        <legend>Opening date</legend>
+                        <div class="form-hint">For example, 20 03 2003</div>
+
+                        <span class="inline-form-control">
+                            <label for="opendate-day">Day</label>
+                            <input class="form-control date-text-day" id="opendate-day" name="OpenDate.Day" type="text" v-model="updateDateDay" v-on:change="attachUnload">
+
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="opendate-month">Month</label>
+                            <input class="form-control date-text-month" id="opendate-month" name="OpenDate.Month" type="text" v-model="updateDateMonth" v-on:change="attachUnload">
+
+                        </span>
+                        <span class="inline-form-contol">
+                            <label for="opendate-year">Year</label>
+                            <input class="form-control date-text-year" id="opendate-year" name="OpenDate.Year" type="text" v-model="updateDateYear" v-on:change="attachUnload">
+                        </span>
+                    </fieldset>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Predecessor URN</label>
+                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorUrn" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Predecessor name</label>
+                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorName" />
+                </div>
+
+                <div class="button-row lower">
+                    <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
+                    <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
+                </div>
+            </div>
         </div>
-        <div class="column-half">
+
+        <div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div>
+        <div id="modal-content" class="modal-content" role="dialog" v-show="presentExitWarning">
+            <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a>
+            <div id="modal-inner">
+                <h3 class="heading-large">Are you sure you want to leave this page?</h3>
+                <p>Any unsaved changes will be lost.</p>
+            </div>
             <div class="button-row">
-                <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
-                <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
+                <a href="#" class="button mobile-full-width" id="button-ok" v-on:click.prevent="presentExitWarning=false, editRecord=false, searchUrn='', presentDetail=false">OK</a>
+                <a href="#" class="button button-grey mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
             </div>
-            <div class="form-group">
-                <label class="form-label">URN</label>
-                <input class="form-control" type="text" :value="od.urn" disabled="disabled" />
-            </div>
-
-            <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
-                <label class="form-label">Establishment name </label>
-                <span class="error-message" v-show="updateNameError">Please check the new establishment name</span>
-                <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" />
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Establishment type</label>
-                <input class="form-control" type="text" :value="od.establishmentType" disabled="disabled" />
-            </div>
-
-            <div v-bind:class="['form-group range-group', openDateError ? 'error' : '' ]">
-                <fieldset id="merger-date">
-                    <span v-bind:class="['error-message']" v-show="openDateError">Please enter the establishment opening date</span>
-                    <legend>Opening date</legend>
-                    <div class="form-hint">For example, 20 03 2003</div>
-
-                    <span class="inline-form-control">
-                        <label for="opendate-day">Day</label>
-                        <input class="form-control date-text-day" id="opendate-day" name="OpenDate.Day" type="text" v-model="updateDateDay"  v-on:change="attachUnload">
-
-                    </span>
-                    <span class="inline-form-control">
-                        <label for="opendate-month">Month</label>
-                        <input class="form-control date-text-month" id="opendate-month" name="OpenDate.Month" type="text" v-model="updateDateMonth" v-on:change="attachUnload">
-
-                    </span>
-                    <span class="inline-form-contol">
-                        <label for="opendate-year">Year</label>
-                        <input class="form-control date-text-year" id="opendate-year" name="OpenDate.Year" type="text" v-model="updateDateYear" v-on:change="attachUnload">
-                    </span>
-                </fieldset>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Predecessor URN</label>
-                <input type="text" class="form-control" disabled="disabled" :value="od.predecessorUrn" />
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Predecessor name</label>
-                <input type="text" class="form-control" disabled="disabled" :value="od.predecessorName" />
-            </div>
-
-            <div class="button-row lower">
-                <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
-                <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div>
-    <div id="modal-content" class="modal-content" role="dialog" v-show="presentExitWarning">
-        <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a>
-        <div id="modal-inner">
-            <h3 class="heading-large">Are you sure you want to leave this page?</h3>
-            <p>Any unsaved changes will be lost.</p>
-        </div>
-        <div class="button-row">
-            <a href="#" class="button mobile-full-width" id="button-ok" v-on:click.prevent="presentExitWarning=false, editRecord=false, searchUrn='', presentDetail=false">OK</a>
-            <a href="#" class="button button-grey mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
         </div>
     </div>
 </div>
@@ -254,5 +274,6 @@
 
     </script>
 
-    <script src="/public/assets/scripts/standalone/manage-academy-openings.js"></script>
+    @*<script src="/public/assets/scripts/standalone/manage-academy-openings.js"></script>*@
+    <script src="/Assets/Scripts/standalone/manage-academy-openings.js"></script>
 }

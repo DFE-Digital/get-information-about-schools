@@ -1,0 +1,110 @@
+﻿@model ConvertSATViewModel
+@{
+    ViewBag.Title = "Convert";
+}
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ul>
+                <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+                <li>Convert to multi-academy trust</li>
+            </ul>
+        </div>
+    </div>
+    <div class="column-full">
+        <h1 class="heading-xlarge">Convert to multi academy trust</h1>
+    </div>
+</div>
+
+@if (Model.Details == null)
+{
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <p>Convert single academy trusts into multi-academy trusts using either the current company record or a new one from companies house</p>
+            <p class="bold-small">Convert current single academy trust</p>
+        </div>
+    </div>
+
+    using (Html.BeginRouteForm("PostGroupConvertSAT2MAT", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <fieldset>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.Text)">
+                        @Html.LabelFor(x => x.Text, "Companies House number, Group UID or ID")
+                        @Html.ValidationMessageFor(x => x.Text)
+                        @Html.TextBoxFor(x => x.Text, new { @class = "form-control" })
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-full">
+                <br />
+                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
+                <button type="submit" name="actionname" class="button mobile-full-width" value="find">Continue</button>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <p>Check this is the correct single academy trust before converting. A new UID will be created on conversion.</p>
+            <p class="bold-small">Existing trust details</p>
+        </div>
+    </div>
+
+    @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+
+    using (Html.BeginRouteForm("PostGroupConvertSAT2MAT", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.Token)
+        @Html.HiddenFor(x => x.CountryName)
+        @Html.HiddenFor(x => x.CountyName)
+        @Html.HiddenFor(x => x.Text)
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <table class="borderless">
+                    <tbody>
+                        <tr>
+                            <td>Trust name:</td>
+                            <td>@Model.Details.Name</td>
+                        </tr>
+                        <tr>
+                            <td>Companies House number:</td>
+                            <td>@(Model.Details.CompaniesHouseNumber ?? "Not recorded")</td>
+                        </tr>
+                        <tr>
+                            <td>Address:</td>
+                            <td>@Model.GetAddress()</td>
+                        </tr>
+                        <tr>
+                            <td>Group UID:</td>
+                            <td>@Model.Details.GroupUId</td>
+                        </tr>
+                        <tr>
+                            <td>Group ID:</td>
+                            <td>@(Model.Details.GroupId ?? "Not recorded")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-full">
+                <br />
+                @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy trust governance to academy")
+                <br />
+                <br />
+                @Html.RouteLink("Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-grey cancel mobile-full-width" })
+                <button type="submit" name="actionname" class="button mobile-full-width" value="confirm">Convert</button>
+                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
+            </div>
+        </div>
+    }
+}

@@ -12,5 +12,9 @@ namespace Edubase.Services.Security
         Task<CreateGroupPermissionDto> GetCreateGroupPermissionAsync(IPrincipal principal);
         Task<CreateEstablishmentPermissionDto> GetCreateEstablishmentPermissionAsync(IPrincipal principal);
         Task<string[]> GetRolesAsync(IPrincipal principal);
+
+        Task<int?> GetMyEstablishmentUrn(IPrincipal principal);
+        Task<int?> GetMyMATUId(IPrincipal principal);
+
     }
 }

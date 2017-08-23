@@ -8,7 +8,6 @@ namespace Edubase.Services.Groups.Models
     {
         public int GroupUId { get; set; }
         public string Name { get; set; }
-        public string NameDistilled { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public int? GroupTypeId { get; set; }
         public DateTime? ClosedDate { get; set; }
@@ -18,5 +17,6 @@ namespace Edubase.Services.Groups.Models
         public string GroupId { get; set; }
         public int EstablishmentCount { get; set; }
         public int? LocalAuthorityId { get; set; }
+        public AddressDto Address { get; set; }
     }
 }

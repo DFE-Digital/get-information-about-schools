@@ -157,8 +157,7 @@
 
             disableFilters();
 
-            $.get("Search/results-js?" + queryString, function (html, textStatus, jqXHR) {
-                var count = jqXHR.getResponseHeader("x-count");
+            var showResult = function (html, count) {
                 $(window).trigger({
                     type: 'ajaxResultLoad',
                     count: count
@@ -167,7 +166,7 @@
                 $("span.count").html(count);
                 if (parseInt(count, 10) === 0) {
                     $("a.download-link").addClass('hidden');
-                    window.scrollTo(0,0);
+                    window.scrollTo(0, 0);
                 } else {
                     $("a.download-link").removeClass('hidden');
                 }
@@ -177,11 +176,17 @@
                 $resultsElement.html(html);
 
                 if (!suppressPushState && GOVUK.support.history()) {
-                        window.history.pushState({ queryString: queryString, formState: captureFormState() }, null, window.location.href.split('?')[0] + "?" + queryString);
+                    window.history.pushState({ queryString: queryString, formState: captureFormState() }, null, window.location.href.split('?')[0] + "?" + queryString);
                 }
-                
-                $("a.download-link").attr("href", downloadUrl + queryString);
 
+                $("a.download-link").attr("href", downloadUrl + queryString);
+            };
+
+            
+            var jqxhr = $.get("Search/results-js?" + queryString, function (html, textStatus, jqXHR) {
+                showResult(html, jqXHR.getResponseHeader("x-count"));
+            }).fail(function (jqXHR) {
+                showResult(jqXHR.responseText, 0);
             });
         };
 

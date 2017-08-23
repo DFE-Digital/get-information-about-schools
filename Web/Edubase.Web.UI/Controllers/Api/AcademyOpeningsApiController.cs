@@ -19,6 +19,8 @@ using System.Web.Http;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
+    using M = EstablishmentSearchResultModel;
+
     public class AcademyOpeningsApiController : ApiController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -58,20 +60,18 @@ namespace Edubase.Web.UI.Controllers.Api
                     OpenDateMax = to,
                     EstablishmentTypeGroupIds = new[] { (int)eLookupEstablishmentTypeGroup.Academies },
                     StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
+                },
+                Select = new List<string>
+                {
+                    nameof(M.Name),
+                    nameof(M.Urn),
+                    nameof(M.TypeId),
+                    nameof(M.OpenDate),
+                    nameof(M.PredecessorName),
+                    nameof(M.PredecessorUrn)
                 }
             }, User));
 
-            // NOTE: One day, we should have an API call created that gets everything all in one go.
-            var linkTypes = await _lookupService.EstablishmentLinkTypesGetAllAsync();
-            var map = new ConcurrentDictionary<int, LinkedEstablishmentModel>();
-            
-            var tasks = apiResult.Items.Select(async x =>
-            {
-                var model = await _establishmentReadService.GetLinkedEstablishmentsAsync(x.Urn.Value, User);
-                map.TryAdd(x.Urn.Value, model.FirstOrDefault(e => e.LinkTypeId == (int)eLookupEstablishmentLinkType.ParentOrPredecessor));
-            });
-
-            await Task.WhenAll(tasks);
             
             return new
             {
@@ -82,8 +82,8 @@ namespace Edubase.Web.UI.Controllers.Api
                     EstablishmentType = x.TypeId.HasValue ? estabTypes.FirstOrDefault(t => t.Id == x.TypeId)?.Name : null,
                     OpeningDate = x.OpenDate,
                     DisplayDate = x.OpenDate?.ToString("dd/MM/yyyy"),
-                    PredecessorName = map[x.Urn.Value]?.EstablishmentName,
-                    PredecessorUrn = map[x.Urn.Value]?.Urn,
+                    PredecessorName = x.PredecessorName,
+                    PredecessorUrn = x.PredecessorUrn,
                 }).OrderBy(x=> x.OpeningDate),
                 Count = apiResult.Count
             };

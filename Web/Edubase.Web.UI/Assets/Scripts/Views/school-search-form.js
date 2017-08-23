@@ -50,7 +50,7 @@
 
         $('#name-search-submit').on('click', function (e) {
             var suggestionCount = $('#TextSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
-            var numericValue = !isNaN ($('#TextSearchModel_Text').val()).slice(0,1);
+            var numericValue = !isNaN ($('#TextSearchModel_Text').val());
 
             if ($.trim($('#TextSearchModel_Text').val()) === '') {
                 e.preventDefault();
@@ -366,5 +366,3 @@ if ($('#content').find('.has-typeahead').length > 0) {
     DfE.Views.schoolSearch.init();
 }
 
-var $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']");
-new GOVUK.SelectionButtons($blockLabels);

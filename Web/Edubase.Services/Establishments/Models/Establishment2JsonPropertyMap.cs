@@ -102,7 +102,9 @@ namespace Edubase.Services.Establishments.Models
             "bsoDateOfLastInspectionVisit",
             "bsoDateOfNextInspectionVisit",
             "createdUtc",
-            "lastUpdatedUtc" };
+            "lastUpdatedUtc",
+            "predecessorName",
+            "predecessorUrn" };
 
         public static string Convert(string propertyName)
         {

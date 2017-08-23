@@ -61,7 +61,7 @@
     var detail = disableStartDate ? @"based on current governor's end date" : @"required to save record";
     var title = $"Date of appointment ({detail})";
 
-    @Html.EditorFor(x => x.AppointmentStartDate, new { title, @readonly = disableStartDate })
+    @Html.EditorFor(x => x.AppointmentStartDate, new { title, @readonly = disableStartDate, ClassPrefix = "start-date" })
 }
 
 @if (Model.DisplayPolicy.AppointmentEndDate)

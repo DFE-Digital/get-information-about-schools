@@ -2,6 +2,7 @@
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Areas.Establishments.Models.Search
 @model EstablishmentSearchDownloadViewModel
+@using Edubase.Web.UI.Helpers
 @{
     ViewBag.bodyClasses = " search-page";
     ViewBag.hideLogo = true;
@@ -38,58 +39,41 @@
                 @Html.HiddenFor(m => m.SearchQueryString)
                 <div class="download-step">
                     <div class="form-group">
-                        <fieldset>
+                        <fieldset class="stacked-controls">
                             <legend class="visually-hidden">Select a data set</legend>
-                            <div class="block-radio-button-wrap">
-                                <label class="block-label selection-button-radio" for="radio-1">
-                                    <input id="radio-1" type="radio" name="dataset" value="core" checked="checked" class="core-full">
-                                    Core set of data
-                                </label>
-                            </div>
                             
-                            <div class="block-radio-button-wrap">
-                                <label class="block-label selection-button-radio" for="radio-2">
-                                    <input id="radio-2" type="radio" name="dataset" value="full" class="core-full">
-                                    Full set of data
-                                </label>
-                            </div>
+                            @Html.GiasRadioFor(m=>m.Dataset, "core", "Core set of data",null,  new { @checked="checked", @class="core-full" })
+                            
+                            @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data",null, new { @class = "core-full" })
 
                             @if (Model.AllowAnyExtraFields)
                             {
-                                <div class="panel-indent shift-panel" id="data-download-options">
+                                <div class="panel-indent shift-panel stacked-controls" id="data-download-options">
                                     <fieldset>
                                         <legend class="bold">Include non-public data:</legend>
 
                                         @if (Model.AllowIncludeEmailAddresses)
                                         {
-                                            <label class="block-label" for="@nameof(Model.IncludeEmailAddresses)">
-                                                <input id="@nameof(Model.IncludeEmailAddresses)" type="checkbox" name="@nameof(Model.IncludeEmailAddresses)" value="true" class="edubase-button-checkbox">
-                                                Email addresses
-                                            </label>
+                                            @Html.GiasCheckboxFor(m => m.IncludeEmailAddresses, "Email addresses")
+                                            
                                         }
 
                                         @if (Model.AllowIncludeIEBTFields)
                                         {
-                                            <label class="block-label" for="@nameof(Model.IncludeIEBTFields)">
-                                                <input id="@nameof(Model.IncludeIEBTFields)" type="checkbox" name="@nameof(Model.IncludeIEBTFields)" value="true" class="edubase-button-checkbox">
-                                                IEBT fields
-                                            </label>
+                                            @Html.GiasCheckboxFor(m => m.IncludeIEBTFields, "IEBT fields")
+                                           
                                         }
 
                                         @if (Model.AllowIncludeBringUpFields)
                                         {
-                                            <label class="block-label" for="@nameof(Model.IncludeBringUpFields)">
-                                                <input id="@nameof(Model.IncludeBringUpFields)" type="checkbox" name="@nameof(Model.IncludeBringUpFields)" value="true" class="edubase-button-checkbox">
-                                                Bring up fields
-                                            </label>
+                                            @Html.GiasCheckboxFor(m => m.IncludeBringUpFields, "Bring up fields")
+                                            
                                         }
 
                                         @if (Model.AllowIncludeChildrensCentreFields)
                                         {
-                                            <label class="block-label" for="@nameof(Model.IncludeChildrensCentreFields)">
-                                                <input id="@nameof(Model.IncludeChildrensCentreFields)" type="checkbox" name="@nameof(Model.IncludeChildrensCentreFields)" value="true" class="edubase-button-checkbox">
-                                                Children's centre fields
-                                            </label>
+                                            @Html.GiasCheckboxFor(m => m.IncludeChildrensCentreFields, "Children's centre fields")
+                                            
                                         }
 
                                     </fieldset>
@@ -117,13 +101,13 @@
             var $panel = $('#data-download-options');
             if ($panel.length > 0) {
                 $radios.on('change', function () {
-                    $panel.detach().insertAfter($(this).parents('.block-radio-button-wrap'));
+                    $panel.detach().insertAfter($(this).parents('.radio-button-wrap'));
                 });
 
                 $panel.detach().insertAfter(
                     $radios.filter(function(n, rad) {
                         return rad.checked;
-                    }).parents('.block-radio-button-wrap'));
+                    }).parents('.radio-button-wrap'));
             }
         }());
     </script>

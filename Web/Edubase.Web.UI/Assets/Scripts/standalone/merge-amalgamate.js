@@ -75,7 +75,8 @@
             completeAmalgamation: false,
             amalgUrn: '',
             exitUrl: '',
-            isProcessing: false
+            isProcessing: false,
+            apiError: {}
         },
         created: function () {
             this.populateSelect('new-establishment-type', this.types);
@@ -143,7 +144,6 @@
                 var arr = this.addedUrns.sort();
                 for (var i = 0, len = arr.length; i < len; i++) {
                     if (arr[i] !== '' && arr[i + 1] === arr[i]) {
-                        console.log('loop ' + i);
                         return true;
                     }
                 }
@@ -287,7 +287,10 @@
                             }
                         }
                     },
-                    error: function () {
+                    error: function (jqxhr) {
+                        if (jqxhr.hasOwnProperty('responseJSON')) {
+                            self.apiError = jqxhr.responseJSON;
+                        }
                         self[component + 'Valid'] = false;
                     },
                     complete: function () {
@@ -455,6 +458,10 @@
                             var errObj = JSON.parse(jqXHR.responseText);
                             var errMessage = '';
 
+                            if (jqXHR.hasOwnProperty('responseJSON')) {
+                                self.apiError = jqXHR.responseJSON;
+                            }
+
                             for (var item in errObj) {
                                 if (item === 'validationEnvelope') {
                                     var env = errObj[item][0].errors;
@@ -517,6 +524,10 @@
                         error: function (jqXHR) {
                             var errObj = JSON.parse(jqXHR.responseText);
                             var errMessage = '';
+
+                            if (jqXHR.hasOwnProperty('responseJSON')) {
+                                self.apiError = jqXHR.responseJSON;
+                            }
 
                             for (var item in errObj) {
                                 if (item === 'validationEnvelope' && errObj.validationEnvelope) {                                    

@@ -24,9 +24,10 @@
 
 
                 <div class="form-group first">
-                        <label class="form-label" for="school-name">
-                            School / College name
-                        </label>
+                    <label class="form-label" for="school-name">
+                        School / College name
+                    </label>
+
                         @Html.TextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
                     </div>
 
@@ -440,6 +441,25 @@
                         </div>
                     }
 
+                    @if (Model.EditPolicy.FreeSchoolMealsNumber)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsNumber)">
+                            @Html.LabelFor(x => x.FreeSchoolMealsNumber)
+                            @Html.ValidationMessageFor(x => x.FreeSchoolMealsNumber)
+                            @Html.TextBoxFor(x => x.FreeSchoolMealsNumber, new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.FreeSchoolMealsPercentage)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsPercentage)">
+                            @Html.LabelFor(x => x.FreeSchoolMealsPercentage)
+                            @Html.ValidationMessageFor(x => x.FreeSchoolMealsPercentage)
+                            @Html.TextBoxFor(x => x.FreeSchoolMealsPercentage, new { @class = "form-control" })
+                        </div>
+                    }
+
+
                     @if (Model.EditPolicy.SENStat)
                     {
                         <div class="form-group">
@@ -475,17 +495,18 @@
 
                     @if (Model.EditPolicy.SENIds)
                     {
-                        <div class="form-group">
-                            <label class="form-label" style="margin-bottom:5px;">Type of SEN provision</label>
+                        <div class="form-group sen-provision">
+                            <fieldset>
+                            <legend class="bold-small">Type of SEN provision</legend>
                             @foreach (var item in Model.SENProvisions)
                             {
-                                <label style="margin-bottom:10px;" class="block-label"
-                                       for="@nameof(Model.SENProvisions)_@item.Id">
-                                    @item.Name
+                                <span class="checkbox-wrap">
                                     <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)"
-                                           value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked") />
-                                </label>
+                                                value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked")/>
+                                    <label class="edubase-button-checkbox" for="@nameof(Model.SENProvisions)_@item.Id">@item.Name</label>
+                                </span>                                
                             }
+                            </fieldset>
                         </div>
                     }
 

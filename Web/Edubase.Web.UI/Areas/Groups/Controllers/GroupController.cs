@@ -28,6 +28,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using static Models.CreateEdit.GroupEditorViewModel;
     using static Models.CreateEdit.GroupEditorViewModelBase;
     using GT = Services.Enums.eLookupGroupType;
+    using GS = Services.Enums.eLookupGroupStatus;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -172,7 +173,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CompaniesHouseNumber = domainModel.CompaniesHouseNumber,
                 GroupUId = domainModel.GroupUId,
                 GroupId = domainModel.GroupId,
-                SelectedTabName = "details"
+                SelectedTabName = "details",
+                StatusId = domainModel.StatusId
             };
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
@@ -183,6 +185,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.DeriveCCLeadCentreUrn();
 
             if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+
+            viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust) 
+                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed) 
+                && User.InRole(EdubaseRoles.ROLE_BACKOFFICE);
+
+            viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup) 
+                && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(EdubaseRoles.ROLE_BACKOFFICE);
 
             return View("EditDetails", viewModel);
         }
@@ -344,6 +353,37 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("CreateAcademyTrust", viewModel);
         }
 
+        [HttpGet, EdubaseAuthorize(Roles=EdubaseRoles.ROLE_BACKOFFICE), Route("Convert", Name = "GroupConvertSAT2MAT")]
+        public ActionResult Convert() => View(new ConvertSATViewModel());
+
+        [HttpPost, EdubaseAuthorize(Roles=EdubaseRoles.ROLE_BACKOFFICE), Route("Convert", Name = "PostGroupConvertSAT2MAT"), ValidateAntiForgeryToken]
+        public async Task<ActionResult> Convert(ConvertSATViewModel viewModel)
+        {
+            if (viewModel.ActionName == "find" && ModelState.IsValid)
+            {
+                var result = (await _groupReadService.SearchByIdsAsync(viewModel.Text, viewModel.Text.ToInteger(), viewModel.Text, User)).Items.FirstOrDefault();
+                if (result == null) ModelState.AddModelError(nameof(viewModel.Text), "We were unable to find a SAT matching those details");
+                else if (result.GroupTypeId != (int)GT.SingleacademyTrust) ModelState.AddModelError(nameof(viewModel.Text), "That's an invalid group because it's of the wrong type.");
+                else
+                {
+                    viewModel.Details = result;
+                    viewModel.CountryName = await _lookup.GetNameAsync(() => result.Address.CountryId);
+                    viewModel.CountyName = await _lookup.GetNameAsync(() => result.Address.CountyId);
+                    viewModel.Token = UriHelper.SerializeToUrlToken(result);
+                }
+            }
+            else if (viewModel.ActionName == "confirm") 
+            {
+                viewModel.Details = UriHelper.DeserializeUrlToken<SearchGroupDocument>(viewModel.Token);
+                var apiResponse = await _groupWriteService.ConvertSAT2MAT(viewModel.Details.GroupUId, viewModel.CopyGovernanceInfo, User);
+                if (apiResponse.HasErrors) apiResponse.Errors.ForEach(x => ModelState.AddModelError("", x.GetMessage()));
+                else return RedirectToRoute("GroupDetails", new { id = apiResponse.GetResponse().Value });
+            }
+
+            return View(viewModel);
+        }
+
+
         private async Task<IEnumerable<SelectListItem>> GetAcademyTrustGroupTypes(int? typeId = null) 
             => (await _lookup.GroupTypesGetAllAsync()).Where(x => x.Id == (int)GT.MultiacademyTrust || x.Id == (int)GT.SingleacademyTrust).ToSelectList(typeId);
         
@@ -404,7 +444,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else return await _groupWriteService.SaveAsync(dto, User);
         }
 
-        private static SaveGroupDto CreateSaveDto(GroupEditorViewModel viewModel)
+        private SaveGroupDto CreateSaveDto(GroupEditorViewModel viewModel)
         {
             viewModel.SetCCLeadCentreUrn();
 
@@ -436,6 +476,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else if (viewModel.SaveMode == eSaveMode.DetailsAndLinks) dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
             else if (viewModel.SaveMode == eSaveMode.Links) dto = new SaveGroupDto(viewModel.GroupUId.Value, createLinksDomainModel());
             else throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
+
+            if (viewModel.CanUserCloseMATAndMarkAsCreatedInError
+                && viewModel.CloseMATAndMarkAsCreatedInError
+                && dto.Group != null)
+            {
+                dto.Group.StatusId = (int)GS.CreatedInError;
+            }
+
             return dto;
         }
 

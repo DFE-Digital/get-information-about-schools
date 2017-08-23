@@ -28,5 +28,9 @@ namespace Edubase.Services.Texuna.Groups
         }
 
         public async Task<ApiResponse> ConfirmGovernanceAsync(int uid, IPrincipal principal) => await _httpClient.PostAsync($"group/{uid}/governance/confirm", null, principal);
+
+
+        public async Task<ApiResponse<NumericResultDto>> ConvertSAT2MAT(int uid, bool copyGovernanceInfo, IPrincipal principal) 
+            => await _httpClient.PostAsync<NumericResultDto>($"group/{uid}/convert-sat-to-mat?copygovernance={copyGovernanceInfo.ToString().ToLower()}", null, principal);
     }
 }

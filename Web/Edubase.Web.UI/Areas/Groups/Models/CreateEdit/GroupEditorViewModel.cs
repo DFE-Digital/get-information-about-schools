@@ -63,6 +63,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string Address { get; set; }
         public DateTimeViewModel OpenDate { get; set; } = new DateTimeViewModel();
         public string AddressJsonToken { get; set; }
+        public bool CloseMATAndMarkAsCreatedInError { get; set; }
+        public bool CanUserCloseMATAndMarkAsCreatedInError { get; set; }
 
         [Display(Name = "Closed date")]
         public DateTimeViewModel ClosedDate { get; set; } = new DateTimeViewModel();

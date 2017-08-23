@@ -70,8 +70,8 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)
             => (await _httpClient.GetAsync<List<LookupDto>>("establishment/permittedstatuses", principal)).GetResponse().Select(x => x.Id).ToArray();
 
-        public async Task<ApiPagedResult<EstablishmentModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
-            => (await _httpClient.PostAsync<ApiPagedResult<EstablishmentModel>>("establishment/search", payload, principal)).GetResponse();
+        public async Task<ApiPagedResult<EstablishmentSearchResultModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal)
+            => (await _httpClient.PostAsync<ApiPagedResult<EstablishmentSearchResultModel>>("establishment/search", payload, principal)).GetResponse();
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10) 
             => (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
@@ -182,5 +182,7 @@ namespace Edubase.Services.Texuna.Establishments
             }
             
         }
+
+        public async Task<string> GetEstablishmentNameAsync(int urn, IPrincipal principal) => (await GetAsync(urn, principal)).GetResult().Name;
     }
 }

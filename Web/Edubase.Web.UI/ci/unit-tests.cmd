@@ -1,4 +1,3 @@
-call grunt copy:jsonStubs 
 call grunt compile-dev-assets
 @echo off
 echo Exit Code is %errorlevel%

@@ -196,7 +196,7 @@ namespace Edubase.Services.Establishments.Models
         public bool HelpdeskTrigger1 { get; set; }
         public bool HelpdeskPreviousLocalAuthorityId { get; set; }
         public bool HelpdeskPreviousEstablishmentNumber { get; set; }
-
+        
         public bool? AltSiteName { get; set; }
         public bool? AltCountryId { get; set; }
         public bool? AltUPRN { get; set; }
@@ -206,6 +206,9 @@ namespace Edubase.Services.Establishments.Models
         public bool? AltTown { get; set; }
         public bool? AltCountyId { get; set; }
         public bool? AltPostCode { get; set; }
+
+        public bool FreeSchoolMealsNumber { get; set; }
+        public bool FreeSchoolMealsPercentage { get; set; }
 
     }
 }

@@ -46,7 +46,8 @@
             appState: 'initial', // initial || groupDetail || addCentre || detail
             pendingEdit: false,
             detailEdit: false,
-            isProcessing: false
+            isProcessing: false,
+            apiError: {}
 
         },
         computed: {
@@ -188,7 +189,9 @@
                             }
                         },
                         error: function (jqXhr) {
-                            console.log(jqXhr);
+                            if (jqXhr.hasOwnProperty('responseJSON')) {
+                                self.apiError = jqXhr.responseJSON;
+                            }
                         }
                     });
                 }
@@ -297,7 +300,10 @@
                             self.remoteUrnValidation();
                         }
                     },
-                    error: function () {
+                    error: function (jqxhr) {
+                        if (jqxhr.hasOwnProperty('responseJSON')) {
+                            self.apiError = jqxhr.responseJSON;
+                        }
                         self.urnError = true;
                         self.isProcessing = false;
                     }
@@ -347,7 +353,9 @@
                         }
                     },
                     error: function (jqXhr) {
-                        console.log(jqXhr);
+                        if (jqXhr.hasOwnProperty('responseJSON')) {
+                            self.apiError = jqXhr.responseJSON;
+                        }
                         self.isProcessing = false;
                     }
                 });
@@ -433,8 +441,6 @@
                             dataType: 'json',
                             data: JSON.stringify(validationObj),
                             success: function(data) {
-                                //
-                                console.log(JSON.stringify(data));
                                 if (data.HasErrors) {
                                     self.groupNameApiError = data.Errors[0].Message;
                                 } else if (data.HasWarnings) {
@@ -449,6 +455,11 @@
                                     self.appState = 'addCentre';
                                 }
                                 self.isProcessing = false;
+                            },
+                            error: function(jqxhr) {
+                                if (jqxhr.hasOwnProperty('responseJSON')) {
+                                    self.apiError = jqxhr.responseJSON;
+                                }
                             }
                         });
                     }

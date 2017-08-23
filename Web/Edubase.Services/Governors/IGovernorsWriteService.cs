@@ -11,6 +11,7 @@ namespace Edubase.Services.Governors
         Task<ApiResponse<int>> SaveAsync(GovernorModel model, IPrincipal principal);
         Task DeleteAsync(int id, IPrincipal principal);
         Task<ApiResponse> UpdateDatesAsync(int governorId, DateTime appointmentStartDate, DateTime appointmentEndDate, IPrincipal principal);
+        Task<ApiResponse> UpdateDatesAsync(int governorId, DateTime appointmentEndDate, IPrincipal principal);
         Task<ValidationEnvelopeDto> ValidateAsync(GovernorModel model, IPrincipal principal);
 
         /// <summary>

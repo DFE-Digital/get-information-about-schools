@@ -67,9 +67,9 @@
   };
 
   OptionSelect.prototype.attachCheckedCounter = function attachCheckedCounter(){
-      if (this.$options.filter(":checked").size() > 0) {
+      if (this.$options.filter(":checked").length > 0) {
           this.updateCheckedCount();
-          this.$optionSelect.trigger('countUpdated', { selectedCount: this.$options.filter(":checked").size() });
+          this.$optionSelect.trigger('countUpdated', { selectedCount: this.$options.filter(":checked").length });
       }
   };
 
@@ -78,7 +78,7 @@
   };
 
   OptionSelect.prototype.checkedString = function checkedString() {
-    var count = this.$options.filter(":checked").size();
+    var count = this.$options.filter(":checked").length;
     var checkedString = "";
     if (count > 0){
       checkedString = count+" selected";

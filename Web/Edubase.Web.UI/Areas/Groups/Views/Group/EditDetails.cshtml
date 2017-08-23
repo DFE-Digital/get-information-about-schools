@@ -1,6 +1,7 @@
 ﻿@using Edubase.Common;
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
+@using S = Edubase.Services.Enums.eLookupGroupStatus;
 @model VM
 @{
     ViewBag.hideLogo = true;
@@ -8,7 +9,7 @@
     Layout = "_EditLayoutPage.cshtml";
 }
 
-@using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post, new { @id="edit-group-details" } ))
 {
     @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.GroupTypeMode)
@@ -17,6 +18,8 @@
     @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
     @Html.HiddenFor(x => x.AddressJsonToken)
     @Html.HiddenFor(x => x.ProcessedWarnings)
+    @Html.HiddenFor(x => x.StatusId)
+    @Html.HiddenFor(x => x.CanUserCloseMATAndMarkAsCreatedInError)
 
     <div class="grid-row">
         <div class="column-full">
@@ -73,6 +76,12 @@
                 {
                     @Html.EditorFor(x => x.ClosedDate, new { title = "Closed date" })
                 }
+                else
+                {
+                    @Html.HiddenFor(x => x.ClosedDate.Day)
+                    @Html.HiddenFor(x => x.ClosedDate.Month)
+                    @Html.HiddenFor(x => x.ClosedDate.Year)
+                }
 
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
                 {
@@ -128,6 +137,16 @@
                     </div>
                 }
 
+                @if (Model.CanUserCloseMATAndMarkAsCreatedInError)
+                {
+                    <div class="form-group">
+                        @Html.GiasCheckboxFor(x => x.CloseMATAndMarkAsCreatedInError,
+                            "Close this trust and mark as created in error", 
+                            null,
+                            new { id="close-created-in-error"})                        
+                    </div>
+                }
+
             </div>
         </div>
     </div>
@@ -138,9 +157,8 @@
             <br />
             <br />
 
-            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
             <button type="submit" name="action" class="button mobile-full-width" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
-            
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
         </div>
     </div>
 
@@ -167,20 +185,62 @@
         });
 
         (function () {
-            var mask = $('#warning-modal-overlay');
-            var modal = $('#warning-modal-content');
+           var canProceed = false;
+            var $modalCancels = $("[id|='warning-exit-overlay'], [id|='overlay-cancel']");
+            var $modalProceeds = $("[id|='overlay-proceed']");
 
-            $('#warning-exit-overlay, #overlay-cancel').on('click',
+            $modalCancels.on('click',
                 function (e) {
                     e.preventDefault();
-                    mask.addClass('hidden');
-                    modal.addClass('hidden');
+                    var idInt = $(this).attr('id').split('-').slice(-1);
+                    $('#warning-modal-overlay-'+ idInt).addClass('hidden');
+                    $('#warning-modal-content-' + idInt).addClass('hidden');
                 });
 
-            $('#overlay-proceed').on('click',
+            $modalProceeds.on('click',
                 function (e) {
+                    console.log('proceed');
+                    canProceed = true;
                     $('#edit-submit').click();
                 });
+
+            if ($modalProceeds.length > 0) {
+                $('#edit-submit').on('click', function(e) {
+                    if (!canProceed) {
+                        console.log('submit click');
+                        e.preventDefault();
+                        $("[id|='warning-modal-overlay']").removeClass('hidden');
+                        $("[id|='warning-modal-content']").removeClass('hidden');
+                    }
+                    
+                });
+            }
         }());
+        (function() {
+            if (document.getElementById('close-created-in-error')) {
+                var form = $('#edit-group-details');
+                var canCloseImmediately = false;
+                var closeCheckbox = document.getElementById('close-created-in-error');
+                form.on('submit', function (e) {                    
+                    if (closeCheckbox.checked && !canCloseImmediately) {
+                        e.preventDefault();
+                        $(this).okCancel({
+                            ok: function () {
+                                canCloseImmediately = true;
+                                $('#edit-submit').click();
+                            },
+                            immediate: true,
+                            idPrefix: 'close-continue',
+                            title: 'Are you sure you want to close this trust?',
+                            content:
+                            'All academies and shared governors will be removed on closure.'
+                        });
+                        $(this).removeData('okCancel');
+                    }
+                    
+                });
+            }
+        }());
+        
     </script>
 }

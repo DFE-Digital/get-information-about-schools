@@ -216,6 +216,13 @@ namespace Edubase.Web.UI.Models
         public string Contact_EmailAddress { get; set; }
         public string ContactAlt_EmailAddress { get; set; }
 
+        [DisplayName("Number of pupils eligible for free school meals")]
+        public int? FreeSchoolMealsNumber { get; set; }
+
+        [DisplayName("Percentage of children eligible for free school meals")]
+        public double? FreeSchoolMealsPercentage { get; set; }
+
+
         [DisplayName("Number of special pupils under a SEN statement/EHCP")]
         public int? SENStat { get; set; }
 

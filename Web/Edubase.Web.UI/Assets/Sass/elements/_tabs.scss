@@ -133,11 +133,146 @@ nav.tabs {
     position: relative;
     top: 1px;
 
+    .tab-count-5 & {
+        @include media($max-width: 841px) {
+            li {
+                margin-right: 0.7em;
+            }
+        }
+
+        @include media($max-width: 792px) {
+            li {
+                font-size: 14px;
+                min-width: 106px;
+            }
+        }
+    }
+
+    .tab-count-7 & {
+        li {
+            margin-right: 0.08em;
+        }
+
+        @include media($max-width: 1050px) {
+            li {
+                font-size: 16px;
+                min-width: 120px;
+            }
+        }
+
+        @include media($max-width: 926px) {
+            li {
+                font-size: 14px;
+                min-width: 88px;
+            }
+        }
+
+        @include media($max-width: 720px ) {
+            li {
+                width: 100%;
+                border: $grey-2 1px solid;
+                text-align: center;
+                padding: 0;
+                float: none;
+                max-width: 100%;
+                font-size: 16px;
+                
+                .selected-tab {
+                    border: 0;
+                }
+            }
+        }
+    }
+
+    .tab-count-6 & {
+        @include media($max-width: 1012px) {
+            li {
+                min-width: 120px;
+                font-size: 16px;
+                margin-right: 0.5em;
+            }
+
+            a {
+                padding-right: 0.5em;
+                padding-left: 0.5em;
+            }
+        }
+
+        @include media ($max-width: 830px) {
+            li {
+                font-size: 14px;
+                margin-right: 0.25em;
+            }
+
+            a {
+                padding: 0.75em 0.25em 0.1em;
+            }
+        }
+
+        @include media($max-width: 804px) {
+            li {
+                width: 100%;
+                border: $grey-2 1px solid;
+                text-align: center;
+                padding: 0;
+                float: none;
+                max-width: 100%;
+                font-size: 16px;
+            }
+
+            .horizontal-tab {
+                padding: 1em 0 0.5em;
+            }
+
+            .selected-tab {
+                border: 0;
+            }
+        }
+
+        @include media(tablet) {
+            .horizontal-tab {
+                padding: 0.5em 1em 0.25em;
+            }
+        }
+    }
+
+
+    .search-tabs & {
+        @include media($max-width: 840px) {
+            li {
+                font-size: 16px;
+                margin-right: 0.75em;
+            }
+        }
+
+        @include media($max-width: 666px) {
+            li {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .tab-count-4 & {
+        @include media($max-width: 700px) {
+            li {
+                font-size: 16px;
+                margin-right: 1em;
+            }
+        }
+
+        @include media($max-width: 657px) {
+            li {
+                margin-right: 0.7em;
+            }
+        }
+    }
+
     li {
         width: 100%;
         border: $grey-2 1px solid;
         text-align: center;
         padding: 0;
+        font-size: 19px;
 
         @include media(tablet) {
             float: left;
@@ -146,26 +281,18 @@ nav.tabs {
             margin: 0 1.2em 0 0;
             min-width: 133px;
             max-width: 380px;
-
-            
         }
     }
-    &.trio-tabs { // chunky search page tabs
-        li {
-            @include media(tablet) {
-                width: 30%;
-                margin-right: 1%;
-            }
-        }            
-    }
+
+
     .horizontal-tab {
         display: block;
-        padding: 1em 0 0.5em;        
+        padding: 1em 0 0.5em;
         min-height: auto;
 
         @include media(tablet) {
             padding: 0.5em 1.3em 0.25em;
-            min-height: 40px;            
+            min-height: 40px;
         }
 
         &.selected-tab {
@@ -173,17 +300,12 @@ nav.tabs {
             background-color: #fff;
             color: $black;
 
-             @include media(tablet) {
+            @include media(tablet) {
                 border: $grey-2 1px solid;
                 border-bottom: 0;
             }
         }
     }
-
-    .sub {
-        display: block;
-    }
-  
 }
 
 .horizontal-tabs-content {

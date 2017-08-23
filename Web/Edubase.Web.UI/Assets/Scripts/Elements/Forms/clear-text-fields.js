@@ -46,7 +46,7 @@
 
 }($));
 
-if ($(window).width() < 640) {
-    $('#content').find('.auto-clear').clearFields();
-}
+//if ($(window).width() < 640) {
+//    $('#content').find('.auto-clear').clearFields();
+//}
 

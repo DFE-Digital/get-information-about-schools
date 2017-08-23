@@ -31,9 +31,12 @@ namespace Edubase.Web.UI.Validation
 
         public static void ApplyToModelState(this ApiResponse apiResponse, ControllerContext controllerContext)
         {
-            foreach (var error in apiResponse.Errors)
+            if (apiResponse.HasErrors && apiResponse.Errors != null)
             {
-                controllerContext.Controller.ViewData.ModelState.AddModelError(error.Fields, error.Message);
+                foreach (var error in apiResponse.Errors)
+                {
+                    controllerContext.Controller.ViewData.ModelState.AddModelError(error.Fields, error.Message);
+                }
             }
         }
     }

@@ -56,8 +56,11 @@
 
     @if (!Request.Browser.Browser.Contains("MSIE 8"))
     {
+        <!--[if (gte IE 9)|!(IE)]><!-->
         <script src="/public/jquery/dist/jquery.min.js"></script>
         <script src="/public/jquery-simulate/jquery.simulate.js"></script>
+        <!--<![endif]-->
+        
         
 
         <!--[if IE 9]>
@@ -67,12 +70,13 @@
         <script src="/public/termi/element.details.js"></script>
         <!--<![endif]-->
       
-        <!--[if (gt IE 8)|!(IE)]><!-->
+        <!--[if (gte IE 9)|!(IE)]><!-->
             <script src="/public/assets/scripts/application.js?v=@version"></script>
         <!--<![endif]-->
 
-
+        <!--[if (gte IE 9)|!(IE)]><!-->
         @(RenderSection("ViewScripts", required: false))
+        <!--<![endif]-->
     }
 
  

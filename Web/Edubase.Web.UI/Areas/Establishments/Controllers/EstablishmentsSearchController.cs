@@ -41,7 +41,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet, Route(Name="EstabSearch")]
         public async Task<ActionResult> Index(EstablishmentSearchViewModel model)
         {
             model.SearchQueryString = Request.QueryString.ToString();

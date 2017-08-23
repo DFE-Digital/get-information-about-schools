@@ -98,174 +98,178 @@ category: Forms
 */
 
 .govuk-option-select {
-  background-color: $grey-3;
-  padding: 5px;
-  position: relative;
-  margin-bottom: 1em;
-
-  .error{
-      padding-left: 0;
-      border-left: 0;
-  }
-  .error-message {
-      font-size: 16px;
-  }
-  &.date-filters .error-message {
-      padding-left: 15px;
-  }
-  @include media(desktop) {
-    /* Redefine scrollbars on desktop where these lists are scrollable
-    so they are always visible in option lists */
-    ::-webkit-scrollbar {
-      -webkit-appearance: none;
-      width: 7px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      border-radius: 4px;
-      background-color: rgba(0,0,0,.5);
-      -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
-    }
-  }
-
-  &:focus {
-    outline: 3px solid $yellow;
-  }
-
-  .container-head {
-    padding: 5px 8px;
-  }
-
-  .option-select-label {
-    @include core-19;
-    margin-right: 60px;
-    font-weight: bold;
-    padding-top: 5px;
-    padding-left: 10px;
-  }
-
-  .options-container {
+    background-color: $grey-3;
+    padding: 5px;
     position: relative;
-    background-color: $page-colour;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    max-height: 200px;
-    
+    margin-bottom: 1em;
 
-    .error-message.hidden {
-        display: none;
+    .error {
+        padding-left: 0;
+        border-left: 0;
     }
 
-    label {
-      @include inline-block;
-      padding: 7px 0 7px 30px;
-      border-bottom: 1px solid $border-colour;
-      width: 95%;
-      cursor: pointer;
-      font-size:16px;
-
-      @include media(desktop) {
-        /* leave room for the scroll bars on desktop*/
-        width: 90%;
-      }
-
-      &:hover {
-        background-color: $highlight-colour;
-      }
-
-      &[disabled] {
-        color: $grey-2;
-      }
+    .error-message {
+        font-size: 16px;
     }
 
-    .filter-input {      
-      position: absolute;
-      top: 0;
-      left: 0;
-      @include opacity(0);
+    &.date-filters .error-message {
+        padding-left: 15px;
     }
-  }
 
-  .js-enabled & {
-    padding: 0 0 1px 0;
+    @include media(desktop) {
+        /* Redefine scrollbars on desktop where these lists are scrollable
+    so they are always visible in option lists */
+        ::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 7px;
+        }
 
-    .js-selected-counter {
-      @include core-14;
-      padding-left: 10px;
-      width: 40%;
+        ::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background-color: rgba(0,0,0,.5);
+            -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+        }
+    }
+
+    &:focus {
+        outline: 3px solid $yellow;
+    }
+
+    .container-head {
+        padding: 5px 8px;
+    }
+
+    .option-select-label {
+        @include core-19;
+        margin-right: 60px;
+        font-weight: bold;
+        padding-top: 5px;
+        padding-left: 10px;
     }
 
     .options-container {
-      border: 5px solid $grey-3;
-      border-top: 10px;
+        position: relative;
+        background-color: $page-colour;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        max-height: 200px;
+
+
+        .error-message.hidden {
+            display: none;
+        }
+
+        label {
+            @include inline-block;
+            padding: 7px 0 7px 30px;
+            border-bottom: 1px solid $border-colour;
+            width: 95%;
+            cursor: pointer;
+            font-size: 16px;
+
+            @include media(desktop) {
+                /* leave room for the scroll bars on desktop*/
+                width: 90%;
+            }
+
+            &:hover {
+                background-color: $highlight-colour;
+            }
+
+            &[disabled] {
+                color: $grey-2;
+            }
+        }
+
+        .filter-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            @include opacity(0);
+        }
     }
 
-    /* styles for collapsibleness. .js-collapsible is added by the javascript if the browser is not ie6/7 in which case these don't collapse */
-    &.js-collapsible {
-      button {
-        z-index: 97;
-        position: relative;
-        border: none;
-        display: block;
-        width: 100%;
-        text-align: left;
-        cursor: pointer;
-        margin-bottom: -1px;
-        padding: 5px 0;
-        
-        background-color: $grey-3;
-       
-        &:after {
-            position: absolute;
-            background: file-url('option-select-toggle-sprite.png') no-repeat right 5px;
-            width: 24px;
-            height: 25px;
-            content: "";
-            right: 0;
-            top: 0;
-        }
 
-        &:hover {
-          background-color: $grey-2;
-        }
 
-        &:hover + .options-container {
-          border-color: $grey-2;
-        }
+    .js-enabled & {
+        padding: 0 0 1px 0;
 
-        &[disabled] {
-          background-image: none;
-          color: inherit;
-        }
-      }
-
-      &.js-closed {
-        button:after {
-          background-position: right -75px;
+        .js-selected-counter {
+            @include core-14;
+            padding-left: 10px;
+            width: 40%;
         }
 
         .options-container {
-          display: none;
+            border: 5px solid $grey-3;
+            border-top: 10px;
         }
-      }
+        /* styles for collapsibleness. .js-collapsible is added by the javascript if the browser is not ie6/7 in which case these don't collapse */
+        &.js-collapsible {
+            button {
+                z-index: 97;
+                position: relative;
+                border: none;
+                display: block;
+                width: 100%;
+                text-align: left;
+                cursor: pointer;
+                margin-bottom: -1px;
+                padding: 5px 0;
+                background-color: $grey-3;
+
+                &:after {
+                    position: absolute;
+                    background: file-url('option-select-toggle-sprite.png') no-repeat right 5px;
+                    width: 24px;
+                    height: 25px;
+                    content: "";
+                    right: 0;
+                    top: 0;
+                }
+
+                &:hover {
+                    background-color: $grey-2;
+                }
+
+                &:hover + .options-container {
+                    border-color: $grey-2;
+                }
+
+                &[disabled] {
+                    background-image: none;
+                    color: inherit;
+                }
+            }
+
+            &.js-closed {
+                button:after {
+                    background-position: right -75px;
+                }
+
+                .options-container {
+                    display: none;
+                }
+            }
+        }
     }
-  }
-  &.no-scroll {
-      .options-container {
-          overflow-y: auto;
-          max-height: none;
-      }
-  }
+
+    &.no-scroll {
+        .options-container {
+            overflow-y: auto;
+            max-height: none;
+        }
+    }
 }
 
 
 #option-select-sort-by,
 #option-select-within-radius-of {
     select {
-          width: 90%;
-          margin-left: 10px;
-          margin-bottom: 12px;
-      }
+        width: 90%;
+        margin-left: 10px;
+        margin-bottom: 12px;
+    }
 }
 
 
@@ -277,13 +281,15 @@ category: Forms
         position: relative;
         float: right;
         right: 5px;
-        top:  0;
+        top: 0;
+
+
         &:after {
             content: "";
             background-image: file-url('option-select-toggle-child-sprite.png');
             background-repeat: no-repeat;
             background-position: 50% 100%;
-            background-size: 28px auto;  
+            background-size: 28px auto;
             width: 20px;
             height: 20px;
             display: block;
@@ -292,21 +298,41 @@ category: Forms
         &:active, &:focus {
             background-color: transparent;
         }
-                           
     }
-    .nested-items {        
+
+    .nested-items {
         .open-children.child-option-toggle::after {
             background-position: 50% top;
         }
+
         dd {
-          label {
-             width: calc(100% - 40px);
-             margin-left: 20px;
-          }
+            label {
+                width: calc(100% - 40px);
+                margin-left: 20px;
+            }
         }
     }
 }
 
 .no-js .child-option-toggle {
     display: none;
+}
+
+
+.lt-ie9 {
+    .options-container .filter-input {
+        @include opacity(1);
+        top: 8px;
+        left: 12px;
+    }
+
+    .filter-wrapper {
+        position: relative;
+    }
+
+    .child-option-toggle,
+    .filter-group-title, 
+    .map-container {
+        display: none;
+    }
 }

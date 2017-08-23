@@ -18,7 +18,7 @@
 <div id="create-establishment">
     <div class="grid-row">
         <div class="column-full">
-            <h1 class="heading-intro" id="title">
+            <h1 class="heading-xlarge" id="title">
                 Create an establishment
             </h1>
 
@@ -148,26 +148,23 @@
                     <legend class="bold-small">Establishment number</legend>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
                         @Html.ValidationMessageFor(x => x.GenerateEstabNumber)
-                        <label class="block-label selection-button-radio" for="generate-number-radio">
-                            @Html.RadioButtonFor(x => x.GenerateEstabNumber, true, new { id = "generate-number-radio" })
-                            Generate number
-                        </label>
-
-                        <label class="block-label selection-button-radio" for="enter-number-radio">
-                            @Html.RadioButtonFor(x => x.GenerateEstabNumber, false, new { id = "enter-number-radio" })
-                            Enter number
-                        </label>
+                        
+                        @Html.GiasRadioFor(x => x.GenerateEstabNumber, true, "Generate number",null,  new { id="generate-number-radio"})
+                        
+                        @Html.GiasRadioFor(x => x.GenerateEstabNumber, false, "Enter number", null, new { id = "enter-number-radio" })
+                        
+                    </div>
+                    <div id="enter-number">
+                        <div id="enter-number-form-group" class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                            @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new {@class="form-label"})
+                            @Html.ValidationMessageFor(x => x.EstablishmentNumber)
+                            @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control form-control-1-2" })
+                        </div>
                     </div>
                 </fieldset>
             </div>
 
-            <div id="enter-number" class="column-half">
-                <div id="enter-number-form-group" class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
-                    @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number")
-                    @Html.ValidationMessageFor(x => x.EstablishmentNumber)
-                    @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control" })
-                </div>
-            </div>
+            
 
             <div class="column-full">
                 <div class="submit-cancel-panel">
@@ -266,8 +263,6 @@
         }
 
         function createChildrensCentre() {
-            //$("#title").text("Create a children's centre");
-            //$("#establishment-type-form-group").hide();
             $("#establishment-phase-form-group").hide();
             $("#number-gen-options").hide();
             $("#enter-number").hide();

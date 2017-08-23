@@ -53,6 +53,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string GroupName { get; set; }
         public int? GroupTypeId { get; set; }
         public string SelectedTabName { get; set; }
+        public int? StatusId { get; set; }
 
         public GroupEditorViewModelBase()
         {

@@ -63,12 +63,13 @@
             <div class="tab-wrap">
                 <ul class="horizontal-tabs">
                     <li><a href="#details" class="horizontal-tab">Details</a></li>
-                    <li><a href="#list" class="horizontal-tab">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a></li>
-
+                    
                     @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li><a href="#governance" class="horizontal-tab">Governance</a></li>
                     }
+
+                    <li><a href="#list" class="horizontal-tab">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a></li>
 
                     @if (Model.IsUserLoggedOn)
                     {
@@ -251,6 +252,14 @@
                         }
 
                         @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUId, viewModel = null as Edubase.Web.UI.Areas.Governors.Models.GovernorsGridViewModel, area = "Governors" });}
+                        
+                        @if (Model.CanUserEdit)
+                        {
+                            <div class="button-wrap">
+                                @Html.ActionLink("Edit", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
+                            </div>
+
+                        }
                     </div>
                 }
                 

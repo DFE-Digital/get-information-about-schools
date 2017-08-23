@@ -10,6 +10,7 @@ using Edubase.Web.UI.Validation;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
+    [RouteArea("Governors"), RoutePrefix("SharedGovernor")]
     public class SharedGovernorController : Controller
     {
         private const string EstabSelectSharedGovernor = "~/Establishment/Edit/{establishmentUrn:int}/Governance/SelectSharedGovernor";
@@ -43,7 +44,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var viewModel = new SelectSharedGovernorViewModel
             {
                 Governors = (await Task.WhenAll(sharedGovernors)).ToList(),
-                GovernorType = roleName.ToLowerInvariant()
+                GovernorType = roleName.ToLowerInvariant(),
+                
             };
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, null, User);

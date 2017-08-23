@@ -130,6 +130,10 @@ $path: $images-path;
 input.button-grey,button.button-grey, a.button-grey {
     background-color:#e6e6e6;
 }
+
+a.button.button-grey:focus {
+  color: $grey-1;
+}
 .button-comparison {
   @include core-19;
   color: black;

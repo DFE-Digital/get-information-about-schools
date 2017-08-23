@@ -16,6 +16,8 @@ namespace Edubase.Web.UI.Filters
 {
     public class ExceptionHandler : IExceptionFilter
     {
+        public static bool EnableFriendlyErrorPage => StringUtil.Boolify(ConfigurationManager.AppSettings["EnableFriendlyErrorPage"], true);
+
         public void OnException(ExceptionContext filterContext)
         {
             if (filterContext == null) throw new ArgumentNullException(nameof(filterContext));
@@ -40,29 +42,27 @@ namespace Edubase.Web.UI.Filters
                 var ctx = filterContext.HttpContext;
                 var msg = Log(ctx, filterContext.Exception);
 
-                if (StringUtil.Boolify(ConfigurationManager.AppSettings["EnableFriendlyErrorPage"], true))
+                if (EnableFriendlyErrorPage)
                 {
                     filterContext.Result = new ViewResult
                     {
                         ViewName = "~/Views/Shared/Error.cshtml",
-                        ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id }
+                        ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
                     };
-
-                    filterContext.ExceptionHandled = true;
                 }
                 else // show full technical error detail
                 {
                     filterContext.Result = new ViewResult
                     {
                         ViewName = "~/Views/Shared/FullErrorDetail.cshtml",
-                        ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id }
+                        ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
                     };
-
-                    ctx.Response.Clear();
-                    ctx.Response.TrySkipIisCustomErrors = true;
-                    ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
-                    filterContext.ExceptionHandled = true;
                 }
+
+                ctx.Response.Clear();
+                ctx.Response.TrySkipIisCustomErrors = true;
+                ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
+                filterContext.ExceptionHandled = true;
             }
         }
 

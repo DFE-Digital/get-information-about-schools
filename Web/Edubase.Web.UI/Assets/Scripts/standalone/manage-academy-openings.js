@@ -32,7 +32,7 @@
            },
            methods: {
                detailUrl: function (urn) {
-                   return '/Establishment/Details/' + urn;
+                   return '/Establishments/Establishment/Details/' + urn;
                }
            }
        });
@@ -62,7 +62,9 @@
             presentDetail: false,
             isProcessing: true,
             userHasEdited: false,
-            presentExitWarning: false
+            presentExitWarning: false,
+            loadDataError: false,
+            apiError: {}
 
         },
         created: function () {
@@ -71,7 +73,7 @@
         },
         methods: {
             detailUrl: function (urn) {
-                return '/Establishment/Details/' + urn;
+                return '/Establishments/Establishment/Details/' + urn;
             },
             formatDate: function (date, separator) {
                 if (!date) {
@@ -170,9 +172,25 @@
                                 self.buildPages(data.items, self.pageSize);
                                 self.buildDateDropDown();
                             }
-                        );
+                        ).fail(function(jqxhr) {
+                            if (jqxhr.hasOwnProperty('responseJSON')) {
+                                self.apiError = jqxhr.responseJSON;
+                            } else {
+                                self.loadDataError = true;
+                            }
+                            self.loadDataError = true;
+                            self.isProcessing = false;
+                        });
                     }
-                );
+                ).fail(function(jqxhr) {
+                    
+                    if (jqxhr.hasOwnProperty('responseJSON')) {
+                        self.apiError = jqxhr.responseJSON;
+                    } else {
+                        self.loadDataError = true;
+                    }
+                    self.isProcessing = false;
+                });
             },
             setCurrentPage: function (pageIndex) {
                 this.currentPage = pageIndex;
@@ -238,7 +256,12 @@
                         success: function (data) {                            
                             self.loadData();
                         },
-                        error: function () {
+                        error: function (jqxhr) {
+                            if (jqxhr.hasOwnProperty('responseJSON')) {
+                                self.apiError = jqxhr.responseJSON;
+                            } else {
+                                self.loadDataError = true;
+                            }
                             console.log('update error');
                         }
                     });

@@ -17,33 +17,36 @@
                 @Html.HiddenFor(m => m.Name)
                 @Html.HiddenFor(m => m.Role)
 
-                @*<div class="button-row">
+                <div class="button-row">
                     <input type="submit" value="Select" class="button mobile-full-width" />
                     <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
-                </div>*@
+                </div>
                 <h2 class="heading-medium tab-lead">Replace chair of local governing body</h2>
                 <h3 class="heading-small">@Model.GovernorFullName</h3>
 
                 @Html.EditorFor(m => m.DateTermEnds)
-                @*<div class="form-group inline toggle-panels">
-                    <label class="block-label">
-                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.LocalChair, new { id = "newChair", @class = "panel-trigger", data_toggle_panel = "#newChairDetails" })
-                        New Chair
-                    </label>
-                
-                    <label class="block-label ">
-                        @Html.RadioButtonFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.SharedChair, new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#sharedChairDetails" })
-                        Shared Chair
-                    </label>
-                </div>*@
-                <h3 class="heading-medium">New chair of local governing body</h3>
+                <div class="form-group inline toggle-panels">
+                    @Html.GiasRadioFor(m =>m.NewChairType,
+                        ReplaceChairViewModel.ChairType.LocalChair,
+                        "New Chair",
+                        null,
+                        new { id = "newChair", @class = "panel-trigger", data_toggle_panel = "#newChairDetails" })
+
+                    
+                    @Html.GiasRadioFor(m => m.NewChairType,
+                        ReplaceChairViewModel.ChairType.SharedChair,
+                        "Shared Chair",
+                        null,
+                        new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#sharedChairDetails" })
+
+                </div>
                 <div id="replacement-chair-details" class="exapanding-list-wrap chair-replace governor-toggles">
                     <div class="column-two-thirds">
-                        @*<div id="newChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">*@
+                        <div id="newChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">
                             <div class="replacement-chair-option">
                                 @Html.EditorFor(m => m.NewLocalGovernor, new { disableStartDate = true })
                             </div>
-                        @*</div>
+                        </div>
                         <div id="sharedChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
                             <div class="replacement-chair-option">
                                 <div class="shared-governor-list">
@@ -52,7 +55,7 @@
                                         <ul>
                                             @for (var index = 0; index < Model.SharedGovernors.Count; index++)
                                             {
-                                                @Html.EditorFor(x => x.SharedGovernors[index])
+                                                @Html.EditorFor(x => x.SharedGovernors[index], new { disableStartDate = true })
                                             }
                                         </ul>
                                     }
@@ -62,11 +65,11 @@
                                     }
                                 </div>
                             </div>
-                        </div>*@
+                        </div>
                     </div>
                 </div>
                 <div class="button-row">
-                    <input type="submit" value="Save" class="button mobile-full-width" />
+                    <input type="submit" value="Select" class="button mobile-full-width" />
                     <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
                 </div>
             }
@@ -84,9 +87,9 @@
             if (Number($day.val()) > 0 && Number($month.val()) > 0 && Number($year.val()) > 0) {
                 var date = new Date($year.val(), $month.val() - 1, $day.val(), 0, 0, 0, 0);
                 date.setDate(date.getDate() + 1);
-                $('#NewLocalGovernor_AppointmentStartDate_Day').val(date.getDate());
-                $('#NewLocalGovernor_AppointmentStartDate_Month').val(date.getMonth() + 1);
-                $('#NewLocalGovernor_AppointmentStartDate_Year').val(date.getFullYear());
+                $('.start-date-day').val(date.getDate());
+                $('.start-date-month').val(date.getMonth() + 1);
+                $('.start-date-year').val(date.getFullYear());
             }
         }
 

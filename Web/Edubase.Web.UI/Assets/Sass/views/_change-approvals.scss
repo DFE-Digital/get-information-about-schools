@@ -132,6 +132,24 @@
         display: block;
         margin-left: 0;
         margin-bottom: 30px;
+
+        &:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    }
+}
+
+.inline {
+    legend {
+        display: block;
+        margin-bottom: 8px;
+    }
+    .radio-button-wrap,
+    .checkbox-wrap {
+        display: inline-block;
+        margin: 15px 30px 15px 0;
     }
 }
 
@@ -195,33 +213,47 @@ input:focus + input + .edubase-button-checkbox:before {
 
 
 .edubase-button-radio {
-    position:relative;
+    position: relative;
     padding-left: 44px;
     padding-top: 6px;
     cursor: pointer;
 
-     &:before {
-      content: "";
-      border: 2px solid;
-      background: transparent;
-      width: 34px;
-      height: 34px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      @include border-radius(50%);
+    &:before {
+        content: "";
+        border: 2px solid;
+        background: transparent;
+        width: 34px;
+        height: 34px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        @include border-radius(50%);
     }
 
     &:after {
-      content: "";
-      border: 10px solid;
-      width: 0;
-      height: 0;
-      position: absolute;
-      top: 9px;
-      left: 9px;
-      @include border-radius(50%);
-      @include opacity(0);
+        content: "";
+        border: 10px solid;
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 9px;
+        left: 9px;
+        @include border-radius(50%);
+        @include opacity(0);
+    }
+
+    &.long-label {
+        padding-left: 46px;
+        display: block;
+        padding-top: 0;
+    }
+
+    &.mid-length-label {
+        @include media($max-width: 605px) {
+            padding-left: 46px;
+            display: block;
+            padding-top: 0;
+        }
     }
 }
 input:checked + .edubase-button-radio:after {

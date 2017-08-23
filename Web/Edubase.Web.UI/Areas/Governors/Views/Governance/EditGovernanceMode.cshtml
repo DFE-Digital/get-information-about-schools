@@ -22,37 +22,41 @@
                 @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalGovernors))
                 {
                     <div class="form-group">
-                        <label class="block-label selection-button-radio">
-                            @Html.RadioButtonFor(x => x.GovernanceMode, eGovernanceMode.LocalGovernors)
-                            This establishment has local governors, not shared governors.
-                        </label>
+                        @Html.GiasRadioFor( x=>x.GovernanceMode,
+                            eGovernanceMode.LocalGovernors,
+                            "This establishment has local governors, not shared governors.",
+                            "mid-length-label")
+
                     </div>
                 }
                 @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalAndSharedGovernors))
                 {
                     <div class="form-group">
-                        <label class="block-label selection-button-radio multi-line">
-                            @Html.RadioButtonFor(x => x.GovernanceMode, eGovernanceMode.LocalAndSharedGovernors)
-                            This establishment has local governors and also shares governors with other academies in the trust.
-                        </label>
+                        @Html.GiasRadioFor(x => x.GovernanceMode,
+                            eGovernanceMode.LocalAndSharedGovernors,
+                            "This establishment has local governors and also shares governors with other academies in the trust.",
+                            "long-label")
+
                     </div>
                 }
                 @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.NoLocalGovernors))
                 {
                     <div class="form-group">
-                        <label class="block-label selection-button-radio multi-line">
-                            @Html.RadioButtonFor(x => x.GovernanceMode, eGovernanceMode.NoLocalGovernors)
-                            This establishment is part of a multi academy trust and does not have local governors.
-                        </label>
+                        @Html.GiasRadioFor(x =>x.GovernanceMode, 
+                            eGovernanceMode.NoLocalGovernors,
+                            "This establishment is part of a multi academy trust and does not have local governors.",
+                            "long-label")
+
                     </div>
                 }
                 @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.SharesLocalGovernors))
                 {
                     <div class="form-group">
-                        <label class="block-label selection-button-radio">
-                            @Html.RadioButtonFor(x => x.GovernanceMode, eGovernanceMode.SharesLocalGovernors)
-                            This establishment shares local governors with other academies in the trust.
-                        </label>
+                        @Html.GiasRadioFor(x => x.GovernanceMode,
+                            eGovernanceMode.SharesLocalGovernors,
+                            "This establishment shares local governors with other academies in the trust.",
+                            "long-label")
+
                     </div>
                 }
             </fieldset>
