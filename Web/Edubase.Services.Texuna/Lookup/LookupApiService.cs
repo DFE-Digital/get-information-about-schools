@@ -49,6 +49,7 @@ namespace Edubase.Services.Texuna.Lookup
             {19, 10},
             {10, 6},
             {9, 8},
+            {24, 9},
             {17, 10},
             {12, 7},
             {18, 10},
