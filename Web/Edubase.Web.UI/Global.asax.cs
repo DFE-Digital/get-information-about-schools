@@ -31,13 +31,10 @@ namespace Edubase.Web.UI
                 x.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;
                 x.Filters.Add(new ApiExceptionFilter());
             });
-
-            using (var scope = IocConfig.Container.BeginLifetimeScope())
-            {
-                scope.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
-            }
-
-            var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.Container));
+            
+            IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
+            
+            var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.AutofacDependencyResolver));
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
             fluentValidationModelValidatorProvider.AddImplicitRequiredValidator = false;
             ModelValidatorProviders.Providers.Add(fluentValidationModelValidatorProvider);
@@ -49,11 +46,7 @@ namespace Edubase.Web.UI
 
         private void FlushLogMessages(CacheEntryRemovedArguments arguments = null)
         {
-            using (var scope = IocConfig.Container.BeginLifetimeScope())
-            {
-                var task = scope.Resolve<IMessageLoggingService>().FlushAsync();
-            }
-
+            var task = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IMessageLoggingService>().FlushAsync();
             var interval = RandomNumber.Next(10, 40); // random so that in a webfarm, where nodes start simultaneously, flushing is staggered across a time window.
 #if (DEBUG)
             interval = 5;

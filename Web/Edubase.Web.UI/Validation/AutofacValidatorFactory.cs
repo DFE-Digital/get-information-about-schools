@@ -1,25 +1,19 @@
 ﻿using Autofac;
+using Autofac.Integration.Mvc;
 using FluentValidation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Edubase.Web.UI.Validation
 {
     public class AutofacValidatorFactory : ValidatorFactoryBase
     {
-        private readonly IContainer container;
+        private readonly AutofacDependencyResolver _resolver;
 
-        public AutofacValidatorFactory(IContainer container)
+        public AutofacValidatorFactory(AutofacDependencyResolver resolver)
         {
-            this.container = container;
+            _resolver = resolver;
         }
 
-        public override IValidator CreateInstance(Type validatorType)
-        {
-            IValidator validator = container.ResolveOptionalKeyed<IValidator>(validatorType);
-            return validator;
-        }
+        public override IValidator CreateInstance(Type validatorType) => _resolver.RequestLifetimeScope.ResolveOptionalKeyed<IValidator>(validatorType);
     }
 }

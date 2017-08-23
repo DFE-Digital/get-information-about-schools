@@ -47,10 +47,7 @@ namespace Edubase.Web.UI.Controllers
         [Route("ClearCache")]
         public async Task<ActionResult> ClearCache()
         {
-            using (var scope = IocConfig.Container.BeginLifetimeScope())
-            {
-                await scope.Resolve<ICacheAccessor>().ClearAsync();
-            }
+            await IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ICacheAccessor>().ClearAsync();   
             return Content("Redis cache and MemoryCache cleared successfully.", "text/plain");
         }
         

@@ -52,8 +52,7 @@ namespace Edubase.Web.UI
 {
     public static class IocConfig
     {
-        private static IContainer _container;
-        public static IContainer Container => _container;
+        public static AutofacDependencyResolver AutofacDependencyResolver { get; private set; }
 
         public static void Register(HttpConfiguration config)
         {
@@ -73,10 +72,10 @@ namespace Edubase.Web.UI
 
             RegisterTypes(builder);
 
-            _container = builder.Build();
-            var resolver = new AutofacDependencyResolver(_container);
-            DependencyResolver.SetResolver(resolver);
-            config.DependencyResolver = new AutofacWebApiDependencyResolver(_container);
+            var container = builder.Build();
+            AutofacDependencyResolver = new AutofacDependencyResolver(container);
+            DependencyResolver.SetResolver(AutofacDependencyResolver);
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
         }
 
         private static void RegisterTypes(ContainerBuilder builder)
