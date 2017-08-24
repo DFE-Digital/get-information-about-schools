@@ -47,21 +47,21 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/JoinedDate")]
-        public async Task<IHttpActionResult> ValidateEstablishmentJoinedDate(DateTimeViewModel joinDate, DateTimeViewModel groupOpenDate, string groupType)
+        public async Task<IHttpActionResult> ValidateEstablishmentJoinedDate(ValidateEstablishmentJoinedDateModel model)
         {
-            if (joinDate == null || joinDate.IsEmpty())
+            if (model.JoinDate == null || model.JoinDate.IsEmpty())
             {
                 ModelState.AddModelError("joinDate", "Join date cannot be empty");
             }
 
-            if (groupOpenDate == null || groupOpenDate.IsEmpty())
+            if (model.GroupOpenDate == null || model.GroupOpenDate.IsEmpty())
             {
                 ModelState.AddModelError("groupOpenDate", "Group open date cannot be empty");
             }
 
-            if (joinDate.ToDateTime().Value.Date < groupOpenDate.ToDateTime().Value.Date)
+            if (model.JoinDate.ToDateTime().Value.Date < model.GroupOpenDate.ToDateTime().Value.Date)
             {
-                var part = (groupOpenDate.ToDateTime().Value.Date == DateTime.Now.Date) ? $"the {groupType}'s creation date of today" : $"the {groupType}'s creation date of {groupOpenDate.Day}/{groupOpenDate.Month}/{groupOpenDate.Year}";
+                var part = (model.GroupOpenDate.ToDateTime().Value.Date == DateTime.Now.Date) ? $"the {model.GroupType}'s creation date of today" : $"the {model.GroupType}'s creation date of {model.GroupOpenDate.Day}/{model.GroupOpenDate.Month}/{model.GroupOpenDate.Year}";
                 var message = $"The join date you enetered is before {part}. Please enter a later date.";
                 ModelState.AddModelError("joinDate", message);
             }
