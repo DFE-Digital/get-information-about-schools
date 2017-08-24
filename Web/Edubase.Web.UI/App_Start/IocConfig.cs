@@ -138,7 +138,7 @@ namespace Edubase.Web.UI
             builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>().InstancePerRequest();
             builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();
 
-            builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf();
+            builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
         }
 
