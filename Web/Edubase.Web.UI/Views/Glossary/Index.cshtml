@@ -33,7 +33,7 @@
             foreach (var item in group)
             {
                 <p class="bold-medium">@item.Title</p>
-                <p class="font-small">@item.Content</p>
+                <p class="font-small">@Html.Raw(item.Content)</p>
                 if (Model.UserCanEdit)
                 {
                     @Html.RouteLink("Edit", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-grey" })
