@@ -26,7 +26,8 @@
             step0Complete: false,
             step1Complete: false,
 
-            dateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/JoinedDate',
+            joinDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/JoinedDate',
+            openDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/OpenDate',
             openDateError: false,
             openDateErrorMessage: '',
 
@@ -244,19 +245,39 @@
             },
             validateDate: function (dateProp) {
                 var self = this;
+                var opData = {
+                    Day: self.openDateDay,
+                    Month: self.openDateMonth,
+                    Year: self.openDateYear,
+                    Label: ""
+                };
+                var opUrl = dateProp === 'joinDate' ? self.joinDateValidateUrl : self.openDateValidateUrl;
+
+                if (dateProp === 'joinDate') {
+                    opData = {
+                        "JoinDate": {
+                            "Day": self.joinDateDay,
+                            "Month": self.joinDateMonth,
+                            "Year": self.joinDateYear
+                        },
+                        "GroupOpenDate": {
+                            "Day": self.openDateDay,
+                            "Month": self.openDateMonth,
+                            "Year": self.openDateYear
+                        },
+                        "GroupType": self.groupTypeName
+                    }
+                }
+
                 self.openDateError = false;
                 self.joinDateError = false;
                 self.isProcessing = true;
+
                return $.ajax({
-                    url: self.dateValidateUrl,
+                    url: opUrl,
                     method: 'post',
                     dataType: 'json',
-                    data: {
-                        Day: self[dateProp + 'Day'],
-                        Month: self[dateProp + 'Month'],
-                        Year: self[dateProp + 'Year'],
-                        Label: ""
-                    },
+                    data: opData,
                     success: function (data) {
                         self[dateProp + 'Error'] = data.length > 0;
                         var errors = [];

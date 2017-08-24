@@ -62,7 +62,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (model.JoinDate.ToDateTime().Value.Date < model.GroupOpenDate.ToDateTime().Value.Date)
             {
                 var part = (model.GroupOpenDate.ToDateTime().Value.Date == DateTime.Now.Date) ? $"the {model.GroupType}'s creation date of today" : $"the {model.GroupType}'s creation date of {model.GroupOpenDate.Day}/{model.GroupOpenDate.Month}/{model.GroupOpenDate.Year}";
-                var message = $"The join date you enetered is before {part}. Please enter a later date.";
+                var message = $"The join date you entered is before {part}. Please enter a later date.";
                 ModelState.AddModelError("joinDate", message);
             }
 

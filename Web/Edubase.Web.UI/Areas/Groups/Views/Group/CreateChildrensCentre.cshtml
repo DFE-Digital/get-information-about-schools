@@ -307,14 +307,16 @@
                 <br/>
                 <a href="#" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Wrong establishment?</a>
             </p>
-
-            @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new {title = "Joined date", vueModel = "joinDate"})
+        </div>
+        <div class="column-half">
+            @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", vueModel = "joinDate" })
 
 
             @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
 
-            <input type="hidden" name="@(nameof(GroupEditorViewModel.ProcessedWarnings))" id="processed-warnings"/>
-
+            <input type="hidden" name="@(nameof(GroupEditorViewModel.ProcessedWarnings))" id="processed-warnings" />
+        </div>
+        <div class="column-full">
             <div class="button-row">
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup">
                     <span v-show="!pendingEdit">Add</span>
