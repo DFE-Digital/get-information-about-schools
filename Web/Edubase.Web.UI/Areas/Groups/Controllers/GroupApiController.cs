@@ -47,7 +47,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/JoinedDate")]
-        public async Task<IHttpActionResult> ValidateEstablishmentJoinedDate(DateTimeViewModel joinDate, DateTimeViewModel groupOpenDate)
+        public async Task<IHttpActionResult> ValidateEstablishmentJoinedDate(DateTimeViewModel joinDate, DateTimeViewModel groupOpenDate, string groupType)
         {
             if (joinDate == null || joinDate.IsEmpty())
             {
@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (joinDate.ToDateTime().Value.Date < groupOpenDate.ToDateTime().Value.Date)
             {
-                var part = (groupOpenDate.ToDateTime().Value.Date == DateTime.Now.Date) ? "today" : $"the group's creation date of {groupOpenDate.Day}/{groupOpenDate.Month}/{groupOpenDate.Year}";
+                var part = (groupOpenDate.ToDateTime().Value.Date == DateTime.Now.Date) ? $"the {groupType}'s creation date of today" : $"the {groupType}'s creation date of {groupOpenDate.Day}/{groupOpenDate.Month}/{groupOpenDate.Year}";
                 var message = $"The join date you enetered is before {part}. Please enter a later date.";
                 ModelState.AddModelError("joinDate", message);
             }
