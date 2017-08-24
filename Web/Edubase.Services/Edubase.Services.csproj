@@ -321,7 +321,6 @@
     <Compile Include="IntegrationEndPoints\Smtp\SmtpEndPoint.cs" />
     <Compile Include="Lookup\ICachedLookupService.cs" />
     <Compile Include="Lookup\ILookupService.cs" />
-    <Compile Include="Mapping\AutoMapperServicesProfile.cs" />
     <Compile Include="MessageLoggingService.cs" />
     <Compile Include="LogMessageReadService.cs" />
     <Compile Include="Nomenclature\NomenclatureService.cs" />

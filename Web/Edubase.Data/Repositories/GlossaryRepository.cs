@@ -63,5 +63,7 @@ namespace Edubase.Data.Repositories
             await Table.ExecuteAsync(TableOperation.Delete(item));
         }
 
+        public async Task UpdateAsync(GlossaryItem item) => await Table.ExecuteAsync(TableOperation.Replace(item));
+        
     }
 }

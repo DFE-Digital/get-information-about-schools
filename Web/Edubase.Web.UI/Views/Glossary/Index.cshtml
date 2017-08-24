@@ -1,0 +1,45 @@
+﻿@model GlossaryViewModel
+@{
+    ViewBag.Title = "GIAS: Glossary";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-intro">Glossary</h1>
+        <p>The sections below give explanations for terms commonly used on this site. Select the ﬁrst letter of the term you're searching for.</p>
+    </div>
+</div>
+
+
+<div class="grid-row">
+    <div class="column-half">
+        
+        @if (Model.UserCanEdit)
+        {
+            @Html.RouteLink("Create new", "CreateGlossaryItem")
+        }
+
+        @foreach (var group in Model.Items)
+        {
+            <p class="bold-large">@group.Key</p>
+            foreach (var item in group)
+            {
+                <p class="bold-medium">@item.Title</p>
+                <p class="font-small">@item.Content</p>
+                if (Model.UserCanEdit)
+                {
+                    @Html.RouteLink("Edit", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-grey" })
+                }
+            }
+        }
+
+    </div>
+</div>

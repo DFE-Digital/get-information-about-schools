@@ -267,6 +267,7 @@
     <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
     <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
+    <Compile Include="Controllers\GlossaryController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
     <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
@@ -375,6 +376,8 @@
     <Compile Include="Areas\Establishments\Models\Validators\CreateEstablishmentViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\SearchForEstablishmentViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentLinksViewModelValidator.cs" />
+    <Compile Include="Models\GlossaryItemViewModel.cs" />
+    <Compile Include="Models\GlossaryViewModel.cs" />
     <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
@@ -396,9 +399,7 @@
     <Compile Include="Helpers\QueryStringHelper.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
-    <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Admin\LogMessagesViewModel.cs" />
-    <Compile Include="Models\ApprovalsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
@@ -410,8 +411,6 @@
     <Compile Include="Models\EstablishmentDetailViewModel.cs" />
     <Compile Include="Models\HomepageViewModel.cs" />
     <Compile Include="Models\LinkedEstabViewModel.cs" />
-    <Compile Include="Models\PendingChangeViewModel.cs" />
-    <Compile Include="Models\GroupEstabViewModel.cs" />
     <Compile Include="Models\Search\eSearchType.cs" />
     <Compile Include="Models\Search\IDownloadGenerationProgressModel.cs" />
     <Compile Include="Models\Search\LocalAuthorityDisambiguationViewModel.cs" />
@@ -941,6 +940,8 @@
     <Content Include="Views\Home\KnownIssues.cshtml" />
     <Content Include="Views\Prototype\TabsTestPage.cshtml" />
     <Content Include="Views\Tools\ApiSessionRecorder.cshtml" />
+    <Content Include="Views\Glossary\Index.cshtml" />
+    <Content Include="Views\Glossary\CreateEdit.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">
