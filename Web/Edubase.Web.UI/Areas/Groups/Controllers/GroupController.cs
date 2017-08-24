@@ -265,6 +265,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [Route("Edit/{id:int}/Links")]
         public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
         {
+            var model = (await _groupReadService.GetAsync(viewModel.GroupUId.Value, User)).GetResult();
+            viewModel.OpenDate = new DateTimeViewModel(model.OpenDate);
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
 

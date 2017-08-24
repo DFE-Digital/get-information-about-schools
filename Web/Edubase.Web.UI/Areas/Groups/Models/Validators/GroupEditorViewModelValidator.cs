@@ -56,14 +56,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("This is not a valid date")
                     .WithSummaryMessage("The Joined Date specified is not valid")
 
-                    .Must((model, joinedDate) => joinedDate.ToDateTime() >= model.OpenDate.ToDateTime())
-                    .When(x => x.OpenDate.ToDateTime().Value.Date == DateTime.Now.Date)
-                    .WithMessage("The join date you enetered is before today. Please enter a later date.")
-                    .WithSummaryMessage("The join date you enetered is before today. Please enter a later date.")
-
-                    .Must((model, joinedDate) => joinedDate.ToDateTime() >= model.OpenDate.ToDateTime())
-                    .When(x => x.OpenDate.ToDateTime().Value.Date > DateTime.Now.Date)
-                    .WithMessage("The join date you enetered is before the group's creation date of {0}. Please enter a later date.", m => m.OpenDate);
+                    .Must((model, joinDate) => VerifyJoinedDate(joinDate.ToDateTime(), model))
+                    .WithMessage("The join date you enetered is before the {0}'s creation date of {1}. Please enter a later date.", m => m.GroupType, m => m.OpenDate);
             });
 
             // Having edited a joined date, validate the date...
@@ -73,14 +67,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("This is not a valid date")
                     .WithSummaryMessage("The Joined Date specified is not valid")
 
-                    .Must((model, joinedDate) => joinedDate.ToDateTime() >= model.OpenDate.ToDateTime())
-                    .When(x => x.OpenDate.ToDateTime().Value.Date == DateTime.Now.Date)
-                    .WithMessage("The join date you enetered is before today. Please enter a later date.")
-                    .WithSummaryMessage("The join date you enetered is before today. Please enter a later date.")
-
-                    .Must((model, joinedDate) => joinedDate.ToDateTime() >= model.OpenDate.ToDateTime())
-                    .When(x => x.OpenDate.ToDateTime().Value.Date > DateTime.Now.Date)
-                    .WithMessage("The join date you enetered is before the group's creation date of {0}. Please enter a later date.", m => m.OpenDate);
+                    .Must((model, joinDate) => VerifyJoinedDate(joinDate.ToDateTime(), model))
+                    .WithMessage("The join date you enetered is before the {0}'s creation date of {1}. Please enter a later date.", m => m.GroupType, m => m.OpenDate);
             });
 
             // On saving the group record....
@@ -132,13 +120,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
                 RuleForEach(x => x.LinkedEstablishments.Establishments)
                     .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime(), model))
-                    //.When(x => x.OpenDate.ToDateTime().Value.Date == DateTime.Now.Date)
-                    .WithMessage("The join date you enetered is before today. Please enter a later date.")
-                    .WithSummaryMessage("The join date you enetered is before today. Please enter a later date.");
+                    .When(x => x.OpenDate.ToDateTime().Value.Date == DateTime.Now.Date)
+                    .WithMessage("The join date you entered is before today. Please enter a later date.")
+                    .WithSummaryMessage("The join date you enetered is before today. Please enter a later date.")
 
-                //.Must((model, estab) => VerifyJoinedDate(estab.JoinedDate, model))
-                //.When(x => x.OpenDate.ToDateTime().Value.Date > DateTime.Now.Date)
-                //.WithMessage("The join date you enetered is before the group's creation date of {0}. Please enter a later date.", m => m.OpenDate);
+                    .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime(), model))
+                    .When(x => x.OpenDate.ToDateTime().Value.Date != DateTime.Now.Date)
+                    .WithMessage("The join date you entered is before the {0}'s creation date of {1}. Please enter a later date.", m => m.GroupType, m => m.OpenDate);
 
             });
         }
