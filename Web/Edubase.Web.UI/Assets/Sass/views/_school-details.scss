@@ -46,7 +46,8 @@
         padding-top: 16px;
     }
 
-    table.estab-links, table.edit-estab-links {
+    table.estab-links, 
+    table.edit-estab-links {
 
         th {
             font-weight: bold;
@@ -84,68 +85,6 @@
 
     td {
         position: relative;
-    }
-
-
-    .school-details-list li strong {
-        font-weight: bold;
-    }
-
-    .side-menu {
-        @include media(mobile) {
-            display: none;
-        }
-    }
-
-    .selector-menu {
-        @include media(desktop, tablet) {
-            display: none;
-        }
-    }
-
-    .selector-menu-options {
-        text-align: center;
-    }
-
-    .ofsted .column-quarter, .ofsted .column-three-quarters {
-        @include media(mobile) {
-            display: inline-block;
-            vertical-align: top;
-        }
-    }
-
-    .stats-left .column-quarter {
-        @include media(mobile) {
-            display: inline-block;
-            width: 45%;
-        }
-    }
-
-    .stats-right .column-quarter {
-        @include media(mobile) {
-            display: inline-block;
-            width: 45%;
-        }
-    }
-
-    .ofsted-rating {
-        margin-top: 35px;
-    }
-
-    .main-stats-label {
-        margin-bottom: 0;
-    }
-
-    .main-stats-value {
-        font-weight: bold;
-    }
-
-    .summary {
-        margin-bottom: 40px;
-    }
-
-    .urn {
-        font-weight: normal;
     }
 
     .tab {
