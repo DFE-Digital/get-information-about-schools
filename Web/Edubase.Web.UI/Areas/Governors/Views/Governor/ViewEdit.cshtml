@@ -148,7 +148,7 @@ else
                     @ShowGovernorEditor(grid)
                 </text>
             }
-            if (Model.HistoricGovernors.Any(h => h.Rows.Any()))
+            if (Model.HistoricGrids.Any(h => h.Rows.Any()))
             {
                 <h2 class="bold-small">Historic (left within last 12 months)</h2>
                 <div class="expanding-content-wrapper" data-opened-text="Less details" data-closed-text="More details">
@@ -156,7 +156,7 @@ else
                         More details
                     </a>
                     <div class="expanding-content panel-indent">
-                        @foreach (var grid in Model.HistoricGovernors)
+                        @foreach (var grid in Model.HistoricGrids)
                         { 
                             if (grid.Rows.Any())
                             {
@@ -175,7 +175,7 @@ else
             {
                 @Html.DisplayFor(m => m.Grids[index])
             }
-            if (Model.HistoricGovernors.Any(h => h.Rows.Any()))
+            if (Model.HistoricGovernors.Any())
             {
                 <h2 class="bold-small">Historic (left within last 12 months)</h2>
                 <div class="expanding-content-wrapper" data-opened-text="Less details" data-closed-text="More details">
@@ -183,13 +183,6 @@ else
                         More details
                     </a>
                     <div class="expanding-content panel-indent">
-                        @*@for (var index = 0; index < Model.HistoricGrids.Count; index++)
-                        {
-                            if (Model.HistoricGrids[index].Rows.Any())
-                            {
-                                @Html.DisplayFor(m => m.HistoricGrids[index])
-                            }
-                        }*@
                         <table class="edubase-table list-table">
                             <thead>
                             <tr>
@@ -207,8 +200,8 @@ else
                                         <td>@governor.FullName</td>
                                         <td>@governor.RoleName</td>
                                         <td>@governor.AppointingBody</td>
-                                        <td>@governor.AppointmentStartDate</td>
-                                        <td>@governor.AppointmentEndDate</td>
+                                        <td>@(governor.AppointmentStartDate.ToDateTime()?.ToString("dd/MM/yyyy"))</td>
+                                        <td>@(governor.AppointmentEndDate.ToDateTime()?.ToString("dd/MM/yyyy"))</td>
                                     </tr>
                                 }
                             </tbody>
