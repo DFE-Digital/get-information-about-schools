@@ -51,7 +51,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// </summary>
         /// <param name="establishmentUrn"></param>
         /// <returns></returns>
-        [Route(EstabEditGovernanceMode, Name = "EstabEditGovernanceMode"), HttpGet]
+        [Route(EstabEditGovernanceMode, Name = "EstabEditGovernanceMode"), HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> EditGovernanceMode(int? establishmentUrn, bool failed = false)
         {
             Guard.IsTrue(establishmentUrn.HasValue, () => new InvalidParameterException($"Parameter '{nameof(establishmentUrn)}' is null."));
@@ -72,7 +72,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// Saves the governance mode
         /// </summary>
         /// <returns></returns>
-        [Route(EstabEditGovernanceMode), HttpPost]
+        [Route(EstabEditGovernanceMode), HttpPost, EdubaseAuthorize]
         public async Task<ActionResult> EditGovernanceMode(EditGovernanceModeViewModel viewModel)
         {
             try

@@ -1,8 +1,6 @@
-﻿using Autofac;
-using Edubase.Common;
+﻿using Edubase.Common;
 using Edubase.Services.Domain;
 using FluentValidation;
-using FluentValidation.Resources;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -14,10 +12,6 @@ using System.Web.Mvc;
 namespace Edubase.Web.UI
 {
     using Edubase.Web.Resources;
-    using FluentValidation.Internal;
-    using FluentValidation.Resources;
-    using FluentValidation.Validators;
-    using MoreLinq;
     using Services.Texuna.ChangeHistory.Models;
 
     public static class LangExt

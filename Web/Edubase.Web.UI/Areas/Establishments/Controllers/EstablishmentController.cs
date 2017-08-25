@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using AutoMapper;
+﻿using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services;
@@ -29,6 +22,13 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using MoreLinq;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
@@ -594,7 +594,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
             catch (Exception) // todo: tech debt, need to more gracefully handle 404 in this instance.
             {
-                viewModel.GovernorsGridViewModel = new Areas.Governors.Models.GovernorsGridViewModel { DomainModel = new Services.Governors.Models.GovernorsDetailsDto() };
+                viewModel.GovernorsGridViewModel = new Governors.Models.GovernorsGridViewModel { DomainModel = new Services.Governors.Models.GovernorsDetailsDto() };
             }
         }
 

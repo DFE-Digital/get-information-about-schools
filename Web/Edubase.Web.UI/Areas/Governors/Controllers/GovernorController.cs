@@ -22,6 +22,7 @@ using Edubase.Services.Domain;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
+using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -125,7 +126,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             
         }
 
-        [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupDeleteOrRetireGovernor"), Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabDeleteOrRetireGovernor"), HttpPost]
+        [Route(GROUP_EDIT_GOVERNANCE, Name = "GroupDeleteOrRetireGovernor"), Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabDeleteOrRetireGovernor"), HttpPost, EdubaseAuthorize]
         public async Task<ActionResult> DeleteOrRetireGovernor(GovernorsGridViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -316,7 +317,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR), 
             Route(GROUP_EDIT_GOVERNOR), Route(ESTAB_EDIT_GOVERNOR),
-            Route(GROUP_REPLACE_GOVERNOR), HttpPost]
+            Route(GROUP_REPLACE_GOVERNOR), HttpPost, EdubaseAuthorize]
         public async Task<ActionResult> AddEditOrReplace(CreateEditGovernorViewModel viewModel)
         {
             await PopulateSelectLists(viewModel);
@@ -386,7 +387,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor")]
+        [HttpGet, Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"), EdubaseAuthorize]
         public async Task<ActionResult> ReplaceChair(int establishmentUrn, int gid)
         {
             var governor = await _governorsReadService.GetGovernorAsync(gid, User);
@@ -430,7 +431,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpPost, Route(ESTAB_REPLACE_GOVERNOR)]
+        [HttpPost, Route(ESTAB_REPLACE_GOVERNOR), EdubaseAuthorize]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)
         {
             if (ModelState.IsValid)

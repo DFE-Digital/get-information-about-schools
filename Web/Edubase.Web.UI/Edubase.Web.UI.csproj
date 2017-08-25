@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -352,13 +352,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
     <Compile Include="Helpers\AuthorizeRolesAttribute.cs" />
     <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\RoleEquivalence.cs" />
     <Compile Include="Helpers\ValidationExtensions.cs" />
-    <Compile Include="Helpers\WebHelpers.cs" />
     <Compile Include="Models\ApiSessionRecorderViewModel.cs" />
     <Compile Include="Models\ChangeHistoryViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityStatusItem.cs" />
