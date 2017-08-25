@@ -266,6 +266,7 @@
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
+    <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
     <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
     <Compile Include="Controllers\GlossaryController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
