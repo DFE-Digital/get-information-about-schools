@@ -157,13 +157,13 @@ else
                     </a>
                     <div class="expanding-content panel-indent">
                         @foreach (var grid in Model.HistoricGrids)
-                        {
+                        { 
                             if (grid.Rows.Any())
                             {
-                                <text>
-                                    @ShowGovernorEditor(grid)
-                                </text>
-                            }
+                                    <text>
+                                        @ShowGovernorEditor(grid)
+                                    </text>
+                                }
                         }
                     </div>
                 </div>
@@ -175,7 +175,7 @@ else
             {
                 @Html.DisplayFor(m => m.Grids[index])
             }
-            if (Model.HistoricGrids.Any(h => h.Rows.Any()))
+            if (Model.HistoricGovernors.Any())
             {
                 <h2 class="bold-small">Historic (left within last 12 months)</h2>
                 <div class="expanding-content-wrapper" data-opened-text="Less details" data-closed-text="More details">
@@ -183,13 +183,29 @@ else
                         More details
                     </a>
                     <div class="expanding-content panel-indent">
-                        @for (var index = 0; index < Model.HistoricGrids.Count; index++)
-                        {
-                            if (Model.HistoricGrids[index].Rows.Any())
-                            {
-                                @Html.DisplayFor(m => m.HistoricGrids[index])
-                            }
-                        }
+                        <table class="edubase-table list-table">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Appointed by</th>
+                                <th>From</th>
+                                <th>To</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var governor in Model.HistoricGovernors)
+                                {
+                                    <tr>
+                                        <td>@governor.FullName</td>
+                                        <td>@governor.RoleName</td>
+                                        <td>@governor.AppointingBody</td>
+                                        <td>@(governor.AppointmentStartDate.ToDateTime()?.ToString("dd/MM/yyyy"))</td>
+                                        <td>@(governor.AppointmentEndDate.ToDateTime()?.ToString("dd/MM/yyyy"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             }

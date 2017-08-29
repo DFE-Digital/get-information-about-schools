@@ -23,6 +23,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public List<GovernorGridViewModel> Grids { get; set; } = new List<GovernorGridViewModel>();
         public List<GovernorGridViewModel> HistoricGrids { get; set; } = new List<GovernorGridViewModel>();
+        public List<HistoricGovernorViewModel> HistoricGovernors { get; set; } = new List<HistoricGovernorViewModel>();
         public List<LookupItemViewModel> GovernorRoles { get; internal set; }
         public GovernorsDetailsDto DomainModel { get; set; }
 
@@ -139,17 +140,31 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var endDate = (isShared && appointment != null) ? appointment.AppointmentEndDate : governor.AppointmentEndDate;
 
                     var row = grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
-                                                   .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
-                                                   .AddCell(governor.Id, displayPolicy.Id)
-                                                   .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name, displayPolicy.AppointingBodyId)
-                                                   .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
-                                                   .AddCell(endDate?.ToString("dd/MM/yyyy"), includeEndDate)
-                                                   .AddCell(governor.PostCode, displayPolicy.PostCode)
-                                                   .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
-                                                   .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
-                                                   .AddCell(Nationalities.FirstOrDefault(x => x.Id == governor.NationalityId)?.Name, displayPolicy.Nationality)
-                                                   .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
-                                                   .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
+                                                    .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
+                                                    .AddCell(governor.Id, displayPolicy.Id)
+                                                    .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name, displayPolicy.AppointingBodyId)
+                                                    .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
+                                                    .AddCell(endDate?.ToString("dd/MM/yyyy"), includeEndDate)
+                                                    .AddCell(governor.PostCode, displayPolicy.PostCode)
+                                                    .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
+                                                    .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
+                                                    .AddCell(Nationalities.FirstOrDefault(x => x.Id == governor.NationalityId)?.Name, displayPolicy.Nationality)
+                                                    .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
+                                                    .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
+                    if (isHistoric)
+                    {
+                        var gov = new HistoricGovernorViewModel
+                        {
+                            AppointingBodyId = governor.AppointingBodyId,
+                            AppointingBody = AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name,
+                            AppointmentEndDate = new DateTimeViewModel(governor.AppointmentEndDate),
+                            AppointmentStartDate = new DateTimeViewModel(governor.AppointmentStartDate),
+                            FullName = governor.GetFullName(),
+                            RoleName = _nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true)
+                        };
+
+                        HistoricGovernors.Add(gov);
+                    }
                 }
 
                 if (isHistoric)
