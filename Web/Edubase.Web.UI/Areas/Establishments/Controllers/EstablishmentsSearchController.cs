@@ -61,6 +61,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (!payload.Success) model.Error = payload.ErrorMessage;
             await ProcessEstablishmentsSearch(model, payload.Object);
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
+            HttpContext.Response.Headers.Add("x-show-date-filter-warning", model.ShowDateFilterWarning.ToString().ToLower());
             return PartialView("Partials/_EstablishmentSearchResults", model);
         }
 
