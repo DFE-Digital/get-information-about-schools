@@ -42,6 +42,8 @@ namespace Edubase.Web.UI
             FlushLogMessages();
 
             ModelBinders.Binders.DefaultBinder = new Helpers.ModelBinding.DefaultModelBinderEx();
+
+            MvcHandler.DisableMvcResponseHeader = true;
         }
 
         private void FlushLogMessages(CacheEntryRemovedArguments arguments = null)
@@ -76,7 +78,30 @@ namespace Edubase.Web.UI
                 }
             }
         }
-        
-        
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            string[] headers = { "Server", "X-AspNet-Version" };
+
+            if (!Response.HeadersWritten)
+            {
+                Response.AddOnSendingHeaders((c) =>
+                {
+                    if (c != null && c.Response != null && c.Response.Headers != null)
+                    {
+                        foreach (string header in headers)
+                        {
+                            if (c.Response.Headers[header] != null)
+                            {
+                                c.Response.Headers.Remove(header);
+                            }
+                        }
+                    }
+                });
+            }
+
+        }
+
+
     }
 }
