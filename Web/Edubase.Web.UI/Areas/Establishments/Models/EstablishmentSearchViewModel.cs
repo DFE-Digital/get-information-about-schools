@@ -94,7 +94,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public int StartIndex { get; set; }
         public bool HasError => !Error.IsNullOrEmpty();
 
-        public bool ShowDateFilterWarning => OpenDateFrom.IsValid() || CloseDateFrom.IsValid() || OpenDateTo.IsValid() || CloseDateTo.IsValid();
+        public bool ShowDateFilterWarning => OpenDateFrom.IsValid() || OpenDateTo.IsValid();
 
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
