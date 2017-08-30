@@ -14,5 +14,6 @@ namespace Edubase.Web.UI.Models.Grid
         public int? GroupUid { get; set; }
         public int? EstablishmentUrn { get; set; }
         public bool IsHistoricRole { get; set; }
+        public string RoleName { get; set; }
     }
 }

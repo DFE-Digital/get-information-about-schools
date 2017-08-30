@@ -1,7 +1,10 @@
 ﻿@model Edubase.Web.UI.Models.Grid.GovernorGridViewModel
 
 <div class="governor-grid">
-    <h2 class="heading-small">@Model.Title</h2>
+    @if (!Model.IsHistoricRole)
+    {
+        <h2 class="heading-small">@Model.Title</h2>
+    }
     @if (!User.Identity.IsAuthenticated && Model.GroupUid != null && Model.IsSharedRole)
     {
         if (Model.Rows.Any())
@@ -51,13 +54,18 @@
                     <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
                         <h2 class="heading-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
                         <dl class="key-value-list">
+                            @if (Model.IsHistoricRole)
+                            {
+                                <dt>Role:</dt>
+                                <dd>@Model.RoleName</dd>
+                            }
                             @foreach (var cell in row.Cells.Skip(1))
                             {
                                 <dt>@cell.Parent.Text:</dt>
                                 <dd>@(cell.Text ?? "Not recorded")</dd>
                             }
                         </dl>
-                          
+
                     </div>
                 }
             }

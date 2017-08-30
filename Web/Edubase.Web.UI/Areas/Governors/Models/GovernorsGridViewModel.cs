@@ -118,7 +118,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     IsSharedRole = EnumSets.eSharedGovernorRoles.Contains(role),
                     GroupUid = groupUid,
                     EstablishmentUrn = establishmentUrn,
-                    IsHistoricRole = isHistoric
+                    IsHistoricRole = isHistoric,
+                    RoleName = _nomenclatureService.GetGovernorRoleName(role)
                 };
 
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
@@ -160,7 +161,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                             AppointmentEndDate = new DateTimeViewModel(governor.AppointmentEndDate),
                             AppointmentStartDate = new DateTimeViewModel(governor.AppointmentStartDate),
                             FullName = governor.GetFullName(),
-                            RoleName = _nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, true)
+                            RoleName = _nomenclatureService.GetGovernorRoleName(role)
                         };
 
                         HistoricGovernors.Add(gov);
