@@ -92,7 +92,7 @@
         </tr>
     }
 
-    @foreach (var group in Model.Groups) 
+    @foreach (var group in Model.Groups.OrderByDescending(g => Model.GetGroupFieldLabel(g))) 
     {
         <tr>
             <th scope="row">@(Model.GetGroupFieldLabel(group)):</th>
