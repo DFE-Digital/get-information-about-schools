@@ -31,6 +31,9 @@
 </div>
     <h1 class="heading-xlarge">@Model.Group.Name</h1>
 
+    <p class="uid">UID: @Model.Group.GroupUId</p>
+    <p class="group-type">@Model.GroupTypeName</p>
+
     @if(Model.Group.ConfirmationUpToDateGovernanceRequired)
     {
         <div class="up-to-date-confirmations expanding-content-wrapper" data-update-text="false">

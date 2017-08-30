@@ -809,6 +809,7 @@
     <Content Include="fb6k7l-throwex.aspx" />
     <Content Include="Assets\Sass\views\_edit-links.scss" />
     <Content Include="Areas\Groups\Views\Group\Convert.cshtml" />
+    <Content Include="Assets\Sass\views\_group-details.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />

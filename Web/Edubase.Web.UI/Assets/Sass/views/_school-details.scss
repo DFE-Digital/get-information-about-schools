@@ -9,6 +9,18 @@
         font-size: 14px;
         color: $grey-1;
         font-weight: bold;
+        margin: 8px 25px 8px 0;
+
+
+        @include media (tablet) {
+            float: left;
+        }
+    }
+
+    p.establishment-type {
+        font-size: 14px;
+        color: $grey-1;
+        font-weight: bold;
         margin: 8px 0;
 
         @include media (tablet) {
@@ -34,7 +46,7 @@
         padding-top: 16px;
     }
 
-    table.estab-links,
+    table.estab-links, 
     table.edit-estab-links {
 
         th {

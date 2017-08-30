@@ -1,0 +1,29 @@
+.mat-details {
+
+    h1.heading-xlarge {
+        margin-bottom: 0;
+    }
+
+    p.uid {
+        font-size: 14px;
+        color: $grey-1;
+        font-weight: bold;
+        margin: 8px 25px 30px 0;
+
+
+        @include media (tablet) {
+            float: left;
+        }
+    }
+
+    p.group-type {
+        font-size: 14px;
+        color: $grey-1;
+        font-weight: bold;
+        margin: 8px 0 30px 0;
+
+        @include media (tablet) {
+            float: left;
+        }
+    }
+}
