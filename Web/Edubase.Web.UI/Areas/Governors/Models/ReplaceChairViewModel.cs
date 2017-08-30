@@ -13,6 +13,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public int ExistingGovernorId { get; set; }
         public ChairType ExistingChairType { get; set; }
         public eLookupGovernorRole Role { get; set; }
+        public string RoleName { get; set; }
 
         [Display(Name = "Date term ends")]
         public DateTimeViewModel DateTermEnds { get; set; } = new DateTimeViewModel();

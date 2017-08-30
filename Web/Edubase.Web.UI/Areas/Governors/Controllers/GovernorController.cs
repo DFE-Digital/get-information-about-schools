@@ -18,6 +18,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Castle.Core.Internal;
+using Edubase.Common.Text;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
@@ -40,6 +41,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         const string GROUP_REPLACE_GOVERNOR = "~/Groups/Group/Edit/{groupUId:int}/Governance/Replace/{gid:int}";
         const string ESTAB_REPLACE_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/Replace/{gid:int}";
+        const string ESTAB_REPLACE_CHAIR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/ReplaceChair/{gid:int}";
 
         const string VIEW_EDIT_GOV_VIEW_NAME = "~/Areas/Governors/Views/Governor/ViewEdit.cshtml";
 
@@ -212,7 +214,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// <returns></returns>
         [Route(GROUP_ADD_GOVERNOR, Name = "GroupAddGovernor"), Route(ESTAB_ADD_GOVERNOR, Name = "EstabAddGovernor"),
              Route(GROUP_EDIT_GOVERNOR, Name = "GroupEditGovernor"), Route(ESTAB_EDIT_GOVERNOR, Name = "EstabEditGovernor"),
-             Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"),
+             Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"), Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"),
              HttpGet]
         public async Task<ActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn, eLookupGovernorRole? role, int? gid)
         {
@@ -317,7 +319,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR), 
             Route(GROUP_EDIT_GOVERNOR), Route(ESTAB_EDIT_GOVERNOR),
-            Route(GROUP_REPLACE_GOVERNOR), HttpPost, EdubaseAuthorize]
+            Route(GROUP_REPLACE_GOVERNOR), Route(ESTAB_REPLACE_GOVERNOR),
+            HttpPost, EdubaseAuthorize]
         public async Task<ActionResult> AddEditOrReplace(CreateEditGovernorViewModel viewModel)
         {
             await PopulateSelectLists(viewModel);
@@ -387,7 +390,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"), EdubaseAuthorize]
+        [HttpGet, Route(ESTAB_REPLACE_CHAIR, Name = "EstabReplaceChair"), EdubaseAuthorize]
         public async Task<ActionResult> ReplaceChair(int establishmentUrn, int gid)
         {
             var governor = await _governorsReadService.GetGovernorAsync(gid, User);
@@ -422,7 +425,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 },
                 SharedGovernors = (await Task.WhenAll(governors.Select(async g => await SharedGovernorViewModel.MapFromGovernor(g, establishmentUrn, _cachedLookupService)))).ToList(),
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
-                Role = (eLookupGovernorRole)governor.RoleId
+                Role = (eLookupGovernorRole)governor.RoleId,
+                RoleName = _nomenclatureService.GetGovernorRoleName((eLookupGovernorRole)governor.RoleId, eTextCase.Lowerase, false)
             };
 
             await PopulateSelectLists(model.NewLocalGovernor);
@@ -431,7 +435,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpPost, Route(ESTAB_REPLACE_GOVERNOR), EdubaseAuthorize]
+        [HttpPost, Route(ESTAB_REPLACE_CHAIR), EdubaseAuthorize]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)
         {
             if (ModelState.IsValid)

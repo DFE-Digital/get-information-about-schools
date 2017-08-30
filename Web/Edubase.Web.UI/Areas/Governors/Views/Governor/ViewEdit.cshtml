@@ -253,9 +253,18 @@ else
 
                                         @if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
                                         {
-                                            @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor",
-                                                new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
-                                                new {@class = "button button-grey mobile-full-width"})
+                                            if (Model.EstablishmentUrn.HasValue && (row.Model.RoleId.Value == (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody || row.Model.RoleId.Value == (int) eLookupGovernorRole.ChairOfLocalGoverningBody))
+                                            {
+                                                @Html.RouteLink("Replace", "EstabReplaceChair",
+                                                    new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
+                                                    new {@class = "button button-grey mobile-full-width"})
+                                            }
+                                            else
+                                            {
+                                                @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor",
+                                                    new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id },
+                                                    new { @class = "button button-grey mobile-full-width" })
+                                            }
                                         }
                                         else
                                         {
