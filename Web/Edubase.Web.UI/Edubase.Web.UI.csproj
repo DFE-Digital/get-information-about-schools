@@ -433,6 +433,7 @@
     <Content Include="404.aspx" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
+    <Content Include="public\assets\images\icons\arrows-vert.png" />
     <Content Include="public\assets\scripts\**\*.*" />
     <Content Include="public\assets\stylesheets\**\*.*" />
     <Content Include="App_Data\sa-dev.education.gov.uk-metadata.xml" />
@@ -810,6 +811,7 @@
     <Content Include="Assets\Sass\views\_edit-links.scss" />
     <Content Include="Areas\Groups\Views\Group\Convert.cshtml" />
     <Content Include="Assets\Sass\views\_group-details.scss" />
+    <Content Include="Assets\Sass\elements\_chevron-accordion.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />

@@ -23,7 +23,7 @@
 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 <div class="grid-row">
-    <div class="column-half">
+    <div class="column-two-thirds">
         
         @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateGlossaryItem" : "PostEditGlossaryItem", new { Model.Id } , FormMethod.Post))
         {
@@ -37,16 +37,48 @@
             <div class="form-group @Html.ValidationCssClassFor(x => x.Content)">
                 @Html.LabelFor(x => x.Content)
                 @Html.ValidationMessageFor(x => x.Content)
-                @Html.TextAreaFor(x => x.Content, 10, 40, new { @class = "form-control" })
+                @Html.TextAreaFor(x => x.Content, 10, 40, new { @class = "form-control entry-content" })
             </div>
 
             <button type="submit" class="button edubase-button">Save</button>
             if (Model.Id != null)
-            {
-                <button type="submit" class="button button-grey edubase-button" name="@nameof(Model.IsDeleting)" value="true">Delete</button>
+            { 
+                <button type="submit" class="button button-grey edubase-button" name="@nameof(Model.IsDeleting)"  id="delete-button" value="true">Delete</button>
             }
             @Html.RouteLink("Cancel", "Glossary", null, new { @class = "button button-grey edubase-button" })
         }
         
     </div>
 </div>
+
+
+@section ViewScripts
+{
+    <script>
+        (function () {
+            var okDelete = false;
+            $('.entry-content').textCount({ maxLength: 1000 });
+
+            $('#delete-button').okCancel({
+                ok: function () {
+                    $('#delete-button').data().okCancel.unbind();
+                    //window.setTimeout(function() {
+                        $('#delete-button').click();
+                    //},10);
+                    
+                },
+                cancel: function() {
+                    this.closeModal();
+                },
+                title: 'Are you sure you want to delete this glossary entry?',
+                content: 'The entry will be removed from the glossary immediately',
+                triggerEvent: 'click'
+                
+            });
+
+        }());
+        
+
+
+    </script>
+}
