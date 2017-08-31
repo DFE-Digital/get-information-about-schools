@@ -142,7 +142,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
         }
 
-        private static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
+        public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
         {
             return new JsonMediaTypeFormatter
             {

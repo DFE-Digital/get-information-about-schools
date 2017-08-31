@@ -162,7 +162,6 @@ namespace Edubase.Web.UI.Controllers
         {
             var items = await _googlePlacesService.SearchAsync(model.LocationSearchModel.Text);
             return View("LocationDisambiguation", new LocationDisambiguationViewModel() { SearchText = model.LocationSearchModel.Text, MatchingLocations = items.ToList() });
-
         }
     }
 }

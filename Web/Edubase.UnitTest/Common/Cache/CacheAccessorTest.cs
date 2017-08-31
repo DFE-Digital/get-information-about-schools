@@ -1,5 +1,7 @@
-﻿namespace API.Integration.Tests.Cache
+﻿namespace Edubase.Integration.Tests.Cache
 {
+    using Edubase.Common.Cache;
+    using NUnit.Framework;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -7,9 +9,6 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using NUnit.Framework;
-    using Edubase.Common.Cache;
-    using Rhino.Mocks;
 
     [TestFixture]
     public class CacheAccessorTest
