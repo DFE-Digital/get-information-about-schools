@@ -336,7 +336,7 @@
                 var today = new Date();
                 var centre = self.pendingEstab;
                 o.urn = centre.urn;
-                o.joinedDate = [today.getFullYear(), today.getMonth() + 1, today.getDate()].join('-');
+                o.joinedDate = [self.openDateYear, self.openDateMonth, self.openDateDay].join('-');
                 o.cCIsLeadCentre = centre.urn === self.groupLead;
 
                 var validationObj = {
