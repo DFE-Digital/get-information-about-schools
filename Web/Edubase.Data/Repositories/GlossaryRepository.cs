@@ -13,7 +13,7 @@ namespace Edubase.Data.Repositories
     public class GlossaryRepository : TableStorageBase<GlossaryItem>
     {
         public GlossaryRepository()
-            : base("ContentConnectionString")
+            : base("DataConnectionString")
         {
         }
 
