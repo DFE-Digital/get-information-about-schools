@@ -62,10 +62,7 @@
             $('#delete-button').okCancel({
                 ok: function () {
                     $('#delete-button').data().okCancel.unbind();
-                    //window.setTimeout(function() {
-                        $('#delete-button').click();
-                    //},10);
-                    
+                    $('#delete-button').click();                    
                 },
                 cancel: function() {
                     this.closeModal();
