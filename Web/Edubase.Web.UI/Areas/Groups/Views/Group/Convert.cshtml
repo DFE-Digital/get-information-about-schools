@@ -8,9 +8,9 @@
             <ul>
                 <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
                 <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-                @if (Model.Details == null)
+                @if (Model.Details != null)
                 {
-                    @*<li>@Html.ActionLink(" Convert to multi-academy trust", "Group", "Convert", new { area="Groups"})</li>*@
+                    <li>@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new { area="Groups"})</li>
                 }
             </ul>
         </div>
