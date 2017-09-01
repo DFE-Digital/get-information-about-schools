@@ -24,7 +24,7 @@ namespace Edubase.UnitTest.Controllers
     public class EstablishmentsSearchControllerTest
     {
         [Test]
-        public async Task Search_Index_WithValidURN_RedirectsToEstabDetail()
+        public async Task EstabSearch_Index_WithValidURN_RedirectsToEstabDetail()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
@@ -52,7 +52,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Search_Index_WithInvalidURN_RedirectsBackOnSelf()
+        public async Task EstabSearch_Index_WithInvalidURN_RedirectsBackOnSelf()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
@@ -83,7 +83,7 @@ namespace Edubase.UnitTest.Controllers
 
 
         [Test]
-        public async Task Search_Index_DisplaysResults()
+        public async Task EstabSearch_Index_DisplaysResults()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
@@ -129,7 +129,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Search_Index_GoToDetailPageOnOneResult_MultipleResults()
+        public async Task EstabSearch_Index_GoToDetailPageOnOneResult_MultipleResults()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
@@ -183,7 +183,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Search_Index_GoToDetailPageOnOneResult_OneResult()
+        public async Task EstabSearch_Index_GoToDetailPageOnOneResult_OneResult()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
@@ -234,7 +234,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test, TestCase("432/5437"), TestCase("4325437")]
-        public async Task Search_Index_SearchWithLAESTAB(string laestab)
+        public async Task EstabSearch_Index_SearchWithLAESTAB(string laestab)
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
@@ -281,7 +281,7 @@ namespace Edubase.UnitTest.Controllers
 
 
         [Test]
-        public async Task Search_PrepareDownload_Step1_BackOfficeUser()
+        public async Task EstabSearch_PrepareDownload_Step1_BackOfficeUser()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
@@ -312,7 +312,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Search_PrepareDownload_Step1_PublicUser()
+        public async Task EstabSearch_PrepareDownload_Step1_PublicUser()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
@@ -343,7 +343,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Search_PrepareDownload_Step2()
+        public async Task EstabSearch_PrepareDownload_Step2()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
@@ -374,7 +374,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Search_PrepareDownload_Step3()
+        public async Task EstabSearch_PrepareDownload_Step3()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
