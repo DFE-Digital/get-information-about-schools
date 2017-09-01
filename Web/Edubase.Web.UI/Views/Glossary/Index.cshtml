@@ -12,34 +12,91 @@
 </div>
 
 <div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-intro">Glossary</h1>
+    <div class="column-two-thirds">
+        <h1 class="heading-xlarge">Glossary</h1>
         <p>The sections below give explanations for terms commonly used on this site. Select the ﬁrst letter of the term you're searching for.</p>
     </div>
 </div>
 
 
 <div class="grid-row">
-    <div class="column-half">
-        
+    <div class="column-full">
         @if (Model.UserCanEdit)
-        {
-            @Html.RouteLink("Create new", "CreateGlossaryItem")
-        }
-
-        @foreach (var group in Model.Items)
-        {
-            <p class="bold-large">@group.Key</p>
-            foreach (var item in group)
+             {
+                 @Html.RouteLink("New Entry", "CreateGlossaryItem",null,  new {@class ="plus-link"})
+             }
+        
+        <ul class="chevron-accordion">
+            <li class="controls">
+                <a href="#" class="open-all-panels">Open all</a>
+                <a href="#" class="close-all-panels">Close all</a>
+            </li>
+            @foreach (var group in Model.Items)
             {
-                <p class="bold-medium">@item.Title</p>
-                <p class="font-small">@Html.Raw(item.Content)</p>
-                if (Model.UserCanEdit)
-                {
-                    @Html.RouteLink("Edit", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-grey" })
-                }
+                <li class="expander-panel">
+                    <a class="panel-trigger" href="#">@group.Key</a>
+                    <div class="expander-panel-content">
+                        @foreach (var item in group)
+                        {
+                            <p class="bold-medium">@item.Title</p>
+                            <p class="font-small">@Html.Raw(item.Content)</p>
+                            if (Model.UserCanEdit)
+                            {
+                                @Html.RouteLink("Edit", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-grey" })
+                            }
+                        }
+                    </div>                    
+                </li>
             }
-        }
-
+            <li class="controls">
+                <a href="#" class="open-all-panels">Open all</a>
+                <a href="#" class="close-all-panels">Close all</a>
+            </li>
+                
+        </ul>
     </div>
 </div>
+
+
+@section ViewScripts
+{
+    <script>
+        (function() {
+            var panels = document.querySelectorAll('.expander-panel');
+            var openAll = document.querySelectorAll('.open-all-panels');
+            var closeAll = document.querySelectorAll('.close-all-panels');
+
+            [].forEach.call(panels, function(el) {
+                var trigger = el.querySelectorAll('.panel-trigger')[0];
+
+                trigger.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    el.classList.toggle('open-expander');
+                });
+            });
+
+            [].forEach.call(openAll, function(el) {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    [].forEach.call(panels,
+                        function(panel) {
+                            panel.classList.add('open-expander');
+                        });
+
+                });
+            });
+
+            [].forEach.call(closeAll, function (el) {
+                el.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    [].forEach.call(panels,
+                        function (panel) {
+                            panel.classList.remove('open-expander');
+                        });
+
+                });
+            });
+
+        }());
+    </script>
+}

@@ -1,0 +1,60 @@
+﻿
+
+.chevron-accordion {
+
+    .panel-trigger {
+        text-indent: 0;
+        padding: 12px 0;
+        font-size: 24px;
+        font-weight: bold;
+        color: $link-colour;
+        position: relative;
+
+        &:link {
+            color: $link-colour;
+        }
+
+        &:before {
+            display: none;
+        }
+
+        &:after {
+            position: absolute;
+            content: "";
+            width: 24px;
+            height: 24px;
+            right: 0;
+            background: transparent url(/public/assets/images/icons/arrows-vert.png) no-repeat 0 0;
+
+        }
+    }
+    .open-expander .panel-trigger:after {
+        background-position-y: 100%;
+    }
+
+    .controls {
+        padding: 12px 0;
+        text-align: right;
+
+        &:first-of-type {
+            border-bottom: $grey-2 2px solid;
+        }
+
+        a {
+            font-size: 16px;
+            margin-left: 1em;
+        }
+    }
+}
+
+.no-js {
+    .expander-panel-content {
+        display: block;
+    }
+
+    .chevron-accordion {
+        .controls {
+            display: none;
+        }
+    }
+}
