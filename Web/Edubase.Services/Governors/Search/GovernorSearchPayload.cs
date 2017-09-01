@@ -12,7 +12,10 @@ namespace Edubase.Services.Governors.Search
             [eGovernorTypesFlag.MultiAcademyTrusts] = "mats",           // filtered to governors associated with MATs
             [eGovernorTypesFlag.AcademiesWithinMAT] = "acads_in_mat",   // filtered to governors of academies associated with an MAT
             [eGovernorTypesFlag.AcademiesWithinSAT] = "acads_in_sat",   // filtered to governors of academies associated with an SAT
-            [eGovernorTypesFlag.GovsOfLAMaintained] = "la_maintained"   // filtered to governors of LA maintained type establishments
+            [eGovernorTypesFlag.GovsOfLAMaintained] = "la_maintained",   // filtered to governors of LA maintained type establishments
+            [eGovernorTypesFlag.CTC] = "ctc",   // filtered to governors of City Technology Colleges
+            [eGovernorTypesFlag.FreeSchools] = "freeschools",   // filtered to governors of Free Schools
+            [eGovernorTypesFlag.AcadsWithSchoolSponsor] = "acads_with_sch_spon",   // filtered to governors of Academies with a School Sponsor
         };
 
         public GovernorSearchPayload()
