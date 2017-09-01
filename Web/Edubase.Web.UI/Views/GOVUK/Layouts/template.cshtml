@@ -80,167 +80,172 @@
     @RenderSection("Head", required: false)
 </head>
 <body class="@(ViewBag.bodyClasses) no-js">
-    <div id="full-content">
-        @if (!Request.Browser.Browser.Contains("MSIE 8"))
-        {
-            <script type="text/javascript">
-                document.body.className = document.body.className.replace(/\bno-js\b/, 'js-enabled');
-                if (!('ontouchstart' in document.documentElement)) { document.body.className += ' no-touch'; }
-                if (navigator.userAgent.indexOf('Mac OS X') > -1) { document.body.className += ' is-mac';}
-            </script>
-        }
+<div id="full-content">
+    @if (!Request.Browser.Browser.Contains("MSIE 8"))
+    {
+        <script type="text/javascript">
+            document.body.className = document.body.className.replace(/\bno-js\b/, 'js-enabled');
+            if (!('ontouchstart' in document.documentElement)) { document.body.className += ' no-touch'; }
+            if (navigator.userAgent.indexOf('Mac OS X') > -1) { document.body.className += ' is-mac';}
+        </script>
+    }
 
-        @RenderSection("bodyStart", required: false)
+    @RenderSection("bodyStart", required: false)
 
-        <div id="skiplink-container">
-            <div>
-                <a href="#content" class="skiplink">Skip to main content</a>
-            </div>
+    <div id="skiplink-container">
+        <div>
+            <a href="#content" class="skiplink">Skip to main content</a>
         </div>
+    </div>
 
-        <div id="global-cookie-message">
-            <div class="outer-block">
-                <div class="inner-block">
-                    @if (string.IsNullOrEmpty(ViewBag.cookieMessage) == false)
-                    {
-                        @(ViewBag.cookieMessage)
-                    }
-                    else
-                    {
-                        <p>
-                            GOV.UK uses cookies to make the site simpler. <a href="/cookies">Find out more about cookies</a>
-                        </p>
-                    }
-                </div>
-            </div>
-        </div>
-        <div id="global-news-message" class="hidden">
-            <div class="outer-block">
-                <div class="inner-block">
-                    <p>
-                        This site is for test purposes only. To update or search live records use
-                        <a href="http://www.education.gov.uk/edubase/home.xhtml" class="allow-exit">Edubase2</a>.
-                        View the <a href="/news" class="allow-exit">news</a> page for release updates.
-                    </p>
-                    <a href="#" id="news-dismiss" class="news-dismiss allow-exit" title="Dismiss this message"></a>
-                </div>
-            </div>
-        </div>
-        <!--end global-cookie-message-->
-
-        <header role="banner" id="global-header" class="with-proposition">
-            <div class="header-wrapper">
-                <div class="header-global">
-                    <div class="header-logo">
-                        <a href="http://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
-                            <img src="/public/govuk_template/assets/images/gov.uk_logotype_crown.png?0.13.0" width="35" height="31" alt="" style="visibility:visible">
-                            GOV.UK
-                        </a>
-                    </div>
-                    @RenderSection("InsideHeader", required: false)
-                </div>
-                <div class="header-proposition">
-                    <div class="content">
-                        <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
-                        <nav id="proposition-menu">
-                            <a href="/" id="proposition-name">Get information about schools</a>
-
-                            <ul id="proposition-links">
-                                <li><a href="/">Search</a></li>
-                                <li><a href="/Downloads">Downloads</a></li>
-                                @if (Request.IsAuthenticated)
-                                {
-                                    <li><a href="/Tools">Tools</a></li>
-                                    <li>
-                                        @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id="logout-link"})
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)</li>
-                                }
-                            </ul>
-
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!--end header-->
-
-        @RenderSection("AfterHeader", required: false)
-
-        <div id="global-header-bar">
+    <div id="global-cookie-message">
+        <div class="outer-block">
             <div class="inner-block">
-                <div class="header-bar"></div>
+                @if (string.IsNullOrEmpty(ViewBag.cookieMessage) == false)
+                {
+                    @(ViewBag.cookieMessage)
+                }
+                else
+                {
+                    <p>
+                        GOV.UK uses cookies to make the site simpler. <a href="/cookies">Find out more about cookies</a>
+                    </p>
+                }
             </div>
         </div>
-        <!--end global-header-bar-->
+    </div>
+    <div id="global-news-message" class="hidden">
+        <div class="outer-block">
+            <div class="inner-block">
+                <p>
+                    This site is for test purposes only. To update or search live records use
+                    <a href="http://www.education.gov.uk/edubase/home.xhtml" class="allow-exit">Edubase2</a>.
+                    View the <a href="/news" class="allow-exit">news</a> page for release updates.
+                </p>
+                <a href="#" id="news-dismiss" class="news-dismiss allow-exit" title="Dismiss this message"></a>
+            </div>
+        </div>
+    </div>
+    <!--end global-cookie-message-->
 
-        <div class="side-width-wrapper">
-            <div class="grid-row">
-                <div class="column-full">
-                    <div class="phase-banner">
-                        @(Html.Partial("../govuk/partials/phase/beta"))
-                    </div>
-                    @*@if (User.Identity.IsAuthenticated)
+    <header role="banner" id="global-header" class="with-proposition">
+        <div class="header-wrapper">
+            <div class="header-global">
+                <div class="header-logo">
+                    <a href="http://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
+                        <img src="/public/govuk_template/assets/images/gov.uk_logotype_crown.png?0.13.0" width="35" height="31" alt="" style="visibility:visible">
+                        GOV.UK
+                    </a>
+                </div>
+                @RenderSection("InsideHeader", required: false)
+            </div>
+            <div class="header-proposition">
+                <div class="content">
+                    <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
+                    <nav id="proposition-menu">
+                        <a href="/" id="proposition-name">Get information about schools</a>
+
+                        <ul id="proposition-links">
+                            <li><a href="/">Search</a></li>
+                            <li><a href="/Downloads">Downloads</a></li>
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li><a href="/Tools">Tools</a></li>
+                                <li>
+                                    @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id="logout-link"})
+                                </li>
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)</li>
+                            }
+                        </ul>
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!--end header-->
+
+    @RenderSection("AfterHeader", required: false)
+
+    <div id="global-header-bar">
+        <div class="inner-block">
+            <div class="header-bar"></div>
+        </div>
+    </div>
+    <!--end global-header-bar-->
+
+    <div class="side-width-wrapper">
+        <div class="grid-row">
+            <div class="column-full">
+                <div class="phase-banner">
+                    @(Html.Partial("../govuk/partials/phase/beta"))
+                </div>
+                @*@if (User.Identity.IsAuthenticated)
                         {
                             @Html.ActionLink("Sign out", "LogOff", "Account", null, new { @class = "sign-out-link" })
                         }*@
+            </div>
+        </div>
+    </div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="side-width-wrapper">
+            <div class="grid-row">
+                <div class="column-full">
+
                 </div>
             </div>
         </div>
+    }
 
-        @if (User.Identity.IsAuthenticated)
-        {
-            <div class="side-width-wrapper">
-                <div class="grid-row">
-                    <div class="column-full">
+    @RenderBody()
 
+    <footer class="group js-footer" id="footer" role="contentinfo">
+        <div class="footer-wrapper">
+            <div class="footer-meta">
+                <div class="footer-meta-inner">
+                    <h2 class="visuallyhidden">Support links</h2>
+                    <ul>
+                        <li><a href="/cookies">Cookies</a></li>
+                        <!--<li><a href="#">Contact</a></li>-->
+                        <li>@Html.RouteLink("Glossary", "Glossary")</li>
+                        <li><a href="/guidance">Guidance</a></li>
+                        <li><a href="/news">News</a></li>
+                    </ul>
+
+                    <div class="open-government-licence">
+                        <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
+                        <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
                     </div>
                 </div>
-            </div>
-        }
-
-        @RenderBody()
-
-        <footer class="group js-footer" id="footer" role="contentinfo">
-            <div class="footer-wrapper">
-                <div class="footer-meta">
-                    <div class="footer-meta-inner">
-                        <h2 class="visuallyhidden">Support links</h2>
-                        <ul>
-                            <li><a href="/cookies">Cookies</a></li>
-                            <!--<li><a href="#">Contact</a></li>-->
-                            <li>@Html.RouteLink("Glossary", "Glossary")</li>
-                            <li><a href="/guidance">Guidance</a></li>
-                            <li><a href="/news">News</a></li>
-                        </ul>
-
-                        <div class="open-government-licence">
-                            <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
-                            <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
-                        </div>
-                    </div>
-                    <div class="copyright">
-                        <a href="https://www.nationalarchives.gov.uk/information-management/our-services/crown-copyright.htm">&copy; Crown copyright</a>
-                    </div>
+                <div class="copyright">
+                    <a href="https://www.nationalarchives.gov.uk/information-management/our-services/crown-copyright.htm">&copy; Crown copyright</a>
                 </div>
             </div>
-        </footer>
-        <!--end footer-->
+        </div>
+    </footer>
+    <!--end footer-->
 
-        <div id="global-app-error" class="app-error hidden"></div>
-        <script src="@(ViewBag.assetsPath)/javascripts/govuk-template.js?0.13.0" type="text/javascript"></script>
+    <div id="global-app-error" class="app-error hidden"></div>
+    <script src="@(ViewBag.assetsPath)/javascripts/govuk-template.js?0.13.0" type="text/javascript"></script>
 
-        @RenderSection("BodyEnd", required: false)
+    @RenderSection("BodyEnd", required: false)
         
     @if (Request.IsAuthenticated)
     {
         <script type="text/javascript" src="/public/assets/scripts/standalone/data-status.js"></script>
     }
 
-    </div>
+</div>
+<script>
+    if (top.location !== location) {
+        top.location.href = document.location.href ;
+    }
+</script>
 </body>
 
 </html>
