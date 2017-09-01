@@ -90,9 +90,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService, 
                 (await _cachedLookupService.NationalitiesGetAllAsync()), 
                 (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
-                
-                var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
-                viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
+
+            var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
+            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User, x => viewModel.GovernanceMode = x.GovernanceMode, x=>
             {
