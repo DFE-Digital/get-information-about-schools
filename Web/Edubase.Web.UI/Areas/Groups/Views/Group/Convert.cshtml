@@ -19,13 +19,14 @@
         <h1 class="heading-xlarge">Convert to multi academy trust</h1>
     </div>
 </div>
+@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 @if (Model.Details == null)
 {
     <div class="grid-row">
         <div class="column-two-thirds">
             <p>Convert single academy trusts into multi-academy trusts using either the current company record or a new one from companies house</p>
-            <h2 class="heading-small">Convert current single academy trust</h2>
+            <h2 class="heading-medium">Current single academy trust</h2>
         </div>
     </div>
 
@@ -45,9 +46,10 @@
         </div>
         <div class="grid-row">
             <div class="column-full">
-                <button type="submit" name="actionname" class="button mobile-full-width" value="find">Continue</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
-                
+                <div class="button-row">
+                    <button type="submit" name="actionname" class="button mobile-full-width" value="find">Continue</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
+                </div>                
             </div>
         </div>
     }
