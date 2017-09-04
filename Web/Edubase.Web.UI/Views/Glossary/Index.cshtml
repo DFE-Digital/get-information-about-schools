@@ -28,29 +28,29 @@
         
         <ul class="chevron-accordion">
             <li class="controls">
-                <a href="#" class="open-all-panels">Open all</a>
-                <a href="#" class="close-all-panels">Close all</a>
+                <button href="#" class="button-as-link open-all-panels">Open all</button>
+                <button href="#" class="button-as-link close-all-panels">Close all</button>
             </li>
             @foreach (var group in Model.Items)
             {
                 <li class="expander-panel">
-                    <a class="panel-trigger" href="#">@group.Key</a>
-                    <div class="expander-panel-content">
+                    <a class="panel-trigger" href="#target-@group.Key" aria-expanded="false" aria-controls="target-@group.Key">@group.Key</a>
+                    <div class="expander-panel-content" id="target-@group.Key">
                         @foreach (var item in group)
                         {
-                            <p class="bold-medium">@item.Title</p>
-                            <p class="font-small">@Html.Raw(item.Content)</p>
+                            <h2 class="heading-medium">@item.Title</h2>
+                            <p>@Html.Raw(item.Content)</p>
                             if (Model.UserCanEdit)
                             {
-                                @Html.RouteLink("Edit", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-grey" })
+                                @Html.RouteLink("Edit", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-grey glossary-edit-button" })
                             }
                         }
                     </div>                    
                 </li>
             }
             <li class="controls">
-                <a href="#" class="open-all-panels">Open all</a>
-                <a href="#" class="close-all-panels">Close all</a>
+                <button href="#" class="button-as-link open-all-panels">Open all</button>
+                <button href="#" class="button-as-link close-all-panels">Close all</button>
             </li>
                 
         </ul>
@@ -66,36 +66,75 @@
             var openAll = document.querySelectorAll('.open-all-panels');
             var closeAll = document.querySelectorAll('.close-all-panels');
 
-            [].forEach.call(panels, function(el) {
-                var trigger = el.querySelectorAll('.panel-trigger')[0];
+            function removeClass(el, className) {
+                if (el.classList) {
+                    el.classList.remove(className);
+                } else {
+                    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+                }
+            }
 
-                trigger.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    el.classList.toggle('open-expander');
-                });
-            });
+            function addClass(el, className) {
+                if (el.classList) {
+                    el.classList.add(className);
+                } else {
+                    el.className += ' ' + className;
+                }
+            }
 
-            [].forEach.call(openAll, function(el) {
-                el.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    [].forEach.call(panels,
-                        function(panel) {
-                            panel.classList.add('open-expander');
+            
+            function hasClass(el, className) {
+                if (el.classList) {
+                   return el.classList.contains(className);
+                } else {
+                    return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+                }
+            }
+
+            [].forEach.call(panels,
+                function(el) {
+                    var trigger = el.querySelectorAll('.panel-trigger')[0];
+
+                    trigger.addEventListener('click',
+                        function(e) {
+                            e.preventDefault();
+                            if (hasClass(el, 'open-expander')) {
+                                removeClass(el, 'open-expander');
+                                trigger.setAttribute('aria-expanded', false);
+                            } else {
+                                addClass(el, 'open-expander');
+                                trigger.setAttribute('aria-expanded', true);
+                            }
                         });
-
                 });
-            });
 
-            [].forEach.call(closeAll, function (el) {
-                el.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    [].forEach.call(panels,
-                        function (panel) {
-                            panel.classList.remove('open-expander');
+            [].forEach.call(openAll,
+                function(el) {
+                    el.addEventListener('click',
+                        function(e) {
+                            e.preventDefault();
+                            [].forEach.call(panels,
+                                function (panel) {
+                                    addClass(panel, 'open-expander');
+                                    panel.querySelectorAll('.panel-trigger')[0].setAttribute('aria-expanded', true);
+                                });
+
                         });
-
                 });
-            });
+
+            [].forEach.call(closeAll,
+                function(el) {
+                    el.addEventListener('click',
+                        function(e) {
+                            e.preventDefault();
+                            [].forEach.call(panels,
+                                function (panel) {
+                                    removeClass(panel, 'open-expander');
+                                    panel.querySelectorAll('.panel-trigger')[0].setAttribute('aria-expanded', false);
+                                });
+
+                        });
+                });
 
         }());
     </script>
