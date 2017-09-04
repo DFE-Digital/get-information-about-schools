@@ -73,3 +73,14 @@
         }
     }
 }
+@if ($is-ie and $ie-version < 9) {
+    .expander-panel-content {
+        display: block;
+    }
+
+    .chevron-accordion {
+        .controls {
+            display: none;
+        }
+    }
+}
