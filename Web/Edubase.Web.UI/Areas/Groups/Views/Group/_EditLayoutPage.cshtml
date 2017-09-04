@@ -14,7 +14,7 @@
 <h1 class="heading-xlarge">@Model.GroupName</h1>
 
 <p class="urn">UID: @Model.GroupUId</p>
-<p class="establishment-type">[[ Group type here please Kris]]</p>
+<p class="establishment-type">@Model.GroupTypeName</p>
 @if (ViewData.ContainsKey("DuplicateGovernor"))
 {
     @Html.Partial("~/Areas/Governors/Views/Governor/_DuplicateGovernor.cshtml", ViewData["DuplicateGovernor"])

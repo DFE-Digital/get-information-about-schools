@@ -36,5 +36,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 return string.Concat(part1, part2, "Governor");
             }
         }
+
+        public string GroupTypeName { get; set; }
+        public string TypeName { get; set; }
     }
 }

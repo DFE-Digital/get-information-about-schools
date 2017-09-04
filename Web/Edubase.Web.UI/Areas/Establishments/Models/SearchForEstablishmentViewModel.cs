@@ -9,6 +9,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public string Name { get; set; }
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
         public string Layout { get; set; }
+
         
         public string SearchUrn { get; set; }
 
@@ -16,5 +17,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
 
         [BindAlias(BIND_ALIAS_DOSEARCH)]
         public bool DoSearch { get; set; }
+        public string TypeName { get; set; }
     }
 }

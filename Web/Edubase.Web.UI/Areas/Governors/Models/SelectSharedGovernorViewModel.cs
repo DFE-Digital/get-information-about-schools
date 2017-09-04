@@ -23,5 +23,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string Layout { get; set; }
 
         public string SelectedGovernorId { get; set; }
+        public string TypeName { get; set; }
     }
 }

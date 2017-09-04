@@ -94,7 +94,7 @@ namespace Edubase.Web.UI.Models
         public string AltPostCode { get; set; }
         public bool IsAltAddressSet => AltSiteName.Clean() != null || AltStreet.Clean() != null;
 
-
+        public string TypeName { get; set; }
 
         public string OldHeadFirstName { get; set; }
         public string HeadFirstName { get; set; }

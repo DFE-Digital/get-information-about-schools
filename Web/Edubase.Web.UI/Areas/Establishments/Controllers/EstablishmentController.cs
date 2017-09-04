@@ -459,7 +459,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 var originalEstabTypeId = (eLookupEstablishmentType) domainModel.TypeId;
                 await ValidateAsync(model, domainModel);
-                var newEstabTypeId = (eLookupEstablishmentType)domainModel.TypeId;
+                var newEstabTypeId = (eLookupEstablishmentType?)domainModel.TypeId;
 
                 if (ModelState.IsValid)
                 {
@@ -606,6 +606,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var editPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, editPolicy, User);
             viewModel.Name = domainModel.Name;
+            if (domainModel.TypeId.HasValue) viewModel.TypeName = (await _cachedLookupService.GetNameAsync(() => domainModel.TypeId));
         }
 
         private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)
@@ -690,6 +691,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
 
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
+            viewModel.TypeName = await _cachedLookupService.GetNameAsync(() => viewModel.TypeId);
         }
 
         private GroupModel GetLegalParent(int establishmentUrn, IEnumerable<GroupModel> parentGroups, IPrincipal principal)

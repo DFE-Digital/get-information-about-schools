@@ -11,6 +11,7 @@ using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Exceptions;
+using Edubase.Services.Lookup;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -21,16 +22,19 @@ namespace Edubase.Web.UI.Helpers
 
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
+        private readonly ICachedLookupService _cls;
         private readonly NomenclatureService _nomenclatureService;
 
         public LayoutHelper(
             NomenclatureService nomenclatureService,
             IGroupReadService groupReadService,
-            IEstablishmentReadService establishmentReadService)
+            IEstablishmentReadService establishmentReadService,
+            ICachedLookupService cls)
         {
             _nomenclatureService = nomenclatureService;
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
+            _cls = cls;
         }
 
         internal async Task PopulateLayoutProperties(object viewModel, int? establishmentUrn, int? groupUId, IPrincipal user, Action<EstablishmentModel> processEstablishment = null, Action<GroupModel> processGroup = null)
@@ -50,6 +54,7 @@ namespace Edubase.Web.UI.Helpers
                 var vm = (IEstablishmentPageViewModel)viewModel;
                 vm.Layout = EstabLayout;
                 vm.Name = domainModel.Name;
+                if (domainModel.TypeId.HasValue) vm.TypeName = (await _cls.GetNameAsync(() => domainModel.TypeId));
                 vm.SelectedTab = "governance";
                 vm.Urn = domainModel.Urn;
                 vm.TabDisplayPolicy = new TabDisplayPolicy(domainModel, displayPolicy, user);
@@ -63,6 +68,7 @@ namespace Edubase.Web.UI.Helpers
                 vm.GroupName = domainModel.Name;
                 vm.GroupTypeId = domainModel.GroupTypeId.Value;
                 vm.GroupUId = groupUId;
+                if (vm.GroupTypeId.HasValue) vm.GroupTypeName = (await _cls.GetNameAsync(() => vm.GroupTypeId));
                 vm.SelectedTabName = "governance";
                 vm.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((eLookupGroupType)vm.GroupTypeId.Value);
                 processGroup?.Invoke(domainModel);
