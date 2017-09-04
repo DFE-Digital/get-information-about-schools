@@ -1,6 +1,6 @@
 ﻿using Edubase.Common;
 using Edubase.Services.Domain;
-using Edubase.Services.Establishments;
+using Edubase.Services.Enums;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Groups.Models;
@@ -10,14 +10,10 @@ using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
@@ -113,14 +109,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     results = await _groupReadService.SearchAsync(payload, User);
                     model.Results = results.Items;
                     if (model.StartIndex == 0) model.Count = results.Count;
-
                 }
-
-
+                
                 if (model.Count == 1) return RedirectToDetailPage(model.Results.Single().GroupUId);
 
                 return View("GroupResults", model);
-
             }
         }
 

@@ -48,6 +48,11 @@ namespace Edubase.Services
 
         }
 
+        public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter) : this(httpClient, formatter, null, null)
+        {
+
+        }
+
         public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal) => await GetAsync<TResponse>(uri, principal, true);
 
         public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal, bool throwOnNotFound)
@@ -387,24 +392,27 @@ namespace Edubase.Services
 
         private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed)
         {
-            var apiSessionId = _clientStorage.Get("ApiSessionId");
-            if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
+            if (_clientStorage != null)
             {
-                if (responseMessage == null && response?.Content != null)
+                var apiSessionId = _clientStorage.Get("ApiSessionId");
+                if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
                 {
-                    responseMessage = await response.Content?.ReadAsStringAsync();
-                }
+                    if (responseMessage == null && response?.Content != null)
+                    {
+                        responseMessage = await response.Content?.ReadAsStringAsync();
+                    }
 
-                await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
-                {
-                    HttpMethod = requestMessage.Method.ToString(),
-                    RawRequestBody = GetRequestJsonBody(requestMessage),
-                    RawResponseBody = responseMessage.Ellipsis(32000),
-                    RequestHeaders = ToJsonIndented(requestMessage.Headers),
-                    ResponseHeaders = ToJsonIndented(response.Headers),
-                    ElapsedTimeSpan = elapsed.ToString(),
-                    ElapsedMS = elapsed.TotalMilliseconds
-                });
+                    await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
+                    {
+                        HttpMethod = requestMessage.Method.ToString(),
+                        RawRequestBody = GetRequestJsonBody(requestMessage),
+                        RawResponseBody = responseMessage.Ellipsis(32000),
+                        RequestHeaders = ToJsonIndented(requestMessage.Headers),
+                        ResponseHeaders = ToJsonIndented(response.Headers),
+                        ElapsedTimeSpan = elapsed.ToString(),
+                        ElapsedMS = elapsed.TotalMilliseconds
+                    });
+                }
             }
         }
 

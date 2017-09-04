@@ -1,6 +1,7 @@
 ﻿using Edubase.Services;
 using Edubase.Services.Exceptions;
 using Edubase.UnitTest.Mocks;
+using Edubase.Web.UI;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
@@ -30,7 +31,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
         {
             var u = new Uri("http://test.com/test");
             var mockHandler = new MockHttpMessageHandler();
-            var subject = new HttpClientWrapper(new HttpClient(mockHandler));
+            var subject = CreateWrapper(mockHandler);
             var r = Ok(JsonConvert.SerializeObject(new TestObject() { Int1 = 1 }));
             mockHandler.Add(u, r);
             var result = await subject.GetAsync<TestObject>(u.ToString(), p, false);
@@ -42,7 +43,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
         {
             var u = new Uri("http://test.com/test");
             var mockHandler = new MockHttpMessageHandler();
-            var subject = new HttpClientWrapper(new HttpClient(mockHandler));
+            var subject = CreateWrapper(mockHandler);
             Assert.That(() => subject.GetAsync<TestObject>(u.ToString(), p, true), Throws.TypeOf<TexunaApiNotFoundException>());
         }
 
@@ -52,7 +53,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
         {
             var u = new Uri("http://test.com/test");
             var mockHandler = new MockHttpMessageHandler();
-            var subject = new HttpClientWrapper(new HttpClient(mockHandler));
+            var subject = CreateWrapper(mockHandler);
             Assert.That((await subject.GetAsync<TestObject>(u.ToString(), p, false)).Response, Is.Null);
         }
 
@@ -61,7 +62,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
         {
             var u = new Uri("http://test.com/test");
             var mockHandler = new MockHttpMessageHandler();
-            var subject = new HttpClientWrapper(new HttpClient(mockHandler));
+            var subject = CreateWrapper(mockHandler);
             mockHandler.Add(u, Ok("<html><head><title>system exception</title></head></html>", mimeTypeHtml));
             Assert.That(() => subject.GetAsync<TestObject>(u.ToString(), p), Throws.TypeOf<TexunaApiSystemException>());
         }
@@ -71,7 +72,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
         {
             var u = new Uri("http://test.com/test");
             var mockHandler = new MockHttpMessageHandler();
-            var subject = new HttpClientWrapper(new HttpClient(mockHandler));
+            var subject = CreateWrapper(mockHandler);
             mockHandler.Add(u, new HttpResponseMessage(HttpStatusCode.InternalServerError));
             Assert.That(() => subject.GetAsync<TestObject>(u.ToString(), p), Throws.TypeOf<TexunaApiSystemException>());
         }
@@ -81,7 +82,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
         {
             var u = new Uri("http://test.com/test");
             var mockHandler = new MockHttpMessageHandler();
-            var subject = new HttpClientWrapper(new HttpClient(mockHandler));
+            var subject = CreateWrapper(mockHandler);
             mockHandler.Add(u, Ok("=--%^&*{}{}{}{}{{@bgnffsegnj"));
             Assert.That(() => subject.GetAsync<TestObject>(u.ToString(), p), Throws.TypeOf<TexunaApiSystemException>());
         }
@@ -90,7 +91,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
         public void GetAsync_HandlesTimeout()
         {
             var mockHandler = new MockHttpMessageHandler { AlwaysTimeout = true };
-            var subject = new HttpClientWrapper(new HttpClient(mockHandler));
+            var subject = CreateWrapper(mockHandler);
             Assert.That(() => subject.GetAsync<TestObject>("http://test.com/do-timeout", p), Throws.TypeOf<TexunaApiSystemException>().And.With.Message.Contains("timely"));
         }
 
@@ -98,7 +99,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
         public async Task GetAsync_SuccessfullyReturnsPrimitives()
         {
             var mockHandler = new MockHttpMessageHandler();
-            var subject = new HttpClientWrapper(new HttpClient(mockHandler));
+            var subject = CreateWrapper(mockHandler);
 
             var u1 = new Uri("http://test.com/test/int");
             mockHandler.Add(u1, Ok("1"));
@@ -119,8 +120,8 @@ namespace Edubase.UnitTest.Services.Texuna.Core
             retVal.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
             return retVal;
         }
-        
 
+        private HttpClientWrapper CreateWrapper(MockHttpMessageHandler mockHandler) => new HttpClientWrapper(new HttpClient(mockHandler), IocConfig.CreateJsonMediaTypeFormatter());
 
 
     }

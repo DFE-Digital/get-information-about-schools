@@ -43,10 +43,5 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         [BindAlias("s")]
         public List<int> SelectedGroupStatusIds { get; set; } = new List<int>();
-
-        [BindAlias("g")]
-        public bool GoToDetailPageOnOneResult { get; set; }
-
-
     }
 }
