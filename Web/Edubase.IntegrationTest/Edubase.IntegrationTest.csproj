@@ -251,6 +251,7 @@
   <ItemGroup>
     <Compile Include="Establishment\DisplayRulesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repos\LocalAuthoritySetRepositoryTest.cs" />
     <Compile Include="Repos\GlossaryRepositoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
