@@ -3,7 +3,7 @@
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.IGroupPageViewModel;
 @model VM
 @{
-    ViewBag.bodyClasses = "governance";
+    ViewBag.bodyClasses = "governance school-details";
     ViewBag.hideLogo = true;
     //ViewBag.Title = Model.PageTitle;
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
@@ -13,6 +13,8 @@
 
 <h1 class="heading-xlarge">@Model.GroupName</h1>
 
+<p class="urn">UID: @Model.GroupUId</p>
+<p class="establishment-type">@Model.GroupTypeName</p>
 @if (ViewData.ContainsKey("DuplicateGovernor"))
 {
     @Html.Partial("~/Areas/Governors/Views/Governor/_DuplicateGovernor.cshtml", ViewData["DuplicateGovernor"])
