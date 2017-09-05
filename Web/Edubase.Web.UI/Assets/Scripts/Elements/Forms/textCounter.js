@@ -42,8 +42,14 @@
 
             $(this.tmpl).insertBefore($el);
 
-            $el.on("keyup blur paste drop", function () {
+            $el.on("keyup blur paste", function () {
                 throttle(self.setCount(), 100);
+            });
+
+            $el.on('drop', function() {
+               window.setTimeout(function() {
+                   self.setCount();
+               }, 0); 
             });
 
             this.setCount();
