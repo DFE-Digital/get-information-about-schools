@@ -28,5 +28,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string Name { get; set; }
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
         public string Layout { get; set; }
+        public string TypeName { get; set; }
     }
 }

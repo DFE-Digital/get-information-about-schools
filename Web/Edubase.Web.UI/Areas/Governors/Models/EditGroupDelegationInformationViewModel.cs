@@ -14,5 +14,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public int? GroupTypeId { get; set; }
         public string Layout { get; set; }
         public string SelectedTabName { get; set; }
+        public string GroupTypeName { get; set; }
     }
 }

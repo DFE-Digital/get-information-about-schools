@@ -87,11 +87,20 @@
             <h1 class="heading-intro">Enter the children's centre {{groupTypeName}} details</h1>
 
             @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
-            <div class="error-summary" v-show="groupNameApiError.length>0">
-                <h2 class="error-summary-heading heading-medium">There was a problem</h2>
+            <div class="error-summary" v-show="groupNameApiError.length>0 || groupNameError || laError || openDateError">
+                <h2 class="error-summary-heading heading-medium">Incorrect or missing details</h2>
                 <ul class="error-summary-list">
-                    <li class="error-message">
+                    <li class="error-message" v-show="groupNameApiError.length>0">
                         {{groupNameApiError}}
+                    </li>
+                    <li class="error-message" v-show="groupNameError">
+                        Please check the {{groupTypeName}} name
+                    </li>
+                    <li class="error-message" v-show="openDateError">
+                        Please check the opening date you have entered
+                    </li>
+                    <li class="error-message" v-show="laError">
+                        Please select a local authority
                     </li>
                 </ul>
             </div>

@@ -21,7 +21,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public string StateToken { get; set; }
         public string Act { get; set; }
         public bool IsNew => (ActiveRecord?.IsNew).GetValueOrDefault();
-        
+
+        public string TypeName { get; set; }
+
         public void HydrateStateToken()
         {
             StateToken = UriHelper.SerializeToUrlToken(this);

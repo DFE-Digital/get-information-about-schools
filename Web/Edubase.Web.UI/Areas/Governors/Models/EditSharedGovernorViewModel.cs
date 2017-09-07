@@ -12,5 +12,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string Layout { get; set; }
 
         public SharedGovernorViewModel Governor { get; set; }
+        public string TypeName { get; set; }
     }
 }

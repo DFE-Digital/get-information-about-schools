@@ -5,16 +5,18 @@
 
     init: function () {
         var self = this;
-        this.closeButton.addEventListener('click',
-            function(e) {
-                e.preventDefault();
-                GOVUK.setCookie('seen-news-banner', true, { days: self.delay });
-                $(self.newsBanner).addClass('hidden');
-            });
+        if (this.closeButton && this.newsBanner) {
+            this.closeButton.addEventListener('click',
+                function (e) {
+                    e.preventDefault();
+                    GOVUK.setCookie('seen-news-banner', true, { days: self.delay });
+                    $(self.newsBanner).addClass('hidden');
+                });
 
-        if (GOVUK.getCookie('seen-news-banner') !== 'true') {
-            $(this.newsBanner).removeClass('hidden');
+            if (GOVUK.getCookie('seen-news-banner') !== 'true') {
+                $(this.newsBanner).removeClass('hidden');
 
+            }
         }
     }
     

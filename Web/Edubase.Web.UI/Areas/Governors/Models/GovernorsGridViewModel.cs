@@ -67,6 +67,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         int? IEstablishmentPageViewModel.Urn { get; set; }
 
         string IEstablishmentPageViewModel.Name { get; set; }
+        public string TypeName { get; set; }
+        public string GroupTypeName { get; set; }
 
         TabDisplayPolicy IEstablishmentPageViewModel.TabDisplayPolicy { get; set; }
 

@@ -249,6 +249,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\CacheAccessorTest.cs" />
     <Compile Include="Establishment\DisplayRulesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repos\LocalAuthoritySetRepositoryTest.cs" />

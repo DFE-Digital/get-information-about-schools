@@ -59,9 +59,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 ModelState.AddModelError("groupOpenDate", "Group open date cannot be empty");
             }
 
-            if (model.JoinDate.ToDateTime().Value.Date < model.GroupOpenDate.ToDateTime().Value.Date)
+            if (model.JoinDate.IsValid() && model.GroupOpenDate.IsValid() &&
+                model.JoinDate.ToDateTime().Value.Date < model.GroupOpenDate.ToDateTime().Value.Date)
             {
-                var part = (model.GroupOpenDate.ToDateTime().Value.Date == DateTime.Now.Date) ? $"the {model.GroupType}'s open date of today" : $"the {model.GroupType}'s open date of {model.GroupOpenDate.Day}/{model.GroupOpenDate.Month}/{model.GroupOpenDate.Year}";
+                var part = (model.GroupOpenDate.ToDateTime().Value.Date == DateTime.Now.Date)
+                    ? $"the {model.GroupType}'s open date of today"
+                    : $"the {model.GroupType}'s open date of {model.GroupOpenDate.Day}/{model.GroupOpenDate.Month}/{model.GroupOpenDate.Year}";
                 var message = $"The join date you entered is before {part}. Please enter a later date.";
                 ModelState.AddModelError("joinDate", message);
             }

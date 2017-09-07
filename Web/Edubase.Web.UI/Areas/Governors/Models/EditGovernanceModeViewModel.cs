@@ -12,5 +12,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string Layout { get; set; }
         public eGovernanceMode? GovernanceMode { get; set; }
         public eGovernanceMode[] PermissibleGovernanceModes { get; internal set; }
+        public string TypeName { get; set; }
     }
 }
