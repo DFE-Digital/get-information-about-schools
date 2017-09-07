@@ -61,6 +61,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (!payload.Success) model.Error = payload.ErrorMessage;
             await ProcessEstablishmentsSearch(model, payload.Object);
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
+            HttpContext.Response.Headers.Add("x-show-date-filter-warning", model.ShowDateFilterWarning.ToString().ToLower());
             return PartialView("Partials/_EstablishmentSearchResults", model);
         }
 
@@ -208,9 +209,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     payload.GeoSearchLocation = coord;
                     payload.RadiusInMiles = model.GetRadiusOption();
                 }
-                else
-                    retVal.ErrorMessage =
-                        "The co-ordinate could not be parsed."; // todo: need to support Location-disambiguation page and non-JS scenario.
+                else retVal.ErrorMessage = "The co-ordinate could not be parsed.";
             }
 
             filters.EducationPhaseIds = model.SelectedEducationPhaseIds.ToArray();

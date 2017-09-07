@@ -157,7 +157,7 @@
 
             disableFilters();
 
-            var showResult = function (html, count) {
+            var showResult = function (html, count, showDateFilterWarning) {
                 $(window).trigger({
                     type: 'ajaxResultLoad',
                     count: count
@@ -169,6 +169,15 @@
                     window.scrollTo(0, 0);
                 } else {
                     $("a.download-link").removeClass('hidden');
+                }
+
+                if (showDateFilterWarning) {
+                    $(".date-filter-warning").show();
+                    $(".date-filter-warning").css("visibility", "visible");
+                }
+                else {
+                    $(".date-filter-warning").hide();
+                    $(".date-filter-warning").css("visibility", "hidden");
                 }
 
                 enableFilters();
@@ -184,9 +193,9 @@
 
             
             var jqxhr = $.get("Search/results-js?" + queryString, function (html, textStatus, jqXHR) {
-                showResult(html, jqXHR.getResponseHeader("x-count"));
+                showResult(html, jqXHR.getResponseHeader("x-count"), jqXHR.getResponseHeader("x-show-date-filter-warning") == "true");
             }).fail(function (jqXHR) {
-                showResult(jqXHR.responseText, 0);
+                showResult(jqXHR.responseText, 0, false);
             });
         };
 

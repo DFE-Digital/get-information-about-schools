@@ -19,67 +19,60 @@ main {
     }
 }
 
-a.home-link
-{
-    display:inline-block;
-    margin-top:10px;
-    margin-bottom:15px;
-    font-size:15px;
-    color:black;
-    &:hover{color:black;}
-    @include media(mobile)
-    {
-        margin-bottom:2px;
+a.home-link {
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    color: black;
+
+    &:hover {
+        color: black;
+    }
+
+    @include media(mobile) {
+        margin-bottom: 2px;
     }
 }
 
 
-.pre-content
-{
-    padding-bottom:20px;
-    @include media(mobile)
-    {
-        padding-bottom:4px;
-    }
-}
-
-a.font16-ext-link[rel="external"]
-{
+a.font16-ext-link[rel="external"] {
     &:after {
         background-position: right 4px;
     }
+
     &:hover:after {
         background-position: right -384px;
     }
 
-    @include media(mobile)
-    {
+    @include media(mobile) {
         &:after {
             background-position: right 2px;
         }
+
         &:hover:after {
             background-position: right -386px;
         }
     }
 }
 
-a.font14-ext-link[rel="external"]
-{
+a.font14-ext-link[rel="external"] {
     &:after {
         background-position: right 2px;
         content: "\A0\A0\A0\A0\A0";
     }
+
     &:hover:after {
         background-position: right -386px;
         content: "\A0\A0\A0\A0\A0";
     }
 
-    @include media(mobile)
-    {
+    @include media(mobile) {
         &:after {
             background-position: right 0;
             content: "\A0\A0\A0\A0\A0";
         }
+
         &:hover:after {
             background-position: right -388px;
             content: "\A0\A0\A0\A0\A0";
@@ -89,28 +82,4 @@ a.font14-ext-link[rel="external"]
 
 .side-width-wrapper {
     @extend %site-width-container;
-}
-
-.top-logo {
-    margin-top: 15px;
-}
-
-.error-section {
-    margin: 20px 0;
-}
-
-.sign-out-container {
-    position:relative;
-}
-
-.sign-out-link {
-    position:absolute;
-    right:15px;
-    bottom:-30px;
-    font-size:15px;
-    display:inline-block;
-    color:$link-colour;
-    &:visited {
-        color:$link-colour;
-    }
 }

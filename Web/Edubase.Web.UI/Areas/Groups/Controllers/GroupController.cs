@@ -89,7 +89,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpGet]
-        [Route("Create/{type}")]
+        [Route("Create/{type}"), EdubaseAuthorize]
         public async Task<ActionResult> CreateNewGroup(string type)
         {
             var groupTypeMode = StringUtil.ToEnum<eGroupTypeMode>(type);
@@ -130,7 +130,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         
 
         [HttpPost]
-        [Route("Create")]
+        [Route("Create"), EdubaseAuthorize]
         public async Task<ActionResult> Create(GroupEditorViewModel viewModel)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
@@ -156,7 +156,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
 
         [HttpGet]
-        [Route("Edit/{id:int}/Details")]
+        [Route("Edit/{id:int}/Details"), EdubaseAuthorize]
         public async Task<ActionResult> EditDetails(int id)
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
@@ -197,7 +197,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost]
-        [Route("Edit/{id:int}/Details")]
+        [Route("Edit/{id:int}/Details"), EdubaseAuthorize]
         public async Task<ActionResult> EditDetails(GroupEditorViewModel viewModel)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
@@ -238,7 +238,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpGet]
-        [Route("Edit/{id:int}/Links")]
+        [Route("Edit/{id:int}/Links"), EdubaseAuthorize]
         public async Task<ActionResult> EditLinks(int id)
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
@@ -262,9 +262,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost]
-        [Route("Edit/{id:int}/Links")]
+        [Route("Edit/{id:int}/Links"), EdubaseAuthorize]
         public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
         {
+            var model = (await _groupReadService.GetAsync(viewModel.GroupUId.Value, User)).GetResult();
+            viewModel.OpenDate = new DateTimeViewModel(model.OpenDate);
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
 
@@ -279,7 +281,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
         
-        [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
+        [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
             if (!viewModel.SearchText.IsNullOrEmpty())

@@ -19,7 +19,6 @@
         <h1 class="heading-xlarge">Search results</h1>
         @if (Model.Count > 0)
         {
-            <!-- TODO: Jon, remember to ajaxify this, by replacing the querystring with whatever has been generated for the partial view GET request -->
             <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
         }
         <div class="error-summary hidden" id="js-filter-error-summary">
@@ -29,54 +28,56 @@
                 <li class="summary-range-error error-message hidden">Your age range format is not recognised</li>
             </ul>
         </div>
-            <p>
-                <!-- TODO: Jon; you can upload the span.heading-xlarge item with the correct count by using the x-count item in the http response of the partial request -->
-                @if (Model.SearchType == eSearchType.Text)
-                {
-                    if (Model.TextSearchType == M.eTextSearchType.EstablishmentName || 
-                        Model.TextSearchType == M.eTextSearchType.Unknown)
-                    {
-                        <text>
-                            We found <span class="heading-xlarge count">@Model.Count</span> establishments
-                            @if (!Model.TextSearchModel.Text.IsEmpty())
-                            {
-                                <text>for the search term &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
-                            }
-                        </text>
-                    }
-                    else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
-                    {
-                        <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
-                    }
-                    else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
-                    {
-                        <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
-                    }
-                    else if (Model.TextSearchType == M.eTextSearchType.URN)
-                    {
-                        <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
-                    }
-                }
-                else if (Model.SearchType == eSearchType.ByLocalAuthority)
-                {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in <span id="la-list">the selected local authorities</span></text>
-                }
-                else if (Model.SearchType == eSearchType.Location)
-                {
-                    var displayLocation = Model.LocationSearchModel.Text;
-                    var lastIndex = displayLocation.LastIndexOf(",");
-                    if (lastIndex > -1)
-                    {
-                        displayLocation = displayLocation.Substring(0, lastIndex);
-                    }
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
-                }
-                else
-                {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
-                }
-            </p>
+        <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
+            <p>Incomplete historical data means a number of records have no open date recorded and do not appear in this search.</p>
         </div>
+        <p>
+            @if (Model.SearchType == eSearchType.Text)
+            {
+                if (Model.TextSearchType == M.eTextSearchType.EstablishmentName || 
+                    Model.TextSearchType == M.eTextSearchType.Unknown)
+                {
+                    <text>
+                        We found <span class="heading-xlarge count">@Model.Count</span> establishments
+                        @if (!Model.TextSearchModel.Text.IsEmpty())
+                        {
+                            <text>for the search term &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
+                        }
+                    </text>
+                }
+                else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
+                {
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
+                }
+                else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
+                {
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
+                }
+                else if (Model.TextSearchType == M.eTextSearchType.URN)
+                {
+                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
+                }
+            }
+            else if (Model.SearchType == eSearchType.ByLocalAuthority)
+            {
+                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in <span id="la-list">the selected local authorities</span></text>
+            }
+            else if (Model.SearchType == eSearchType.Location)
+            {
+                var displayLocation = Model.LocationSearchModel.Text;
+                var lastIndex = displayLocation.LastIndexOf(",");
+                if (lastIndex > -1)
+                {
+                    displayLocation = displayLocation.Substring(0, lastIndex);
+                }
+                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
+            }
+            else
+            {
+                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
+            }
+        </p>
+    </div>
 </div>
 
 
@@ -108,17 +109,17 @@
 
                     @SortBySelector("Sort by")
                     
-                    @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
+                    @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes.OrderBy(e => e.Name), Model.SelectedEstablishmentTypeIds)
                     
-                    @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses, Model.SelectedEstablishmentStatusIds)
+                    @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses.OrderBy(x => x.Name), Model.SelectedEstablishmentStatusIds)
                     
-                    @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases, Model.SelectedEducationPhaseIds)
+                    @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases.OrderBy(x => x.Name), Model.SelectedEducationPhaseIds)
                     
-                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities, Model.SelectedLocalAuthorityIds)
+                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds)
                     
 
             
-                    @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters, Model.SelectedReligiousCharacterIds)
+                    @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds)
                                         
                     
                     <!-- begin opted in filters -->
@@ -130,41 +131,41 @@
 
                     @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM })
 
-                    @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies, Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
+                    @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies.OrderBy(x => x.Name), Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
                     
-                    @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions, Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
+                    @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions.OrderBy(x => x.Name), Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
                     
 
-                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses, Model.SelectedDioceseIds, "additional-search-critera hidden", true)
+                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true)
                     
-                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts, Model.SelectedDistrictIds, "additional-search-critera hidden", true)
+                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true)
                     
-                    @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes, Model.SelectedFETypeIds, "additional-search-critera hidden", true)
+                    @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes.OrderBy(x => x.Name), Model.SelectedFETypeIds, "additional-search-critera hidden", true)
                     
-                    @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders, Model.SelectedGenderIds, "additional-search-critera hidden", true)
+                    @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders.OrderBy(x => x.Name), Model.SelectedGenderIds, "additional-search-critera hidden", true)
                     
-                    @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs, Model.SelectedGORIds, "additional-search-critera hidden", true)
+                    @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs.OrderBy(x => x.Name), Model.SelectedGORIds, "additional-search-critera hidden", true)
                     
                    
-                    @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions, Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", true)
+                    @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions.OrderBy(x => x.Name), Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", true)
                     
-                    @Selector("Ofsted rating", M.BIND_ALIAS_OFSTEDRATINGS, Model.OfstedRatings, Model.SelectedOfstedRatingIds, "additional-search-critera hidden", true)
+                    @Selector("Ofsted rating", M.BIND_ALIAS_OFSTEDRATINGS, Model.OfstedRatings.OrderBy(x => x.Name), Model.SelectedOfstedRatingIds, "additional-search-critera hidden", true)
                     
-                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies, Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true)
+                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true)
 
-                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses, Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true)
+                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true)
 
-                    @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions, Model.SelectedRSCRegionIds, "additional-search-critera hidden", true)
+                    @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions.OrderBy(x => x.Name), Model.SelectedRSCRegionIds, "additional-search-critera hidden", true)
 
-                    @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations, Model.SelectedSection41Ids, "additional-search-critera hidden", true)
+                    @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations.OrderBy(x => x.Name), Model.SelectedSection41Ids, "additional-search-critera hidden", true)
 
-                    @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions, Model.SelectedSixthFormProvisionIds, "additional-search-critera hidden", true)
+                    @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions.OrderBy(x => x.Name), Model.SelectedSixthFormProvisionIds, "additional-search-critera hidden", true)
 
-                    @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions, Model.SelectedSpecialClassesProvisionIds, "additional-search-critera hidden", true)
+                    @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions.OrderBy(x => x.Name), Model.SelectedSpecialClassesProvisionIds, "additional-search-critera hidden", true)
 
-                    @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions, Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", true)
+                    @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions.OrderBy(x => x.Name), Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", true)
 
-                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations, Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)                    
+                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations.OrderBy(x => x.Name), Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)                    
                     
                     <div id="filter-addtional-controls">
                         <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>

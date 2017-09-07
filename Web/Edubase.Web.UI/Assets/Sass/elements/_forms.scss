@@ -35,48 +35,48 @@ category: Forms
 
 // Fieldset is used to group more than one .form-group
 fieldset {
-  @extend %contain-floats;
-  width: 100%;
+    @extend %contain-floats;
+    width: 100%;
 }
 
 // Fix left hand gap in IE7 and below
 @include ie-lte(7) {
-  legend {
-    margin-left: -7px;
-  }
+    legend {
+        margin-left: -7px;
+    }
 }
 
 // Form group is used to wrap label and input pairs
 .form-group {
-  @extend %contain-floats;
-  @include box-sizing(border-box);
-  /*float: left;*/ // PJF: fixes height not set correctly
-  width: 100%;
-  margin-bottom: $gutter-half;
-  clear: both;
+    @extend %contain-floats;
+    @include box-sizing(border-box);
+    /*float: left;*/ // PJF: fixes height not set correctly
+    width: 100%;
+    margin-bottom: $gutter-half;
+    clear: both;
 }
 
 .form-group-related {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 
-  @include media(tablet) {
-    margin-bottom: 20px;
-  }
+    @include media(tablet) {
+        margin-bottom: 20px;
+    }
 }
 
 // Form group compound is used to reduce the space between label and input pairs
 .form-group-compound {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 
 // Form title
 .form-title {
-  margin-bottom: $gutter;
+    margin-bottom: $gutter;
 
-  @include media(tablet) {
-    margin-bottom: ($gutter*1.5);
-  }
+    @include media(tablet) {
+        margin-bottom: ($gutter*1.5);
+    }
 }
 
 
@@ -85,45 +85,44 @@ fieldset {
 // Form labels, or for legends styled to look like labels
 .form-label,
 .form-label-bold {
-  display: block;
-  color: $text-colour;
+    display: block;
+    color: $text-colour;
 }
 
 .form-label {
-  @include core-19;
+    @include core-19;
 }
 
 .form-label-bold {
-  @include bold-19;
+    @include bold-19;
 }
 
 // Add spacing under spans within labels
 legend {
-  .form-label,
-  .form-label-bold {
-    padding-bottom: 7px;
-  }
+    .form-label,
+    .form-label-bold {
+        padding-bottom: 7px;
+    }
 }
 
 // Remove spacing when error messages are shown
 .error legend {
-  .form-label,
-  .form-label-bold {
-    padding-bottom: 0;
-  }
+    .form-label,
+    .form-label-bold {
+        padding-bottom: 0;
+    }
 }
 
 // Used for paragraphs in-between form elements
 .form-block {
-  @extend %contain-floats;
-  float: left;
-  width: 100%;
+    @extend %contain-floats;
+    float: left;
+    width: 100%;
+    margin-bottom: 5px;
 
-  margin-bottom: 5px;
-
-  @include media(tablet) {
-    margin-top: 10px;
-  }
+    @include media(tablet) {
+        margin-top: 10px;
+    }
 }
 
 
@@ -131,12 +130,12 @@ legend {
 
 // Form hints & examples are light grey and sit above a form control
 .form-hint {
-  @include core-19;
-  display: block;
-  color: $secondary-text-colour;
-  font-weight: normal;
-  margin-bottom: 2px;
-  margin-top: -2px;
+    @include core-19;
+    display: block;
+    color: $secondary-text-colour;
+    font-weight: normal;
+    margin-bottom: 2px;
+    margin-top: -2px;
 }
 
 
@@ -145,93 +144,88 @@ legend {
 // By default, form controls are 50% width for desktop,
 // and 100% width for mobile
 .form-control {
-  @include box-sizing(border-box);
-  @include core-19;
-  width: 100%;
-
-  padding: 5px 4px 4px;
-  background-color: $white;
-  border: 2px solid;
-
-  /*@include media(tablet) {
-    width: 50%;
-  }*/
+    @include box-sizing(border-box);
+    @include core-19;
+    width: 100%;
+    padding: 5px 4px 4px;
+    background-color: $white;
+    border: 2px solid;
 }
 
 .form-control.search-box {
-    padding:5px;
+    padding: 5px;
 }
 
 
 
 // Form control widths
 .form-control-3-4 {
-  width: 100%;
+    width: 100%;
 
-  @include media(tablet) {
-    width: 75%;
-  }
+    @include media(tablet) {
+        width: 75%;
+    }
 }
 
 .form-control-1-2 {
-  width: 50%;
-
-  @include media(tablet) {
     width: 50%;
-  }
+
+    @include media(tablet) {
+        width: 50%;
+    }
 }
 
 .form-control-1-4 {
-  width: 25%;
+    width: 25%;
 }
 
 .form-control-1-8 {
-  width: 12.5%;
+    width: 12.5%;
 }
 
 
 // Radio buttons
 .form-radio {
-  display: block;
-  margin: 10px 0;
+    display: block;
+    margin: 10px 0;
 
-  input {
-    vertical-align: middle;
-    margin: -4px 5px 0 0;
-  }
+    input {
+        vertical-align: middle;
+        margin: -4px 5px 0 0;
+    }
 }
 
 
 // Checkboxes
 .form-checkbox {
-  display: block;
-  margin: $gutter-half 0;
+    display: block;
+    margin: $gutter-half 0;
 
-  input {
-    vertical-align: middle;
-    margin: -2px 5px 0 0;
-  }
+    input {
+        vertical-align: middle;
+        margin: -2px 5px 0 0;
+    }
 }
 
 
 // Buttons
 .form .button {
-  @include media(mobile) {
-    width: 100%;
-  }
+    @include media(mobile) {
+        width: 100%;
+    }
 }
 
 .header-submit {
     float: right;
     margin-top: 0.5em;
     display: block;
-    @include media(mobile){
+
+    @include media(mobile) {
         width: 100%;
-        display:none;
+        display: none;
         float: none;
         clear: both;
     }
-    
 }
 
 .mobile-full-width {
@@ -261,6 +255,7 @@ legend {
     background-color: $light-blue;
     text-decoration: none !important;
     cursor: pointer;
+
     &:hover {
         color: #fff;
     }
@@ -272,7 +267,8 @@ legend {
 
 .help-text {
     border-left: 4px solid $grey-2;
-    padding-left: 8px;    
+    padding-left: 8px;
+
     .js-enabled & {
         display: none;
     }
@@ -283,37 +279,40 @@ legend {
     .create-edit-school & {
         width: 66%;
     }
-    
 }
 
 .form-group {
-
-        &.error {
-            border-left: 4px solid $error-colour;
-        }
+    &.error {
+        border-left: 4px solid $error-colour;
     }
-    
-    .error-message, .field-validation-error {
-        font-size: 16px;
-        color: $error-colour;
-        display: none; 
-        font-weight: bold; 
-    }
-    .error .error-message, .error .field-validation-error {
-        display: block;
-    }
+}
 
-    .form-control {
-        font-size: 16px;
-    }
+.error-message, .field-validation-error {
+    font-size: 16px;
+    color: $error-colour;
+    display: none;
+    font-weight: bold;
+}
 
-    select {
-        width: 99%;
-    }
+.error .error-message, .error .field-validation-error {
+    display: block;
+}
 
-hr { height:3px; background-color:$grey-3; border:none; }
+.form-control {
+    font-size: 16px;
+}
 
-input[disabled=disabled], 
+select {
+    width: 99%;
+}
+
+hr {
+    height: 3px;
+    background-color: $grey-3;
+    border: none;
+}
+
+input[disabled=disabled],
 select[disabled=disabled],
 input:disabled {
     background-color: #eee;
@@ -327,7 +326,7 @@ input:disabled {
     .heading-small {
         margin-bottom: 20px;
         display: block;
-    } 
+    }
 }
 
 
@@ -383,7 +382,6 @@ fieldset legend.heading-small {
 }
 
 .button-wrap {
-    //overflow: hidden;
     padding: 3px;
     clear: both;
 }
@@ -408,7 +406,6 @@ fieldset legend.heading-small {
 
 .inline-button {
     font-size: 16px;
-    
 }
 
 .establishment-links {
@@ -419,7 +416,25 @@ fieldset legend.heading-small {
 
 .data-status-group {
     margin: 20px 0;
+
     h3 {
         margin: 0.5em 0 1em;
     }
+}
+
+fieldset {
+    @extend %contain-floats;
+    margin-left: 0;
+}
+
+// Hide the 'spinner' for webkit
+// and also for Firefox
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }

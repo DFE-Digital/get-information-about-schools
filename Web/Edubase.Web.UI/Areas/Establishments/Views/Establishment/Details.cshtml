@@ -72,6 +72,7 @@
 <h1 class="heading-large">@(Model.Establishment.Name.Clean() ?? "(name not recorded)")</h1>
 
 <p class="urn">URN: @Model.Establishment.Urn</p>
+<p class="establishment-type">@Model.TypeName</p>
 <p class="establishment-data-download">
     @Html.ActionLink("Download establishment data", "DownloadEstablishmentData", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, new { })
 </p>

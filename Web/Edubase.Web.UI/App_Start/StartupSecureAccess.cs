@@ -83,7 +83,7 @@ namespace Edubase.Web.UI
             spOptions.ServiceCertificates.Add(new ServiceCertificate
             {
                 Use = CertificateUse.Signing,
-                Certificate = GetSPCertificate()
+                Certificate = GetSPCertificateFromAppData()
             });
 
             var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false) { SPOptions = spOptions };
@@ -101,42 +101,6 @@ namespace Edubase.Web.UI
             return authServicesOptions;
         }
 
-        private static X509Certificate2 GetSPCertificate()
-        {
-//#if (DEBUG)
-            return GetSPCertificateFromAppData();
-//#else
-            //return GetSPCertificateFromCertStore();
-//#endif
-        }
-
         private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath($"~/app_data/{SaCertificate}"), SaCertificatePassword, X509KeyStorageFlags.MachineKeySet);
-
-        // TODO: one day get rid of this
-        //private static X509Certificate2 GetSPCertificateFromCertStore()
-        //{
-        //    using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-        //    {
-        //        var thumbprint = "‎979E6A59A91A08DC4F230E4091AEDBDAC64A8042";
-        //        store.Open(OpenFlags.ReadOnly);
-        //        var list = store.Certificates.Cast<X509Certificate2>().ToList().OrderBy(x => x.Subject).ToList();
-
-        //        X509Certificate2 cert = null;
-        //        for (int i = 0; i < list.Count; i++)
-        //        {
-        //            var t = list[i];
-        //            if (t.Subject.Equals("CN=*.education.gov.uk, OU=Department for Education, O=Department for Education, L=London, S=London, C=GB", StringComparison.OrdinalIgnoreCase))
-        //            {
-        //                cert = t;
-        //            }
-        //        }
-
-        //        //var cert = list.FirstOrDefault(x => x.Thumbprint == thumbprint);
-        //        Guard.IsNotNull(cert, () => new Exception($"Service provider certificate could not be found by thumbprint [{thumbprint}]"));
-        //        return cert;
-        //    }
-        //}
-
-
     }
 }

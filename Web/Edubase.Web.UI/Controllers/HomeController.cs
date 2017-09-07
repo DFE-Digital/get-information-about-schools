@@ -2,6 +2,7 @@
 using Edubase.Services;
 using Edubase.Services.Lookup;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -54,10 +55,18 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
         public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
-
-        [Route("~/service-wsdl")]
-        public ActionResult ServiceWSDL() => Content(new System.Net.WebClient().DownloadString("http://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl"), "text/xml");
         
+        [Route("~/service-wsdl"), Route("~/service.wsdl")]
+        public async Task<ActionResult> ServiceWSDL()
+        {
+            using (var client = new HttpClient())
+            {
+                var result = (await client.GetAsync("http://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl")).EnsureSuccessStatusCode();
+                return Content(await result.Content.ReadAsStringAsync(), "text/xml");
+            }
+
+        }
+
         private async Task<string> GetHtmlBlob(string name)
         {
             var blob = _blobService.GetBlobReference("content", name);

@@ -1,0 +1,43 @@
+.mat-details {
+
+    h1.heading-xlarge {
+        margin-bottom: 0;
+    }
+
+    p.uid {
+        font-size: 14px;
+        color: $grey-1;
+        font-weight: bold;
+        margin: 8px 25px 8px 0;
+
+
+        @include media (tablet) {
+            float: left;
+        }
+    }
+
+    p.group-type {
+        font-size: 14px;
+        color: $grey-1;
+        font-weight: bold;
+        margin: 8px 0;
+
+        @include media (tablet) {
+            float: left;
+        }
+    }
+
+    .group-data-download {
+        margin: 4px 0 12px;
+
+        @include media(tablet) {
+            overflow: hidden;
+            float: right;
+            margin-bottom: 24px;
+
+            a {
+                font-size: 16px;
+            }
+        }
+    }
+}

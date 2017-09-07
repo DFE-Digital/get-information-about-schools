@@ -1,10 +1,7 @@
-﻿using Edubase.Common.Reflection;
-using Edubase.Services.Governors.Models;
+﻿using Edubase.Services.Governors.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -42,49 +39,16 @@ namespace Edubase.Web.UI.Helpers
             return MvcHtmlString.Empty;
         }
         
-        
-
-        private static Dictionary<string, object> SetAttributes(bool isDisabled, object otherAttributes = null, string id = null)
-        {
-            var d = new Dictionary<string, object>();
-            d["class"] = "form-control";
-            if (isDisabled) d["disabled"] = "disabled";
-            if (id != null) d["id"] = id.Replace(".", "_").ToLower();
-
-            if (otherAttributes != null)
-            {
-                var items = ReflectionHelper.GetProperties(otherAttributes);
-                foreach (var item in items)
-                {
-                    d[item] = ReflectionHelper.GetProperty(otherAttributes, item);
-                }
-            }
-
-            if (isDisabled) d["style"] = d.ContainsKey("style") ? (d["style"] + ";background-color:#eee;") : "background-color:#eee";
-            return d;
-        }
 
         public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 
             new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
 
         public static IHtmlString Conditional<TModel>(this HtmlHelper<TModel> htmlHelper, bool condition, string text)
             => condition ? htmlHelper.Raw(text) : MvcHtmlString.Empty;
-
-
+        
         public static IHtmlString HiddenFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
          => condition ? htmlHelper.HiddenFor(expression) : MvcHtmlString.Empty;
-
-        public static IDisposable BeginFormRetainQuery(this HtmlHelper html, string action, string controller, FormMethod method)
-        {
-            var routeValues = new RouteValueDictionary();
-            var query = html.ViewContext.HttpContext.Request.QueryString;
-            foreach (string key in query)
-            {
-                routeValues[key] = query[key];
-            }
-            return html.BeginForm(action, controller, routeValues, FormMethod.Get);
-        }
-
+        
         /// <summary>
         /// Puts all the stuff that's current in the querystring into hidden form fields.
         /// </summary>
@@ -151,29 +115,7 @@ namespace Edubase.Web.UI.Helpers
                 ViewData = viewData;
             }
         }
-
-        public static MvcHtmlString EditorForGeneric<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
-        {
-            var propertyType = typeof(TValue);
-            if (!propertyType.IsGenericType)
-                throw new ArgumentException();
-
-            var genericType = propertyType.GetGenericArguments()[0];
-            var templateName = $"{propertyType.Name.Split('`')[0]}_{genericType.Name}";
-            return html.EditorFor<TModel, TValue>(expression, templateName);
-        }
-
-        public static MvcHtmlString DisplayForGeneric<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
-        {
-            var propertyType = typeof(TValue);
-            if (!propertyType.IsGenericType)
-                throw new ArgumentException();
-
-            var genericType = propertyType.GetGenericArguments()[0];
-            var templateName = $"{propertyType.Name.Split('`')[0]}_{genericType.Name}";
-            return html.DisplayFor<TModel, TValue>(expression, templateName);
-        }
-
+        
         /// <summary>
         /// Outputs the supplied file size in megabytes and appends 'MB', or if the supplied bytes value is null, a zero length string is returned.
         /// </summary>

@@ -20,7 +20,7 @@
 
         &:focus {
             background-color: inherit !important;
-            outline: 3px solid #ffbf47 !important;
+            outline: 3px solid $yellow !important;
         }
 
         @include media(mobile) {
@@ -35,8 +35,8 @@
         display: inline-block;
         float: right;
         height: 16px;
-        padding: 2px 2px 2px 2px;
-        margin: 1px 1px 5px 1px;
+        padding: 2px;
+        margin: 1px 1px 5px;
         vertical-align: middle;
         width: 16px;
 

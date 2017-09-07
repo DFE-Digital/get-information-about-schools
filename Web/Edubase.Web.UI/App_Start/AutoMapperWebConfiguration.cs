@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Edubase.Services.Mapping;
 
 namespace Edubase.Web.UI
 {
@@ -10,7 +9,6 @@ namespace Edubase.Web.UI
             var mapper = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<AutoMapperWebProfile>();
-                cfg.AddProfile<AutoMapperServicesProfile>();
             }).CreateMapper();
 
             return mapper;

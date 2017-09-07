@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using AutoMapper;
+﻿using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services;
@@ -29,6 +22,13 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using MoreLinq;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
@@ -459,7 +459,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 var originalEstabTypeId = (eLookupEstablishmentType) domainModel.TypeId;
                 await ValidateAsync(model, domainModel);
-                var newEstabTypeId = (eLookupEstablishmentType)domainModel.TypeId;
+                var newEstabTypeId = (eLookupEstablishmentType?)domainModel.TypeId;
 
                 if (ModelState.IsValid)
                 {
@@ -594,7 +594,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
             catch (Exception) // todo: tech debt, need to more gracefully handle 404 in this instance.
             {
-                viewModel.GovernorsGridViewModel = new Areas.Governors.Models.GovernorsGridViewModel { DomainModel = new Services.Governors.Models.GovernorsDetailsDto() };
+                viewModel.GovernorsGridViewModel = new Governors.Models.GovernorsGridViewModel { DomainModel = new Services.Governors.Models.GovernorsDetailsDto() };
             }
         }
 
@@ -606,6 +606,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var editPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, editPolicy, User);
             viewModel.Name = domainModel.Name;
+            if (domainModel.TypeId.HasValue) viewModel.TypeName = (await _cachedLookupService.GetNameAsync(() => domainModel.TypeId));
         }
 
         private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)
@@ -690,6 +691,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
 
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
+            viewModel.TypeName = await _cachedLookupService.GetNameAsync(() => viewModel.TypeId);
         }
 
         private GroupModel GetLegalParent(int establishmentUrn, IEnumerable<GroupModel> parentGroups, IPrincipal principal)

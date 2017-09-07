@@ -39,7 +39,6 @@ $ie-version: 9;
 
 // Layout
 @import "elements/layout";
-@import "elements/footer";
 
 // Links
 @import "elements/links";
@@ -58,14 +57,14 @@ $ie-version: 9;
 @import "elements/box/box";
 
 // Tabs
-@import "elements/_tabs";
+@import "elements/tabs";
 
 // Help icon
-@import "elements/_helpicon";
+@import "elements/helpicon";
 
 //edubase mixins
 
-@import "utils/_edubase-mixins";
+@import "utils/edubase-mixins";
 
 // Components
 // ==========================================================================
@@ -73,48 +72,23 @@ $ie-version: 9;
 // Forms
 @import "elements/forms";
 @import "elements/forms/form-validation";
-@import "elements/forms/form-questions";
 
-@import "elements/forms/filter-form/text-filter";
 @import "elements/forms/filter-form/option-select";
 
-@import "elements/forms/feedback/feedback";
 
 // Form validation
 @import "elements/forms/form-validation";
 
-// Form patterns
-@import "elements/forms/form-date";
-
-// Collapsibles
-@import "elements/collapsible/collapsible";
 
 // Panels
 @import "elements/panels";
 
-// Details
-@import "elements/details";
 
 // Lists
 @import "elements/lists";
 
-// Breadcumbs
-@import "elements/breadcrumbs";
-
-// Browse
-@import "elements/browse";
-
-// Rating
-@import "elements/rating/rating";
-
-// Pagination
-@import "elements/pagination";
-
 // mobile navigation
 @import "elements/mobile-nav";
-
-// clearing text fields
-@import 'elements/forms/clear-fields';
 
 
 @import "elements/autosuggest";
@@ -122,25 +96,26 @@ $ie-version: 9;
 @import "elements/modal";
 @import "elements/forms/fileupload";
 @import"elements/news-message";
-
-
 @import "elements/filter-radios";
 @import "elements/filter-form-controls";
 
 // Views
 // ==========================================================================
 @import "views/base";
-@import "views/_school-details";
-@import "views/_search-results";
-@import "views/_school-search";
-@import "views/_search-page";
-@import "views/_view-logs";
-@import "views/_create-edit-establishment";
-@import "views/_bulk-academies";
-@import "views/_create-academy-trust";
-@import "views/_mergers";
-@import "views/_change-approvals";
+@import "views/school-details";
+@import "views/group-details";
+@import "views/search-results";
+@import "views/school-search";
+@import "views/search-page";
+@import "views/view-logs";
+@import "views/create-edit-establishment";
+@import "views/bulk-academies";
+@import "views/create-academy-trust";
+@import "views/mergers";
+@import "views/change-approvals";
 @import "views/academy-openings";
 @import "views/search-changes";
 @import "views/cookies";
 @import "views/edit-links";
+
+@import "elements/chevron-accordion";

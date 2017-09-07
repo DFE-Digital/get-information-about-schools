@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Edubase: Amalgamations and mergers tool";
+    ViewBag.Title = "Get information about schools: Amalgamations and mergers tool";
     ViewBag.bodyClasses = "amalgamate";
 }
 
@@ -25,6 +25,9 @@
                 </li>
                 <li>
                     @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+                </li>
+                <li v-show="mergerTypeConfirmed">
+                    @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new { area = "" }, null)
                 </li>
             </ul>
         </div>
@@ -76,7 +79,7 @@
                             process automatically creates/closes records and creates predecessor/successor links.
                         </p>
 
-                        <fieldset class="merger-almalgamation">
+                        <fieldset class="merger-almalgamation stacked-controls">
                             <legend class="bold">Select the process you are interested in</legend>
 
                             <p id="almagamation-desc">
@@ -92,7 +95,7 @@
                                 <span class="radio-button-wrap">
                                     <input id="radio-amalgamation" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
                                     <label class="edubase-button-radio" for="radio-amalgamation">
-                                        Amalagamation
+                                        Amalgamation
                                     </label>
                                 </span>
                                 <span class="radio-button-wrap">
@@ -156,6 +159,7 @@
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
+                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="validateMergeSelection">Continue</button>
                                 <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
@@ -205,6 +209,7 @@
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
+                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processMerger">Process</button>
                                 <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
@@ -247,40 +252,41 @@
                     <div v-show="!validMergeUrns">
                         <div class="column-full top-button-panel">
                             <div class="submit-cancel-panel">
+                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateAmalgamationSelection">Continue</button>
                                 <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                         <div class="column-two-thirds">
                             <p>You can propose closing two or more schools and establishing a new school</p>
-                            <fieldset>
-                                <legend class="bold">Select establishments to be amalgamated</legend>
-                                <span class="form-hint">
-                                    Up to 4 establishments can be amalgamated (minimum of 2 establishments)
-                                </span>
-
-
-                                <dl v-bind:class="['field-group form-group', amalgamateUrnError || amalgamationLengthError || duplicateUrnsError ? 'error' : '' ]">
-                                    <dt>
-                                        <label class="form-label">Enter the establishment URN(s)</label>
-                                        <span v-bind:class="['error-message', amalgamateUrnError ? '' : 'hidden' ]">Please check the URN</span>
-                                        <span v-bind:class="['error-message', amalgamationLengthError && !amalgamateUrnError  ? '' : 'hidden' ]">Select between 2 and 4 schools.</span>
-                                        <span v-bind:class="['error-message', duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError ? '' : 'hidden' ]">Duplicate URN. Please correct the URN.</span>
-                                    </dt>
-                                    <dd>
-                                        <ol class="linked-establishments" id="amalg-linked">
-                                            <li><input class="form-control" type="text" v-model="amalgamatedEstab0" id="amalgamate-estab0" /></li>
-                                            <li><input class="form-control" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" /></li>
-                                            <li><input class="form-control" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" /></li>
-                                            <li><input class="form-control" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" /></li>
-
-                                        </ol>
-                                    </dd>
-                                </dl>
-                            </fieldset>
+                            <h2 class="bold">Select establishments to be amalgamated</h2>
+                            <span class="form-hint">
+                                Up to 4 establishments can be amalgamated (minimum of 2 establishments)
+                            </span>
                         </div>
+                        <div class="column-half">
+                            <dl v-bind:class="['field-group form-group', amalgamateUrnError || amalgamationLengthError || duplicateUrnsError ? 'error' : '' ]">
+                                <dt>
+                                    <label class="form-label">Enter the establishment URN(s)</label>
+                                    <span v-bind:class="['error-message', amalgamateUrnError ? '' : 'hidden' ]">Please check the URN</span>
+                                    <span v-bind:class="['error-message', amalgamationLengthError && !amalgamateUrnError  ? '' : 'hidden' ]">Select between 2 and 4 schools.</span>
+                                    <span v-bind:class="['error-message', duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError ? '' : 'hidden' ]">Duplicate URN. Please correct the URN.</span>
+                                </dt>
+                                <dd>
+                                    <ol class="linked-establishments" id="amalg-linked">
+                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab0" id="amalgamate-estab0" /></li>
+                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" /></li>
+                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" /></li>
+                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" /></li>
+
+                                    </ol>
+                                </dd>
+                            </dl>
+                        </div>
+                        
                         <div class="column-full">
                             <div class="submit-cancel-panel">
+                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="validateAmalgamationSelection">Continue</button>
                                 <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
@@ -289,6 +295,7 @@
                     <div v-show="mergerType==='amalgamation' && validMergeUrns && !completeAmalgamation">
                         <div class="column-full top-button-panel">
                             <div class="submit-cancel-panel">
+                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processAmalgamation">Process</button>
                                 <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
@@ -358,6 +365,7 @@
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
+                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processAmalgamation">Process</button>
                                 <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>

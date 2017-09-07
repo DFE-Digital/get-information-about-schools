@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Enums;
+﻿using System;
+using Edubase.Services.Enums;
 using Edubase.Services.Groups;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Validation;
@@ -13,11 +14,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
     using System.Security.Principal;
     using static GroupEditorViewModel;
     using static GroupEditorViewModelBase;
-    using EG = eLookupEstablishmentTypeGroup;
-    using GT = eLookupGroupType;
-    using VM = GroupEditorViewModel;
 
-    public class GroupEditorViewModelValidator : EdubaseAbstractValidator<VM>
+    public class GroupEditorViewModelValidator : EdubaseAbstractValidator<GroupEditorViewModel>
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
@@ -53,9 +51,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             // Having found an establishment to link, validate the joined date if supplied...
             When(x => x.Action == ActionLinkedEstablishmentAdd, () =>
             {
-                RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate).Must(x => x.IsValid())
+                RuleFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate)
+                    .Must(x => x.IsValid())
                     .WithMessage("This is not a valid date")
-                    .WithSummaryMessage("The Joined Date specified is not valid");
+                    .WithSummaryMessage("The Joined Date specified is not valid")
+
+                    .Must((model, joinDate) => VerifyJoinedDate(joinDate.ToDateTime(), model))
+                    .WithMessage("The join date you entered is before the {0}'s open date of {1}. Please enter a later date.", m => m.GroupType, m => m.OpenDate);
             });
 
             // Having edited a joined date, validate the date...
@@ -63,7 +65,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             {
                 RuleFor(x => x.LinkedEstablishments.Establishments.Single(e => e.EditMode).JoinedDateEditable).Must(x => x.IsValid())
                     .WithMessage("This is not a valid date")
-                    .WithSummaryMessage("The Joined Date specified is not valid");
+                    .WithSummaryMessage("The Joined Date specified is not valid")
+
+                    .Must((model, joinDate) => VerifyJoinedDate(joinDate.ToDateTime(), model))
+                    .WithMessage("The join date you entered is before the {0}'s open date of {1}. Please enter a later date.", m => m.GroupType, m => m.OpenDate);
             });
 
             // On saving the group record....
@@ -104,7 +109,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
                     .When(x => x.GroupTypeMode != eGroupTypeMode.ChildrensCentre && x.GroupTypeMode != eGroupTypeMode.AcademyTrust && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
 
-
                 RuleFor(x => x.GroupId)
                     .Cascade(CascadeMode.StopOnFirstFailure)
                     .NotEmpty()
@@ -114,8 +118,25 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("Group ID already exists. Enter a different group ID.")
                     .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
 
+                RuleForEach(x => x.LinkedEstablishments.Establishments)
+                    .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
+                    .When(x => x.OpenDate.ToDateTime().Value.Date == DateTime.Now.Date)
+                    .WithMessage("The join date you entered is before today. Please enter a later date.")
+                    .WithSummaryMessage("The join date you entered is before today. Please enter a later date.")
+
+                    .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
+                    .When(x => x.OpenDate.ToDateTime().Value.Date != DateTime.Now.Date)
+                    .WithMessage("The join date you entered is before the {0}'s open date of {1}. Please enter a later date.", m => m.GroupType, m => m.OpenDate);
+
             });
         }
 
+        private bool VerifyJoinedDate(DateTime? joinedDate, GroupEditorViewModel model)
+        {
+            return model.OpenDate.IsValid() && 
+                   model.OpenDate.ToDateTime().HasValue &&
+                   joinedDate.HasValue &&
+                   joinedDate.Value.Date >= model.OpenDate.ToDateTime().Value.Date;
+        }
     }
 }

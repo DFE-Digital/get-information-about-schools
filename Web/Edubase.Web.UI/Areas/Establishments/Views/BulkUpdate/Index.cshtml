@@ -16,7 +16,7 @@
 {
     <div class="grid-row spaced-groups">
         <div class="column-full">
-            @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure())
+            @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure() && !Model.Result.CompletedWithErrors())
             {
                 <div class="pending-updates-message dismissable-message bulk-update-success">
                     <div class="tick"></div>
@@ -46,6 +46,16 @@
             {
                 <div class="form-group error" id="error-log">
                     <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                    <p class="download-list-item">
+                        <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
+                    </p>
+                </div>
+            }
+            
+            @if (Model.Result != null && Model.Result.CompletedWithErrors())
+            {
+                <div class="form-group error" id="error-log">
+                    <p class="error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
                     <p class="download-list-item">
                         <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
                     </p>

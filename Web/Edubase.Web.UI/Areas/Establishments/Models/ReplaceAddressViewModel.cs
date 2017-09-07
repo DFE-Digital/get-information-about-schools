@@ -79,6 +79,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         string IEstablishmentPageViewModel.SelectedTab { get; set; }
         int? IEstablishmentPageViewModel.Urn { get; set; }
         string IEstablishmentPageViewModel.Name { get; set; }
+        string IEstablishmentPageViewModel.TypeName { get; set; }
         TabDisplayPolicy IEstablishmentPageViewModel.TabDisplayPolicy { get; set; }
         string IEstablishmentPageViewModel.Layout { get; set; }
 

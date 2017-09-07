@@ -1,4 +1,5 @@
-module.exports = function () {
+module.exports = function (grunt) {
+  var isLocal = grunt.option('target') === "local";
   return {
     'generate-dev': {
       files: {
@@ -9,9 +10,9 @@ module.exports = function () {
       },
       options: {
         includePaths: ['node_modules/govuk_frontend_toolkit/stylesheets'],
-        outputStyle: 'expanded',
+        outputStyle: isLocal ? 'expanded' : 'compressed',
         imagePath: '../images',
-        sourceMap: true
+        sourceMap: isLocal
       }
     }
   };

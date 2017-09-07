@@ -38,14 +38,6 @@ namespace Edubase.Web.UI
 
                 var filenamePrefix = HostingEnvironment.MapPath($"~/App_Data/{ExternalIdpEntityId.Host}-metadata");
                 var fullPath = $"{filenamePrefix}.xml";
-//#if DEBUG
-//                var debugFullPath = $"{filenamePrefix}-DEBUG.xml";
-//                if (File.Exists(debugFullPath))
-//                {
-//                    fullPath = debugFullPath;
-//                }
-//#endif
-
                 return fullPath;
             }
         }

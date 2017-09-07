@@ -27,6 +27,7 @@
     </NuGetPackageImportStamp>
     <WebProject_DirectoryAccessLevelKey>1</WebProject_DirectoryAccessLevelKey>
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -123,17 +124,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Edm.5.6.4\lib\net40\Microsoft.Data.Edm.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Data.Edm, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.8.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.OData.5.6.4\lib\net40\Microsoft.Data.OData.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Data.OData, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.8.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin">
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -159,9 +157,8 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=8.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.8.4.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="MoreLinq, Version=2.6.20831.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.2.6.0\lib\net40\MoreLinq.dll</HintPath>
@@ -189,9 +186,8 @@
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Spatial, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.8.2\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
@@ -270,10 +266,14 @@
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
+    <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
     <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
+    <Compile Include="Controllers\GlossaryController.cs" />
+    <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
     <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
+    <Compile Include="Helpers\BrowserClientStorage.cs" />
     <Compile Include="Helpers\FormHelpers.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
@@ -353,13 +353,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Areas\Governors\Models\GovernorsGridViewModel.cs" />
     <Compile Include="Helpers\AuthorizeRolesAttribute.cs" />
     <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\RoleEquivalence.cs" />
     <Compile Include="Helpers\ValidationExtensions.cs" />
-    <Compile Include="Helpers\WebHelpers.cs" />
+    <Compile Include="Models\ApiSessionRecorderViewModel.cs" />
     <Compile Include="Models\ChangeHistoryViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityStatusItem.cs" />
     <Compile Include="Models\DataQuality\DataQualityStatusViewModel.cs" />
@@ -377,6 +376,8 @@
     <Compile Include="Areas\Establishments\Models\Validators\CreateEstablishmentViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\SearchForEstablishmentViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentLinksViewModelValidator.cs" />
+    <Compile Include="Models\GlossaryItemViewModel.cs" />
+    <Compile Include="Models\GlossaryViewModel.cs" />
     <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
     <Compile Include="Models\Grid\GridRowViewModel.cs" />
@@ -398,9 +399,7 @@
     <Compile Include="Helpers\QueryStringHelper.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
     <Compile Include="Models\AddressViewModel.cs" />
-    <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\Admin\LogMessagesViewModel.cs" />
-    <Compile Include="Models\ApprovalsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchViewModel.cs" />
     <Compile Include="Models\ContactDetailsViewModel.cs" />
@@ -412,8 +411,6 @@
     <Compile Include="Models\EstablishmentDetailViewModel.cs" />
     <Compile Include="Models\HomepageViewModel.cs" />
     <Compile Include="Models\LinkedEstabViewModel.cs" />
-    <Compile Include="Models\PendingChangeViewModel.cs" />
-    <Compile Include="Models\GroupEstabViewModel.cs" />
     <Compile Include="Models\Search\eSearchType.cs" />
     <Compile Include="Models\Search\IDownloadGenerationProgressModel.cs" />
     <Compile Include="Models\Search\LocalAuthorityDisambiguationViewModel.cs" />
@@ -436,6 +433,7 @@
     <Content Include="404.aspx" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
+    <Content Include="public\assets\images\icons\arrows-vert.png" />
     <Content Include="public\assets\scripts\**\*.*" />
     <Content Include="public\assets\stylesheets\**\*.*" />
     <Content Include="App_Data\sa-dev.education.gov.uk-metadata.xml" />
@@ -443,7 +441,6 @@
     <Content Include="App_Data\sa.education.gov.uk-metadata.xml" />
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
     <Content Include="Assets\Sass\elements\_mobile-nav.scss" />
-    <Content Include="Assets\Sass\elements\forms\_clear-fields.scss" />
     <Content Include="Areas\Establishments\Views\Web.config" />
     <Content Include="Areas\Establishments\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Groups\Views\Web.config" />
@@ -722,20 +719,10 @@
     <Content Include="ci\unit-tests.cmd" />
     <Content Include="Assets\Sass\docs\resources.md" />
     <Content Include="Assets\Sass\elements\box\_box.scss" />
-    <Content Include="Assets\Sass\elements\collapsible\_collapsible.scss" />
-    <Content Include="Assets\Sass\elements\forms\feedback\_feedback.scss" />
     <Content Include="Assets\Sass\elements\forms\filter-form\_option-select.scss" />
-    <Content Include="Assets\Sass\elements\forms\filter-form\_text-filter.scss" />
-    <Content Include="Assets\Sass\elements\forms\_form-date.scss" />
-    <Content Include="Assets\Sass\elements\forms\_form-questions.scss" />
     <Content Include="Assets\Sass\elements\forms\_form-validation.scss" />
-    <Content Include="Assets\Sass\elements\rating\_rating.scss" />
-    <Content Include="Assets\Sass\elements\_breadcrumbs.scss" />
-    <Content Include="Assets\Sass\elements\_browse.scss" />
     <Content Include="Assets\Sass\elements\_buttons.scss" />
-    <Content Include="Assets\Sass\elements\_details.scss" />
     <Content Include="Assets\Sass\elements\_elements-typography.scss" />
-    <Content Include="Assets\Sass\elements\_footer.scss" />
     <Content Include="Assets\Sass\elements\_forms.scss" />
     <Content Include="Assets\Sass\elements\_helpers.scss" />
     <Content Include="Assets\Sass\elements\_helpicon.scss" />
@@ -743,14 +730,11 @@
     <Content Include="Assets\Sass\elements\_layout.scss" />
     <Content Include="Assets\Sass\elements\_links.scss" />
     <Content Include="Assets\Sass\elements\_lists.scss" />
-    <Content Include="Assets\Sass\elements\_pagination.scss" />
     <Content Include="Assets\Sass\elements\_panels.scss" />
     <Content Include="Assets\Sass\elements\_related-box.scss" />
     <Content Include="Assets\Sass\elements\_reset.scss" />
     <Content Include="Assets\Sass\elements\_tables.scss" />
     <Content Include="Assets\Sass\elements\_tabs.scss" />
-    <Content Include="Assets\Sass\main-ie6.scss" />
-    <Content Include="Assets\Sass\main-ie7.scss" />
     <Content Include="Assets\Sass\main-ie8.scss" />
     <Content Include="Assets\Sass\main.scss" />
     <Content Include="Assets\Sass\prism.scss" />
@@ -826,6 +810,8 @@
     <Content Include="fb6k7l-throwex.aspx" />
     <Content Include="Assets\Sass\views\_edit-links.scss" />
     <Content Include="Areas\Groups\Views\Group\Convert.cshtml" />
+    <Content Include="Assets\Sass\views\_group-details.scss" />
+    <Content Include="Assets\Sass\elements\_chevron-accordion.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
@@ -942,6 +928,9 @@
     <Content Include="Views\Shared\_GenericPaginationV2.cshtml" />
     <Content Include="Views\Home\KnownIssues.cshtml" />
     <Content Include="Views\Prototype\TabsTestPage.cshtml" />
+    <Content Include="Views\Tools\ApiSessionRecorder.cshtml" />
+    <Content Include="Views\Glossary\Index.cshtml" />
+    <Content Include="Views\Glossary\CreateEdit.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">
@@ -956,6 +945,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />
+    <Folder Include="grunt\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="public\html\" />
     <Folder Include="Views\GOVUK\Views\errors\" />

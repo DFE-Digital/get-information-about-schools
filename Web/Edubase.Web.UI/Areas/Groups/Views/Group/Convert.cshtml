@@ -8,7 +8,10 @@
             <ul>
                 <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
                 <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-                <li>Convert to multi-academy trust</li>
+                @if (Model.Details != null)
+                {
+                    <li>@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new { area="Groups"})</li>
+                }
             </ul>
         </div>
     </div>
@@ -16,13 +19,14 @@
         <h1 class="heading-xlarge">Convert to multi academy trust</h1>
     </div>
 </div>
+@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 @if (Model.Details == null)
 {
     <div class="grid-row">
         <div class="column-two-thirds">
             <p>Convert single academy trusts into multi-academy trusts using either the current company record or a new one from companies house</p>
-            <p class="bold-small">Convert current single academy trust</p>
+            <h2 class="heading-medium">Current single academy trust</h2>
         </div>
     </div>
 
@@ -30,21 +34,22 @@
     {
         @Html.AntiForgeryToken()
         <div class="grid-row">
-            <div class="column-two-thirds">
+            <div class="column-full">
                 <fieldset>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.Text)">
-                        @Html.LabelFor(x => x.Text, "Companies House number, Group UID or ID")
+                        @Html.LabelFor(x => x.Text, "Companies House number, Group UID or ID", new {@class="form-label"})
                         @Html.ValidationMessageFor(x => x.Text)
-                        @Html.TextBoxFor(x => x.Text, new { @class = "form-control" })
+                        @Html.TextBoxFor(x => x.Text, new { @class = "form-control form-control-1-2" })
                     </div>
                 </fieldset>
             </div>
         </div>
         <div class="grid-row">
             <div class="column-full">
-                <br />
-                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
-                <button type="submit" name="actionname" class="button mobile-full-width" value="find">Continue</button>
+                <div class="button-row">
+                    <button type="submit" name="actionname" class="button mobile-full-width" value="find">Continue</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
+                </div>                
             </div>
         </div>
     }
@@ -54,7 +59,7 @@ else
     <div class="grid-row">
         <div class="column-two-thirds">
             <p>Check this is the correct single academy trust before converting. A new UID will be created on conversion.</p>
-            <p class="bold-small">Existing trust details</p>
+            
         </div>
     </div>
 
@@ -69,41 +74,41 @@ else
         @Html.HiddenFor(x => x.Text)
         <div class="grid-row">
             <div class="column-two-thirds">
-                <table class="borderless">
-                    <tbody>
-                        <tr>
-                            <td>Trust name:</td>
-                            <td>@Model.Details.Name</td>
-                        </tr>
-                        <tr>
-                            <td>Companies House number:</td>
-                            <td>@(Model.Details.CompaniesHouseNumber ?? "Not recorded")</td>
-                        </tr>
-                        <tr>
-                            <td>Address:</td>
-                            <td>@Model.GetAddress()</td>
-                        </tr>
-                        <tr>
-                            <td>Group UID:</td>
-                            <td>@Model.Details.GroupUId</td>
-                        </tr>
-                        <tr>
-                            <td>Group ID:</td>
-                            <td>@(Model.Details.GroupId ?? "Not recorded")</td>
-                        </tr>
-                    </tbody>
-                </table>
+                
+                <h2 class="heading-small">Existing trust details</h2>
+                
+                <dl class="key-value-list trust-detail-list">
+                    <dt>Trust name:</dt>
+                    <dd>@Model.Details.Name</dd>
+                    <dt>Companies House number:</dt>
+                    @if (Model.Details.CompaniesHouseNumber != null)
+                    {
+                        <dd><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">@Model.Details.CompaniesHouseNumber</a></dd>
+                    }
+                    else
+                    {
+                        <dd>Not recorded</dd>
+                    }
+                    
+                    <dt>Address:</dt>
+                    <dd>@Model.GetAddress()</dd>
+                    <dt>Group UID:</dt>
+                    <dd>@Model.Details.GroupUId</dd>
+                    <dt>Group ID:</dt>
+                    <dd>@(Model.Details.GroupId ?? "Not recorded")</dd>
+                </dl>
+                
             </div>
         </div>
         <div class="grid-row">
             <div class="column-full">
-                <br />
-                @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy trust governance to academy")
-                <br />
-                <br />
-                @Html.RouteLink("Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-grey cancel mobile-full-width" })
+                <div class="form-group">
+                    @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy SAT governance to MAT")
+                </div>
+                
+                @Html.RouteLink("« Go back", "GroupConvertSAT2MAT", null, new {@class = "button button-grey cancel mobile-full-width"})
                 <button type="submit" name="actionname" class="button mobile-full-width" value="confirm">Convert</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-grey cancel mobile-full-width"})
             </div>
         </div>
     }

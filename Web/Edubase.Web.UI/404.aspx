@@ -174,7 +174,7 @@
 
         <div class="side-width-wrapper">
             <div class="grid-row">
-                <div class="column-full sign-out-container">
+                <div class="column-full">
                     <div class="phase-banner">
                         <div class="phase-banner-beta">
     <p>

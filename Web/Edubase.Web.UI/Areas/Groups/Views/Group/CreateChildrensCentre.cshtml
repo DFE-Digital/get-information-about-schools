@@ -87,11 +87,20 @@
             <h1 class="heading-intro">Enter the children's centre {{groupTypeName}} details</h1>
 
             @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
-            <div class="error-summary" v-show="groupNameApiError.length>0">
-                <h2 class="error-summary-heading heading-medium">There was a problem</h2>
+            <div class="error-summary" v-show="groupNameApiError.length>0 || groupNameError || laError || openDateError">
+                <h2 class="error-summary-heading heading-medium">Incorrect or missing details</h2>
                 <ul class="error-summary-list">
-                    <li class="error-message">
+                    <li class="error-message" v-show="groupNameApiError.length>0">
                         {{groupNameApiError}}
+                    </li>
+                    <li class="error-message" v-show="groupNameError">
+                        Please check the {{groupTypeName}} name
+                    </li>
+                    <li class="error-message" v-show="openDateError">
+                        Please check the opening date you have entered
+                    </li>
+                    <li class="error-message" v-show="laError">
+                        Please select a local authority
                     </li>
                 </ul>
             </div>
@@ -164,7 +173,7 @@
                         {{err.field}} : {{err.message}}
                     </li>
                 </ul>
-            </div>
+            </div>            
             <div class="error-summary" v-show="urnApiErrors.length>0">
                 <h2 class="error-summary-heading heading-medium">Please check the URN</h2>
                 <ul class="error-summary-list">
@@ -294,6 +303,12 @@
             <h1 class="heading-intro" v-show="!pendingEdit">Enter the children's centre details</h1>
             <h1 class="heading-intro" v-show="pendingEdit">Edit the children's centre group details</h1>
             @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
+            <div class="error-summary" v-show="joinDateError">
+                <h2 class="error-summary-heading heading-medium">Incorrect or missing details</h2>
+                <ul class="error-summary-list">
+                    <li class="error-message">{{joinDateErrorMessage}}</li>
+                </ul>
+            </div>
         </div>
         <div class="column-full">
             <p>Ensure this is the right children's centre and add a joined date.</p>
@@ -307,14 +322,16 @@
                 <br/>
                 <a href="#" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Wrong establishment?</a>
             </p>
-
-            @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new {title = "Joined date", vueModel = "joinDate"})
+        </div>
+        <div class="column-half">
+            @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", vueModel = "joinDate" })
 
 
             @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
 
-            <input type="hidden" name="@(nameof(GroupEditorViewModel.ProcessedWarnings))" id="processed-warnings"/>
-
+            <input type="hidden" name="@(nameof(GroupEditorViewModel.ProcessedWarnings))" id="processed-warnings" />
+        </div>
+        <div class="column-full">
             <div class="button-row">
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup">
                     <span v-show="!pendingEdit">Add</span>

@@ -8,9 +8,13 @@ namespace Edubase.Services
     using Common.IO;
     using Domain;
     using Edubase.Common;
+    using Edubase.Data.Repositories;
+    using Edubase.Services.Core;
     using Exceptions;
     using Newtonsoft.Json;
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -21,32 +25,30 @@ namespace Edubase.Services
     using System.Threading.Tasks;
     using Texuna;
     using Texuna.Core;
-    using Texuna.Serialization;
 
     public class HttpClientWrapper
     {
         private readonly HttpClient _httpClient;
         private readonly JsonMediaTypeFormatter _formatter = new JsonMediaTypeFormatter();
+        private readonly ApiRecorderSessionItemRepository _apiRecorderSessionItemRepository;
         private const string HEADER_SA_USER_ID = "sa_user_id";
         private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
-        
-        public HttpClientWrapper(HttpClient httpClient, string apiUsername, string apiPassword)
+        private IClientStorage _clientStorage;
+
+        public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage, ApiRecorderSessionItemRepository apiRecorderSessionItemRepository)
         {
             _httpClient = httpClient;
-            _httpClient.Timeout = TimeSpan.FromSeconds(180); // API is slooooow
+            _clientStorage = clientStorage;
+            _formatter = formatter;
+            _apiRecorderSessionItemRepository = apiRecorderSessionItemRepository;
+        }
+        
+        public HttpClientWrapper(HttpClient httpClient) : this(httpClient, null, null, null)
+        {
 
-            if (apiUsername != null && apiPassword != null)
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
-
-            _formatter.SerializerSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new TexunaCamelCasePropertyNamesContractResolver(),
-                DateTimeZoneHandling = DateTimeZoneHandling.Unspecified
-            };
         }
 
-        public HttpClientWrapper(HttpClient httpClient) : this(httpClient, null, null)
+        public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter) : this(httpClient, formatter, null, null)
         {
 
         }
@@ -341,6 +343,7 @@ namespace Edubase.Services
         {
             var startTime = DateTime.UtcNow;
             HttpResponseMessage response = null;
+            var stopwatch = Stopwatch.StartNew();
 
             try
             {
@@ -356,8 +359,9 @@ namespace Edubase.Services
             }
             finally
             {
+                stopwatch.Stop();
+                string responseMessage = null;
 #if DEBUG
-                var responseMessage = "";
                 if (response?.Content != null)
                 {
                     responseMessage = await response.Content?.ReadAsStringAsync();
@@ -371,9 +375,9 @@ namespace Edubase.Services
                     DurationMillis = (int)Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
                     Method = requestMessage.Method.Method,
                     Url = requestMessage.RequestUri.ToString(),
-                    Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}" ,
+                    Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
                     Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
-                    ResponseCode = response != null ? (int) response.StatusCode : 0,
+                    ResponseCode = response != null ? (int)response.StatusCode : 0,
                     ClientIpAddress = context?.Request?.UserHostAddress,
                     UserId = context?.User?.Identity?.GetUserId(),
                     UserName = context?.User?.Identity?.GetUserName()
@@ -381,6 +385,34 @@ namespace Edubase.Services
 
                 ApiTrace.Data.Add(data);
 #endif
+                
+                await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed);
+            }
+        }
+
+        private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed)
+        {
+            if (_clientStorage != null)
+            {
+                var apiSessionId = _clientStorage.Get("ApiSessionId");
+                if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
+                {
+                    if (responseMessage == null && response?.Content != null)
+                    {
+                        responseMessage = await response.Content?.ReadAsStringAsync();
+                    }
+
+                    await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
+                    {
+                        HttpMethod = requestMessage.Method.ToString(),
+                        RawRequestBody = GetRequestJsonBody(requestMessage),
+                        RawResponseBody = responseMessage.Ellipsis(32000),
+                        RequestHeaders = ToJsonIndented(requestMessage.Headers),
+                        ResponseHeaders = ToJsonIndented(response.Headers),
+                        ElapsedTimeSpan = elapsed.ToString(),
+                        ElapsedMS = elapsed.TotalMilliseconds
+                    });
+                }
             }
         }
 
@@ -401,6 +433,31 @@ namespace Edubase.Services
         }
 
         private string GetRequestJsonBody(HttpRequestMessage msg) => msg != null && msg.Properties.ContainsKey(REQ_BODY_JSON_PAYLOAD) ? msg.Properties[REQ_BODY_JSON_PAYLOAD]?.ToString() ?? string.Empty : string.Empty;
+
+        public string ToJsonIndented(HttpHeaders headers)
+        {
+            var dict = ToDictionary(headers);
+            return JsonConvert.SerializeObject(dict, Formatting.Indented);
+        }
+
+        private static Dictionary<string, string> ToDictionary(HttpHeaders headers)
+        {
+            var dict = new Dictionary<string, string>();
+            foreach (var item in headers.ToList())
+            {
+                if (item.Value != null)
+                {
+                    var header = string.Empty;
+                    foreach (var value in item.Value)
+                    {
+                        header += value + " ";
+                    }
+                    header = header.TrimEnd(" ".ToCharArray());
+                    dict.Add(item.Key, header);
+                }
+            }
+            return dict;
+        }
 
         #endregion
     }

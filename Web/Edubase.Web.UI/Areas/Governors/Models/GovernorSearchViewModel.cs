@@ -26,6 +26,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             new LookupItemViewModel((int)eGovernorTypesFlag.AcademiesWithinMAT, "Academies in a multi academy trust"),
             new LookupItemViewModel((int)eGovernorTypesFlag.AcademiesWithinSAT, "Academies in a single academy trust"),
             new LookupItemViewModel((int)eGovernorTypesFlag.GovsOfLAMaintained, "Local authority maintained schools"),
+            new LookupItemViewModel((int)eGovernorTypesFlag.CTC, "City technology colleges"),
+            new LookupItemViewModel((int)eGovernorTypesFlag.FreeSchools, "Free schools"),
+            new LookupItemViewModel((int)eGovernorTypesFlag.AcadsWithSchoolSponsor, "Academies with a school sponsor"),
         };
         
 

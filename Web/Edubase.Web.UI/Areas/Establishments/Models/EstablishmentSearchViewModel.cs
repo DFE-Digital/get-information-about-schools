@@ -94,6 +94,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public int StartIndex { get; set; }
         public bool HasError => !Error.IsNullOrEmpty();
 
+        public bool ShowDateFilterWarning => OpenDateFrom.IsValid() || OpenDateTo.IsValid();
+
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
 
@@ -260,16 +262,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public bool GoToDetailPageOnOneResult { get; set; }
 
         [BindAlias(BIND_ALIAS_CLOSE_DATE_FROM)]
-        public DateTimeViewModel CloseDateFrom { get; set; }
+        public DateTimeViewModel CloseDateFrom { get; set; } = new DateTimeViewModel();
 
         [BindAlias(BIND_ALIAS_CLOSE_DATE_TO)]
-        public DateTimeViewModel CloseDateTo { get; set; }
+        public DateTimeViewModel CloseDateTo { get; set; } = new DateTimeViewModel();
 
         [BindAlias(BIND_ALIAS_OPEN_DATE_FROM)]
-        public DateTimeViewModel OpenDateFrom { get; set; }
+        public DateTimeViewModel OpenDateFrom { get; set; } = new DateTimeViewModel();
 
         [BindAlias(BIND_ALIAS_OPEN_DATE_TO)]
-        public DateTimeViewModel OpenDateTo { get; set; }
+        public DateTimeViewModel OpenDateTo { get; set; } = new DateTimeViewModel();
 
         [BindAlias(BIND_ALIAS_AGE_RANGE_LOW_FROM)]
         public AgeRangeFilterViewModel AgeRangeLow { get; set; }

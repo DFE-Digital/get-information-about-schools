@@ -57,11 +57,12 @@
                 self.showWarning($('#searchby-name-ref'),
                     'Please enter an establishment name, URN, LAESTAB or UKPRN to start a search');
 
-            } else if (suggestionCount === 0 && !numericValue) {
-                e.preventDefault();
-                self.showWarning($('#searchby-name-ref'),
-                    'We couldn’t find any establishments matching your search criteria');
             }
+            //else if (suggestionCount === 0 && !numericValue) { // temp workaround until autosuggest matches partials
+            //    e.preventDefault();
+            //    self.showWarning($('#searchby-name-ref'),
+            //        'We couldn’t find any establishments matching your search criteria');
+            //}
         });
 
         $('#la-search-submit').on('click', function (e) {

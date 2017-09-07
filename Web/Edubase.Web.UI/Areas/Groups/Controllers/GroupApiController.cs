@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -30,12 +30,43 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return Json(new string[] { });
         }
 
-        [HttpPost, Route("CreateChildrensCentre/Validate/JoinedDate")]
-        public async Task<IHttpActionResult> ValidateEstablishmentJoinedDate(DateTimeViewModel model)
+        [HttpPost, Route("CreateChildrensCentre/Validate/OpenDate")]
+        public async Task<IHttpActionResult> ValidateGroupOpenDate(DateTimeViewModel openDate)
         {
-            if (model == null || model.IsEmpty())
+            if (openDate == null || openDate.IsEmpty())
             {
-                ModelState.AddModelError("model", "Date cannot be empty");
+                ModelState.AddModelError("openDate", "Date cannot be empty");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Json(ModelState.Where(m => m.Value.Errors.Any()));
+            }
+
+            return Json(new string[] { });
+        }
+
+        [HttpPost, Route("CreateChildrensCentre/Validate/JoinedDate")]
+        public async Task<IHttpActionResult> ValidateEstablishmentJoinedDate(ValidateEstablishmentJoinedDateModel model)
+        {
+            if (model.JoinDate == null || model.JoinDate.IsEmpty())
+            {
+                ModelState.AddModelError("joinDate", "Join date cannot be empty");
+            }
+
+            if (model.GroupOpenDate == null || model.GroupOpenDate.IsEmpty())
+            {
+                ModelState.AddModelError("groupOpenDate", "Group open date cannot be empty");
+            }
+
+            if (model.JoinDate.IsValid() && model.GroupOpenDate.IsValid() &&
+                model.JoinDate.ToDateTime().Value.Date < model.GroupOpenDate.ToDateTime().Value.Date)
+            {
+                var part = (model.GroupOpenDate.ToDateTime().Value.Date == DateTime.Now.Date)
+                    ? $"the {model.GroupType}'s open date of today"
+                    : $"the {model.GroupType}'s open date of {model.GroupOpenDate.Day}/{model.GroupOpenDate.Month}/{model.GroupOpenDate.Year}";
+                var message = $"The join date you entered is before {part}. Please enter a later date.";
+                ModelState.AddModelError("joinDate", message);
             }
 
             if (!ModelState.IsValid)

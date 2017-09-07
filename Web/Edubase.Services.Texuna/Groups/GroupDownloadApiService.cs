@@ -16,16 +16,18 @@ namespace Edubase.Services.Texuna.Groups
             _httpClient = httpClient;
         }
 
-        public async Task<DownloadDto> DownloadGroupHistory(int groupUid, DownloadType downloadType, IPrincipal principal) => (await _httpClient.GetAsync<DownloadDto>($"group/{groupUid}/changes/download?format={downloadType}", principal)).Response;
+        public async Task<DownloadDto> DownloadGroupHistory(int groupUId, DownloadType downloadType, IPrincipal principal) => (await _httpClient.GetAsync<DownloadDto>($"group/{groupUId}/changes/download?format={downloadType}", principal)).GetResponse();
+
+        public async Task<DownloadDto> DownloadGroupData(int groupUId, IPrincipal principal) => (await _httpClient.GetAsync<DownloadDto>($"group/{groupUId}/download", principal)).GetResponse();
 
         public async Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal)
         {
-            return (await _httpClient.GetAsync<ProgressDto>("group/search/download/progress?id=" + taskId, principal)).Response;
+            return (await _httpClient.GetAsync<ProgressDto>("group/search/download/progress?id=" + taskId, principal)).GetResponse();
         }
 
         public async Task<Guid> SearchWithDownloadGenerationAsync(SearchDownloadDto<GroupSearchPayload> payload, IPrincipal principal)
         {
-            return (await _httpClient.PostAsync<ApiResultDto<Guid>>("group/search/download/generate", payload, principal)).Response.Value;
+            return (await _httpClient.PostAsync<ApiResultDto<Guid>>("group/search/download/generate", payload, principal)).GetResponse().Value;
         }
     }
 }

@@ -1,8 +1,6 @@
-﻿using Autofac;
-using Edubase.Common;
+﻿using Edubase.Common;
 using Edubase.Services.Domain;
 using FluentValidation;
-using FluentValidation.Resources;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -14,10 +12,6 @@ using System.Web.Mvc;
 namespace Edubase.Web.UI
 {
     using Edubase.Web.Resources;
-    using FluentValidation.Internal;
-    using FluentValidation.Resources;
-    using FluentValidation.Validators;
-    using MoreLinq;
     using Services.Texuna.ChangeHistory.Models;
 
     public static class LangExt
@@ -27,18 +21,6 @@ namespace Edubase.Web.UI
 
         public static IEnumerable<SelectListItem> ToSelectList(this IEnumerable<UserGroupModel> items, string currentId)
             => items.Select(x => new SelectListItem { Text = x.Name, Value = x.Code, Selected = currentId == x.Code });
-
-        /// <summary>
-        /// Adds an item to the list if it's not already in there.
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public static List<int> AddUniqueMutable(this List<int> list, int item)
-        {
-            if (!list.Contains(item)) list.Add(item);
-            return list;
-        }
 
         public static List<int> AddUnique(this List<int> list, int item)
         {

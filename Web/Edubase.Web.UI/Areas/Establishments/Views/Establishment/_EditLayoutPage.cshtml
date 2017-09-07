@@ -8,11 +8,17 @@
     ViewBag.Title = "Edit establishment";
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+    </ul>
+</div>
+
 
 <h1 class="heading-large">@Model.Name</h1>
 <p class="urn">URN: @Model.Urn</p>
+<p class="establishment-type">@Model.TypeName</p>
 
-@*@Html.Partial("_ValidationSummary", ViewData.ModelState)*@
 @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 <div class="grid-row">

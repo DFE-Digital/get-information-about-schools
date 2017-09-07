@@ -27,14 +27,6 @@
     position: relative;
 }
 
-.result-info {
-    border-bottom: 1px solid #bfc1c3;
-    p {
-        font-size: 16px;
-        line-height: 1.25;
-        margin-bottom: 8px;
-    }
-}
 
 .school-results-listing {
     margin: 35px 0 15px;
@@ -183,9 +175,8 @@
 
 }
 
-div.approval-data
-{
-    dl{
+div.approval-data {
+    dl {
         font-size:15px;
     }
 }
@@ -264,20 +255,7 @@ table.approval-items {
     }
 }
 
-ul.approval-items{
-    display:none;
 
-    dl {
-        border-bottom-width: 2px;
-        font-size: 14px;
-    }
-    dt {
-        font-weight: bold;
-    }
-    @include media(mobile){
-        display:block;
-    }
-}
 
 .link-button {
     padding:0;
@@ -406,7 +384,7 @@ ul.approval-items{
     word-wrap: break-word;
 }
 
-.govenors-results {
+.governors-results {
     padding-left: 15px;
 }
 

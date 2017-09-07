@@ -7,6 +7,7 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
+using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -33,7 +34,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _layoutHelper = layoutHelper;
         }
 
-        [HttpGet, Route(EstabSelectSharedGovernor, Name = "SelectSharedGovernor")]
+        [HttpGet, Route(EstabSelectSharedGovernor, Name = "SelectSharedGovernor"), EdubaseAuthorize]
         public async Task<ActionResult> SelectSharedGovernor(int establishmentUrn, eLookupGovernorRole role)
         {
             var roleName = (await _cachedLookupService.GovernorRolesGetAllAsync()).Single(x => x.Id == (int)role).Name;
@@ -53,7 +54,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, Route(EstabSelectSharedGovernor)]
+        [HttpPost, Route(EstabSelectSharedGovernor), EdubaseAuthorize]
         public async Task<ActionResult> SelectSharedGovernor(SelectSharedGovernorViewModel model)
         {
             if (ModelState.IsValid)
@@ -93,7 +94,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpGet, Route(EstabEditSharedGovernor, Name = "EditSharedGovernor")]
+        [HttpGet, Route(EstabEditSharedGovernor, Name = "EditSharedGovernor"), EdubaseAuthorize]
         public async Task<ActionResult> EditSharedGovernor(int establishmentUrn, int governorId)
         {
             var governor = await _governorsReadService.GetGovernorAsync(governorId, User);
@@ -109,7 +110,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpPost, Route(EstabEditSharedGovernor)]
+        [HttpPost, Route(EstabEditSharedGovernor), EdubaseAuthorize]
         public async Task<ActionResult> EditSharedGovernor(EditSharedGovernorViewModel model)
         {
             if (ModelState.IsValid)
