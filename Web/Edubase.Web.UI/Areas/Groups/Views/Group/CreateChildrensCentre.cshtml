@@ -173,7 +173,7 @@
                         {{err.field}} : {{err.message}}
                     </li>
                 </ul>
-            </div>
+            </div>            
             <div class="error-summary" v-show="urnApiErrors.length>0">
                 <h2 class="error-summary-heading heading-medium">Please check the URN</h2>
                 <ul class="error-summary-list">
@@ -303,6 +303,12 @@
             <h1 class="heading-intro" v-show="!pendingEdit">Enter the children's centre details</h1>
             <h1 class="heading-intro" v-show="pendingEdit">Edit the children's centre group details</h1>
             @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
+            <div class="error-summary" v-show="joinDateError">
+                <h2 class="error-summary-heading heading-medium">Incorrect or missing details</h2>
+                <ul class="error-summary-list">
+                    <li class="error-message">{{joinDateErrorMessage}}</li>
+                </ul>
+            </div>
         </div>
         <div class="column-full">
             <p>Ensure this is the right children's centre and add a joined date.</p>
