@@ -58,6 +58,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.4.0.0\lib\net451\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
@@ -134,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DisposerTest.cs" />
+    <Compile Include="Controllers\EstablishmentControllerTest.cs" />
     <Compile Include="Controllers\GovernorSearchControllerTest.cs" />
     <Compile Include="Controllers\GroupSearchControllerTest.cs" />
     <Compile Include="Controllers\EstablishmentsSearchControllerTest.cs" />
@@ -143,6 +150,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Establishments\EstablishmentReadServiceTest.cs" />
     <Compile Include="Services\Texuna\Core\HttpClientWrapperTest.cs" />
+    <Compile Include="UnitTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -164,6 +172,10 @@
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
       <Project>{D605ACE4-2659-48DC-BF21-94E7B8D230DA}</Project>
       <Name>Edubase.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edubase.Web.Resources\Edubase.Web.Resources.csproj">
+      <Project>{7bb77b74-4669-44b7-85c0-f7980274c105}</Project>
+      <Name>Edubase.Web.Resources</Name>
     </ProjectReference>
     <ProjectReference Include="..\Edubase.Web.UI\Edubase.Web.UI.csproj">
       <Project>{F32E2A2E-6782-4293-B533-284FF1B17FF6}</Project>
