@@ -49,8 +49,7 @@ namespace Edubase.UnitTest.Controllers
         {
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            Assert.That(async () => await ObjectUnderTest.EditDetails(4, null), 
-                Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
+            Assert.That(async () => await ObjectUnderTest.EditDetails(4, null), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
         }
 
         [Test]
@@ -64,19 +63,9 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public async Task Estab_Edit_Helpdesk_Id_NotFound()
         {
-            var expectedExceptionThrown = false;
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            try
-            {
-                await ObjectUnderTest.EditHelpdesk(4);
-            }
-            catch (Exception e)
-            {
-                expectedExceptionThrown = ExceptionContains<EntityNotFoundException>(e);
-            }
-
-            Assert.IsTrue(expectedExceptionThrown, "Expected exception of type EntityNotFoundException");
+            Assert.That(async () => await ObjectUnderTest.EditHelpdesk(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
         }
 
         [Test]
@@ -90,19 +79,9 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public async Task Estab_Edit_Location_Id_NotFound()
         {
-            var expectedExceptionThrown = false;
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            try
-            {
-                await ObjectUnderTest.EditLocation(4);
-            }
-            catch (Exception e)
-            {
-                expectedExceptionThrown = ExceptionContains<EntityNotFoundException>(e);
-            }
-
-            Assert.IsTrue(expectedExceptionThrown, "Expected exception of type EntityNotFoundException");
+            Assert.That(async () => await ObjectUnderTest.EditLocation(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
         }
 
         [Test]
@@ -116,19 +95,9 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public async Task Estab_Edit_IEBT_Id_NotFound()
         {
-            var expectedExceptionThrown = false;
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            try
-            {
-                await ObjectUnderTest.EditIEBT(4);
-            }
-            catch (Exception e)
-            {
-                expectedExceptionThrown = ExceptionContains<EntityNotFoundException>(e);
-            }
-
-            Assert.IsTrue(expectedExceptionThrown, "Expected exception of type EntityNotFoundException");
+            Assert.That(async () => await ObjectUnderTest.EditIEBT(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
         }
 
         [Test]
@@ -142,19 +111,9 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public async Task Estab_SearchForEstablishment_Id_NotFound()
         {
-            var expectedExceptionThrown = false;
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            try
-            {
-                await ObjectUnderTest.SearchForEstablishment(4, null);
-            }
-            catch (Exception e)
-            {
-                expectedExceptionThrown = ExceptionContains<EntityNotFoundException>(e);
-            }
-
-            Assert.IsTrue(expectedExceptionThrown, "Expected exception of type EntityNotFoundException");
+            Assert.That(async () => await ObjectUnderTest.SearchForEstablishment(4, null), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
         }
 
         [Test]
