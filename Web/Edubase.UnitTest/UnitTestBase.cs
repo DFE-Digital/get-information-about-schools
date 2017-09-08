@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
+using System.Web;
+using System.Web.Mvc;
 using Autofac;
 using Moq;
 
@@ -27,6 +30,11 @@ namespace Edubase.UnitTest
 
         internal void SetupObjectUnderTest()
         {
+            if (typeof(T).IsAssignableTo<Controller>())
+            {
+                SetupHttpRequest();
+            }
+
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterType<T>().AsImplementedInterfaces().AsSelf();
 
@@ -38,21 +46,26 @@ namespace Edubase.UnitTest
             var container = containerBuilder.Build();
             containerLifetime = container.BeginLifetimeScope();
             ObjectUnderTest = containerLifetime.Resolve<T>();
+
+            var controller = ObjectUnderTest as Controller;
+            if (controller != null)
+            {
+                controller.ControllerContext = GetMock<ControllerContext>().Object;
+            }
         }
 
-        internal bool ExceptionContains<TException>(Exception exception) where TException : Exception
+        private void SetupHttpRequest()
         {
-            while (exception != null)
-            {
-                if (exception is TException)
-                {
-                    return true;
-                }
+            AddMock<HttpRequestBase>();
+            AddMock<HttpContextBase>();
+            AddMock<IPrincipal>();
+            AddMock<ControllerContext>();
 
-                exception = exception.InnerException;
-            }
-
-            return false;
+            GetMock<HttpRequestBase>().SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
+            GetMock<HttpContextBase>().SetupGet(x => x.Request).Returns(GetMock<HttpRequestBase>().Object);
+            GetMock<HttpContextBase>().SetupGet(x => x.User).Returns(GetMock<IPrincipal>().Object);
+            GetMock<ControllerContext>().SetupGet(x => x.HttpContext).Returns(GetMock<HttpContextBase>().Object);
+            GetMock<ControllerContext>().SetupGet(x => x.IsChildAction).Returns(false);
         }
 
         public void Dispose()
