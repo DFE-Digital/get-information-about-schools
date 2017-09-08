@@ -47,19 +47,10 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public async Task Estab_EditDetails_Id_NotFound()
         {
-            var expectedExceptionThrown = false;
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            try
-            {
-                await ObjectUnderTest.EditDetails(4, null);
-            }
-            catch (Exception e)
-            {
-                expectedExceptionThrown = ExceptionContains<EntityNotFoundException>(e);
-            }
-            
-            Assert.IsTrue(expectedExceptionThrown, "Expected exception of type EntityNotFoundException");
+            Assert.That(async () => await ObjectUnderTest.EditDetails(4, null), 
+                Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
         }
 
         [Test]
