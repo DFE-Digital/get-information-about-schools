@@ -5,9 +5,9 @@ namespace Edubase.Services.Domain
 {
     public class ValidationEnvelopeDto
     {
-        public List<ApiWarning> Warnings { get; set; }
+        public List<ApiWarning> Warnings { get; set; } = new List<ApiWarning>();
 
-        public List<ApiError> Errors { get; set; }
+        public List<ApiError> Errors { get; set; } = new List<ApiError>();
 
         public bool HasErrors => Errors != null && Errors.Any();
 

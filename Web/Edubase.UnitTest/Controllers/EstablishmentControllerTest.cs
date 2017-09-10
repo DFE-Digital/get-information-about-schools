@@ -29,15 +29,7 @@ namespace Edubase.UnitTest.Controllers
     {
         public EstablishmentControllerTest()
         {
-            AddMock<IEstablishmentReadService>();
-            AddMock<IGroupReadService>();
-            AddMock<IMapper>();
-            AddMock<IEstablishmentWriteService>();
-            AddMock<ICachedLookupService>();
-            AddMock<IResourcesHelper>();
-            AddMock<ISecurityService>();
-
-            SetupObjectUnderTest();
+            
         }
 
         [Test]
@@ -279,6 +271,26 @@ namespace Edubase.UnitTest.Controllers
             GetMock<ICachedLookupService>().Setup(c => c.LSOAsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
             GetMock<IEstablishmentReadService>().Setup(e => e.GetEstabType2EducationPhaseMap()).Returns(new Dictionary<eLookupEstablishmentType, eLookupEducationPhase[]>());
             GetMock<ICachedLookupService>().Setup(c => c.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), null)).ReturnsAsync("");
+        }
+
+
+        [SetUp]
+        public void SetUpTest() => SetupObjectUnderTest();
+
+        [TearDown]
+        public void TearDownTest() => ResetMocks();
+
+        [OneTimeSetUp]
+        protected override void InitialiseMocks()
+        {
+            AddMock<IEstablishmentReadService>();
+            AddMock<IGroupReadService>();
+            AddMock<IMapper>();
+            AddMock<IEstablishmentWriteService>();
+            AddMock<ICachedLookupService>();
+            AddMock<IResourcesHelper>();
+            AddMock<ISecurityService>();
+            base.InitialiseMocks();
         }
     }
 }
