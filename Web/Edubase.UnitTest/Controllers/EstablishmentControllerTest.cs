@@ -93,7 +93,7 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentDisplayEditPolicy {IEBTDetail = new IEBTDetailDisplayEditPolicy()});
             GetMock<IPrincipal>().Setup(p => p.IsInRole(It.IsAny<string>())).Returns(true);
 
-            SetupMocksForSelectLists();
+            SetupCachedLookupService();
 
             var response = await ObjectUnderTest.EditDetails(4, address);
 
@@ -223,56 +223,6 @@ namespace Edubase.UnitTest.Controllers
 
             Assert.That(async () => await ObjectUnderTest.EditLinks(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
         }
-
-        private void SetupMocksForSelectLists()
-        {
-            GetMock<ICachedLookupService>().Setup(c => c.AccommodationChangedGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto()});
-            GetMock<ICachedLookupService>().Setup(c => c.FurtherEducationTypesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.GendersGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.LocalAuthorityGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.EstablishmentTypesGetAllAsync()).ReturnsAsync(() => new List<EstablishmentLookupDto> { new EstablishmentLookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.TitlesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.EstablishmentStatusesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.AdmissionsPoliciesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.InspectoratesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.IndependentSchoolTypesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.InspectorateNamesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ReligiousCharactersGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ReligiousEthosGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.DiocesesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ProvisionBoardingGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ProvisionNurseriesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ProvisionOfficialSixthFormsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.Section41ApprovedGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.EducationPhasesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ReasonEstablishmentOpenedGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ReasonEstablishmentClosedGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ProvisionSpecialClassesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.SpecialEducationNeedsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.TypeOfResourcedProvisionsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.TeenageMothersProvisionsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ChildcareFacilitiesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.RscRegionsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.GovernmentOfficeRegionsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.AdministrativeDistrictsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.AdministrativeWardsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.ParliamentaryConstituenciesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.UrbanRuralGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.GSSLAGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.CASWardsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.PruFulltimeProvisionsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.PruEducatedByOthersGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.PRUEBDsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.PRUSENsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.CountiesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.NationalitiesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.OfstedRatingsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.MSOAsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<ICachedLookupService>().Setup(c => c.LSOAsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
-            GetMock<IEstablishmentReadService>().Setup(e => e.GetEstabType2EducationPhaseMap()).Returns(new Dictionary<eLookupEstablishmentType, eLookupEducationPhase[]>());
-            GetMock<ICachedLookupService>().Setup(c => c.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), null)).ReturnsAsync("");
-        }
-
 
         [SetUp]
         public void SetUpTest() => SetupObjectUnderTest();
