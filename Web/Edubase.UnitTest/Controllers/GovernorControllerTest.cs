@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
+using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Governors.DisplayPolicies;
 using Edubase.Services.Governors.Models;
@@ -30,7 +32,7 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public async Task Gov_Edit_Null_Params()
         {
-            await ObjectUnderTest.Edit(null, null, null, null).ShouldThrowAsync(typeof(InvalidParameterException));
+            await ObjectUnderTest.Edit(null, null, null, null).ShouldThrowAsync<InvalidParameterException>();
         }
 
         [Test]
@@ -317,7 +319,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Gov_View_ModelSpecified()
+        public void Gov_View_ModelSpecified()
         {
             var model = new GovernorsGridViewModel();
             var result = ObjectUnderTest.View(null, null, model);
@@ -332,7 +334,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Gov_View_groupUIdSpecified()
+        public void Gov_View_groupUIdSpecified()
         {
             var groupUId = 10;
             var governorDetailsDto = new GovernorsDetailsDto
@@ -368,7 +370,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Gov_View_establishmentUrnSpecified()
+        public void Gov_View_establishmentUrnSpecified()
         {
             var establishmentUrn = 26;
             var governorDetailsDto = new GovernorsDetailsDto
@@ -401,6 +403,100 @@ namespace Edubase.UnitTest.Controllers
             modelResult.GovernanceMode.ShouldBeNull();
             modelResult.GroupUId.ShouldBeNull();
             modelResult.EstablishmentUrn.ShouldBe(establishmentUrn);
+        }
+
+        [Test]
+        public async Task Gov_AddEditOrReplace_NullParams()
+        {
+            GetMock<ControllerContext>().SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
+            await ObjectUnderTest.AddEditOrReplace(null, null, null, null).ShouldThrowAsync<EdubaseException>();
+        }
+
+        [Test]
+        public async Task Gov_AddEditOrReplace_RoleSpecified_Single_NotShared_AlreadyExists()
+        {
+            var estabUrn = 4;
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorsDetailsDto
+            {
+                CurrentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfGovernors }}
+            });
+            GetMock<ControllerContext>().SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")) );
+
+            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, eLookupGovernorRole.ChairOfGovernors, null);
+
+            var redirectResult = result as RedirectToRouteResult;
+            redirectResult.ShouldNotBeNull();
+            redirectResult.RouteName.ShouldBe("EstabEditGovernance");
+        }
+
+        [Test]
+        public async Task Gov_AddEditOrReplace_RoleSpecified_Single_NotShared_DoesntExist()
+        {
+            var estabUrn = 4;
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorsDetailsDto
+            {
+                CurrentGovernors = new List<GovernorModel>()
+            });
+            GetMock<ControllerContext>().SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<CreateEditGovernorViewModel>(), estabUrn, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetEditorDisplayPolicyAsync(eLookupGovernorRole.ChairOfGovernors, false, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
+            SetupCachedLookupService();
+
+            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, eLookupGovernorRole.ChairOfGovernors, null);
+
+            var viewResult = result as ViewResult;
+            viewResult.ShouldNotBeNull();
+
+            var model = viewResult.Model as CreateEditGovernorViewModel;
+            model.ShouldNotBeNull();
+            model.GovernorRole.ShouldBe(eLookupGovernorRole.ChairOfGovernors);
+            model.EstablishmentUrn.ShouldBe(estabUrn);
+            model.GroupUId.ShouldBeNull();
+        }
+
+        [Test]
+        public async Task Gov_AddEditOrReplace_GIDSpecified()
+        {
+            var estabUrn = 4;
+            var governorId = 1032;
+
+            var governor = new GovernorModel
+            {
+                Id = governorId,
+                RoleId = (int)eLookupGovernorRole.Governor
+            };
+
+            GetMock<ControllerContext>().SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorAsync(governorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<CreateEditGovernorViewModel>(), estabUrn, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetEditorDisplayPolicyAsync(eLookupGovernorRole.Governor, false, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
+            SetupCachedLookupService();
+
+            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, null, 1032);
+
+            var viewResult = result as ViewResult;
+            viewResult.ShouldNotBeNull();
+
+            var model = viewResult.Model as CreateEditGovernorViewModel;
+            model.ShouldNotBeNull();
+            model.Mode.ShouldBe(CreateEditGovernorViewModel.EditMode.Edit);
+        }
+
+        [Test]
+        public async Task Gov_AddEditOrReplace_RoleSpecified_Shared()
+        {
+            var estabUrn = 4;
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorsDetailsDto
+            {
+                CurrentGovernors = new List<GovernorModel>()
+            });
+            GetMock<ControllerContext>().SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
+
+            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, null);
+
+            var redirectResult = result as RedirectToRouteResult;
+            redirectResult.ShouldNotBeNull();
+            redirectResult.RouteName.ShouldBe("SelectSharedGovernor");
         }
 
         [SetUp]
