@@ -6,12 +6,13 @@ using System.Web;
 using System.Web.Mvc;
 using Autofac;
 using Moq;
+using MoreLinq;
 
 namespace Edubase.UnitTest
 {
     public abstract class UnitTestBase<T> : IDisposable where T : class
     {
-        private readonly List<Mock> mocks = new List<Mock>();
+        private readonly Dictionary<Type, Mock> mocks = new Dictionary<Type, Mock>();
         public List<object> RealObjects { get; set; } = new List<object>();
         private ILifetimeScope containerLifetime;
 
@@ -20,13 +21,13 @@ namespace Edubase.UnitTest
         protected Mock<TMock> AddMock<TMock>() where TMock: class
         {
             var mock = new Mock<TMock>(MockBehavior.Strict);
-            mocks.Add(mock);
+            mocks.Add(typeof(TMock), mock);
             return mock;
         }
 
         protected Mock<TMock> GetMock<TMock>() where TMock : class
         {
-            return mocks.SingleOrDefault(m => m is Mock<TMock>) as Mock<TMock>;
+            return mocks.SingleOrDefault(m => m.Value is Mock<TMock>).Value as Mock<TMock>;
         }
 
         protected void SetupObjectUnderTest()
@@ -41,7 +42,11 @@ namespace Edubase.UnitTest
 
             foreach (var mock in mocks)
             {
-                containerBuilder.RegisterInstance(mock.Object).AsImplementedInterfaces().AsSelf();
+                containerBuilder.RegisterInstance(mock.Value.Object).AsImplementedInterfaces().AsSelf();
+                if (!mock.Key.IsInterface)
+                {
+                    containerBuilder.RegisterInstance(mock.Value.Object).As(mock.Key);
+                }
             }
 
             RealObjects.ForEach(x => containerBuilder.RegisterInstance(x).AsImplementedInterfaces().AsSelf());
@@ -80,7 +85,7 @@ namespace Edubase.UnitTest
             GetMock<IPrincipal>().SetupGet(x => x.Identity).Returns(GetMock<IIdentity>().Object);
         }
 
-        protected void ResetMocks() => mocks.ForEach(x => x.Reset());
+        protected void ResetMocks() => mocks.ForEach(x => x.Value.Reset());
 
         public void Dispose()
         {
