@@ -21,6 +21,7 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models;
 using Moq;
 using NUnit.Framework;
+using Edubase.Services.Groups.Models;
 
 namespace Edubase.UnitTest.Controllers
 {
@@ -53,11 +54,13 @@ namespace Edubase.UnitTest.Controllers
         {
             var establishment = new EstablishmentModel
             {
+                Urn = 100000,
                 IEBTModel = new IEBTModel()
             };
 
             var editEstabModel = new EditEstablishmentModel
             {
+                Urn = 100000,
                 Address_CityOrTown = "cityOrTown",
                 Address_CountryId = 1,
                 Address_CountyId = 2,
@@ -87,6 +90,7 @@ namespace Edubase.UnitTest.Controllers
 
             var address = UriHelper.SerializeToUrlToken(replacementAddress);
 
+            GetMock<IGroupReadService>().Setup(x => x.GetAllByEstablishmentUrnAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new[] { new GroupModel { Name = "Group 1", GroupUId = 1000 } });
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishment));
             GetMock<IMapper>().Setup(m => m.Map<EditEstablishmentModel>(establishment)).Returns(editEstabModel);
             GetMock<IMapper>().Setup(m => m.Map(It.IsAny<IEBTModel>(), editEstabModel)).Returns(editEstabModel);
@@ -200,6 +204,7 @@ namespace Edubase.UnitTest.Controllers
                 Name = "test"
             };
 
+            GetMock<IGroupReadService>().Setup(x => x.GetAllByEstablishmentUrnAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new[] { new GroupModel { Name = "Group 1", GroupUId = 1000 } });
             GetMock<ICachedLookupService>().Setup(c => c.NationalitiesGetAllAsync()).ReturnsAsync(() => nationalities);
             GetMock<ICachedLookupService>().Setup(c => c.CountiesGetAllAsync()).ReturnsAsync(() => counties);
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishment));
