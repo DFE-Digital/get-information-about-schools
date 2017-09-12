@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models;
+using Edubase.Services.Groups.Models;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
@@ -29,5 +30,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
         public string Layout { get; set; }
         public string TypeName { get; set; }
+        GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
+        string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
     }
 }

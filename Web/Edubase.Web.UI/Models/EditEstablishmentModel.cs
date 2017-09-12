@@ -8,6 +8,7 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 
 namespace Edubase.Web.UI.Models
 {
+    using Edubase.Services.Groups.Models;
     using Services.Domain;
     using System.ComponentModel;
     using System.Linq;
@@ -95,6 +96,20 @@ namespace Edubase.Web.UI.Models
         public bool IsAltAddressSet => AltSiteName.Clean() != null || AltStreet.Clean() != null;
 
         public string TypeName { get; set; }
+
+        public GroupModel LegalParentGroup
+        {
+            get
+            {
+                return UriHelper.TryDeserializeUrlToken<GroupModel>(LegalParentGroupToken);
+            }
+            set
+            {
+                LegalParentGroupToken = UriHelper.SerializeToUrlToken(value);
+            }
+        }
+
+        public string LegalParentGroupToken { get; set; }
 
         public string OldHeadFirstName { get; set; }
         public string HeadFirstName { get; set; }

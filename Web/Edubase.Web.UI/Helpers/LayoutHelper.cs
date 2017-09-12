@@ -12,6 +12,7 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Services.Lookup;
+using Edubase.Web.UI.Areas.Establishments.Controllers;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -58,6 +59,7 @@ namespace Edubase.Web.UI.Helpers
                 vm.SelectedTab = "governance";
                 vm.Urn = domainModel.Urn;
                 vm.TabDisplayPolicy = new TabDisplayPolicy(domainModel, displayPolicy, user);
+                vm.LegalParentGroup = EstablishmentController.GetLegalParent(vm.Urn.Value, await _groupReadService.GetAllByEstablishmentUrnAsync(vm.Urn.Value, user), user); // I agree, this shouldn't be a static.  We should refector all this. We should have a base view model class.
                 processEstablishment?.Invoke(domainModel);
             }
             else if (groupUId.HasValue)

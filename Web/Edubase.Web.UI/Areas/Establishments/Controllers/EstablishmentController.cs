@@ -607,6 +607,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, editPolicy, User);
             viewModel.Name = domainModel.Name;
             if (domainModel.TypeId.HasValue) viewModel.TypeName = (await _cachedLookupService.GetNameAsync(() => domainModel.TypeId));
+            viewModel.LegalParentGroup = GetLegalParent(viewModel.Urn.Value, await _groupReadService.GetAllByEstablishmentUrnAsync(viewModel.Urn.Value, User), User);
         }
 
         private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)
@@ -692,9 +693,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             viewModel.TypeName = await _cachedLookupService.GetNameAsync(() => viewModel.TypeId);
+            viewModel.LegalParentGroup = GetLegalParent(viewModel.Urn.Value, await _groupReadService.GetAllByEstablishmentUrnAsync(viewModel.Urn.Value, User), User);
         }
 
-        private GroupModel GetLegalParent(int establishmentUrn, IEnumerable<GroupModel> parentGroups, IPrincipal principal)
+        /// <summary>
+        /// This all needs to be refactored, but not before a major release ;-)
+        /// </summary>
+        /// <param name="establishmentUrn"></param>
+        /// <param name="parentGroups"></param>
+        /// <param name="principal"></param>
+        /// <returns></returns>
+        internal static GroupModel GetLegalParent(int establishmentUrn, IEnumerable<GroupModel> parentGroups, IPrincipal principal)
         {
             var parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.SingleacademyTrust);
             if (parentGroup != null)
