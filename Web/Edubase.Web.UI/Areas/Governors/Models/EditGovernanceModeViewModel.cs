@@ -1,4 +1,5 @@
 ﻿using Edubase.Services.Enums;
+using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Establishments.Models;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
@@ -13,5 +14,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public eGovernanceMode? GovernanceMode { get; set; }
         public eGovernanceMode[] PermissibleGovernanceModes { get; internal set; }
         public string TypeName { get; set; }
+        GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
+        string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Services.Groups.Models;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
@@ -24,5 +25,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public string SelectedGovernorId { get; set; }
         public string TypeName { get; set; }
+        GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
+        string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
     }
 }

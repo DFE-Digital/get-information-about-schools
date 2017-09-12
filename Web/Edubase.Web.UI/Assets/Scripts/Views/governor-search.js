@@ -32,6 +32,6 @@
         });        
     }
 }
-if (document.getElementById('governor-search-results')) {
+if (document.getElementById('governors-search-results')) {
     DfE.Views.preventMassiveDownload.init();
 }

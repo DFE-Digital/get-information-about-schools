@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Core;
+﻿using Edubase.Common;
+using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
@@ -15,6 +16,7 @@ using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Exceptions;
 using Moq;
 using NUnit.Framework;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +26,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
+using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModelBase;
 
 namespace Edubase.UnitTest.Controllers
 {
@@ -38,31 +41,7 @@ namespace Edubase.UnitTest.Controllers
         {
             var grs = GetMock<IGroupReadService>();
             var id = GetMock<IIdentity>();
-
-            var estabList = Enumerable.Range(1, 10).Select(x => new EstablishmentGroupModel
-            {
-                Address = new AddressDto
-                {
-                    CityOrTown = Faker.Address.City(),
-                    Line1 = Faker.Address.StreetAddress(),
-                    Line2 = Faker.Address.SecondaryAddress(),
-                    Line3 = Faker.Address.UkCounty(),
-                    PostCode = Faker.Address.UkPostCode()
-                },
-                CCIsLeadCentre = Faker.RandomNumber.Next() % 2 == 0,
-                Urn = Faker.RandomNumber.Next(100000, 400000),
-                HeadFirstName = Faker.Name.First(),
-                HeadLastName = Faker.Name.Last(),
-                Id = Faker.RandomNumber.Next(100, 1000000),
-                HeadTitle = Faker.Name.Prefix(),
-                Name = string.Join(" ", Faker.Lorem.Words(2)) + " school",
-                JoinedDate = DateTime.Now,
-                LAESTAB = string.Concat(Faker.RandomNumber.Next(100, 999), "/", Faker.RandomNumber.Next(1000, 9999)),
-                LocalAuthorityName = string.Join(" ", Faker.Lorem.Words(2)),
-                PhaseName = Faker.Lorem.GetFirstWord(),
-                StatusName = Faker.Lorem.GetFirstWord(),
-                TypeName = Faker.Lorem.GetFirstWord()
-            }).ToList();
+            var estabList = CreateEstabList();
 
             id.Setup(x => x.IsAuthenticated).Returns(isUserLoggedOn);
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(new GroupModel { GroupUId = 1, Name = "grp" }));
@@ -70,7 +49,7 @@ namespace Edubase.UnitTest.Controllers
             grs.Setup(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new PaginatedResult<GroupChangeDto>());
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
 
-            var response = (ViewResult) await ObjectUnderTest.Details(1);
+            var response = (ViewResult)await ObjectUnderTest.Details(1);
 
             if (!isUserLoggedOn)
             {
@@ -81,7 +60,7 @@ namespace Edubase.UnitTest.Controllers
                 grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<IPrincipal>()), Times.Once());
             }
 
-            var viewModel = (GroupDetailViewModel) response.Model;
+            var viewModel = (GroupDetailViewModel)response.Model;
             Assert.That(viewModel.CanUserEdit, Is.EqualTo(canUserEdit));
             Assert.That(viewModel.Establishments.Count, Is.EqualTo(estabList.Count));
 
@@ -106,17 +85,16 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Group_CreateNewGroup_InvalidType() => Assert.That(async () => await ObjectUnderTest.CreateNewGroup("invalidtype"), Throws.TypeOf<InvalidParameterException>());
+        public void Group_CreateNewGroup_InvalidType() => Assert.That(async () => await ObjectUnderTest.CreateNewGroup("invalidtype"), Throws.TypeOf<InvalidParameterException>());
 
         [Test]
-        public async Task Group_CreateNewGroup_PermissionDenied()
+        public void Group_CreateNewGroup_PermissionDenied()
         {
-            GetMock<ICachedLookupService>().Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_la]" } });
-            GetMock<ICachedLookupService>().Setup(x => x.GroupTypesGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_grouptype]", Id = 1 } });
-
+            InjectBasicLAsAndGroupTypes();
             GetMock<ISecurityService>().Setup(x => x.GetCreateGroupPermissionAsync(It.IsAny<IPrincipal>())).ReturnsAsync(new CreateGroupPermissionDto { GroupTypes = new eLookupGroupType[0] });
             Assert.That(async () => await ObjectUnderTest.CreateNewGroup("Federation"), Throws.TypeOf<PermissionDeniedException>());
         }
+        
 
         [Test]
         [TestCase("ChildrensCentre", 899, TestName = "Group_CreateNewGroup_ChildrensCentre_WithLA")]
@@ -129,9 +107,7 @@ namespace Edubase.UnitTest.Controllers
             GetMock<ISecurityService>().Setup(x => x.GetCreateGroupPermissionAsync(It.IsAny<IPrincipal>()))
                 .ReturnsAsync(new CreateGroupPermissionDto { GroupTypes = new eLookupGroupType[] { eLookupGroupType.ChildrensCentresCollaboration, eLookupGroupType.Federation, eLookupGroupType.Trust, eLookupGroupType.SchoolSponsor }, CCLocalAuthorityId = localAuthorityId });
 
-            GetMock<ICachedLookupService>().Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_la]", Id = localAuthorityId.GetValueOrDefault() } });
-            GetMock<ICachedLookupService>().Setup(x => x.GroupTypesGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_grouptype]", Id = 1 } });
-            GetMock<ICachedLookupService>().Setup(x => x.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), It.IsAny<string>())).ReturnsAsync("placeholder");
+            InjectBasicLAsAndGroupTypes();
 
             var result = (ViewResult)await ObjectUnderTest.CreateNewGroup(type);
             var model = (GroupEditorViewModel) result.Model;
@@ -174,9 +150,7 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public async Task Group_Create()
         {
-            GetMock<ICachedLookupService>().Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_la]" } });
-            GetMock<ICachedLookupService>().Setup(x => x.GroupTypesGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_grouptype]", Id = 1 } });
-            GetMock<ICachedLookupService>().Setup(x => x.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), It.IsAny<string>())).ReturnsAsync("placeholder");
+            InjectBasicLAsAndGroupTypes();
             GetMock<IGroupsWriteService>().Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
             GetMock<IGroupsWriteService>().Setup(x => x.SaveNewAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse<NumericResultDto>(true) { Response = new NumericResultDto { Value = 123 } });
             GetMock<IGroupReadService>().Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
@@ -197,9 +171,7 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public async Task Group_Create_WithSimilarNameWarning()
         {
-            GetMock<ICachedLookupService>().Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_la]" } });
-            GetMock<ICachedLookupService>().Setup(x => x.GroupTypesGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_grouptype]", Id = 1 } });
-            GetMock<ICachedLookupService>().Setup(x => x.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), It.IsAny<string>())).ReturnsAsync("placeholder");
+            InjectBasicLAsAndGroupTypes();
             GetMock<IGroupsWriteService>().Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto { Warnings = new List<ApiWarning> { new ApiWarning { Code = ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND, Message = "similar" } } });
             GetMock<IGroupsWriteService>().Setup(x => x.SaveNewAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse<NumericResultDto>(true) { Response = new NumericResultDto { Value = 123 } });
             GetMock<IGroupReadService>().Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
@@ -233,9 +205,7 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public async Task Group_Create_WithUnknownWarning_IgnoresIt()
         {
-            GetMock<ICachedLookupService>().Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_la]" } });
-            GetMock<ICachedLookupService>().Setup(x => x.GroupTypesGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_grouptype]", Id = 1 } });
-            GetMock<ICachedLookupService>().Setup(x => x.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), It.IsAny<string>())).ReturnsAsync("placeholder");
+            InjectBasicLAsAndGroupTypes();
             GetMock<IGroupsWriteService>().Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto { Warnings = new List<ApiWarning> { new ApiWarning { Code = "unknown", Message = "similar" } } });
             GetMock<IGroupsWriteService>().Setup(x => x.SaveNewAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse<NumericResultDto>(true) { Response = new NumericResultDto { Value = 123 } });
             GetMock<IGroupReadService>().Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
@@ -255,6 +225,236 @@ namespace Edubase.UnitTest.Controllers
         }
 
 
+        [Test]
+        public async Task Group_EditDetails()
+        {
+            var grs = GetMock<IGroupReadService>();
+            var estabList = CreateEstabList();
+
+            InjectBasicLAsAndGroupTypes();
+
+            var domainModel = new GroupModel
+            {
+                Address = new AddressDto
+                {
+                    CityOrTown = Faker.Address.City(),
+                    Line1 = Faker.Address.StreetAddress(),
+                    Line2 = Faker.Address.SecondaryAddress(),
+                    Line3 = Faker.Address.UkCounty(),
+                    PostCode = Faker.Address.UkPostCode()
+                },
+                ClosedDate = DateTime.Now,
+                CompaniesHouseNumber = "67829662",
+                ConfirmationUpToDateGovernanceRequired = true,
+                ConfirmationUpToDateGovernance_LastConfirmationDate = DateTime.Now,
+                DelegationInformation = "delinf",
+                GroupId = "123",
+                GroupTypeId = (int)eLookupGroupType.Federation,
+                GroupUId = 123,
+                HeadFirstName = Faker.Name.First(),
+                HeadLastName = Faker.Name.Last(),
+                HeadTitleId = 1,
+                LocalAuthorityId = 1,
+                ManagerEmailAddress = Faker.Internet.Email(),
+                Name = "I am Federation",
+                OpenDate = DateTime.Now.Subtract(TimeSpan.FromDays(10)),
+                StatusId = (int)eLookupGroupStatus.Open
+            };
+
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
+
+            var response = (ViewResult)await ObjectUnderTest.EditDetails(123);
+            var vm = (GroupEditorViewModel) response.Model;
+            Assert.That(response.ViewName, Is.EqualTo("EditDetails"));
+            Assert.That(vm.GroupName, Is.EqualTo("I am Federation"));
+            Assert.That(vm.GroupId, Is.EqualTo("123"));
+            Assert.That(vm.GroupType, Is.EqualTo(eLookupGroupType.Federation));
+            Assert.That(vm.GroupTypeId, Is.EqualTo((int)eLookupGroupType.Federation));
+            Assert.That(vm.GroupTypeMode, Is.EqualTo(eGroupTypeMode.Federation));
+            Assert.That(vm.GroupTypeName, Is.EqualTo("placeholder"));
+            Assert.That(vm.GroupUId, Is.EqualTo(123));
+            Assert.That(vm.InEditMode, Is.True);
+            Assert.That(vm.IsLocalAuthorityEditable, Is.False);
+            Assert.That(vm.LinkedEstablishments.Establishments.Count, Is.EqualTo(10));
+            Assert.That(vm.ListOfEstablishmentsPluralName, Is.EqualTo("Schools"));
+            Assert.That(vm.LocalAuthorityId, Is.EqualTo(1));
+            Assert.That(vm.LocalAuthorityName, Is.EqualTo("placeholder"));
+            Assert.That(vm.ManagerEmailAddress, Is.EqualTo(domainModel.ManagerEmailAddress));
+            Assert.That(vm.OpenDate.ToDateTime().GetValueOrDefault().Date, Is.EqualTo(domainModel.OpenDate.GetValueOrDefault().Date));
+            Assert.That(vm.ClosedDate.ToDateTime().GetValueOrDefault().Date, Is.EqualTo(domainModel.ClosedDate.GetValueOrDefault().Date));
+            Assert.That(vm.OpenDateLabel, Is.EqualTo("Open date"));
+            Assert.That(vm.PageTitle, Is.EqualTo("Edit school federation"));
+            Assert.That(vm.StatusId, Is.EqualTo((int)eLookupGroupStatus.Open));
+            Assert.That(vm.Address, Is.EqualTo(domainModel.Address.ToString()));
+            Assert.That(vm.CanUserCloseMATAndMarkAsCreatedInError, Is.False);
+            Assert.That(vm.CCLeadCentreUrn, Is.EqualTo(estabList.Single(x => x.CCIsLeadCentre == true).Urn));
+        }
+
+
+        [Test]
+        public async Task Group_EditLinks()
+        {
+            var grs = GetMock<IGroupReadService>();
+            var estabList = CreateEstabList();
+
+            InjectBasicLAsAndGroupTypes();
+
+            var domainModel = new GroupModel
+            {
+                Address = new AddressDto
+                {
+                    CityOrTown = Faker.Address.City(),
+                    Line1 = Faker.Address.StreetAddress(),
+                    Line2 = Faker.Address.SecondaryAddress(),
+                    Line3 = Faker.Address.UkCounty(),
+                    PostCode = Faker.Address.UkPostCode()
+                },
+                ClosedDate = DateTime.Now,
+                CompaniesHouseNumber = "67829662",
+                ConfirmationUpToDateGovernanceRequired = true,
+                ConfirmationUpToDateGovernance_LastConfirmationDate = DateTime.Now,
+                DelegationInformation = "delinf",
+                GroupId = "123",
+                GroupTypeId = (int)eLookupGroupType.Federation,
+                GroupUId = 123,
+                HeadFirstName = Faker.Name.First(),
+                HeadLastName = Faker.Name.Last(),
+                HeadTitleId = 1,
+                LocalAuthorityId = 1,
+                ManagerEmailAddress = Faker.Internet.Email(),
+                Name = "I am Federation",
+                OpenDate = DateTime.Now.Subtract(TimeSpan.FromDays(10)),
+                StatusId = (int)eLookupGroupStatus.Open
+            };
+
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
+
+            var response = (ViewResult)await ObjectUnderTest.EditLinks(123);
+            var vm = (GroupEditorViewModel)response.Model;
+            Assert.That(response.ViewName, Is.EqualTo(string.Empty));
+            Assert.That(vm.GroupName, Is.EqualTo("I am Federation"));
+            Assert.That(vm.GroupUId, Is.EqualTo(123));
+            Assert.That(vm.GroupType, Is.EqualTo(eLookupGroupType.Federation));
+            Assert.That(vm.GroupTypeId, Is.EqualTo((int)eLookupGroupType.Federation));
+            Assert.That(vm.GroupTypeMode, Is.EqualTo(eGroupTypeMode.Federation));
+            Assert.That(vm.GroupTypeName, Is.EqualTo("placeholder"));
+            Assert.That(vm.CCLeadCentreUrn, Is.EqualTo(estabList.Single(x => x.CCIsLeadCentre == true).Urn));
+            Assert.That(vm.SaveMode, Is.EqualTo(eSaveMode.Links));
+            Assert.That(vm.InEditMode, Is.True);
+            Assert.That(vm.LinkedEstablishments.Establishments.Count, Is.EqualTo(10));
+            Assert.That(vm.ListOfEstablishmentsPluralName, Is.EqualTo("Schools"));
+            Assert.That(vm.SelectedTabName, Is.EqualTo("links"));
+            Assert.That(vm.OpenDateLabel, Is.EqualTo("Open date"));
+            Assert.That(vm.PageTitle, Is.EqualTo("Edit school federation"));
+            Assert.That(vm.CanUserCloseMATAndMarkAsCreatedInError, Is.False);
+        }
+
+        [Test]
+        public void Group_Convert()
+        {
+            var response = (ViewResult) ObjectUnderTest.Convert();
+            var vm = (ConvertSATViewModel)response.Model;
+            Assert.That(response.ViewName, Is.EqualTo(string.Empty));
+            Assert.That(response.Model, Is.TypeOf<ConvertSATViewModel>());
+        }
+
+        [Test]
+        public async Task Group_Convert_FindNonExistentSAT()
+        {
+            var grs = GetMock<IGroupReadService>();
+            grs.Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(0, new List<SearchGroupDocument>()));
+            
+            var response = (ViewResult) await ObjectUnderTest.Convert(new ConvertSATViewModel
+            {
+                ActionName = "find",
+                Text = "1000"
+            });
+
+            Assert.That(ObjectUnderTest.ModelState["Text"].Errors[0].ErrorMessage, Is.EqualTo("We were unable to find a SAT matching those details"));
+            Assert.That(response.ViewName, Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public async Task Group_Convert_FindInvalidGroupType()
+        {
+            var grs = GetMock<IGroupReadService>();
+            grs.Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>(){
+                new SearchGroupDocument{ Name="Group 1000", GroupUId = 1000, GroupTypeId=(int)eLookupGroupType.MultiacademyTrust }
+            }));
+
+            var response = (ViewResult)await ObjectUnderTest.Convert(new ConvertSATViewModel
+            {
+                ActionName = "find",
+                Text = "1000"
+            });
+
+            Assert.That(ObjectUnderTest.ModelState["Text"].Errors[0].ErrorMessage, Is.EqualTo("That's an invalid group because it's of the wrong type."));
+            Assert.That(response.ViewName, Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public async Task Group_Convert_FindValidGroup()
+        {
+            GetMock<ICachedLookupService>().Setup(x => x.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), It.IsAny<string>())).ReturnsAsync("placeholder");
+            GetMock<IGroupReadService>().Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>(){
+                new SearchGroupDocument{ Name="Group 1000", GroupUId = 1000, GroupTypeId=(int)eLookupGroupType.SingleacademyTrust }
+            }));
+
+            var vm = new ConvertSATViewModel
+            {
+                ActionName = "find",
+                Text = "1000"
+            };
+            var response = (ViewResult)await ObjectUnderTest.Convert(vm);
+            vm.Details.Name.ShouldBe("Group 1000");
+            vm.Details.GroupUId.ShouldBe(1000);
+            vm.Details.GroupTypeId.ShouldBe((int)eLookupGroupType.SingleacademyTrust);
+            vm.CountryName.ShouldBe("placeholder");
+            vm.CountyName.ShouldBe("placeholder");
+            vm.Token.ShouldNotBe(null);
+            response.ViewName.ShouldBe("");
+        }
+
+        [Test]
+        public async Task Group_Convert_Confirm_Success()
+        {
+            var domainModel = new SearchGroupDocument { Name = "Group 1000", GroupUId = 1000, GroupTypeId = (int)eLookupGroupType.SingleacademyTrust };
+            GetMock<IGroupsWriteService>().Setup(x => x.ConvertSAT2MAT(It.Is<int>(i => i == 1000), It.Is<bool>(b => b == true), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse<NumericResultDto>(true) { Response = new NumericResultDto { Value = 200 } });
+
+            var vm = new ConvertSATViewModel
+            {
+                Token = UriHelper.SerializeToUrlToken(domainModel),
+                ActionName = "confirm",
+                CopyGovernanceInfo = true
+            };
+            var response = (RedirectToRouteResult) await ObjectUnderTest.Convert(vm);
+            response.RouteName.ShouldBe("GroupDetails");
+            response.RouteValues["id"].ShouldBe(200);
+            GetMock<IGroupsWriteService>().Verify(x => x.ConvertSAT2MAT(It.Is<int>(i => i == 1000), It.Is<bool>(b => b == true), It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Group_Convert_Confirm_WithValidationError()
+        {
+            var domainModel = new SearchGroupDocument { Name = "Group 1000", GroupUId = 1000, GroupTypeId = (int)eLookupGroupType.SingleacademyTrust };
+            GetMock<IGroupsWriteService>().Setup(x => x.ConvertSAT2MAT(It.Is<int>(i => i == 1000), It.Is<bool>(b => b == true), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse<NumericResultDto>(false) { Errors = new [] { new ApiError { Code="test", Message="msg" } } });
+
+            var vm = new ConvertSATViewModel
+            {
+                Token = UriHelper.SerializeToUrlToken(domainModel),
+                ActionName = "confirm",
+                CopyGovernanceInfo = true
+            };
+            var response = (ViewResult)await ObjectUnderTest.Convert(vm);
+            response.ViewName.ShouldBe("");
+            Assert.That(ObjectUnderTest.ModelState[""].Errors[0].ErrorMessage, Is.EqualTo("msg"));
+            GetMock<IGroupsWriteService>().Verify(x => x.ConvertSAT2MAT(It.Is<int>(i => i == 1000), It.Is<bool>(b => b == true), It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+
+
         [SetUp]
         public void SetUpTest() => SetupObjectUnderTest();
 
@@ -272,6 +472,46 @@ namespace Edubase.UnitTest.Controllers
             AddMock<ISecurityService>();
             RealObjects.Add(new NomenclatureService());
             base.InitialiseMocks();
+        }
+
+        /// <summary>
+        /// Sets up LocalAuthorityGetAllAsync and GroupTypesGetAllAsync
+        /// </summary>
+        private void InjectBasicLAsAndGroupTypes()
+        {
+            var cls = GetMock<ICachedLookupService>();
+            cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_la]" } });
+            cls.Setup(x => x.GroupTypesGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_grouptype]", Id = 1 } });
+            cls.Setup(x => x.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), It.IsAny<string>())).ReturnsAsync("placeholder");
+        }
+
+        private static List<EstablishmentGroupModel> CreateEstabList()
+        {
+            var y = Faker.RandomNumber.Next(1, 10); // what index should be CCIsLeadCentre == true
+            return Enumerable.Range(1, 10).Select(x => new EstablishmentGroupModel
+            {
+                Address = new AddressDto
+                {
+                    CityOrTown = Faker.Address.City(),
+                    Line1 = Faker.Address.StreetAddress(),
+                    Line2 = Faker.Address.SecondaryAddress(),
+                    Line3 = Faker.Address.UkCounty(),
+                    PostCode = Faker.Address.UkPostCode()
+                },
+                CCIsLeadCentre = (x == y),
+                Urn = Faker.RandomNumber.Next(100000, 400000),
+                HeadFirstName = Faker.Name.First(),
+                HeadLastName = Faker.Name.Last(),
+                Id = Faker.RandomNumber.Next(100, 1000000),
+                HeadTitle = Faker.Name.Prefix(),
+                Name = string.Join(" ", Faker.Lorem.Words(2)) + " school",
+                JoinedDate = DateTime.Now,
+                LAESTAB = string.Concat(Faker.RandomNumber.Next(100, 999), "/", Faker.RandomNumber.Next(1000, 9999)),
+                LocalAuthorityName = string.Join(" ", Faker.Lorem.Words(2)),
+                PhaseName = Faker.Lorem.GetFirstWord(),
+                StatusName = Faker.Lorem.GetFirstWord(),
+                TypeName = Faker.Lorem.GetFirstWord()
+            }).ToList();
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using Edubase.Web.UI.Areas.Establishments.Models;
+﻿using Edubase.Services.Groups.Models;
+using Edubase.Web.UI.Areas.Establishments.Models;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
@@ -13,5 +14,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public SharedGovernorViewModel Governor { get; set; }
         public string TypeName { get; set; }
+        GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
+        string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
     }
 }

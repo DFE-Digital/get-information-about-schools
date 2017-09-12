@@ -84,6 +84,8 @@ namespace Edubase.Web.UI.Models
         public string DioceseName { get; set; }
         public string ReligiousEthosName { get; set; }
         public string ProvisionBoardingName { get; set; }
+        public string BoardingEstabName { get; set; }
+        public string AccommodationChangedName { get; set; }
         public string ProvisionNurseryName { get; set; }
         public string ProvisionOfficialSixthFormName { get; set; }
         public string Section41ApprovedName { get; set; }

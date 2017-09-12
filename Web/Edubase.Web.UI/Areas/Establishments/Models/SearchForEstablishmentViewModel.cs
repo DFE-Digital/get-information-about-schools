@@ -1,4 +1,5 @@
-﻿using Edubase.Web.UI.Helpers.ModelBinding;
+﻿using Edubase.Services.Groups.Models;
+using Edubase.Web.UI.Helpers.ModelBinding;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models
 {
@@ -18,5 +19,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         [BindAlias(BIND_ALIAS_DOSEARCH)]
         public bool DoSearch { get; set; }
         public string TypeName { get; set; }
+
+        GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
+        string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
     }
 }

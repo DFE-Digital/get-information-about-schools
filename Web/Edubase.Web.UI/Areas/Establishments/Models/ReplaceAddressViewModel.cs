@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Domain;
+using Edubase.Services.Groups.Models;
 using Edubase.Services.Texuna.Lookup;
 using Newtonsoft.Json;
 
@@ -80,10 +81,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         int? IEstablishmentPageViewModel.Urn { get; set; }
         string IEstablishmentPageViewModel.Name { get; set; }
         string IEstablishmentPageViewModel.TypeName { get; set; }
+        GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
+        string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
         TabDisplayPolicy IEstablishmentPageViewModel.TabDisplayPolicy { get; set; }
         string IEstablishmentPageViewModel.Layout { get; set; }
 
         public string Step { get; set; } = "enterpostcode";
+        
 
         public ReplaceAddressViewModel()
         {

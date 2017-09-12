@@ -1,4 +1,5 @@
 ﻿using Edubase.Services.Enums;
+using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 
@@ -24,6 +25,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         string IEstablishmentPageViewModel.Name { get; set; }
         TabDisplayPolicy IEstablishmentPageViewModel.TabDisplayPolicy { get; set; }
         public bool IsHistoric { get; set; }
+        GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
+        string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
 
         public ReplaceGovernorViewModel ReplaceGovernorViewModel { get; set; } = new ReplaceGovernorViewModel();
 
