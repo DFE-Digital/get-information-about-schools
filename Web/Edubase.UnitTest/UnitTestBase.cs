@@ -64,6 +64,7 @@ namespace Edubase.UnitTest
             if (controller != null)
             {
                 controller.ControllerContext = GetMock<ControllerContext>().Object;
+                GetMock<ControllerContext>().SetupGet(c => c.Controller).Returns(controller);
             }
         }
 

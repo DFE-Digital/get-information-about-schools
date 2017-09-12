@@ -20,6 +20,7 @@ using Edubase.Web.UI.Areas.Governors.Controllers;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Models;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -499,6 +500,419 @@ namespace Edubase.UnitTest.Controllers
             redirectResult.RouteName.ShouldBe("SelectSharedGovernor");
         }
 
+        [Test]
+        public async Task Gov_DeleteOrRetireGovernor_NoAction()
+        {
+           await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel()).ShouldThrowAsync<InvalidParameterException>();
+        }
+
+        //[Test]
+        //public async Task Gov_DeleteOrRetireGovernor_InvalidModel()
+        //{
+        //    var groupId = 2436;
+
+        //    var governorDetailsDto = new GovernorsDetailsDto
+        //    {
+        //        ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+        //        RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+        //        {
+        //            { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+        //            { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+        //        },
+        //        CurrentGovernors = new List<GovernorModel>(),
+        //        HistoricalGovernors = new List<GovernorModel>()
+        //    };
+
+        //    GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+        //    SetupCachedLookupService();
+
+        //    GetMock<ICachedLookupService>().Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
+        //    {
+        //        new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
+        //        new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
+        //    });
+
+        //    GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<CreateEditGovernorViewModel>(), null, groupId, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+
+        //    var result = await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel { GroupUId = groupId, Action = "Save", RemovalAppointmentEndDate = new DateTimeViewModel()});
+        //}
+
+        [Test]
+        public async Task Gov_DeleteOrRetireGovernor_Save_ApiError()
+        {
+            var groupId = 2436;
+            var governorId = 6224;
+            var errorKey = "Test";
+            var errorMessage = "Test Error";
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            SetupCachedLookupService();
+
+            GetMock<ICachedLookupService>().Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
+            {
+                new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
+                new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
+            });
+
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), null, groupId, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsWriteService>()
+                .Setup(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ApiResponse(false)
+                {
+                    Errors = new[]
+                    {
+                        new ApiError {Code = "Test", Fields = errorKey, Message = errorMessage}
+                    }
+                });
+
+            var result = await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel { GroupUId = groupId, Action = "Save", RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now), RemovalGid = governorId});
+
+            var viewResult = result as ViewResult;
+            viewResult.ShouldNotBeNull();
+
+            viewResult.ViewData.ModelState.IsValid.ShouldBeFalse();
+            viewResult.ViewData.ModelState.Count.ShouldBe(1);
+            viewResult.ViewData.ModelState.ContainsKey(errorKey).ShouldBeTrue();
+            viewResult.ViewData.ModelState[errorKey].Errors.Count.ShouldBe(1);
+            viewResult.ViewData.ModelState[errorKey].Errors[0].ErrorMessage.ShouldBe(errorMessage);
+        }
+
+        [Test]
+        public async Task Gov_DeleteOrRetireGovernor_Save_UnknownApiError()
+        {
+            var groupId = 2436;
+            var governorId = 6224;
+            var errorKey = "Test";
+            var errorMessage = "Test Error";
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            SetupCachedLookupService();
+
+            GetMock<ICachedLookupService>().Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
+            {
+                new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
+                new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
+            });
+
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), null, groupId, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsWriteService>()
+                .Setup(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ApiResponse(false)
+                {
+                    Errors = new ApiError[0]
+                });
+
+            await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel { GroupUId = groupId, Action = "Save", RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now), RemovalGid = governorId }).ShouldThrowAsync<TexunaApiSystemException>();
+        }
+
+        [TestCase(16513, null)]
+        [TestCase(null, 81681)]
+        public async Task Gov_DeleteOrRetireGovernor_Group_Save_OK(int? estabId, int? groupId)
+        {
+            var governorId = 6224;
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(estabId, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            SetupCachedLookupService();
+
+            GetMock<ICachedLookupService>().Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
+            {
+                new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
+                new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
+            });
+
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, groupId, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsWriteService>()
+                .Setup(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ApiResponse(true));
+
+            var result = await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel { GroupUId = groupId, EstablishmentUrn = estabId, Action = "Save", RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now), RemovalGid = governorId });
+
+            var viewResult = result as RedirectToRouteResult;
+            viewResult.ShouldNotBeNull();
+
+            viewResult.RouteName.ShouldBe(groupId == null ? "EstabEditGovernance" : "GroupEditGovernance");
+            GetMock<IGovernorsWriteService>().Verify(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Gov_DeleteOrRetireGovernor_SharedGov_Save_ApiError()
+        {
+            var governorId = 2436;
+            var estabId = 6151;
+            var errorKey = "Test";
+            var errorMessage = "Test Error";
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            var governor = new GovernorModel
+            {
+                Id = governorId,
+                Appointments = new[]
+                {
+                    new GovernorAppointment
+                    {
+                        EstablishmentUrn = estabId,
+                        AppointmentStartDate = DateTime.Now.AddDays(-30)
+                    }
+                }
+            };
+
+            var error = new ApiResponse(false)
+            {
+                Errors = new[]
+                {
+                    new ApiError {Code = "Test", Fields = errorKey, Message = errorMessage}
+                }
+            };
+
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorAsync(governorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
+            GetMock<IGovernorsWriteService>().Setup(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => error);
+            SetupCachedLookupService();
+
+            var result = await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel
+            {
+                EstablishmentUrn = estabId,
+                Action = "Save",
+                RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
+                RemovalGid = governorId,
+                GovernorShared = true
+            });
+
+            var viewResult = result as ViewResult;
+            viewResult.ShouldNotBeNull();
+            viewResult.ViewData.ModelState.IsValid.ShouldBeFalse();
+            viewResult.ViewData.ModelState.Count.ShouldBe(1);
+            viewResult.ViewData.ModelState.ContainsKey(errorKey).ShouldBeTrue();
+            viewResult.ViewData.ModelState[errorKey].Errors.Count.ShouldBe(1);
+            viewResult.ViewData.ModelState[errorKey].Errors[0].ErrorMessage.ShouldBe(errorMessage);
+        }
+
+        [Test]
+        public async Task Gov_DeleteOrRetireGovernor_SharedGov_Save_Estab_OK()
+        {
+            var governorId = 2436;
+            var estabId = 6151;
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            var governor = new GovernorModel
+            {
+                Id = governorId,
+                Appointments = new[]
+                {
+                    new GovernorAppointment
+                    {
+                        EstablishmentUrn = estabId,
+                        AppointmentStartDate = DateTime.Now.AddDays(-30)
+                    }
+                }
+            };
+
+            var error = new ApiResponse(true);
+
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorAsync(governorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
+            GetMock<IGovernorsWriteService>().Setup(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => error);
+            SetupCachedLookupService();
+
+            var result = await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel
+            {
+                EstablishmentUrn = estabId,
+                Action = "Save",
+                RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
+                RemovalGid = governorId,
+                GovernorShared = true
+            });
+
+            var viewResult = result as RedirectToRouteResult;
+            viewResult.ShouldNotBeNull();
+
+            viewResult.RouteName.ShouldBe("EstabEditGovernance");
+            GetMock<IGovernorsWriteService>().Verify(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Gov_DeleteOrRetireGovernor_Estab_Remove_Shared_OK()
+        {
+            var estabId = 7845;
+            var governorId = 6224;
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsWriteService>().Setup(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsWriteService>().Setup(g => g.DeleteSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<IPrincipal>())).Returns(Task.CompletedTask);
+            SetupCachedLookupService();
+
+            GetMock<ICachedLookupService>().Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
+            {
+                new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
+                new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
+            });
+
+            var result = await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel
+            {
+                EstablishmentUrn = estabId,
+                Action = "Remove",
+                RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
+                RemovalGid = governorId,
+                GovernorShared = true
+            });
+
+            var viewResult = result as RedirectToRouteResult;
+            viewResult.ShouldNotBeNull();
+
+            viewResult.RouteName.ShouldBe("EstabEditGovernance");
+            GetMock<IGovernorsWriteService>().Verify(g => g.DeleteSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Gov_DeleteOrRetireGovernor_Estab_Remove_NonShared_OK()
+        {
+            var estabId = 7845;
+            var governorId = 6224;
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsWriteService>().Setup(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsWriteService>().Setup(g => g.DeleteAsync(governorId, It.IsAny<IPrincipal>())).Returns(Task.CompletedTask);
+            SetupCachedLookupService();
+
+            GetMock<ICachedLookupService>().Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
+            {
+                new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
+                new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
+            });
+
+            var result = await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel
+            {
+                EstablishmentUrn = estabId,
+                Action = "Remove",
+                RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
+                RemovalGid = governorId
+            });
+
+            var viewResult = result as RedirectToRouteResult;
+            viewResult.ShouldNotBeNull();
+
+            viewResult.RouteName.ShouldBe("EstabEditGovernance");
+            GetMock<IGovernorsWriteService>().Verify(g => g.DeleteAsync(governorId, It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [TestCase(null, 153513)]
+        [TestCase(16851, null)]
+        public async Task Gov_Post_AddEditOrReplace_ApiError(int? estabId, int? groupId)
+        {
+            var errorKey = "test";
+            var errorMessage = "test message";
+
+            SetupCachedLookupService();
+            GetMock<IGovernorsReadService>().Setup(g => g.GetEditorDisplayPolicyAsync(It.IsAny<eLookupGovernorRole>(), It.IsAny<bool>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
+            GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<CreateEditGovernorViewModel>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            GetMock<IGovernorsWriteService>()
+                .Setup(g => g.ValidateAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ValidationEnvelopeDto()
+                {
+                    Errors =
+                    {
+                        new ApiError {Code = "Test", Fields = errorKey, Message = errorMessage}
+                    }
+                });
+
+            var result = await ObjectUnderTest.AddEditOrReplace(new CreateEditGovernorViewModel {EstablishmentUrn = estabId, GroupUId = groupId});
+
+            var viewResult = result as ViewResult;
+            viewResult.ShouldNotBeNull();
+            var model = viewResult.Model as CreateEditGovernorViewModel;
+            model.ShouldNotBeNull();
+            viewResult.ViewData.ModelState.IsValid.ShouldBeFalse();
+            viewResult.ViewData.ModelState.ContainsKey(errorKey).ShouldBeTrue();
+            viewResult.ViewData.ModelState[errorKey].Errors.Count.ShouldBe(1);
+            viewResult.ViewData.ModelState[errorKey].Errors[0].ErrorMessage.ShouldBe(errorMessage);
+        }
+
         [SetUp]
         public void SetUpTest() => SetupObjectUnderTest();
 
@@ -519,3 +933,4 @@ namespace Edubase.UnitTest.Controllers
         }
     }
 }
+
