@@ -1,4 +1,6 @@
-﻿namespace Edubase.Web.UI.Areas.Establishments.Models
+﻿using Edubase.Services.Groups.Models;
+
+namespace Edubase.Web.UI.Areas.Establishments.Models
 {
     public interface IEstablishmentPageViewModel
     {
@@ -8,5 +10,7 @@
         string TypeName { get; set; }
         TabDisplayPolicy TabDisplayPolicy { get; set; }
         string Layout { get; set; }
+        GroupModel LegalParentGroup { get; set; }
+        string LegalParentGroupToken { get; set; }
     }
 }

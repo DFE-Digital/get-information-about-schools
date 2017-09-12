@@ -7,6 +7,10 @@
         <div class="breadcrumbs">
             <ul>
                 <li>@Html.ActionLink("Home", "Index", "Search")</li>
+                @if (Model.LegalParentGroup != null)
+                {
+                    <li>@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, null)</li>
+                }
                 <li>@Html.ActionLink(Model.Name, "Details", "Establishment", new {@class="requires-conf-to-leave"})</li>
             </ul>
         </div>

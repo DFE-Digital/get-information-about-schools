@@ -17,6 +17,7 @@
         @Html.HiddenFor(x => x.Urn)
         @Html.HiddenFor(x => x.Name)
         @Html.HiddenFor(x => x.SelectedTab)
+        @Html.HiddenFor(x => x.LegalParentGroupToken)
 
         <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
         
