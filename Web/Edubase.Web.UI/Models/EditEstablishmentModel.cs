@@ -55,6 +55,7 @@ namespace Edubase.Web.UI.Models
         public int? StatutoryLowAge { get; set; }
         public int? StatutoryHighAge { get; set; }
         public int? ProvisionBoardingId { get; set; }
+        public int? BoardingEstablishmentId { get; set; }
         public int? ProvisionNurseryId { get; set; }
         public int? ProvisionOfficialSixthFormId { get; set; }
         public int? GenderId { get; set; }
@@ -192,6 +193,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> ReligiousEthoses { get; set; }
         public IEnumerable<SelectListItem> Dioceses { get; set; }
         public IEnumerable<SelectListItem> BoardingProvisions { get; set; }
+        public IEnumerable<SelectListItem> BoardingEstablishment { get; set; }
         public IEnumerable<SelectListItem> NurseryProvisions { get; set; }
         public IEnumerable<SelectListItem> OfficialSixthFormProvisions { get; set; }
         public IEnumerable<SelectListItem> Section41ApprovedItems { get; set; }
