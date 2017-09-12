@@ -104,5 +104,6 @@ namespace Edubase.Services.Establishments.Models
         public string ChairOfProprietorsBodyEmail { get; set; }
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
         public int? AccommodationChangedId { get; set; }
+        public int? BoardingEstablishmentId { get; set; }
     }
 }

@@ -658,6 +658,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.ReligiousEthoses = (await _cachedLookupService.ReligiousEthosGetAllAsync()).ToSelectList(viewModel.ReligiousEthosId);
             viewModel.Dioceses = (await _cachedLookupService.DiocesesGetAllAsync()).ToSelectList(viewModel.DioceseId);
             viewModel.BoardingProvisions = (await _cachedLookupService.ProvisionBoardingGetAllAsync()).ToSelectList(viewModel.ProvisionBoardingId);
+            viewModel.BoardingEstablishment = (await _cachedLookupService.BoardingEstablishmentGetAllAsync()).ToSelectList(viewModel.BoardingEstablishmentId);
             viewModel.NurseryProvisions = (await _cachedLookupService.ProvisionNurseriesGetAllAsync()).ToSelectList(viewModel.ProvisionNurseryId);
             viewModel.OfficialSixthFormProvisions = (await _cachedLookupService.ProvisionOfficialSixthFormsGetAllAsync()).ToSelectList(viewModel.ProvisionOfficialSixthFormId);
             viewModel.Section41ApprovedItems = (await _cachedLookupService.Section41ApprovedGetAllAsync()).ToSelectList(viewModel.Section41ApprovedId);
@@ -728,6 +729,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             vm.DioceseName = await c.GetNameAsync(() => vm.Establishment.DioceseId);
             vm.ReligiousEthosName = await c.GetNameAsync(() => vm.Establishment.ReligiousEthosId);
             vm.ProvisionBoardingName = await c.GetNameAsync(() => vm.Establishment.ProvisionBoardingId);
+            vm.BoardingEstabName = await c.GetNameAsync(() => vm.Establishment.IEBTModel.BoardingEstablishmentId, nameof(IEBTModel));
+            vm.AccommodationChangedName = await c.GetNameAsync(() => vm.Establishment.IEBTModel.AccommodationChangedId, nameof(IEBTModel));
             vm.ProvisionNurseryName = await c.GetNameAsync(() => vm.Establishment.ProvisionNurseryId);
             vm.ProvisionOfficialSixthFormName = await c.GetNameAsync(() => vm.Establishment.ProvisionOfficialSixthFormId);
             vm.Section41ApprovedName = await c.GetNameAsync(() => vm.Establishment.Section41ApprovedId);
