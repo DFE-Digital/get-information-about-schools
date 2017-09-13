@@ -453,6 +453,208 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IGroupsWriteService>().Verify(x => x.ConvertSAT2MAT(It.Is<int>(i => i == 1000), It.Is<bool>(b => b == true), It.IsAny<IPrincipal>()), Times.Once);
         }
 
+        [Test]
+        public async Task Group_EditDetails_Post_Success()
+        {
+            GetMock<IGroupsWriteService>().Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
+            GetMock<IGroupReadService>().Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
+            GetMock<ISecurityService>().Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
+            GetMock<IGroupsWriteService>().Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
+            InjectBasicLAsAndGroupTypes();
+
+            var viewModel = new GroupEditorViewModel
+            {
+                GroupUId = 123,
+                GroupName = "This is a test",
+                Action = ActionSave,
+                GroupTypeId = (int)eLookupGroupType.Federation
+            };
+            var result = (RedirectToRouteResult) await ObjectUnderTest.EditDetails(viewModel);
+            Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
+            Assert.That(result.RouteValues["id"], Is.EqualTo(123));
+
+            GetMock<IGroupsWriteService>().Verify(x => x.SaveAsync(It.Is<SaveGroupDto>(v => v.LinkedEstablishments == null && v.GroupUId == 123 && v.Group != null), It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Test]
+        public async Task Group_EditLinks_Post_Success()
+        {
+            var domainModel = CreateGroupModel();
+            var gws = GetMock<IGroupsWriteService>();
+            var grs = GetMock<IGroupReadService>();
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            gws.Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
+            grs.Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
+            GetMock<ISecurityService>().Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
+            gws.Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
+            InjectBasicLAsAndGroupTypes();
+
+            var viewModel = new GroupEditorViewModel
+            {
+                GroupUId = 123,
+                GroupName = "This is a test",
+                Action = ActionSave,
+                SaveMode = eSaveMode.Links,
+                GroupTypeId = (int)eLookupGroupType.Federation,
+                LinkedEstablishments = new GroupLinkedEstablishmentsViewModel
+                {
+                    Establishments = CreateEstablishmentGroupViewModelList(1)
+                }
+            };
+            var result = (RedirectToRouteResult)await ObjectUnderTest.EditLinks(viewModel);
+            Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
+            Assert.That(result.RouteValues["id"], Is.EqualTo(123));
+
+            GetMock<IGroupsWriteService>().Verify(x => x.SaveAsync(It.Is<SaveGroupDto>(v => v.LinkedEstablishments != null && v.GroupUId == 123 && v.Group == null), It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+
+        [Test]
+        public async Task Group_EditLinks_RemoveEstablishment_Success()
+        {
+            var domainModel = CreateGroupModel();
+
+            var grs = GetMock<IGroupReadService>();
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            grs.Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
+            GetMock<IGroupsWriteService>().Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
+            GetMock<ISecurityService>().Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
+            GetMock<IGroupsWriteService>().Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
+            InjectBasicLAsAndGroupTypes();
+
+            var estabs = CreateEstablishmentGroupViewModelList(3);
+            var viewModel = new GroupEditorViewModel
+            {
+                GroupUId = 123,
+                GroupName = "This is a test",
+                Action = ActionLinkedEstablishmentRemove + estabs[0].Urn,
+                SaveMode = eSaveMode.Links,
+                GroupTypeId = (int)eLookupGroupType.Federation,
+                LinkedEstablishments = new GroupLinkedEstablishmentsViewModel
+                {
+                    Establishments = estabs
+                }
+            };
+            var result = (ViewResult)await ObjectUnderTest.EditLinks(viewModel);
+            viewModel.LinkedEstablishments.Establishments.Count.ShouldBe(2);
+        }
+
+        [Test]
+        public async Task Group_EditLinks_CancelEditMode()
+        {
+            var domainModel = CreateGroupModel();
+
+            var grs = GetMock<IGroupReadService>();
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            GetMock<IGroupsWriteService>().Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
+            GetMock<IGroupReadService>().Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
+            GetMock<ISecurityService>().Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
+            GetMock<IGroupsWriteService>().Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
+            InjectBasicLAsAndGroupTypes();
+
+            var viewModel = new GroupEditorViewModel
+            {
+                GroupUId = 123,
+                GroupName = "This is a test",
+                Action = ActionLinkedEstablishmentCancelEdit,
+                SaveMode = eSaveMode.Links,
+                GroupTypeId = (int)eLookupGroupType.Federation,
+                LinkedEstablishments = new GroupLinkedEstablishmentsViewModel
+                {
+                    Establishments = CreateEstablishmentGroupViewModelList(3)
+                }
+            };
+            viewModel.LinkedEstablishments.Establishments[0].EditMode = true;
+            var result = (ViewResult)await ObjectUnderTest.EditLinks(viewModel);
+            viewModel.LinkedEstablishments.Establishments[0].EditMode.ShouldBe(false);
+        }
+
+
+        [Test]
+        public async Task Group_EditLinks_SetEditMode_Success()
+        {
+            var domainModel = CreateGroupModel();
+
+            var grs = GetMock<IGroupReadService>();
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            grs.Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
+            GetMock<IGroupsWriteService>().Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
+            GetMock<ISecurityService>().Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
+            GetMock<IGroupsWriteService>().Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
+            InjectBasicLAsAndGroupTypes();
+
+            var estabs = CreateEstablishmentGroupViewModelList(3);
+            var viewModel = new GroupEditorViewModel
+            {
+                GroupUId = 123,
+                GroupName = "This is a test",
+                Action = ActionLinkedEstablishmentEdit + estabs[0].Urn,
+                SaveMode = eSaveMode.Links,
+                GroupTypeId = (int)eLookupGroupType.Federation,
+                LinkedEstablishments = new GroupLinkedEstablishmentsViewModel
+                {
+                    Establishments = estabs
+                }
+            };
+            var result = (ViewResult)await ObjectUnderTest.EditLinks(viewModel);
+            viewModel.LinkedEstablishments.Establishments[0].EditMode.ShouldBe(true);
+            viewModel.LinkedEstablishments.Establishments[0].JoinedDateEditable.ToDateTime().Value.Date.ShouldBe(viewModel.LinkedEstablishments.Establishments[0].JoinedDate.Value.Date);
+        }
+
+        [Test]
+        public async Task Group_EditLinks_SaveJoinedDate_Success()
+        {
+            var domainModel = CreateGroupModel();
+
+            var grs = GetMock<IGroupReadService>();
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            grs.Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
+            GetMock<IGroupsWriteService>().Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
+            GetMock<ISecurityService>().Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
+            GetMock<IGroupsWriteService>().Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
+            InjectBasicLAsAndGroupTypes();
+
+            var estabs = CreateEstablishmentGroupViewModelList(3);
+            var viewModel = new GroupEditorViewModel
+            {
+                GroupUId = 123,
+                GroupName = "This is a test",
+                Action = ActionLinkedEstablishmentSave,
+                SaveMode = eSaveMode.Links,
+                GroupTypeId = (int)eLookupGroupType.Federation,
+                LinkedEstablishments = new GroupLinkedEstablishmentsViewModel
+                {
+                    Establishments = estabs
+                }
+            };
+            estabs[0].JoinedDateEditable = new Web.UI.Models.DateTimeViewModel(DateTime.Now.AddDays(1));
+            estabs[0].EditMode = true;
+            var result = (ViewResult)await ObjectUnderTest.EditLinks(viewModel);
+            viewModel.LinkedEstablishments.Establishments[0].EditMode.ShouldBe(false);
+            viewModel.LinkedEstablishments.Establishments[0].JoinedDate.Value.Date.ShouldBe(viewModel.LinkedEstablishments.Establishments[0].JoinedDateEditable.ToDateTime().Value.Date);
+        }
+
+        [Test]
+        public async Task Group_SaveNewAcademyTrust()
+        {
+            var gws = GetMock<IGroupsWriteService>();
+            gws.Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
+            gws.Setup(x => x.SaveNewAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse<NumericResultDto>(true) { Response = new NumericResultDto { Value = 123 } });
+
+            var vm = new CreateAcademyTrustViewModel
+            {
+                CompaniesHouseAddressToken = UriHelper.SerializeToUrlToken(new AddressDto { Line1 = "line1", CityOrTown = "Bobville" }),
+                CompaniesHouseNumber = "67362546543",
+                TypeId = (int)eLookupGroupType.MultiacademyTrust,
+                Name = "Multi acad",
+                OpenDate = DateTime.Now,
+                GroupId = "54243"
+            };
+            var result = (RedirectToRouteResult)await ObjectUnderTest.SaveNewAcademyTrust(vm);
+            Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
+            Assert.That(result.RouteValues["id"], Is.EqualTo(123));
+
+        }
 
 
         [SetUp]
@@ -484,8 +686,39 @@ namespace Edubase.UnitTest.Controllers
             cls.Setup(x => x.GroupTypesGetAllAsync()).ReturnsAsync(new LookupDto[] { new LookupDto { Name = "[placeholder_grouptype]", Id = 1 } });
             cls.Setup(x => x.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), It.IsAny<string>())).ReturnsAsync("placeholder");
         }
+        private GroupModel CreateGroupModel()
+        {
+            return new GroupModel
+            {
+                Address = new AddressDto
+                {
+                    CityOrTown = Faker.Address.City(),
+                    Line1 = Faker.Address.StreetAddress(),
+                    Line2 = Faker.Address.SecondaryAddress(),
+                    Line3 = Faker.Address.UkCounty(),
+                    PostCode = Faker.Address.UkPostCode()
+                },
+                ClosedDate = DateTime.Now,
+                CompaniesHouseNumber = "67829662",
+                ConfirmationUpToDateGovernanceRequired = true,
+                ConfirmationUpToDateGovernance_LastConfirmationDate = DateTime.Now,
+                DelegationInformation = "delinf",
+                GroupId = "123",
+                GroupTypeId = (int)eLookupGroupType.Federation,
+                GroupUId = 123,
+                HeadFirstName = Faker.Name.First(),
+                HeadLastName = Faker.Name.Last(),
+                HeadTitleId = 1,
+                LocalAuthorityId = 1,
+                ManagerEmailAddress = Faker.Internet.Email(),
+                Name = "I am Federation",
+                OpenDate = DateTime.Now.Subtract(TimeSpan.FromDays(10)),
+                StatusId = (int)eLookupGroupStatus.Open
+            };
+        }
 
-        private static List<EstablishmentGroupModel> CreateEstabList()
+
+        private List<EstablishmentGroupModel> CreateEstabList()
         {
             var y = Faker.RandomNumber.Next(1, 10); // what index should be CCIsLeadCentre == true
             return Enumerable.Range(1, 10).Select(x => new EstablishmentGroupModel
@@ -504,6 +737,28 @@ namespace Edubase.UnitTest.Controllers
                 HeadLastName = Faker.Name.Last(),
                 Id = Faker.RandomNumber.Next(100, 1000000),
                 HeadTitle = Faker.Name.Prefix(),
+                Name = string.Join(" ", Faker.Lorem.Words(2)) + " school",
+                JoinedDate = DateTime.Now,
+                LAESTAB = string.Concat(Faker.RandomNumber.Next(100, 999), "/", Faker.RandomNumber.Next(1000, 9999)),
+                LocalAuthorityName = string.Join(" ", Faker.Lorem.Words(2)),
+                PhaseName = Faker.Lorem.GetFirstWord(),
+                StatusName = Faker.Lorem.GetFirstWord(),
+                TypeName = Faker.Lorem.GetFirstWord()
+            }).ToList();
+        }
+
+        private List<EstablishmentGroupViewModel> CreateEstablishmentGroupViewModelList(int count)
+        {
+            var y = Faker.RandomNumber.Next(1, count); // what index should be CCIsLeadCentre == true
+            return Enumerable.Range(1, count).Select(x => new EstablishmentGroupViewModel
+            {
+                Address = Faker.Address.StreetAddress(),
+                CCIsLeadCentre = (x == y),
+                Urn = Faker.RandomNumber.Next(100000, 400000),
+                HeadFirstName = Faker.Name.First(),
+                HeadLastName = Faker.Name.Last(),
+                Id = Faker.RandomNumber.Next(100, 1000000),
+                HeadTitleName = Faker.Name.Prefix(),
                 Name = string.Join(" ", Faker.Lorem.Words(2)) + " school",
                 JoinedDate = DateTime.Now,
                 LAESTAB = string.Concat(Faker.RandomNumber.Next(100, 999), "/", Faker.RandomNumber.Next(1000, 9999)),
