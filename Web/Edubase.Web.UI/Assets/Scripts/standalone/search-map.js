@@ -83,11 +83,15 @@ DfE.searchMap = {
 
                             self.clusterGroup.addLayer(marker);
                             pointCount ++;
-                            $('#map-count').text(pointCount);
+                            
                         }
                        
                     });
-
+                    var countDisplayed = Number($('#map-count').text());
+                    if (pointCount > countDisplayed) {
+                        $('#map-count').text(pointCount);
+                    }
+                    
                     if (startIndex <= resultCount) {
                         if (pointCount > self.softLimit && !self.breachLimit) {
                             pointsLoaded();
@@ -126,7 +130,9 @@ DfE.searchMap = {
             }
             
             self.mapObj.fitBounds(self.clusterGroup.getBounds());
-            $('.map-header').removeClass('loading');
+            window.setTimeout(function() {
+                $('.map-header').removeClass('loading');
+            },1500);            
         }
         
     },
