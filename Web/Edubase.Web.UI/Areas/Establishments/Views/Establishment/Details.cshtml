@@ -240,3 +240,17 @@
     </div>
 
 </div>
+
+
+@section ViewScripts {
+    
+    @if (Model.Establishment.CloseDate != null)
+    {
+        <script>var estabOpen = false;</script>
+    }
+    else
+    {
+        <script>var estabOpen = true;</script>
+    }
+        
+    }
