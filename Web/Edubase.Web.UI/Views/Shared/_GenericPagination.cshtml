@@ -4,7 +4,7 @@
     var endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
     var currentPage = @Model.StartIndex / @Model.PageSize;
     var totalPages = @Model.Results.Count / @Model.PageSize;
-    var maxPages = 10;
+    var maxPages = ViewData["maxPages"] != null ? (int)ViewData["maxPages"] : 10;
     var paginationStart = 0;
     var paginationFinish = @Model.PageCount;
 
@@ -30,13 +30,21 @@
 }
 
 <div class="pagination">
-    <p>Showing @startResult - @endResult of @Model.Count</p>
+    @if (ViewData.ContainsKey("resultsDescription"))
+    {
+        <p>@Html.Raw(ViewData["resultsDescription"])</p>
+    }
+    else 
+    {
+        <p @Html.Conditional(ViewData.ContainsKey("hideDescription"),  "class='hidden'")>Showing @startResult - @endResult of @Model.Count</p>
+    }
+    
     <ul class="pagination-links">
-        
+
         @if (currentPage > 0)
         {
             <li>
-                <a href="@Url.Current(new { startIndex = ((currentPage - 1) * Model.PageSize), Count = Model.Count })" class="pagination-prev">Previous</a>
+                <a href="@Url.Current(new {startIndex = ((currentPage - 1) * Model.PageSize), Count = Model.Count})" class="pagination-prev">Previous</a>
             </li>
         }
 
@@ -49,20 +57,20 @@
             }
             else
             {
-                var tabletClass = (i >= currentPage -2 && i <= currentPage + 2) ? "tablet-pagination" : "";
+                var tabletClass = (i >= currentPage - 2 && i <= currentPage + 2) ? "tablet-pagination" : "";
                 <li>
-                    <a href="@Url.Current(new { startIndex = (i * Model.PageSize), Count = Model.Count })" class="numeric-pagination @tabletClass">@displayPage</a>
+                    <a href="@Url.Current(new {startIndex = (i * Model.PageSize), Count = Model.Count})" class="numeric-pagination @tabletClass">@displayPage</a>
                 </li>
-                
+
             }
         }
 
         @if (currentPage < Model.PageCount - 1)
         {
             <li>
-                <a href="@Url.Current(new { startIndex = ((currentPage + 1) * Model.PageSize), Count = Model.Count })" class="pagination-next">Next</a>
+                <a href="@Url.Current(new {startIndex = ((currentPage + 1) * Model.PageSize), Count = Model.Count})" class="pagination-next">Next</a>
             </li>
         }
-        
+
     </ul>
 </div>

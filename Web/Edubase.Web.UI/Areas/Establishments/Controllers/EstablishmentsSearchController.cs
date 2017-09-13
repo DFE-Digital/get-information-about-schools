@@ -1,4 +1,5 @@
-﻿using Edubase.Common;
+﻿using System.IdentityModel.Protocols.WSTrust;
+using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
 using System.Web.Mvc;
@@ -63,6 +64,35 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
             HttpContext.Response.Headers.Add("x-show-date-filter-warning", model.ShowDateFilterWarning.ToString().ToLower());
             return PartialView("Partials/_EstablishmentSearchResults", model);
+        }
+
+        [HttpGet, Route("results-json")]
+        public async Task<ActionResult> JsonResults(EstablishmentSearchViewModel model)
+        {
+            var payload = await GetEstablishmentSearchPayload(model);
+            //payload.Object.Skip = 0;
+            payload.Object.Take = 200;
+
+            if (!payload.Success) model.Error = payload.ErrorMessage;
+            await ProcessEstablishmentsSearch(model, payload.Object);
+            var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
+            var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
+            var educationPhases = await _lookupService.EducationPhasesGetAllAsync();
+            HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
+           
+            var filtered = model.Results.Select(a => new
+            {
+                Name = a.Name,
+                Location = a.Location,
+                Address = StringUtil.ConcatNonEmpties(", ", a.Address_Line1, a.Address_Locality, a.Address_Line3, a.Address_CityOrTown, a.Address_PostCode), // TODO add County
+                Urn = a.Urn,
+                LAESTAB = localAuthorities.FirstOrDefault(x => x.Id == a.LocalAuthorityId)?.Code != null && a.EstablishmentNumber.HasValue ? string.Concat(localAuthorities.FirstOrDefault(x => x.Id == a.LocalAuthorityId)?.Code, "/", a.EstablishmentNumber.GetValueOrDefault().ToString("D4")) : string.Empty, //TODO dodge the heavy items Kris will throw at my head
+                Status = model.EstablishmentStatuses.FirstOrDefault(x => x.Id == a.StatusId)?.Name ?? "Not recorded",
+                LocalAuthority = localAuthorities.FirstOrDefault(x => x.Id == a.LocalAuthorityId)?.Name ?? "Not recorded",
+                PhaseType = String.Concat(educationPhases.FirstOrDefault(x => x.Id == a.EducationPhaseId)?.Name ?? "Not recorded", ", ", establishmentTypes.FirstOrDefault(x => x.Id == a.TypeId)?.Name ?? "Not recorded")
+            });
+
+            return Json(filtered);
         }
 
         [HttpGet, Route("PrepareDownload")]

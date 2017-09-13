@@ -428,13 +428,26 @@
     <Compile Include="ValueConverters\WeblinkConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="403.aspx" />
+    <Content Include="403.html" />
     <Content Include="500.aspx" />
     <Content Include="500.html" />
     <Content Include="404.html" />
     <Content Include="404.aspx" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
+    <Content Include="Assets\Scripts\libs\leaflet\leaflet-src.js" />
+    <Content Include="Assets\Scripts\libs\leaflet\leaflet.js" />
+    <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet-google.js" />
+    <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet.markercluster.src.js" />
+    <Content Include="Assets\Scripts\standalone\search-map.js" />
     <Content Include="public\assets\images\icons\arrows-vert.png" />
+    <Content Include="public\assets\images\icons\icon-burger.png" />
+    <Content Include="public\assets\images\icons\icon-map.png" />
+    <Content Include="public\assets\images\maps\closed-marker.png" />
+    <Content Include="public\assets\images\maps\google-closed-marker.png" />
+    <Content Include="public\assets\images\maps\google-open-marker.png" />
+    <Content Include="public\assets\images\maps\open-marker.png" />
     <Content Include="public\assets\scripts\**\*.*" />
     <Content Include="public\assets\stylesheets\**\*.*" />
     <Content Include="App_Data\sa-dev.education.gov.uk-metadata.xml" />
@@ -813,6 +826,9 @@
     <Content Include="Areas\Groups\Views\Group\Convert.cshtml" />
     <Content Include="Assets\Sass\views\_group-details.scss" />
     <Content Include="Assets\Sass\elements\_chevron-accordion.scss" />
+    <Content Include="Assets\Sass\leaflet\_leaflet.scss" />
+    <Content Include="Assets\Sass\views\_search-map.scss" />
+    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_EstablishmentSearchMap.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
