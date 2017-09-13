@@ -42,7 +42,8 @@ DfE.searchMap = {
         var startIndex = 0;
         var pointCount = 0;
         this.clusterGroup = new L.MarkerClusterGroup();
-        this.breachLimit = false;  
+        this.breachLimit = false;
+        $('#map-count').text('0');
         getPoints();
 
         
