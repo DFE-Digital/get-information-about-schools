@@ -12,6 +12,9 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         [JsonProperty("notes")]
         public bool Notes { get; set; }
 
+        [JsonProperty("dateOfLastOfstedVisit")]
+        public bool DateOfLastOfstedVisit { get; set; }
+
         [JsonProperty("dateOfTheLastBridgeVisit")]
         public bool DateOfTheLastBridgeVisit { get; set; }
 
