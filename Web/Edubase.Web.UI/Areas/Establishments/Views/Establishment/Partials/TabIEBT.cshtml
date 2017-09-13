@@ -27,10 +27,10 @@
                 <dd>@(Model.Establishment.IEBTModel.DateOfTheLastBridgeVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (Model.DisplayPolicy.OfstedInspectionDate)
+            @if (p.DateOfLastOfstedVisit)
             {
                 <dt>Date of last Ofsted visit:</dt>
-                <dd>@(Model.Establishment.OfstedInspectionDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                <dd>@(Model.Establishment.IEBTModel.DateOfLastOfstedVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
             @if (p.DateOfTheLastISIVisit)
