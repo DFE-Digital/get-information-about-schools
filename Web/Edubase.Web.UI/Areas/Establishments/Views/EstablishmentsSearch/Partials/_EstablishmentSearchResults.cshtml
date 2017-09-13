@@ -1,8 +1,12 @@
 ﻿@using Edubase.Web.UI.Models.Search
 @using Edubase.Web.UI.Helpers
 @using Edubase.Common
+@using Edubase.Services.Enums
 @model EstablishmentSearchViewModel
-
+@using M = Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
+@{
+    var endResult = (@Model.StartIndex + @Model.PageSize > @Model.Count) ? @Model.Count : @Model.StartIndex + @Model.PageSize;
+}
 
 @if (Model.HasError)
 {
@@ -12,12 +16,22 @@
 }
 else if (Model.Results.Count > 0)
 {
-    if (Model.PageCount > 1)
-    {
-        <div class="top-pagination">
-            @Html.Partial("_GenericPagination")
+    <div class="search-results-header">
+
+      <div class="top-pagination">
+            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+            {
+                {"resultsDescription", String.Concat("Showing ", @Model.StartIndex + 1, "-", @endResult, " of <span class='result-count'>", @Model.Count, "</span> establishments")}
+            })
         </div>
-    }
+      
+        <div class="form-group">
+            @SortBySelector("Sort by")
+        </div>
+        <a href="#" class="js-enabled search-type-toggle map-link" id="view-map">
+            <span class="extraneous">View on a </span>map
+        </a>
+    </div>
     <ul class="school-results-listing">
         @foreach (var result in Model.Results)
                 {
@@ -59,11 +73,27 @@ else if (Model.Results.Count > 0)
     if (Model.PageCount > 1)
     {
         <div class="lower-pagination">
-            @Html.Partial("_GenericPagination")
+            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary { { "hideDescription", true } })
         </div>
     }
 }
 else
 {
     <p class="no-school-results">Please try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
+}
+
+
+@helper SortBySelector(string label)
+{
+    <div class="form-group">
+        <label class="form-label">@label:</label>
+        <select class="form-control trigger-result-update" name="@M.BIND_ALIAS_SORT_BY">
+            @if (Model.SearchType == eSearchType.Location)
+            {
+                <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>Distance</option>
+            }
+            <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
+            <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+        </select>
+    </div>
 }

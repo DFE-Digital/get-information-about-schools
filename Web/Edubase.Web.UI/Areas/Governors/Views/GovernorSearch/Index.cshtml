@@ -16,7 +16,7 @@
         <h1 class="heading-xlarge">Search results</h1>
         <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
             <p>
-                We found <span class="heading-xlarge count">@Model.Count</span> governor@(Model.Count == 1 ? "" : "s") 
+                Governor@(Model.Count == 1 ? "" : "s") 
                 
                 @if (Model.GovernorSearchModel.Forename.Clean() != null ||
                      Model.GovernorSearchModel.Surname.Clean() != null ||
@@ -61,15 +61,6 @@
 
     <div class="column-third">
         <div class="filter-form" id="filter-form">
-
-            <div id="EditSearchCollapsible"
-                 class="button-as-link js-collapsible selected mbl js-track"
-                 data-track="search-results||edit-search"
-                 aria-controls="EditSearchCollapse"
-                 role="button">
-                <a class="help-toggle" href="@Url.Action("Index", "Search", new { area = "", SelectedTab = "Governors" })">Edit search</a>
-            </div>
-
             <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
                 <div class="blanket"></div>
                 <div class="filter-divider"></div>

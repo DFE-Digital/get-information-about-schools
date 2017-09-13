@@ -1,0 +1,110 @@
+﻿
+
+.search-map {
+    width: 100%;
+    height: 700px;
+    position: relative;
+}
+
+.leaflet-google-layer {
+    z-index: 1;
+}
+
+.map-link {
+    position: relative;
+
+    &:before {
+        position: absolute;
+        content: "";
+        background: transparent url("/public/assets/images/icons/icon-map.png") no-repeat 0 0;
+        width: 38px;
+        height: 56px;
+        background-size: 50%;
+        left: -27px;
+        top: -5px;
+    }
+}
+
+.show-list-link {
+    position: relative;
+
+    &:before {
+        position: absolute;
+        content: "";
+        background: transparent url("/public/assets/images/icons/icon-burger.png") no-repeat 0 0;
+        width: 71px;
+        height: 56px;
+        background-size: 30%;
+        left: -30px;
+        top: 0;
+    }
+}
+
+.result-header-section {
+    width: 100%;
+    position: relative;
+    min-height: 48px;
+
+    a:active, a:focus {
+        outline: none;
+    }
+}
+
+.result-type-toggle {
+    position: absolute;
+    right: 0;
+}
+
+.map-radius {
+    float: left;
+    overflow: hidden;
+
+    .form-label, .form-control {
+        display: inline-block;
+    }
+
+    .form-control {
+        width: 140px;
+    }
+}
+
+.map-header {
+    clear: both;
+    &.loading {
+        background-image: url('/public/assets/images/icons/icon-loading.gif');
+        background-repeat: no-repeat;
+        background-position: left 5%;
+        background-size: 28px 28px;
+        padding-left: 32px;
+    }
+
+    p {
+        margin-top: 0;
+    }
+}
+.result-count {
+    font-weight: bold;
+    font-size: 21px;
+}
+
+
+.map-data-warning {
+    position: relative;
+
+    .load-all-map-points {
+        position: absolute;
+        right: 8px;
+        font-weight: normal;
+        top: 50%;
+        margin-top: -14px;
+    }
+
+    .warning-text {
+        max-width: 70%;
+        font-weight: normal;
+    }
+}
+//streetview pegman
+.gm-svpc {
+    z-index: 999 !important;
+}

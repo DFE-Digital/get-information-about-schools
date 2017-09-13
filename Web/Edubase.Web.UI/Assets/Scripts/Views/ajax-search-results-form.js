@@ -7,19 +7,24 @@
    
 
     function updateSearchedLas() {
+        var laCount = 0;
         selectedLas = [];
         $('#option-select-local-authority').find('.trigger-result-update').filter(':checked').each(function () {
             var label = $(this).parent().clone();
             label.find('span, input').remove();
             var text = label.text();
             selectedLas.push('&lsquo;<span class="bold-small">' + $.trim(text) + '</span>&rsquo;');
+            laCount ++;
         });
-        
+        console.log(laCount);
         selectedLas = selectedLas.join(', ');
         var lastComma = selectedLas.lastIndexOf(',');
-        selectedLas = selectedLas.substring(0, lastComma) +
+        if (laCount > 1) {
+            selectedLas = selectedLas.substring(0, lastComma) +
             ' and ' +
             selectedLas.substring(lastComma + 1, selectedLas.length);
+        }
+        
         $('#la-list').html(selectedLas);
     }
     if (searchType === 'ByLocalAuthority') {
@@ -189,6 +194,11 @@
                 }
 
                 $("a.download-link").attr("href", downloadUrl + queryString);
+                if (DfE.searchMap.currentView === 'map') {
+                    DfE.searchMap.getSearchData();
+                } else {
+                    DfE.searchMap.dataRefreshRequired = true;
+                }
             };
 
             
@@ -227,12 +237,17 @@
                 $(this).prop('checked', false);
 
             } else {
+                
                 if (ci) {
                     window.clearTimeout(ci);
                 }
                 if (filterIntent) {
                     window.clearTimeout(filterIntent);
                 }
+                if (DfE.searchMap.scriptsLoaded) {
+                    DfE.searchMap.clearPoints();
+                }
+                
                 $resultsElement.addClass('pending-results-update');
                 filterIntent = window.setTimeout(function() {
                     ci = setTimeout(refreshResults, 200); // when the clear button is clicked on the filters, multiple events come through; so using timer to prevent extraneous requests
@@ -242,6 +257,7 @@
                     if (searchType === 'Governor') {
                         updateGovernorRoles();
                     }
+                    
                 }, 1500);
             }                      
         });
