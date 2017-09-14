@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Edubase.Services.Enums;
-
-namespace Edubase.Web.UI.Areas.Groups.Models
+﻿namespace Edubase.Web.UI.Areas.Groups.Models
 {
     using Common;
-    using Services.Groups.Models;
-    using Services.Establishments.Models;
-    using GT = Services.Enums.eLookupGroupType;
-    using Services.Governors.Models;
-    using Data.Entity;
-    using System.Configuration;
-    using UI.Models;
+    using Services.Core;
     using Services.Domain;
-    using Edubase.Services.Core;
+    using Services.Enums;
+    using Services.Groups.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using GT = Services.Enums.eLookupGroupType;
 
     public class GroupDetailViewModel
     {
@@ -28,6 +21,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string LocalAuthorityName { get; set; }
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
+        public bool IsClosed { get; set; }
+        public bool IsClosedInError { get; set; }
+        public DateTime? CloseDate { get; set; }
+        public int GroupTypeId { get; set; }
 
         public string OpenDateLabel => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on" : "Open date";
         public string EstablishmentsPluralName => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) ? "Academies" :

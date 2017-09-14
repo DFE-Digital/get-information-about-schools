@@ -75,7 +75,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 LocalAuthorityName = model.LocalAuthorityId.HasValue ? await _lookup.GetNameAsync(() => model.LocalAuthorityId) : null,
                 GroupStatusName = model.StatusId.HasValue ? await _lookup.GetNameAsync(() => model.StatusId, "Group") : null,
                 Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup) ? model.Address.ToString() : null,
-                IsUserLoggedOn = User.Identity.IsAuthenticated
+                IsUserLoggedOn = User.Identity.IsAuthenticated,
+                GroupTypeId = model.GroupTypeId ?? -1,
+                IsClosed = model.StatusId == (int)eLookupGroupStatus.Closed || model.StatusId == (int)eLookupGroupStatus.CreatedInError,
+                IsClosedInError = model.StatusId == (int)eLookupGroupStatus.CreatedInError,
+                CloseDate = model.ClosedDate
             };
 
             if (viewModel.IsUserLoggedOn)
