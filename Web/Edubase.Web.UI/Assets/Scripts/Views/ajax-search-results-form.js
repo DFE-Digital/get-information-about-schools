@@ -244,7 +244,7 @@
                 if (filterIntent) {
                     window.clearTimeout(filterIntent);
                 }
-                if (DfE.searchMap.scriptsLoaded) {
+                if (DfE.searchMap != null && DfE.searchMap.scriptsLoaded) {
                     DfE.searchMap.clearPoints();
                 }
                 
