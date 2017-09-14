@@ -138,7 +138,7 @@ namespace Edubase.Web.UI.Controllers
             return PartialView("_IndSchSearchResults", viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/prefined-local-authority-sets", Name = "PredefinedLASets")]
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets", Name = "PredefinedLASets")]
         public async Task<ActionResult> PredefinedLASets(PredefinedLASetsViewModel viewModel)
         {
             viewModel.LocalAuthorities = await _lookup.LocalAuthorityGetAllAsync();
@@ -147,11 +147,18 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/prefined-local-authority-sets/create", Name = "CreatePredefinedLASet")]
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASet")]
         public async Task<ActionResult> AddPredefinedLASet() => View();
 
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/prefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASet")]
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASet")]
         public async Task<ActionResult> EditPredefinedLASet(string id) => View();
+
+        [HttpPost, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/delete/{id}", Name = "DeletePredefinedLASet")]
+        public async Task<ActionResult> DeletePredefinedLASet(string id)
+        {
+            await _localAuthoritySetRepository.DeleteAsync(id);
+            return RedirectToRoute("PredefinedLASets");
+        }
 
         private async Task PopulateLookupData(IndSchoolsSearchViewModel viewModel)
         {

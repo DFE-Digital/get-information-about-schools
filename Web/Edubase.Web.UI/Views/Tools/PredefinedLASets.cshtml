@@ -47,9 +47,13 @@
                     <td>@Html.Field(item.Title)</td>
                     <td>@Html.Field(Model.GetLANames(item.Ids))</td>
                     <td nowrap="">
-                        @Html.RouteLink("Add", "CreatePredefinedLASet")@* TODO!!!! apparently this should go to the prev screen with the las populated in the box *@
-                        @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey })
-                        @Html.RouteLink("Remove", "CreatePredefinedLASet") @* TODO!!!! *@
+                        @using (Html.BeginRouteForm("DeletePredefinedLASet", new { id = item.RowKey }, FormMethod.Post))
+                        {
+                            @Html.RouteLink("Add", "CreatePredefinedLASet")
+                            <text>&nbsp;</text>
+                            @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey })
+                            <button class="button-as-link" style="font-size:14px;">Remove</button>
+                        }
                     </td>
                 </tr>
             }
