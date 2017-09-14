@@ -1,0 +1,68 @@
+﻿@model PredefinedLASetsViewModel
+@{
+    ViewBag.Title = "Predefined local authority sets";
+    ViewBag.bodyClasses = "";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.RouteLink("Home", "Homepage")</li>
+        <li>@Html.RouteLink("Tools", "Tools")</li>
+        <li>@Html.RouteLink("Independent schools reminders", "IndSchSearch")</li>
+    </ul>
+</div>
+
+<div class="grid-row">
+    <div class="column-full results-heading">
+        <h1 class="heading-large">
+            Predefined local authority sets
+        </h1>
+        <a class="font-xsmall" style="margin-right: 0;position: absolute;right: 15px;top: 14px;" href="@Url.RouteUrl("CreatePredefinedLASet")">Create new set</a>
+    </div>
+</div>
+
+<br />
+
+
+@if (Model.HasResults)
+{
+    if (Model.Results.PageCount > 1)
+    {
+        <div class="top-pagination">
+            @Html.Partial("_GenericPaginationV2", Model.Results)
+        </div>
+    }
+    <table class="edubase-table">
+        <thead>
+            <tr>
+                <th>Set name</th>
+                <th>Local authorities</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results.Items)
+            {
+                <tr>
+                    <td>@Html.Field(item.Title)</td>
+                    <td>@Html.Field(Model.GetLANames(item.Ids))</td>
+                    <td nowrap="">
+                        @Html.RouteLink("Add", "CreatePredefinedLASet")@* TODO!!!! apparently this should go to the prev screen with the las populated in the box *@
+                        @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey })
+                        @Html.RouteLink("Remove", "CreatePredefinedLASet") @* TODO!!!! *@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    if (Model.Results.PageCount > 1)
+    {
+        <div class="lower-pagination">
+            @Html.Partial("_GenericPaginationV2", Model.Results)
+        </div>
+    }
+}
+else
+{
+    <p>Sorry, no results were found.</p>
+}

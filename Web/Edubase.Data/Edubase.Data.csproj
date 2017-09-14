@@ -163,6 +163,7 @@
     <Compile Include="Entity\LogMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DataQualityStatusRepository.cs" />
+    <Compile Include="Repositories\ILocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\LocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\IDataQualityStatusRepository.cs" />
     <Compile Include="Repositories\ApiRecorderSessionItemRepository.cs" />

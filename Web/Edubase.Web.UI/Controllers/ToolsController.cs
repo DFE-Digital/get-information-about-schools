@@ -5,6 +5,9 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
 {
+    using Edubase.Common;
+    using Edubase.Data.Entity;
+    using Edubase.Data.Repositories;
     using Edubase.Services;
     using Edubase.Services.Core;
     using Edubase.Services.Establishments;
@@ -14,6 +17,7 @@ namespace Edubase.Web.UI.Controllers
     using Edubase.Web.UI.Models.Tools;
     using Filters;
     using Helpers;
+    using Microsoft.WindowsAzure.Storage.Table;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using System;
@@ -29,15 +33,18 @@ namespace Edubase.Web.UI.Controllers
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly ICachedLookupService _lookup;
         private readonly IClientStorage _clientStorage;
+        private readonly ILocalAuthoritySetRepository _localAuthoritySetRepository;
 
-        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, ICachedLookupService lookup, IClientStorage clientStorage)
+        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, ICachedLookupService lookup, IClientStorage clientStorage, ILocalAuthoritySetRepository localAuthoritySetRepository)
         {
             _securityService = securityService;
             _establishmentReadService = establishmentReadService;
             _lookup = lookup;
             _clientStorage = clientStorage;
+            _localAuthoritySetRepository = localAuthoritySetRepository;
         }
         
+        [Route(Name = "Tools")]
         public async Task<ActionResult> Index()
         {
             var createGroupPermission = await _securityService.GetCreateGroupPermissionAsync(User);
@@ -134,9 +141,17 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/prefined-local-authority-sets", Name = "PredefinedLASets")]
         public async Task<ActionResult> PredefinedLASets(PredefinedLASetsViewModel viewModel)
         {
-            
+            viewModel.LocalAuthorities = await _lookup.LocalAuthorityGetAllAsync();
+            var items = (await _localAuthoritySetRepository.GetAllAsync()).Items.OrderBy(x => x.Title);
+            viewModel.Results =  new PaginatedResult<LocalAuthoritySet>(viewModel.Skip, 100, items.Count(), items.Skip(viewModel.Skip).Take(100).ToList());
             return View(viewModel);
         }
+
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/prefined-local-authority-sets/create", Name = "CreatePredefinedLASet")]
+        public async Task<ActionResult> AddPredefinedLASet() => View();
+
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/prefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASet")]
+        public async Task<ActionResult> EditPredefinedLASet(string id) => View();
 
         private async Task PopulateLookupData(IndSchoolsSearchViewModel viewModel)
         {

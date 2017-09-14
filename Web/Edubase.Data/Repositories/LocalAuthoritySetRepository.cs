@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Storage.Table.Queryable;
 
 namespace Edubase.Data.Repositories
 {
-    public class LocalAuthoritySetRepository : TableStorageBase<LocalAuthoritySet>
+    public class LocalAuthoritySetRepository : TableStorageBase<LocalAuthoritySet>, ILocalAuthoritySetRepository
     {
         public LocalAuthoritySetRepository()
             : base("DataConnectionString")
@@ -42,10 +42,10 @@ namespace Edubase.Data.Repositories
 
         public async Task CreateAsync(IEnumerable<LocalAuthoritySet> messages) => await CreateAsync(messages.ToArray());
 
-        public async Task<Page<LocalAuthoritySet>> GetAllAsync(int take, TableContinuationToken skip = null)
+        public async Task<Page<LocalAuthoritySet>> GetAllAsync(int? take = null, TableContinuationToken skip = null)
         {
             var query = Table.CreateQuery<LocalAuthoritySet>().AsQueryable();
-            query = query.Take(take);
+            if (take.HasValue) query = query.Take(take.Value);
             var results = await Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), skip);
             return new Page<LocalAuthoritySet>(results, results.ContinuationToken);
         }
