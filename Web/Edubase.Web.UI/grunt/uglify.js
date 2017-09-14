@@ -13,7 +13,7 @@
             scriptBundle.splice(1, 1, 'Assets/Scripts/libs/vue/vue.js');
             return scriptBundle;
         }
-        
+
     }());
     return {
         "bundle-elements-dev": {
@@ -25,23 +25,39 @@
                 preserveComments: 'some' // allow jScript conditional compilation
             },
             src: scriptBundle,
-            
+
             dest: 'public/assets/scripts/application.js'
         },
         "process-standalone": {
             options: {
-                sourceMap: false,
-                beautify: false,
-                compress: true,
-                mangle: true
+                sourceMap: isLocal,
+                beautify: isLocal,
+                compress: !isLocal,
+                mangle: !isLocal
             },
             files: [{
                 expand: true,
                 flatten: true,
                 cwd: '.',
                 src: ['Assets/Scripts/standalone/*.js'],
-                dest: 'public/assets/scripts/standalone/',                    
+                dest: 'public/assets/scripts/standalone/',
             }]
+        },
+        "leaflet-bundle": {
+            options: {
+                sourceMap: isLocal,
+                beautify: isLocal,
+                compress: !isLocal,
+                mangle: !isLocal,
+                preserveComments: isLocal
+            },
+            src: [
+                'Assets/Scripts/libs/leaflet/leaflet-src.js',
+                'Assets/Scripts/libs/leaflet/plugins/leaflet-google.js',
+                'Assets/Scripts/libs/leaflet/plugins/leaflet.markercluster.src.js'
+            ],
+
+            dest: 'public/assets/scripts/leaflet-bundle.js'
         }
     };
 };

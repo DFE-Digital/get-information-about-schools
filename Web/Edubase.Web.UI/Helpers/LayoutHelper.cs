@@ -12,10 +12,11 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Services.Lookup;
+using Edubase.Web.UI.Areas.Establishments.Controllers;
 
 namespace Edubase.Web.UI.Helpers
 {
-    public class LayoutHelper
+    public class LayoutHelper : ILayoutHelper
     {
         private const string GroupsLayout = "~/Areas/Groups/Views/Group/_EditLayoutPage.cshtml";
         private const string EstabLayout = "~/Areas/Establishments/Views/Establishment/_EditLayoutPage.cshtml";
@@ -37,7 +38,7 @@ namespace Edubase.Web.UI.Helpers
             _cls = cls;
         }
 
-        internal async Task PopulateLayoutProperties(object viewModel, int? establishmentUrn, int? groupUId, IPrincipal user, Action<EstablishmentModel> processEstablishment = null, Action<GroupModel> processGroup = null)
+        public async Task PopulateLayoutProperties(object viewModel, int? establishmentUrn, int? groupUId, IPrincipal user, Action<EstablishmentModel> processEstablishment = null, Action<GroupModel> processGroup = null)
         {
             if (establishmentUrn.HasValue && groupUId.HasValue)
                 throw new InvalidParameterException("Both urn and uid cannot be populated");
@@ -58,6 +59,7 @@ namespace Edubase.Web.UI.Helpers
                 vm.SelectedTab = "governance";
                 vm.Urn = domainModel.Urn;
                 vm.TabDisplayPolicy = new TabDisplayPolicy(domainModel, displayPolicy, user);
+                vm.LegalParentGroup = EstablishmentController.GetLegalParent(vm.Urn.Value, await _groupReadService.GetAllByEstablishmentUrnAsync(vm.Urn.Value, user), user); // I agree, this shouldn't be a static.  We should refector all this. We should have a base view model class.
                 processEstablishment?.Invoke(domainModel);
             }
             else if (groupUId.HasValue)

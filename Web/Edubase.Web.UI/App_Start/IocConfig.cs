@@ -133,7 +133,7 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 
-            builder.RegisterType<LayoutHelper>();
+            builder.RegisterType<LayoutHelper>().AsImplementedInterfaces().AsSelf();
 
             builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>().InstancePerRequest();
             builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();

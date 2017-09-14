@@ -17,6 +17,7 @@
         @Html.HiddenFor(x => x.Urn)
         @Html.HiddenFor(x => x.Name)
         @Html.HiddenFor(x => x.SelectedTab)
+        @Html.HiddenFor(x => x.LegalParentGroupToken)
 
         <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
         
@@ -31,14 +32,9 @@
                     @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "10" })
                 </div>
 
-
-                <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
-                    <label for="boarders">Boarders</label>
-                    @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control", id = "boarders" })
-                </div>
                 
                 @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Bridge visit" })
-                @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Date of last Ofsted visit" })
+                @Html.EditorFor(x => x.DateOfLastOfstedVisit, new { title = "Date of last Ofsted visit" })
                 @Html.EditorFor(x => x.DateOfTheLastISIVisit, new { title = "Date of last ISI visit" })
                 @Html.EditorFor(x => x.DateOfTheLastWelfareVisit, new { title = "Date of last welfare visit"})
                 @Html.EditorFor(x => x.DateOfTheLastFPVisit, new { title = "Date of last FP visit"})
@@ -85,15 +81,15 @@
                 @RenderNumericTextBox("Total number of part time staff", x => x.TotalNumberOfPartTimeStaff)
 
 
-                @RenderNumericTextBox("Lowest annual rate for day pupils", x => x.HighestAnnualRateForDayPupils)
-                @RenderNumericTextBox("Highest annual rate for day pupils", x => x.LowestAnnualRateForDayPupils)
-                @RenderNumericTextBox("Lowest annual rate for boarding pupils", x => x.HighestAnnualRateForBoardingPupils)
-                @RenderNumericTextBox("Highest annual rate for boarding pupils", x => x.LowestAnnualRateForBoardingPupils)
+                @RenderNumericTextBox("Lowest annual rate for day pupils", x => x.LowestAnnualRateForDayPupils)
+                @RenderNumericTextBox("Highest annual rate for day pupils", x => x.HighestAnnualRateForDayPupils)
+                @RenderNumericTextBox("Lowest annual rate for boarding pupils", x => x.LowestAnnualRateForBoardingPupils)
+                @RenderNumericTextBox("Highest annual rate for boarding pupils", x => x.HighestAnnualRateForBoardingPupils)
 
 
                 <div class="form-group">
-                    @Html.LabelFor(x => x.ProvisionBoardingId, "Boarding establishment")
-                    @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control" })
+                    @Html.LabelFor(x => x.BoardingEstablishmentId, "Boarding establishment")
+                    @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new { @class = "form-control" })
                 </div>
                 
                 <fieldset class="toggle-panels" id="proprietor-radios">

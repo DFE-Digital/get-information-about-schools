@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Models;
+using Edubase.Services.Groups.Models;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models
 {
@@ -23,6 +24,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public bool IsNew => (ActiveRecord?.IsNew).GetValueOrDefault();
 
         public string TypeName { get; set; }
+        public GroupModel LegalParentGroup
+        {
+            get
+            {
+                return UriHelper.TryDeserializeUrlToken<GroupModel>(LegalParentGroupToken);
+            }
+            set
+            {
+                LegalParentGroupToken = UriHelper.SerializeToUrlToken(value);
+            }
+        }
+
+        public string LegalParentGroupToken { get; set; }
 
         public void HydrateStateToken()
         {

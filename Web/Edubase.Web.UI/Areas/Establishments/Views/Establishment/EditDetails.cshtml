@@ -15,6 +15,7 @@
         @Html.HiddenFor(x => x.Urn)
         @Html.HiddenFor(x => x.SelectedTab)
         @Html.HiddenFor(x => x.TypeName)
+        @Html.HiddenFor(x => x.LegalParentGroupToken)
         <div class="column-full" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
             <div class="grid-row">
 

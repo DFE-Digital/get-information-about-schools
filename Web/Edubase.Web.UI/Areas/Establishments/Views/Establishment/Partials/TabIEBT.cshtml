@@ -27,10 +27,10 @@
                 <dd>@(Model.Establishment.IEBTModel.DateOfTheLastBridgeVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (Model.DisplayPolicy.OfstedInspectionDate)
+            @if (p.DateOfLastOfstedVisit)
             {
                 <dt>Date of last Ofsted visit:</dt>
-                <dd>@(Model.Establishment.OfstedInspectionDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                <dd>@(Model.Establishment.IEBTModel.DateOfLastOfstedVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
             @if (p.DateOfTheLastISIVisit)
@@ -266,11 +266,9 @@
         </dl>
 
         <dl>
-            @if (Model.DisplayPolicy.ProvisionBoardingId)
-            {
-                <dt>Boarding establishment:</dt>
-                <dd>@Model.ProvisionBoardingName</dd>
-            }
+            <dt>Boarding establishment:</dt>
+            <dd>@(Model.BoardingEstabName ?? "Not recorded")</dd>
+            
 
             @if (Model.DisplayPolicy.ProprietorName)
             {
@@ -348,6 +346,12 @@
             {
                 <dt>Chair of proprietor's preferred job title:</dt>
                 <dd>@(Model.Establishment.IEBTModel.ChairOfProprietorsBodyPreferredJobTitle ?? "Not recorded")</dd>
+            }
+
+            @if (p.AccommodationChangedId)
+            {
+                <dt>Accommodation changed:</dt>
+                <dd>@(Model.AccommodationChangedName ?? "Not recorded")</dd>
             }
         </dl>
 

@@ -8,6 +8,7 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 
 namespace Edubase.Web.UI.Models
 {
+    using Edubase.Services.Groups.Models;
     using Services.Domain;
     using System.ComponentModel;
     using System.Linq;
@@ -54,6 +55,7 @@ namespace Edubase.Web.UI.Models
         public int? StatutoryLowAge { get; set; }
         public int? StatutoryHighAge { get; set; }
         public int? ProvisionBoardingId { get; set; }
+        public int? BoardingEstablishmentId { get; set; }
         public int? ProvisionNurseryId { get; set; }
         public int? ProvisionOfficialSixthFormId { get; set; }
         public int? GenderId { get; set; }
@@ -95,6 +97,20 @@ namespace Edubase.Web.UI.Models
         public bool IsAltAddressSet => AltSiteName.Clean() != null || AltStreet.Clean() != null;
 
         public string TypeName { get; set; }
+
+        public GroupModel LegalParentGroup
+        {
+            get
+            {
+                return UriHelper.TryDeserializeUrlToken<GroupModel>(LegalParentGroupToken);
+            }
+            set
+            {
+                LegalParentGroupToken = UriHelper.SerializeToUrlToken(value);
+            }
+        }
+
+        public string LegalParentGroupToken { get; set; }
 
         public string OldHeadFirstName { get; set; }
         public string HeadFirstName { get; set; }
@@ -177,6 +193,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> ReligiousEthoses { get; set; }
         public IEnumerable<SelectListItem> Dioceses { get; set; }
         public IEnumerable<SelectListItem> BoardingProvisions { get; set; }
+        public IEnumerable<SelectListItem> BoardingEstablishment { get; set; }
         public IEnumerable<SelectListItem> NurseryProvisions { get; set; }
         public IEnumerable<SelectListItem> OfficialSixthFormProvisions { get; set; }
         public IEnumerable<SelectListItem> Section41ApprovedItems { get; set; }
@@ -256,6 +273,7 @@ namespace Edubase.Web.UI.Models
         #region IEBT properties
         public string Notes { get; set; }
         public DateTimeViewModel DateOfTheLastBridgeVisit { get; set; } = new DateTimeViewModel();
+        public DateTimeViewModel DateOfLastOfstedVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfTheLastISIVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfTheLastWelfareVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfTheLastFPVisit { get; set; } = new DateTimeViewModel();

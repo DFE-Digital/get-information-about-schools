@@ -16,6 +16,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     using GR = Services.Enums.eLookupGovernorRole;
     using Services.Enums;
     using Edubase.Services.Domain;
+    using Edubase.Services.Groups.Models;
 
     public class GovernorsGridViewModel : Groups.Models.CreateEdit.IGroupPageViewModel, IEstablishmentPageViewModel
     {
@@ -65,6 +66,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         string IEstablishmentPageViewModel.SelectedTab { get; set; }
 
         int? IEstablishmentPageViewModel.Urn { get; set; }
+        GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
+        string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
 
         string IEstablishmentPageViewModel.Name { get; set; }
         public string TypeName { get; set; }

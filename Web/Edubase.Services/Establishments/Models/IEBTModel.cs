@@ -12,6 +12,10 @@ namespace Edubase.Services.Establishments.Models
     {
         [DisplayName("IEBT Notes")]
         public string Notes { get; set; }
+
+        [DisplayName("Date of the last Ofsted visit")]
+        public DateTime? DateOfLastOfstedVisit { get; set; }
+
         public DateTime? DateOfTheLastBridgeVisit { get; set; }
 
         [DisplayName("Date of the last ISI visit")]
@@ -104,5 +108,6 @@ namespace Edubase.Services.Establishments.Models
         public string ChairOfProprietorsBodyEmail { get; set; }
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
         public int? AccommodationChangedId { get; set; }
+        public int? BoardingEstablishmentId { get; set; }
     }
 }

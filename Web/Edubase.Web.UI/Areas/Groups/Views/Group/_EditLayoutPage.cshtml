@@ -5,11 +5,10 @@
 @{
     ViewBag.bodyClasses = "governance school-details";
     ViewBag.hideLogo = true;
-    //ViewBag.Title = Model.PageTitle;
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 
-@Html.ActionLink("Back", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "home-link" })
 
 <h1 class="heading-xlarge">@Model.GroupName</h1>
 
