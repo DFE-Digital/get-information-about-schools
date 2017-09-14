@@ -1,0 +1,26 @@
+﻿@model IndSchoolsSearchViewModel
+@{
+    ViewBag.Title = "View independent schools’ significant dates";
+    ViewBag.bodyClasses = "";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+    </ul>
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-intro">
+            @Html.Conditional(Model.IsGeneralMode, "Results for next general action required")
+            @Html.Conditional(Model.IsWelfareMode, "Results for next action required by welfare")
+        </h1>
+        <br />
+    </div>
+</div>
+
+@{Html.RenderPartial("_IndSchSearchResults");}

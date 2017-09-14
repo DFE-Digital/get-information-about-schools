@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -386,6 +386,7 @@
     <Compile Include="Models\HeirarchicalLookupItemViewModel.cs" />
     <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
+    <Compile Include="Models\Tools\IndSchoolsSearchViewModel.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="Models\Validators\ChangeHistoryViewModelValidator.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />
@@ -948,6 +949,9 @@
     <Content Include="Views\Tools\ApiSessionRecorder.cshtml" />
     <Content Include="Views\Glossary\Index.cshtml" />
     <Content Include="Views\Glossary\CreateEdit.cshtml" />
+    <Content Include="Views\Tools\IndependentSchoolsSearch.cshtml" />
+    <Content Include="Views\Tools\IndependentSchoolsSearchResults.cshtml" />
+    <Content Include="Views\Tools\_IndSchSearchResults.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">

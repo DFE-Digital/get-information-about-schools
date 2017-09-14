@@ -155,7 +155,7 @@ namespace Edubase.Web.UI
             };
         }
 
-        private static HttpClient CreateHttpClient()
+        public static HttpClient CreateHttpClient()
         {
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {

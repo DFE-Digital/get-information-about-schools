@@ -8,12 +8,16 @@ namespace Edubase.Web.UI.Controllers
     using Edubase.Services;
     using Edubase.Services.Core;
     using Edubase.Services.Establishments;
+    using Edubase.Services.Establishments.Models;
+    using Edubase.Services.Establishments.Search;
     using Edubase.Services.Lookup;
+    using Edubase.Web.UI.Models.Tools;
     using Filters;
     using Helpers;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using GT = Services.Enums.eLookupGroupType;
     using R = EdubaseRoles;
@@ -54,7 +58,8 @@ namespace Edubase.Web.UI.Controllers
                 UserCanBulkUpdateEstablishments = User.InRole(R.EDUBASE_CMT, R.EDUBASE, R.AP_AOS, R.APT, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EFADO, R.EFAHNS, R.FST, R.IEBT, R.SOU, R.EDUBASE_LACCDO, R.LADO, R.LSU, R.UKRLP),
                 UserCanApprove = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE, R.AP_AOS, R.APT, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EFADO, R.EFAHNS, R.FST, R.IEBT, R.SOU, R.EDUBASE_LACCDO, R.LADO),
                 UserCanSearchChangeHistory = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE, R.AP_AOS, R.APT, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EFADO, R.EFAHNS, R.FST, R.IEBT, R.SOU, R.EDUBASE_LACCDO, R.LADO, R.OFSTED),
-                UserCanConvertAcademyTrusts = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE)
+                UserCanConvertAcademyTrusts = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE),
+                UserCanViewIndependentSchoolsSignificantDates = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE, R.IEBT)
             };
 
             return View(viewModel);
@@ -104,5 +109,67 @@ namespace Edubase.Web.UI.Controllers
             return View("ApiSessionRecorder");
         }
 
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools", Name = "IndSchSearch")]
+        public async Task<ActionResult> IndependentSchoolsSearch(IndSchoolsSearchViewModel viewModel)
+        {
+            await PopulateLookupData(viewModel);
+
+            if (viewModel.ActionName == IndSchoolsSearchViewModel.ActionSearch)
+            {    
+                viewModel.Results = await _establishmentReadService.SearchAsync(CreateIndSchoolSearchPayload(viewModel), User);
+                return View("IndependentSchoolsSearchResults", viewModel);
+            }
+
+            return View(viewModel);
+        }
+        
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/results-js", Name = "IndSchSearchResultsPartial")]
+        public async Task<ActionResult> IndependentSchoolsSearchResults(IndSchoolsSearchViewModel viewModel)
+        {
+            await PopulateLookupData(viewModel);
+            viewModel.Results = await _establishmentReadService.SearchAsync(CreateIndSchoolSearchPayload(viewModel), User);
+            return PartialView("_IndSchSearchResults", viewModel);
+        }
+
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/prefined-local-authority-sets", Name = "PredefinedLASets")]
+        public async Task<ActionResult> PredefinedLASets(PredefinedLASetsViewModel viewModel)
+        {
+            
+            return View(viewModel);
+        }
+
+        private async Task PopulateLookupData(IndSchoolsSearchViewModel viewModel)
+        {
+            viewModel.LocalAuthorities = await _lookup.LocalAuthorityGetAllAsync();
+            viewModel.EstablishmentTypes = await _lookup.EstablishmentTypesGetAllAsync();
+            viewModel.EstablishmentStatuses = await _lookup.EstablishmentStatusesGetAllAsync();
+        }
+
+        private EstablishmentSearchPayload CreateIndSchoolSearchPayload(IndSchoolsSearchViewModel viewModel)
+        {
+            return new EstablishmentSearchPayload
+            {
+                Filters = new EstablishmentSearchFilters
+                {
+                    NextActionRequiredByWELMin = viewModel.IsWelfareMode ? viewModel.MinDate.ToDateTime() : null,
+                    NextActionRequiredByWELMax = viewModel.IsWelfareMode ? viewModel.MaxDate.ToDateTime() : null,
+                    NextGeneralActionRequiredMin = viewModel.IsGeneralMode ? viewModel.MinDate.ToDateTime() : null,
+                    NextGeneralActionRequiredMax = viewModel.IsGeneralMode ? viewModel.MaxDate.ToDateTime() : null,
+                    LocalAuthorityIds = viewModel.SelectedLocalAuthorityIds.Where(x => x > 0).ToArray()
+                },
+                Skip = viewModel.Skip,
+                Take = 50,
+                Select = new List<string>
+                    {
+                        nameof(EstablishmentSearchResultModel.Name),
+                        nameof(EstablishmentSearchResultModel.LocalAuthorityId),
+                        nameof(EstablishmentSearchResultModel.Address_CityOrTown),
+                        nameof(EstablishmentSearchResultModel.StatusId),
+                        nameof(EstablishmentSearchResultModel.TypeId),
+                        nameof(EstablishmentSearchResultModel.NextGeneralActionRequired),
+                        nameof(EstablishmentSearchResultModel.NextActionRequiredByWEL)
+                    }
+            };
+        }
     }
 }

@@ -31,6 +31,7 @@ namespace Edubase.Web.UI.Models
         public bool UserCanApprove { get; internal set; }
         public bool UserCanSearchChangeHistory { get; internal set; }
         public bool UserCanConvertAcademyTrusts { get; internal set; }
+        public bool UserCanViewIndependentSchoolsSignificantDates { get; internal set; }
 
 
         public List<LinkAction> GetCreateActions(HtmlHelper htmlHelper)
@@ -62,6 +63,7 @@ namespace Edubase.Web.UI.Models
             if (UserCanApprove) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Approvals", "PendingApprovals"), Description = "View your pending changes and approve or reject." });
             if (UserCanSearchChangeHistory) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Change history", "ChangeHistoryCriteria"), Description = "View changes in the data relating to establishments and groups." });
             if (UserCanManageAcademyOpenings) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage academy openings", "ManageAcademyOpenings"), Description = "View details of proposed-to-open academies. Edit academy names and opening dates." });
+            if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Independent schools reminders", "IndSchSearch"), Description = "" });
             retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data status", "ViewStatus", "DataQuality"), Description = "See when each team’s data was last updated. You can also confirm that your team's data is up to date." });
             return retVal;
         }

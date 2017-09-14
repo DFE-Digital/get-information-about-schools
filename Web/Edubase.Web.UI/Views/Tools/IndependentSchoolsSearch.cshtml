@@ -1,0 +1,54 @@
+﻿@model IndSchoolsSearchViewModel
+@{
+    ViewBag.Title = "View independent schools’ significant dates";
+    ViewBag.bodyClasses = "";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+    </ul>
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-intro">View independent schools’ significant dates</h1>
+        <br />
+        <p>Use this tool to view independent schools’ ‘Next general action required’ or ‘Next action required by welfare' date. Local authorities can be added manually or with custom predeﬁned sets.</p>
+    </div>
+</div>
+
+@using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get))
+{
+    <div class="form-group">
+        <fieldset class="stacked-controls">
+            <legend class="">Select the action you’re interested in</legend>
+            @Html.GiasRadioFor(x => x.Mode, "g", "Next general action required")
+            @Html.GiasRadioFor(x => x.Mode, "w", "Next action required by welfare")
+        </fieldset>
+    </div>
+
+    <div class="form-group">
+        <!-- this is in lieu of the dynamic js local autority picker box widget control applet -->
+        <input name="l" />
+        <input name="l" />
+        <input name="l" />
+        @Html.RouteLink("View predefined sets", "PredefinedLASets")
+    </div>
+
+    <div class="form-group">
+        <label>Date range</label>
+        @Html.EditorFor(x => x.MinDate, new { title = "From", style = "font-weight:bold;" })
+        @Html.EditorFor(x => x.MaxDate, new { title = "To", style = "font-weight:bold;" })
+    </div>
+
+    <div class="grid-row">
+        <div class="column-full">
+            <br />
+            <button type="submit" name="a" class="button mobile-full-width" value="search">Continue</button>
+        </div>
+    </div>
+}
