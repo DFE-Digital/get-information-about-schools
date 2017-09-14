@@ -148,10 +148,58 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASet")]
-        public async Task<ActionResult> AddPredefinedLASet() => View();
+        public async Task<ActionResult> CreatePredefinedLASet()
+        {
+            var viewModel = new PredefinedLASetViewModel();
+            viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+            return View("CreateEditPredefinedLASet", viewModel);
+        }
 
         [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASet")]
-        public async Task<ActionResult> EditPredefinedLASet(string id) => View();
+        public async Task<ActionResult> EditPredefinedLASet(string id)
+        {
+            var entity = await _localAuthoritySetRepository.GetAsync(id);
+            return View("CreateEditPredefinedLASet", new PredefinedLASetViewModel
+            {
+                Id = entity.RowKey,
+                SelectedLocalAuthorityIds = entity.Ids.ToList(),
+                Title = entity.Title,
+                LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x))
+        });
+        }
+
+        [HttpPost, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), 
+            Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASetPost"),
+            Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASetPost")]
+        public async Task<ActionResult> CreateEditPredefinedLASet(PredefinedLASetViewModel viewModel)
+        {
+            if(ModelState.ContainsKey(nameof(viewModel.SuppressWarning)))
+                ModelState.Remove(nameof(viewModel.SuppressWarning));
+            
+            if (ModelState.IsValid)
+            {
+                var sets = await _localAuthoritySetRepository.GetAllAsync();
+                var duplicate = sets.Items.Where(x => x.Title == viewModel.Title && (viewModel.IsNewEntity || viewModel.Id != x.RowKey)).Select(x => x.RowKey).FirstOrDefault();
+
+                if (duplicate == null || viewModel.SuppressWarning)
+                {
+                    var entity = viewModel.IsNewEntity ? new LocalAuthoritySet() : await _localAuthoritySetRepository.GetAsync(viewModel.Id);
+                    entity.Title = viewModel.Title;
+                    entity.Ids = viewModel.SelectedLocalAuthorityIds.ToArray();
+                    if (viewModel.IsNewEntity) await _localAuthoritySetRepository.CreateAsync(entity);
+                    else await _localAuthoritySetRepository.UpdateAsync(entity);
+
+                    if (duplicate != null) await _localAuthoritySetRepository.DeleteAsync(duplicate);
+
+                    return RedirectToRoute("PredefinedLASets");
+                }
+                else if (duplicate != null) viewModel.WarningNameClash = true;
+            }
+
+            viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+
+            return View("CreateEditPredefinedLASet", viewModel);
+        }
 
         [HttpPost, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/delete/{id}", Name = "DeletePredefinedLASet")]
         public async Task<ActionResult> DeletePredefinedLASet(string id)

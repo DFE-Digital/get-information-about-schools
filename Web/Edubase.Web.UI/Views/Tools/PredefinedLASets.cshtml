@@ -52,7 +52,7 @@
                             @Html.RouteLink("Add", "CreatePredefinedLASet")
                             <text>&nbsp;</text>
                             @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey })
-                            <button class="button-as-link" style="font-size:14px;">Remove</button>
+                            <button class="button-as-link" style="font-size:14px;" type="submit" id="delete">Remove</button>
                         }
                     </td>
                 </tr>
@@ -69,4 +69,32 @@
 else
 {
     <p>Sorry, no results were found.</p>
+}
+
+
+@section ViewScripts{
+    
+    <script>
+        (function () {
+            var dismissed = false;
+            var form = $('form');
+            form.on('submit', function (e) {
+                if (!dismissed) {
+                    e.preventDefault();
+                    $(this).okCancel({
+                        ok: function () {
+                            dismissed = true;
+                            $('#delete').click();
+                        },
+                        immediate: true,
+                        idPrefix: 'close-continue',
+                        title: 'Are you sure you want to remove this set?',
+                        content: 'You will no longer be able to filter by this set.'
+                    });
+                    $(this).removeData('okCancel');
+                }
+            });
+        }());
+    </script>    
+    
 }

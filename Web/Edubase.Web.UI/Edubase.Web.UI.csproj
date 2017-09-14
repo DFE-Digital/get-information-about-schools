@@ -274,6 +274,7 @@
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
     <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
     <Compile Include="Helpers\BrowserClientStorage.cs" />
+    <Compile Include="Helpers\CannotBeEmptyAttribute.cs" />
     <Compile Include="Helpers\FormHelpers.cs" />
     <Compile Include="Helpers\ILayoutHelper.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
@@ -387,6 +388,7 @@
     <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
     <Compile Include="Models\Tools\IndSchoolsSearchViewModel.cs" />
+    <Compile Include="Models\Tools\PredefinedLASetViewModel.cs" />
     <Compile Include="Models\Tools\PredefinedLASetsViewModel.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="Models\Validators\ChangeHistoryViewModelValidator.cs" />
@@ -954,6 +956,7 @@
     <Content Include="Views\Tools\IndependentSchoolsSearchResults.cshtml" />
     <Content Include="Views\Tools\_IndSchSearchResults.cshtml" />
     <Content Include="Views\Tools\PredefinedLASets.cshtml" />
+    <Content Include="Views\Tools\CreateEditPredefinedLASet.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">
