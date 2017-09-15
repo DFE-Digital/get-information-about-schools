@@ -75,21 +75,29 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (!payload.Success) model.Error = payload.ErrorMessage;
             await ProcessEstablishmentsSearch(model, payload.Object);
-            var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
+            var localAuthorities = (await _lookupService.LocalAuthorityGetAllAsync());
             var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
             var educationPhases = await _lookupService.EducationPhasesGetAllAsync();
+            var counties = (await _lookupService.CountiesGetAllAsync()).Where(c => c.Id != 63); //remove "not recorded"
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
-           
-            var filtered = model.Results.Select(a => new
+
+            var filtered = model.Results
+                                .Select(result => new { Result = result, LA = localAuthorities.SingleOrDefault(la => la.Id == result.LocalAuthorityId) })
+                                .Select(a => new
             {
-                Name = a.Name,
-                Location = a.Location,
-                Address = StringUtil.ConcatNonEmpties(", ", a.Address_Line1, a.Address_Locality, a.Address_Line3, a.Address_CityOrTown, a.Address_PostCode), // TODO add County
-                Urn = a.Urn,
-                LAESTAB = localAuthorities.FirstOrDefault(x => x.Id == a.LocalAuthorityId)?.Code != null && a.EstablishmentNumber.HasValue ? string.Concat(localAuthorities.FirstOrDefault(x => x.Id == a.LocalAuthorityId)?.Code, "/", a.EstablishmentNumber.GetValueOrDefault().ToString("D4")) : string.Empty, //TODO dodge the heavy items Kris will throw at my head
-                Status = model.EstablishmentStatuses.FirstOrDefault(x => x.Id == a.StatusId)?.Name ?? "Not recorded",
-                LocalAuthority = localAuthorities.FirstOrDefault(x => x.Id == a.LocalAuthorityId)?.Name ?? "Not recorded",
-                PhaseType = String.Concat(educationPhases.FirstOrDefault(x => x.Id == a.EducationPhaseId)?.Name ?? "Not recorded", ", ", establishmentTypes.FirstOrDefault(x => x.Id == a.TypeId)?.Name ?? "Not recorded")
+                Name = a.Result.Name,
+                Location = a.Result.Location,
+                Address = StringUtil.ConcatNonEmpties(", ", a.Result.Address_Line1, 
+                                                            a.Result.Address_Locality, 
+                                                            a.Result.Address_Line3, 
+                                                            a.Result.Address_CityOrTown, 
+                                                            counties.FirstOrDefault(c => c.Id == a.Result.Address_CountyId)?.Name,
+                                                            a.Result.Address_PostCode),
+                Urn = a.Result.Urn,
+                LAESTAB = a.LA?.Code != null && a.Result.EstablishmentNumber.HasValue ? $"{a.LA.Code}/{a.Result.EstablishmentNumber.Value:D4}" : string.Empty,
+                Status = model.EstablishmentStatuses.FirstOrDefault(x => x.Id == a.Result.StatusId)?.Name ?? "Not recorded",
+                LocalAuthority = a.LA?.Name ?? "Not recorded",
+                PhaseType = string.Concat(educationPhases.FirstOrDefault(x => x.Id == a.Result.EducationPhaseId)?.Name ?? "Not recorded", ", ", establishmentTypes.FirstOrDefault(x => x.Id == a.Result.TypeId)?.Name ?? "Not recorded"),
             });
 
             return Json(filtered);
