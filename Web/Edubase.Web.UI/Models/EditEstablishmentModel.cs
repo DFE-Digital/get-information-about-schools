@@ -272,6 +272,9 @@ namespace Edubase.Web.UI.Models
 
         #region IEBT properties
         public string Notes { get; set; }
+
+        [Display(Name = "Associations")]
+        public string Associations { get; set; }
         public DateTimeViewModel DateOfTheLastBridgeVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfLastOfstedVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfTheLastISIVisit { get; set; } = new DateTimeViewModel();
