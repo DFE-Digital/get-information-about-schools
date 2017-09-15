@@ -271,9 +271,10 @@ namespace Edubase.Web.UI.Models
         public int? PruEducatedByOthersId { get; set; }
 
         #region IEBT properties
+        [MaxLength(4000)]
         public string Notes { get; set; }
 
-        [Display(Name = "Associations")]
+        [Display(Name = "Associations"), MaxLength(1000)]
         public string Associations { get; set; }
         public DateTimeViewModel DateOfTheLastBridgeVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfLastOfstedVisit { get; set; } = new DateTimeViewModel();
