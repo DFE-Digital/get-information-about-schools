@@ -1,9 +1,7 @@
-﻿using Edubase.Common;
-using Microsoft.WindowsAzure.Storage.Table;
+﻿using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Edubase.Data.Entity
@@ -11,7 +9,7 @@ namespace Edubase.Data.Entity
     public class LocalAuthoritySet : TableEntity
     {
         public string Title { get; set; }
-
+        
         public byte[] IdData { get; set; }
 
         /// <summary>

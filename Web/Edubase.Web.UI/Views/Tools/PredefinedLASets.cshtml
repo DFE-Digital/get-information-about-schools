@@ -49,7 +49,7 @@
                     <td nowrap="">
                         @using (Html.BeginRouteForm("DeletePredefinedLASet", new { id = item.RowKey }, FormMethod.Post))
                         {
-                            @Html.RouteLink("Add", "CreatePredefinedLASet")
+                            <a href="@Url.RouteUrl("IndSchSearch")?@QueryStringHelper.ToQueryString("d", item.Ids)&SelectedLocalAuthoritySetId=@item.RowKey">Select</a>
                             <text>&nbsp;</text>
                             @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey })
                             <button class="button-as-link" style="font-size:14px;" type="submit" id="delete">Remove</button>

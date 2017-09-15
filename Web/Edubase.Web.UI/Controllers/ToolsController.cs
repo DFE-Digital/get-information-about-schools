@@ -122,9 +122,18 @@ namespace Edubase.Web.UI.Controllers
             await PopulateLookupData(viewModel);
 
             if (viewModel.ActionName == IndSchoolsSearchViewModel.ActionSearch)
-            {    
-                viewModel.Results = await _establishmentReadService.SearchAsync(CreateIndSchoolSearchPayload(viewModel), User);
-                return View("IndependentSchoolsSearchResults", viewModel);
+            {
+                return View("IndependentSchoolsSearchResults", viewModel.SetResults(new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take, 
+                    await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel), User))));
+            }
+            else if (viewModel.ActionName == IndSchoolsSearchViewModel.ActionSaveSet)
+            {
+                return Redirect(string.Concat(Url.RouteUrl("CreatePredefinedLASet"), "?",
+                    QueryStringHelper.ToQueryString(IndSchoolsSearchViewModel.BindAliasForSelectedLocalAuthorityIds, viewModel.SelectedLocalAuthorityIds.ToArray())));
+            }
+            else
+            {
+                viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync()).Items.OrderBy(x => x.Title).Select(x => new IndSchoolsSearchViewModel.LASetViewModel(x));
             }
 
             return View(viewModel);
@@ -134,7 +143,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> IndependentSchoolsSearchResults(IndSchoolsSearchViewModel viewModel)
         {
             await PopulateLookupData(viewModel);
-            viewModel.Results = await _establishmentReadService.SearchAsync(CreateIndSchoolSearchPayload(viewModel), User);
+            viewModel.Results = new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take, await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel), User));
             return PartialView("_IndSchSearchResults", viewModel);
         }
 
@@ -148,9 +157,9 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASet")]
-        public async Task<ActionResult> CreatePredefinedLASet()
+        public async Task<ActionResult> CreatePredefinedLASet(PredefinedLASetViewModel viewModel)
         {
-            var viewModel = new PredefinedLASetViewModel();
+            ModelState.Clear();
             viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
             return View("CreateEditPredefinedLASet", viewModel);
         }
@@ -215,8 +224,12 @@ namespace Edubase.Web.UI.Controllers
             viewModel.EstablishmentStatuses = await _lookup.EstablishmentStatusesGetAllAsync();
         }
 
-        private EstablishmentSearchPayload CreateIndSchoolSearchPayload(IndSchoolsSearchViewModel viewModel)
+        private async Task<EstablishmentSearchPayload> CreateIndSchoolSearchPayload(IndSchoolsSearchViewModel viewModel)
         {
+            int[] laIds;
+            if (viewModel.SelectedLocalAuthoritySetId.Clean() != null) laIds = (await _localAuthoritySetRepository.GetAsync(viewModel.SelectedLocalAuthoritySetId.Clean())).Ids;
+            else laIds = viewModel.SelectedLocalAuthorityIds.ToArray();
+
             return new EstablishmentSearchPayload
             {
                 Filters = new EstablishmentSearchFilters
@@ -225,7 +238,7 @@ namespace Edubase.Web.UI.Controllers
                     NextActionRequiredByWELMax = viewModel.IsWelfareMode ? viewModel.MaxDate.ToDateTime() : null,
                     NextGeneralActionRequiredMin = viewModel.IsGeneralMode ? viewModel.MinDate.ToDateTime() : null,
                     NextGeneralActionRequiredMax = viewModel.IsGeneralMode ? viewModel.MaxDate.ToDateTime() : null,
-                    LocalAuthorityIds = viewModel.SelectedLocalAuthorityIds.Where(x => x > 0).ToArray()
+                    LocalAuthorityIds = laIds
                 },
                 Skip = viewModel.Skip,
                 Take = 50,
