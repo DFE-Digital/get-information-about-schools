@@ -36,14 +36,14 @@ namespace Edubase.Web.UI.Models.Tools
         public const string ActionSaveSet = "saveset";
         public const string BindAliasForActionName = "a";
         public const string BindAliasForSelectedLocalAuthorityIds = "d";
-        
+        public const string SpecifierDateOfActionWelfare = "w";
+        public const string SpecifierDateOfActionGeneral = "g";
+
         [BindAlias(BindAliasForActionName)]
         public string ActionName { get; set; }
-
-        public string Mode { get; set; } // welfare => 'w' || general => 'g'
-
-        public bool IsWelfareMode => Mode == "w"; // filter by welfare action date
-        public bool IsGeneralMode => Mode == "g"; // filter by general action date
+        public string Mode { get; set; }
+        public bool IsWelfareMode => Mode == SpecifierDateOfActionWelfare;
+        public bool IsGeneralMode => Mode == SpecifierDateOfActionGeneral;
 
         public DateTimeViewModel MinDate { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel MaxDate { get; set; } = new DateTimeViewModel();
@@ -60,12 +60,11 @@ namespace Edubase.Web.UI.Models.Tools
         public IEnumerable<LookupDto> LocalAuthorities { get; internal set; }
         public IEnumerable<EstablishmentLookupDto> EstablishmentTypes { get; internal set; }
         public IEnumerable<LookupDto> EstablishmentStatuses { get; internal set; }
-
         public string SelectedLocalAuthoritySetId { get; set; }
-
         public IEnumerable<LASetViewModel> LocalAuthoritySets { get; set; }
 
-        public IEnumerable<SelectListItem> LocalAuthoritySetSelectList => LocalAuthoritySets.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString(), Selected = SelectedLocalAuthoritySetId == x.Id });
+        public IEnumerable<SelectListItem> LocalAuthoritySetSelectList 
+            => LocalAuthoritySets.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString(), Selected = SelectedLocalAuthoritySetId == x.Id });
 
         public IndSchoolsSearchViewModel SetResults(PaginatedResult<EstablishmentSearchResultModel> results)
         {

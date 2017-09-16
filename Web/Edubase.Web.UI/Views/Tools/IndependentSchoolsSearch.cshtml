@@ -30,8 +30,8 @@
                 <fieldset class="stacked-controls">
                     <legend class="bold-small">Select the action you’re interested in</legend>
                     <br />
-                    @Html.GiasRadioFor(x => x.Mode, "g", "Next general action required")
-                    @Html.GiasRadioFor(x => x.Mode, "w", "Next action required by welfare")
+                    @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionGeneral, "Next general action required")
+                    @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionWelfare, "Next action required by welfare")
                 </fieldset>
             </div>
 
