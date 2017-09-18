@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -440,6 +440,7 @@
     <Content Include="Assets\Scripts\libs\leaflet\leaflet.js" />
     <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet-google.js" />
     <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet.markercluster.src.js" />
+    <Content Include="Assets\Scripts\mapsApiKey.js" />
     <Content Include="Assets\Scripts\standalone\search-map.js" />
     <Content Include="public\assets\images\icons\arrows-vert.png" />
     <Content Include="public\assets\images\icons\icon-burger.png" />

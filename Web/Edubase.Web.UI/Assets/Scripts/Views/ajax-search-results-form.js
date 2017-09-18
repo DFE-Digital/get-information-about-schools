@@ -16,7 +16,6 @@
             selectedLas.push('&lsquo;<span class="bold-small">' + $.trim(text) + '</span>&rsquo;');
             laCount ++;
         });
-        console.log(laCount);
         selectedLas = selectedLas.join(', ');
         var lastComma = selectedLas.lastIndexOf(',');
         if (laCount > 1) {

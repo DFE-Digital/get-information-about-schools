@@ -5,7 +5,7 @@ DfE.searchMap = {
     step: 200,
     breachLimit: false,
     dataRefreshRequired: false,
-    googleApiKey: 'AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw',
+    googleApiKey: DfE.mapConfig.apiKey,
     establishmentDetailBaseUrl: '/Establishments/Establishment/Details/',
 
     openIcon: L.icon({
@@ -29,6 +29,7 @@ DfE.searchMap = {
                 '&callback=DfE.searchMap.initMap';
             document.body.appendChild(s);
             DfE.searchMap.scriptsLoaded = true;
+            
         } else {
             DfE.searchMap.getSearchData();
         }
@@ -151,11 +152,16 @@ DfE.searchMap = {
 
         $('#full-content').on('click', '#view-map', function (e) {
             e.preventDefault();
-            $('#results-container').addClass('hidden');
-            $('#map-container').removeClass('hidden');
-            if (DfE.searchMap.dataRefreshRequired) {
-                DfE.searchMap.getSearchData();
+            if (!DfE.searchMap.scriptsLoaded) {
+                DfE.searchMap.setUp();
+            } else {
+                $('#results-container').addClass('hidden');
+                $('#map-container').removeClass('hidden');
+                if (DfE.searchMap.dataRefreshRequired) {
+                    DfE.searchMap.getSearchData();
+                }
             }
+            
             DfE.searchMap.currentView = 'map';
         });
     },
@@ -189,13 +195,11 @@ DfE.searchMap = {
 
         
 
-        self.bindActions();
-
         searchMap.addLayer(googleTiles);
 
         this.mapObj = searchMap;
         this.getSearchData(true);
-        
+        this.bindActions();
         
     }    
 };

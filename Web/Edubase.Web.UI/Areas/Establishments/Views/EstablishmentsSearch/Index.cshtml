@@ -382,8 +382,11 @@
     </script>
     <script src="/public/assets/scripts/leaflet-bundle.js"></script>
     <script src="/public/assets/scripts/standalone/search-map.js"></script>
-    <script>
+    @*<script>
         $(document).one('click', '#view-map', DfE.searchMap.setUp);
+    </script>*@
+    <script>
+        DfE.searchMap.bindActions();
     </script>
     
 }
