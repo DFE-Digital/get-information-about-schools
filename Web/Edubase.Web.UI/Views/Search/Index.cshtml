@@ -67,8 +67,9 @@
 
 @section ViewScripts{
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key="+ DfE.mapConfig.apiKey></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw"></script>
     <script type="text/javascript">
+        console.log(DfE.mapConfig.apiKey);
         var jScriptVersion;
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
 
