@@ -62,11 +62,11 @@
         </div>
         <div class="column-two-thirds">
             <div class="form-group date-group-wrap">
-                @Html.EditorFor(x => x.MinDate, new { title = "From", style = "font-weight:bold;" })
+                @Html.EditorFor(x => x.MinDate, new { title = "From" })
             </div>
         
             <div class="form-group date-group-wrap">
-                @Html.EditorFor(x => x.MaxDate, new { title = "To", style = "font-weight:bold;" })
+                @Html.EditorFor(x => x.MaxDate, new { title = "To" })
             </div>
         </div>
 
@@ -87,16 +87,18 @@
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
         window.sets = @Html.Json(Model.LocalAuthoritySets);
 
-
-        if ($('#la-id-target').find('.remove-suggest-la').length > 0) {
-            $('#set-saver').removeClass('hidden');
-        }
-        $(window).on('laSelected', function (e){
-            if (e.count == 0) {
-                $('#set-saver').addClass('hidden');
-            } else {
+        (function() {
+            if ($('#la-id-target').find('.remove-suggest-la').length > 0) {
                 $('#set-saver').removeClass('hidden');
             }
-        });
+            $(window).on('laSelected', function (e) {
+                if (e.count === 0) {
+                    $('#set-saver').addClass('hidden');
+                } else {
+                    $('#set-saver').removeClass('hidden');
+                }
+            });
+        }());
+        
     </script>
 }

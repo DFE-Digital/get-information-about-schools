@@ -5,6 +5,9 @@
     var errorSummary = $('#js-filter-error-summary');
     var selectedLas = [];
    
+    if (!document.getElementById('filter-form')) {
+        return;
+    }
 
     function updateSearchedLas() {
         var laCount = 0;
