@@ -24,3 +24,6 @@
 </div>
 
 @{Html.RenderPartial("_IndSchSearchResults");}
+
+
+<a href="@Url.RouteUrl("IndSchSearchResultsRequestDownload")?@Request.QueryString">DOWNLOAD RESULTS</a>

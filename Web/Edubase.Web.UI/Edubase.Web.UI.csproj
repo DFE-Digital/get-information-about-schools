@@ -958,6 +958,8 @@
     <Content Include="Views\Tools\_IndSchSearchResults.cshtml" />
     <Content Include="Views\Tools\PredefinedLASets.cshtml" />
     <Content Include="Views\Tools\CreateEditPredefinedLASet.cshtml" />
+    <Content Include="Views\Tools\IndSchoolSearchDownload\PreparingFilePleaseWait.cshtml" />
+    <Content Include="Views\Tools\IndSchoolSearchDownload\ReadyToDownload.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">

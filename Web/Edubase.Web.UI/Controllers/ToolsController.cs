@@ -10,7 +10,9 @@ namespace Edubase.Web.UI.Controllers
     using Edubase.Data.Repositories;
     using Edubase.Services;
     using Edubase.Services.Core;
+    using Edubase.Services.Enums;
     using Edubase.Services.Establishments;
+    using Edubase.Services.Establishments.Downloads;
     using Edubase.Services.Establishments.Models;
     using Edubase.Services.Establishments.Search;
     using Edubase.Services.Lookup;
@@ -34,14 +36,16 @@ namespace Edubase.Web.UI.Controllers
         private readonly ICachedLookupService _lookup;
         private readonly IClientStorage _clientStorage;
         private readonly ILocalAuthoritySetRepository _localAuthoritySetRepository;
+        private readonly IEstablishmentDownloadService _establishmentDownloadService;
 
-        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, ICachedLookupService lookup, IClientStorage clientStorage, ILocalAuthoritySetRepository localAuthoritySetRepository)
+        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, ICachedLookupService lookup, IClientStorage clientStorage, ILocalAuthoritySetRepository localAuthoritySetRepository, IEstablishmentDownloadService establishmentDownloadService)
         {
             _securityService = securityService;
             _establishmentReadService = establishmentReadService;
             _lookup = lookup;
             _clientStorage = clientStorage;
             _localAuthoritySetRepository = localAuthoritySetRepository;
+            _establishmentDownloadService = establishmentDownloadService;
         }
         
         [Route(Name = "Tools")]
@@ -147,6 +151,34 @@ namespace Edubase.Web.UI.Controllers
             return PartialView("_IndSchSearchResults", viewModel);
         }
 
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/download", Name = "IndSchSearchResultsRequestDownload")]
+        public async Task<ActionResult> IndependentSchoolsSearchDownload(IndSchoolsSearchViewModel viewModel)
+        {
+            var id = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(new EstablishmentSearchDownloadPayload
+            {
+                 SearchPayload= await CreateIndSchoolSearchPayload(viewModel),
+                 FileFormat = eFileFormat.XLSX,
+                 DataSet = eDataSet.IEBT
+            }, User);
+            
+            return RedirectToRoute("IndSchSearchResultsDownload", new { id, viewModel.Mode });
+        }
+
+        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/download/{id}", Name = "IndSchSearchResultsDownload")]
+        public async Task<ActionResult> IndependentSchoolsSearchDownload(Guid id, string mode)
+        {
+            ViewBag.Subtitle = mode == IndSchoolsSearchViewModel.SpecifierDateOfActionGeneral ? "Download results for next general action required": "Download results for next welfare action required";
+            var model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id, User);
+
+            if (model.HasErrored)
+                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+
+            if (!model.IsComplete)
+                return View("IndSchoolSearchDownload/PreparingFilePleaseWait", model);
+
+            return View("IndSchoolSearchDownload/ReadyToDownload", model);
+        }
+
         [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets", Name = "PredefinedLASets")]
         public async Task<ActionResult> PredefinedLASets(PredefinedLASetsViewModel viewModel)
         {
@@ -174,7 +206,7 @@ namespace Edubase.Web.UI.Controllers
                 SelectedLocalAuthorityIds = entity.Ids.ToList(),
                 Title = entity.Title,
                 LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x))
-        });
+            });
         }
 
         [HttpPost, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), 
