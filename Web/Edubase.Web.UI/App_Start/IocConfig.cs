@@ -172,7 +172,5 @@ namespace Edubase.Web.UI
 
             return client;
         }
-
-
     }
 }

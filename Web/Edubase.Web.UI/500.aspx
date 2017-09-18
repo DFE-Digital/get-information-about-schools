@@ -8,7 +8,7 @@
 <html lang="en">
 <!--<![endif]-->
 <head>
-    <title>Edubase - GOV.UK</title>
+    <title>Get information about schools - GOV.UK</title>
     <meta name="google-site-verification" content="uRt7CAkfClOB8Jig6Pw2-DELUWuuyG2kYKip0UThxhg" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -118,18 +118,6 @@
                         <p>
                             GOV.UK uses cookies to make the site simpler. <a href="/cookies">Find out more about cookies</a>
                         </p>
-                </div>
-            </div>
-        </div>
-        <div id="global-news-message" class="hidden">
-            <div class="outer-block">
-                <div class="inner-block">
-                    <p>
-                        This site is for test purposes only. To update or search live records use
-                        <a href="http://www.education.gov.uk/edubase/home.xhtml" class="allow-exit">Edubase2</a>.
-                        View the <a href="/news" class="allow-exit">news</a> page for release updates.
-                    </p>
-                    <a href="#" id="news-dismiss" class="news-dismiss allow-exit" title="Dismiss this message"></a>
                 </div>
             </div>
         </div>

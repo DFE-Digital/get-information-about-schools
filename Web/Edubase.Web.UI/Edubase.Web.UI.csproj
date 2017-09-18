@@ -444,6 +444,7 @@
     <Content Include="Assets\Scripts\libs\leaflet\leaflet.js" />
     <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet-google.js" />
     <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet.markercluster.src.js" />
+    <Content Include="Assets\Scripts\mapsApiKey.js" />
     <Content Include="Assets\Scripts\standalone\search-map.js" />
     <Content Include="public\assets\images\icons\arrows-vert.png" />
     <Content Include="public\assets\images\icons\icon-burger.png" />

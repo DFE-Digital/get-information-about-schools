@@ -16,7 +16,6 @@
             selectedLas.push('&lsquo;<span class="bold-small">' + $.trim(text) + '</span>&rsquo;');
             laCount ++;
         });
-        console.log(laCount);
         selectedLas = selectedLas.join(', ');
         var lastComma = selectedLas.lastIndexOf(',');
         if (laCount > 1) {
@@ -244,7 +243,7 @@
                 if (filterIntent) {
                     window.clearTimeout(filterIntent);
                 }
-                if (DfE.searchMap.scriptsLoaded) {
+                if (DfE.searchMap != null && DfE.searchMap.scriptsLoaded) {
                     DfE.searchMap.clearPoints();
                 }
                 

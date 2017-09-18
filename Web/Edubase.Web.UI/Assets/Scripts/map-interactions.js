@@ -2,13 +2,10 @@
 
 DfE.mapInteractions =  (function () {
     'use strict';
-    var settings = {
-        apikey: 'AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw' // registered to Jon B, resticted to localhost / dev / stage for Edubase
-    }
-
+   
      return {
          loadGoogleScript: function () {
-            $.getScript("https://maps.googleapis.com/maps/api/js?key=" + settings.apikey + "&callback=DfE.mapInteractions.initMap");
+             $.getScript("https://maps.googleapis.com/maps/api/js?key=" + DfE.mapConfig.apiKey + "&callback=DfE.mapInteractions.initMap");
         },
         
         initMap: function() {

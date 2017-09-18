@@ -5,7 +5,7 @@ DfE.searchMap = {
     step: 200,
     breachLimit: false,
     dataRefreshRequired: false,
-    googleApiKey: 'AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw',
+    googleApiKey: DfE.mapConfig.apiKey,
     establishmentDetailBaseUrl: '/Establishments/Establishment/Details/',
 
     openIcon: L.icon({
@@ -29,6 +29,7 @@ DfE.searchMap = {
                 '&callback=DfE.searchMap.initMap';
             document.body.appendChild(s);
             DfE.searchMap.scriptsLoaded = true;
+            
         } else {
             DfE.searchMap.getSearchData();
         }
@@ -42,7 +43,8 @@ DfE.searchMap = {
         var startIndex = 0;
         var pointCount = 0;
         this.clusterGroup = new L.MarkerClusterGroup();
-        this.breachLimit = false;  
+        this.breachLimit = false;
+        $('#map-count').text('0');
         getPoints();
 
         
@@ -82,11 +84,15 @@ DfE.searchMap = {
 
                             self.clusterGroup.addLayer(marker);
                             pointCount ++;
-                            $('#map-count').text(pointCount);
+                            
                         }
                        
                     });
-
+                    var countDisplayed = Number($('#map-count').text());
+                    if (pointCount > countDisplayed) {
+                        $('#map-count').text(pointCount);
+                    }
+                    
                     if (startIndex <= resultCount) {
                         if (pointCount > self.softLimit && !self.breachLimit) {
                             pointsLoaded();
@@ -125,7 +131,9 @@ DfE.searchMap = {
             }
             
             self.mapObj.fitBounds(self.clusterGroup.getBounds());
-            $('.map-header').removeClass('loading');
+            window.setTimeout(function() {
+                $('.map-header').removeClass('loading');
+            },1500);            
         }
         
     },
@@ -144,11 +152,16 @@ DfE.searchMap = {
 
         $('#full-content').on('click', '#view-map', function (e) {
             e.preventDefault();
-            $('#results-container').addClass('hidden');
-            $('#map-container').removeClass('hidden');
-            if (DfE.searchMap.dataRefreshRequired) {
-                DfE.searchMap.getSearchData();
+            if (!DfE.searchMap.scriptsLoaded) {
+                DfE.searchMap.setUp();
+            } else {
+                $('#results-container').addClass('hidden');
+                $('#map-container').removeClass('hidden');
+                if (DfE.searchMap.dataRefreshRequired) {
+                    DfE.searchMap.getSearchData();
+                }
             }
+            
             DfE.searchMap.currentView = 'map';
         });
     },
@@ -182,13 +195,11 @@ DfE.searchMap = {
 
         
 
-        self.bindActions();
-
         searchMap.addLayer(googleTiles);
 
         this.mapObj = searchMap;
         this.getSearchData(true);
-        
+        this.bindActions();
         
     }    
 };

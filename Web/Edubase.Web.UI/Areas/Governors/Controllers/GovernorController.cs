@@ -486,7 +486,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 }
             }
 
-            var governor = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User) ?? await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
+            var governor = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
             var roles = new List<eLookupGovernorRole>
             {
                 (eLookupGovernorRole)governor.RoleId
@@ -494,11 +494,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value))
             {
-                var localEquivalent =
-                    RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole)governor.RoleId);
+                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole)governor.RoleId);
                 if (localEquivalent != null)
                     roles.Add(localEquivalent.Value);
-
             }
             else
             {

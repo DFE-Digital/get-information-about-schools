@@ -10,6 +10,9 @@ using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Lookup;
+using Edubase.Web.UI;
+using Edubase.Web.UI.Validation;
+using FluentValidation.Mvc;
 using Moq;
 using MoreLinq;
 
@@ -43,6 +46,7 @@ namespace Edubase.UnitTest
             }
 
             var containerBuilder = new ContainerBuilder();
+            //containerBuilder.RegisterModule<ValidationModule>();
             containerBuilder.RegisterType<T>().AsImplementedInterfaces().AsSelf();
 
             foreach (var mock in mocks)
@@ -67,6 +71,14 @@ namespace Edubase.UnitTest
                 GetMock<ControllerContext>().SetupGet(c => c.Controller).Returns(controller);
             }
         }
+
+        //protected void SetupFluentValidation()
+        //{ 
+        //    var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.AutofacDependencyResolver));
+        //    DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
+        //    fluentValidationModelValidatorProvider.AddImplicitRequiredValidator = false;
+        //    ModelValidatorProviders.Providers.Add(fluentValidationModelValidatorProvider);
+        //}
 
         /// <summary>
         /// Sets up mocks for HttpRequestBase, HttpContextBase, IPrincipal, IIdentity & ControllerContext
