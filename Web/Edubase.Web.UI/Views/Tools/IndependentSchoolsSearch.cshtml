@@ -1,4 +1,4 @@
-﻿@using VM = Edubase.Web.UI.Models.Tools.IndSchoolsSearchViewModel; 
+﻿@using VM = Edubase.Web.UI.Models.Tools.IndSchoolsSearchViewModel;
 @model VM
 @{
     ViewBag.Title = "View independent schools’ significant dates";
@@ -16,62 +16,66 @@
 
 <div class="grid-row">
     <div class="column-full">
-        <h1 class="heading-intro">View independent schools’ significant dates</h1>
-        <br />
-        <p>Use this tool to view independent schools’ ‘Next general action required’ or ‘Next action required by welfare' date. Local authorities can be added manually or with custom predeﬁned sets.</p>
+        <h1 class="heading-xlarge">View independent schools' significant dates</h1>
+        <p>Use this tool to view independent schools' &lsquo;Next general action required&rsquo; or &lsquo;Next action required by welfare&rsquo; date. Local authorities can be added manually or with custom predeﬁned sets.</p>
     </div>
 </div>
 
 @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get, new { @class = "has-typeahead" }))
 {
     <div class="grid-row">
-        <fieldset class="column-half">
+        <div class="column-full">
             <div class="form-group">
-                <fieldset class="stacked-controls">
-                    <legend class="bold-small">Select the action you’re interested in</legend>
-                    <br />
+                <fieldset>
+                    <legend class="heading-medium">Select the action you’re interested in</legend>
                     @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionGeneral, "Next general action required")
                     @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionWelfare, "Next action required by welfare")
                 </fieldset>
             </div>
-
-
+        </div>
+        <div class="column-two-thirds">
+            <h2 class="heading-medium">Select local authorities</h2>
             <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
-                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select local authorities", new { @class = "form-label-bold" })
-                @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "", new { @class = "form-control" })
-                @Html.RouteLink("View predefined sets", "PredefinedLASets", null, new { style="float:right;" })
+                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "form-label" })
+                @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "", new { @class = "form-control form-control-3-4" })
+                @Html.RouteLink("View predefined sets", "PredefinedLASets", null, new { @class = "baseline-inline" })
             </div>
 
-            <div id="la-id-target">
-                @foreach (var id in Model.SelectedLocalAuthorityIds)
+            <div class="form-group form-control-3-4 ">
+                <div id="la-id-target">
+                    @foreach (var id in Model.SelectedLocalAuthorityIds)
                 {
                     var la = Model.LocalAuthorities.Single(x => x.Id == id);
-                    <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
-                    <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
-                    <input type="hidden" name="@VM.BindAliasForSelectedLocalAuthorityIds" value="@id" id="la-@id">
-                }
-                <div class="floating-text-field-wrap">
-                    <input class="floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
+                        <input value="@la.Name" type="hidden" class="user-selected-la" />
+                        <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
+                        <input type="hidden" name="@VM.BindAliasForSelectedLocalAuthorityIds" value="@id" id="la-@id">
+                    }
+                    <div class="floating-text-field-wrap">
+                        <input class="floating-text-field form-control-3-4" id="LocalAuthorityToAdd" autocomplete="off" />
+                    </div>
                 </div>
+                <button class="link-button font-xsmall hidden" name="@VM.BindAliasForActionName" value="@VM.ActionSaveSet" id="set-saver">Save as set</button>
             </div>
-            <button class="button-as-link" name="@VM.BindAliasForActionName" value="@VM.ActionSaveSet">Save as set</button>
-            <br />
-            <br />
-
-            <div class="form-group">
-                <label class="form-label-bold">Date range</label>
-                <br />
+        </div>
+        <div class="column-full">
+            <h2 class="heading-medium">Date range</h2>
+        </div>
+        <div class="column-two-thirds">
+            <div class="form-group date-group-wrap">
                 @Html.EditorFor(x => x.MinDate, new { title = "From", style = "font-weight:bold;" })
+            </div>
+        
+            <div class="form-group date-group-wrap">
                 @Html.EditorFor(x => x.MaxDate, new { title = "To", style = "font-weight:bold;" })
             </div>
+        </div>
 
-            <div class="grid-row">
-                <div class="column-full">
-                    <br />
-                    <button type="submit" name="@VM.BindAliasForActionName" class="button mobile-full-width" value="@VM.ActionSearch">Continue</button>
-                </div>
-            </div>
-        </fieldset>
+
+        <div class="column-full">
+            <button type="submit" name="@VM.BindAliasForActionName" class="button mobile-full-width" value="@VM.ActionSearch">Continue</button>
+        </div>
+
+
     </div>
 }
 
@@ -82,5 +86,17 @@
     <script>
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
         window.sets = @Html.Json(Model.LocalAuthoritySets);
+
+
+        if ($('#la-id-target').find('.remove-suggest-la').length > 0) {
+            $('#set-saver').removeClass('hidden');
+        }
+        $(window).on('laSelected', function (e){
+            if (e.count == 0) {
+                $('#set-saver').addClass('hidden');
+            } else {
+                $('#set-saver').removeClass('hidden');
+            }
+        });
     </script>
 }

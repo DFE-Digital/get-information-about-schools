@@ -195,6 +195,8 @@
                 button.insertBefore($inputField);
             }
 
+            $(window).trigger({type: 'laSelected', count: selectedLocalAuthorities.length });
+
         }
 
         $('#la-id-target').on('click', '.remove-suggest-la', function (e) {
@@ -205,6 +207,7 @@
             self.addedLaCount > 0
                 ? $('.selected-las').addClass('has-results')
                 : $('.selected-las').removeClass('has-results');
+            $(window).trigger({ type: 'laSelected', count: $('#la-id-target').find('.remove-suggest-la').length });
         });
 
         $('#LocalAuthorityToAdd').on('focus', function () {
