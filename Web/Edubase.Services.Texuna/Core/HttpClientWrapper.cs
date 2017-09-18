@@ -1,16 +1,12 @@
-﻿
-using Edubase.Services.Texuna.Glimpse;
-using Microsoft.AspNet.Identity;
-using System.Web;
-
-namespace Edubase.Services
+﻿namespace Edubase.Services
 {
+    using Common;
     using Common.IO;
+    using Core;
+    using Data.Repositories;
     using Domain;
-    using Edubase.Common;
-    using Edubase.Data.Repositories;
-    using Edubase.Services.Core;
     using Exceptions;
+    using Microsoft.AspNet.Identity;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -23,17 +19,19 @@ namespace Edubase.Services
     using System.Net.Http.Headers;
     using System.Security.Principal;
     using System.Threading.Tasks;
+    using System.Web;
     using Texuna;
     using Texuna.Core;
+    using Texuna.Glimpse;
 
     public class HttpClientWrapper
     {
         private readonly HttpClient _httpClient;
-        private readonly JsonMediaTypeFormatter _formatter = new JsonMediaTypeFormatter();
+        private readonly JsonMediaTypeFormatter _formatter;
         private readonly ApiRecorderSessionItemRepository _apiRecorderSessionItemRepository;
         private const string HEADER_SA_USER_ID = "sa_user_id";
         private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
-        private IClientStorage _clientStorage;
+        private readonly IClientStorage _clientStorage;
 
         public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage, ApiRecorderSessionItemRepository apiRecorderSessionItemRepository)
         {
@@ -59,7 +57,7 @@ namespace Edubase.Services
         {
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
             var result = await SendAsync(requestMessage);
-            return await ParseHttpResponseMessageAsync<TResponse>(result, throwOnNotFound);
+            return await ParseHttpResponseMessageAsync<TResponse>(uri, result, throwOnNotFound);
 
         }
 
@@ -67,14 +65,14 @@ namespace Edubase.Services
         {
             var requestMessage = await CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
             var result = await SendAsync(requestMessage);
-            return await ParseHttpResponseMessageAsync(result);
+            return await ParseHttpResponseMessageAsync(uri, result);
         }
 
         public async Task DeleteAsync(string uri, object data, IPrincipal principal)
         {
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
             var result = await SendAsync(requestMessage);
-            await ParseHttpResponseMessageAsync(result);
+            await ParseHttpResponseMessageAsync(uri, result);
 
         }
 
@@ -84,14 +82,14 @@ namespace Edubase.Services
         {
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
             var result = await SendAsync(requestMessage);
-            return await ParseHttpResponseMessageAsync<T>(result);
+            return await ParseHttpResponseMessageAsync<T>(uri, result);
         }
 
         public async Task<ApiResponse> PutAsync(string uri, object data, IPrincipal principal)
         {
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
             var result = await SendAsync(requestMessage);
-            return await ParseHttpResponseMessageAsync(result);
+            return await ParseHttpResponseMessageAsync(uri, result);
         }
 
         #endregion
@@ -102,7 +100,7 @@ namespace Edubase.Services
         {
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
             var result = await SendAsync(requestMessage);
-            return await ParseHttpResponseMessageAsync<T>(result);
+            return await ParseHttpResponseMessageAsync<T>(uri, result);
 
         }
 
@@ -111,7 +109,7 @@ namespace Edubase.Services
 
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
             var result = await SendAsync(requestMessage);
-            return await ParseHttpResponseMessageAsync(result);
+            return await ParseHttpResponseMessageAsync(uri, result);
 
         }
 
@@ -121,7 +119,7 @@ namespace Edubase.Services
 
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, payload);
             var result = await SendAsync(requestMessage);
-            return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
+            return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(uri, result);
 
         }
 
@@ -130,7 +128,7 @@ namespace Edubase.Services
         {
             var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, payload);
             var result = await SendAsync(requestMessage);
-            return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(result);
+            return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(uri, result);
 
         }
 
@@ -179,7 +177,7 @@ namespace Edubase.Services
             requestMessage.Content = content;
 
             var result = await _httpClient.SendAsync(requestMessage);
-            return await ParseHttpResponseMessageAsync<T>(result);
+            return await ParseHttpResponseMessageAsync<T>(uri, result);
 
         }
 
@@ -187,43 +185,43 @@ namespace Edubase.Services
 
         #region ParseHttpResponseMessageAsync
 
-        private async Task<ApiResponse<T>> ParseHttpResponseMessageAsync<T>(HttpResponseMessage message, bool throwOnNotFound = true)
+        private async Task<ApiResponse<T>> ParseHttpResponseMessageAsync<T>(string requestUrl, HttpResponseMessage message, bool throwOnNotFound = true)
         {
             AssertJsonContentOrEmpty(message);
             var response = new ApiResponse<T>(message.IsSuccessStatusCode);
-            if (message.IsSuccessStatusCode) return response.OK(await DeserializeResponseAsync<T>(message));
-            else return await ProcessApiErrorAsync(message, response, throwOnNotFound);
+            if (message.IsSuccessStatusCode) return response.OK(await DeserializeResponseAsync<T>(message, requestUrl));
+            else return await ProcessApiErrorAsync(message, response, requestUrl, throwOnNotFound);
         }
 
-        private async Task<ApiResponse> ParseHttpResponseMessageAsync(HttpResponseMessage message)
+        private async Task<ApiResponse> ParseHttpResponseMessageAsync(string requestUrl, HttpResponseMessage message)
         {
             AssertJsonContentOrEmpty(message);
             var response = new ApiResponse(message.IsSuccessStatusCode);
             if (message.IsSuccessStatusCode) return response;
-            else return await ProcessApiErrorAsync(message, response);
+            else return await ProcessApiErrorAsync(message, response, requestUrl);
         }
 
-        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message)
+        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(string requestUrl, HttpResponseMessage message)
             where TValidationEnvelope : class
         {
             AssertJsonContentOrEmpty(message);
             var response = new ApiResponse<TSuccess, TValidationEnvelope>();
-            if (message.IsSuccessStatusCode) return response.Success(await DeserializeResponseAsync<TSuccess>(message));
-            else return await ProcessApiErrorAsync(message, response);
+            if (message.IsSuccessStatusCode) return response.Success(await DeserializeResponseAsync<TSuccess>(message, requestUrl));
+            else return await ProcessApiErrorAsync(message, response, requestUrl);
         }
 
         #endregion
 
         #region Error handling
 
-        private async Task<T> ProcessApiErrorAsync<T>(HttpResponseMessage message, T response, bool throwOnNotFound = true) where T : ApiResponse
+        private async Task<T> ProcessApiErrorAsync<T>(HttpResponseMessage message, T response, string requestUrl, bool throwOnNotFound = true) where T : ApiResponse
         {
             ValidateGenericHttpErrors(message, throwOnNotFound);
             if (message.StatusCode == HttpStatusCode.BadRequest)
             {
                 var json = await message.Content.ReadAsStringAsync();
                 var errors = ParseApiErrors(json);
-                Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException("The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. " + json, GetRequestJsonBody(message.RequestMessage)));
+                Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException($"The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. (Request URI: {requestUrl}) \r\n body:{json}", GetRequestJsonBody(message.RequestMessage)));
                 response.Fail(errors);
             }
 
@@ -235,7 +233,7 @@ namespace Edubase.Services
             return response;
         }
 
-        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ProcessApiErrorAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message, ApiResponse<TSuccess, TValidationEnvelope> response, bool throwOnNotFound = true)
+        private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ProcessApiErrorAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message, ApiResponse<TSuccess, TValidationEnvelope> response, string requestUrl)
             where TValidationEnvelope : class
         {
             ValidateGenericHttpErrors(message);
@@ -248,7 +246,7 @@ namespace Edubase.Services
                 if (response.ValidationEnvelope == null)
                 {
                     var errors = ParseApiErrors(json);
-                    Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException("The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. " + json, GetRequestJsonBody(message.RequestMessage)));
+                    Guard.IsTrue(errors.Any(), () => new TexunaApiSystemException($"The API gave a 400 Bad Request response; returned JSON.  But the JSON returned was unrecognizable. (Request URI: {requestUrl}) \r\n body:{json}", GetRequestJsonBody(message.RequestMessage)));
                     response.Fail(errors);
                 }
             }
@@ -283,15 +281,15 @@ namespace Edubase.Services
                         AssertJsonContent(message);
                         break;
                     case HttpStatusCode.InternalServerError:
-                        throw new TexunaApiSystemException($"The API returned an 'Internal Server Error'. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
+                        throw new TexunaApiSystemException($"The API returned an 'Internal Server Error'. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
                     case HttpStatusCode.NotFound:
                         if (throwOnNotFound)
-                            throw new TexunaApiNotFoundException($"The API returned 404 Not Found. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})");
+                            throw new TexunaApiNotFoundException($"The API returned 404 Not Found. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
                         break;
                     case HttpStatusCode.Forbidden:
-                        throw new EduSecurityException("The current principal does not have permission to call this API");
+                        throw new EduSecurityException($"The current principal does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
                     default:
-                        throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
+                        throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
                 }
             }
         }
@@ -301,7 +299,7 @@ namespace Edubase.Services
             if (message?.Content?.Headers?.ContentType?.MediaType != "application/json")
             {
                 throw new TexunaApiSystemException(
-                    $"The API returned an invalid content type: '{message?.Content?.Headers?.ContentType?.MediaType}' (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
+                    $"The API returned an invalid content type: '{message?.Content?.Headers?.ContentType?.MediaType}' (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message?.RequestMessage));
             }
         }
 
@@ -319,7 +317,7 @@ namespace Edubase.Services
 
         #region Helper methods
 
-        private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage message)
+        private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage message, string requestUri)
         {
             AssertJsonContent(message);
             if (typeof(T) == typeof(string)) return (T)(object)await message.Content.ReadAsStringAsync();
@@ -328,7 +326,7 @@ namespace Edubase.Services
             {
                 var errorLogger = new FormatterErrorLogger();
                 var retVal = await message.Content.ReadAsAsync<T>(new[] { _formatter }, errorLogger);
-                if (errorLogger.Errors.Any()) throw new TexunaApiSystemException($"Error parsing the JSON returned by the API; details: {errorLogger.Errors.First().ErrorMessage}");
+                if (errorLogger.Errors.Any()) throw new TexunaApiSystemException($"Error parsing the JSON returned by the API; (Request URI: {requestUri}) details: {errorLogger.Errors.First().ErrorMessage}");
                 return retVal;
             }
         }
@@ -378,7 +376,7 @@ namespace Edubase.Services
                     Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
                     Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
                     ResponseCode = response != null ? (int)response.StatusCode : 0,
-                    ClientIpAddress = context?.Request?.UserHostAddress,
+                    ClientIpAddress = context?.Request.UserHostAddress,
                     UserId = context?.User?.Identity?.GetUserId(),
                     UserName = context?.User?.Identity?.GetUserName()
                 };
@@ -392,27 +390,24 @@ namespace Edubase.Services
 
         private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed)
         {
-            if (_clientStorage != null)
+            var apiSessionId = _clientStorage?.Get("ApiSessionId");
+            if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
             {
-                var apiSessionId = _clientStorage.Get("ApiSessionId");
-                if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
+                if (responseMessage == null && response?.Content != null)
                 {
-                    if (responseMessage == null && response?.Content != null)
-                    {
-                        responseMessage = await response.Content?.ReadAsStringAsync();
-                    }
-
-                    await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
-                    {
-                        HttpMethod = requestMessage.Method.ToString(),
-                        RawRequestBody = GetRequestJsonBody(requestMessage),
-                        RawResponseBody = responseMessage.Ellipsis(32000),
-                        RequestHeaders = ToJsonIndented(requestMessage.Headers),
-                        ResponseHeaders = ToJsonIndented(response.Headers),
-                        ElapsedTimeSpan = elapsed.ToString(),
-                        ElapsedMS = elapsed.TotalMilliseconds
-                    });
+                    responseMessage = await response.Content?.ReadAsStringAsync();
                 }
+
+                await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
+                {
+                    HttpMethod = requestMessage.Method.ToString(),
+                    RawRequestBody = GetRequestJsonBody(requestMessage),
+                    RawResponseBody = responseMessage.Ellipsis(32000),
+                    RequestHeaders = ToJsonIndented(requestMessage.Headers),
+                    ResponseHeaders = ToJsonIndented(response.Headers),
+                    ElapsedTimeSpan = elapsed.ToString(),
+                    ElapsedMS = elapsed.TotalMilliseconds
+                });
             }
         }
 
@@ -447,11 +442,7 @@ namespace Edubase.Services
             {
                 if (item.Value != null)
                 {
-                    var header = string.Empty;
-                    foreach (var value in item.Value)
-                    {
-                        header += value + " ";
-                    }
+                    var header = item.Value.Aggregate(string.Empty, (current, value) => $"{current}{value} ");
                     header = header.TrimEnd(" ".ToCharArray());
                     dict.Add(item.Key, header);
                 }
