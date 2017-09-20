@@ -516,24 +516,25 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        internal async Task<GovernorsGridViewModel> CreateGovernorsViewModel(int? groupUId = null, int? establishmentUrn = null, EstablishmentModel establishmentModel = null)
+        internal async Task<GovernorsGridViewModel> CreateGovernorsViewModel(int? groupUId = null, int? establishmentUrn = null, EstablishmentModel establishmentModel = null, IPrincipal user = null)
         {
+            user = user ?? User;
             establishmentUrn = establishmentUrn ?? establishmentModel?.Urn;
 
-            var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
+            var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
             var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService,
                 (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
 
             if (establishmentUrn.HasValue || establishmentModel != null)
             {
-                var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, User)).GetResult();
-                var items = await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, User); // The API uses 1 as a default value, hence we have to call another API to deduce whether to show the Governance mode UI section
+                var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, user)).GetResult();
+                var items = await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, user); // The API uses 1 as a default value, hence we have to call another API to deduce whether to show the Governance mode UI section
                 viewModel.GovernanceMode = items.Any() ? estabDomainModel.GovernanceMode : null;
             }
 
             if (groupUId.HasValue)
             {
-                var groupModel = (await _groupReadService.GetAsync(groupUId.Value, User)).GetResult();
+                var groupModel = (await _groupReadService.GetAsync(groupUId.Value, user)).GetResult();
                 viewModel.ShowDelegationInformation = groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust;
                 viewModel.DelegationInformation = groupModel.DelegationInformation;
             }
