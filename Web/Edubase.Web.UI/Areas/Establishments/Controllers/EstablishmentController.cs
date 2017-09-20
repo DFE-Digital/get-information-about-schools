@@ -585,12 +585,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return viewModel;
         }
 
-        private static async Task PopulateGovernors(EstablishmentDetailViewModel viewModel)
+        private async Task PopulateGovernors(EstablishmentDetailViewModel viewModel)
         {
             try
             {
                 var governorsController = DependencyResolver.Current.GetService<GovernorController>();
-                viewModel.GovernorsGridViewModel = await governorsController.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment);
+                viewModel.GovernorsGridViewModel = await governorsController.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment, user: User);
             }
             catch (Exception) // todo: tech debt, need to more gracefully handle 404 in this instance.
             {
