@@ -237,8 +237,8 @@
                                 @foreach (var item in Model.Results.Items)
                                 {
                                     <tr>
-                                        <td aria-label="URN"><a href="/establishment/details/@(item.EstablishmentUrn)">@(item.EstablishmentUrn)</a></td>
-                                        <td aria-label="Establishment"><a href="/establishment/details/@(item.EstablishmentUrn)">@(item.EstablishmentName)</a></td>
+                                        <td aria-label="URN">@Html.RouteLink(item.EstablishmentUrn.ToString(), "EstabDetails", new { id =  item.EstablishmentUrn})</td>
+                                        <td aria-label="Establishment">@Html.RouteLink(item.EstablishmentName, "EstabDetails", new { id = item.EstablishmentUrn })</td>
                                         <td aria-label="Date changed">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
                                         <td aria-label="Updated field">@item.FieldName</td>
                                         <td aria-label="Old value">@item.OldValue</td>
@@ -282,8 +282,8 @@
                                     <tr>
                                         <td aria-label="Date changed">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
                                         <td aria-label="Request type">@item.RequestType</td>
-                                        <td aria-label="Group UID"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupUId)</a></td>
-                                        <td aria-label="Group"><a href="/groups/group/details/@(item.GroupUId)">@(item.GroupName)</a></td>
+                                        <td aria-label="Group UID">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new { id = item.GroupUId })</td>
+                                        <td aria-label="Group">@Html.RouteLink(item.GroupName, "GroupDetails", new { id = item.GroupUId })</td>
                                         <td aria-label="Change">
                                             <dl class="key-value-list">
                                                 @if (item.RequestType == GroupChangeRequestType.GroupChange)
