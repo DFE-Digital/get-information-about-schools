@@ -20,60 +20,65 @@
         </h1>
     </div>
 </div>
+<div class="grid-row">
+    <div class="column-two-thirds">
 
-<br />
+        @using (Html.BeginRouteForm((Model.IsNewEntity ? "CreatePredefinedLASetPost" : "EditPredefinedLASetPost"), new { Model.Id }, FormMethod.Post, new { @class = "has-typeahead" }))
+        {
+            @Html.HiddenFor(x => x.Id)
 
-@using (Html.BeginRouteForm((Model.IsNewEntity? "CreatePredefinedLASetPost" : "EditPredefinedLASetPost"), new { Model.Id }, FormMethod.Post, new { @class = "has-typeahead" }))
-{
-    @Html.HiddenFor(x => x.Id)
-
-    if (Model.WarningNameClash)
-    {
-        <div class="modal-overlay" id="warning-modal-overlay-0"></div>
-        <div class="modal-content" id="warning-modal-content-0">
-            <div class="modal-inner">
-                <a href="#" id="warning-exit-overlay-0" class="modal-exit allow-exit">Close</a>
-                <h3 class="heading-large">A set already exists with this name.</h3>
-                <p>Saving with this name will overwrite the existing set.</p>
-            </div>
-            <div class="button-row">
-                <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
-                <a href="#" class="button button-grey mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
-            </div>
-        </div>
+            if (Model.WarningNameClash)
+            {
+                <div class="modal-overlay" id="warning-modal-overlay-0"></div>
+                <div class="modal-content" id="warning-modal-content-0">
+                    <div class="modal-inner">
+                        <a href="#" id="warning-exit-overlay-0" class="modal-exit allow-exit">Close</a>
+                        <h3 class="heading-large">A set already exists with this name.</h3>
+                        <p>Saving with this name will overwrite the existing set.</p>
+                    </div>
+                    <div class="button-row">
+                        <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
+                        <a href="#" class="button button-grey mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
+                    </div>
+                </div>
 
         <!-- Set to true ONLY when 'Proceed' is clicked.  -->
-        <input type="hidden" id="@nameof(Model.SuppressWarning)" name="@nameof(Model.SuppressWarning)" value="false" />
-    }
+                <input type="hidden" id="@nameof(Model.SuppressWarning)" name="@nameof(Model.SuppressWarning)" value="false" />
+            }
 
-    <div class="form-group @Html.ValidationCssClassFor(x => x.Title)">
-        @Html.LabelFor(x => x.Title, "Name")
-        @Html.ValidationMessageFor(x => x.Title)
-        @Html.TextBoxFor(x => x.Title)
-    </div>
+            <div class="form-group @Html.ValidationCssClassFor(x => x.Title)">
+                @Html.LabelFor(x => x.Title, "Name", new { @class = "form-label" })
+                @Html.ValidationMessageFor(x => x.Title)
+                @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+            </div>
 
-    <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
-        @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Local authorities")
-        @Html.ValidationMessageFor(x => x.SelectedLocalAuthorityIds)
-    </div>
+            <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
+                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Local authorities")
+                @Html.ValidationMessageFor(x => x.SelectedLocalAuthorityIds)
+            </div>
 
-    <div id="la-id-target">
+            <div id="la-id-target">
 
-        @foreach (var id in Model.SelectedLocalAuthorityIds)
-        {
-            var la = Model.LocalAuthorities.First(x => x.Id == id);
-            <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
-            <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
-            <input type="hidden" name="d" value="@id" id="la-@id">
+                @foreach (var id in Model.SelectedLocalAuthorityIds)
+                {
+                    var la = Model.LocalAuthorities.First(x => x.Id == id);
+                    <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
+                    <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
+                    <input type="hidden" name="d" value="@id" id="la-@id">
+                }
+                <div class="floating-text-field-wrap">
+                    <input class="floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
+                </div>
+
+            </div>
+            <br />
+            <button id="edit-submit" class="button mobile-full-width" type="submit">Save</button>
+            @Html.ActionLink("Cancel", "IndependentSchoolsSearch", "Tools", new { @class="button button-grey mobile-full-width"})
         }
-        <div class="floating-text-field-wrap">
-            <input class="floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
-        </div>
 
     </div>
-    <br />
-    <button id="edit-submit" class="button" type="submit">Save</button>
-}
+
+</div>
 
 @section ViewScripts{
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>

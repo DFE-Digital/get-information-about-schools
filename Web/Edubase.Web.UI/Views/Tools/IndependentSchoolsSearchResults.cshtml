@@ -1,7 +1,7 @@
 ﻿@using Edubase.Services.Domain
 @model IndSchoolsSearchViewModel
 @{
-    ViewBag.Title = "View independent schools’ significant dates";
+    ViewBag.Title = "View independent schools' significant dates";
     ViewBag.bodyClasses = "search-results";
 }
 
@@ -11,12 +11,15 @@
             @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
         </li>
         <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+        <li>
+            @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools")
+        </li>
     </ul>
 </div>
 
 <div class="grid-row">
     <div class="column-full results-heading indi-results-header">
-        <h1 class="heading-large">
+        <h1 class="heading-intro-36">
             @Html.Conditional(Model.IsGeneralMode, "Results for next general action required")
             @Html.Conditional(Model.IsWelfareMode, "Results for next action required by welfare")
         </h1>
@@ -25,8 +28,8 @@
 </div>
 
 <div class="grid-row">
-<div class="column-third" id="indi-filter-form"">
-    @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get))
+<div class="column-third" id="indi-filter-form">
+    @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get, new {id="filter-form-ind"}))
     {
         
         @Html.HiddenFor(m=>m.SelectedLocalAuthoritySetId)
@@ -65,7 +68,7 @@
 <div class="column-two-thirds" id="results-container">
 @{Html.RenderPartial("_IndSchSearchResults");}
 
-    </div>
+</div>
     
     
 </div>
