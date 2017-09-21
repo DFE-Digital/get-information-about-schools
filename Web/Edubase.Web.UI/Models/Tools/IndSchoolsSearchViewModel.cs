@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Helpers.ModelBinding;
@@ -41,6 +40,8 @@ namespace Edubase.Web.UI.Models.Tools
 
         [BindAlias(BindAliasForActionName)]
         public string ActionName { get; set; }
+
+        [Required(ErrorMessage = "Please select an action")]
         public string Mode { get; set; }
         public bool IsWelfareMode => Mode == SpecifierDateOfActionWelfare;
         public bool IsGeneralMode => Mode == SpecifierDateOfActionGeneral;
@@ -65,7 +66,7 @@ namespace Edubase.Web.UI.Models.Tools
 
         public IEnumerable<SelectListItem> LocalAuthoritySetSelectList 
             => LocalAuthoritySets.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString(), Selected = SelectedLocalAuthoritySetId == x.Id });
-
+        
         public IndSchoolsSearchViewModel SetResults(PaginatedResult<EstablishmentSearchResultModel> results)
         {
             Results = results;

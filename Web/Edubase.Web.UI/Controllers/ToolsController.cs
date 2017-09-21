@@ -1,30 +1,30 @@
-﻿using Edubase.Services.Security;
-using Edubase.Web.UI.Models;
-using System.Linq;
-using System.Web.Mvc;
+﻿using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
 
 namespace Edubase.Web.UI.Controllers
 {
-    using Edubase.Common;
-    using Edubase.Data.Entity;
-    using Edubase.Data.Repositories;
-    using Edubase.Services;
-    using Edubase.Services.Core;
-    using Edubase.Services.Enums;
-    using Edubase.Services.Establishments;
-    using Edubase.Services.Establishments.Downloads;
-    using Edubase.Services.Establishments.Models;
-    using Edubase.Services.Establishments.Search;
-    using Edubase.Services.Lookup;
-    using Edubase.Web.UI.Models.Tools;
+    using Common;
+    using Data.Entity;
+    using Data.Repositories;
     using Filters;
     using Helpers;
-    using Microsoft.WindowsAzure.Storage.Table;
+    using Models;
+    using Models.Tools;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
+    using Services;
+    using Services.Core;
+    using Services.Enums;
+    using Services.Establishments;
+    using Services.Establishments.Downloads;
+    using Services.Establishments.Models;
+    using Services.Establishments.Search;
+    using Services.Lookup;
+    using Services.Security;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
+    using System.Web.Mvc;
     using GT = Services.Enums.eLookupGroupType;
     using R = EdubaseRoles;
 
@@ -125,20 +125,32 @@ namespace Edubase.Web.UI.Controllers
         {
             await PopulateLookupData(viewModel);
 
-            if (viewModel.ActionName == IndSchoolsSearchViewModel.ActionSearch)
+            if (!string.Equals(viewModel.ActionName, IndSchoolsSearchViewModel.ActionSearch))
             {
-                return View("IndependentSchoolsSearchResults", viewModel.SetResults(new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take, 
-                    await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel), User))));
+                ModelState.Clear();
             }
-            else if (viewModel.ActionName == IndSchoolsSearchViewModel.ActionSaveSet)
+
+            if (ModelState.IsValid)
             {
-                return Redirect(string.Concat(Url.RouteUrl("CreatePredefinedLASet"), "?",
-                    QueryStringHelper.ToQueryString(IndSchoolsSearchViewModel.BindAliasForSelectedLocalAuthorityIds, viewModel.SelectedLocalAuthorityIds.ToArray())));
+                switch (viewModel.ActionName)
+                {
+                    case IndSchoolsSearchViewModel.ActionSearch:
+                        return View("IndependentSchoolsSearchResults", viewModel.SetResults(
+                            new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take,
+                                await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel),
+                                    User))));
+                    case IndSchoolsSearchViewModel.ActionSaveSet:
+                        return Redirect(string.Concat(Url.RouteUrl("CreatePredefinedLASet"), "?",
+                            QueryStringHelper.ToQueryString(IndSchoolsSearchViewModel.BindAliasForSelectedLocalAuthorityIds,
+                                viewModel.SelectedLocalAuthorityIds.ToArray())));
+                    default:
+                        break;
+                }
             }
-            else
-            {
-                viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync()).Items.OrderBy(x => x.Title).Select(x => new IndSchoolsSearchViewModel.LASetViewModel(x));
-            }
+            
+            viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync()).Items
+                .OrderBy(x => x.Title)
+                .Select(x => new IndSchoolsSearchViewModel.LASetViewModel(x));
 
             return View(viewModel);
         }
