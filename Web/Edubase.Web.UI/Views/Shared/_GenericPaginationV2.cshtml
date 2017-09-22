@@ -32,11 +32,11 @@
 <div class="pagination">
     <p>Showing @Model.FirstResultIndex - @Model.LastResultIndex of @Model.Count</p>
     <ul class="pagination-links">
-        
+
         @if (Model.CurrentPageIndex > 1)
         {
             <li>
-                <a href="@Url.Current(new { skip = (Model.Skip - Model.Take), Count = Model.Count })" class="pagination-prev">Previous</a>
+                <a href="@Url.Current(new {skip = (Model.Skip - Model.Take), Count = Model.Count})" class="pagination-prev">Previous</a>
             </li>
         }
 
@@ -50,18 +50,18 @@
             {
                 var tabletClass = (i >= Model.CurrentPageIndex - 2 && i <= Model.CurrentPageIndex + 2) ? "tablet-pagination" : "";
                 <li>
-                    <a href="@Url.Current(new { skip = ((i-1) * Model.Take), Count = Model.Count })" class="numeric-pagination @tabletClass">@i</a>
+                    <a href="@Url.Current(new {skip = ((i - 1) * Model.Take), Count = Model.Count})" class="numeric-pagination @tabletClass">@i</a>
                 </li>
-                
+
             }
         }
 
         @if (Model.CurrentPageIndex < Model.PageCount)
         {
             <li>
-                <a href="@Url.Current(new { skip = (Model.Skip + Model.Take), Count = Model.Count })" class="pagination-next">Next</a>
+                <a href="@Url.Current(new {skip = (Model.Skip + Model.Take), Count = Model.Count})" class="pagination-next">Next</a>
             </li>
         }
-        
+
     </ul>
 </div>

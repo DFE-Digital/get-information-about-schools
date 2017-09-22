@@ -34,7 +34,7 @@ namespace Edubase.Web.UI.Controllers
             _groupReadService = groupReadService;
         }
         
-        [HttpGet, Route]
+        [HttpGet, Route(Name = "Homepage")]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
             if (!viewModel.NoResultsForLocation && !viewModel.NoResultsForName && !viewModel.NoResultsForLA)

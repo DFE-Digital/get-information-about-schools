@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Governors.Models;
+﻿using Edubase.Common;
+using Edubase.Services.Governors.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -134,5 +135,18 @@ namespace Edubase.Web.UI.Helpers
             }
             else return new MvcHtmlString(string.Empty);
         }
+
+        /// <summary>
+        /// Outputs the ToString value of an object; if the value is empty or null, it'll output "Not recorded"
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="htmlHelper"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string Field<TModel>(this HtmlHelper<TModel> htmlHelper, object obj, string dateFormat = null) 
+            => (obj is DateTime? ? ((DateTime?)obj)?.ToString(dateFormat ?? "dd/MM/yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
+        
+
+
     }
 }

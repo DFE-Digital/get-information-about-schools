@@ -1,0 +1,100 @@
+﻿@model PredefinedLASetsViewModel
+@{
+    ViewBag.Title = "Predefined local authority sets";
+    ViewBag.bodyClasses = "";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.RouteLink("Home", "Homepage")</li>
+        <li>@Html.RouteLink("Tools", "Tools")</li>
+        <li>@Html.RouteLink("Independent schools reminders", "IndSchSearch")</li>
+    </ul>
+</div>
+
+<div class="grid-row">
+    <div class="column-full results-heading">
+        <h1 class="heading-large">
+            Predefined local authority sets
+        </h1>
+        <a class="font-xsmall" style="margin-right: 0;position: absolute;right: 15px;top: 14px;" href="@Url.RouteUrl("CreatePredefinedLASet")">Create new set</a>
+    </div>
+</div>
+
+<br />
+
+
+@if (Model.HasResults)
+{
+    if (Model.Results.PageCount > 1)
+    {
+        <div class="top-pagination">
+            @Html.Partial("_GenericPaginationV2", Model.Results)
+        </div>
+    }
+    <table class="edubase-table">
+        <thead>
+            <tr>
+                <th>Set name</th>
+                <th>Local authorities</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results.Items)
+            {
+                <tr>
+                    <td>@Html.Field(item.Title)</td>
+                    <td>@Html.Field(Model.GetLANames(item.Ids))</td>
+                    <td nowrap="">
+                        @using (Html.BeginRouteForm("DeletePredefinedLASet", new { id = item.RowKey }, FormMethod.Post))
+                        {
+                            <a href="@Url.RouteUrl("IndSchSearch")?@QueryStringHelper.ToQueryString("d", item.Ids)&SelectedLocalAuthoritySetId=@item.RowKey">Select</a>
+                            <text>&nbsp;</text>
+                            @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey })
+                            <button class="button-as-link" style="font-size:14px;" type="submit" id="delete">Remove</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    if (Model.Results.PageCount > 1)
+    {
+        <div class="lower-pagination">
+            @Html.Partial("_GenericPaginationV2", Model.Results)
+        </div>
+    }
+}
+else
+{
+    <p>Sorry, no results were found.</p>
+}
+
+
+@section ViewScripts{
+    
+    <script>
+        (function () {
+            var dismissed = false;
+            var form = $('form');
+            form.on('submit', function (e) {
+                if (!dismissed) {
+                    e.preventDefault();
+                    $(this).okCancel({
+                        ok: function () {
+                            dismissed = true;
+                            $('#delete').click();
+                        },
+                        immediate: true,
+                        idPrefix: 'close-continue',
+                        title: 'Are you sure you want to remove this set?',
+                        content: 'You will no longer be able to filter by this set.'
+                    });
+                    $(this).removeData('okCancel');
+                }
+            });
+        }());
+    </script>    
+    
+}

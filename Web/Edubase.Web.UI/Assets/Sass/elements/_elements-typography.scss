@@ -116,7 +116,12 @@ main {
 
   margin-top: em(15, 32);
   margin-bottom: 0;
-  }
+}
+
+.heading-intro-36 {
+    @include bold-36();
+    margin: 0.5em 0 1.5em;
+}
 
 .heading-large {
   @include bold-36();

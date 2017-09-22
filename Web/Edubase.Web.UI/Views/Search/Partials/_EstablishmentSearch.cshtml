@@ -123,7 +123,7 @@
                                 {
                                     var la = Model.LocalAuthorities.First(x => x.Id == id);
                                     <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
-                                    <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" value="@id">@la.Name</button>
+                                    <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
                                 }
                                 <div class="floating-text-field-wrap">
                                     @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new { @class = "floating-text-field", autocomplete = "off" })
