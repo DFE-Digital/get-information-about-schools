@@ -8,14 +8,14 @@
     <ul>
         <li>@Html.RouteLink("Home", "Homepage")</li>
         <li>@Html.RouteLink("Tools", "Tools")</li>
-        <li>@Html.RouteLink("Independent schools reminders", "IndSchSearch")</li>
-        <li>@Html.RouteLink("Predefined local authority sets", "PredefinedLASets")</li>
+        <li>@Html.RouteLink("View independent schools' significant dates", "IndSchSearch")</li>
+        @*<li>@Html.RouteLink("Predefined local authority sets", "PredefinedLASets")</li>*@
     </ul>
 </div>
 
 <div class="grid-row">
     <div class="column-full results-heading">
-        <h1 class="heading-large">
+        <h1 class="heading-intro">
             @Model.PageTitle
         </h1>
     </div>
@@ -37,12 +37,12 @@
                         <p>Saving with this name will overwrite the existing set.</p>
                     </div>
                     <div class="button-row">
-                        <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
+                        <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Ok</a>
                         <a href="#" class="button button-grey mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
                     </div>
                 </div>
 
-        <!-- Set to true ONLY when 'Proceed' is clicked.  -->
+        <!-- Set to true ONLY when 'Ok' is clicked.  -->
                 <input type="hidden" id="@nameof(Model.SuppressWarning)" name="@nameof(Model.SuppressWarning)" value="false" />
             }
 
@@ -53,25 +53,24 @@
             </div>
 
             <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
-                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Local authorities")
+                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Local authorities", new { @class="form-label"})
                 @Html.ValidationMessageFor(x => x.SelectedLocalAuthorityIds)
-            </div>
+            
 
-            <div id="la-id-target">
+                <div id="la-id-target">
 
-                @foreach (var id in Model.SelectedLocalAuthorityIds)
-                {
+                    @foreach (var id in Model.SelectedLocalAuthorityIds)
+                    {
                     var la = Model.LocalAuthorities.First(x => x.Id == id);
-                    <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
-                    <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
-                    <input type="hidden" name="d" value="@id" id="la-@id">
-                }
-                <div class="floating-text-field-wrap">
-                    <input class="floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
+                        <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
+                        <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
+                        <input type="hidden" name="d" value="@id" id="la-@id">
+                    }
+                    <div class="floating-text-field-wrap">
+                        <input class="floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
+                    </div>
                 </div>
-
             </div>
-            <br />
             <button id="edit-submit" class="button mobile-full-width" type="submit">Save</button>
             @Html.ActionLink("Cancel", "IndependentSchoolsSearch", "Tools", new { @class="button button-grey mobile-full-width"})
         }

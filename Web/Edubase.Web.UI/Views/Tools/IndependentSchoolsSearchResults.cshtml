@@ -5,21 +5,20 @@
     ViewBag.bodyClasses = "search-results";
 }
 
-<div class="breadcrumbs">
-    <ul>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-        <li>
-            @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools")
-        </li>
-    </ul>
-</div>
-
 <div class="grid-row">
-    <div class="column-full results-heading indi-results-header">
-        <h1 class="heading-intro-36">
+    <div class="column-full results-heading">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+                <li>
+                    @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools")
+                </li>
+            </ul>
+        </div>
+        <h1 class="heading-large">
             @Html.Conditional(Model.IsGeneralMode, "Results for next general action required")
             @Html.Conditional(Model.IsWelfareMode, "Results for next action required by welfare")
         </h1>
@@ -51,8 +50,8 @@
             <a href="#" class="clear-selections filter-clear">Clear</a>
             <div class="options-container" id="">
                 <div class="js-auto-height-inner">
-                    @Html.EditorFor(x => x.MinDate, new {title = "From"})
-                    @Html.EditorFor(x => x.MaxDate, new {title = "To"})
+                    @Html.EditorFor(x => x.MinDate, new {title = "From", inFilters = true, disableHint = true })
+                    @Html.EditorFor(x => x.MaxDate, new {title = "To", inFilters = true, disableHint = true })
 
                     <div class="form-group">
                         <a href="#" class="button button-grey filter-button">Apply</a>

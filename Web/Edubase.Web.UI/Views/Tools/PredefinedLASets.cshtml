@@ -1,27 +1,27 @@
 ﻿@model PredefinedLASetsViewModel
 @{
     ViewBag.Title = "Predefined local authority sets";
-    ViewBag.bodyClasses = "";
+    ViewBag.bodyClasses = "search-results";
 }
 
-<div class="breadcrumbs">
-    <ul>
-        <li>@Html.RouteLink("Home", "Homepage")</li>
-        <li>@Html.RouteLink("Tools", "Tools")</li>
-        <li>@Html.RouteLink("Independent schools reminders", "IndSchSearch")</li>
-    </ul>
-</div>
+
 
 <div class="grid-row">
     <div class="column-full results-heading">
-        <h1 class="heading-large">
+        <div class="breadcrumbs">
+            <ul>
+                <li>@Html.RouteLink("Home", "Homepage")</li>
+                <li>@Html.RouteLink("Tools", "Tools")</li>
+                <li>@Html.RouteLink("View independent schools' significant dates", "IndSchSearch")</li>
+            </ul>
+        </div>
+        <h1 class="heading-xlarge">
             Predefined local authority sets
         </h1>
-        <a class="font-xsmall" style="margin-right: 0;position: absolute;right: 15px;top: 14px;" href="@Url.RouteUrl("CreatePredefinedLASet")">Create new set</a>
+        <a class="download-link" @*style="margin-right: 0;position: absolute;right: 15px;top: 14px;"*@ href="@Url.RouteUrl("CreatePredefinedLASet")">Create new set</a>
     </div>
 </div>
 
-<br />
 
 
 @if (Model.HasResults)
@@ -73,7 +73,7 @@ else
 
 
 @section ViewScripts{
-    
+
     <script>
         (function () {
             var dismissed = false;
@@ -95,6 +95,6 @@ else
                 }
             });
         }());
-    </script>    
-    
+    </script>
+
 }
