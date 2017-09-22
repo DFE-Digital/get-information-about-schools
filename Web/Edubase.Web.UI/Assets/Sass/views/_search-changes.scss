@@ -101,13 +101,13 @@
             float: left;
             min-height: 48px;
             padding-top: 11px;
-            
+
             &:nth-child(3n+1) {
                 clear: left;
             }
-            
+
             @media(max-width: 980px) {
-                width: 49%;                
+                width: 49%;
             }
         }
     }
@@ -115,6 +115,14 @@
     .long-label label {
         padding-top: 0px;
     }
+
+
+    legend {
+            float: none;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
 }
 
 
