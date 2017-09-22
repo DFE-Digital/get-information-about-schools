@@ -160,6 +160,7 @@ namespace Edubase.Web.UI.Controllers
         {
             await PopulateLookupData(viewModel);
             viewModel.Results = new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take, await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel), User));
+            HttpContext.Response.Headers.Add("x-count", viewModel.Results.Count.ToString());
             return PartialView("_IndSchSearchResults", viewModel);
         }
 

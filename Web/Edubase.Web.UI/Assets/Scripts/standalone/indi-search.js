@@ -20,12 +20,17 @@
         $.ajax({
             url: '/independent-schools/results-js',
             data: searchParams,
-            success: function (data) {
+            success: function (data, status, xhr) {
                 resultsContainer.html(data);
+                downloadLink.removeClass('hidden');
+
                 downloadLink.attr('href', downloadBaseUrl + searchParams);
                 resultsContainer.removeClass('pending-results-update');
                 filterForm.find('input').removeAttr('disabled');
                 clearLinks.removeClass('clear-disabled');
+                if (Number(xhr.getResponseHeader("x-count")) === 0) {
+                    downloadLink.addClass('hidden');
+                }
             }
         });
     }
