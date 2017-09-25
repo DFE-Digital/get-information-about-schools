@@ -32,7 +32,7 @@
     {
         <div class="grid-row">
             <div class="column-full">
-                <h3 class="heading-medium">Select the action you're interested in</h3>
+                <h3 class="heading-medium sn-1">Select the action you're interested in</h3>
                 <div class="form-group @Html.ValidationCssClassFor(x => x.Mode)">
                     <fieldset class="action">
                         <legend class="visually-hidden">Select the action you're interested in</legend>
@@ -43,7 +43,7 @@
             </div>
         </div>
         <div class="column-two-thirds">
-            <h2 class="heading-medium">Select local authorities</h2>
+            <h2 class="heading-medium sn-2">Select local authorities</h2>
             <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
                 @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "form-label" })
                 @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "form-control form-control-3-4" })
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="column-full">
-            <h2 class="heading-medium">Date range</h2>
+            <h2 class="heading-medium sn-3">Date range</h2>
         </div>
         <div class="column-two-thirds">
             <div class="form-group date-group-wrap">
