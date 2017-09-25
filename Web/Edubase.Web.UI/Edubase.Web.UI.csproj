@@ -835,6 +835,7 @@
     <Content Include="Assets\Sass\leaflet\_leaflet.scss" />
     <Content Include="Assets\Sass\views\_search-map.scss" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_EstablishmentSearchMap.cshtml" />
+    <Content Include="Assets\Sass\views\_independent-sigdates.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
