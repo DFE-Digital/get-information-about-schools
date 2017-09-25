@@ -130,7 +130,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     IncludeBringUpFields = viewModel.IncludeBringUpFields,
                     IncludeChildrensCentreFields = viewModel.IncludeChildrensCentreFields,
                     IncludeEmailAddresses = viewModel.IncludeEmailAddresses,
-                    IncludeIEBTFields = viewModel.IncludeIEBTFields
+                    IncludeIEBTFields = viewModel.IncludeIEBTFields,
+                    IncludeLinks = viewModel.IncludeLinks
                 }, User);
 
             return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });

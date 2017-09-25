@@ -1,5 +1,4 @@
 ﻿using Edubase.Services.Domain;
-using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Search;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -15,5 +14,6 @@ namespace Edubase.Services.Establishments.Downloads
         public bool IncludeIEBTFields { get; set; }
         public bool IncludeBringUpFields { get; set; }
         public bool IncludeChildrensCentreFields { get; set; }
+        public bool IncludeLinks { get; set; }
     }
 }

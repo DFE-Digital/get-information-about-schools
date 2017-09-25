@@ -46,40 +46,38 @@
                             
                             @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data",null, new { @class = "core-full" })
 
-                            @if (Model.AllowAnyExtraFields)
-                            {
-                                <div class="panel-indent shift-panel stacked-controls" id="data-download-options">
-                                    <fieldset>
-                                        <legend class="bold">Include non-public data:</legend>
+                            <div class="panel-indent shift-panel stacked-controls" id="data-download-options">
+                                <fieldset>
+                                    <legend class="bold">Include non-public data:</legend>
 
-                                        @if (Model.AllowIncludeEmailAddresses)
-                                        {
-                                            @Html.GiasCheckboxFor(m => m.IncludeEmailAddresses, "Email addresses")
+                                    @if (Model.AllowIncludeEmailAddresses)
+                                    {
+                                        @Html.GiasCheckboxFor(m => m.IncludeEmailAddresses, "Email addresses")
                                             
-                                        }
+                                    }
 
-                                        @if (Model.AllowIncludeIEBTFields)
-                                        {
-                                            @Html.GiasCheckboxFor(m => m.IncludeIEBTFields, "IEBT fields")
+                                    @if (Model.AllowIncludeIEBTFields)
+                                    {
+                                        @Html.GiasCheckboxFor(m => m.IncludeIEBTFields, "IEBT fields")
                                            
-                                        }
+                                    }
 
-                                        @if (Model.AllowIncludeBringUpFields)
-                                        {
-                                            @Html.GiasCheckboxFor(m => m.IncludeBringUpFields, "Bring up fields")
+                                    @if (Model.AllowIncludeBringUpFields)
+                                    {
+                                        @Html.GiasCheckboxFor(m => m.IncludeBringUpFields, "Bring up fields")
                                             
-                                        }
+                                    }
 
-                                        @if (Model.AllowIncludeChildrensCentreFields)
-                                        {
-                                            @Html.GiasCheckboxFor(m => m.IncludeChildrensCentreFields, "Children's centre fields")
+                                    @if (Model.AllowIncludeChildrensCentreFields)
+                                    {
+                                        @Html.GiasCheckboxFor(m => m.IncludeChildrensCentreFields, "Children's centre fields")
                                             
-                                        }
+                                    }
+                                        
+                                    @Html.GiasCheckboxFor(m => m.IncludeLinks, "Links")
 
-                                    </fieldset>
-                                </div>
-                            }
-
+                                </fieldset>
+                            </div>
                         </fieldset>
                     </div>
                 </div>

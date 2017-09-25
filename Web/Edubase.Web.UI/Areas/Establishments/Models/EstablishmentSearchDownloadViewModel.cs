@@ -19,6 +19,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public bool IncludeIEBTFields { get; set; }
         public bool IncludeBringUpFields { get; set; }
         public bool IncludeChildrensCentreFields { get; set; }
+        public bool IncludeLinks { get; set; }
         public bool AllowIncludeEmailAddresses { get; set; }
         public bool AllowIncludeIEBTFields { get; set; }
         public bool AllowIncludeBringUpFields { get; set; }
