@@ -7,12 +7,12 @@ namespace Edubase.Services.Establishments.Models
 {
     public class BulkUpdateDto
     {
-        public const string EduBaseBulkUpload = "EduBase Bulk Upload";
+        public const string EduBaseBulkUpload = "Bulk Upload";
         public const string MultipleColumnsFile = "Multiple Columns file";
 
         public enum eBulkUpdateType
         {
-            [Display(Name = "EduBase Bulk Upload")]
+            [Display(Name = "Bulk Upload")]
             EduBaseBulkUpload,
 
             [Display(Name = "Multiple Columns File")]
