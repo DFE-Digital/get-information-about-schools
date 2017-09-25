@@ -71,20 +71,20 @@
         </div>
         <div class="column-two-thirds">
             <div class="form-group date-group-wrap">
-                @Html.EditorFor(x => x.MinDate, new { title = "From" })
+                @Html.EditorFor(x => x.MinDate, new { title = "From (optional)" })
             </div>
 
             <div class="form-group date-group-wrap">
-                @Html.EditorFor(x => x.MaxDate, new { title = "To" })
+                @Html.EditorFor(x => x.MaxDate, new { title = "To (optional)" })
             </div>
         </div>
 
 
-        <div class="column-full">
-            <button type="submit" name="@VM.BindAliasForActionName" class="button mobile-full-width" value="@VM.ActionSearch">Continue</button>
-        </div>
-
-
+            <div class="column-full">
+                <div class="button-row">
+                    <button type="submit" name="@VM.BindAliasForActionName" class="button mobile-full-width" value="@VM.ActionSearch">Continue</button>
+                </div>                
+            </div>
     </div>
     }
 

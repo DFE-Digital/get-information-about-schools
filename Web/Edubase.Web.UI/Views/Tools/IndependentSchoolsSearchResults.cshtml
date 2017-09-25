@@ -18,9 +18,9 @@
                 </li>
             </ul>
         </div>
-        <h1 class="heading-large">
-            @Html.Conditional(Model.IsGeneralMode, "Results for next general action required")
-            @Html.Conditional(Model.IsWelfareMode, "Results for next action required by welfare")
+        <h1 class="heading-xlarge">
+            @Html.Conditional(Model.IsGeneralMode, "Next general action required")
+            @Html.Conditional(Model.IsWelfareMode, "Next action required by welfare")
         </h1>
         <a class="download-link" href="@Url.RouteUrl("IndSchSearchResultsRequestDownload")?@Request.QueryString">Download these results</a>
     </div>

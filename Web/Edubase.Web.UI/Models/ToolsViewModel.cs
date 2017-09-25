@@ -63,7 +63,7 @@ namespace Edubase.Web.UI.Models
             if (UserCanApprove) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Approvals", "PendingApprovals"), Description = "View your pending changes and approve or reject." });
             if (UserCanSearchChangeHistory) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Change history", "ChangeHistoryCriteria"), Description = "View changes in the data relating to establishments and groups." });
             if (UserCanManageAcademyOpenings) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage academy openings", "ManageAcademyOpenings"), Description = "View details of proposed-to-open academies. Edit academy names and opening dates." });
-            if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View independent schools' significant dates", "IndSchSearch"), Description = "Use this tool to view independent schools' &lsquo;Next general action required&rsquo; or &lsquo;Next action required by welfare&rsquo; dates." });
+            if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View independent schools' significant dates", "IndSchSearch"), Description = "View independent schools' &lsquo;Next general action required&rsquo; or &lsquo;Next action required by welfare&rsquo; dates." });
             retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data status", "ViewStatus", "DataQuality"), Description = "See when each team’s data was last updated. You can also confirm that your team's data is up to date." });
             return retVal;
         }
