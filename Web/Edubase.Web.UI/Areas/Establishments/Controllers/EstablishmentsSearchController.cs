@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Protocols.WSTrust;
+﻿using System.Collections.Generic;
+using System.IdentityModel.Protocols.WSTrust;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
@@ -364,18 +365,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var permittedStatusIds = await _establishmentReadService.GetPermittedStatusIdsAsync(User);
                 var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
                 var establishmentGroupTypes = await _lookupService.EstablishmentTypeGroupsGetAllAsync();
-                model.EstablishmentTypes = establishmentTypes.GroupBy(x => x.GroupId)
-                    .Join(establishmentGroupTypes,
-                          t => t.Key,
-                          g => g.Id,
-                          (establishments, groupDetails) => new HeirarchicalLookupItemViewModel
-                          {
-                              Id = groupDetails.Id,
-                              Name = groupDetails.Name,
-                              ChildItems = establishments.Select(e => new HeirarchicalLookupItemViewModel { Id = e.Id, Name = e.Name }).ToList()
-                          }).ToList();
 
-
+                
+                model.EstablishmentTypes = establishmentGroupTypes.Select(groupType => new HeirarchicalLookupItemViewModel
+                    {
+                        Id = groupType.Id,
+                        Name = groupType.Name,
+                        ChildItems = establishmentTypes.Where(c => c.GroupIds.Contains(groupType.Id))
+                            .Select(e => new HeirarchicalLookupItemViewModel {Id = e.Id, Name = e.Name})
+                            .ToList()
+                    })
+                    .ToList();
+                
                 model.EstablishmentStatuses = (await _lookupService.EstablishmentStatusesGetAllAsync())
                     .Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id))
                     .Select(x => new LookupItemViewModel(x));
