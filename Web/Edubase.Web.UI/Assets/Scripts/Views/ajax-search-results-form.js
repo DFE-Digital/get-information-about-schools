@@ -200,6 +200,11 @@
                 }
 
                 $("a.download-link").attr("href", downloadUrl + queryString);
+                //if (DfE.searchMap.currentView === 'map') {
+                //    DfE.searchMap.getSearchData();
+                //} else {
+                //    DfE.searchMap.dataRefreshRequired = true;
+                //}
             };
 
             
@@ -219,57 +224,56 @@
             $resultsElement.removeClass('pending-results-update');
             window.clearTimeout(filterIntent);
         });
-        
 
+       
         $(document).on("change", ".trigger-result-update", function () {
             var filterCount = $filters.filter(':checked, :selected').length;
+            var currentInput = this;
             var snowFlakeFilters = [];
             var chxVal = $(this).val();
             var chxName = $(this).prop('name');
             var isChecked = this.checked;
-            var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').not(this).filter(function(n, input) {
+            var gUkSelect = $(this).parents('.govuk-option-select');
+            var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').filter(function(n, input) {
                 if (input.value === chxVal) {
                     return input;
                 }
-            });
+            }).not(currentInput);
 
             similarInput.prop('checked', isChecked);
-            similarInput.click();
-          
             if (isChecked) {
                 similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
-                similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', true);
             } else {
-                var groupChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
-                if (groupChxCount === 0) {
+                
+                var siblingChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
+                if (siblingChxCount === 0) {
                     similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
                     similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
+                } else {
+                    similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
                 }
-
-                var siblingChxCount = $(this).parents('.filter-group').find('.filter-input').filter(':checked').length;
-                if (siblingChxCount === 0) {
-                    $(this).parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
-                    $(this).parents('.nested-items').find('.filter-group-title').prop('checked', false);
-                }
-
-
-                var panelCheckedFilters = $(this).parents('.govuk-option-select').find('.filter-group input').filter(':checked');
-                panelCheckedFilters.each(function (n, elem) {
-                    if ($.inArray(elem.value, snowFlakeFilters) === -1) {
-                        snowFlakeFilters.push(elem.value);
-                    }
-                    
-                });
-                var panelChxCount = snowFlakeFilters.length;
-
-                $(this).parents('.govuk-option-select').find('.js-selected-counter-text')
-                    .text(panelChxCount + ' selected');
-                if (panelChxCount === 0) {
-                    $(this).parents('.govuk-option-select').find('.clear-selections').removeClass('active-clear');
-                    $(this).parents('.govuk-option-select').find('.js-selected-counter-text').text('');
-                    
-                }
+                
             }
+                        
+            var panelCheckedFilters = $(this).parents('.govuk-option-select').find('.filter-group input').filter(':checked');
+            panelCheckedFilters.each(function (n, elem) {
+                if ($.inArray(elem.value, snowFlakeFilters) === -1) {
+                    snowFlakeFilters.push(elem.value);
+                }
+
+            });
+
+            var panelChxCount = snowFlakeFilters.length;
+            window.setTimeout(function() {
+                gUkSelect.find('.js-selected-counter-text').text(panelChxCount + ' selected');
+                if (panelChxCount === 0) {
+                    gUkSelect.find('.clear-selections').removeClass('active-clear');
+                    gUkSelect.find('.js-selected-counter-text').text('');
+
+                }
+            },500);
+            
+            
 
             if (filterCount >= filterLimit) {
                 $(this).okCancel({
@@ -292,6 +296,10 @@
                 if (filterIntent) {
                     window.clearTimeout(filterIntent);
                 }
+                //if (DfE.searchMap != null && DfE.searchMap.scriptsLoaded) {
+                //    DfE.searchMap.clearPoints();
+                //}
+                
                 $resultsElement.addClass('pending-results-update');
                 filterIntent = window.setTimeout(function() {
                     ci = setTimeout(refreshResults, 200); // when the clear button is clicked on the filters, multiple events come through; so using timer to prevent extraneous requests
