@@ -150,10 +150,21 @@
         var refreshResults = function (queryString, suppressPushState) { // suppressPushState == when popping state/clicking browser->back
             errorSummary.addClass('hidden');
             $resultsElement.removeClass('pending-results-update').html(progressHtml);
+
+
+            function deDupeParams(qs) {
+                var paramArray = qs.split('&');
+                return paramArray.sort().filter(function(item, pos, ary) {
+                    return !pos || item !== ary[pos - 1];
+                }).join('&');
             
+            }
+
             captureFormState();
 
-            queryString = queryString ? queryString : $("form").serialize();
+            queryString = queryString ? queryString : deDupeParams($("form").serialize());
+
+
 
             disableFilters();
 
@@ -212,6 +223,54 @@
 
         $(document).on("change", ".trigger-result-update", function () {
             var filterCount = $filters.filter(':checked, :selected').length;
+            var snowFlakeFilters = [];
+            var chxVal = $(this).val();
+            var chxName = $(this).prop('name');
+            var isChecked = this.checked;
+            var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').not(this).filter(function(n, input) {
+                if (input.value === chxVal) {
+                    return input;
+                }
+            });
+
+            similarInput.prop('checked', isChecked);
+            similarInput.click();
+          
+            if (isChecked) {
+                similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
+                similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', true);
+            } else {
+                var groupChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
+                if (groupChxCount === 0) {
+                    similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
+                    similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
+                }
+
+                var siblingChxCount = $(this).parents('.filter-group').find('.filter-input').filter(':checked').length;
+                if (siblingChxCount === 0) {
+                    $(this).parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
+                    $(this).parents('.nested-items').find('.filter-group-title').prop('checked', false);
+                }
+
+
+                var panelCheckedFilters = $(this).parents('.govuk-option-select').find('.filter-group input').filter(':checked');
+                panelCheckedFilters.each(function (n, elem) {
+                    if ($.inArray(elem.value, snowFlakeFilters) === -1) {
+                        snowFlakeFilters.push(elem.value);
+                    }
+                    
+                });
+                var panelChxCount = snowFlakeFilters.length;
+
+                $(this).parents('.govuk-option-select').find('.js-selected-counter-text')
+                    .text(panelChxCount + ' selected');
+                if (panelChxCount === 0) {
+                    $(this).parents('.govuk-option-select').find('.clear-selections').removeClass('active-clear');
+                    $(this).parents('.govuk-option-select').find('.js-selected-counter-text').text('');
+                    
+                }
+            }
+
             if (filterCount >= filterLimit) {
                 $(this).okCancel({
                     cancel: null,
