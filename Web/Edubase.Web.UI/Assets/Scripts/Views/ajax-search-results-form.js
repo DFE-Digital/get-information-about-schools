@@ -236,11 +236,9 @@
         $(document).on("change", ".trigger-result-update", function () {
             var filterCount = $filters.filter(':checked, :selected').length;
             var currentInput = this;
-            var snowFlakeFilters = [];
             var chxVal = $(this).val();
             var chxName = $(this).prop('name');
             var isChecked = this.checked;
-            var gUkSelect = $(this).parents('.govuk-option-select');
             var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').filter(function(n, input) {
                 if (input.value === chxVal) {
                     return input;
@@ -261,27 +259,7 @@
                 }
                 
             }
-                        
-            var panelCheckedFilters = $(this).parents('.govuk-option-select').find('.filter-group input').filter(':checked');
-            panelCheckedFilters.each(function (n, elem) {
-                if ($.inArray(elem.value, snowFlakeFilters) === -1) {
-                    snowFlakeFilters.push(elem.value);
-                }
-
-            });
-
-            var panelChxCount = snowFlakeFilters.length;
-            window.setTimeout(function() {
-                gUkSelect.find('.js-selected-counter-text').text(panelChxCount + ' selected');
-                if (panelChxCount === 0) {
-                    gUkSelect.find('.clear-selections').removeClass('active-clear');
-                    gUkSelect.find('.js-selected-counter-text').text('');
-
-                }
-            },500);
             
-            
-
             if (filterCount >= filterLimit) {
                 $(this).okCancel({
                     cancel: null,
