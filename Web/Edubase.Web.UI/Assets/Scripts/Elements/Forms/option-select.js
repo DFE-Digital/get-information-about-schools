@@ -78,7 +78,15 @@
   };
 
   OptionSelect.prototype.checkedString = function checkedString() {
-    var count = this.$options.filter(":checked").length;
+      var filteredFilters = [];
+      var panelCheckedFilters = this.$options.filter(':checked');
+      panelCheckedFilters.each(function (n, elem) {
+          if ($.inArray(elem.value, filteredFilters) === -1) {
+              filteredFilters.push(elem.value);
+          }
+
+      });
+      var count = filteredFilters.length;
     var checkedString = "";
     if (count > 0){
       checkedString = count+" selected";
