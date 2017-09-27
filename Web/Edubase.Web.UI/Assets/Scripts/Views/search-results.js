@@ -106,8 +106,7 @@
                         return $(item).prop('checked');
                     });
 
-                    console.log($(this).next('.options-container').find('.filter-radio'));
-                    
+                   
                     selectedFilters.click();
                     $(this).removeClass('active-clear');
                    
