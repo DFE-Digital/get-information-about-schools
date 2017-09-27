@@ -150,10 +150,21 @@
         var refreshResults = function (queryString, suppressPushState) { // suppressPushState == when popping state/clicking browser->back
             errorSummary.addClass('hidden');
             $resultsElement.removeClass('pending-results-update').html(progressHtml);
+
+
+            function deDupeParams(qs) {
+                var paramArray = qs.split('&');
+                return paramArray.sort().filter(function(item, pos, ary) {
+                    return !pos || item !== ary[pos - 1];
+                }).join('&');
             
+            }
+
             captureFormState();
 
-            queryString = queryString ? queryString : $("form").serialize();
+            queryString = queryString ? queryString : deDupeParams($("form").serialize());
+
+
 
             disableFilters();
 
@@ -189,6 +200,11 @@
                 }
 
                 $("a.download-link").attr("href", downloadUrl + queryString);
+                //if (DfE.searchMap.currentView === 'map') {
+                //    DfE.searchMap.getSearchData();
+                //} else {
+                //    DfE.searchMap.dataRefreshRequired = true;
+                //}
             };
 
             
@@ -208,10 +224,35 @@
             $resultsElement.removeClass('pending-results-update');
             window.clearTimeout(filterIntent);
         });
-        
 
+       
         $(document).on("change", ".trigger-result-update", function () {
             var filterCount = $filters.filter(':checked, :selected').length;
+            var currentInput = this;
+            var chxVal = $(this).val();
+            var chxName = $(this).prop('name');
+            var isChecked = this.checked;
+            var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').filter(function(n, input) {
+                if (input.value === chxVal) {
+                    return input;
+                }
+            }).not(currentInput);
+
+            similarInput.prop('checked', isChecked);
+            if (isChecked) {
+                similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
+            } else {
+                
+                var siblingChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
+                if (siblingChxCount === 0) {
+                    similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
+                    similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
+                } else {
+                    similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
+                }
+                
+            }
+            
             if (filterCount >= filterLimit) {
                 $(this).okCancel({
                     cancel: null,
@@ -233,6 +274,10 @@
                 if (filterIntent) {
                     window.clearTimeout(filterIntent);
                 }
+                //if (DfE.searchMap != null && DfE.searchMap.scriptsLoaded) {
+                //    DfE.searchMap.clearPoints();
+                //}
+                
                 $resultsElement.addClass('pending-results-update');
                 filterIntent = window.setTimeout(function() {
                     ci = setTimeout(refreshResults, 200); // when the clear button is clicked on the filters, multiple events come through; so using timer to prevent extraneous requests

@@ -26,12 +26,12 @@
 
             if (checkedChildren.length > 0) {
                 parent.prop('checked', true);
-            }
-                
-            if (checkedChildren.length < childControls.length) {
-                parent.next('label').addClass('partial-selection');
-            }
 
+
+                if (checkedChildren.length < childControls.length) {
+                    parent.next('label').addClass('partial-selection');
+                }
+            }
             optionsPanel.addClass('hidden');
 
             trigger.on('click', function(e) {
@@ -74,7 +74,6 @@
                 var checkedCount = childControls.filter(function (n,ctrl) {
                     return ctrl.checked;
                 }).length;
-
 
                 if (checkedCount < childControls.length && checkedCount > 0) {
                     parent.next('label').addClass('partial-selection');

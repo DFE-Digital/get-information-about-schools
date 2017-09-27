@@ -1,7 +1,9 @@
-﻿namespace Edubase.Services.Domain
+﻿using System.Collections.Generic;
+
+namespace Edubase.Services.Domain
 {
     public class EstablishmentLookupDto : LookupDto
     {
-        public int GroupId { get; set; }
+        public List<int> GroupIds { get; set; }
     }
 }

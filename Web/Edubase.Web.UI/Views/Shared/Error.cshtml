@@ -3,7 +3,7 @@
 @{
     var isPartialView = ((bool?)ViewBag.IsPartialView).GetValueOrDefault();
     Layout = isPartialView ? null as string : "../dfe/layouts/template.cshtml";
-    ViewBag.Title = "Edubase";
+    ViewBag.Title = "Get information about schools";
     ViewBag.pageDescription = "";
     ViewBag.pageClass = "error-page";
 }
