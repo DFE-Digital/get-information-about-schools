@@ -106,10 +106,13 @@
                         return $(item).prop('checked');
                     });
 
+                   
                     selectedFilters.click();
                     $(this).removeClass('active-clear');
+                   
                     if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
                         selectedFilters.prop('checked', false);
+                        $(this).next('.options-container').find('.filter-radio').removeClass('partial-selection');
                     }
                 }
             }
