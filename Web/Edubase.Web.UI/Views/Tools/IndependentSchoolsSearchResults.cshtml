@@ -22,7 +22,11 @@
             @Html.Conditional(Model.IsGeneralMode, "Next general action required")
             @Html.Conditional(Model.IsWelfareMode, "Next action required by welfare")
         </h1>
-        <a class="download-link" href="@Url.RouteUrl("IndSchSearchResultsRequestDownload")?@Request.QueryString">Download these results</a>
+        @if (Model.Results.Count > 0)
+        {
+            <a class="download-link" href="@Url.RouteUrl("IndSchSearchResultsRequestDownload")?@Request.QueryString">Download these results</a>
+        }
+        
     </div>
 </div>
 

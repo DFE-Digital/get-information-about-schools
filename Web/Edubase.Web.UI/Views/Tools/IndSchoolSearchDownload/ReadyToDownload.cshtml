@@ -10,7 +10,7 @@
     <ul>
         <li>@Html.RouteLink("Home", "Homepage")</li>
         <li>@Html.RouteLink("Tools", "Tools")</li>
-        <li>@Html.RouteLink("Independent schools reminders", "IndSchSearch")</li>
+        <li>@Html.RouteLink("View independent schools' significant dates", "IndSchSearch")</li>
     </ul>
 </div>
 
@@ -18,21 +18,36 @@
     <div class="column-full">
         <h1 class="heading-xlarge">Download data</h1>
     </div>
-    <div class="horizontal-tabs-wrapper">        
-        <div class="column-two-thirds">
-            <h2 class="bold-medium">@ViewBag.Subtitle</h2>
-            <p class="font-small">Your requested file is ready to download.</p>
+</div>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h2 class="bold-medium">@ViewBag.Subtitle</h2>
+        <p class="font-small">Your requested file is ready to download.</p>
             
-            <ul>
-                <li class="download-list-item">
-                    <span class="icon-link-copy">
-                        <a href="@Model.FileLocationUri" target="_blank" rel="nofollow">Data in XLSX format</a>
-                        (will download as a ZIP file: open the ZIP to access its content)
-                    </span>
+        <ul>
+            <li class="download-list-item">
+                <span class="icon-link-copy">
+                    <a href="@Model.FileLocationUri" target="_blank" rel="nofollow">Data in XLSX format</a>
+                    (will download as a ZIP file: open the ZIP to access its content)
+                </span>
 
-                </li>
-            </ul>
-        </div>
+            </li>
+        </ul>
+    </div>
+    <div class="column-full">
+        <div class="button-row">
+            <br/>
+            @Html.RouteLink("« Go back", "IndSchSearch", null, new {@class = "button button-grey mobile-full-width back-to-indi"})
+        </div>        
     </div>
 </div>
 
+@section ViewScripts
+{
+    <script>
+        $('.back-to-indi').on('click', function(e) {
+            e.preventDefault();
+            window.history.go(-1);
+        })
+    </script>
+}
