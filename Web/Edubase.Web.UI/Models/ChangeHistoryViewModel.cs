@@ -58,6 +58,8 @@ namespace Edubase.Web.UI.Models
 
         public bool IsEstablishmentSearch => SearchType == eSearchType.EstablishmentAll || SearchType == eSearchType.Text;
 
+        public string EstablishmentName { get; set; }
+
         public eTextSearchType TextSearchType
         {
             get

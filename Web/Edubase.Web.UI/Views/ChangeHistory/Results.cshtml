@@ -1,18 +1,66 @@
-﻿
+﻿@model ChangeHistoryViewModel
 @{
-    Layout = null;
+    ViewBag.Title = "";
+    ViewBag.PageClass = "search-history-results";
 }
 
-<!DOCTYPE html>
+<div class="grid-row">
+    <div class="column-full results-heading">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = ""}, null)
+                </li>
+            </ul>
+        </div>
+    
+        @{
+            var heading = "Establishment change history";
+            if (!string.IsNullOrWhiteSpace(Model.EstablishmentName))
+            {
+                heading = Model.EstablishmentName;
+            }
+        }
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Results</title>
-</head>
-<body>
-<div>
-    Here be results!
+        <h1 class="heading-large">@heading</h1>
+        @if (Model.Count > 0)
+        {
+            <a class="download-link" href="#">Download change history</a>
+        }
+
+    </div>
 </div>
-</body>
-</html>
+
+<div class="grid-row">
+    <form>
+        <div class="column-third">
+            <div class="filter-form" id="filter-form">
+                <div id="EditSearchCollapse" class="blanket-container">
+                    <div class="govuk-option-select js-collapsible date-filters no-scroll additional-search-critera hidden" data-closed-on-load="false" id="date-filter">
+                        <div class="container-head js-container-head">
+                            <div class="option-select-label">Date changes</div>            
+                            <div class="js-selected-counter">
+                                <span class="js-selected-counter-text">Date applied</span>
+                            </div>
+                        </div>        
+                        <a href="#" class="clear-selections filter-clear">Clear</a>
+                        <div class="options-container" id="">
+                            <div class="js-auto-height-inner">
+                
+                                <div class="form-group">
+                                    <a href="#" class="button button-grey filter-button">Apply</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

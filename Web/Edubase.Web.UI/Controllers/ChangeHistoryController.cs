@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Edubase.Common;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
 using Edubase.Web.UI.Models.Search;
@@ -92,16 +93,19 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (viewModel.TextSearchType == ChangeHistoryViewModel.eTextSearchType.URN)
                 {
-                    viewModel.EstablishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(
-                        Int32.Parse(viewModel.TextSearchModel.Text), viewModel.StartIndex, viewModel.PageSize, User);
+                    var urn = Int32.Parse(viewModel.TextSearchModel.Text);
+                    var establishmentName = await _establishmentReadService.GetEstablishmentNameAsync(urn, User);
+                    viewModel.EstablishmentName = establishmentName;
+                    viewModel.EstablishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn, viewModel.StartIndex, viewModel.PageSize, User);
                 }
                 else
                 {
-                    var urn = TryGetEstablishmentUrn(viewModel);
-                    if (urn != null)
+                    var result = await TryGetEstablishmentUrn(viewModel);
+                    if (result?.Urn != null)
                     {
+                        viewModel.EstablishmentName = result.Name;
                         viewModel.EstablishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(
-                            Int32.Parse(viewModel.TextSearchModel.Text), viewModel.StartIndex, viewModel.PageSize,
+                            result.Urn.Value, viewModel.StartIndex, viewModel.PageSize,
                             User);
                     }
                     else
@@ -173,7 +177,7 @@ namespace Edubase.Web.UI.Controllers
             //vm.Approvers = userGroups.ToSelectList(vm.SelectedApproverId);
         }
 
-        private async Task<int?> TryGetEstablishmentUrn(ChangeHistoryViewModel model)
+        private async Task<EstablishmentSearchResultModel> TryGetEstablishmentUrn(ChangeHistoryViewModel model)
         {
             //var retVal = new Returns<EstablishmentSearchPayload>();
             var payload = new EstablishmentSearchPayload(model.StartIndex, model.PageSize);
@@ -201,7 +205,7 @@ namespace Edubase.Web.UI.Controllers
 
             var results = await _establishmentReadService.SearchAsync(payload, User);
 
-            return results.Count == 1 ? results.Items.First().Urn : null;
+            return results.Count == 1 ? results.Items.First() : null;
         }
     }
 }
