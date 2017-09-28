@@ -91,6 +91,7 @@
             var autocompleteService = new google.maps.places.AutocompleteService();
             var placesService = new google.maps.places.PlacesService($('<div />')[0]);
             var predictionsOld;
+            var locationSelected = false;
 
             Gplaces.prototype = {
                 init: function() {
@@ -151,6 +152,23 @@
                                 }
                             }
                         });
+
+                    $('#location-search-submit').on('click', function (e) {
+                        if (!locationSelected) {
+                            e.preventDefault();
+
+                            if ($('#LocationSearchModel_Text').val() !== '') {
+                                $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).click();
+                                window.setTimeout(function() {
+                                    $('#location-search-submit').click();
+                                },100);
+                                
+                            }
+                        }
+                        
+                    
+                    });
+
                 },
                 places: function(q, cb, fc) {
                     var c = new Array();
@@ -183,7 +201,8 @@
 
                         });
                 },
-                itemSelect: function(e, address) {
+                itemSelect: function (e, address) {
+                    locationSelected = true;
                     var self = this;
                     var ref = $.grep(predictionsOld,
                         function(prediction) {
