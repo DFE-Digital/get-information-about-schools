@@ -1,4 +1,5 @@
-﻿@model ChangeHistoryViewModel
+﻿@using Edubase.Services.Enums
+@model ChangeHistoryViewModel
 @{
     ViewBag.Title = "";
     ViewBag.PageClass = "search-history-results";
@@ -61,6 +62,174 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="column-full">
+            @if (Model.Count == 0)
+            {
+                <p class="no-school-results">Please try searching again using different spelling or words.</p>
+            }
+            else
+            {
+                <div>
+                    @Html.Partial("_GenericPaginationV2", Model.Changes)
+                </div>
+                if (Model.IsEstablishmentSearch)
+                {
+                    if (Model.SingleEstablishment)
+                    {
+                        <table class="edubase-table change-history establishment-changes" id="changes-table">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="cell-edate">Date changed</th>
+                                <th scope="col" class="cell-updatedfield">Updated field</th>
+                                <th scope="col" class="cell-oldvalue">Old value</th>
+                                <th scope="col" class="cell-newvalue">New value</th>
+                                <th scope="col" class="cell-suggested">Suggested by</th>
+                                <th scope="col" class="cell-suggested">Approved by</th>
+                            </tr>
+                            </thead>
+                            @if (Model.Changes.Items.Any())
+                            {
+                                <tbody>
+                                    @foreach (var item in Model.Changes.Items)
+                                    {
+                                        <tr>
+                                            <td aria-label="Date changed">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
+                                            <td aria-label="Updated field">@item.FieldName</td>
+                                            <td aria-label="Old value">@item.OldValue</td>
+                                            <td aria-label="New value">@item.NewValue</td>
+                                            <td aria-label="Suggested by">@item.SuggesterName</td>
+                                            <td aria-label="Approved by">@item.ApproverName</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                            else
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6">
+                                            <p> No items</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <table class="edubase-table change-history establishment-changes" id="changes-table">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="cell-urn">
+                                    <abbr title="Unique reference number">
+                                        URN
+                                    </abbr>
+                                </th>
+                                <th scope="col" class="cell-estab">Establishment</th>
+                                <th scope="col" class="cell-edate">Date changed</th>
+                                <th scope="col" class="cell-updatedfield">Updated field</th>
+                                <th scope="col" class="cell-oldvalue">Old value</th>
+                                <th scope="col" class="cell-newvalue">New value</th>
+                                <th scope="col" class="cell-suggested">Suggested by</th>
+                                <th scope="col" class="cell-suggested">Approved by</th>
+                            </tr>
+                            </thead>
+                            @if (Model.Changes.Items.Any())
+                            {
+                                <tbody>
+                                @foreach (var item in Model.Changes.Items)
+                                {
+                                    <tr>
+                                        <td aria-label="URN">@Html.RouteLink(item.EstablishmentUrn.ToString(), "EstabDetails", new {id = item.EstablishmentUrn})</td>
+                                        <td aria-label="Establishment">@Html.RouteLink(item.EstablishmentName, "EstabDetails", new {id = item.EstablishmentName})</td>
+                                        <td aria-label="Date changed">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
+                                        <td aria-label="Updated field">@item.FieldName</td>
+                                        <td aria-label="Old value">@item.OldValue</td>
+                                        <td aria-label="New value">@item.NewValue</td>
+                                        <td aria-label="Suggested by">@item.SuggesterName</td>
+                                        <td aria-label="Approved by">@item.ApproverName</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            }
+                            else
+                            {
+                                <tbody>
+                                <tr>
+                                    <td colspan="9">
+                                        <p> No items</p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            }
+                        </table>
+                    }
+                }
+                else
+                {
+                    <table class="edubase-table change-history" id="changes-table">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="cell-edate">Date changed</th>
+                            <th scope="col" class="cell-requesttype">Request type</th>
+                            <th scope="col" class="cell-urn">Group UID</th>
+                            <th scope="col" class="cell-estab">Group</th>
+                            <th scope="col" class="cell-change">Change</th>
+                            <th scope="col" class="cell-suggested">Suggested by</th>
+                        </tr>
+                        </thead>
+                        @if (Model.Changes.Items.Any())
+                        {
+                            <tbody>
+                            @foreach (var item in Model.Changes.Items)
+                            {
+                                <tr>
+                                    <td aria-label="Date changed">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
+                                    <td aria-label="Request type">@item.RequestType</td>
+                                    <td aria-label="Group UID">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new { id = item.GroupUId })</td>
+                                    <td aria-label="Group">@Html.RouteLink(item.GroupName, "GroupDetails", new { id = item.GroupUId })</td>
+                                    <td aria-label="Change">
+                                        <dl class="key-value-list">
+                                            @if (item.RequestType == GroupChangeRequestType.GroupChange)
+                                            {
+                                                <dt>Field</dt>
+                                                <dd>@item.FieldName</dd>
+                                                <dt>Old value</dt>
+                                                <dd>@item.OldValue</dd>
+                                                <dt>New value</dt>
+                                                <dd>@item.NewValue</dd>
+                                            }
+                                            else
+                                            {
+                                                <dt>Establishment</dt>
+                                                <dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
+                                                <dt>Link date</dt>
+                                                <dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
+                                                <dt>Type</dt>
+                                                <dd>@(item.LinkType?.ToString() ?? "not recorded")</dd>
+                                            }
+
+                                        </dl>
+                                    </td>
+                                    <td aria-label="Suggested by">@item.SuggesterName</td>
+                                </tr>
+                            }
+                            </tbody>
+                        }
+                        else
+                        {
+                            <tbody>
+                            <tr>
+                                <td colspan="9">
+                                    <p> No items</p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        }
+                    </table>
+                }
+            }
         </div>
     </form>
 </div>

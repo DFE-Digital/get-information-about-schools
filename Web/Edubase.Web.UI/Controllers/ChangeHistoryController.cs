@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Edubase.Common;
+using Edubase.Services.Core;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
@@ -94,9 +95,11 @@ namespace Edubase.Web.UI.Controllers
                 if (viewModel.TextSearchType == ChangeHistoryViewModel.eTextSearchType.URN)
                 {
                     var urn = Int32.Parse(viewModel.TextSearchModel.Text);
-                    var establishmentName = await _establishmentReadService.GetEstablishmentNameAsync(urn, User);
+                    var establishmentName = (await _establishmentReadService.GetEstablishmentNameAsync(urn, User))?? "";
                     viewModel.EstablishmentName = establishmentName;
-                    viewModel.EstablishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn, viewModel.StartIndex, viewModel.PageSize, User);
+                    var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn, viewModel.StartIndex, viewModel.PageSize, User);
+                    viewModel.Changes = ConvertEstablishmentChanges(establishmentChanges, establishmentName);
+                    viewModel.SingleEstablishment = true;
                 }
                 else
                 {
@@ -104,9 +107,11 @@ namespace Edubase.Web.UI.Controllers
                     if (result?.Urn != null)
                     {
                         viewModel.EstablishmentName = result.Name;
-                        viewModel.EstablishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(
+                        var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(
                             result.Urn.Value, viewModel.StartIndex, viewModel.PageSize,
                             User);
+                        viewModel.Changes = ConvertEstablishmentChanges(establishmentChanges, result.Name);
+                        viewModel.SingleEstablishment = true;
                     }
                     else
                     {
@@ -117,10 +122,31 @@ namespace Edubase.Web.UI.Controllers
             else
             {
                 var payload = PopulatePayload(viewModel, new SearchChangeHistoryBrowsePayload(viewModel.StartIndex, viewModel.PageSize));
-                viewModel.Changes = await _svc.SearchAsync(payload, User);
+                var changes = await _svc.SearchAsync(payload, User);
+                viewModel.Changes = new PaginatedResult<ChangeHistorySearchItem>(viewModel.StartIndex, viewModel.PageSize, changes);
             }
             
             return View("Results", viewModel);
+        }
+
+        private PaginatedResult<ChangeHistorySearchItem> ConvertEstablishmentChanges(PaginatedResult<EstablishmentChangeDto> changes, string estabName)
+        {
+            return new PaginatedResult<ChangeHistorySearchItem>(
+                changes.Skip,
+                changes.Take,
+                changes.Count,
+                changes.Items.Select(i => new ChangeHistorySearchItem
+                    {
+                        EstablishmentName = estabName,
+                        SuggesterName = i.OriginatorUserName,
+                        ApproverName = i.ApproverUserName,
+                        EffectiveDate = i.EffectiveDateUtc,
+                        RequestedDate = i.RequestedDateUtc,
+                        EstablishmentUrn = i.Urn,
+                        FieldName = i.Name,
+                        OldValue = i.OldValue,
+                        NewValue = i.NewValue
+                    }).ToList());
         }
 
         [HttpGet, Route("Search/Groups", Name = "ChangeHistoryGroups")]

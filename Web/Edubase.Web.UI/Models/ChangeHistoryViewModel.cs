@@ -50,11 +50,13 @@ namespace Edubase.Web.UI.Models
 
         public int StartIndex { get; set; }
 
-        public IPagedResult<ChangeHistorySearchItem> Changes { get; internal set; }
+        public PaginatedResult<ChangeHistorySearchItem> Changes { get; internal set; }
 
-        public IPagedResult<EstablishmentChangeDto> EstablishmentChanges { get; internal set; }
+//        public IPagedResult<EstablishmentChangeDto> EstablishmentChanges { get; internal set; }
 
         public long Count => (Changes?.Count).GetValueOrDefault();
+            
+        public bool SingleEstablishment { get; set; }
 
         public bool IsEstablishmentSearch => SearchType == eSearchType.EstablishmentAll || SearchType == eSearchType.Text;
 
