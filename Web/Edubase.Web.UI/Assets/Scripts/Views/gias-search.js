@@ -9,6 +9,7 @@ DfE.searchResults = (function () {
     var searchType = null;
     var filterLimit = 200;
     var filterIntent = null;
+    var seenOpenDateWarning = false;
     var downloadBaseUrl = '/Establishments/Search/PrepareDownload?';
     var $additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera');
     var $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear');
@@ -32,6 +33,11 @@ DfE.searchResults = (function () {
     return {
         params: function() {
             return searchParams;
+        },
+        setSearchParams: function() {
+            searchParams = deDupeParams($filterForm.find(':input').filter(function (n, ele) {
+                return ele.value !== '';
+            }).serialize());
         },
         setupAdditionalFilters: function () {
             var optionsFragment = '';
@@ -195,7 +201,7 @@ DfE.searchResults = (function () {
 
         getResults : function() {
             DfE.searchResults.disableFilters();
-            
+            $('.date-filter-warning').addClass('hidden');
 
             $resultsContainer.html(plsWait);
             if (GOVUK.support.history()) {
@@ -218,6 +224,14 @@ DfE.searchResults = (function () {
 
                     if (DfE.searchMap.currentView !== 'map') {
                         DfE.searchResults.enableFilters();
+                    }
+
+                    if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
+                        $('.date-filter-warning').removeClass('hidden');
+                        if (!seenOpenDateWarning) {
+                            window.scrollTo(0, 0);
+                            seenOpenDateWarning = true;
+                        }
                     }
                     
                 },

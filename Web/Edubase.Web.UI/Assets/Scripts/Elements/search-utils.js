@@ -106,6 +106,8 @@ DfE.searchUtils = (function () {
                         DfE.searchMap.getSearchData();
                     } else {
                         DfE.searchMap.dataRefreshRequired = true;
+                        
+                        DfE.searchResults.setSearchParams();
                         DfE.searchResults.getResults();
                     }
                     
@@ -186,6 +188,7 @@ DfE.searchUtils = (function () {
                         DfE.searchMap.getSearchData();
                     } else {
                         DfE.searchMap.dataRefreshRequired = true;
+                        DfE.searchResults.setSearchParams();
                         DfE.searchResults.getResults();
                     }
                     
