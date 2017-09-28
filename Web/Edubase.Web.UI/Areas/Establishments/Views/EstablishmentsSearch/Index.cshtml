@@ -10,7 +10,7 @@
     ViewBag.HideLogo = true;
 }
 
-<div class="grid-row">
+<div class="grid-row" id="search-results">
     <div class="column-full results-heading">
         <div class="breadcrumbs">            
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = @Model.SearchType})">Back to find an establishment</a>
@@ -82,11 +82,12 @@
 
 
 <div class="grid-row">
-    <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new { area = "" })">
+    <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new {area = ""})">
+       
         <div class="column-third">
             <div class="filter-form" id="filter-form">
 
-                <div id="EditSearchCollapse"  class="blanket-container">
+                <div id="EditSearchCollapse" class="blanket-container">
 
                     @if (Model.SearchType == eSearchType.Location)
                     {
@@ -94,7 +95,7 @@
 
                     }
 
-                    
+
 
                     @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes.OrderBy(e => e.Name), Model.SelectedEstablishmentTypeIds)
 
@@ -114,9 +115,9 @@
 
                     @CloseDateFilter()
 
-                    @Html.EditorFor(x => x.AgeRangeLow, new { title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM })
+                    @Html.EditorFor(x => x.AgeRangeLow, new {title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM})
 
-                    @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM })
+                    @Html.EditorFor(x => x.AgeRangeHigh, new {title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM})
 
                     @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies.OrderBy(x => x.Name), Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
 
@@ -160,7 +161,7 @@
                     </div>
 
 
-                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
+                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit"/>
 
                     @if (Model.SearchType == eSearchType.Text)
                     {
@@ -173,7 +174,7 @@
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                     }
 
-                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
+                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters"/>
 
                     @Html.HiddenFor(x => x.SearchType)
 
@@ -382,11 +383,10 @@
     </script>
     <script src="/public/assets/scripts/leaflet-bundle.js"></script>
     <script src="/public/assets/scripts/standalone/search-map.js"></script>
-    @*<script>
-        $(document).one('click', '#view-map', DfE.searchMap.setUp);
-    </script>*@
+    
     <script>
-        DfE.searchMap.bindActions();
+        //DfE.searchMap.bindActions();
+        DfE.searchResults.init();
     </script>
     
 }

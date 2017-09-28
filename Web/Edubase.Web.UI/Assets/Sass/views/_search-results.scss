@@ -426,6 +426,9 @@ table.approval-items {
 .filter-form .edubase-filter-submit {
     font-size:19px;
 
+    .js-enabled & {
+        display: none;
+    }
 }
 
 .add-clear-filters {

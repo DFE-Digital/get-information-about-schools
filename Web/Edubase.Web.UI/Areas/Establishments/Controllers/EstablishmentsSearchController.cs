@@ -72,7 +72,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var payload = await GetEstablishmentSearchPayload(model);
             //payload.Object.Skip = 0;
-            payload.Object.Take = 200;
+            payload.Object.Take = 100;
 
             if (!payload.Success) model.Error = payload.ErrorMessage;
             await ProcessEstablishmentsSearch(model, payload.Object);
