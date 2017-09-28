@@ -334,7 +334,13 @@ DfE.searchResults = (function () {
             self.setupGovUkSelects();
             self.setupAdditionalFilters();
             self.bindEvents();
-            DfE.searchMap.bindActions();
+            if (DfE.hasOwnProperty('searchMap')) {
+                DfE.searchMap.bindActions();
+            } else {
+                DfE.searchMap = {};
+                DfE.searchMap.currentView = 'list';
+            }
+            
 
         }
     }
