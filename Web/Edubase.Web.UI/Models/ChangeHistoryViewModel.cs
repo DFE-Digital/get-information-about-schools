@@ -65,6 +65,8 @@ namespace Edubase.Web.UI.Models
 
         public DateTimeViewModel DateFilterTo { get; set; }
 
+        public string DateFilterMode { get; set; }
+
         public eTextSearchType TextSearchType
         {
             get

@@ -16,8 +16,6 @@
 
 <h1 class="heading-xlarge">Change history</h1>
 
-@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
-
 <div class="grid-row" id="change-history-app">
     <div class="column-two-thirds">
         <p>
@@ -108,6 +106,42 @@
                                             </label>
                                         </span>
                                         <div class="expanding-search-field" id="searchby-all-ref">
+                                            @if (Model.NoResultsForName)
+                                            {
+                                                <div class="warning-message">
+                                                    <p>We couldn't find any establishments matching your search criteria</p>
+                                                </div>
+                                            }
+                                            <div class="column-third">
+                                                <span class="radio-button-wrap">
+                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, new {id = "datefiltermode-applied"})
+                                                    <label class="edubase-button-radio" for="datefiltermode-applied">
+                                                        Applied
+                                                    </label>
+                                                </span>
+                                            </div>
+                                            <div class="column-third">
+                                                <span class="radio-button-wrap">
+                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, new { id = "datefiltermode-approved" })
+                                                    <label class="edubase-button-radio" for="datefiltermode-approved">
+                                                        Approved
+                                                    </label>
+                                                </span>
+                                            </div>
+                                            <div class="column-third">
+                                                <span class="radio-button-wrap">
+                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, new { id = "datefiltermode-effective" })
+                                                    <label class="edubase-button-radio" for="datefiltermode-effective">
+                                                        Effective
+                                                    </label>
+                                                </span>
+                                            </div>
+                                            <div class="column-half">
+                                                @Html.EditorFor(x => x.DateFilterFrom, new { title = "From (optional)" })
+                                            </div>
+                                            <div class="column-half">
+                                                @Html.EditorFor(x => x.DateFilterTo, new { title = "To (optional)" })
+                                            </div>
                                             @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                             <div class="form-group">
                                                 <button type="submit" class="button mobile-full-width search-button" id="all-search-submit">Search</button>
