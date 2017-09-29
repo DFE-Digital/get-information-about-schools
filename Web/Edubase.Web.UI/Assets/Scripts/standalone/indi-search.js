@@ -80,6 +80,13 @@
         searchParams = $('#filter-form-ind').serialize();
         getResults();
     });
-    
+
+    $('#set-saver').on('click',
+        function(e) {
+            e.preventDefault();
+            var params = $('#option-select-local-authority').find(':input').serialize();
+            window.location = '/independent-schools/predefined-local-authority-sets/create?' + params;
+
+        });
 
 }());
