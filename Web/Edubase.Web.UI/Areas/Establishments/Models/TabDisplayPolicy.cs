@@ -45,6 +45,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
                     ET.StudioSchools,
                     ET.UniversityTechnicalCollege,
                     ET.CommunitySchool,
+                    ET.CommunitySpecialSchool,
                     ET.FoundationSchool,
                     ET.LANurserySchool,
                     ET.PupilReferralUnit,
