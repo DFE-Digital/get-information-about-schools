@@ -86,9 +86,8 @@ else
 
 @helper SortBySelector(string label)
 {
-    <div class="form-group">
         <label class="form-label">@label:</label>
-        <select class="form-control trigger-result-update" name="@M.BIND_ALIAS_SORT_BY">
+        <select class="form-control trigger-result-update sortby-selector" name="@M.BIND_ALIAS_SORT_BY">
             @if (Model.SearchType == eSearchType.Location)
             {
                 <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>Distance</option>
@@ -96,5 +95,4 @@ else
             <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
             <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
         </select>
-    </div>
 }
