@@ -58,7 +58,7 @@
     <p class="group-type">@Model.GroupTypeName</p>
 
     <p class="group-data-download">
-        @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId })
+        @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { })
     </p>
 
     @if(Model.Group.ConfirmationUpToDateGovernanceRequired)

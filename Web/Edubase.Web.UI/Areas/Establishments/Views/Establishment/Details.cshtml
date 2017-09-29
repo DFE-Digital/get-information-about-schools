@@ -19,7 +19,7 @@
             <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
             @if (Model.LegalParentGroup != null)
             {
-                <li>@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, null)</li>
+                <li>@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues)</li>
             }
         </ul>
     }
@@ -74,7 +74,7 @@
 <p class="urn">URN: @Model.Establishment.Urn</p>
 <p class="establishment-type">@Model.TypeName</p>
 <p class="establishment-data-download">
-    @Html.ActionLink("Download establishment data", "DownloadEstablishmentData", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, new { })
+    @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto.Value, Model.EstabDetailRouteDto)) }, new { })
 </p>
 
 @if (Model.Establishment.ConfirmationUpToDateRequired || Model.Establishment.ConfirmationUpToDateGovernanceRequired)
@@ -92,20 +92,21 @@
                             @(Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
                         </span> 
                     </p>
-                    
+
+
                     @using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new { urn = Model.Establishment.Urn }, FormMethod.Post))
                     {
                         <label class="confirmation-label" for="estab-data-confirm">
                             Confirm establishment record is up to date
                         </label>
                         <button class="button button-grey confirmation-button" id="estab-data-confirm">Confirm</button>
-                    }
+    }
                     
                 </div>
                 
             }
             @if (Model.Establishment.ConfirmationUpToDateGovernanceRequired)
-            {
+    {
                 <div class="data-confirmation-panel">
                     <p class="confirmation-statement">
                         Governance record last confirmed: 
@@ -113,7 +114,8 @@
                             @(Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
                         </span>
                     </p>
-                        
+
+
                     @using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new { urn = Model.Establishment.Urn }, FormMethod.Post))
                     {
                         <label class="confirmation-label" for="gov-data-confirm">
@@ -132,37 +134,38 @@
         <div class="tab-wrap">
             <ul class="horizontal-tabs">
                 @if (Model.TabDisplayPolicy.Details)
-                {
+    {
                     <li><a href="#school-dashboard" class="horizontal-tab">Details</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Governance)
-                {
+    {
                     <li><a href="#school-governance" class="horizontal-tab">Governance</a></li>
                 }
-                
+
+
                 @if (Model.TabDisplayPolicy.IEBT)
-                {
+    {
                     <li><a href="#school-iebt" class="horizontal-tab">IEBT</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Links)
-                {
+    {
                     <li><a href="#school-links" class="horizontal-tab">Links</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Location)
-                {
+    {
                     <li><a href="#school-location" class="horizontal-tab">Location</a></li>
                 }
 
                 @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
-                {
+    {
                     <li><a href="#school-change-history" class="horizontal-tab">Changes</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Helpdesk)
-                {
+    {
                     <li><a href="#helpdesk" class="horizontal-tab">Helpdesk</a></li>
                 }
             </ul>

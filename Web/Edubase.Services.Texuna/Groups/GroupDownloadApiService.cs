@@ -18,7 +18,7 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<DownloadDto> DownloadGroupHistory(int groupUId, DownloadType downloadType, IPrincipal principal) => (await _httpClient.GetAsync<DownloadDto>($"group/{groupUId}/changes/download?format={downloadType}", principal)).GetResponse();
 
-        public async Task<DownloadDto> DownloadGroupData(int groupUId, IPrincipal principal) => (await _httpClient.GetAsync<DownloadDto>($"group/{groupUId}/download", principal)).GetResponse();
+        public async Task<DownloadDto> DownloadGroupData(int groupUId, DownloadType downloadType, IPrincipal principal) => (await _httpClient.GetAsync<DownloadDto>($"group/{groupUId}/download?format={downloadType}", principal)).GetResponse();
 
         public async Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal)
         {

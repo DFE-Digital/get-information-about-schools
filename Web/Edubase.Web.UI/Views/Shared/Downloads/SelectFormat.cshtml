@@ -38,7 +38,7 @@
 
             <h2 class="bold-medium">Download @Model.DownloadName search results</h2>
             <p>@Model.Step of @Model.TotalSteps</p>
-            <h2 class="bold-medium">Select the ﬁle format of the data you are interested in</h2>
+            <h2 class="bold-medium">Select the file format of the data you are interested in</h2>
             <p>
                 You can download your requested data in either CSV or XLSX format.
                 The file will download as a ZIP file: open the ZIP to access its contents.
@@ -50,7 +50,7 @@
                 <div class="download-step">
                     <div class="form-group">
                         <fieldset class="stacked-controls">
-                            <legend class="visually-hidden">Select your prefered format</legend>
+                            <legend class="visually-hidden">Select your preferred format</legend>
                             @FormHelpers.GiasRadio("csv", "fileformat", "Data in CSV format",null,  new { @checked = "checked"})
                             @FormHelpers.GiasRadio("xlsx", "fileformat", "Data in XLSX (Excel) format")
                         </fieldset>

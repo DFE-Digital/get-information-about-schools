@@ -10,6 +10,8 @@ using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Web.UI.Filters;
+using Edubase.Common;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -70,14 +72,28 @@ namespace Edubase.Web.UI.Controllers
             return View("ReadyToDownloadScheduledExtract", model);
         }
 
-        [HttpGet, Route("Download/{downloadType}/{id}")]
-        public async Task<ActionResult> DownloadEstablishmentData(int id, DownloadType downloadType)
-            => Redirect((await _establishmentReadService.GetDownloadAsync(id, downloadType, User)).Url);
+        [HttpGet, Route("Download/Establishment/{urn}", Name = "EstabDataDownload")]
+        public async Task<ActionResult> DownloadEstablishmentData(int urn, string state, DownloadType? downloadType = null, bool start = false)
+        {
+            Guard.IsNotNull(state, () => new ArgumentNullException(nameof(state)));
+            ViewBag.RouteName = "EstabDataDownload";
+            ViewBag.BreadcrumbRoutes = UriHelper.DeserializeUrlToken<RouteDto[]>(state);
+            if (downloadType.HasValue && !start) return View("Download");
+            else if (downloadType.HasValue && start) return Redirect((await _establishmentReadService.GetDownloadAsync(urn, downloadType.Value, User)).Url);
+            else return View("SelectFormat");
+        }
 
         [HttpGet, Route("Download/Group/{uid}", Name = "GroupDataDownload")]
-        public async Task<ActionResult> DownloadEstablishmentData(int uid)
-            => Redirect((await _groupDownloadService.DownloadGroupData(uid, User)).Url);
-
+        public async Task<ActionResult> DownloadGroupData(int uid, string state, DownloadType? downloadType = null, bool start = false)
+        {
+            Guard.IsNotNull(state, () => new ArgumentNullException(nameof(state)));
+            ViewBag.RouteName = "GroupDataDownload";
+            ViewBag.BreadcrumbRoutes = UriHelper.DeserializeUrlToken<RouteDto[]>(state);
+            if (downloadType.HasValue && !start) return View("Download");
+            else if (downloadType.HasValue && start) return Redirect((await _groupDownloadService.DownloadGroupData(uid, downloadType.Value, User)).Url);
+            else return View("SelectFormat");
+        }
+        
         [HttpGet, EdubaseAuthorize]
         [Route("Download/ChangeHistory/{downloadType}")]
         public async Task<ActionResult> DownloadChangeHistory(int? groupId, int? establishmentUrn, DownloadType downloadType)
