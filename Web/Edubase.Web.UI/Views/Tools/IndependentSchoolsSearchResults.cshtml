@@ -35,7 +35,6 @@
     @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get, new {id="filter-form-ind"}))
     {
         
-        @*@Html.HiddenFor(m=>m.SelectedLocalAuthoritySetId)*@
 
         @Html.HiddenFor(m=>m.Mode)
 
@@ -43,7 +42,9 @@
         
         @Selector("Local authority", "d", Model.LocalAuthorities.OrderBy(x => x.Name).ToList(), Model.SelectedLocalAuthorityIds)
 
-
+        <p>
+            <a class="font-xsmall" href="#" id="set-saver">Save as set</a>
+        </p>
         <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
             <div class="container-head js-container-head">
                 <div class="option-select-label">Date range</div>
@@ -51,6 +52,7 @@
                     <span class="js-selected-counter-text">Date applied</span>
                 </div>
             </div>
+            
             <a href="#" class="clear-selections filter-clear">Clear</a>
             <div class="options-container" id="">
                 <div class="js-auto-height-inner">

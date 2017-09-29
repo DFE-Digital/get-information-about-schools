@@ -12,11 +12,11 @@ DfE.searchMap = (function () {
 
         openIcon: L.icon({
             iconUrl: '/public/assets/images/maps/open-marker.png',
-            iconSize: [25, 41]
+            iconSize: [28, 41]
         }),
         closeIcon: L.icon({
             iconUrl: '/public/assets/images/maps/closed-marker.png',
-            iconSize: [25, 41]
+            iconSize: [28, 41]
         }),
         currentView: 'list',
         setUp: function() {

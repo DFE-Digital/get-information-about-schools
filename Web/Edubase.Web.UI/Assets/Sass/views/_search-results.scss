@@ -476,3 +476,7 @@ table.approval-items {
 .pending-results-update {
     @include opacity(0.6);
 }
+
+.is-mac .sortby-selector {
+    margin-top: 20px;
+}
