@@ -220,7 +220,6 @@ DfE.searchMap = (function () {
                     if (searchMap.getZoom() === 18) {
                        window.setTimeout(function() {
                            $('#search-map').find('.marker-cluster').filter(':visible').click();
-                           console.log('Attempted click');
                        },750);
                        
                    }
