@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
@@ -66,6 +67,13 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel DateFilterTo { get; set; }
 
         public string DateFilterMode { get; set; }
+
+        public IEnumerable<SelectListItem> DateFilterOptions => new List<SelectListItem>
+        {
+            new SelectListItem {Text = "Effective", Value = DATE_FILTER_MODE_EFFECTIVE},
+            new SelectListItem {Text = "Applied", Value = DATE_FILTER_MODE_APPLIED},
+            new SelectListItem {Text = "Approved", Value = DATE_FILTER_MODE_APPROVED}
+        };
 
         public eTextSearchType TextSearchType
         {

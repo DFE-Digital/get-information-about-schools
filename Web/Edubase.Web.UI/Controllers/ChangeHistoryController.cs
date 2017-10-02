@@ -174,21 +174,21 @@ namespace Edubase.Web.UI.Controllers
             //payload.ApproverUserGroupCode = vm.SelectedApproverId.Clean();
             //payload.SuggesterUserGroupCode = vm.SelectedSuggesterId.Clean();
 
-            //if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED)
-            //{
-            //    payload.AppliedDateFrom = vm.DateFilterFrom.ToDateTime();
-            //    payload.AppliedDateTo = vm.DateFilterTo.ToDateTime();
-            //}
-            //else if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED)
-            //{
-            //    payload.ApprovedDateFrom = vm.DateFilterFrom.ToDateTime();
-            //    payload.ApprovedDateTo = vm.DateFilterTo.ToDateTime();
-            //}
-            //else if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE)
-            //{
-            //    payload.EffectiveDateFrom = vm.DateFilterFrom.ToDateTime();
-            //    payload.EffectiveDateTo = vm.DateFilterTo.ToDateTime();
-            //}
+            if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED)
+            {
+                payload.AppliedDateFrom = vm.DateFilterFrom.ToDateTime();
+                payload.AppliedDateTo = vm.DateFilterTo.ToDateTime();
+            }
+            else if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED)
+            {
+                payload.ApprovedDateFrom = vm.DateFilterFrom.ToDateTime();
+                payload.ApprovedDateTo = vm.DateFilterTo.ToDateTime();
+            }
+            else if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE)
+            {
+                payload.EffectiveDateFrom = vm.DateFilterFrom.ToDateTime();
+                payload.EffectiveDateTo = vm.DateFilterTo.ToDateTime();
+            }
             return payload;
         }
 
