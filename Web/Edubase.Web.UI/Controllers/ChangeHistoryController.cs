@@ -1,9 +1,13 @@
 ﻿using System.Linq;
+using Castle.DynamicProxy.Generators.Emitters;
 using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
+using Edubase.Services.Groups;
+using Edubase.Services.Groups.Models;
+using Edubase.Services.Groups.Search;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
 using Edubase.Web.UI.Models.Search;
 
@@ -25,12 +29,14 @@ namespace Edubase.Web.UI.Controllers
         private readonly IChangeHistoryService _svc;
         private readonly ICachedLookupService _lookupService;
         private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly IGroupReadService _groupReadService;
 
-        public ChangeHistoryController(IChangeHistoryService svc, ICachedLookupService lookupService, IEstablishmentReadService establishmentReadService)
+        public ChangeHistoryController(IChangeHistoryService svc, ICachedLookupService lookupService, IEstablishmentReadService establishmentReadService, IGroupReadService groupReadService)
         {
             _svc = svc;
             _lookupService = lookupService;
             _establishmentReadService = establishmentReadService;
+            _groupReadService = groupReadService;
         }
 
         [HttpGet, Route(Name = "ChangeHistoryCriteria")]
@@ -53,7 +59,7 @@ namespace Edubase.Web.UI.Controllers
                             return Redirect(Url.RouteUrl("ChangeHistoryEstablishments") + "?" + Request.QueryString);
                         }
 
-                        if (viewModel.SearchType == eSearchType.Group)
+                        if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))
                         {
                             return Redirect(Url.RouteUrl("ChangeHistoryGroups") + "?" + Request.QueryString);
                         }
@@ -64,27 +70,6 @@ namespace Edubase.Web.UI.Controllers
             }
 
             return await Index(viewModel);
-
-            //if (!string.IsNullOrWhiteSpace(vm.SearchType) && !vm.ClearResults && ModelState.IsValid)
-            //{
-            //    if (!vm.StartDownload)
-            //    {
-            //        var payload = PopulatePayload(vm, new SearchChangeHistoryBrowsePayload(vm.StartIndex, vm.PageSize));
-            //        vm.Results = await _svc.SearchAsync(payload, User);
-            //    }
-            //    else
-            //    {
-            //        var payload = PopulatePayload(vm, new SearchChangeHistoryDownloadPayload(vm.DownloadFormat));
-            //        var progress = await _svc.SearchWithDownloadGenerationAsync(payload, User);
-            //        return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new { id = progress.Id }), "?", Request.QueryString));
-            //    }
-            //}
-            //else
-            //{
-            //    ModelState.AddModelError("SearchType", "Please select either 'All establishments' or 'All groups'");
-            //}
-
-            //return View("Index", vm);
         }
 
         [HttpGet, Route("Search/Establishments", Name = "ChangeHistoryEstablishments")]
@@ -129,6 +114,62 @@ namespace Edubase.Web.UI.Controllers
             return View("Results", viewModel);
         }
 
+        [HttpGet, Route("Search/Groups", Name = "ChangeHistoryGroups")]
+        public async Task<ActionResult> SearchChangeHistoryGroups(ChangeHistoryViewModel viewModel)
+        {
+            switch (viewModel.SearchType)
+            {
+                case eSearchType.Group:
+                    int? groupUid = null;
+                    var groupName = "";
+                    var found = false;
+
+                    if (viewModel.GroupSearchModel.AutoSuggestValueAsInt.HasValue)
+                    {
+                        groupUid = viewModel.GroupSearchModel.AutoSuggestValueAsInt.Value;
+                        var group = await _groupReadService.GetAsync(groupUid.Value, User);
+                        if (group.Success)
+                        {
+                            groupName = group.ReturnValue.Name;
+                            found = true;
+                        }
+                    }
+
+                    if (groupUid == null || string.IsNullOrWhiteSpace(groupName))
+                    {
+                        var result = await TryGetGoupUid(viewModel);
+                        if (result != null)
+                        {
+                            groupUid = result.GroupUId;
+                            groupName = result.Name;
+                        }
+                    }
+                    
+                    if (groupUid.HasValue)
+                    {
+                        var changes = await _groupReadService.GetChangeHistoryAsync(groupUid.Value, viewModel.StartIndex, viewModel.PageSize, User);
+                        viewModel.Changes = ConvertGroupChanges(changes, groupName);
+                        viewModel.SingleGroup = true;
+                        viewModel.GroupName = groupName;
+                    }
+                    else
+                    {
+                        //TODO: redirect to change history search page with error message
+                    }
+
+                    break;
+                case eSearchType.GroupAll:
+                    var payload = PopulatePayload(viewModel, new SearchChangeHistoryBrowsePayload(viewModel.StartIndex, viewModel.PageSize));
+                    var allChanges = await _svc.SearchAsync(payload, User);
+                    viewModel.Changes = new PaginatedResult<ChangeHistorySearchItem>(viewModel.StartIndex, viewModel.PageSize, allChanges);
+                    break;
+                default:
+                    return Redirect(Url.RouteUrl("ChangeHistoryCriteria") + "?" + Request.QueryString);
+            }
+
+            return View("Results", viewModel);
+        }
+
         private PaginatedResult<ChangeHistorySearchItem> ConvertEstablishmentChanges(PaginatedResult<EstablishmentChangeDto> changes, string estabName)
         {
             return new PaginatedResult<ChangeHistorySearchItem>(
@@ -149,10 +190,30 @@ namespace Edubase.Web.UI.Controllers
                     }).ToList());
         }
 
-        [HttpGet, Route("Search/Groups", Name = "ChangeHistoryGroups")]
-        public async Task<ActionResult> SearchChangeHistoryGroup(ChangeHistoryViewModel viewModel)
+        private PaginatedResult<ChangeHistorySearchItem> ConvertGroupChanges(PaginatedResult<GroupChangeDto> changes,
+            string groupName)
         {
-            return View("Results", viewModel);
+            return new PaginatedResult<ChangeHistorySearchItem>(
+                changes.Skip,
+                changes.Take,
+                changes.Count,
+                changes.Items.Select(i => new ChangeHistorySearchItem
+                {
+                    GroupName = groupName,
+                    ApproverName = i.ApproverUserName,
+                    GroupUId = i.GroupUId,
+                    RequestType = i.RequestType,
+                    LinkType = i.LinkType,
+                    LinkDateUtc = i.LinkDateUtc,
+                    LinkUrn = i.LinkUrn,
+                    LinkEstablishmentName = i.LinkEstablishmentName,
+                    SuggesterName = i.OriginatorUserName,
+                    EffectiveDate = i.EffectiveDateUtc,
+                    RequestedDate = i.RequestedDateUtc,
+                    FieldName = i.Name,
+                    OldValue = i.OldValue,
+                    NewValue = i.NewValue
+                 }).ToList());
         }
 
         [HttpGet, Route("Download/{id}", Name = "ChangeHistoryDownload")]
@@ -192,17 +253,6 @@ namespace Edubase.Web.UI.Controllers
             return payload;
         }
 
-        private async Task PopulateLookups(ChangeHistoryViewModel vm)
-        {
-            //vm.EstablishmentFields = await _svc.GetEstablishmentFieldsAsync(User);
-            //vm.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
-            //vm.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(x => new LookupItemViewModel(x));
-
-            //var userGroups = (await _svc.GetSuggesterGroupsAsync(User));
-            //vm.Suggesters = userGroups.ToSelectList(vm.SelectedSuggesterId);
-            //vm.Approvers = userGroups.ToSelectList(vm.SelectedApproverId);
-        }
-
         private async Task<EstablishmentSearchResultModel> TryGetEstablishmentUrn(ChangeHistoryViewModel model)
         {
             //var retVal = new Returns<EstablishmentSearchPayload>();
@@ -232,6 +282,30 @@ namespace Edubase.Web.UI.Controllers
             var results = await _establishmentReadService.SearchAsync(payload, User);
 
             return results.Count == 1 ? results.Items.First() : null;
+        }
+
+        private async Task<SearchGroupDocument> TryGetGoupUid(ChangeHistoryViewModel model)
+        {
+            ApiPagedResult<SearchGroupDocument> results = null;
+            var searchText = model.GroupSearchModel.Text.Clean();
+            if (searchText != null) results = await _groupReadService.SearchByIdsAsync(searchText, searchText.ToInteger(), searchText, User);
+
+            if (results == null || results.Count == 0)
+            {
+                var payload = new GroupSearchPayload(model.StartIndex, model.PageSize)
+                {
+                    Text = model.GroupSearchModel.Text.Clean()
+                };
+
+                results = await _groupReadService.SearchAsync(payload, User);
+            }
+
+            if (results != null && results.Count > 0)
+            {
+                return results.Items.First();
+            }
+
+            return null;
         }
     }
 }

@@ -9,15 +9,15 @@ namespace Edubase.Web.UI.Models.Validators
     {
         public ChangeHistoryViewModelValidator()
         {
-            RuleFor(x => x)
-                .Must(x => x.DateFilterTo.ToDateTime() > x.DateFilterFrom.ToDateTime())
-                .WithSummaryMessage("To date cannot be prior to From date")
+            RuleFor(x => x.DateFilterFrom)
+                .Must((model, x) => model.DateFilterTo.ToDateTime() > x.ToDateTime())
+                .WithSummaryMessage("Please enter a From date later than the To date")
                 .When(x => x.DateFilterFrom != null && x.DateFilterTo != null && x.DateFilterFrom.IsValid() && x.DateFilterTo.IsValid());
 
-            RuleFor(x => x.DateFilterMode)
-                .Must(x => !string.IsNullOrWhiteSpace(x))
-                .WithSummaryMessage("Date mode must be selected")
-                .When(x => x.SearchType == eSearchType.EstablishmentAll);
+            RuleFor(x => x.DateFilterTo)
+                .Must((model, x) => model.DateFilterFrom.ToDateTime() < x.ToDateTime())
+                .WithSummaryMessage("Please enter a To date earlier than the From date")
+                .When(x => x.DateFilterFrom != null && x.DateFilterTo != null && x.DateFilterFrom.IsValid() && x.DateFilterTo.IsValid());
         }
     }
 }

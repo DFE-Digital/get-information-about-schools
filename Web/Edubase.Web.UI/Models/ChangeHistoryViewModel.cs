@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Edubase.Common;
-using Edubase.Services.Core;
-using Edubase.Services.Domain;
-using Edubase.Services.Texuna.ChangeHistory.Models;
-using Edubase.Web.UI.Helpers.ModelBinding;
-using Edubase.Web.UI.Models.Search;
-
-namespace Edubase.Web.UI.Models
+﻿namespace Edubase.Web.UI.Models
 {
+    using System.Collections.Generic;
+    using System.Web.Mvc;
+
+    using Common;
+    using Helpers.ModelBinding;
+    using Search;
+    using Services.Core;
+    using Services.Texuna.ChangeHistory.Models;
+
     public class ChangeHistoryViewModel
     {
         private Dictionary<int, eTextSearchType> _textSearchTypeMap = new Dictionary<int, eTextSearchType>
@@ -44,6 +44,7 @@ namespace Edubase.Web.UI.Models
         public eSearchType? SearchType { get; set; }
 
         public SearchPayloadViewModel TextSearchModel { get; set; } = new SearchPayloadViewModel();
+        public SearchPayloadViewModel GroupSearchModel { get; set; } = new SearchPayloadViewModel();
 
         public bool NoResultsForName { get; set; }
 
@@ -53,20 +54,21 @@ namespace Edubase.Web.UI.Models
 
         public PaginatedResult<ChangeHistorySearchItem> Changes { get; internal set; }
 
-//        public IPagedResult<EstablishmentChangeDto> EstablishmentChanges { get; internal set; }
-
         public long Count => (Changes?.Count).GetValueOrDefault();
             
         public bool SingleEstablishment { get; set; }
+        public bool SingleGroup { get; set; }
 
         public bool IsEstablishmentSearch => SearchType == eSearchType.EstablishmentAll || SearchType == eSearchType.Text;
 
         public string EstablishmentName { get; set; }
+        public string GroupName { get; set; }
+
         public DateTimeViewModel DateFilterFrom { get; set; }
 
         public DateTimeViewModel DateFilterTo { get; set; }
 
-        public string DateFilterMode { get; set; }
+        public string DateFilterMode { get; set; } = DATE_FILTER_MODE_APPLIED;
 
         public IEnumerable<SelectListItem> DateFilterOptions => new List<SelectListItem>
         {

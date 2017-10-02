@@ -33,16 +33,10 @@
                     <li>
                         @{ var estabSelected = Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments ? "selected-tab" : ""; }
                         @Html.RouteLink("Find an establishment", "ChangeHistoryCriteria", new {SelectedTab = "Establishments"}, new {@class = $"horizontal-tab estab {estabSelected}" })
-                        @*<a href="/?SelectedTab=Establishments" class="horizontal-tab estab @((Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments) ? "selected-tab" : "")">
-                            Find an establishment
-                        </a>*@
                     </li>
                     <li>
                         @{ var groupSelected = Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups ? "selected-tab" : ""; }
                         @Html.RouteLink("Find an establishment group", "ChangeHistoryCriteria", new { SelectedTab = "Groups" }, new { @class = $"horizontal-tab group {groupSelected}" })
-                        @*<a href="/?SelectedTab=Groups" class="horizontal-tab group @((Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups) ? "selected-tab" : "")">
-                            Find an establishment group
-                        </a>*@
                     </li>
                 </ul>
             </div>
@@ -159,7 +153,72 @@
                     </fieldset>
                 </div>
                 <div id="groups" class="tab-content @((Model.SelectedTab != ChangeHistoryViewModel.Tab.Groups) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != ChangeHistoryViewModel.Tab.Groups)">
-                        
+                    <fieldset>
+                        <legend>Search by:</legend>
+                        <ul>
+                            <li class="search-type-wrapper">
+                                @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
+                                {
+                                    <fieldset class="search-toggle-panel">
+                                        <span class="radio-button-wrap">
+                                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new {id = "searchtype-name-group", data_toggle_panel = "#searchby-group-ref"})
+                                            <label class="edubase-button-radio" for="searchtype-name-group">
+                                                Name or reference number
+                                            </label>
+                                        </span>
+                                        <div class="expanding-search-field" id="searchby-group-ref">
+                                            <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
+                                                <label class="form-label">
+                                                    Name, Companies House number, Group UID or ID
+                                                    <a href="#group-reference" class="icon-help">
+                                                        <span class="visuallyhidden">About reference numbers</span>
+                                                    </a>
+                                                </label>
+                                                <div class="form-group">
+                                                    @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text="})
+                                                </div>
+
+                                                @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" id="group-search-submit" class="button mobile-full-width search-button">Search</button>
+                                            </div>
+
+                                        </div>
+                                    </fieldset>
+                                }
+                            </li>
+                        </ul>
+                        <p>or</p>
+                        <ul>
+                            <li class="search-type-wrapper">
+                                @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
+                                {
+                                    <fieldset class="search-toggle-panel">
+                                        <span class="radio-button-wrap">
+                                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.GroupAll, new {id = "searchtype-all-groups", data_toggle_panel = "#searchby-allgroups-ref"})
+                                            <label class="edubase-button-radio" for="searchtype-all-groups">
+                                                All groups
+                                            </label>
+                                        </span>
+                                        <div class="expanding-search-field" id="searchby-allgroups-ref">
+                                            <div class="column-two-thirds">
+                                                <div class="date-group-wrap">
+                                                    @Html.EditorFor(x => x.DateFilterFrom, new {title = "From (optional)"})
+                                                </div>
+                                                <div class="date-group-wrap">
+                                                    @Html.EditorFor(x => x.DateFilterTo, new {title = "To (optional)"})
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" id="all-group-submit" class="button mobile-full-width search-button">Search</button>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                }
+                            </li>
+                        </ul>
+                    </fieldset>
                 </div>
             </div>
         </div>
