@@ -188,7 +188,8 @@ DfE.searchMap = (function () {
                     center: new L.LatLng(51.51, -0.11),
                     zoom: 9,
                     attributionControl: false,
-                    zoomControl: false
+                    zoomControl: false,
+                    spiderfyOnMaxZoom:  false
 
                 });
 
@@ -213,6 +214,16 @@ DfE.searchMap = (function () {
             this.mapObj = searchMap;
             this.getSearchData(true);
             this.bindActions();
+
+            searchMap.on('zoomend',
+                function() {
+                    if (searchMap.getZoom() === 18) {
+                       window.setTimeout(function() {
+                           $('#search-map').find('.marker-cluster').filter(':visible').click();
+                       },750);
+                       
+                   }
+                });            
 
         }
     };
