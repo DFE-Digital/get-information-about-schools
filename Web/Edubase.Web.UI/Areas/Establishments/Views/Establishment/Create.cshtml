@@ -1,4 +1,5 @@
-﻿@model CreateChildrensCentreViewModel
+﻿@using Edubase.Services.Domain
+@model CreateChildrensCentreViewModel
 @{
     ViewBag.Title = "Create a new establishment";
     ViewBag.bodyClasses = "create-establishment";
@@ -28,6 +29,8 @@
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.ProcessedWarnings)
+
             <div class="column-full top-button-panel">
                 <div class="submit-cancel-panel">
                     <button type="submit" name="action" value="" class="button mobile-full-width">Create</button>
@@ -176,6 +179,23 @@
 
     </div>
 </div>
+
+@if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
+{
+    <div class="modal-overlay" id="warning-modal-overlay-0"></div>
+    <div class="modal-content" id="warning-modal-content-0">
+        <div class="modal-inner">
+            <a href="#" id="warning-exit-overlay-0" class="modal-exit allow-exit">Close</a>
+            <h3 class="heading-large">Similar name</h3>
+            <p>There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, UID: @warning.MessageParameters[1]</p>
+        </div>
+        <div class="button-row">
+            <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
+        </div>
+    </div>
+
+}
 
 @section ViewScripts {
     <script type="text/javascript">

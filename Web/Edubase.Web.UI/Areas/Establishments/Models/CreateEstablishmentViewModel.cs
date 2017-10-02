@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Edubase.Services.Domain;
+using System.Linq;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models
 {
@@ -19,5 +20,27 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public CreateEstablishmentPermissionDto CreateEstablishmentPermission { get; internal set; }
 
         public Dictionary<int, int[]> Type2PhaseMap { get; set; }
+
+
+        public string[] RecognisedWarningCodes { get; set; } = new[]
+        {
+            ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND
+        };
+
+        public List<ApiWarning> WarningsToProcess { get; private set; } = new List<ApiWarning>();
+
+        public bool ProcessedWarnings { get; set; }
+
+        public void SetWarnings(ValidationEnvelopeDto envelope)
+        {
+            if (!ProcessedWarnings && !envelope.Errors.Any())
+            {
+                var warnings = envelope.Warnings;
+                warnings = warnings ?? new List<ApiWarning>();
+                warnings = warnings.Where(x => RecognisedWarningCodes.Contains(x.Code) == true).ToList();
+                WarningsToProcess = warnings;
+                ProcessedWarnings = true;
+            }
+        }
     }
 }
