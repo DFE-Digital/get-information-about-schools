@@ -147,7 +147,7 @@ namespace Edubase.Web.UI.Models
         public int? InspectorateId { get; set; }
         public string ProprietorName { get; set; }
         public int? Section41ApprovedId { get; set; }
-        public int[] SENIds { get; set; }
+        public int[] SENIds { get; set; } = new int[0];
         public int? TypeOfResourcedProvisionId { get; set; }
         public int? ResourcedProvisionOnRoll { get; set; }
         public int? ResourcedProvisionCapacity { get; set; }

@@ -38,7 +38,9 @@ namespace Edubase.Services.Texuna.Establishments
             var queryString = string.Join("&", parameters.Where(x => x.Value != null).Select(x => $"{x.Key}={x.Value}"));
 
             model.Location = null; // always set to null just in case the easting/northing values have been changed - apparently by setting this to null, it signifies to Texuna, they should re-calc the lat/long values.
-            
+
+            if (model.SENIds != null && !model.SENIds.Any()) model.SENIds = null; // they don't like an empty array. 
+
             await _httpClient.PutAsync($"establishment?{queryString}", model, principal);
         }
 
@@ -46,6 +48,8 @@ namespace Edubase.Services.Texuna.Establishments
         {
             if (!model.HelpdeskPreviousLocalAuthorityId.HasValue)
                 model.HelpdeskPreviousLocalAuthorityId = 189; // marcel: for the timebeing lets just hack it and put it in tech debt to resolve. At this stage it feels like we have more pressing matters
+
+            if (model.SENIds != null && !model.SENIds.Any()) model.SENIds = null; // they don't like an empty array. 
 
             return (await _httpClient.PutAsync<ValidationEnvelopeDto>($"establishment/validate", model, principal)).Response;
         }
