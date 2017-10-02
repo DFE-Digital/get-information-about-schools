@@ -1,4 +1,5 @@
-﻿using Edubase.Web.UI.Validation;
+﻿using Edubase.Web.UI.Models.Search;
+using Edubase.Web.UI.Validation;
 using FluentValidation;
 
 namespace Edubase.Web.UI.Models.Validators
@@ -15,7 +16,8 @@ namespace Edubase.Web.UI.Models.Validators
 
             RuleFor(x => x.DateFilterMode)
                 .Must(x => !string.IsNullOrWhiteSpace(x))
-                .WithSummaryMessage("Date mode must be selected");
+                .WithSummaryMessage("Date mode must be selected")
+                .When(x => x.SearchType == eSearchType.EstablishmentAll);
         }
     }
 }
