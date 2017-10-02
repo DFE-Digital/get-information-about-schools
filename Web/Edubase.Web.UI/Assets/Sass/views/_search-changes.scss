@@ -148,3 +148,40 @@
         font-size: 16px;
     }
 }
+
+
+.hide-show-filters {
+    position: relative;
+    left: 16px;
+    font-size: 16px;
+    &:focus {
+        background-color: transparent;
+        outline: 0;
+    }
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 7px;
+        left: -18px;
+        width: 0;
+        height: 0;
+        border-bottom: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 9px solid #005ea5;        
+    }
+
+    &.filters-closed:before {
+        top: 5px;
+        left: -15px;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 9px solid #005ea5;
+    }
+}
+
+.in-filters {
+    width: 90%;
+    margin: 12px 5%;
+}
