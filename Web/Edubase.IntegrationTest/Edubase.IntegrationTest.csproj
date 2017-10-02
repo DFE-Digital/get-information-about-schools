@@ -251,6 +251,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheAccessorTest.cs" />
+    <Compile Include="Establishment\SearchTest.cs" />
     <Compile Include="Establishment\IEBTSearchTest.cs" />
     <Compile Include="Establishment\DisplayRulesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
