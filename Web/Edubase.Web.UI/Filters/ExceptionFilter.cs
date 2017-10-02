@@ -69,6 +69,7 @@ namespace Edubase.Web.UI.Filters
         public LogMessage Log(HttpContextBase ctx, Exception exception)
         {
             string userId = null, userName = null;
+            string httpMethod = ctx?.Request?.HttpMethod ?? string.Empty;
 
             try
             {
@@ -76,13 +77,13 @@ namespace Edubase.Web.UI.Filters
                 userName = ctx?.User?.Identity?.GetUserName();
             }
             catch { }
-
+            
             var msg = new LogMessage
             {
                 ClientIPAddress = ctx?.Request?.UserHostAddress,
                 Environment = ConfigurationManager.AppSettings["Environment"],
                 Exception = exception?.ToString(),
-                HttpMethod = ctx?.Request?.HttpMethod,
+                HttpMethod = httpMethod,
                 Level = LogMessage.eLevel.Error,
                 ReferrerUrl = ctx?.Request?.UrlReferrer?.ToString(),
                 Text = exception?.GetBaseException()?.Message,
@@ -93,8 +94,11 @@ namespace Edubase.Web.UI.Filters
                 RequestJsonBody = (exception as TexunaApiSystemException)?.ApiRequestJsonPayload ?? string.Empty
             };
 
-            DependencyResolver.Current.GetService<IMessageLoggingService>().Push(msg);
-
+            if (new[] { string.Empty, "POST", "GET" }.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase))) // only log errors GET/POST or empty http method 
+            {
+                DependencyResolver.Current.GetService<IMessageLoggingService>().Push(msg);
+            }
+            
             return msg;
         }
     }
