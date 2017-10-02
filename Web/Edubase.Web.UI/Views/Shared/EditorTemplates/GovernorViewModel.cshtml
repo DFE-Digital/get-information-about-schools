@@ -119,15 +119,6 @@
     </div>
 }
 
-@if (Model.DisplayPolicy.Nationality)
-{
-    <div class="form-group @Html.ValidationCssClassFor(x => x.NationalityId)">
-        @Html.LabelFor(x => x.NationalityId)
-        @Html.ValidationMessageFor(x => x.NationalityId)
-        @Html.DropDownListFor(x => x.NationalityId, Model.Nationalities, "", new { @class = "form-control" })
-    </div>
-}
-
 @if (Model.DisplayPolicy.TelephoneNumber)
 {
     <div class="form-group @Html.ValidationCssClassFor(x => x.TelephoneNumber)">

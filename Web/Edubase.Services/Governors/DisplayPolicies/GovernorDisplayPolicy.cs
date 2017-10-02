@@ -16,7 +16,6 @@ namespace Edubase.Services.Governors.DisplayPolicies
         public bool AppointingBodyId { get; set; }
         public bool EmailAddress { get; set; }
         public bool DOB { get; set; }
-        public bool Nationality { get; set; }
         public bool PostCode { get; set; }
         public bool PreviousFullName { get; set; }
         public bool TelephoneNumber { get; set; }

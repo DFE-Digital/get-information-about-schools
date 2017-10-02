@@ -42,9 +42,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Date of birth")]
         public DateTimeViewModel DOB { get; set; } = new DateTimeViewModel();
 
-        [DisplayName("Nationality")]
-        public int? NationalityId { get; set; }
-
         [DisplayName("Home postcode")]
         public string PostCode { get; set; }
 
@@ -69,6 +66,5 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public IEnumerable<SelectListItem> Titles { get; set; }
         public IEnumerable<SelectListItem> PreviousTitles { get; set; }
         public IEnumerable<SelectListItem> AppointingBodies { get; set; }
-        public IEnumerable<SelectListItem> Nationalities { get; set; }
     }
 }
