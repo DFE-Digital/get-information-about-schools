@@ -118,11 +118,17 @@
 
 
     legend {
-            float: none;
-            margin: 20px 0;
-            font-weight: bold;
-        }
+        float: none;
+        margin: 20px 0;
+        font-weight: bold;
+    }
 
+    .inline-date-type-radios {
+        padding-top: 20px;
+        .radio-button-wrap {
+            margin-right: 34px;
+        }
+    }
 }
 
 

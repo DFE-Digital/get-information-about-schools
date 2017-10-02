@@ -1,7 +1,7 @@
 ﻿@model ChangeHistoryViewModel
 @{
     ViewBag.Title = "Search change history";
-    ViewBag.bodyClasses = "search-changes";
+    ViewBag.bodyClasses = "search-changes schools-search-page";
 }
 <div class="breadcrumbs">
     <ul>
@@ -17,7 +17,7 @@
 <h1 class="heading-xlarge">Change history</h1>
 
 <div class="grid-row" id="change-history-app">
-    <div class="column-two-thirds">
+    <div class="column-full">
         <p>
             This allows you to find out when establishments (such as schools, colleges and
             children's centres) and groups (such as multi academy trusts and federations)
@@ -112,35 +112,38 @@
                                                     <p>We couldn't find any establishments matching your search criteria</p>
                                                 </div>
                                             }
-                                            <div class="column-third">
+                                            <fieldset class="inline-date-type-radios">
+                                                <legend class="visually-hidden">Select a date type</legend>
                                                 <span class="radio-button-wrap">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, new {id = "datefiltermode-applied"})
                                                     <label class="edubase-button-radio" for="datefiltermode-applied">
                                                         Applied
                                                     </label>
                                                 </span>
-                                            </div>
-                                            <div class="column-third">
+
                                                 <span class="radio-button-wrap">
-                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, new { id = "datefiltermode-approved" })
+                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, new {id = "datefiltermode-approved"})
                                                     <label class="edubase-button-radio" for="datefiltermode-approved">
                                                         Approved
                                                     </label>
                                                 </span>
-                                            </div>
-                                            <div class="column-third">
+
                                                 <span class="radio-button-wrap">
-                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, new { id = "datefiltermode-effective" })
+                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, new {id = "datefiltermode-effective"})
                                                     <label class="edubase-button-radio" for="datefiltermode-effective">
                                                         Effective
                                                     </label>
                                                 </span>
-                                            </div>
-                                            <div class="column-half">
-                                                @Html.EditorFor(x => x.DateFilterFrom, new { title = "From (optional)" })
-                                            </div>
-                                            <div class="column-half">
-                                                @Html.EditorFor(x => x.DateFilterTo, new { title = "To (optional)" })
+                                            </fieldset>
+                                             
+
+                                            <div class="column-two-thirds">
+                                                <div class="date-group-wrap">
+                                                    @Html.EditorFor(x => x.DateFilterFrom, new { title = "From (optional)" })
+                                                </div>
+                                                <div class="date-group-wrap">
+                                                    @Html.EditorFor(x => x.DateFilterTo, new { title = "To (optional)" })
+                                                </div>                                                
                                             </div>
                                             @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                             <div class="form-group">
@@ -161,4 +164,11 @@
         </div>
     </div>
 </div>
+
+
+@section ViewScripts
+{
+<script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
+    
+}
 
