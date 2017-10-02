@@ -33,7 +33,6 @@ namespace Edubase.Web.UI.Models
         public bool UserCanConvertAcademyTrusts { get; internal set; }
         public bool UserCanViewIndependentSchoolsSignificantDates { get; internal set; }
 
-
         public List<LinkAction> GetCreateActions(HtmlHelper htmlHelper)
         {
             var retVal = new List<LinkAction>();
