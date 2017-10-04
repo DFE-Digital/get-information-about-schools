@@ -110,7 +110,9 @@ namespace Edubase.Web.UI.Controllers
                 var changes = await _svc.SearchAsync(payload, User);
                 viewModel.Changes = new PaginatedResult<ChangeHistorySearchItem>(viewModel.StartIndex, viewModel.PageSize, changes);
             }
-            
+
+            await PopulateLists(viewModel);
+
             return View("Results", viewModel);
         }
 
@@ -167,6 +169,7 @@ namespace Edubase.Web.UI.Controllers
                     return Redirect(Url.RouteUrl("ChangeHistoryCriteria") + "?" + Request.QueryString);
             }
 
+            await PopulateLists(viewModel);
             return View("Results", viewModel);
         }
 
@@ -253,9 +256,16 @@ namespace Edubase.Web.UI.Controllers
             return payload;
         }
 
+        private async Task PopulateLists(ChangeHistoryViewModel model)
+        {
+            model.SuggesterGroups = (await _svc.GetSuggesterGroupsAsync(User)).Select(s => new SelectListItem { Text = s.Name, Value = s.Code });
+            model.ApproverGroups = model.SuggesterGroups;
+            model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).Select(e => new LookupItemViewModel(e));
+            model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(g => new LookupItemViewModel(g));
+        }
+
         private async Task<EstablishmentSearchResultModel> TryGetEstablishmentUrn(ChangeHistoryViewModel model)
         {
-            //var retVal = new Returns<EstablishmentSearchPayload>();
             var payload = new EstablishmentSearchPayload(model.StartIndex, model.PageSize);
             var filters = payload.Filters;
 
