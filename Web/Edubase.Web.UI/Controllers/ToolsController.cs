@@ -249,6 +249,12 @@ namespace Edubase.Web.UI.Controllers
 
                     if (duplicate != null) await _localAuthoritySetRepository.DeleteAsync(duplicate);
 
+                    if (viewModel.Referrer == "results")
+                    {
+                        return Redirect(string.Concat(Url.RouteUrl("IndSchSearch"), "?a=search&Mode=", viewModel.Mode, "&",
+                            QueryStringHelper.ToQueryString(IndSchoolsSearchViewModel.BindAliasForSelectedLocalAuthorityIds,
+                                viewModel.SelectedLocalAuthorityIds.ToArray())));
+                    }
                     return RedirectToRoute("PredefinedLASets");
                 }
                 else if (duplicate != null) viewModel.WarningNameClash = true;
