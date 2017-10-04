@@ -26,10 +26,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 .WithMessage("Enter an Group name")
 
                 .MustAsync(async (model, name, ct) => !(await groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name: name, localAuthorityId: model.LocalAuthorityId.Value)))
-                .WithMessage("Group name already exists at this authority, please select another name")
+                .WithMessage("Group name already exists at this authority, please select another name");
 
-                .MustAsync(async (model, name, ct) => !(await groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name: name)))
-                .WithMessage("Group name already exists, please select another name");
+                //.MustAsync(async (model, name, ct) => !(await groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name: name)))
+                //.WithMessage("Group name already exists, please select another name");
         }
     }
 }
