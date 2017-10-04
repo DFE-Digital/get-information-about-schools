@@ -130,6 +130,9 @@ namespace Edubase.Web.UI.Controllers
                 ModelState.Clear();
             }
 
+            if(viewModel.MinDate.ToDateTime().HasValue && viewModel.MaxDate.ToDateTime().HasValue && viewModel.MinDate.ToDateTime() > viewModel.MaxDate.ToDateTime())
+                ModelState.AddModelError("date-range", "Please use a valid date range");
+            
             if (ModelState.IsValid)
             {
                 switch (viewModel.ActionName)
@@ -159,7 +162,8 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> IndependentSchoolsSearchResults(IndSchoolsSearchViewModel viewModel)
         {
             await PopulateLookupData(viewModel);
-            viewModel.Results = new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take, await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel), User));
+            viewModel.Results = new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take, 
+                await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel), User));
             HttpContext.Response.Headers.Add("x-count", viewModel.Results.Count.ToString());
             return PartialView("_IndSchSearchResults", viewModel);
         }
@@ -275,14 +279,18 @@ namespace Edubase.Web.UI.Controllers
             if (viewModel.SelectedLocalAuthoritySetId.Clean() != null) laIds = (await _localAuthoritySetRepository.GetAsync(viewModel.SelectedLocalAuthoritySetId.Clean())).Ids;
             else laIds = viewModel.SelectedLocalAuthorityIds.ToArray();
 
+            // Default to large min/max range, so that only those record _with_ a date are shown.
+            Func<DateTime?, DateTime?> getMaxDate = (DateTime? dt) => dt.HasValue ? dt : new DateTime(DateTime.UtcNow.Year + 100, 1, 1);
+            Func<DateTime?, DateTime?> getMinDate = (DateTime? dt) => dt.HasValue ? dt : new DateTime(DateTime.UtcNow.Year - 100, 1, 1);
+
             return new EstablishmentSearchPayload
             {
                 Filters = new EstablishmentSearchFilters
                 {
-                    NextActionRequiredByWELMin = viewModel.IsWelfareMode ? viewModel.MinDate.ToDateTime() : null,
-                    NextActionRequiredByWELMax = viewModel.IsWelfareMode ? viewModel.MaxDate.ToDateTime() : null,
-                    NextGeneralActionRequiredMin = viewModel.IsGeneralMode ? viewModel.MinDate.ToDateTime() : null,
-                    NextGeneralActionRequiredMax = viewModel.IsGeneralMode ? viewModel.MaxDate.ToDateTime() : null,
+                    NextActionRequiredByWELMin = viewModel.IsWelfareMode ? getMinDate(viewModel.MinDate.ToDateTime()) : null,
+                    NextActionRequiredByWELMax = viewModel.IsWelfareMode ? getMaxDate(viewModel.MaxDate.ToDateTime()) : null,
+                    NextGeneralActionRequiredMin = viewModel.IsGeneralMode ? getMinDate(viewModel.MinDate.ToDateTime()) : null,
+                    NextGeneralActionRequiredMax = viewModel.IsGeneralMode ? getMaxDate(viewModel.MaxDate.ToDateTime()) : null,
                     LocalAuthorityIds = laIds
                 },
                 Skip = viewModel.Skip,
