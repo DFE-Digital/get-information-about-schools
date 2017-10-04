@@ -55,6 +55,7 @@ DfE.searchMap = (function () {
             function getPoints() {
                 $('.map-header').addClass('loading');
                 $('#map-data-warning').addClass('hidden');
+                $('#zero-results-message').addClass('hidden');
                 $.ajax({
                     url: '/Establishments/Search/results-json',
                     data: DfE.searchResults.params() + '&startIndex=' + startIndex,
@@ -96,6 +97,14 @@ DfE.searchMap = (function () {
                         var countDisplayed = Number($('#map-count').text());
                         if (pointCount > countDisplayed) {
                             $('#map-count').text(pointCount);
+                        }
+
+                        if (pointCount === 0) {
+                            $('#zero-results-message').removeClass('hidden');
+                            
+                            $('.map-header').removeClass('loading');
+                            DfE.searchResults.enableFilters();
+                            return;
                         }
 
                         if (startIndex <= resultCount) {
@@ -185,8 +194,8 @@ DfE.searchMap = (function () {
             self.currentView = 'map';
             var searchMap = new L.map('search-map',
                 {
-                    center: new L.LatLng(51.51, -0.11),
-                    zoom: 9,
+                    center: new L.LatLng(54, -3),
+                    zoom: 6,
                     attributionControl: false,
                     zoomControl: false,
                     spiderfyOnMaxZoom:  false
