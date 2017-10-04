@@ -159,16 +159,16 @@
 //            $resultsElement.removeClass('pending-results-update').html(progressHtml);
 
 
-            function deDupeParams(qs) {
-                var paramArray = qs.split('&');
-                return paramArray.sort().filter(function(item, pos, ary) {
-                    return !pos || item !== ary[pos - 1];
-                }).join('&');
+            //function deDupeParams(qs) {
+            //    var paramArray = qs.split('&');
+            //    return paramArray.sort().filter(function(item, pos, ary) {
+            //        return !pos || item !== ary[pos - 1];
+            //    }).join('&');
             
-            }
+            //}
 
 
-            queryString = queryString ? queryString : deDupeParams($("form").serialize());
+            //queryString = queryString ? queryString : deDupeParams($("form").serialize());
 
 
 //            function deDupeParams(qs) {
@@ -231,30 +231,30 @@
 //                //}
 //            };
        
-            var currentInput = this;
-            var chxVal = $(this).val();
-            var chxName = $(this).prop('name');
-            var isChecked = this.checked;
-            var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').filter(function(n, input) {
-                if (input.value === chxVal) {
-                    return input;
-                }
-            }).not(currentInput);
+            //var currentInput = this;
+            //var chxVal = $(this).val();
+            //var chxName = $(this).prop('name');
+            //var isChecked = this.checked;
+            //var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').filter(function(n, input) {
+            //    if (input.value === chxVal) {
+            //        return input;
+            //    }
+            //}).not(currentInput);
 
-            similarInput.prop('checked', isChecked);
-            if (isChecked) {
-                similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
-            } else {
+            //similarInput.prop('checked', isChecked);
+            //if (isChecked) {
+            //    similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
+            //} else {
                 
-                var siblingChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
-                if (siblingChxCount === 0) {
-                    similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
-                    similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
-                } else {
-                    similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
-                }
+            //    var siblingChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
+            //    if (siblingChxCount === 0) {
+            //        similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
+            //        similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
+            //    } else {
+            //        similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
+            //    }
                 
-            }
+            //}
             
             
 //            var jqxhr = $.get("Search/results-js?" + queryString, function (html, textStatus, jqXHR) {
