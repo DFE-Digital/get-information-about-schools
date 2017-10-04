@@ -84,7 +84,7 @@ else
                     $(this).okCancel({
                         ok: function () {
                             dismissed = true;
-                            $('#delete').click();
+                            $(e.target).find("#delete").click();
                         },
                         immediate: true,
                         idPrefix: 'close-continue',
