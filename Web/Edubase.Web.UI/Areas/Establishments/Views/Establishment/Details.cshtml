@@ -62,9 +62,18 @@
 
 @if (ViewBag.ShowApproved)
 {
-    <div class="pending-updates-message dismissable-message ">
+    <div class="pending-updates-message dismissable-message">
         <div class="tick"></div>
         Your changes have been approved
+        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+    </div>
+}
+
+@if (ViewBag.PendingApproval)
+{
+    <div class="pending-updates-message dismissable-message">
+        <div class="tick"></div>
+        Your changes have been submitted, some changes may require approval before being visible
         <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
     </div>
 }
@@ -134,38 +143,38 @@
         <div class="tab-wrap">
             <ul class="horizontal-tabs">
                 @if (Model.TabDisplayPolicy.Details)
-    {
+                {
                     <li><a href="#school-dashboard" class="horizontal-tab">Details</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Governance)
-    {
+                {
                     <li><a href="#school-governance" class="horizontal-tab">Governance</a></li>
                 }
 
 
                 @if (Model.TabDisplayPolicy.IEBT)
-    {
+                {
                     <li><a href="#school-iebt" class="horizontal-tab">IEBT</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Links)
-    {
+                {
                     <li><a href="#school-links" class="horizontal-tab">Links</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Location)
-    {
+                {
                     <li><a href="#school-location" class="horizontal-tab">Location</a></li>
                 }
 
                 @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
-    {
+                {
                     <li><a href="#school-change-history" class="horizontal-tab">Changes</a></li>
                 }
 
                 @if (Model.TabDisplayPolicy.Helpdesk)
-    {
+                {
                     <li><a href="#helpdesk" class="horizontal-tab">Helpdesk</a></li>
                 }
             </ul>
