@@ -95,7 +95,7 @@ DfE.searchUtils = (function () {
 
                 if (!validDate) {
                     $(elem).find('.form-group').slice(0, 2).addClass('error');
-                    $(elem).find('.error-message').removeClass('hidden');
+                    $(elem).find('.error-message').not('.date-range-error').removeClass('hidden');
                     canSubmit = false;
                     errorSummary.removeClass('hidden');
                     errorSummary.find('.summary-date-error').removeClass('hidden');

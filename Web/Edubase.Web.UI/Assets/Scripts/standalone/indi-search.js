@@ -15,7 +15,7 @@
     function validateFilters() {
         var filters = $('.date-filters').filter(':visible');
         var canSubmit = true;
-       
+        var rangeError = false;
         filters.each(function (n, elem) {
             $(elem).find('.form-group').slice(0, 2).removeClass('error');
             $(elem).find('.error-message').addClass('hidden');
@@ -70,7 +70,8 @@
                 var fromDate = new Date(fromDateValues[2], fromDateValues[1], fromDateValues[0]);
                 var toDate = new Date(toDateValues[2],toDateValues[1], toDateValues[0]);
                 if (toDate < fromDate) {
-                    canSubmit = false;
+                    canSubmit = false;                    
+                    rangeError = true;
                 }
             }
 
@@ -78,8 +79,13 @@
 
             if (n + 1 === filters.length ) {
                 if (!canSubmit) {
-                    $('#date-filter').find('.form-group').addClass('error');                  
-                    $('#date-filter').find('.error-message').slice(0, 1).removeClass('hidden'); 
+                    $('#date-filter').find('.form-group').addClass('error');               
+                    if (rangeError) {
+                        $('#date-filter').find('.date-range-error').slice(0,1).removeClass('hidden');
+                    } else {
+                        $('#date-filter').find('.error-message').slice(0, 1).removeClass('hidden'); 
+                    }
+                    //
                 }
                 filterError = canSubmit;
 

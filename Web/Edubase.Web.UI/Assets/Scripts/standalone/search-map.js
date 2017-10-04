@@ -112,10 +112,7 @@ DfE.searchMap = (function () {
                                 pointsLoaded();
                                 $('#map-data-warning').removeClass('hidden');
                                 $('#map-count').text('1000');
-                                $('#estimated-remaining')
-                                    .text('Approximately ' +
-                                        Math.round((resultCount - pointCount) / 10) * 10 +
-                                        ' remaining.');
+                                
                                 $('#show-all-map').one('click',
                                     function(e) {
                                         e.preventDefault();
