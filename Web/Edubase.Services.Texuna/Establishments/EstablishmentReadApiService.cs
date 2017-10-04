@@ -101,7 +101,27 @@ namespace Edubase.Services.Texuna.Establishments
                 });
             }
 
+            await DetectSENChanges(original, model, retVal);
+
             return retVal;
+        }
+
+        private async Task DetectSENChanges(EstablishmentModel original, EstablishmentModel model, List<ChangeDescriptorDto> retVal)
+        {
+            var originalSenIds = (original.SENIds ?? new int[0]).OrderBy(x => x);
+            var newSenIds = (model.SENIds ?? new int[0]).OrderBy(x => x);
+            if (!originalSenIds.SequenceEqual(newSenIds))
+            {
+                var sens = await _cachedLookupService.SpecialEducationNeedsGetAllAsync();
+                var originalSenNames = StringUtil.SentencifyNoFormating(originalSenIds.Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
+                var newSenNames = StringUtil.SentencifyNoFormating(newSenIds.Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
+                retVal.Add(new ChangeDescriptorDto
+                {
+                    Name = "Type of SEN provision",
+                    NewValue = newSenNames,
+                    OldValue = originalSenNames
+                });
+            }
         }
 
         public async Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, DownloadType format, IPrincipal principal) 

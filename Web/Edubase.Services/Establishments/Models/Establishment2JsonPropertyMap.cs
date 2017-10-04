@@ -104,7 +104,9 @@ namespace Edubase.Services.Establishments.Models
             "createdUtc",
             "lastUpdatedUtc",
             "predecessorName",
-            "predecessorUrn" };
+            "predecessorUrn",
+            "nextGeneralActionRequired",
+            "nextActionRequiredByWEL"};
 
         public static string Convert(string propertyName)
         {

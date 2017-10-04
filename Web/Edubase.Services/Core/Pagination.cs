@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Edubase.Services.Domain;
+using System;
 using System.Collections.Generic;
 
 namespace Edubase.Services.Core
@@ -47,7 +48,7 @@ namespace Edubase.Services.Core
         }
     }
 
-    public class PaginatedResult<T> : Pagination
+    public class PaginatedResult<T> : Pagination where T : class
     {
         public IList<T> Items { get; set; } = new List<T>();
 
@@ -64,6 +65,11 @@ namespace Edubase.Services.Core
         public PaginatedResult(int skip, int take, int totalCount, List<T> items) : base(skip, take, totalCount)
         {
             Items = items;
+        }
+
+        public PaginatedResult(int skip, int take, ApiPagedResult<T> inner) : this(skip, take, inner.Count, inner.Items)
+        {
+            
         }
     }
 }

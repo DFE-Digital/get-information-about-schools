@@ -133,8 +133,10 @@ namespace Edubase.Web.UI.Controllers
                     Email = d.Email
                 }).OrderBy(x=>x.EstablishmentType.GetEnumMember()).ToList(),
                 DataUpdated = dataUpdated
-               
             };
+
+            data.UserCanUpdate = Api.UserRolesController.UserRequiresDataQualityPrompt(User);
+
             return View(data);
         }
     }

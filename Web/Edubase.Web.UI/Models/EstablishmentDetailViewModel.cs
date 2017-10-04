@@ -8,6 +8,8 @@ using Edubase.Web.UI.Areas.Governors.Models;
 using System.Collections.Generic;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Services.Core;
+using Edubase.Web.UI.Helpers;
+using System;
 
 namespace Edubase.Web.UI.Models
 {
@@ -53,6 +55,10 @@ namespace Edubase.Web.UI.Models
 
         public GroupModel LegalParentGroup { get; set; }
 
+        public Lazy<RouteDto> LegalParentGroupRouteDto { get; private set; }
+
+        public RouteDto EstabDetailRouteDto => new RouteDto("EstabDetails", new System.Web.Routing.RouteValueDictionary(new { id = Establishment.Urn }), Establishment.Name);
+
         public bool IsUserLoggedOn { get; set; }
 
         public bool UserCanEdit { get; set; }
@@ -65,7 +71,7 @@ namespace Edubase.Web.UI.Models
 
         public EstablishmentDetailViewModel()
         {
-
+            LegalParentGroupRouteDto = new Lazy<RouteDto>(() => LegalParentGroup != null ? new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name) : null);
         }
 
         public string OfstedRatingReportUrl => (Establishment.OfstedRatingId.HasValue 

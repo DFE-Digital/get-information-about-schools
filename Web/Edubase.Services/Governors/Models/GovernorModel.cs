@@ -50,8 +50,6 @@ namespace Edubase.Services.Governors.Models
         [JsonProperty("DOB")]
         public DateTime? DOB { get; set; }
 
-        public int? NationalityId { get; set; }
-
         public string PostCode { get; set; }
 
         public string TelephoneNumber { get; set; }

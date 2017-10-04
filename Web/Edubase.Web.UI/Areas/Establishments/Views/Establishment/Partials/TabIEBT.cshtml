@@ -19,6 +19,12 @@
             <h2 class="heading-small">Notes</h2>
             <div>@(Model.Establishment.IEBTModel.Notes ?? "Not recorded")</div>
         }
+        
+        @if (p.Associations)
+        {
+            <h2 class="heading-small">Associations</h2>
+            <div>@(Model.Establishment.IEBTModel.Associations ?? "Not recorded")</div>
+        }
 
         <dl>
             @if (p.DateOfTheLastBridgeVisit)

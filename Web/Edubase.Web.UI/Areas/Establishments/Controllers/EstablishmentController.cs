@@ -506,7 +506,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             model.LSOAId = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.LSOACode)?.Id;
             model.MSOAId = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.MSOACode)?.Id;
-
+            
             MapToDomainModel(model, domainModel, Request.Form);
             MapToDomainModelIEBT(model, domainModel, Request.Form);
         }
@@ -541,6 +541,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     ReflectionHelper.SetProperty(domainModel, item, value);
                 }
             }
+
+            domainModel.SENIds = viewModel.SENIds ?? new int[0];
         }
 
         private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)

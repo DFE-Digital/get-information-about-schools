@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IdentityModel.Protocols.WSTrust;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
@@ -66,6 +67,43 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return PartialView("Partials/_EstablishmentSearchResults", model);
         }
 
+        [HttpGet, Route("results-json")]
+        public async Task<ActionResult> JsonResults(EstablishmentSearchViewModel model)
+        {
+            var payload = await GetEstablishmentSearchPayload(model);
+            //payload.Object.Skip = 0;
+            payload.Object.Take = 100;
+
+            if (!payload.Success) model.Error = payload.ErrorMessage;
+            await ProcessEstablishmentsSearch(model, payload.Object);
+            var localAuthorities = (await _lookupService.LocalAuthorityGetAllAsync());
+            var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
+            var educationPhases = await _lookupService.EducationPhasesGetAllAsync();
+            var counties = (await _lookupService.CountiesGetAllAsync()).Where(c => c.Id != 63); //remove "not recorded"
+            HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
+
+            var filtered = model.Results
+                                .Select(result => new { Result = result, LA = localAuthorities.SingleOrDefault(la => la.Id == result.LocalAuthorityId) })
+                                .Select(a => new
+            {
+                Name = a.Result.Name,
+                Location = a.Result.Location,
+                Address = StringUtil.ConcatNonEmpties(", ", a.Result.Address_Line1, 
+                                                            a.Result.Address_Locality, 
+                                                            a.Result.Address_Line3, 
+                                                            a.Result.Address_CityOrTown, 
+                                                            counties.FirstOrDefault(c => c.Id == a.Result.Address_CountyId)?.Name,
+                                                            a.Result.Address_PostCode),
+                Urn = a.Result.Urn,
+                LAESTAB = a.LA?.Code != null && a.Result.EstablishmentNumber.HasValue ? $"{a.LA.Code}/{a.Result.EstablishmentNumber.Value:D4}" : string.Empty,
+                Status = model.EstablishmentStatuses.FirstOrDefault(x => x.Id == a.Result.StatusId)?.Name ?? "Not recorded",
+                LocalAuthority = a.LA?.Name ?? "Not recorded",
+                PhaseType = string.Concat(educationPhases.FirstOrDefault(x => x.Id == a.Result.EducationPhaseId)?.Name ?? "Not recorded", ", ", establishmentTypes.FirstOrDefault(x => x.Id == a.Result.TypeId)?.Name ?? "Not recorded"),
+            });
+
+            return Json(filtered);
+        }
+
         [HttpGet, Route("PrepareDownload")]
         public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
         {
@@ -93,7 +131,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     IncludeBringUpFields = viewModel.IncludeBringUpFields,
                     IncludeChildrensCentreFields = viewModel.IncludeChildrensCentreFields,
                     IncludeEmailAddresses = viewModel.IncludeEmailAddresses,
-                    IncludeIEBTFields = viewModel.IncludeIEBTFields
+                    IncludeIEBTFields = viewModel.IncludeIEBTFields,
+                    IncludeLinks = viewModel.IncludeLinks
                 }, User);
 
             return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });

@@ -3,7 +3,6 @@ using Edubase.Services.Domain;
 using Edubase.Services.Lookup;
 using Edubase.Services.Texuna.ChangeHistory;
 using Edubase.Services.Texuna.ChangeHistory.Models;
-using Edubase.Web.Resources;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
 using System;
@@ -43,7 +42,7 @@ namespace Edubase.Web.UI.Controllers
         {
             await PopulateLookups(vm);
 
-            if (!vm.ClearResults && ModelState.IsValid)
+            if (!string.IsNullOrWhiteSpace(vm.SearchType) && !vm.ClearResults && ModelState.IsValid)
             {
                 if (!vm.StartDownload)
                 {
@@ -56,6 +55,10 @@ namespace Edubase.Web.UI.Controllers
                     var progress = await _svc.SearchWithDownloadGenerationAsync(payload, User);
                     return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new { id = progress.Id }), "?", Request.QueryString));
                 }
+            }
+            else
+            {
+                ModelState.AddModelError("SearchType", "Please select either 'All establishments' or 'All groups'");
             }
 
             return View("Index", vm);

@@ -73,8 +73,13 @@
       }
   };
 
-  OptionSelect.prototype.updateCheckedCount = function updateCheckedCount(){
-    this.$optionSelect.find('.js-selected-counter-text').text(this.checkedString());
+  OptionSelect.prototype.updateCheckedCount = function updateCheckedCount() {
+      var os = this.$optionSelect;
+      var self = this;
+      window.setTimeout(function() {
+          os.find('.js-selected-counter-text').text(self.checkedString());
+      },0);
+    
   };
 
   OptionSelect.prototype.checkedString = function checkedString() {

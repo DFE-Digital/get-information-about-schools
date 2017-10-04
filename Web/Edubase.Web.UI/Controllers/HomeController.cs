@@ -21,17 +21,7 @@ namespace Edubase.Web.UI.Controllers
             _blobService = blobService;
             _cacheAccessor = cacheAccessor;
         }
-
-        [Route]
-        public ActionResult Index()
-        {
-            var model = new Models.HomepageViewModel();
-            model.AllowApprovals = User.Identity.IsAuthenticated;
-            model.AllowSchoolCreation = User.Identity.IsAuthenticated;
-            model.AllowTrustCreation = User.Identity.IsAuthenticated;
-            return View(model);
-        }
-
+        
         [Route("~/cookies")]
         public ActionResult Cookies()
         {

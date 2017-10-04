@@ -1,0 +1,160 @@
+﻿@using VM = Edubase.Web.UI.Models.Tools.IndSchoolsSearchViewModel;
+@model VM
+@{
+    ViewBag.Title = "View independent schools’ significant dates";
+    ViewBag.bodyClasses = "";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+    </ul>
+</div>
+
+<div class="independent-sigdates-search">
+
+    <div class="grid-row">
+        <div class="column-full">
+            <h1 class="heading-xlarge">View independent schools' significant dates</h1>
+            @Html.ValidationSummary("Information missing or incorrect or missing details. To complete the record:", new { @class = "error-summary" })
+            <p class="intro-para">
+                Use this tool to view independent schools' &lsquo;Next general action
+                required&rsquo; or &lsquo;Next action required by welfare&rsquo; date.
+                Local authorities can be added manually or with custom predeﬁned sets.
+            </p>
+        </div>
+    </div>
+
+    @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get, new { @class = "has-typeahead" }))
+    {
+        <div class="grid-row">
+            <div class="column-full">
+                <h3 class="heading-medium sn-1">Select the action you're interested in</h3>
+                <div class="form-group @Html.ValidationCssClassFor(x => x.Mode)">
+                    <fieldset class="action">
+                        <legend class="visually-hidden">Select the action you're interested in</legend>
+                        @Html.ValidationMessageFor(x => x.Mode)
+                    @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionGeneral, "Next general action required")
+                    @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionWelfare, "Next action required by welfare")
+                </fieldset>
+            </div>
+        </div>
+        <div class="column-two-thirds">
+            <h2 class="heading-medium sn-2">Select local authorities</h2>
+            <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
+                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "form-label" })
+                @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "form-control form-control-3-4" })
+                @Html.RouteLink("View predefined sets", "PredefinedLASets", null, new { @class = "baseline-inline" })
+            </div>
+
+            <div class="form-group form-control-3-4 ">
+                <div id="la-id-target">
+                    @foreach (var id in Model.SelectedLocalAuthorityIds)
+                {
+                    var la = Model.LocalAuthorities.Single(x => x.Id == id);
+                        <input value="@la.Name" type="hidden" class="user-selected-la" />
+                        <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
+                        <input type="hidden" name="@VM.BindAliasForSelectedLocalAuthorityIds" value="@id" id="la-@id">
+                    }
+                    <div class="floating-text-field-wrap">
+                        <input class="floating-text-field form-control-3-4" id="LocalAuthorityToAdd" autocomplete="off" />
+                    </div>
+                </div>
+                <button class="link-button font-xsmall hidden" name="@VM.BindAliasForActionName" value="@VM.ActionSaveSet" id="set-saver">Save as set</button>
+            </div>
+        </div>
+        <div class="column-full">
+            <h2 class="heading-medium sn-3">Date range</h2>
+        </div>
+        <div class="column-two-thirds @Html.ValidationCssClass("date-range")">
+            @Html.ValidationMessage("date-range")
+            <div class="form-group date-group-wrap">
+                @Html.EditorFor(x => x.MinDate, new { title = "From (optional)" })
+            </div>
+
+            <div class="form-group date-group-wrap">
+                @Html.EditorFor(x => x.MaxDate, new { title = "To (optional)" })
+            </div>
+        </div>
+
+
+            <div class="column-full">
+                <div class="button-row">                    
+                    <button type="submit" name="@VM.BindAliasForActionName" class="button mobile-full-width" value="@VM.ActionSearch">Continue</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", null, new { @class = "button button-grey mobile-full-width" })
+                </div>                
+            </div>
+    </div>
+    }
+
+</div>
+
+@section ViewScripts{
+    <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
+    <script>
+        window.localAuthorities = @Html.Json(Model.LocalAuthorities);
+        window.sets = @Html.Json(Model.LocalAuthoritySets);
+
+        (function() {
+            var laButton =
+                '<a id="button-la-{0}" class="link-button font-small remove-suggest-la" data-remove="la-{0}">{1}</a>';
+            var laInput = '<input name="d" value="{0}" id="la-{0}" type="hidden">';
+
+            var changeFn = function() {
+                $('#la-id-target').find('[name="d"], .remove-suggest-la').remove();
+                var val = this.value;
+                if (val.length === 0) {
+                    return;
+                }
+                var selectedSet = window.sets.filter(function(set) {
+                    if (val === set.id) {
+                        return set;
+                    }
+                })[0];
+
+                var buttons = '';
+                var inputs = '';
+                $(selectedSet.localAuthorityIds).each(function() {
+                    var laId = this;
+                    var laName = window.localAuthorities.filter(function(la) {
+                        if (laId == la.id) {
+                            return true;
+                        }
+                    })[0].name;
+
+                    var input = laInput.replace(/\{0\}/g, laId);
+                    var button = laButton.replace('{1}', laName).replace(/\{0\}/g, laId);
+
+                    buttons += button;
+                    inputs += input;
+                });
+                $('#la-id-target').prepend(buttons);
+                $('#la-id-target').append(inputs);
+
+            };
+
+            if ($('#la-id-target').find('.remove-suggest-la').length > 0) {
+                $('#set-saver').removeClass('hidden');
+            }
+            $(window).on('laSelected',
+                function(e) {
+                    if (e.count === 0) {
+                        $('#set-saver').addClass('hidden');
+                    } else {
+                        $('#set-saver').removeClass('hidden');
+                    }
+                    $('#SelectedLocalAuthoritySetId').off('change');
+                    $('#SelectedLocalAuthoritySetId').val($('#SelectedLocalAuthoritySetId option:first').val());
+                    $('#SelectedLocalAuthoritySetId').on('change', changeFn);
+                });
+
+            $('#SelectedLocalAuthoritySetId').on('change',changeFn);
+
+
+        }());
+
+    </script>
+}

@@ -10,7 +10,7 @@
     ViewBag.HideLogo = true;
 }
 
-<div class="grid-row">
+<div class="grid-row" id="search-results">
     <div class="column-full results-heading">
         <div class="breadcrumbs">            
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = @Model.SearchType})">Back to find an establishment</a>
@@ -38,29 +38,29 @@
                     Model.TextSearchType == M.eTextSearchType.Unknown)
                 {
                     <text>
-                        We found <span class="heading-xlarge count">@Model.Count</span> establishments
+                        @*We found <span class="heading-xlarge count">@Model.Count</span> establishments*@
                         @if (!Model.TextSearchModel.Text.IsEmpty())
                         {
-                            <text>for the search term &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
+                            <text>Establishments matching &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
                         }
                     </text>
                 }
                 else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
                 {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the LAESTAB "@Model.TextSearchModel.Text".</text>
+                    <text>Establishments matching the LAESTAB "@Model.TextSearchModel.Text".</text>
                 }
                 else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
                 {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
+                    <text>Establishments matching the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
                 }
                 else if (Model.TextSearchType == M.eTextSearchType.URN)
                 {
-                    <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments with the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
+                    <text>Establishments matching the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
                 }
             }
             else if (Model.SearchType == eSearchType.ByLocalAuthority)
             {
-                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments in <span id="la-list">the selected local authorities</span></text>
+                <text>Establishments in <span id="la-list">the selected local authorities</span></text>
             }
             else if (Model.SearchType == eSearchType.Location)
             {
@@ -70,87 +70,75 @@
                 {
                     displayLocation = displayLocation.Substring(0, lastIndex);
                 }
-                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
+                <text>Establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
             }
-            else
+            @*else
             {
                 <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
-            }
+            }*@
         </p>
     </div>
 </div>
 
 
 <div class="grid-row">
+    <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new {area = ""})">
+       
+        <div class="column-third">
+            <div class="filter-form" id="filter-form">
 
-    <div class="column-third">
-        <div class="filter-form" id="filter-form">
-            
-            <div id="EditSearchCollapsible"
-                 class="button-as-link js-collapsible selected mbl js-track"
-                 data-track="search-results||edit-search"
-                 aria-controls="EditSearchCollapse"
-                 role="button">
-                <a class="help-toggle" href="/">Edit search</a>
-            </div>
-
-            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
-
-                <div class="blanket"></div>
-
-                
-                <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new { area = "" })">
+                <div id="EditSearchCollapse" class="blanket-container">
 
                     @if (Model.SearchType == eSearchType.Location)
                     {
                         @RadiusSelector("Within radius of")
-                        
+
                     }
 
-                    @SortBySelector("Sort by")
-                    
-                    @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes.OrderBy(e => e.Name), Model.SelectedEstablishmentTypeIds)
-                    
-                    @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses.OrderBy(x => x.Name), Model.SelectedEstablishmentStatusIds)
-                    
-                    @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases.OrderBy(x => x.Name), Model.SelectedEducationPhaseIds)
-                    
-                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds)
-                    
 
-            
+
+                    @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes.OrderBy(e => e.Name), Model.SelectedEstablishmentTypeIds)
+
+                    @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses.OrderBy(x => x.Name), Model.SelectedEstablishmentStatusIds)
+
+                    @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases.OrderBy(x => x.Name), Model.SelectedEducationPhaseIds)
+
+                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds)
+
+
+
                     @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds)
-                                        
-                    
+
+
                     <!-- begin opted in filters -->
                     @OpenDateFilter()
 
                     @CloseDateFilter()
 
-                    @Html.EditorFor(x => x.AgeRangeLow, new { title = "Age range low", id="age-range-low-filter" , bindalias= M.BIND_ALIAS_AGE_RANGE_LOW_FROM})
+                    @Html.EditorFor(x => x.AgeRangeLow, new {title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM})
 
-                    @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM })
+                    @Html.EditorFor(x => x.AgeRangeHigh, new {title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM})
 
                     @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies.OrderBy(x => x.Name), Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
-                    
+
                     @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions.OrderBy(x => x.Name), Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
-                    
+
 
                     @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true)
-                    
+
                     @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true)
-                    
+
                     @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes.OrderBy(x => x.Name), Model.SelectedFETypeIds, "additional-search-critera hidden", true)
-                    
+
                     @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders.OrderBy(x => x.Name), Model.SelectedGenderIds, "additional-search-critera hidden", true)
-                    
+
                     @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs.OrderBy(x => x.Name), Model.SelectedGORIds, "additional-search-critera hidden", true)
-                    
-                   
+
+
                     @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions.OrderBy(x => x.Name), Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", true)
-                    
+
                     @Selector("Ofsted rating", M.BIND_ALIAS_OFSTEDRATINGS, Model.OfstedRatings.OrderBy(x => x.Name), Model.SelectedOfstedRatingIds, "additional-search-critera hidden", true)
-                    
+
                     @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true)
 
                     @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true)
@@ -165,15 +153,15 @@
 
                     @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions.OrderBy(x => x.Name), Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", true)
 
-                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations.OrderBy(x => x.Name), Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)                    
-                    
+                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations.OrderBy(x => x.Name), Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
+
                     <div id="filter-addtional-controls">
                         <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
                         <a href="#" class="add-filters-link add-clear-filters">+ Add more filters</a>
                     </div>
-                    
 
-                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
+
+                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit"/>
 
                     @if (Model.SearchType == eSearchType.Text)
                     {
@@ -186,44 +174,44 @@
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                     }
 
-                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
+                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters"/>
 
                     @Html.HiddenFor(x => x.SearchType)
-                    
-                </form>
+
+
+
+                </div>
+
+            </div>
+            <div id="additional-filter-wrap" class="hidden">
+                <div class="govuk-option-select js-collapsible " data-closed-on-load="false" id="option-select-additional-filters">
+                    <div class="container-head js-container-head">
+                        <div class="option-select-label">Add more filters</div>
+                        <div class="js-selected-counter">
+                            <span class="js-selected-counter-text"></span>
+                        </div>
+                    </div>
+                    <a href="#" class="clear-selections filter-clear">Clear</a>
+                    <div class="options-container" id="">
+                        <div class="js-auto-height-inner">
+                            <fieldset id="filter-type-target"></fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                <input value="Add" class="button edubase-filter-submit" id="filter-refine" type="submit">
+                <button class="button button-grey edubase-filter-submit" id="add-filter-cancel">Cancel</button>
             </div>
 
         </div>
-        <div id="additional-filter-wrap" class="hidden">
-            <div class="govuk-option-select js-collapsible " data-closed-on-load="false" id="option-select-additional-filters">
-                <div class="container-head js-container-head">
-                    <div class="option-select-label">Add more filters</div>
-                    <div class="js-selected-counter">
-                        <span class="js-selected-counter-text"></span>                
-                    </div>
-                </div>
-                <a href="#" class="clear-selections filter-clear">Clear</a>
-                <div class="options-container" id="">
-                    <div class="js-auto-height-inner">
-                        <fieldset id="filter-type-target">
-                           
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-            
-            <input value="Add" class="button edubase-filter-submit" id="filter-refine" type="submit">
-            <button class="button button-grey edubase-filter-submit" id="add-filter-cancel">Cancel</button>
+
+        <div class="column-two-thirds" id="results-container">
+
+            @{Html.RenderPartial("Partials/_EstablishmentSearchResults");}
+
         </div>
-
-    </div>
-
-    <div class="column-two-thirds" id="results-container">
-
-        @{Html.RenderPartial("Partials/_EstablishmentSearchResults");}
-
-    </div>
-
+        @{Html.RenderPartial("Partials/_EstablishmentSearchMap");}
+    </form>
 </div>
 
 
@@ -360,23 +348,7 @@
     </div>
 }
 
-@helper SortBySelector(string label)
-{
-    <div class="govuk-option-select js-collapsible"
-         id="option-select-@label.ToLower().Replace(" ", "-")">
-        <div class="container-head js-container-head">
-            <div class="option-select-label">@label</div>
-        </div>
-        <select class="form-control trigger-result-update" name="@M.BIND_ALIAS_SORT_BY">
-            @if (Model.SearchType == eSearchType.Location)
-            {
-                <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>distance</option>
-            }
-            <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
-            <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
-        </select>
-    </div>
-}
+
 
 @helper RadiusSelector(string label)
 {   
@@ -407,6 +379,14 @@
             if (this.checked) {
                 $openClosedSelector.prop('checked', true);
             }
-        })
+        });
     </script>
+    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
+    <script src="/public/assets/scripts/standalone/search-map.js"></script>
+    
+    <script>
+        //DfE.searchMap.bindActions();
+        DfE.searchResults.init();
+    </script>
+    
 }

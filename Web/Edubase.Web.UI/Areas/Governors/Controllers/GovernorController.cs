@@ -51,7 +51,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly IGovernorsWriteService _governorsWriteService;
         private readonly IGroupReadService _groupReadService;
         private readonly IEstablishmentReadService _establishmentReadService;
-        private readonly LayoutHelper _layoutHelper;
+        private readonly ILayoutHelper _layoutHelper;
 
         public GovernorController(
             IGovernorsReadService governorsReadService,
@@ -60,7 +60,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             IGovernorsWriteService governorsWriteService,
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
-            LayoutHelper layoutHelper)
+            ILayoutHelper layoutHelper)
         {
             _governorsReadService = governorsReadService;
             _nomenclatureService = nomenclatureService;
@@ -273,7 +273,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.PreviousLastName = model.PreviousPerson_LastName;
 
                     viewModel.GID = model.Id;
-                    viewModel.NationalityId = model.NationalityId; //todo: textchange
                     viewModel.TelephoneNumber = model.TelephoneNumber;
                     viewModel.PostCode = model.PostCode;
 
@@ -335,7 +334,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 EmailAddress = viewModel.EmailAddress,
                 GroupUId = viewModel.GroupUId,
                 EstablishmentUrn = viewModel.EstablishmentUrn,
-                NationalityId = viewModel.NationalityId,
                 Id = viewModel.GID,
                 Person_FirstName = viewModel.FirstName,
                 Person_MiddleName = viewModel.MiddleName,
@@ -460,7 +458,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         DOB = model.NewLocalGovernor.DOB.ToDateTime(),
                         EmailAddress = model.NewLocalGovernor.EmailAddress,
                         EstablishmentUrn = model.Urn,
-                        NationalityId = model.NewLocalGovernor.NationalityId,
                         Person_FirstName = model.NewLocalGovernor.FirstName,
                         Person_MiddleName = model.NewLocalGovernor.MiddleName,
                         Person_LastName = model.NewLocalGovernor.LastName,
@@ -486,7 +483,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 }
             }
 
-            var governor = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User) ?? await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
+            var governor = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
             var roles = new List<eLookupGovernorRole>
             {
                 (eLookupGovernorRole)governor.RoleId
@@ -494,11 +491,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value))
             {
-                var localEquivalent =
-                    RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole)governor.RoleId);
+                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole)governor.RoleId);
                 if (localEquivalent != null)
                     roles.Add(localEquivalent.Value);
-
             }
             else
             {
@@ -545,7 +540,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private async Task PopulateSelectLists(GovernorViewModel viewModel)
         {
             viewModel.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).ToSelectList(viewModel.AppointingBodyId);
-            viewModel.Nationalities = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(viewModel.NationalityId);
             viewModel.Titles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.GovernorTitleId);
             viewModel.PreviousTitles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.PreviousTitleId);
         }

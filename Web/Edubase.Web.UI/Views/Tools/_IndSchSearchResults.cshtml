@@ -1,0 +1,53 @@
+﻿@using Edubase.Services.Domain
+@model IndSchoolsSearchViewModel
+
+   
+        @if (Model.HasResults)
+            {
+
+                if (Model.Results.PageCount > 1)
+                {
+                <div class="top-pagination">
+                    @Html.Partial("_GenericPaginationV2", Model.Results)
+                </div>
+            }
+
+            <table class="edubase-table">
+                <thead>
+                    <tr>
+                        <th>Establishment name</th>
+                        <th>Local authority</th>
+                        <th>Town</th>
+                        <th>Establishment status</th>
+                        <th>Establishment type</th>
+                        <th>Date of action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Results.Items)
+                {
+                        <tr>
+                            <td>@(Html.Field(item.Name))</td>
+                            <td>@(Html.Field(Model.LocalAuthorities.FirstOrDefault(x => x.Id == item.LocalAuthorityId)))</td>
+                            <td>@(Html.Field(item.Address_CityOrTown))</td>
+                            <td>@(Html.Field(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == item.StatusId)))</td>
+                            <td>@(Html.Field(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == item.TypeId)))</td>
+                            <td>
+                                @Html.Conditional(Model.IsGeneralMode, Html.Field(item.NextGeneralActionRequired))
+                                @Html.Conditional(Model.IsWelfareMode, Html.Field(item.NextActionRequiredByWEL))
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            if (Model.Results.PageCount > 1)
+            {
+                <div class="lower-pagination">
+                    @Html.Partial("_GenericPaginationV2", Model.Results)
+                </div>
+            }
+        }
+        else
+        {
+            <p>Sorry, no results were found. Please expand your search criteria and search again.</p>
+        }

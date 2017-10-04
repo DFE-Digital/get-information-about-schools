@@ -438,3 +438,14 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+.column-two-thirds {
+    .date-group-wrap {
+        @include media(500px) {
+        float: left;
+        width: 50%;
+        clear: none;
+        }
+        
+    }
+}

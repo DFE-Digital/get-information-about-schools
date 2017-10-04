@@ -37,7 +37,7 @@
             url: '/Api/should-show-data-status',
             dataType: 'json',
             success: function(data) {
-                if (data.UserRequiresDataPrompt) {
+                if (data.userRequiresDataPrompt) {
                     self.init();
                 }
             },

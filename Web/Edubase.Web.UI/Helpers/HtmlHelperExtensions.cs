@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Governors.Models;
+﻿using Edubase.Common;
+using Edubase.Services.Governors.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -21,6 +22,13 @@ namespace Edubase.Web.UI.Helpers
             var expressionText = ExpressionHelper.GetExpressionText(expression);
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
+            if (state == null) return MvcHtmlString.Empty;
+            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("error");
+        }
+
+        public static MvcHtmlString ValidationCssClass(this HtmlHelper htmlHelper, string modelName)
+        {
+            var state = htmlHelper.ViewData.ModelState[modelName];
             if (state == null) return MvcHtmlString.Empty;
             return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("error");
         }
@@ -134,5 +142,18 @@ namespace Edubase.Web.UI.Helpers
             }
             else return new MvcHtmlString(string.Empty);
         }
+
+        /// <summary>
+        /// Outputs the ToString value of an object; if the value is empty or null, it'll output "Not recorded"
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="htmlHelper"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string Field<TModel>(this HtmlHelper<TModel> htmlHelper, object obj, string dateFormat = null) 
+            => (obj is DateTime? ? ((DateTime?)obj)?.ToString(dateFormat ?? "dd/MM/yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
+        
+
+
     }
 }

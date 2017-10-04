@@ -6,5 +6,6 @@ namespace Edubase.Web.UI.Models.DataQuality
     {
         public List<FullDataQualityStatusItem> Items { get; set; }
         public bool DataUpdated { get; set; }
+        public bool UserCanUpdate { get; set; }
     }
 }

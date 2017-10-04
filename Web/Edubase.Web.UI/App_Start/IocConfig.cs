@@ -130,10 +130,11 @@ namespace Edubase.Web.UI
             builder.RegisterType<DataQualityWriteService>().As<IDataQualityWriteService>();
             builder.RegisterType<DataQualityReadService>().As<IDataQualityReadService>();
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
+            builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 
-            builder.RegisterType<LayoutHelper>();
+            builder.RegisterType<LayoutHelper>().AsImplementedInterfaces().AsSelf();
 
             builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>().InstancePerRequest();
             builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();
@@ -155,7 +156,7 @@ namespace Edubase.Web.UI
             };
         }
 
-        private static HttpClient CreateHttpClient()
+        public static HttpClient CreateHttpClient()
         {
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {

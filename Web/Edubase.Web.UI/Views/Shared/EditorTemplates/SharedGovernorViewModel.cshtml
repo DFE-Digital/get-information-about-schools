@@ -34,7 +34,6 @@
         @Html.HiddenFor(x => x.PostCode)
         @Html.HiddenFor(x => x.AppointingBodyName)
         @Html.HiddenFor(x => x.DOB)
-        @Html.HiddenFor(x => x.Nationality)
         @Html.HiddenFor(x => x.FullName)
         <div class="shared-governor @(Model.PreExisting ? "remove-border": "")">
             @if (Model.PreExisting)
@@ -67,8 +66,6 @@
                         <dd>@Model.AppointingBodyName</dd>
                         <dt>Date of birth:</dt>
                         <dd>@(Model.DOB?.ToString("dd/MM/yyyy"))</dd>
-                        <dt>Nationality:</dt>
-                        <dd>@Model.Nationality</dd>
                     </dl>
 
                     @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date" })

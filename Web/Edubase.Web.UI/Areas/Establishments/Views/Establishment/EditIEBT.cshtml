@@ -31,6 +31,11 @@
                     <label for="notes">Notes</label>
                     @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "10" })
                 </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Associations)
+                
+                    @Html.TextAreaFor(x => x.Associations, new { @class = "form-control", rows = "10" })
+                </div>
 
                 
                 @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Bridge visit" })
@@ -196,7 +201,8 @@
                             content: 'Any unsaved changes will be lost',
                             triggerEvent: 'click'
                         });
-                        $('#Notes').textCount({ maxLength: 200 });
+                        $('#Notes').textCount({ maxLength: 4000 });
+                        $('#Associations').textCount({ maxLength: 1000 });
                     </script>
                 }
         }
@@ -213,7 +219,8 @@
                             exitAttached = true;
                         }
                     });
-                    $('#Notes').textCount({ maxLength : 200});
+                    $('#Notes').textCount({ maxLength: 4000 });
+                    $('#Associations').textCount({ maxLength: 1000 });
                 </script>
                 
             }

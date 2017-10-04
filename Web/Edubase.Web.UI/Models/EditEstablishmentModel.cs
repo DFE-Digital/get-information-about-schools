@@ -147,7 +147,7 @@ namespace Edubase.Web.UI.Models
         public int? InspectorateId { get; set; }
         public string ProprietorName { get; set; }
         public int? Section41ApprovedId { get; set; }
-        public int[] SENIds { get; set; }
+        public int[] SENIds { get; set; } = new int[0];
         public int? TypeOfResourcedProvisionId { get; set; }
         public int? ResourcedProvisionOnRoll { get; set; }
         public int? ResourcedProvisionCapacity { get; set; }
@@ -271,7 +271,11 @@ namespace Edubase.Web.UI.Models
         public int? PruEducatedByOthersId { get; set; }
 
         #region IEBT properties
+        [MaxLength(4000)]
         public string Notes { get; set; }
+
+        [Display(Name = "Associations"), MaxLength(1000)]
+        public string Associations { get; set; }
         public DateTimeViewModel DateOfTheLastBridgeVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfLastOfstedVisit { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel DateOfTheLastISIVisit { get; set; } = new DateTimeViewModel();

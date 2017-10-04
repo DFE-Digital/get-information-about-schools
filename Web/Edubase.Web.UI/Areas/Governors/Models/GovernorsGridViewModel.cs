@@ -148,7 +148,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                                                     .AddCell(governor.PostCode, displayPolicy.PostCode)
                                                     .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
                                                     .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
-                                                    .AddCell(Nationalities.FirstOrDefault(x => x.Id == governor.NationalityId)?.Name, displayPolicy.Nationality)
                                                     .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
                                                     .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
                     if (isHistoric)
@@ -189,7 +188,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 .AddHeaderCell("Postcode", displayPolicy.PostCode)
                 .AddHeaderCell("Date of birth", displayPolicy.DOB)
                 .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
-                .AddHeaderCell("Nationality", displayPolicy.Nationality)
                 .AddHeaderCell("Email address", displayPolicy.EmailAddress)
                 .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber);
         }

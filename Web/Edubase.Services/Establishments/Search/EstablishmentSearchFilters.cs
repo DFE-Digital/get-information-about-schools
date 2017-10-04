@@ -17,5 +17,17 @@ namespace Edubase.Services.Establishments.Search
         public int? StatutoryHighAgeMin { get; set; }
         public int? StatutoryHighAgeMax { get; set; }
         public int[] OfstedRatingIds { get; set; }
+
+        [JsonProperty("nextActionRequiredByWELMin")]
+        public DateTime? NextActionRequiredByWELMin { get; set; }
+
+        [JsonProperty("nextActionRequiredByWELMax")]
+        public DateTime? NextActionRequiredByWELMax { get; set; }
+
+        [JsonProperty("nextGeneralActionRequiredMin")]
+        public DateTime? NextGeneralActionRequiredMin { get; set; }
+
+        [JsonProperty("nextGeneralActionRequiredMax")]
+        public DateTime? NextGeneralActionRequiredMax { get; set; }
     }
 }
