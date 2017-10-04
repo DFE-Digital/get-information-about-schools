@@ -95,19 +95,19 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .Cascade(CascadeMode.StopOnFirstFailure)
                     .NotEmpty()
                     .WithMessage("Enter an {0} name", x => x.FieldNamePrefix.ToLower())
-                    .When(x => x.SaveGroupDetail)
+                    .When(x => x.SaveGroupDetail);
 
-                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name: name, localAuthorityId: model.LocalAuthorityId.Value, existingGroupUId: model.GroupUId)))
-                    .WithMessage("Group name already exists at this authority, please select another name")
-                    .When(x => x.GroupTypeMode == eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator)
+                    //.MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name: name, localAuthorityId: model.LocalAuthorityId.Value, existingGroupUId: model.GroupUId)))
+                    //.WithMessage("Group name already exists at this authority, please select another name")
+                    //.When(x => x.GroupTypeMode == eGroupTypeMode.ChildrensCentre && x.LocalAuthorityId.HasValue && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator)
 
-                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name: name, existingGroupUId: model.GroupUId)))
-                    .WithMessage("{0} name already exists. Enter a different {0} name", x => x.FieldNamePrefix)
-                    .When(x => x.GroupTypeMode == eGroupTypeMode.Sponsor && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator)
+                    //.MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name: name, existingGroupUId: model.GroupUId)))
+                    //.WithMessage("{0} name already exists. Enter a different {0} name", x => x.FieldNamePrefix)
+                    //.When(x => x.GroupTypeMode == eGroupTypeMode.Sponsor && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator)
 
-                    .MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name: name, existingGroupUId: model.GroupUId)))
-                    .WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
-                    .When(x => x.GroupTypeMode != eGroupTypeMode.ChildrensCentre && x.GroupTypeMode != eGroupTypeMode.AcademyTrust && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
+                    //.MustAsync(async (model, name, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), name: name, existingGroupUId: model.GroupUId)))
+                    //.WithMessage("{0} name already exists, please select another name", m => m.FieldNamePrefix)
+                    //.When(x => x.GroupTypeMode != eGroupTypeMode.ChildrensCentre && x.GroupTypeMode != eGroupTypeMode.AcademyTrust && x.SaveGroupDetail, ApplyConditionTo.CurrentValidator);
 
                 RuleFor(x => x.GroupId)
                     .Cascade(CascadeMode.StopOnFirstFailure)
