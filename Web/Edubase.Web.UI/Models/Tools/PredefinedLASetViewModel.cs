@@ -18,6 +18,8 @@ namespace Edubase.Web.UI.Models.Tools
 
         [Required(ErrorMessage = "Please enter the set name")]
         public string Title { get; set; }
+        public string Referrer { get; set; }
+        public string Mode { get; set; }
         public bool IsNewEntity => Id == null;
 
         public bool WarningNameClash { get; set; } // when true, we should warn the user
