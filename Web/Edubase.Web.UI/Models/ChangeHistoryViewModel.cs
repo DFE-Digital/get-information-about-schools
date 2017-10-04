@@ -22,6 +22,8 @@
         public const string BIND_ALIAS_ESTABTYPEIDS = "e";
         public const string BIND_ALIAS_FIELDS = "f";
         public const string BIND_ALIAS_GROUPTYPEIDS = "g";
+        public const string BIND_ALIAS_SUGGESTED_BY = "s";
+        public const string BIND_ALIAS_APPROVED_BY = "a";
 
         public const string DATE_FILTER_MODE_EFFECTIVE = "e";
         public const string DATE_FILTER_MODE_APPLIED = "a";
@@ -38,6 +40,9 @@
 
         [BindAlias(BIND_ALIAS_ESTABTYPEIDS)]
         public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();
+
+        [BindAlias(BIND_ALIAS_GROUPTYPEIDS)]
+        public List<int> SelectedGroupTypeIds { get; set; } = new List<int>();
 
         public Tab SelectedTab { get; set; }
 
@@ -70,12 +75,25 @@
 
         public string DateFilterMode { get; set; } = DATE_FILTER_MODE_APPLIED;
 
+        [BindAlias(BIND_ALIAS_SUGGESTED_BY)]
+        public string SuggestedBy { get; set; }
+
+        [BindAlias(BIND_ALIAS_APPROVED_BY)]
+        public string ApprovedBy { get; set; }
+
         public IEnumerable<SelectListItem> DateFilterOptions => new List<SelectListItem>
         {
             new SelectListItem {Text = "Effective", Value = DATE_FILTER_MODE_EFFECTIVE},
             new SelectListItem {Text = "Applied", Value = DATE_FILTER_MODE_APPLIED},
             new SelectListItem {Text = "Approved", Value = DATE_FILTER_MODE_APPROVED}
         };
+
+        public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; } = new List<LookupItemViewModel>();
+        public IEnumerable<LookupItemViewModel> EstablishmentFields { get; set; } = new List<LookupItemViewModel>();
+        public IEnumerable<LookupItemViewModel> GroupTypes { get; set; } = new List<LookupItemViewModel>();
+
+        public IEnumerable<SelectListItem> SuggesterGroups { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> ApproverGroups { get; set; } = new List<SelectListItem>();
 
         public eTextSearchType TextSearchType
         {
