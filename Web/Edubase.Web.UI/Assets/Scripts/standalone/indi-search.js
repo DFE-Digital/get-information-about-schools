@@ -8,8 +8,85 @@
     var downloadBaseUrl = '/independent-schools/download?';
     var plsWait = '<div class="progress-indicator"><span class="visually-hidden">Please wait</span></div>';
     var searchParams;
+    var filterError = false;
 
     $('#filter-submit').addClass('hidden');
+
+    function validateFilters() {
+        var filters = $('.date-filters').filter(':visible');
+        var canSubmit = true;
+       
+        filters.each(function (n, elem) {
+            $(elem).find('.form-group').slice(0, 2).removeClass('error');
+            $(elem).find('.error-message').addClass('hidden');
+
+            var validDate = true;
+            var dateObj = {};
+            var fromDateFields = $(elem).find('.search-from-date .form-control');
+            var toDateFields = $(elem).find('.search-to-date .form-control');
+
+            var fromDateValues = $.map(fromDateFields, function (field) {
+                if (field.value.trim() !== '') {
+                    return field.value;
+                }
+            });
+
+            var toDateValues = $.map(toDateFields, function (field) {
+                if (field.value.trim() !== '') {
+                    return field.value;
+                }
+            });
+
+            if (fromDateValues.length > 0 && fromDateValues.length < 3) {
+                validDate = false;
+            }
+            if (toDateValues.length > 0 && toDateValues.length < 3) {
+                validDate = false;
+            }
+
+
+            if (fromDateValues.length === 3 && validDate) {
+                dateObj.day = fromDateValues[0];
+                dateObj.month = fromDateValues[1] - 1;
+                dateObj.year = fromDateValues[2];
+
+                validDate = !DfE.searchUtils.validateDate(dateObj);
+            }
+
+            if (toDateValues.length === 3 && validDate) {
+                dateObj.day = toDateValues[0];
+                dateObj.month = toDateValues[1] - 1;
+                dateObj.year = toDateValues[2];
+
+                validDate = !DfE.searchUtils.validateDate(dateObj);
+            }
+
+            if (!validDate) {
+                $(elem).find('.form-group').slice(0, 2).addClass('error');
+                $(elem).find('.error-message').removeClass('hidden');
+                canSubmit = false;
+
+            } else {
+                var fromDate = new Date(fromDateValues[2], fromDateValues[1], fromDateValues[0]);
+                var toDate = new Date(toDateValues[2],toDateValues[1], toDateValues[0]);
+                if (toDate < fromDate) {
+                    canSubmit = false;
+                }
+            }
+
+           
+
+            if (n + 1 === filters.length ) {
+                if (!canSubmit) {
+                    $('#date-filter').find('.form-group').addClass('error');                  
+                    $('#date-filter').find('.error-message').slice(0, 1).removeClass('hidden'); 
+                }
+                filterError = canSubmit;
+
+            }
+        });
+        
+    }
 
     var getResults = function () {
         filterForm.find('input').prop('disabled', 'disabled');
@@ -59,13 +136,19 @@
 
     filterForm.find('.trigger-result-update').on('change', function() {
         window.clearTimeout(filterIntent);
-        resultsContainer.addClass('pending-results-update');
-        filterIntent = window.setTimeout(function () {
-            resultsContainer.html(plsWait);
-            searchParams = $('#filter-form-ind').serialize();
+         validateFilters();
+
+         if (filterError){
+            resultsContainer.addClass('pending-results-update');
+            filterIntent = window.setTimeout(function () {
+                resultsContainer.html(plsWait);
+                searchParams = $('#filter-form-ind').serialize();
             
-            getResults();
-        }, 1200);
+                getResults();
+            }, 1200);
+        }
+
+        
         
     });
 
@@ -76,15 +159,19 @@
     filterForm.find('.filter-button').on('click', function(e) {
         e.preventDefault();
         window.clearTimeout(filterIntent);
-        resultsContainer.html(plsWait);
-        searchParams = $('#filter-form-ind').serialize();
-        getResults();
+        validateFilters();
+
+        if (filterError) {            
+            resultsContainer.html(plsWait);
+            searchParams = $('#filter-form-ind').serialize();
+            getResults();
+        }
     });
 
     $('#set-saver').on('click',
         function(e) {
             e.preventDefault();
-            var params = $('#option-select-local-authority').find(':input').serialize();
+            var params = $('#option-select-local-authority').find(':input').serialize() + '&referrer=results&Mode=' + document.getElementById('Mode').value;
             window.location = '/independent-schools/predefined-local-authority-sets/create?' + params;
 
         });

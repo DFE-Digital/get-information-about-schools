@@ -27,6 +27,8 @@
         {
             <div class="column-two-thirds">
                 @Html.HiddenFor(x => x.Id)
+                @Html.HiddenFor(x=>x.Referrer)
+                @Html.HiddenFor(x=>x.Mode)
 
                 @if (Model.WarningNameClash)
                 {
