@@ -48,6 +48,7 @@
         @if (ViewData["inFilters"] != null)
         {
             <span class="error-message hidden">Please check the date(s) you have entered</span>
+            <span class="error-message hidden date-range-error">Please use a valid date range</span>
         }   
         <legend class="bold" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
         
