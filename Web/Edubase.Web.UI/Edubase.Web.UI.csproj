@@ -279,6 +279,7 @@
     <Compile Include="Helpers\ILayoutHelper.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
+    <Compile Include="Helpers\ValueProviders\TokenValueProviderFactory.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\EstablishmentSearchDownloadGenerationProgressViewModel.cs" />
