@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Downloads.Models;
+﻿using Edubase.Services.Core;
+using Edubase.Services.Downloads.Models;
 using Edubase.Web.Resources;
 using System;
 using System.Collections.Generic;
@@ -19,18 +20,11 @@ namespace Edubase.Web.UI.Models
 
         public FileDownload[] Downloads { get; set; }
 
-        public ScheduledExtractsResult ScheduledExtracts { get; set; }
-
-        public int Skip { get; set; }
-
-        public int Take { get; set; }
+        public PaginatedResult<ScheduledExtract> ScheduledExtracts { get; internal set; }
 
         public int ScheduledExtractsCount => (ScheduledExtracts?.Count).GetValueOrDefault();
 
         public bool AreScheduledExtractsAvailable => ScheduledExtractsCount > 0;
-
-        public PaginationViewModel Pagination => new PaginationViewModel(Skip, Take, ScheduledExtractsCount);
-
 
         public IEnumerable<Section> GetFileDownloadGroups()
         {

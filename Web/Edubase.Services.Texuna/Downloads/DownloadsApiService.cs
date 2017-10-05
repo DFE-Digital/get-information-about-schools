@@ -1,13 +1,11 @@
-﻿using Edubase.Services.Downloads;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Edubase.Services.Downloads.Models;
-using System.Security.Principal;
+﻿using Edubase.Services.Core;
 using Edubase.Services.Domain;
-using Edubase.Services.Exceptions;
+using Edubase.Services.Downloads;
+using Edubase.Services.Downloads.Models;
+using System;
+using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace Edubase.Services.Texuna.Downloads
 {
@@ -21,19 +19,21 @@ namespace Edubase.Services.Texuna.Downloads
         }
 
         public async Task<FileDownload[]> GetListAsync(IPrincipal principal) => (await _httpClient.GetAsync<FileDownload[]>($"downloads", principal)).Response;
-
-        public async Task<ScheduledExtractsResult> GetScheduledExtractsAsync(int skip, int take, IPrincipal principal)
+        
+        public async Task<PaginatedResult<ScheduledExtract>> GetScheduledExtractsAsync(int skip, int take, IPrincipal principal)
         {
             try
             {
-                return (await _httpClient.GetAsync<ScheduledExtractsResult>($"scheduled-extracts?skip={skip}&take={take}", principal)).Response;
+                var set = (await _httpClient.GetAsync<ApiPagedResult<ScheduledExtract>>($"scheduled-extracts?skip={skip}&take={take}", principal)).GetResponse();
+                return new PaginatedResult<ScheduledExtract>(skip, take, set.Count, set.Items);
             }
-            catch(EduSecurityException)
+            catch (Exception)
             {
-                return new ScheduledExtractsResult();
+                return new PaginatedResult<ScheduledExtract>(skip, take, 0, Enumerable.Empty<ScheduledExtract>().ToList());
             }
-        }
             
+        }
+
 
         public async Task<string> GenerateScheduledExtractAsync(int id, IPrincipal principal) 
             => (await _httpClient.PostAsync<string>($"scheduled-extract/generate/{id}", null, principal)).Response;
