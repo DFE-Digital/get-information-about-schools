@@ -37,21 +37,24 @@
         }
 
         <h1 class="heading-xlarge">@heading</h1>
-        @if (Model.Count > 0)
-        {
-            <a class="download-link" href="#">Download change history</a>
-        }
+       
+         <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href="#">Download change history</a>
+       
 
     </div>
 </div>
 
 <div class="grid-row">
-<div class="column-full">
-    <p>
-        <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters</a>
-    </p>
-</div>
-<form>
+    <div class="column-full">
+        <div class="error-summary hidden" id="ajax-error-message">
+            <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
+            <p>Please refresh the page to try again</p>
+        </div>
+        <p>
+            <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters</a>
+        </p>
+    </div>
+<form id="change-history-filters">
 <div class="column-third" id="filter-container">
     <div class="filter-form" id="filter-form">
         <div id="EditSearchCollapse" class="blanket-container">
@@ -239,34 +242,6 @@
 </form>
 </div>
 
-@section ViewScripts {
-    <script>
-        (function () {
-            var openState = true;
-            var resultsPanel = $('#results-panel');
-            var filterPanel = $('#filter-container');
-
-            $('#filter-toggle').on('click', function (e) {
-                e.preventDefault();
-                openState = !openState;
-                if (openState) {
-                    $(this).text('Hide filters');
-                } else {
-                    $(this).text('Show filters');
-                }
-                $(this).toggleClass('filters-closed');
-                filterPanel.toggleClass('hidden');
-                resultsPanel.toggleClass('column-full column-two-thirds');                
-            });
-
-            $('#date-type-filter').on('change', function() {
-                $('#date-filter-type-label').text('Date ' + $('#date-type-filter option:selected').text().toLowerCase());
-            });
-        }());
-    </script>
-    
-}
-
 @helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
 {
     <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
@@ -319,3 +294,12 @@
         </div>
     </div>
 }
+
+
+@section ViewScripts {
+
+    <script src="/public/assets/scripts/standalone/search-change-history.js"></script>
+    
+}
+
+
