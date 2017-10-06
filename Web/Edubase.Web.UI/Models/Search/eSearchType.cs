@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Edubase.Web.UI.Models.Search
+﻿namespace Edubase.Web.UI.Models.Search
 {
     public enum eSearchType
     {
@@ -13,6 +8,7 @@ namespace Edubase.Web.UI.Models.Search
         ByLocalAuthority,
         Group,
         Governor,
-        LocalAuthorityDisambiguation
+        LocalAuthorityDisambiguation,
+        GroupAll
     }
 }

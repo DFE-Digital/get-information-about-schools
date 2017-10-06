@@ -362,6 +362,7 @@
     <Compile Include="Helpers\RoleEquivalence.cs" />
     <Compile Include="Helpers\ValidationExtensions.cs" />
     <Compile Include="Models\ApiSessionRecorderViewModel.cs" />
+    <Compile Include="Models\ChangeHistoryViewModel - Copy.cs" />
     <Compile Include="Models\ChangeHistoryViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityStatusItem.cs" />
     <Compile Include="Models\DataQuality\DataQualityStatusViewModel.cs" />
@@ -967,6 +968,8 @@
     <Content Include="Views\Downloads\SelectFormat.cshtml" />
     <Content Include="Views\Downloads\Download.cshtml" />
     <Content Include="Views\DataQuality\Status.cshtml" />
+    <Content Include="Views\ChangeHistory\Results.cshtml" />
+    <Content Include="Views\ChangeHistory\Partials\_Helptext.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">
