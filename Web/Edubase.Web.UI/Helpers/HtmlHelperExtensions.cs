@@ -26,6 +26,13 @@ namespace Edubase.Web.UI.Helpers
             return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("error");
         }
 
+        public static MvcHtmlString ValidationCssClass(this HtmlHelper htmlHelper, string modelName)
+        {
+            var state = htmlHelper.ViewData.ModelState[modelName];
+            if (state == null) return MvcHtmlString.Empty;
+            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("error");
+        }
+
         public static MvcHtmlString DuplicateCssClassFor(this HtmlHelper htmlHelper, int? governorId)
         {
             if (htmlHelper.ViewContext.ViewData.ContainsKey("DuplicateGovernor") && governorId.HasValue)

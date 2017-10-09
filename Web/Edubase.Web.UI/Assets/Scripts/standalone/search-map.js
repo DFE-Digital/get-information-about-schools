@@ -55,6 +55,7 @@ DfE.searchMap = (function () {
             function getPoints() {
                 $('.map-header').addClass('loading');
                 $('#map-data-warning').addClass('hidden');
+                $('#zero-results-message').addClass('hidden');
                 $.ajax({
                     url: '/Establishments/Search/results-json',
                     data: DfE.searchResults.params() + '&startIndex=' + startIndex,
@@ -98,15 +99,20 @@ DfE.searchMap = (function () {
                             $('#map-count').text(pointCount);
                         }
 
+                        if (pointCount === 0) {
+                            $('#zero-results-message').removeClass('hidden');
+                            
+                            $('.map-header').removeClass('loading');
+                            DfE.searchResults.enableFilters();
+                            return;
+                        }
+
                         if (startIndex <= resultCount) {
                             if (pointCount > self.softLimit && !self.breachLimit) {
                                 pointsLoaded();
                                 $('#map-data-warning').removeClass('hidden');
                                 $('#map-count').text('1000');
-                                $('#estimated-remaining')
-                                    .text('Approximately ' +
-                                        Math.round((resultCount - pointCount) / 10) * 10 +
-                                        ' remaining.');
+                                
                                 $('#show-all-map').one('click',
                                     function(e) {
                                         e.preventDefault();
@@ -185,8 +191,8 @@ DfE.searchMap = (function () {
             self.currentView = 'map';
             var searchMap = new L.map('search-map',
                 {
-                    center: new L.LatLng(51.51, -0.11),
-                    zoom: 9,
+                    center: new L.LatLng(54, -3),
+                    zoom: 6,
                     attributionControl: false,
                     zoomControl: false,
                     spiderfyOnMaxZoom:  false

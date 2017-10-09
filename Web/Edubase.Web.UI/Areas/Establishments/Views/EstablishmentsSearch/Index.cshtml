@@ -83,9 +83,9 @@
 
 <div class="grid-row">
     <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new {area = ""})">
-       
-        <div class="column-third">
-            <div class="filter-form" id="filter-form">
+        <div class="filter-form" id="filter-form">
+            <div class="column-third">
+
 
                 <div id="EditSearchCollapse" class="blanket-container">
 
@@ -115,9 +115,9 @@
 
                     @CloseDateFilter()
 
-                    @Html.EditorFor(x => x.AgeRangeLow, new {title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM})
+                    @Html.EditorFor(x => x.AgeRangeLow, new { title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM })
 
-                    @Html.EditorFor(x => x.AgeRangeHigh, new {title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM})
+                    @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM })
 
                     @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies.OrderBy(x => x.Name), Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
 
@@ -161,7 +161,7 @@
                     </div>
 
 
-                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit"/>
+                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
 
                     @if (Model.SearchType == eSearchType.Text)
                     {
@@ -174,7 +174,7 @@
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                     }
 
-                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters"/>
+                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
 
                     @Html.HiddenFor(x => x.SearchType)
 
@@ -182,7 +182,6 @@
 
                 </div>
 
-            </div>
             <div id="additional-filter-wrap" class="hidden">
                 <div class="govuk-option-select js-collapsible " data-closed-on-load="false" id="option-select-additional-filters">
                     <div class="container-head js-container-head">
@@ -194,26 +193,39 @@
                     <a href="#" class="clear-selections filter-clear">Clear</a>
                     <div class="options-container" id="">
                         <div class="js-auto-height-inner">
+                            @searchWithin()
                             <fieldset id="filter-type-target"></fieldset>
                         </div>
                     </div>
                 </div>
 
-                <input value="Add" class="button edubase-filter-submit" id="filter-refine" type="submit">
-                <button class="button button-grey edubase-filter-submit" id="add-filter-cancel">Cancel</button>
+                <input value="Add" class="button " id="filter-refine" type="submit">
+                <button class="button button-grey " id="add-filter-cancel">Cancel</button>
             </div>
 
+                </div>
+
+            <div class="column-two-thirds" id="results-container">
+
+                @{Html.RenderPartial("Partials/_EstablishmentSearchResults");}
+
+            </div>
+            @{Html.RenderPartial("Partials/_EstablishmentSearchMap");}
         </div>
-
-        <div class="column-two-thirds" id="results-container">
-
-            @{Html.RenderPartial("Partials/_EstablishmentSearchResults");}
-
-        </div>
-        @{Html.RenderPartial("Partials/_EstablishmentSearchMap");}
     </form>
 </div>
 
+@helper searchWithin()
+{
+    <div class="search-field-wrap">
+        <label class="filter-searchwithin-label">
+            <span class="visually-hidden">Search within this filter</span>
+            <input type="text" class="filter-search" />
+            <button class="field-clear hidden"><span class="visually-hidden">Clear</span></button>
+        </label>
+        <div class="suggestion-target"></div>
+    </div>
+}
 
 @helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
 {
@@ -234,22 +246,25 @@
         <a href="#" class="clear-selections filter-clear">Clear</a>
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
+                @searchWithin()
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @foreach (var item in items)
                     {
                         <div class="filter-wrapper">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
                             <label for="@(name)_@item.Id" class="filter-radio">
                                 @item
                             </label>
-                        </div>                        
+                        </div>
                     }
                 </fieldset>
             </div>
         </div>
     </div>
 }
+
+
 
 @helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
 {
@@ -258,7 +273,7 @@
     {
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
-    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
+    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
@@ -269,13 +284,14 @@
         <a href="#" class="clear-selections filter-clear">Clear</a>
         <div class="options-container">
             <div class="js-auto-height-inner">
+                @searchWithin()
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @foreach (var item in items)
                     {
                         <dl class="nested-items">
                             <dt>
-                                <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                                <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
                                 <label for="@(name)_@item.Id" class="filter-radio">
                                     @item
                                     <a href="#" class="child-option-toggle"></a>
@@ -285,14 +301,14 @@
                                 @foreach (var child in item.ChildItems)
                                 {
                                     <div class="filter-wrapper">
-                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked") />
+                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
                                         <label for="@(name)_@(item.Id)_@child.Id" class="filter-radio">
                                             @child
                                         </label>
-                                    </div>                                    
+                                    </div>
                                 }
                             </dd>
-                        </dl>                        
+                        </dl>
                     }
                 </fieldset>
             </div>
@@ -371,6 +387,8 @@
 
 @section ViewScripts
 {
+    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
+    <script src="/public/assets/scripts/standalone/search-map.js"></script>
     <script language="javascript">
         var $openSelector = $("#b_1");
         var $openClosedSelector = $("#b_4");
@@ -380,13 +398,9 @@
                 $openClosedSelector.prop('checked', true);
             }
         });
-    </script>
-    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
-    <script src="/public/assets/scripts/standalone/search-map.js"></script>
     
-    <script>
-        //DfE.searchMap.bindActions();
         DfE.searchResults.init();
+        $('#filter-form').find('.govuk-option-select').searchWithinFilters();       
     </script>
     
 }

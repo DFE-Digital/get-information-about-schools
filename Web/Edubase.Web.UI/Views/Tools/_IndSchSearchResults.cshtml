@@ -5,12 +5,11 @@
         @if (Model.HasResults)
             {
 
-                if (Model.Results.PageCount > 1)
-                {
-                <div class="top-pagination">
-                    @Html.Partial("_GenericPaginationV2", Model.Results)
-                </div>
-            }
+                
+            <div class="top-pagination">
+                @Html.Partial("_GenericPaginationV2", Model.Results)
+            </div>
+            
 
             <table class="edubase-table">
                 <thead>
@@ -40,12 +39,11 @@
                     }
                 </tbody>
             </table>
-            if (Model.Results.PageCount > 1)
-            {
-                <div class="lower-pagination">
-                    @Html.Partial("_GenericPaginationV2", Model.Results)
-                </div>
-            }
+            
+            <div class="lower-pagination">
+                @Html.Partial("_GenericPaginationV2", Model.Results)
+            </div>
+            
         }
         else
         {

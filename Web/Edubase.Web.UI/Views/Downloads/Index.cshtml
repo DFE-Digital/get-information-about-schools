@@ -75,18 +75,18 @@
                         
                         <p>
                             This is full data that can be found on the Register of educational establishments (Edubase).
-                            When you request a ﬁle the data will be generated and then ready for download a short time
+                            When you request a file the data will be generated and then ready for download a short time
                             after the request.
                         </p>
                         
-                        @if (Model.Pagination.PageCount > 1)
+                        @if (Model.ScheduledExtracts.PageCount > 1)
                         {
                             <div class="top-pagination">
-                                @Html.Partial("_GenericPagination", Model.Pagination)
+                                @Html.Partial("_GenericPaginationV2", Model.ScheduledExtracts)
                             </div>
                         }
 
-                        <table class="edubase-table retain-columns @(Model.Pagination.PageCount > 1 ? "" : "no-pagination")">
+                        <table class="edubase-table retain-columns @(Model.ScheduledExtracts.PageCount > 1 ? "" : "no-pagination")">
                             <thead>
                                 <tr>
                                     <th>File</th>
@@ -107,10 +107,10 @@
                             }
                             </tbody>
                         </table>
-                        @if (Model.Pagination.PageCount > 1)
+                        @if (Model.ScheduledExtracts.PageCount > 1)
                         {
                             <div class="lower-pagination">
-                                @Html.Partial("_GenericPagination", Model.Pagination)
+                                @Html.Partial("_GenericPaginationV2", Model.ScheduledExtracts)
                             </div>
                         }
                     </div>

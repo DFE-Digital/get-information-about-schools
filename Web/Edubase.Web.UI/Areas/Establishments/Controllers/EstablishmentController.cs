@@ -313,9 +313,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, int skip = 0)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, bool pendingApproval = false, int skip = 0)
         {
             ViewBag.ShowApproved = approved;
+            ViewBag.PendingApproval = pendingApproval;
+
             var viewModel = new EstablishmentDetailViewModel
             {
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
@@ -498,7 +500,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     await PrepareModels(model, domainModel);
                     await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                    return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
+                    return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess, pendingApproval = !model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
 

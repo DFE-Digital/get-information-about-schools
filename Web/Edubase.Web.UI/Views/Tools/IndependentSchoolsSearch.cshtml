@@ -69,7 +69,8 @@
         <div class="column-full">
             <h2 class="heading-medium sn-3">Date range</h2>
         </div>
-        <div class="column-two-thirds">
+        <div class="column-two-thirds @Html.ValidationCssClass("date-range")">
+            @Html.ValidationMessage("date-range")
             <div class="form-group date-group-wrap">
                 @Html.EditorFor(x => x.MinDate, new { title = "From (optional)" })
             </div>

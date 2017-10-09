@@ -90,18 +90,23 @@
 
 .map-data-warning {
     position: relative;
-
+    background-size: 24px;
     .load-all-map-points {
         position: absolute;
-        right: 8px;
+        right: 16px;
         font-weight: normal;
         top: 50%;
-        margin-top: -14px;
+        margin-top: -13px;
     }
 
     .warning-text {
         max-width: 70%;
         font-weight: normal;
+        padding-top:4px;
+        display: inline-block;
+    }
+    p {
+        padding-left: 46px;
     }
 }
 //streetview pegman

@@ -15,7 +15,7 @@ DfE.searchResults = (function () {
     var $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear');
     var $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]');
     var $extraFiltersLink = $('#EditSearchCollapse').find('.add-filters-link');
-    var optionTemplate = '<div class="filter-wrap"><input type="checkbox" value="#{0}" data-alias="{2}" id="ctrl-{0}" class="additional-filter-type filter-input" /><label  for="ctrl-{0}" class="filter-radio">{1}</label></div>';
+    var optionTemplate = '<div class="filter-wrapper"><input type="checkbox" value="#{0}" data-alias="{2}" id="ctrl-{0}" class="additional-filter-type filter-input" /><label  for="ctrl-{0}" class="filter-radio">{1}</label></div>';
     var searchParams = deDupeParams($filterForm.find(':input').filter(function (n, ele) {
         return ele.value !== '';
     }).serialize());
@@ -188,12 +188,14 @@ DfE.searchResults = (function () {
         },
         disableFilters: function () {
             $filters.prop('disabled', true);
+            $filterForm.find('.filter-clone').prop('disabled', true);
             $('#filter-form').find('.active-clear').addClass('clear-disabled');
             $('#filter-form').find('input[type="text"]').prop('disabled', true);
             $('#filter-addtional-controls a').addClass('hidden');
         },
         enableFilters: function () {
             $filters.prop('disabled', false);
+            $filterForm.find('.filter-clone').prop('disabled', false);
             $('#filter-form').find('.active-clear').removeClass('clear-disabled');
             $('#filter-form').find('input[type="text"]').prop('disabled', false);
             $('#filter-addtional-controls a').removeClass('hidden');
@@ -337,16 +339,17 @@ DfE.searchResults = (function () {
             });
         },
 
-        init: function() {
-            searchType = DfE.Util.QueryString.get('searchtype');
+        init: function () {
             var self = this;
+            self.setupGovUkSelects();
+            self.setupAdditionalFilters();
+            searchType = DfE.Util.QueryString.get('searchtype');
+            
             if (searchType === 'ByLocalAuthority') {
                 DfE.searchUtils.updateSearchedLas();
             }
 
-
-            self.setupGovUkSelects();
-            self.setupAdditionalFilters();
+            
             self.bindEvents();
             if (DfE.hasOwnProperty('searchMap')) {
                 DfE.searchMap.bindActions();
