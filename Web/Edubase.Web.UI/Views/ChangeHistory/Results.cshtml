@@ -108,7 +108,7 @@
     else
     {
         <div>
-            @Html.Partial("_GenericPaginationV2", Model.Changes)
+            @Html.Partial("_GenericPaginationV2", Model)
         </div>
         if (Model.IsEstablishmentSearch)
         {
@@ -132,10 +132,10 @@
                     <th scope="col" class="cell-suggested">Approved by</th>
                 </tr>
                 </thead>
-                @if (Model.Changes.Items.Any())
+                @if (Model.Items.Any())
                 {
                     <tbody>
-                    @foreach (var item in Model.Changes.Items)
+                    @foreach (var item in Model.Items)
                     {
                         <tr>
                             <td aria-label="Date changed">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
@@ -181,10 +181,10 @@
                     <th scope="col" class="cell-suggested">Suggested by</th>
                 </tr>
                 </thead>
-                @if (Model.Changes.Items.Any())
+                @if (Model.Items.Any())
                 {
                     <tbody>
-                    @foreach (var item in Model.Changes.Items)
+                    @foreach (var item in Model.Items)
                     {
                         <tr>
                             <td aria-label="Date changed">@(item.RequestedDate?.ToString("dd/MM/yyyy"))</td>
@@ -235,7 +235,7 @@
             </table>
         }
         <div>
-            @Html.Partial("_GenericPaginationV2", Model.Changes)
+            @Html.Partial("_GenericPaginationV2", Model)
         </div>
     }
 </div>

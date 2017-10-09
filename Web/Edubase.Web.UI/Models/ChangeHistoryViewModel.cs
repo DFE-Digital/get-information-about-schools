@@ -9,8 +9,15 @@
     using Services.Core;
     using Services.Texuna.ChangeHistory.Models;
 
-    public class ChangeHistoryViewModel
+    public class ChangeHistoryViewModel : PaginatedResult<ChangeHistorySearchItem>
     {
+
+        public ChangeHistoryViewModel()
+        {
+            Skip = 0;
+            Take = 100;
+        }
+
         private Dictionary<int, eTextSearchType> _textSearchTypeMap = new Dictionary<int, eTextSearchType>
         {
             { 5, eTextSearchType.URN },
@@ -53,14 +60,8 @@
 
         public bool NoResultsForName { get; set; }
 
-        public int PageSize { get; set; } = 100;
 
-        public int StartIndex { get; set; }
 
-        public PaginatedResult<ChangeHistorySearchItem> Changes { get; internal set; }
-
-        public long Count => (Changes?.Count).GetValueOrDefault();
-            
         public bool SingleEstablishment { get; set; }
         public bool SingleGroup { get; set; }
 

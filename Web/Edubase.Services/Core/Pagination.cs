@@ -9,17 +9,17 @@
         /// <summary>
         /// Total number of records available
         /// </summary>
-        public int Count { get; set; }
+        public virtual int Count { get; set; }
 
         /// <summary>
         /// The page size
         /// </summary>
-        public int Take { get; private set; }
+        public int Take { get; set; }
 
         /// <summary>
         /// How many records to skip
         /// </summary>
-        public int Skip { get; private set; }
+        public int Skip { get; set; }
 
         /// <summary>
         /// How many pages based on the Take value / page size
