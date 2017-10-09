@@ -83,7 +83,7 @@
 
             //attach events
             searchField.on('keyup', function () {
-                if (this.value.trim().length > 0) {
+                if (this.value.trim().length > 1) {
                     var searchVal = new RegExp(this.value, 'i');
                     var options = self.dataList.filter(function (suggestion) {
                         if (searchVal.test(suggestion.text)) {
@@ -92,7 +92,7 @@
                     });
 
                     throttle(renderSuggestions(options, this.value), 200);
-                } else {
+                } else if (this.value.trim().length === 0) {
                     removeSuggestions();
                 }
             });
