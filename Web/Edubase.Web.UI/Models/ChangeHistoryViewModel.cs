@@ -59,6 +59,7 @@
         public SearchPayloadViewModel GroupSearchModel { get; set; } = new SearchPayloadViewModel();
 
         public bool NoResultsForName { get; set; }
+        public bool GroupSearchError { get; set; }
 
         public bool SingleEstablishment { get; set; }
         public bool SingleGroup { get; set; }

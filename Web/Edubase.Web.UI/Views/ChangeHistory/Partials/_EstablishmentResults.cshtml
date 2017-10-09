@@ -1,0 +1,60 @@
+﻿@model ChangeHistoryViewModel
+
+<div>
+    @Html.Partial("_GenericPaginationV2", Model)
+</div>
+<table class="edubase-table change-history establishment-changes" id="changes-table">
+    <thead>
+    <tr>
+        <th scope="col" class="cell-edate">Date changed</th>
+        @if (!Model.SingleEstablishment)
+        {
+            <th scope="col" class="cell-urn">
+                <abbr title="Unique reference number">
+                    URN
+                </abbr>
+            </th>
+            <th scope="col" class="cell-estab">Establishment</th>
+        }
+        <th scope="col" class="cell-updatedfield">Updated field</th>
+        <th scope="col" class="cell-oldvalue">Old value</th>
+        <th scope="col" class="cell-newvalue">New value</th>
+        <th scope="col" class="cell-suggested">Suggested by</th>
+        <th scope="col" class="cell-suggested">Approved by</th>
+    </tr>
+    </thead>
+    @if (Model.Items.Any())
+    {
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td aria-label="Date changed">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
+                @if (!Model.SingleEstablishment)
+                {
+                    <td aria-label="URN">@Html.RouteLink(item.EstablishmentUrn.ToString(), "EstabDetails", new {id = item.EstablishmentUrn})</td>
+                    <td aria-label="Establishment">@Html.RouteLink(item.EstablishmentName, "EstabDetails", new {id = item.EstablishmentName})</td>
+                }
+                <td aria-label="Updated field">@item.FieldName</td>
+                <td aria-label="Old value">@item.OldValue</td>
+                <td aria-label="New value">@item.NewValue</td>
+                <td aria-label="Suggested by">@item.SuggesterName</td>
+                <td aria-label="Approved by">@item.ApproverName</td>
+            </tr>
+        }
+        </tbody>
+    }
+    else
+    {
+        <tbody>
+        <tr>
+            <td colspan="@(Model.SingleEstablishment ? "6" : "8")">
+                <p> No items</p>
+            </td>
+        </tr>
+        </tbody>
+    }
+</table>
+<div>
+    @Html.Partial("_GenericPaginationV2", Model)
+</div>

@@ -76,14 +76,51 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Search/Establishments", Name = "ChangeHistoryEstablishments")]
         public async Task<ActionResult> SearchChangeHistoryEstab(ChangeHistoryViewModel viewModel)
         {
+            viewModel = await ProcessEstablishmentSearch(viewModel);
+            if (viewModel.NoResultsForName)
+                return View("Index", viewModel);
+
+            await PopulateLists(viewModel);
+            return View("Results", viewModel);
+        }
+
+        [HttpGet, Route("Search/Establishments/results-js")]
+        public async Task<PartialViewResult> EstablishmentResultsPartial(ChangeHistoryViewModel viewModel)
+        {
+            viewModel = await ProcessEstablishmentSearch(viewModel);
+            HttpContext.Response.Headers.Add("x-count", viewModel.Count.ToString());
+            return PartialView("Partials/_EstablishmentResults", viewModel);
+        }
+
+        [HttpGet, Route("Search/Groups", Name = "ChangeHistoryGroups")]
+        public async Task<ActionResult> SearchChangeHistoryGroups(ChangeHistoryViewModel viewModel)
+        {
+            viewModel = await ProcessGroupSearch(viewModel);
+            if (viewModel.GroupSearchError)
+                return Redirect(Url.RouteUrl("ChangeHistoryCriteria") + "?" + Request.QueryString);
+
+            await PopulateLists(viewModel);
+            return View("Results", viewModel);
+        }
+
+        [HttpGet, Route("Search/Groups/results-js")]
+        public async Task<PartialViewResult> GroupResultsPartial(ChangeHistoryViewModel viewModel)
+        {
+            viewModel = await ProcessGroupSearch(viewModel);
+            HttpContext.Response.Headers.Add("x-count", viewModel.Count.ToString());
+            return PartialView("Partials/_GroupResults", viewModel);
+        }
+
+        private async Task<ChangeHistoryViewModel> ProcessEstablishmentSearch(ChangeHistoryViewModel viewModel)
+        {
             if (viewModel.SearchType == eSearchType.Text)
             {
                 if (viewModel.TextSearchType == ChangeHistoryViewModel.eTextSearchType.URN)
                 {
                     var urn = Int32.Parse(viewModel.TextSearchModel.Text);
-                    var establishmentName = (await _establishmentReadService.GetEstablishmentNameAsync(urn, User))?? "";
+                    var establishmentName = (await _establishmentReadService.GetEstablishmentNameAsync(urn, User)) ?? "";
                     viewModel.EstablishmentName = establishmentName;
-                    var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn, viewModel.Skip, viewModel.Take, User);
+                    var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn, viewModel.Skip, viewModel.Take, GetEstablishmentChangeHistoryFilters(viewModel), User);
                     viewModel.Items = ConvertEstablishmentChanges(establishmentChanges, establishmentName);
                     viewModel.Count = establishmentChanges.Count;
                     viewModel.SingleEstablishment = true;
@@ -108,7 +145,7 @@ namespace Edubase.Web.UI.Controllers
                     {
                         viewModel.EstablishmentName = name;
                         var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(
-                            urn.Value, viewModel.Skip, viewModel.Take,
+                            urn.Value, viewModel.Skip, viewModel.Take, GetEstablishmentChangeHistoryFilters(viewModel),
                             User);
                         viewModel.Items = ConvertEstablishmentChanges(establishmentChanges, name);
                         viewModel.Count = establishmentChanges.Count;
@@ -117,7 +154,7 @@ namespace Edubase.Web.UI.Controllers
                     else
                     {
                         viewModel.NoResultsForName = true;
-                        return View("Index", viewModel);
+                        
                     }
                 }
             }
@@ -129,13 +166,38 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.Count = changes.Count;
             }
 
-            await PopulateLists(viewModel);
-
-            return View("Results", viewModel);
+            return viewModel;
         }
 
-        [HttpGet, Route("Search/Groups", Name = "ChangeHistoryGroups")]
-        public async Task<ActionResult> SearchChangeHistoryGroups(ChangeHistoryViewModel viewModel)
+        private EstablishmentChangeHistoryFilters GetEstablishmentChangeHistoryFilters(ChangeHistoryViewModel viewModel)
+        {
+            var filters = new EstablishmentChangeHistoryFilters
+            {
+                ApprovedBy = viewModel.ApprovedBy,
+                SuggestedBy = viewModel.SuggestedBy,
+                FieldsUpdated = viewModel.SelectedEstablishmentFields.ToArray()
+            };
+
+            switch (viewModel.DateFilterMode)
+            {
+                case ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE:
+                    filters.DateEffectiveFrom = viewModel.DateFilterFrom?.ToDateTime();
+                    filters.DateEffectiveTo = viewModel.DateFilterTo?.ToDateTime();
+                    break;
+                case ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED:
+                    filters.DateAppliedFrom = viewModel.DateFilterFrom?.ToDateTime();
+                    filters.DateAppliedTo = viewModel.DateFilterTo?.ToDateTime();
+                    break;
+                case ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED:
+                    filters.DateApprovedFrom = viewModel.DateFilterFrom?.ToDateTime();
+                    filters.DateApprovedTo = viewModel.DateFilterTo?.ToDateTime();
+                    break;
+            }
+
+            return filters;
+        }
+
+        private async Task<ChangeHistoryViewModel> ProcessGroupSearch(ChangeHistoryViewModel viewModel)
         {
             switch (viewModel.SearchType)
             {
@@ -164,7 +226,7 @@ namespace Edubase.Web.UI.Controllers
                             groupName = result.Name;
                         }
                     }
-                    
+
                     if (groupUid.HasValue)
                     {
                         var changes = await _groupReadService.GetChangeHistoryAsync(groupUid.Value, viewModel.Skip, viewModel.Take, User);
@@ -184,11 +246,11 @@ namespace Edubase.Web.UI.Controllers
                     viewModel.Items = new List<ChangeHistorySearchItem>(allChanges.Items);
                     break;
                 default:
-                    return Redirect(Url.RouteUrl("ChangeHistoryCriteria") + "?" + Request.QueryString);
+                    viewModel.GroupSearchError = true;
+                    break;
             }
 
-            await PopulateLists(viewModel);
-            return View("Results", viewModel);
+            return viewModel;
         }
 
         private List<ChangeHistorySearchItem> ConvertEstablishmentChanges(PaginatedResult<EstablishmentChangeDto> changes, string estabName)
@@ -244,11 +306,11 @@ namespace Edubase.Web.UI.Controllers
         {
             payload.EstablishmentFieldIds = vm.IsEstablishmentSearch && vm.SelectedEstablishmentFields.Any() ? vm.SelectedEstablishmentFields.ToArray() : null;
             payload.EstablishmentTypeIds = vm.IsEstablishmentSearch && vm.SelectedEstablishmentTypeIds.Any() ? vm.SelectedEstablishmentTypeIds.ToArray() : null;
-            //payload.GroupTypeIds = vm.IsGroupSearch && vm.SelectedGroupTypeIds.Any() ? vm.SelectedGroupTypeIds.ToArray() : null;
+            payload.GroupTypeIds = !vm.IsEstablishmentSearch && vm.SelectedGroupTypeIds.Any() ? vm.SelectedGroupTypeIds.ToArray() : null;
 
             payload.EntityName = vm.IsEstablishmentSearch ? "establishments" : "groups";
-            //payload.ApproverUserGroupCode = vm.SelectedApproverId.Clean();
-            //payload.SuggesterUserGroupCode = vm.SelectedSuggesterId.Clean();
+            payload.ApproverUserGroupCode = vm.ApprovedBy.Clean();
+            payload.SuggesterUserGroupCode = vm.SuggestedBy.Clean();
 
             if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED)
             {

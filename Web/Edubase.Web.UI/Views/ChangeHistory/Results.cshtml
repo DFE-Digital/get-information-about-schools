@@ -22,7 +22,6 @@
                 </li>
             </ul>
         </div>
-    
         @{
             var heading = (Model.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll)) ? "Group change history" : "Establishment change history";
             if (Model.SingleEstablishment && !string.IsNullOrWhiteSpace(Model.EstablishmentName))
@@ -35,12 +34,8 @@
                 heading = Model.GroupName;
             }
         }
-
         <h1 class="heading-xlarge">@heading</h1>
-       
-         <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href="#">Download change history</a>
-       
-
+        <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href="#">Download change history</a>
     </div>
 </div>
 
@@ -54,52 +49,53 @@
             <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters</a>
         </p>
     </div>
-<form id="change-history-filters">
-<div class="column-third" id="filter-container">
-    <div class="filter-form" id="filter-form">
-        <div id="EditSearchCollapse" class="blanket-container">
+    <form id="change-history-filters">
+        <div class="column-third" id="filter-container">
+            <div class="filter-form" id="filter-form">
+                <div id="EditSearchCollapse" class="blanket-container">
             
-            <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
-                <div class="container-head js-container-head">
-                    <div class="option-select-label">Date changes</div>
-                    <div class="js-selected-counter">
-                        <span class="js-selected-counter-text" id="date-filter-type-label">Date applied</span>
-                    </div>
-                </div>
-                <a href="#" class="clear-selections filter-clear">Clear</a>
-                <div class="options-container" id="">
-                    <div class="js-auto-height-inner">
-                        <fieldset>
-                            @if (Model.IsEstablishmentSearch)
-                            {
-                                @Html.DropDownListFor(m => m.DateFilterMode, Model.DateFilterOptions, new {@class = "form-control in-filters", id = "date-type-filter"})
-                            }
-                            @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
-                            @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
-                            <div class="form-group">
-                                <a href="#" class="button button-grey filter-button">Apply</a>
+                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
+                        <div class="container-head js-container-head">
+                            <div class="option-select-label">Date changes</div>
+                            <div class="js-selected-counter">
+                                <span class="js-selected-counter-text" id="date-filter-type-label">Date applied</span>
                             </div>
-                        </fieldset>
+                        </div>
+                        <a href="#" class="clear-selections filter-clear">Clear</a>
+                        <div class="options-container" id="">
+                            <div class="js-auto-height-inner">
+                                <fieldset>
+                                    @if (Model.IsEstablishmentSearch)
+                                    {
+                                        @Html.DropDownListFor(m => m.DateFilterMode, Model.DateFilterOptions, new {@class = "form-control in-filters", id = "date-type-filter"})
+                                    }
+                                    @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
+                                    @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
+                                    <div class="form-group">
+                                        <a href="#" class="button button-grey filter-button">Apply</a>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
                     </div>
+                    @if (Model.IsEstablishmentSearch && !Model.SingleEstablishment)
+                    { 
+                        @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
+                    }
+                    @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields)
+                    @if (!Model.IsEstablishmentSearch)
+                    {
+                        @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds)
+                    }
+                    @DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
+                    @if (Model.IsEstablishmentSearch)
+                    {
+                        @DropdownSelector("Approved By", ChangeHistoryViewModel.BIND_ALIAS_APPROVED_BY, Model.ApproverGroups, m => m.ApprovedBy)
+                    }
                 </div>
             </div>
-            @if (Model.IsEstablishmentSearch && !Model.SingleEstablishment)
-            { 
-                @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
-            }
-            @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields)
-            @if (!Model.IsEstablishmentSearch)
-            {
-                @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds)
-            }
-            @DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
-            @if (Model.IsEstablishmentSearch)
-            {
-                @DropdownSelector("Approved By", ChangeHistoryViewModel.BIND_ALIAS_APPROVED_BY, Model.ApproverGroups, m => m.ApprovedBy)
-            }
         </div>
-    </div>
-</div>
+    </form>
 <div class="column-two-thirds" id="results-panel">
     @if (Model.Count == 0)
     {
@@ -107,139 +103,10 @@
     }
     else
     {
-        <div>
-            @Html.Partial("_GenericPaginationV2", Model)
-        </div>
-        if (Model.IsEstablishmentSearch)
-        {
-            <table class="edubase-table change-history establishment-changes" id="changes-table">
-                <thead>
-                <tr>
-                    <th scope="col" class="cell-edate">Date changed</th>
-                    @if (!Model.SingleEstablishment)
-                    {
-                        <th scope="col" class="cell-urn">
-                            <abbr title="Unique reference number">
-                                URN
-                            </abbr>
-                        </th>
-                        <th scope="col" class="cell-estab">Establishment</th>
-                    }
-                    <th scope="col" class="cell-updatedfield">Updated field</th>
-                    <th scope="col" class="cell-oldvalue">Old value</th>
-                    <th scope="col" class="cell-newvalue">New value</th>
-                    <th scope="col" class="cell-suggested">Suggested by</th>
-                    <th scope="col" class="cell-suggested">Approved by</th>
-                </tr>
-                </thead>
-                @if (Model.Items.Any())
-                {
-                    <tbody>
-                    @foreach (var item in Model.Items)
-                    {
-                        <tr>
-                            <td aria-label="Date changed">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
-                            @if (!Model.SingleEstablishment)
-                            {
-                                <td aria-label="URN">@Html.RouteLink(item.EstablishmentUrn.ToString(), "EstabDetails", new {id = item.EstablishmentUrn})</td>
-                                <td aria-label="Establishment">@Html.RouteLink(item.EstablishmentName, "EstabDetails", new {id = item.EstablishmentName})</td>
-                            }
-                            <td aria-label="Updated field">@item.FieldName</td>
-                            <td aria-label="Old value">@item.OldValue</td>
-                            <td aria-label="New value">@item.NewValue</td>
-                            <td aria-label="Suggested by">@item.SuggesterName</td>
-                            <td aria-label="Approved by">@item.ApproverName</td>
-                        </tr>
-                    }
-                    </tbody>
-                }
-                else
-                {
-                    <tbody>
-                    <tr>
-                        <td colspan="@(Model.SingleEstablishment ? "6" : "8")">
-                            <p> No items</p>
-                        </td>
-                    </tr>
-                    </tbody>
-                }
-            </table>
-        }
-        else
-        {
-            <table class="edubase-table change-history" id="changes-table">
-                <thead>
-                <tr>
-                    <th scope="col" class="cell-edate">Date changed</th>
-                    @if (!Model.SingleGroup)
-                    {
-                        <th scope="col" class="cell-urn">Group UID</th>
-                        <th scope="col" class="cell-estab">Group</th>
-                    }
-                    <th scope="col" class="cell-requesttype">Request type</th>
-                    <th scope="col" class="cell-change">Change</th>
-                    <th scope="col" class="cell-suggested">Suggested by</th>
-                </tr>
-                </thead>
-                @if (Model.Items.Any())
-                {
-                    <tbody>
-                    @foreach (var item in Model.Items)
-                    {
-                        <tr>
-                            <td aria-label="Date changed">@(item.RequestedDate?.ToString("dd/MM/yyyy"))</td>
-                            @if (!Model.SingleGroup)
-                            {
-                                <td aria-label="Group UID">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new {id = item.GroupUId})</td>
-                                <td aria-label="Group">@Html.RouteLink(item.GroupName, "GroupDetails", new {id = item.GroupUId})</td>
-                            }
-                            <td aria-label="Request type">@item.RequestType</td>
-                            <td aria-label="Change">
-                                <dl class="key-value-list">
-                                    @if (item.RequestType == GroupChangeRequestType.GroupChange)
-                                    {
-                                        <dt>Field</dt>
-                                        <dd>@item.FieldName</dd>
-                                        <dt>Old value</dt>
-                                        <dd>@item.OldValue</dd>
-                                        <dt>New value</dt>
-                                        <dd>@item.NewValue</dd>
-                                    }
-                                    else
-                                    {
-                                        <dt>Establishment</dt>
-                                        <dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
-                                        <dt>Link date</dt>
-                                        <dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
-                                        <dt>Type</dt>
-                                        <dd>@(item.LinkType?.ToString() ?? "not recorded")</dd>
-                                    }
-
-                                </dl>
-                            </td>
-                            <td aria-label="Suggested by">@item.SuggesterName</td>
-                        </tr>
-                    }
-                    </tbody>
-                }
-                else
-                {
-                    <tbody>
-                    <tr>
-                        <td colspan="@(Model.SingleGroup ? "4" : "6")">
-                            <p> No items</p>
-                        </td>
-                    </tr>
-                    </tbody>
-                }
-            </table>
-        }
-        <div>
-            @Html.Partial("_GenericPaginationV2", Model)
-        </div>
+        Html.RenderPartial(Model.IsEstablishmentSearch ? "Partials/_EstablishmentResults" : "Partials/_GroupResults", Model);
     }
 </div>
-</form>
+
 </div>
 
 @helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)

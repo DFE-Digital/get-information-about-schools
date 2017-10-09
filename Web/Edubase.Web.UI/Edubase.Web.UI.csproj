@@ -17,7 +17,7 @@
     <AssemblyName>Edubase.Web.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -442,7 +442,6 @@
     <Content Include="404.aspx" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
-    <Content Include="Assets\Scripts\Elements\Forms\search-within-filters.js" />
     <Content Include="Assets\Scripts\libs\leaflet\leaflet-src.js" />
     <Content Include="Assets\Scripts\libs\leaflet\leaflet.js" />
     <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet-google.js" />
@@ -453,9 +452,7 @@
     <Content Include="Assets\Scripts\Views\gias-search.js" />
     <Content Include="Assets\Scripts\Elements\search-utils.js" />
     <Content Include="public\assets\images\icons\arrows-vert.png" />
-    <Content Include="public\assets\images\icons\black-transparent-X.png" />
     <Content Include="public\assets\images\icons\icon-burger.png" />
-    <Content Include="public\assets\images\icons\icon-mag-glass.png" />
     <Content Include="public\assets\images\icons\icon-map.png" />
     <Content Include="public\assets\images\maps\closed-marker.png" />
     <Content Include="public\assets\images\maps\google-closed-marker.png" />
@@ -843,7 +840,6 @@
     <Content Include="Assets\Sass\views\_search-map.scss" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_EstablishmentSearchMap.cshtml" />
     <Content Include="Assets\Sass\views\_independent-sigdates.scss" />
-    <Content Include="Assets\Sass\elements\forms\filter-form\_search-within-filters.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
@@ -974,6 +970,8 @@
     <Content Include="Views\DataQuality\Status.cshtml" />
     <Content Include="Views\ChangeHistory\Results.cshtml" />
     <Content Include="Views\ChangeHistory\Partials\_Helptext.cshtml" />
+    <Content Include="Views\ChangeHistory\Partials\_EstablishmentResults.cshtml" />
+    <Content Include="Views\ChangeHistory\Partials\_GroupResults.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">

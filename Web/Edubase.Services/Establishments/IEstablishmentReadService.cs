@@ -5,7 +5,6 @@ using Edubase.Services.Domain;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
-using System;
 using Edubase.Services.Enums;
 using Edubase.Services.Core;
 
@@ -19,6 +18,7 @@ namespace Edubase.Services.Establishments
         Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal);
         Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal);
         Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, IPrincipal user);
+        Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, EstablishmentChangeHistoryFilters filters, IPrincipal user);
 
         /// <summary>
         /// Returns whether the current principal can edit a given establishment

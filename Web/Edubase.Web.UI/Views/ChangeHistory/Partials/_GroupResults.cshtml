@@ -1,0 +1,75 @@
+﻿@using Edubase.Services.Enums
+@model ChangeHistoryViewModel
+
+<div>
+    @Html.Partial("_GenericPaginationV2", Model)
+</div>
+<table class="edubase-table change-history" id="changes-table">
+    <thead>
+    <tr>
+        <th scope="col" class="cell-edate">Date changed</th>
+        @if (!Model.SingleGroup)
+        {
+            <th scope="col" class="cell-urn">Group UID</th>
+            <th scope="col" class="cell-estab">Group</th>
+        }
+        <th scope="col" class="cell-requesttype">Request type</th>
+        <th scope="col" class="cell-change">Change</th>
+        <th scope="col" class="cell-suggested">Suggested by</th>
+    </tr>
+    </thead>
+    @if (Model.Items.Any())
+    {
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td aria-label="Date changed">@(item.RequestedDate?.ToString("dd/MM/yyyy"))</td>
+                @if (!Model.SingleGroup)
+                {
+                    <td aria-label="Group UID">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new {id = item.GroupUId})</td>
+                    <td aria-label="Group">@Html.RouteLink(item.GroupName, "GroupDetails", new {id = item.GroupUId})</td>
+                }
+                <td aria-label="Request type">@item.RequestType</td>
+                <td aria-label="Change">
+                    <dl class="key-value-list">
+                        @if (item.RequestType == GroupChangeRequestType.GroupChange)
+                        {
+                            <dt>Field</dt>
+                            <dd>@item.FieldName</dd>
+                            <dt>Old value</dt>
+                            <dd>@item.OldValue</dd>
+                            <dt>New value</dt>
+                            <dd>@item.NewValue</dd>
+                        }
+                        else
+                        {
+                            <dt>Establishment</dt>
+                            <dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
+                            <dt>Link date</dt>
+                            <dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
+                            <dt>Type</dt>
+                            <dd>@(item.LinkType?.ToString() ?? "not recorded")</dd>
+                        }
+
+                    </dl>
+                </td>
+                <td aria-label="Suggested by">@item.SuggesterName</td>
+            </tr>
+        }
+        </tbody>
+    }
+    else
+    {
+        <tbody>
+        <tr>
+            <td colspan="@(Model.SingleGroup ? "4" : "6")">
+                <p> No items</p>
+            </td>
+        </tr>
+        </tbody>
+    }
+</table>
+<div>
+    @Html.Partial("_GenericPaginationV2", Model)
+</div>
