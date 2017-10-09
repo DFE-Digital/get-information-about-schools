@@ -103,7 +103,8 @@ namespace Edubase.Web.UI.Controllers
                     }
                     else
                     {
-                        //TODO: redirect to change history search page with error message
+                        viewModel.NoResultsForName = true;
+                        return View("Index", viewModel);
                     }
                 }
             }

@@ -1,4 +1,5 @@
-﻿using Edubase.Web.UI.Models.Search;
+﻿using Edubase.Services.Establishments;
+using Edubase.Web.UI.Models.Search;
 using Edubase.Web.UI.Validation;
 using FluentValidation;
 
