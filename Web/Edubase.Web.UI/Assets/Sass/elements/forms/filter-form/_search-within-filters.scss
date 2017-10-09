@@ -1,0 +1,58 @@
+﻿
+
+.search-field-wrap {
+    background-color: $grey-3;
+
+    .filter-searchwithin-label {
+        background: transparent url("/public/assets/images/icons/icon-mag-glass.png") no-repeat center left;
+        background-size: 20px;
+        padding-left: 28px;
+        width: calc(100% - 28px);
+        display: block;
+        position: relative;
+        padding-bottom: 6px;
+    }
+
+    .no-js & {
+        display: none;
+    }
+}
+
+.filter-search {
+    background-color: transparent;
+    border: 0;
+    border-bottom: $black 1px solid;
+    width: 100%;
+
+    &:focus {
+        outline: 0;
+    }
+
+    &::-ms-clear {
+        display: none;
+    }
+}
+
+.field-clear {
+    border: 0;
+    background: transparent url('/public/assets/images/icons/black-transparent-X.png') no-repeat center;
+    background-size: 50%;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    &:focus {
+        outline: 0;
+    }
+}
+
+
+.filter-suggestion {
+    position: relative;
+    span { 
+        font-weight: bold;
+
+    }
+}

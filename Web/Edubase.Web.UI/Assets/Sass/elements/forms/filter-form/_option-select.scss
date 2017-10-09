@@ -153,13 +153,14 @@ category: Forms
         overflow-y: scroll;
         overflow-x: hidden;
         max-height: 200px;
+        min-height: 200px;
 
 
         .error-message.hidden {
             display: none;
         }
 
-        label {
+        .filter-radio {
             @include inline-block;
             padding: 7px 0 7px 30px;
             border-bottom: 1px solid $border-colour;
@@ -206,7 +207,7 @@ category: Forms
         }
         /* styles for collapsibleness. .js-collapsible is added by the javascript if the browser is not ie6/7 in which case these don't collapse */
         &.js-collapsible {
-            button {
+            .js-container-head {
                 z-index: 97;
                 position: relative;
                 border: none;

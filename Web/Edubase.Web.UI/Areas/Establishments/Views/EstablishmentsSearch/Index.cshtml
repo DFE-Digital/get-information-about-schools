@@ -193,6 +193,7 @@
                     <a href="#" class="clear-selections filter-clear">Clear</a>
                     <div class="options-container" id="">
                         <div class="js-auto-height-inner">
+                            @searchWithin()
                             <fieldset id="filter-type-target"></fieldset>
                         </div>
                     </div>
@@ -214,6 +215,17 @@
     </form>
 </div>
 
+@helper searchWithin()
+{
+    <div class="search-field-wrap">
+        <label class="filter-searchwithin-label">
+            <span class="visually-hidden">Search within this filter</span>
+            <input type="text" class="filter-search" />
+            <button class="field-clear hidden"><span class="visually-hidden">Clear</span></button>
+        </label>
+        <div class="suggestion-target"></div>
+    </div>
+}
 
 @helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
 {
@@ -234,22 +246,25 @@
         <a href="#" class="clear-selections filter-clear">Clear</a>
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
+                @searchWithin()
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @foreach (var item in items)
                     {
                         <div class="filter-wrapper">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
                             <label for="@(name)_@item.Id" class="filter-radio">
                                 @item
                             </label>
-                        </div>                        
+                        </div>
                     }
                 </fieldset>
             </div>
         </div>
     </div>
 }
+
+
 
 @helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
 {
@@ -258,7 +273,7 @@
     {
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
-    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
+    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
@@ -269,13 +284,14 @@
         <a href="#" class="clear-selections filter-clear">Clear</a>
         <div class="options-container">
             <div class="js-auto-height-inner">
+                @searchWithin()
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @foreach (var item in items)
                     {
                         <dl class="nested-items">
                             <dt>
-                                <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                                <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
                                 <label for="@(name)_@item.Id" class="filter-radio">
                                     @item
                                     <a href="#" class="child-option-toggle"></a>
@@ -285,14 +301,14 @@
                                 @foreach (var child in item.ChildItems)
                                 {
                                     <div class="filter-wrapper">
-                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked") />
+                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
                                         <label for="@(name)_@(item.Id)_@child.Id" class="filter-radio">
                                             @child
                                         </label>
-                                    </div>                                    
+                                    </div>
                                 }
                             </dd>
-                        </dl>                        
+                        </dl>
                     }
                 </fieldset>
             </div>
@@ -371,6 +387,8 @@
 
 @section ViewScripts
 {
+    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
+    <script src="/public/assets/scripts/standalone/search-map.js"></script>
     <script language="javascript">
         var $openSelector = $("#b_1");
         var $openClosedSelector = $("#b_4");
@@ -380,13 +398,9 @@
                 $openClosedSelector.prop('checked', true);
             }
         });
-    </script>
-    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
-    <script src="/public/assets/scripts/standalone/search-map.js"></script>
     
-    <script>
-        //DfE.searchMap.bindActions();
         DfE.searchResults.init();
+        $('#filter-form').find('.govuk-option-select').searchWithinFilters();       
     </script>
     
 }
