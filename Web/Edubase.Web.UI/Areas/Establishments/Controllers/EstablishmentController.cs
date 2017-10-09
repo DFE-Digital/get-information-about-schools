@@ -856,8 +856,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     return RedirectToAction(nameof(Details), new {id = response.Response});
                 }
-
-                response.ApplyToModelState(ControllerContext);
+                else if (response.Errors.Select(x => x.Code).Contains("establishment.with.same.name.la.postcode.found"))
+                {
+                    model.CCDuplicate = true;
+                    ModelState.AddModelError(nameof(model.Name), "Please enter a different establishment name");
+                    ModelState.AddModelError(nameof(model.LocalAuthorityId), "Please enter a different local authority");
+                    ModelState.AddModelError("Address.PostCode", "Please enter a different postcode");
+                }
+                else response.ApplyToModelState(ControllerContext);    
             }
 
             await PopulateCCSelectLists(model);
