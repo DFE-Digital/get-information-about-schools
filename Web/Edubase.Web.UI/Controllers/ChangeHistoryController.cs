@@ -90,14 +90,27 @@ namespace Edubase.Web.UI.Controllers
                 }
                 else
                 {
-                    var result = await TryGetEstablishmentUrn(viewModel);
-                    if (result?.Urn != null)
+                    int? urn;
+                    string name;
+                    if (viewModel.TextSearchModel.AutoSuggestValueAsInt.HasValue)
                     {
-                        viewModel.EstablishmentName = result.Name;
+                        urn = viewModel.TextSearchModel.AutoSuggestValueAsInt;
+                        name = (await _establishmentReadService.GetEstablishmentNameAsync(urn.Value, User)) ?? "";
+                    }
+                    else
+                    {
+                        var result = await TryGetEstablishmentUrn(viewModel);
+                        urn = result?.Urn;
+                        name = result?.Name;
+                    }
+
+                    if (urn != null)
+                    {
+                        viewModel.EstablishmentName = name;
                         var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(
-                            result.Urn.Value, viewModel.Skip, viewModel.Take,
+                            urn.Value, viewModel.Skip, viewModel.Take,
                             User);
-                        viewModel.Items = ConvertEstablishmentChanges(establishmentChanges, result.Name);
+                        viewModel.Items = ConvertEstablishmentChanges(establishmentChanges, name);
                         viewModel.Count = establishmentChanges.Count;
                         viewModel.SingleEstablishment = true;
                     }
@@ -290,7 +303,7 @@ namespace Edubase.Web.UI.Controllers
 
             var results = await _establishmentReadService.SearchAsync(payload, User);
 
-            return results.Count == 1 ? results.Items.First() : null;
+            return results.Count >= 1 ? results.Items.First() : null;
         }
 
         private async Task<SearchGroupDocument> TryGetGoupUid(ChangeHistoryViewModel model)
