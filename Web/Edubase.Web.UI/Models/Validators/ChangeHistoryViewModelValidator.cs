@@ -11,12 +11,12 @@ namespace Edubase.Web.UI.Models.Validators
         {
             RuleFor(x => x.DateFilterFrom)
                 .Must((model, x) => model.DateFilterTo.ToDateTime() > x.ToDateTime())
-                .WithSummaryMessage("Please enter a From date later than the To date")
+                .WithSummaryMessage("Please enter a From date earlier than the To date")
                 .When(x => x.DateFilterFrom != null && x.DateFilterTo != null && x.DateFilterFrom.IsValid() && x.DateFilterTo.IsValid());
 
             RuleFor(x => x.DateFilterTo)
                 .Must((model, x) => model.DateFilterFrom.ToDateTime() < x.ToDateTime())
-                .WithSummaryMessage("Please enter a To date earlier than the From date")
+                .WithSummaryMessage("Please enter a To date later than the From date")
                 .When(x => x.DateFilterFrom != null && x.DateFilterTo != null && x.DateFilterFrom.IsValid() && x.DateFilterTo.IsValid());
         }
     }
