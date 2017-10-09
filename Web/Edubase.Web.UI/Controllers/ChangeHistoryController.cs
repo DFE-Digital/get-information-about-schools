@@ -242,7 +242,7 @@ namespace Edubase.Web.UI.Controllers
         
         private T PopulatePayload<T>(ChangeHistoryViewModel vm, T payload) where T : SearchChangeHistoryPayload
         {
-            payload.EstablishmentFieldIds = vm.IsEstablishmentSearch && vm.SelectedEstablishmentFields.Any() ? vm.SelectedEstablishmentFields : null;
+            payload.EstablishmentFieldIds = vm.IsEstablishmentSearch && vm.SelectedEstablishmentFields.Any() ? vm.SelectedEstablishmentFields.ToArray() : null;
             payload.EstablishmentTypeIds = vm.IsEstablishmentSearch && vm.SelectedEstablishmentTypeIds.Any() ? vm.SelectedEstablishmentTypeIds.ToArray() : null;
             //payload.GroupTypeIds = vm.IsGroupSearch && vm.SelectedGroupTypeIds.Any() ? vm.SelectedGroupTypeIds.ToArray() : null;
 
@@ -274,6 +274,7 @@ namespace Edubase.Web.UI.Controllers
             model.ApproverGroups = model.SuggesterGroups;
             model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).Select(e => new LookupItemViewModel(e));
             model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(g => new LookupItemViewModel(g));
+            model.EstablishmentFields = (await _svc.GetEstablishmentFieldsAsync(User)).Select(s => new StringLookupItemViewModel(s.Key, s.Text));
         }
 
         private async Task<EstablishmentSearchResultModel> TryGetEstablishmentUrn(ChangeHistoryViewModel model)

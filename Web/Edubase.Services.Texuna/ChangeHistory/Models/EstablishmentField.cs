@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Edubase.Services.Texuna.ChangeHistory.Models
+﻿namespace Edubase.Services.Texuna.ChangeHistory.Models
 {
+    using Newtonsoft.Json;
+
     public class EstablishmentField
     {
+        [JsonProperty("id")]
         public string Key { get; set; }
 
+        [JsonProperty("text")]
         public string Text { get; set; }
 
         public EstablishmentField()

@@ -43,7 +43,7 @@
         }
 
         [BindAlias(BIND_ALIAS_FIELDS)]
-        public string[] SelectedEstablishmentFields { get; set; } = new string[0];
+        public List<string> SelectedEstablishmentFields { get; set; } = new List<string>();
 
         [BindAlias(BIND_ALIAS_ESTABTYPEIDS)]
         public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();
@@ -59,8 +59,6 @@
         public SearchPayloadViewModel GroupSearchModel { get; set; } = new SearchPayloadViewModel();
 
         public bool NoResultsForName { get; set; }
-
-
 
         public bool SingleEstablishment { get; set; }
         public bool SingleGroup { get; set; }
@@ -90,7 +88,7 @@
         };
 
         public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; } = new List<LookupItemViewModel>();
-        public IEnumerable<LookupItemViewModel> EstablishmentFields { get; set; } = new List<LookupItemViewModel>();
+        public IEnumerable<StringLookupItemViewModel> EstablishmentFields { get; set; } = new List<StringLookupItemViewModel>();
         public IEnumerable<LookupItemViewModel> GroupTypes { get; set; } = new List<LookupItemViewModel>();
 
         public IEnumerable<SelectListItem> SuggesterGroups { get; set; } = new List<SelectListItem>();
