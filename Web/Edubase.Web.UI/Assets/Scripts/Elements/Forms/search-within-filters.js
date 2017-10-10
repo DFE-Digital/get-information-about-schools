@@ -46,8 +46,9 @@
                 for (var i = 0, len = options.length; i < len; i++) {
                     var opt = options[i];
 
-                    var res = opt.text.match(new RegExp(userText, 'gi'));
-                    var optionText = opt.text.replace(new RegExp(userText, 'gi'), '<span>' + res + '</span>');
+                    var optionText = opt.text.replace(new RegExp(userText, 'gi'), function(match) {
+                        return '<span>' + match + '</span>';
+                    });
                     var suggestion = opts.suggestionTemplate.replace(/\{0\}/g, opt.id).replace('{1}', optionText);
                     if (opt.checked) {
                         suggestion = suggestion.replace('{2}', 'checked="checked"');
