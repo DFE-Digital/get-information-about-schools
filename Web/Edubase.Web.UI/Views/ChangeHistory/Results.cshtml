@@ -1,6 +1,5 @@
 ﻿@using System.Linq.Expressions
 @using Edubase.Common
-@using Edubase.Services.Enums
 @model ChangeHistoryViewModel
 @{
     ViewBag.Title = "";
@@ -35,7 +34,7 @@
             }
         }
         <h1 class="heading-xlarge">@heading</h1>
-        <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href="#">Download change history</a>
+        <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href=@($"{Url.RouteUrl("DownloadChangeHistory")}?{Request.QueryString}")>Download change history</a>
     </div>
 </div>
 

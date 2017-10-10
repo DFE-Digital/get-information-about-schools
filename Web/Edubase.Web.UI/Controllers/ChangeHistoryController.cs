@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Castle.DynamicProxy.Generators.Emitters;
 using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Establishments;
@@ -9,7 +8,6 @@ using Edubase.Services.Establishments.Search;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
-using Edubase.Web.UI.Areas.Establishments.Models.Search;
 using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Controllers
@@ -76,6 +74,10 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Search/Establishments", Name = "ChangeHistoryEstablishments")]
         public async Task<ActionResult> SearchChangeHistoryEstab(ChangeHistoryViewModel viewModel)
         {
+            if (viewModel.SearchType == null)
+            {
+                viewModel.SearchType = eSearchType.EstablishmentAll;
+            }
             viewModel = await ProcessEstablishmentSearch(viewModel);
             if (viewModel.NoResultsForName)
                 return View("Index", viewModel);
@@ -113,6 +115,20 @@ namespace Edubase.Web.UI.Controllers
             viewModel = await ProcessGroupSearch(viewModel);
             HttpContext.Response.Headers.Add("x-count", viewModel.Count.ToString());
             return PartialView("Partials/_GroupResults", viewModel);
+        }
+
+        [HttpGet, Route("Search/Download", Name="DownloadChangeHistory")]
+        public async Task<ActionResult> Download(ChangeHistoryViewModel viewModel)
+        {
+            if (!viewModel.DownloadFormat.HasValue)
+            {
+                viewModel.SearchQueryString = Request.QueryString.ToString();
+                return View("Download", viewModel);
+            }
+
+            var payload = PopulatePayload(viewModel, new SearchChangeHistoryDownloadPayload(viewModel.DownloadFormat.Value));
+            var progress = await _svc.SearchWithDownloadGenerationAsync(payload, User);
+            return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new { id = progress.Id }), "?", Request.QueryString));
         }
 
         private async Task<ChangeHistoryViewModel> ProcessEstablishmentSearch(ChangeHistoryViewModel viewModel)
@@ -157,8 +173,7 @@ namespace Edubase.Web.UI.Controllers
                     }
                     else
                     {
-                        viewModel.NoResultsForName = true;
-                        
+                        viewModel.NoResultsForName = true;   
                     }
                 }
             }
