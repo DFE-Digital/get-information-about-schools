@@ -248,6 +248,7 @@ namespace Edubase.Web.UI.Controllers
                     var payload = PopulatePayload(viewModel, new SearchChangeHistoryBrowsePayload(viewModel.Skip, viewModel.Take));
                     var allChanges = await _svc.SearchAsync(payload, User);
                     viewModel.Items = new List<ChangeHistorySearchItem>(allChanges.Items);
+                    viewModel.Count = allChanges.Count;
                     break;
                 default:
                     viewModel.GroupSearchError = true;
