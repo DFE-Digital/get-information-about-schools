@@ -14,7 +14,7 @@ namespace Edubase.Data.Entity
 
         public Token()
         {
-            PartitionKey = Base62.Encode(int.Parse(string.Concat(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)));
+            PartitionKey = Base62.FromCurrentDate();
             RowKey = Base62.Encode(RandomNumber.Next(1, 10_000_000));
         }
 

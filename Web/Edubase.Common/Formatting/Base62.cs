@@ -4,6 +4,9 @@ namespace Edubase.Common.Formatting
 {
     public static class Base62
     {
+        private const int ADJUSTMENT = 7394674; // otherwise any date-based value will be out of range
+        public const int MAX = 14776336;
+
         static string ToBase62(int value)
         {
             if (value < 10)
@@ -18,7 +21,7 @@ namespace Edubase.Common.Formatting
 
         public static string Encode(int value)
         {
-            if (value <= 0 || value > 14776336)
+            if (value <= 0 || value > MAX)
                 throw new ArgumentOutOfRangeException();
 
             value--;
@@ -40,5 +43,7 @@ namespace Edubase.Common.Formatting
             }
             return value + 1;
         }
+
+        public static string FromCurrentDate() => Encode(int.Parse(string.Concat(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)) - ADJUSTMENT);
     }
 }
