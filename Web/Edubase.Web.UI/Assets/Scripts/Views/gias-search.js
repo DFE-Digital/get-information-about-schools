@@ -212,9 +212,13 @@ DfE.searchResults = (function () {
             
 
             $.ajax({
-                url: 'Search/results-js',
+                //url: 'Search/results-js',
+                type: "POST",
+                url: '/api/tokenize',
+               
                 data: searchParams,
                 success: function (data, status, xhr) {
+                    searchParams = data.token;
                     $resultsContainer.html(data);
                     $downloadLink.removeClass('hidden');
 
@@ -286,30 +290,22 @@ DfE.searchResults = (function () {
                     return ele.value !== '';
                 }).serialize());
                     
-                $.ajax({
-                    type: "POST",
-                    url: '/api/tokenize',
-                    data: searchParams,
-                    dataType: "json",
-                    success: function (data, status, xhr) {
-                        searchParams = data.token;
-                        filterIntent = window.setTimeout(function () {
-                            self.getResults();
-                            if (DfE.searchMap.currentView === 'map') {
-                                DfE.searchMap.getSearchData();
-                            } else {
-                                DfE.searchMap.dataRefreshRequired = true;
-                            }
-                            if (searchType === 'ByLocalAuthority') {
-                                DfE.searchUtils.updateSearchedLas();
-                            }
-                            if (searchType === 'Governor') {
-                                DfE.searchUtils.updateGovernorRoles();
-                            }
-
-                        }, 1500);
+              
+                filterIntent = window.setTimeout(function () {
+                    self.getResults();
+                    if (DfE.searchMap.currentView === 'map') {
+                        DfE.searchMap.getSearchData();
+                    } else {
+                        DfE.searchMap.dataRefreshRequired = true;
                     }
-                });
+                    if (searchType === 'ByLocalAuthority') {
+                        DfE.searchUtils.updateSearchedLas();
+                    }
+                    if (searchType === 'Governor') {
+                        DfE.searchUtils.updateGovernorRoles();
+                    }
+
+                }, 1500);                
                 
             });
 
