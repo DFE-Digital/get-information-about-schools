@@ -206,7 +206,7 @@ DfE.searchResults = (function () {
 
             $resultsContainer.html(plsWait);
             if (GOVUK.support.history()) {
-                history.pushState({}, null, window.location.href.split('?')[0] + '?' + searchParams);
+             //   history.pushState({}, null, window.location.href.split('?')[0] + '?' + searchParams);
             }
 
             
