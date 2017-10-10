@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Edubase.Services.Establishments.Models
 {
@@ -16,6 +17,7 @@ namespace Edubase.Services.Establishments.Models
         public string ApprovedBy { get; set; }
         public string SuggestedBy { get; set; }
 
+        [JsonProperty("fieldsUpdate")]
         public string[] FieldsUpdated { get; set; }
 
     }
