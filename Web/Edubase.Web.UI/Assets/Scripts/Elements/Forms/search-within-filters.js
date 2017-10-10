@@ -37,6 +37,8 @@
             var clearButton = $el.find('.field-clear');
             var originalFilters = $el.find('.filter-input');
 
+            $el.find('.options-container').css({ minHeight: '200px' });
+
             var self = this;
             // helpers
             var renderSuggestions = function (options, userText) {

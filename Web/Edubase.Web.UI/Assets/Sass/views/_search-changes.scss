@@ -179,6 +179,9 @@
         border-bottom: 6px solid transparent;
         border-left: 9px solid #005ea5;
     }
+    @include media(mobile) {
+        display: none;
+    }
 }
 
 .in-filters {

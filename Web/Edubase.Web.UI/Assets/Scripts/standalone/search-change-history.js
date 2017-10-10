@@ -99,7 +99,7 @@
             history.pushState({}, null, window.location.href.split('?')[0] + '?' + searchParams);
         }
         $.ajax({
-            url: '/some-dark-void-probably-damp-too/results-js',
+            url: '/ChangeHistory/Search/Establishments/results-js',
             data: searchParams,
             success: function (data, status, xhr) {
                 resultsPanel.html(data);
@@ -136,6 +136,9 @@
 
 
     function bindEvents() {
+
+        DfE.searchResults.setupGovUkSelects();
+
         $('#filter-toggle').on('click', function (e) {
             e.preventDefault();
             toggleFilters();

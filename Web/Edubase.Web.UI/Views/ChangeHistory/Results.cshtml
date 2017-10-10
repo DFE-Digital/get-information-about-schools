@@ -54,7 +54,7 @@
             <div class="filter-form" id="filter-form">
                 <div id="EditSearchCollapse" class="blanket-container">
             
-                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
+                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="true" id="date-filter">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Date changes</div>
                             <div class="js-selected-counter">
@@ -82,13 +82,13 @@
                     {
                         if (!Model.SingleEstablishment)
                         {
-                            @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
+                            @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds, null, true)
                         }
-                        @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields)
+                        @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields, null, true)
                     }
                     else
                     {
-                        @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds)
+                        @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null, false)
                     }
                     @DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
                     @if (Model.IsEstablishmentSearch)
