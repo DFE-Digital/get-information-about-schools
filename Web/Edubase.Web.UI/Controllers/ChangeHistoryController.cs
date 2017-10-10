@@ -87,6 +87,10 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Search/Establishments/results-js")]
         public async Task<PartialViewResult> EstablishmentResultsPartial(ChangeHistoryViewModel viewModel)
         {
+            if (viewModel.SearchType == null)
+            {
+                viewModel.SearchType = eSearchType.EstablishmentAll;
+            }
             viewModel = await ProcessEstablishmentSearch(viewModel);
             HttpContext.Response.Headers.Add("x-count", viewModel.Count.ToString());
             return PartialView("Partials/_EstablishmentResults", viewModel);
