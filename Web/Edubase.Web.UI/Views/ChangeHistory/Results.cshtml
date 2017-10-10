@@ -78,12 +78,15 @@
                             </div>
                         </div>
                     </div>
-                    @if (Model.IsEstablishmentSearch && !Model.SingleEstablishment)
-                    { 
-                        @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
+                    @if (Model.IsEstablishmentSearch)
+                    {
+                        if (!Model.SingleEstablishment)
+                        {
+                            @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds)
+                        }
+                        @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields)
                     }
-                    @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields)
-                    @if (!Model.IsEstablishmentSearch)
+                    else
                     {
                         @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds)
                     }
