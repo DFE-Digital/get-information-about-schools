@@ -1,44 +1,15 @@
 ﻿(function () {
-
     var uniqueDates = [],
         academyOpenings,
         i,
         len,
+        raw = [],
         monthNames = [
             'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
             'November', 'December'
         ];
 
-    Vue.component('openings-table',
-       {
-           template: '#table-template',
-           props: {
-               currentPage: {
-                   type: Number,
-                   default: 0
-               },
-               maxPageSize: {
-                   type: Number,
-                   default: 10
-               },
-               pages: Array,
-               editEstab: Function
-           },
-
-           computed: {
-               page: function () {
-                   return this.pages[this.currentPage];
-               }
-           },
-           methods: {
-               detailUrl: function (urn) {
-                   return '/Establishments/Establishment/Details/' + urn;
-               }
-           }
-       });
-
-
-
+  
     academyOpenings = new Vue({
         el: '#academy-opening-app',
         data: {
@@ -64,7 +35,9 @@
             userHasEdited: false,
             presentExitWarning: false,
             loadDataError: false,
-            apiError: {}
+            apiError: {},
+            sortKey: 'openingDate',
+            sortAscending: true            
 
         },
         created: function () {
@@ -72,6 +45,67 @@
             blockExits();
         },
         methods: {
+            sortOpenings: function (key) {
+
+                if (key === this.sortKey) {
+                    this.sortAscending = !this.sortAscending;
+                }
+                this.sortKey = key;
+                var asc = this.sortAscending === true;
+
+                var sortFn;
+
+                var sortDate = function (a, b) {
+                    if (asc) {
+                        return new Date(a.openingDate) - new Date(b.openingDate);
+                    } else {
+                        return new Date(b.openingDate) - new Date(a.openingDate);
+                    }
+
+                };
+                var sortNumeric = function (a, b) {
+                    if (asc) {
+                        return Number(a[key]) - Number(b[key]);
+                    } else {
+                        return Number(b[key]) - Number(a[key]);
+                    }
+
+                };
+                var sortText = function (a, b) {
+                    var textA = (a[key]!== null)? a[key].toLowerCase(): '';
+                    var textB = (b[key] !== null)? b[key].toLowerCase() : '';
+                    if (asc) {
+                        if (textA < textB) {
+                            return -1;
+                        }
+                        if (textA > textB) {
+                            return 1;
+                        }
+                        return 0;
+                    } else {
+                        if (textA > textB) {
+                            return -1;
+                        }
+                        if (textA < textB) {
+                            return 1;
+                        }
+                        return 0;
+                    }
+
+                };
+
+                if (key === 'urn' || key === 'predecessorUrn') {
+                    sortFn = sortNumeric;
+                } else if (key === 'openingDate') {
+                    sortFn = sortDate;
+                } else {
+                    sortFn = sortText;
+                }
+
+                var temp = raw.sort(sortFn);
+                this.openingAcademies = temp;
+                this.buildPages(this.openingAcademies, this.pageSize);
+            },
             detailUrl: function (urn) {
                 return '/Establishments/Establishment/Details/' + urn;
             },
@@ -171,6 +205,7 @@
                                 self.openingAcademies = data.items;
                                 self.buildPages(data.items, self.pageSize);
                                 self.buildDateDropDown();
+                                raw = data.items;
                             }
                         ).fail(function(jqxhr) {
                             if (jqxhr.hasOwnProperty('responseJSON')) {
@@ -339,6 +374,9 @@
                 ending = ending > this.currentCount ? this.currentCount : ending;
 
                 return starting + " - " + ending;
+            },
+            page: function () {
+                return this.pages[this.currentPage];
             }
         }
 

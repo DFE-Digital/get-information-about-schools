@@ -661,7 +661,7 @@
 
             <div class="button-row">
                 <button class="button-grey button mobile-full-width" name="action" type="submit" value="@ViewModel.eAction.CancelChanges">&laquo; Back</button>
-                <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width">Confirm</button>
+                <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width js-confirm">Confirm</button>
 
                 @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey mobile-full-width", id = "cancel-edit" })
             </div>
@@ -677,6 +677,17 @@
                         content: 'Any unsaved changes will be lost',
                         triggerEvent: 'click'
                     });
+
+                    $(function () {
+                        $("button.js-confirm").click(function (e) {
+                            e.preventDefault();
+                            var $el = $(this);
+                            $el.prop('disabled', true);
+                            $("<input>").attr("type", "hidden").attr("name", $el.attr("name")).attr("value", $el.attr("value")).insertAfter($el);
+                            this.form.submit();
+                        });
+                    });
+
                 </script>
 
             }
@@ -684,8 +695,7 @@
         }
         else
         {
-            @section ViewScripts
-{
+            @section ViewScripts {
                 <script>
                     var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
                     var phases = @Html.Json(Model.EducationPhases);
@@ -732,6 +742,7 @@
                         $phaseSelector.html(optionList);
                     }
 
+                    
 
                 </script>
             }
