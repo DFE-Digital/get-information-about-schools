@@ -87,6 +87,10 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Search/Establishments/results-js")]
         public async Task<PartialViewResult> EstablishmentResultsPartial(ChangeHistoryViewModel viewModel)
         {
+            if (viewModel.SearchType == null)
+            {
+                viewModel.SearchType = eSearchType.EstablishmentAll;
+            }
             viewModel = await ProcessEstablishmentSearch(viewModel);
             HttpContext.Response.Headers.Add("x-count", viewModel.Count.ToString());
             return PartialView("Partials/_EstablishmentResults", viewModel);
@@ -244,6 +248,7 @@ namespace Edubase.Web.UI.Controllers
                     var payload = PopulatePayload(viewModel, new SearchChangeHistoryBrowsePayload(viewModel.Skip, viewModel.Take));
                     var allChanges = await _svc.SearchAsync(payload, User);
                     viewModel.Items = new List<ChangeHistorySearchItem>(allChanges.Items);
+                    viewModel.Count = allChanges.Count;
                     break;
                 default:
                     viewModel.GroupSearchError = true;
