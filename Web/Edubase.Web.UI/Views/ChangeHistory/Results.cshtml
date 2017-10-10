@@ -102,7 +102,7 @@
 <div class="column-two-thirds" id="results-panel">
     @if (Model.Count == 0)
     {
-        <p class="no-school-results">Please try searching again using different spelling or words.</p>
+        <p>There are no results, please widen your search with the filters.</p>
     }
     else
     {
@@ -189,7 +189,7 @@
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    @Html.DropDownListFor(expression, items, "Please select", new { @class = "form-control in-filters"})
+                    @Html.DropDownListFor(expression, items, "Please select", new { @class = "form-control in-filters trigger-result-update"})
                 </fieldset>
             </div>
         </div>
