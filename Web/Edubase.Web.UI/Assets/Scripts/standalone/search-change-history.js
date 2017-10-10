@@ -95,11 +95,14 @@
         $('#ajax-error-message').addClass('hidden');
         filterPanel.find('input').prop('disabled', 'disabled');
         filterPanel.find('.filter-clear').addClass('clear-disabled');
+        var resultsUrl = isEstabSearch
+            ? '/ChangeHistory/Search/Establishments/results-js'
+            : '/ChangeHistory/Search/Groups/results-js';
         if (GOVUK.support.history()) {
             history.pushState({}, null, window.location.href.split('?')[0] + '?' + searchParams);
         }
         $.ajax({
-            url: '/some-dark-void-probably-damp-too/results-js',
+            url: resultsUrl,
             data: searchParams,
             success: function (data, status, xhr) {
                 resultsPanel.html(data);
@@ -136,6 +139,9 @@
 
 
     function bindEvents() {
+
+        DfE.searchResults.setupGovUkSelects();
+
         $('#filter-toggle').on('click', function (e) {
             e.preventDefault();
             toggleFilters();
