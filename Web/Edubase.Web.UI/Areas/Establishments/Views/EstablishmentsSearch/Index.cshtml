@@ -103,11 +103,11 @@
 
                     @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases.OrderBy(x => x.Name), Model.SelectedEducationPhaseIds)
 
-                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds)
+                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true)
 
 
 
-                    @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds)
+                    @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds, filterRefine: true)
 
 
                     <!-- begin opted in filters -->
@@ -124,9 +124,9 @@
                     @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions.OrderBy(x => x.Name), Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
 
 
-                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true)
+                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true, true)
 
-                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true)
+                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true, true)
 
                     @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes.OrderBy(x => x.Name), Model.SelectedFETypeIds, "additional-search-critera hidden", true)
 
@@ -139,9 +139,9 @@
 
                     @Selector("Ofsted rating", M.BIND_ALIAS_OFSTEDRATINGS, Model.OfstedRatings.OrderBy(x => x.Name), Model.SelectedOfstedRatingIds, "additional-search-critera hidden", true)
 
-                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true)
+                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true, true)
 
-                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true)
+                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true, true)
 
                     @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions.OrderBy(x => x.Name), Model.SelectedRSCRegionIds, "additional-search-critera hidden", true)
 
@@ -183,7 +183,7 @@
                 </div>
 
             <div id="additional-filter-wrap" class="hidden">
-                <div class="govuk-option-select js-collapsible " data-closed-on-load="false" id="option-select-additional-filters">
+                <div class="govuk-option-select js-collapsible searchable-filters" data-closed-on-load="false" id="option-select-additional-filters">
                     <div class="container-head js-container-head">
                         <div class="option-select-label">Add more filters</div>
                         <div class="js-selected-counter">
@@ -191,9 +191,10 @@
                         </div>
                     </div>
                     <a href="#" class="clear-selections filter-clear">Clear</a>
+                    @SearchWithin()
                     <div class="options-container" id="">
                         <div class="js-auto-height-inner">
-                            @searchWithin()
+                            <div class="suggestion-target"></div>
                             <fieldset id="filter-type-target"></fieldset>
                         </div>
                     </div>
@@ -215,26 +216,25 @@
     </form>
 </div>
 
-@helper searchWithin()
+@helper SearchWithin()
 {
     <div class="search-field-wrap">
         <label class="filter-searchwithin-label">
             <span class="visually-hidden">Search within this filter</span>
             <input type="text" class="filter-search" />
             <button class="field-clear hidden"><span class="visually-hidden">Clear</span></button>
-        </label>
-        <div class="suggestion-target"></div>
+        </label>        
     </div>
 }
 
-@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
+@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false, bool filterRefine = false)
 {
     var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
     if (!closed)
     {
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
+    <div class="govuk-option-select js-collapsible @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
@@ -244,9 +244,13 @@
             </div>
         </div>
         <a href="#" class="clear-selections filter-clear">Clear</a>
+    @if (filterRefine)
+    {
+        @SearchWithin()
+    }
         <div class="options-container" id="">
+            <div class="suggestion-target"></div>
             <div class="js-auto-height-inner">
-                @searchWithin()
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @foreach (var item in items)
@@ -266,14 +270,14 @@
 
 
 
-@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
+@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false,  bool filterRefine = false)
 {
     var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
     if (!closed)
     {
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
-    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
+    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
@@ -282,9 +286,13 @@
             </div>
         </div>
         <a href="#" class="clear-selections filter-clear">Clear</a>
-        <div class="options-container">
+        @if (filterRefine)
+        {
+           @SearchWithin()
+        }
+        <div class="options-container">            
+            <div class="suggestion-target"></div>
             <div class="js-auto-height-inner">
-                @searchWithin()
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @foreach (var item in items)
@@ -400,7 +408,7 @@
         });
     
         DfE.searchResults.init();
-        $('#filter-form').find('.govuk-option-select').searchWithinFilters();       
+        $('#filter-form').find('.searchable-filters').searchWithinFilters();       
     </script>
     
 }
