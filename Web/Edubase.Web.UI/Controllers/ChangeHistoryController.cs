@@ -122,7 +122,7 @@ namespace Edubase.Web.UI.Controllers
         {
             if (!viewModel.DownloadFormat.HasValue)
             {
-                viewModel.SearchQueryString = Request.QueryString.ToString();
+                //viewModel.SearchQueryString = Request.QueryString.ToString();
                 return View("Download", viewModel);
             }
 
@@ -353,11 +353,11 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task PopulateLists(ChangeHistoryViewModel model)
         {
-            model.SuggesterGroups = (await _svc.GetSuggesterGroupsAsync(User)).Select(s => new SelectListItem { Text = s.Name, Value = s.Code });
+            model.SuggesterGroups = (await _svc.GetSuggesterGroupsAsync(User)).OrderBy(s => s.Name).Select(s => new SelectListItem { Text = s.Name, Value = s.Code });
             model.ApproverGroups = model.SuggesterGroups;
-            model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).Select(e => new LookupItemViewModel(e));
-            model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).Select(g => new LookupItemViewModel(g));
-            model.EstablishmentFields = (await _svc.GetEstablishmentFieldsAsync(User)).Select(s => new StringLookupItemViewModel(s.Key, s.Text));
+            model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).OrderBy(e => e.Name).Select(e => new LookupItemViewModel(e));
+            model.GroupTypes = (await _lookupService.GroupTypesGetAllAsync()).OrderBy(g => g.Name).Select(g => new LookupItemViewModel(g));
+            model.EstablishmentFields = (await _svc.GetEstablishmentFieldsAsync(User)).OrderBy(e => e.Text).Select(s => new StringLookupItemViewModel(s.Key, s.Text));
         }
 
         private async Task<EstablishmentSearchResultModel> TryGetEstablishmentUrn(ChangeHistoryViewModel model)

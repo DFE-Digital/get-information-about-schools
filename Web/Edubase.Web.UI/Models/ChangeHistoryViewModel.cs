@@ -87,8 +87,6 @@ namespace Edubase.Web.UI.Models
         [BindAlias(BIND_ALIAS_DOWNLOADFORMAT)]
         public eFileFormat? DownloadFormat { get; set; }
 
-        public string SearchQueryString { get; set; }
-
         public IEnumerable<SelectListItem> DateFilterOptions => new List<SelectListItem>
         {
             new SelectListItem {Text = "Effective", Value = DATE_FILTER_MODE_EFFECTIVE},
