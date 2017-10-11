@@ -250,6 +250,7 @@ namespace Edubase.Web.UI.Controllers
                     {
                         var changes = await _groupReadService.GetChangeHistoryAsync(groupUid.Value, viewModel.Skip, viewModel.Take, User);
                         viewModel.Items = ConvertGroupChanges(changes, groupName);
+                        viewModel.Count = changes.Count;
                         viewModel.SingleGroup = true;
                         viewModel.GroupName = groupName;
                     }
