@@ -64,11 +64,11 @@ namespace Edubase.Services.Texuna.Establishments
             return Unwrap(await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={generateEstablishmentNumber.ToString().ToLower()}", model, principal));
         }
 
-        public async Task<BulkUpdateProgressModel> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)
+        public async Task<ApiResponse<BulkUpdateProgressModel>> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)
         {
             var overrideCRFlag = bulkUpdateInfo.OverrideCRProcess ? "?overridecr=true" : string.Empty;
             return (await _httpClient.PostMultipartAsync<BulkUpdateProgressModel>("establishment/bulk-update" + overrideCRFlag, 
-                bulkUpdateInfo, bulkUpdateInfo.FileName, principal)).GetResponse();
+                bulkUpdateInfo, bulkUpdateInfo.FileName, principal));
         }
 
         public async Task<BulkUpdateProgressModel> BulkUpdateAsync_GetProgressAsync(Guid taskId, IPrincipal principal)

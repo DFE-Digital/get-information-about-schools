@@ -37,18 +37,35 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
                 viewModel.BulkFile.SaveAs(fileName);
 
-                var payload = new BulkUpdateDto
+                if (new FileInfo(fileName).Length > 1000000)
                 {
-                    BulkFileType = viewModel.BulkUpdateType.Value,
-                    FileName = fileName,
-                    OverrideCRProcess = viewModel.CanOverrideCRProcess && viewModel.OverrideCRProcess
-                };
+                    viewModel.Result = new Services.Domain.BulkUpdateProgressModel
+                    {
+                        Errors = new[] { new Services.Domain.ApiError { Code = "error.maxRowsLimitReached.payload.bulkUpload" } }
+                    };
+                }
+                else
+                {
+                    var payload = new BulkUpdateDto
+                    {
+                        BulkFileType = viewModel.BulkUpdateType.Value,
+                        FileName = fileName,
+                        OverrideCRProcess = viewModel.CanOverrideCRProcess && viewModel.OverrideCRProcess
+                    };
 
-                var state = UriHelper.SerializeToUrlToken(payload);
-                var progress = await _establishmentWriteService.BulkUpdateAsync(payload, User);
+                    var state = UriHelper.SerializeToUrlToken(payload);
+                    var response = await _establishmentWriteService.BulkUpdateAsync(payload, User);
+                    System.IO.File.Delete(fileName);
 
-                System.IO.File.Delete(fileName);
-                return RedirectToAction(nameof(Result), new { progress.Id, state });
+                    if (response.HasErrors)
+                    {
+                        viewModel.Result = new Services.Domain.BulkUpdateProgressModel
+                        {
+                            Errors = response.Errors
+                        };
+                    }
+                    else return RedirectToAction(nameof(Result), new { response.GetResponse().Id, state });
+                }
             }
 
             return View("Index", viewModel);

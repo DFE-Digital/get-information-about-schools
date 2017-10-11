@@ -465,3 +465,50 @@ p.table-caption {
         word-wrap: break-word;
     }
 }
+
+// sortable tables
+
+
+.sortable-table {
+    thead a {
+        text-decoration: none;
+
+        &:focus, &:active {
+            background-color: transparent;
+            outline: 0;
+        }
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+.selected-sort {
+    font-weight: bold;
+    position: relative;
+    padding-right: 15px;
+    display: inline-block;
+
+    &.sorted-asc:after {
+        width: 0;
+        height: 0;
+        position: absolute;
+        content: '';
+        right: 0;
+        top: 5px;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 9px solid $govuk-blue;
+    }
+
+    &.sorted-desc:after {
+        width: 0;
+        height: 0;
+        position: absolute;
+        content: '';
+        right: 0;
+        top: 6px;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 9px solid $govuk-blue;
+    }
+}

@@ -1,4 +1,6 @@
-﻿namespace Edubase.Web.UI.Models
+﻿using Edubase.Services.Enums;
+
+namespace Edubase.Web.UI.Models
 {
     using System.Collections.Generic;
     using System.Web.Mvc;
@@ -31,6 +33,7 @@
         public const string BIND_ALIAS_GROUPTYPEIDS = "g";
         public const string BIND_ALIAS_SUGGESTED_BY = "s";
         public const string BIND_ALIAS_APPROVED_BY = "a";
+        public const string BIND_ALIAS_DOWNLOADFORMAT = "df";
 
         public const string DATE_FILTER_MODE_EFFECTIVE = "e";
         public const string DATE_FILTER_MODE_APPLIED = "a";
@@ -43,7 +46,7 @@
         }
 
         [BindAlias(BIND_ALIAS_FIELDS)]
-        public string[] SelectedEstablishmentFields { get; set; } = new string[0];
+        public List<string> SelectedEstablishmentFields { get; set; } = new List<string>();
 
         [BindAlias(BIND_ALIAS_ESTABTYPEIDS)]
         public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();
@@ -59,8 +62,7 @@
         public SearchPayloadViewModel GroupSearchModel { get; set; } = new SearchPayloadViewModel();
 
         public bool NoResultsForName { get; set; }
-
-
+        public bool GroupSearchError { get; set; }
 
         public bool SingleEstablishment { get; set; }
         public bool SingleGroup { get; set; }
@@ -82,6 +84,11 @@
         [BindAlias(BIND_ALIAS_APPROVED_BY)]
         public string ApprovedBy { get; set; }
 
+        [BindAlias(BIND_ALIAS_DOWNLOADFORMAT)]
+        public eFileFormat? DownloadFormat { get; set; }
+
+        public string SearchQueryString { get; set; }
+
         public IEnumerable<SelectListItem> DateFilterOptions => new List<SelectListItem>
         {
             new SelectListItem {Text = "Effective", Value = DATE_FILTER_MODE_EFFECTIVE},
@@ -90,7 +97,7 @@
         };
 
         public IEnumerable<LookupItemViewModel> EstablishmentTypes { get; set; } = new List<LookupItemViewModel>();
-        public IEnumerable<LookupItemViewModel> EstablishmentFields { get; set; } = new List<LookupItemViewModel>();
+        public IEnumerable<StringLookupItemViewModel> EstablishmentFields { get; set; } = new List<StringLookupItemViewModel>();
         public IEnumerable<LookupItemViewModel> GroupTypes { get; set; } = new List<LookupItemViewModel>();
 
         public IEnumerable<SelectListItem> SuggesterGroups { get; set; } = new List<SelectListItem>();

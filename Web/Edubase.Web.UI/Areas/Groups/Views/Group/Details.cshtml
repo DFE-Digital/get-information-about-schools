@@ -329,7 +329,7 @@
                                     @foreach (var item in Model.ChangeHistory.Items)
                                     {
                                         <tr>
-                                            <td aria-label="Date changed">@(item.RequestedDateUtc.Value.ToString("dd/MM/yyyy"))</td>
+                                            <td aria-label="Date changed">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
                                             <td aria-label="Request type">@item.RequestType.GetEnumMember()</td>
                                             <td aria-label="Change">
                                                 <dl>
@@ -338,10 +338,12 @@
                                                         <dt>Field</dt><dd>@item.Name</dd>
                                                         <dt>Old value</dt><dd>@item.OldValue</dd>
                                                         <dt>New value</dt><dd>@item.NewValue</dd>
-                                                    } else {
+                                                    }
+                                                    else if (item.RequestType != GroupChangeRequestType.NewGroup)
+                                                    {
                                                         <dt>Establishment</dt><dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
-                                                        <dt>Link date</dt><dd>@item.LinkDateUtc.Value.ToString("dd/MM/yyyy")</dd>
-                                                        <dt>Type</dt><dd>@(item.LinkType?.ToString() ?? "not recorded")</dd>
+                                                        <dt>Link date</dt><dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
+                                                        <dt>Type</dt><dd>@(item.LinkType?.ToString() ?? "Not recorded")</dd>
                                                     }
                                                     
                                                 </dl>

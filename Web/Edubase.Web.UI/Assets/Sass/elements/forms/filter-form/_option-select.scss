@@ -141,10 +141,40 @@ category: Forms
 
     .option-select-label {
         @include core-19;
-        margin-right: 60px;
+        margin-right: 20px;
         font-weight: bold;
         padding-top: 5px;
         padding-left: 10px;
+    }
+
+
+    .filter-radio {
+        @include inline-block;
+        padding: 7px 0 7px 30px;
+        border-bottom: 1px solid $border-colour;
+        width: 95%;
+        cursor: pointer;
+        font-size: 16px;
+
+        @include media(desktop) {
+            /* leave room for the scroll bars on desktop*/
+            width: 90%;
+        }
+
+        &:hover {
+            background-color: $highlight-colour;
+        }
+
+        &[disabled] {
+            color: $grey-2;
+        }
+    }
+
+    .filter-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        @include opacity(0);
     }
 
     .options-container {
@@ -153,40 +183,11 @@ category: Forms
         overflow-y: scroll;
         overflow-x: hidden;
         max-height: 200px;
-        min-height: 200px;
+
 
 
         .error-message.hidden {
             display: none;
-        }
-
-        .filter-radio {
-            @include inline-block;
-            padding: 7px 0 7px 30px;
-            border-bottom: 1px solid $border-colour;
-            width: 95%;
-            cursor: pointer;
-            font-size: 16px;
-
-            @include media(desktop) {
-                /* leave room for the scroll bars on desktop*/
-                width: 90%;
-            }
-
-            &:hover {
-                background-color: $highlight-colour;
-            }
-
-            &[disabled] {
-                color: $grey-2;
-            }
-        }
-
-        .filter-input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            @include opacity(0);
         }
     }
 

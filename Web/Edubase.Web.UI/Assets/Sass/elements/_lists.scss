@@ -11,6 +11,9 @@ ol {
 .list-bullet {
   list-style-type: disc;
   padding-left: 20px;
+  &.inside {
+      list-style-position:inside;
+  }
 }
 
 // Numbered lists

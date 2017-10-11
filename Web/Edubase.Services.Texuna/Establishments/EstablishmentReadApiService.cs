@@ -52,6 +52,12 @@ namespace Edubase.Services.Texuna.Establishments
             return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Items);
         }
 
+        public async Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, EstablishmentChangeHistoryFilters filters, IPrincipal user)
+        {
+            var changes = (await _httpClient.PostAsync<ApiPagedResult<EstablishmentChangeDto>>($"establishment/{urn}/changes?skip={skip}&take={take}", filters, user)).GetResponse();
+            return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Items);
+        }
+
         public async Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user)
             => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/display-policy", user)).GetResponse().Initialise(establishment);
 

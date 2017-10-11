@@ -974,6 +974,9 @@
     <Content Include="Views\DataQuality\Status.cshtml" />
     <Content Include="Views\ChangeHistory\Results.cshtml" />
     <Content Include="Views\ChangeHistory\Partials\_Helptext.cshtml" />
+    <Content Include="Views\ChangeHistory\Partials\_EstablishmentResults.cshtml" />
+    <Content Include="Views\ChangeHistory\Partials\_GroupResults.cshtml" />
+    <Content Include="Views\ChangeHistory\Download.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
     <None Include="Web.Debug %28QA%29.config">

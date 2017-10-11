@@ -10,7 +10,7 @@ namespace Edubase.Services.Establishments
     public interface IEstablishmentWriteService
     {
         Task SaveAsync(EstablishmentModel model, bool overrideCR, DateTime? effectiveDate, IPrincipal principal);
-        Task<BulkUpdateProgressModel> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal);
+        Task<ApiResponse<BulkUpdateProgressModel>> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal);
         Task<BulkUpdateProgressModel> BulkUpdateAsync_GetProgressAsync(Guid taskId, IPrincipal principal);
         Task<ApiResponse<int>> CreateNewAsync(EstablishmentModel model, bool generateEstablishmentNumber,IPrincipal principal);
         Task<ValidationEnvelopeDto> ValidateAsync(EstablishmentModel model, IPrincipal principal);
