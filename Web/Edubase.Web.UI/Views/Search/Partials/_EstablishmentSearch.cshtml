@@ -33,7 +33,7 @@
                             </a>
                         </span>
                         <div class="form-group">
-                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=" })
+                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", maxlength="200" })
                         </div>
                         <div class="form-group">
                             <span class="checkbox-wrap">
@@ -74,7 +74,7 @@
                         }
                         <span class="search-hint">Postcode, town or city</span>
                         <div class="form-group">
-                            @Html.TextBoxFor(x => x.LocationSearchModel.Text, new { @class = "form-control location-search", autocomplete = "off" })
+                            @Html.TextBoxFor(x => x.LocationSearchModel.Text, new { @class = "form-control location-search", autocomplete = "off", maxlength = "200" })
                         </div>
 
                         @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
