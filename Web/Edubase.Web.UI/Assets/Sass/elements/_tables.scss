@@ -485,7 +485,7 @@ p.table-caption {
 .selected-sort {
     font-weight: bold;
     position: relative;
-    padding-right: 15px;
+    padding-right: 14px;
     display: inline-block;
 
     &.sorted-asc:after {
@@ -495,9 +495,9 @@ p.table-caption {
         content: '';
         right: 0;
         top: 5px;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-bottom: 9px solid $govuk-blue;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 7px solid $govuk-blue;
     }
 
     &.sorted-desc:after {
@@ -507,8 +507,8 @@ p.table-caption {
         content: '';
         right: 0;
         top: 6px;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 9px solid $govuk-blue;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 7px solid $govuk-blue;
     }
 }
