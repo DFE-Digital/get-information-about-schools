@@ -159,6 +159,7 @@
                             <li class="search-type-wrapper">
                                 @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
                                 {
+                                    @Html.HiddenFor(m => m.SelectedTab)
                                     <fieldset class="search-toggle-panel">
                                         <span class="radio-button-wrap">
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new {id = "searchtype-name-group", data_toggle_panel = "#searchby-group-ref"})
@@ -167,6 +168,12 @@
                                             </label>
                                         </span>
                                         <div class="expanding-search-field" id="searchby-group-ref">
+                                            @if (Model.GroupSearchError)
+                                            {
+                                                <div class="warning-message">
+                                                    <p>We couldn't find any establishments matching your search criteria</p>
+                                                </div>
+                                            }
                                             <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
                                                 <label class="form-label">
                                                     Name, Companies House number, Group UID or ID
@@ -194,6 +201,7 @@
                             <li class="search-type-wrapper">
                                 @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
                                 {
+                                    @Html.HiddenFor(m => m.SelectedTab)
                                     <fieldset class="search-toggle-panel">
                                         <span class="radio-button-wrap">
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.GroupAll, new {id = "searchtype-all-groups", data_toggle_panel = "#searchby-allgroups-ref"})

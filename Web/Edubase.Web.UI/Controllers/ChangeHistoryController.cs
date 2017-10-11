@@ -103,7 +103,7 @@ namespace Edubase.Web.UI.Controllers
         {
             viewModel = await ProcessGroupSearch(viewModel);
             if (viewModel.GroupSearchError)
-                return Redirect(Url.RouteUrl("ChangeHistoryCriteria") + "?" + Request.QueryString);
+                return View("Index", viewModel);
 
             await PopulateLists(viewModel);
             return View("Results", viewModel);
@@ -256,7 +256,7 @@ namespace Edubase.Web.UI.Controllers
                     }
                     else
                     {
-                        //TODO: redirect to change history search page with error message
+                        viewModel.GroupSearchError = true;
                     }
 
                     break;

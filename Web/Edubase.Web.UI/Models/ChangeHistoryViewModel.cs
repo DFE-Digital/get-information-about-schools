@@ -54,7 +54,7 @@ namespace Edubase.Web.UI.Models
         [BindAlias(BIND_ALIAS_GROUPTYPEIDS)]
         public List<int> SelectedGroupTypeIds { get; set; } = new List<int>();
 
-        public Tab SelectedTab { get; set; }
+        public Tab? SelectedTab { get; set; } = Tab.Establishments;
 
         public eSearchType? SearchType { get; set; }
 
