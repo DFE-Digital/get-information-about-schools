@@ -97,7 +97,7 @@ namespace Edubase.Web.UI
 
         public static string GetMessage(this ApiError error)
         {
-            return ApiMessagesHelper.Get(error.Code, error.Message);
+            return ApiMessagesHelper.Get(error.Code).Clean() ?? ApiMessagesHelper.Get(string.Concat(error.Code, "_", error.Fields), error.Message);
         }
 
         public static string GetMessage(this ApiWarning warning)

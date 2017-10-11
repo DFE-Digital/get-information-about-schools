@@ -1,4 +1,5 @@
-﻿@model CreateChildrensCentreViewModel
+﻿@using Edubase.Services.Domain
+@model CreateChildrensCentreViewModel
 @{
     ViewBag.Title = "Create a new establishment";
     ViewBag.bodyClasses = "create-establishment";
@@ -21,13 +22,33 @@
             <h1 class="heading-xlarge" id="title">
                 Create an establishment
             </h1>
-
-            @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+            @if (Model.CCDuplicate)
+            {
+                <div class="validation-summary-errors error-summary">
+                    <span>Duplicate record found</span>
+                    <ul>
+                        <li>A children’s centre is already registered with this name, local authority and postcode. To complete the record:</li>
+                        <li>
+                            <a href="#Name">Please enter a different establishment name</a>
+                            or
+                            <a href="#LocalAuthorityId">Please enter a different local authority </a>
+                            or
+                            <a href="#Address_PostCode">Please enter a different postcode</a>
+                        </li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+            }
         </div>
 
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.ProcessedWarnings)
+
             <div class="column-full top-button-panel">
                 <div class="submit-cancel-panel">
                     <button type="submit" name="action" value="" class="button mobile-full-width">Create</button>
@@ -177,6 +198,23 @@
     </div>
 </div>
 
+@if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
+{
+    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
+    <div class="modal-overlay" id="warning-modal-overlay-0"></div>
+    <div class="modal-content" id="warning-modal-content-0">
+        <div class="modal-inner">
+            <a href="#" id="warning-exit-overlay-0" class="modal-exit allow-exit">Close</a>
+            <h3 class="heading-large">Duplicate record</h3>
+            <p>The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
+        </div>
+        <div class="button-row">
+            <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
+        </div>
+    </div>
+}
+
 @section ViewScripts {
     <script type="text/javascript">
 
@@ -276,10 +314,26 @@
                 $("#establishment-phase-form-group").hide();
                 $("#enter-number").hide();
             }   
-        });
-            
-        
-       
+        });       
+
+
+        (function () {
+            var mask = $('#warning-modal-overlay-0');
+            var modal = $('#warning-modal-content-0');
+
+
+            $('#warning-exit-overlay-0, #overlay-cancel-0').on('click',
+                function (e) {
+                    e.preventDefault();
+                    mask.addClass('hidden');
+                    modal.addClass('hidden');
+                });
+
+            $('#overlay-proceed-0').on('click',
+                function (e) {
+                    $('#create-submit').click();
+                });
+        }());
 
     </script>
 }

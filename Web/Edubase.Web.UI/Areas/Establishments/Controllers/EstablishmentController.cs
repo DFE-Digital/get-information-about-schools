@@ -370,30 +370,48 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (ModelState.IsValid)
             {
-                var response = await _establishmentWriteService.CreateNewAsync(new NewEstablishmentModel
+                var apiModel = new EstablishmentModel
                 {
+                    Name = viewModel.Name,
+                    EstablishmentNumber = viewModel.EstablishmentNumber.ToInteger(),
                     EducationPhaseId = viewModel.EducationPhaseId,
-                    EstablishmentNumber = viewModel.EstablishmentNumber,
-                    EstablishmentTypeId = viewModel.EstablishmentTypeId,
-                    GenerateEstabNumber = viewModel.GenerateEstabNumber ?? false,
+                    TypeId = viewModel.EstablishmentTypeId,
                     LocalAuthorityId = viewModel.LocalAuthorityId,
-                    Name = viewModel.Name
-                }, User);
+                    CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(),
+                    IEBTModel = new IEBTModel(),
+                    StatusId = (int)eLookupEstablishmentStatus.ProposedToOpen
+                };
 
-                if (response.Success)
+                var validation = await _establishmentWriteService.ValidateCreateAsync(apiModel, true, User);
+
+                ApplyCreateEstabValidationErrors(validation);
+
+                if (ModelState.IsValid)
                 {
-                    return RedirectToAction(nameof(Details), new { id = response.Response });
+                    viewModel.SetWarnings(validation);
+                    ModelState.Remove(nameof(viewModel.ProcessedWarnings));
                 }
-                else
+
+                if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
                 {
-                    foreach (var error in response.Errors)
+                    var response = await _establishmentWriteService.CreateNewAsync(apiModel, viewModel.GenerateEstabNumber.GetValueOrDefault(), User);
+
+                    if (response.Success)
                     {
-                        ModelState.AddModelError(error.Fields, error.Message);
+                        return RedirectToAction(nameof(Details), new { id = response.Response });
+                    }
+                    else
+                    {
+                        foreach (var error in response.Errors)
+                        {
+                            ModelState.AddModelError(error.Fields, error.Message);
+                        }
                     }
                 }
             }
 
             await PopulateCCSelectLists(viewModel);
+
             return View(viewModel);
         }
 
@@ -500,7 +518,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 await PrepareModels(viewModel, existingDomainModel);
                 var validationEnvelope = await _establishmentWriteService.ValidateAsync(existingDomainModel, User);
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.Message));
+                viewModel.ShowDuplicateRecordError = validationEnvelope.Errors.Any(x => x.Code == "establishment.edit.with.same.name.la.postcode.found");
+                if (viewModel.ShowDuplicateRecordError)
+                {
+                    ModelState.AddModelError(nameof(viewModel.Name), "Please enter a different establishment name");
+                    ModelState.AddModelError(nameof(viewModel.LocalAuthorityId), "Please enter a different local authority");
+                    ModelState.AddModelError(nameof(viewModel.Address_PostCode), "Please enter a different postcode");
+                }
+                else validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+
+                viewModel.ShowDuplicateRecordWarning = validationEnvelope.HasWarnings && validationEnvelope.Warnings.Any(x => x.Code == "establishment.with.same.name.la.found");
             }
         }
 
@@ -828,7 +855,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             };
 
             var validation = await _establishmentWriteService.ValidateCreateAsync(newEstablishment, true, User);
-            ApplyCreateChildrensCenterValidationErrors(validation);
+            ApplyCreateEstabValidationErrors(validation);
 
             if (ModelState.IsValid)
             {
@@ -838,15 +865,21 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     return RedirectToAction(nameof(Details), new {id = response.Response});
                 }
-
-                response.ApplyToModelState(ControllerContext);
+                else if (response.Errors.Any(x => x.Code == "establishment.with.same.name.la.postcode.found"))
+                {
+                    model.CCDuplicate = true;
+                    ModelState.AddModelError(nameof(model.Name), "Please enter a different establishment name");
+                    ModelState.AddModelError(nameof(model.LocalAuthorityId), "Please enter a different local authority");
+                    ModelState.AddModelError("Address.PostCode", "Please enter a different postcode");
+                }
+                else response.ApplyToModelState(ControllerContext);    
             }
 
             await PopulateCCSelectLists(model);
             return View(model);
         }
 
-        private void ApplyCreateChildrensCenterValidationErrors(ValidationEnvelopeDto validation)
+        private void ApplyCreateEstabValidationErrors(ValidationEnvelopeDto validation)
         {
             foreach (var error in validation.Errors)
             {
