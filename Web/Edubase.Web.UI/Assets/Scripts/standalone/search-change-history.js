@@ -4,10 +4,24 @@
     var filterPanel = $('#filter-container');
     var filterError = false;
     var downloadLink = $('.download-link');
-    var downloadBaseUrl = '#/?';
+    var downloadBaseUrl = '/ChangeHistory/Search/Download/?';
     var filterIntent = null;
     var searchParams = '';
     var plsWait = '<div class="progress-indicator"><span class="visually-hidden">Please wait</span></div>';
+
+     function okClick() {
+        this.closeModal();
+     }
+     function attachOkCancel () {
+         $('#content').find('.download-link').okCancel({
+            ok: okClick,
+            cancel: null,
+            title: 'Too many records',
+            content: 'Please filter your search to fewer than 20,000 changes.',
+            triggerEvent: 'click'
+        });
+    }
+
 
     function validateFilters() {
         var filters = $('.date-filters').filter(':visible');
@@ -115,6 +129,11 @@
                 if (Number(xhr.getResponseHeader("x-count")) === 0) {
                     downloadLink.addClass('hidden');
                 }
+                if (Number(xhr.getResponseHeader('x-count')) > 19999) {
+                    attachOkCancel();
+                } else if ($('#content').find('.download-link').data().hasOwnProperty('okCancel')) {
+                    $('#content').find('.download-link').data().okCancel.unbind();
+                }
             },
             error: function () {
                 $('#ajax-error-message').removeClass('hidden');
@@ -128,11 +147,11 @@
     function toggleFilters() {
         openState = !openState;
         if (openState) {
-            $(this).text('Hide filters');
+            $('#filter-toggle').text('Hide filters');
         } else {
-            $(this).text('Show filters');
+            $('#filter-toggle').text('Show filters');
         }
-        $(this).toggleClass('filters-closed');
+        $('#filter-toggle').toggleClass('filters-closed');
         filterPanel.toggleClass('hidden');
         resultsPanel.toggleClass('column-full column-two-thirds');
     }
@@ -182,6 +201,11 @@
                 getResults();
             }
         });
+
+        var resultCount = Number($('#results-panel').find('.pagination p').slice(0,1).text().split(' ').slice(-1));
+        if (resultCount > 19999) {
+            attachOkCancel();
+        }
     }
 
     

@@ -71,3 +71,21 @@ input:checked + .filter-radio:after,
     @include opacity(1);
 }
 
+.select-all-wrap {
+    background-color: $grey-3;
+
+    .filter-radio{
+        &:hover {
+            background-color: $grey-3;
+        }
+        &:before {
+            background-color: $white;
+        }
+    }
+
+    input:disabled + .filter-radio {
+        &:before, &:after {
+            border-color: $grey-2;
+        }
+    }
+}

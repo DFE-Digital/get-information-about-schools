@@ -129,6 +129,12 @@
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="filter-wrapper select-all-wrap">
+                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
+                        <label for="@(name)_all" class="filter-radio">
+                            All
+                        </label>
+                    </div>
                     @foreach (var item in items)
                     {
                         <div class="filter-wrapper">
@@ -160,6 +166,12 @@
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="filter-wrapper select-all-wrap">
+                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
+                        <label for="@(name)_all" class="filter-radio">
+                            All
+                        </label>
+                    </div>
                     @foreach (var item in items)
                     {
                         <div class="filter-wrapper">
