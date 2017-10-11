@@ -23,7 +23,14 @@
 <p class="urn">URN: @Model.Urn</p>
 <p class="establishment-type">@Model.TypeName</p>
 
-@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+@if (!IsSectionDefined("validation"))
+{
+    @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+}
+else
+{
+    @RenderSection("validation", false)
+}
 
 <div class="grid-row">
     <div class="column-full">

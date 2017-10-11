@@ -518,7 +518,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 await PrepareModels(viewModel, existingDomainModel);
                 var validationEnvelope = await _establishmentWriteService.ValidateAsync(existingDomainModel, User);
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.Message));
+                viewModel.ShowDuplicateRecordError = validationEnvelope.Errors.Any(x => x.Code == "establishment.edit.with.same.name.la.postcode.found");
+                if (viewModel.ShowDuplicateRecordError)
+                {
+                    ModelState.AddModelError(nameof(viewModel.Name), "Please enter a different establishment name");
+                    ModelState.AddModelError(nameof(viewModel.LocalAuthorityId), "Please enter a different local authority");
+                    ModelState.AddModelError(nameof(viewModel.Address_PostCode), "Please enter a different postcode");
+                }
+                else validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+
+                viewModel.ShowDuplicateRecordWarning = validationEnvelope.HasWarnings && validationEnvelope.Warnings.Any(x => x.Code == "establishment.with.same.name.la.found");
             }
         }
 
@@ -856,7 +865,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     return RedirectToAction(nameof(Details), new {id = response.Response});
                 }
-                else if (response.Errors.Select(x => x.Code).Contains("establishment.with.same.name.la.postcode.found"))
+                else if (response.Errors.Any(x => x.Code == "establishment.with.same.name.la.postcode.found"))
                 {
                     model.CCDuplicate = true;
                     ModelState.AddModelError(nameof(model.Name), "Please enter a different establishment name");

@@ -361,6 +361,16 @@ namespace Edubase.Web.UI.Models
         public bool CCIsDemoting { get; set; }
         public bool CCIsPromoting { get; set; }
 
+        /// <summary>
+        /// When the name, LA and post code match another record
+        /// </summary>
+        public bool ShowDuplicateRecordError { get; set; }
+
+        /// <summary>
+        /// When the name and LA match another record
+        /// </summary>
+        public bool ShowDuplicateRecordWarning { get; set; }
+
         public EditEstablishmentModel()
         {
 
