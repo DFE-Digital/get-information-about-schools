@@ -22,14 +22,14 @@
                 <div class="column-half">
 
                     <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
 
 
-                <div class="form-group first">
-                    <label class="form-label" for="school-name">
-                        School / College name
-                    </label>
-
+                    <div class="form-group first @Html.ValidationCssClassFor(x => x.Name)">
+                        <label class="form-label" for="school-name">
+                            School / College name
+                        </label>
+                        @Html.ValidationMessageFor(x => x.Name)
                         @Html.TextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
                     </div>
 
@@ -76,8 +76,9 @@
 
                     @Html.HiddenFor(x => x.Address_CountryId)
 
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.Address_PostCode)">
                         @Html.LabelFor(x => x.Address_PostCode, "Postcode", new { @class = "form-label" })
+                        @Html.ValidationMessageFor(x => x.Address_PostCode)
                         @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, @class = "form-control postcode-field", disabled = "disabled" })
                         @Html.HiddenFor(x => x.Address_PostCode)
                         @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn, target = "main" }, new { @class = "replace-address" })
@@ -749,4 +750,23 @@
         }
 
     </div>
+}
+
+@if (Model.ShowDuplicateRecordError)
+{
+    @section validation {
+        <div class="validation-summary-errors error-summary">
+            <span>Duplicate record found</span>
+            <ul>
+                <li>An establishment is already registered with this name, local authority and postcode. To complete the record:</li>
+                <li>
+                    <a href="#Name">Please enter a different establishment name</a>
+                    or
+                    <a href="#LocalAuthorityId">Please enter a different local authority </a>
+                    or
+                    <a href="#Address_PostCode">Please enter a different postcode</a>
+                </li>
+            </ul>
+        </div>
+    }
 }

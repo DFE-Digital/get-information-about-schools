@@ -56,5 +56,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public IEnumerable<SelectListItem> DirectProvisionOfEarlyYearsOptions { get; set; }
         public IEnumerable<SelectListItem> EstablishmentStatusOptions { get; set; }
         public IEnumerable<SelectListItem> Phases { get; set; }
+
+        public bool CCDuplicate { get; set; }
     }
 }
