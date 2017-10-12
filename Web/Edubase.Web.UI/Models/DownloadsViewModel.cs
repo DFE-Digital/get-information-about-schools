@@ -33,8 +33,8 @@ namespace Edubase.Web.UI.Models
             var allEstabData = Downloads.Where(x => new[] { "all.edubase.data", "all.edubase.data.links" }.Contains(x.Tag));
             var openAcademiesAndFreeSchoolsData = Downloads.Where(x => new[] { "all.open.academies.and.free.schools", "all.open.academies.and.free.school.links" }.Contains(x.Tag));
             var openStateFundedSchoolsData = Downloads.Where(x => new[] { "all.open.state-funded.schools", "all.open.state-funded.school.links" }.Contains(x.Tag));
-            var openChildrensCentresData = Downloads.Where(x => new[] { "all.open.childrens.centres" }.Contains(x.Tag));
-            var openGroupData = Downloads.Where(x => new[] { "academy.sponsor.and.trust.links" }.Contains(x.Tag));
+            var openChildrensCentresData = Downloads.Where(x => new[] { "all.open.childrens.centres", "all.open.childrens.centres.links" }.Contains(x.Tag));
+            var openGroupData = Downloads.Where(x => new[] { "academy.sponsor.and.trust.links", "all.group.records", "all.group.links.records", "all.group.with.links.records" }.Contains(x.Tag));
             var allGovernorData = Downloads.Where(x => new[] { "all.governance.records", "all.mat.governance.records", "all.academy.governance.records", "all.la.maintained.governance.records" }.Contains(x.Tag));
             
             
@@ -83,7 +83,11 @@ namespace Edubase.Web.UI.Models
 
             if (openGroupData.Any())
             {
-                var section = new Section { Heading = "Establishment groups", Paragraph = "You can download the complete record for the specified establishment group. There's a separate file with links to any predecessor or successor establishments." };
+                var section = new Section
+                {
+                    Heading = "Establishment groups",
+                    Paragraph = "You can download the complete record for the specified establishment group. There's a separate file with links to any establishments associated with the groups."
+                };
                 section.SubSections.Add(new Section
                 {
                     Heading = "Open group data",
@@ -120,6 +124,24 @@ namespace Edubase.Web.UI.Models
              tag=all.mat.governance.records
              tag=all.academy.governance.records
              tag=all.la.maintained.governance.records
+             
+             --
+             tag=all.edubase.data
+             tag=all.edubase.data.links
+             tag=all.open.state-funded.schools
+             tag=all.open.state-funded.school.links
+             tag=all.open.academies.and.free.schools
+             tag=all.open.academies.and.free.school.links
+             tag=academy.sponsor.and.trust.links
+             tag=all.open.childrens.centres
+             +tag=all.open.childrens.centres.links
+             tag=all.governance.records
+             tag=all.mat.governance.records
+             tag=all.academy.governance.records
+             tag=all.la.maintained.governance.records
+             +tag=all.group.records
+             +tag=all.group.links.records
+             +tag=all.group.with.links.records
              */
 
 
