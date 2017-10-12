@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity;
+﻿using System;
+using Edubase.Data.Entity;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
@@ -33,5 +34,6 @@ namespace Edubase.Services.Groups
         Task<bool> ExistsAsync(IPrincipal principal, CompaniesHouseNumber? companiesHouseNumber = null, string groupId = null, int? existingGroupUId = null, string name = null, int? localAuthorityId = null);
 
         Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, IPrincipal principal);
+        Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, DateTime? dateFrom, DateTime? dateTo, string suggestedBy, IPrincipal principal);
     }
 }

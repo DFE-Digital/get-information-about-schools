@@ -248,7 +248,7 @@ namespace Edubase.Web.UI.Controllers
 
                     if (groupUid.HasValue)
                     {
-                        var changes = await _groupReadService.GetChangeHistoryAsync(groupUid.Value, viewModel.Skip, viewModel.Take, User);
+                        var changes = await _groupReadService.GetChangeHistoryAsync(groupUid.Value, viewModel.Skip, viewModel.Take, viewModel.DateFilterFrom?.ToDateTime(), viewModel.DateFilterTo?.ToDateTime(), viewModel.SuggestedBy, User);
                         viewModel.Items = ConvertGroupChanges(changes, groupName);
                         viewModel.Count = changes.Count;
                         viewModel.SingleGroup = true;

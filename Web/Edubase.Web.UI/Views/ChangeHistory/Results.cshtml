@@ -50,7 +50,14 @@
     </div>
     <form id="change-history-filters">
         @Html.HiddenFor(m => m.SelectedTab)
-        @Html.HiddenFor(m=>m.SearchType)
+        @Html.HiddenFor(m => m.SearchType)
+        @Html.HiddenFor(m => m.TextSearchModel.Text)
+        @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValue)
+        @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValueAsInt)
+        @Html.HiddenFor(m => m.GroupSearchModel.Text)
+        @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValue)
+        @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValueAsInt)
+
         <div class="column-third" id="filter-container">
             <div class="filter-form" id="filter-form">
                 <div id="EditSearchCollapse" class="blanket-container">
@@ -89,7 +96,10 @@
                     }
                     else
                     {
-                        @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null, false)
+                        if (!Model.SingleGroup)
+                        {
+                            @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null, false)
+                        }
                     }
                     @DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
                     @if (Model.IsEstablishmentSearch)
