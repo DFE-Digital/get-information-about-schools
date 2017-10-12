@@ -70,6 +70,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 SearchQueryString = searchQueryString,
                 SearchSource = searchSource,
                 CanUserEdit = await _groupReadService.CanEditAsync(id, User),
+                CanUserEditGovernance = await _groupReadService.CanEditGovernanceAsync(id, User),
                 Group = model,
                 GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
                 LocalAuthorityName = model.LocalAuthorityId.HasValue ? await _lookup.GetNameAsync(() => model.LocalAuthorityId) : null,
