@@ -184,6 +184,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, viewModel.EstablishmentUrn, viewModel.GroupUId, User);
 
+            string url;
+            if (viewModel.EstablishmentUrn != null)
+                url = $"{Url.RouteUrl("EstabDetails", new { id = viewModel.Urn })}#school-governance";
             return await Edit(viewModel.GroupUId, viewModel.EstablishmentUrn, viewModel.RemovalGid, null);
         }
 
