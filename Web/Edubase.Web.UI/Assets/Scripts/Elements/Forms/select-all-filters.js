@@ -18,12 +18,19 @@
             this.childOptionCount = $childOptions.length;
 
             $el.on('change', function() {
-               if (this.checked) {
-                   $childOptions.prop('checked', true);
-               } else {
-                   $childOptions.prop('checked', false);
+                if (this.checked) {
+                    if ($el.parents('.govuk-option-select').hasClass('nested-filter-options')) {
+                        $el.parents('fieldset').find('.filter-group-title').prop('checked', true);
+                    } 
+                    $childOptions.prop('checked', true);
+                    
+                } else {
+                    if ($el.parents('.govuk-option-select').hasClass('nested-filter-options')) {
+                        $el.parents('fieldset').find('.filter-group-title').prop('checked', false);
+                    }
+                    $childOptions.prop('checked', false);
                 }
-                $childOptions.trigger('change');
+                $childOptions.slice(0, 1).trigger('change');
             });
 
             $childOptions.on('change', function() {
