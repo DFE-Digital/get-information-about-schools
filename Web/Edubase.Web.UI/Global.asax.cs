@@ -13,6 +13,9 @@ using System.Web.Routing;
 using System.Web.Http;
 using Newtonsoft.Json.Serialization;
 using Kentor.AuthServices.Exceptions;
+using Edubase.Web.UI.Areas.Establishments.Models.Search;
+using Edubase.Web.UI.Helpers.ModelBinding;
+using Edubase.Web.UI.Helpers.ValueProviders;
 
 namespace Edubase.Web.UI
 {
@@ -41,7 +44,8 @@ namespace Edubase.Web.UI
 
             FlushLogMessages();
 
-            ModelBinders.Binders.DefaultBinder = new Helpers.ModelBinding.DefaultModelBinderEx();
+            ModelBinders.Binders.DefaultBinder = new DefaultModelBinderEx();
+            ValueProviderFactories.Factories.Add(new TokenValueProviderFactory());
 
             MvcHandler.DisableMvcResponseHeader = true;
         }

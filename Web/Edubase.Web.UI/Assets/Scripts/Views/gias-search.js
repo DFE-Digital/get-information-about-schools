@@ -7,10 +7,9 @@ DfE.searchResults = (function () {
     var $resultsContainer = $('#results-container');
     var $downloadLink = $('.download-link');
     var searchType = null;
-    var filterLimit = 200;
     var filterIntent = null;
     var seenOpenDateWarning = false;
-    var downloadBaseUrl = '/Establishments/Search/PrepareDownload?';
+    var downloadBaseUrl = '/Establishments/Search/PrepareDownload?token=';
     var $additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera');
     var $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear');
     var $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]');
@@ -19,6 +18,7 @@ DfE.searchResults = (function () {
     var searchParams = deDupeParams($filterForm.find(':input').filter(function (n, ele) {
         return ele.value !== '';
     }).serialize());
+    var token = '';
 
     var plsWait = '<div class="progress-indicator"><span class="visually-hidden">Please wait</span></div>';
 
@@ -157,19 +157,24 @@ DfE.searchResults = (function () {
                             $govUkSelect.find('input[type="text"]').val('');
 
                         } else {
-                            var selectedFilters = $(this)
-                                .next('.options-container')
-                                .find('input')
+                            var selectedFilters = $(this).parents('.govuk-option-select')
+                                .find('.options-container .trigger-result-update')
                                 .filter(function (n, item) {
                                     return $(item).prop('checked');
                                 });
 
-                            selectedFilters.click();
-                            $(this).removeClass('active-clear');
-                            if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
-                                selectedFilters.prop('checked', false);
-                                $(this).next('.options-container').find('.filter-radio').removeClass('partial-selection');
+                            selectedFilters.slice(0, 1).trigger('change');
+                            selectedFilters.prop('checked', false);
 
+                            $govUkSelect.find('.select-all').next('label').removeClass('partial-selection');
+                            $govUkSelect.find('.select-all').prop('checked', false);
+
+                            $govUkSelect.find('.js-selected-counter-text').text('');
+                            $(this).removeClass('active-clear');
+
+                            if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
+                                $govUkSelect.find('.filter-group-title').prop('checked', false);
+                                $govUkSelect.find('.filter-group-title').next('label').removeClass('partial-selection');                                
                             }
                         }
                     }
@@ -177,11 +182,16 @@ DfE.searchResults = (function () {
 
             $('.govuk-option-select').on('countUpdated',
                 function (e, d) {
+                    var os = this;
                     if (d.selectedCount) {
                         $(this).find('.filter-clear, .additional-filter-clear').addClass('active-clear');
                     } else {
                         $(this).find('.filter-clear, .additional-filter-clear').removeClass('active-clear');
                     }
+                    window.setTimeout(function() {                        
+                        var clearLeftPos = $(os).find('.js-selected-counter').width() + 12 + 'px';
+                        $(os).find('.clear-selections').css({ left: clearLeftPos });
+                    },0);
                 });
 
             
@@ -206,36 +216,49 @@ DfE.searchResults = (function () {
             $('.date-filter-warning').addClass('hidden');
 
             $resultsContainer.html(plsWait);
-            if (GOVUK.support.history()) {
-                history.pushState({}, null, window.location.href.split('?')[0] + '?' + searchParams);
-            }
-
+            
             $.ajax({
-                url: 'Search/results-js',
+                //url: 'Search/results-js',
+                type: "POST",
+                url: '/api/tokenize',
+               
                 data: searchParams,
                 success: function (data, status, xhr) {
-                    $resultsContainer.html(data);
-                    $downloadLink.removeClass('hidden');
-
-                    $downloadLink.attr('href', downloadBaseUrl + searchParams);
-                    $resultsContainer.removeClass('pending-results-update');
+                    token = data.token;
+                    if (GOVUK.support.history()) {
+                        history.pushState({}, null, window.location.href.split('?')[0] + '?token=' + token);
+                    }
                     
-                    if (Number(xhr.getResponseHeader("x-count")) === 0) {
-                        $downloadLink.addClass('hidden');
-                    }
+                    $.ajax({
+                        url: 'Search/results-js',
+                        data: token,
+                        dataType: 'html',
+                        success: function (results, status, xhr) {
+                            $resultsContainer.html(results);
+                            $downloadLink.attr('href', downloadBaseUrl + searchParams);
+                            $downloadLink.removeClass('hidden');
+                            $resultsContainer.removeClass('pending-results-update');
 
-                    if (DfE.searchMap.currentView !== 'map') {
-                        DfE.searchResults.enableFilters();
-                    }
+                            if (Number(xhr.getResponseHeader("x-count")) === 0) {
+                                $downloadLink.addClass('hidden');
+                            }
 
-                    if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
-                        $('.date-filter-warning').removeClass('hidden');
-                        if (!seenOpenDateWarning) {
-                            window.scrollTo(0, 0);
-                            seenOpenDateWarning = true;
+                            if (DfE.searchMap.currentView !== 'map') {
+                                DfE.searchResults.enableFilters();
+                            }
+
+                            if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
+                                $('.date-filter-warning').removeClass('hidden');
+                                if (!seenOpenDateWarning) {
+                                    window.scrollTo(0, 0);
+                                    seenOpenDateWarning = true;
+                                }
+                            }
                         }
-                    }
-                    
+
+                    });
+
+
                 },
                 error: function(xhr) {
                     DfE.searchResults.enableFilters();
@@ -251,72 +274,57 @@ DfE.searchResults = (function () {
                 var chxName = $(this).prop('name');
                 var isChecked = this.checked;
                 var filterCount = $filters.filter(':checked, :selected').length;
-
-                if (filterCount >= filterLimit) {
-                    $(this).okCancel({
-                        cancel: null,
-                        ok: function () {
-                            return true;
-                        },
-                        immediate: true,
-                        title: 'Filter limit reached',
-                        content:
-                            'You\'ve selected too many filters. You can either reduce the number of filters, or download the data and filter it offline.'
-                    });
-                    $(this).removeData('okCancel');
-                    $(this).prop('checked', false);
-
-                } else {
-
+                
                 var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').filter(function (n, input) {
                 if (input.value === chxVal) {
-                            return input;
-                        }
-                    }).not(currentInput);
+                        return input;
+                    }
+                }).not(currentInput);
 
-                    similarInput.prop('checked', isChecked);
-                    if (isChecked) {
-                        similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
+                similarInput.prop('checked', isChecked);
+                if (isChecked) {
+                    similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
+                } else {
+
+                    var siblingChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
+                    if (siblingChxCount === 0) {
+                        similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
+                        similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
                     } else {
-
-                        var siblingChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
-                        if (siblingChxCount === 0) {
-                            similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
-                            similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
-                        } else {
-                            similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
-                        }
-
+                        similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
                     }
 
-                    if (filterIntent) {
-                        window.clearTimeout(filterIntent);
-                    }
-                    if (DfE.searchMap != null && DfE.searchMap.scriptsLoaded) {
-                        DfE.searchMap.clearPoints();
-                    }
-
-                    $resultsContainer.addClass('pending-results-update');
-                    searchParams = deDupeParams($filterForm.find(':input').filter(function(n, ele) {
-                        return ele.value !== '';
-                    }).serialize());
-
-                    filterIntent = window.setTimeout(function () {
-                        self.getResults();
-                        if (DfE.searchMap.currentView === 'map') {
-                            DfE.searchMap.getSearchData();
-                        } else {
-                            DfE.searchMap.dataRefreshRequired = true;
-                        }
-                        if (searchType === 'ByLocalAuthority') {
-                            DfE.searchUtils.updateSearchedLas();
-                        }
-                        if (searchType === 'Governor') {
-                            DfE.searchUtils.updateGovernorRoles();
-                        }
-
-                    }, 1500);
                 }
+
+                if (filterIntent) {
+                    window.clearTimeout(filterIntent);
+                }
+                if (DfE.searchMap != null && DfE.searchMap.scriptsLoaded) {
+                    DfE.searchMap.clearPoints();
+                }
+
+                $resultsContainer.addClass('pending-results-update');
+                searchParams = deDupeParams($filterForm.find(':input').filter(function(n, ele) {
+                    return ele.value !== '';
+                }).serialize());
+                    
+              
+                filterIntent = window.setTimeout(function () {
+                    self.getResults();
+                    if (DfE.searchMap.currentView === 'map') {
+                        DfE.searchMap.getSearchData();
+                    } else {
+                        DfE.searchMap.dataRefreshRequired = true;
+                    }
+                    if (searchType === 'ByLocalAuthority') {
+                        DfE.searchUtils.updateSearchedLas();
+                    }
+                    if (searchType === 'Governor') {
+                        DfE.searchUtils.updateGovernorRoles();
+                    }
+
+                }, 1500);                
+                
             });
 
             $('.age-filter').find('.filter-button').on('click',

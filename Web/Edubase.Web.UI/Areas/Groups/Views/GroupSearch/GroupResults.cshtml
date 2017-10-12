@@ -33,16 +33,13 @@
     <div class="column-third">
         <div class="filter-form" id="filter-form">
 
-            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
-                <div class="blanket"></div>
-                <div class="filter-divider"></div>
+            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">                
                 <form method="get" action="@Url.Action("Index", "GroupSearch", new { area = "Groups" })">
 
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-sort-by">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Sort by</div>
-                            <div class="js-selected-counter"></div>
                         </div>
                         <select class="form-control trigger-result-update" name="SortBy">
                             <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ , "selected")>Alphabetical A-Z</option>
@@ -54,14 +51,21 @@
                          id="option-select-group-type">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Group type</div>
-                            <div class="js-selected-counter"></div>
+                            <div class="js-selected-counter">
+                                <span class="js-selected-counter-text"></span>                
+                            </div>
                         </div>
-                        <a href="#" class="clear-selections">Clear</a>
+                        <a href="#" class="clear-selections filter-clear">Clear</a>
                         <div class="options-container">
                             <div class="js-auto-height-inner">
                                 <fieldset>
-                                    <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
+                                    <div class="filter-wrapper select-all-wrap">
+                                        <input id="grouptype_all" class="filter-input select-all" type="checkbox" />
+                                        <label for="grouptype_all" class="filter-radio">
+                                            All
+                                        </label>
+                                    </div>
                                     @foreach (var item in Model.GroupTypes)
                                     {
                                         <div class="filter-wrapper">
@@ -81,13 +85,21 @@
                         <div class="govuk-option-select js-collapsible" id="option-select-group-status">
                             <div class="container-head js-container-head">
                                 <div class="option-select-label">Group status</div>
-                                <div class="js-selected-counter"></div>
+                                <div class="js-selected-counter">
+                                    <span class="js-selected-counter-text"></span>                
+                                </div>
                             </div>
-                            <a href="#" class="clear-selections">Clear</a>
+                            <a href="#" class="clear-selections filter-clear">Clear</a>
                             <div class="options-container" id="">
                                 <div class="js-auto-height-inner">
                                     <fieldset><span class="visuallyhidden">- changing the selection will refresh the results</span>
                                         <legend class="visuallyhidden">Select an option below to filter the results</legend>
+                                    <div class="filter-wrapper select-all-wrap">
+                                        <input id="groupstatus_all" class="filter-input select-all" type="checkbox" />
+                                        <label for="groupstatus_all" class="filter-radio">
+                                            All
+                                        </label>
+                                    </div>
                                         @foreach (var item in Model.GroupStatuses)
                                         {
                                             <div class="filter-wrapper">
@@ -102,7 +114,6 @@
                             </div>
                         </div>
                     }
-                    <div class="filter-divider"></div>
 
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
                     @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)

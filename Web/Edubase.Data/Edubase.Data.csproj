@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbGeographyConverter.cs" />
+    <Compile Include="Entity\Token.cs" />
     <Compile Include="Entity\LocalAuthoritySet.cs" />
     <Compile Include="Entity\GlossaryItem.cs" />
     <Compile Include="Entity\ApiRecorderSessionItem.cs" />
@@ -164,6 +165,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DataQualityStatusRepository.cs" />
     <Compile Include="Repositories\ILocalAuthoritySetRepository.cs" />
+    <Compile Include="Repositories\ITokenRepository.cs" />
+    <Compile Include="Repositories\TokenRepository.cs" />
     <Compile Include="Repositories\LocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\IDataQualityStatusRepository.cs" />
     <Compile Include="Repositories\ApiRecorderSessionItemRepository.cs" />

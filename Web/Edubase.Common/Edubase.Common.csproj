@@ -102,6 +102,7 @@
     <Compile Include="Config\DictionaryApplicationConfiguration.cs" />
     <Compile Include="Config\ApplicationConfigurationFile.cs" />
     <Compile Include="Config\IApplicationConfiguration.cs" />
+    <Compile Include="Formatting\Base62.cs" />
     <Compile Include="IExceptionLogger.cs" />
     <Compile Include="Invoker.cs" />
     <Compile Include="Disposer.cs" />
