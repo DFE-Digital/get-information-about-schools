@@ -46,6 +46,7 @@ namespace Edubase.UnitTest.Controllers
             id.Setup(x => x.IsAuthenticated).Returns(isUserLoggedOn);
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(new GroupModel { GroupUId = 1, Name = "grp" }));
             grs.Setup(x => x.CanEditAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(canUserEdit);
+            grs.Setup(x => x.CanEditGovernanceAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(canUserEdit);
             grs.Setup(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new PaginatedResult<GroupChangeDto>());
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
 
