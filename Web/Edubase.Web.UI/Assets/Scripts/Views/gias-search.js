@@ -146,6 +146,31 @@ DfE.searchResults = (function () {
                         !$(this).hasClass('date-filters')) {
                         $(this).find('.clear-selections').addClass('active-clear');
                     }
+
+                    if ($(this).hasClass('age-filter') || $(this).hasClass('date-filters')) {
+                        var valuesOnLoad = $(this).find('input.form-control')
+                            .filter(function (n, elem) {
+                                return elem.value.length > 0;
+                            }).length > 0;
+
+                        if (valuesOnLoad) {
+                            $(this).find('.clear-selections').addClass('active-clear');
+                        }
+                    }
+                });
+
+            $('#EditSearchCollapse').find('.age-filter .form-control, .date-filters .form-control').on('blur',
+                function() {
+                    var somethingHasValue = $(this).parents('.js-auto-height-inner').find('input.form-control')
+                        .filter(function(n, elem) {
+                            return elem.value.length > 0;
+                        }).length >
+                        0;
+                    if (somethingHasValue) {
+                        $(this).parents('.govuk-option-select').find('.clear-selections').addClass('active-clear');
+                    } else {
+                        $(this).parents('.govuk-option-select').find('.clear-selections').removeClass('active-clear');
+                    }
                 });
 
             $clearLinks.on('click',
@@ -155,6 +180,7 @@ DfE.searchResults = (function () {
                         var $govUkSelect = $(this).parents('.govuk-option-select');
                         if ($govUkSelect.hasClass('date-filters') || $govUkSelect.hasClass('age-filter')) {
                             $govUkSelect.find('input[type="text"]').val('');
+                            $(this).removeClass('active-clear');
 
                         } else {
                             var selectedFilters = $(this).parents('.govuk-option-select')

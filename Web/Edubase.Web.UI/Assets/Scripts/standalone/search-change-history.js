@@ -107,7 +107,7 @@
 
     function getResults() {
         $('#ajax-error-message').addClass('hidden');
-        filterPanel.find('input').prop('disabled', 'disabled');
+        filterPanel.find(':input').prop('disabled', 'disabled');
         filterPanel.find('.filter-clear').addClass('clear-disabled');
         var resultsUrl = isEstabSearch
             ? '/ChangeHistory/Search/Establishments/results-js'
@@ -124,7 +124,7 @@
 
                 downloadLink.attr('href', downloadBaseUrl + searchParams);
                 resultsPanel.removeClass('pending-results-update');
-                filterPanel.find('input').removeAttr('disabled');
+                filterPanel.find(':input').removeAttr('disabled');
                 filterPanel.find('.filter-clear').removeClass('clear-disabled');
                 if (Number(xhr.getResponseHeader("x-count")) === 0) {
                     downloadLink.addClass('hidden');
@@ -138,7 +138,7 @@
             error: function () {
                 $('#ajax-error-message').removeClass('hidden');
                 resultsPanel.removeClass('pending-results-update').html('');
-                filterPanel.find('input').removeAttr('disabled');
+                filterPanel.find(':input').removeAttr('disabled');
                 downloadLink.addClass('hidden');
             }
         });
@@ -168,6 +168,8 @@
 
         $('#date-type-filter').on('change', function () {
             $('#date-filter-type-label').text('Date ' + $('#date-type-filter option:selected').text().toLowerCase());
+            $(this).parents('.govuk-option-select').find('.clear-selections')
+                .css({ left: $('#date-filter-type-label').width() + 12 + 'px' });
         });
 
         filterPanel.find('.trigger-result-update').on('change', function () {

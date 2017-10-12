@@ -240,7 +240,15 @@
 
 @section ViewScripts
 {
-<script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
+    <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
+    
+    <script>
+        (function() {
+            $('.edubase-button-radio').on('click', function () {
+                $('.warning-message').addClass('hidden');
+            });
+        }());        
+    </script>
     
 }
 

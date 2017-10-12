@@ -21,16 +21,7 @@
         {
             <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
         }
-        <div class="error-summary hidden" id="js-filter-error-summary">
-            <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
-            <ul class="error-summary-list">
-                <li class="summary-date-error error-message hidden">Your date format is not recognised</li>
-                <li class="summary-range-error error-message hidden">Your age range format is not recognised</li>
-            </ul>
-        </div>
-        <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
-            <p>Incomplete historical data means a number of records have no open date recorded and do not appear in this search.</p>
-        </div>
+        
         <p>
             @if (Model.SearchType == eSearchType.Text)
             {
@@ -76,7 +67,19 @@
             {
                 <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
             }*@
-        </p>
+    </p>
+    </div>
+    <div class="column-full">
+        <div class="error-summary hidden" id="js-filter-error-summary">
+            <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
+            <ul class="error-summary-list">
+                <li class="summary-date-error error-message hidden">Your date format is not recognised</li>
+                <li class="summary-range-error error-message hidden">Your age range format is not recognised</li>
+            </ul>
+        </div>
+        <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
+            <p>Incomplete historical data means a number of records have no open date recorded and do not appear in this search.</p>
+        </div>
     </div>
 </div>
 

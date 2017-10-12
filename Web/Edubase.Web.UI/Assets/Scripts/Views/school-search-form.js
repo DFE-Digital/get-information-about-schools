@@ -18,8 +18,10 @@
         /*@cc_on
             jScriptVersion = @_jscript_version
         @*/
-
-        $('#content').find('.search-toggle-panel').radioToggle({ untoggle: true });
+        
+        $('#content').find('.search-toggle-panel').radioToggle({
+            untoggle: true
+        });
 
         if (typeof (jScriptVersion) === 'undefined' || jScriptVersion >= 9) {
             $(function () {
@@ -325,11 +327,11 @@
             }, 0);
         });
 
-        $('#LocalAuthorityToAdd').on('typeahead:render', function (e) {
+        $('#LocalAuthorityToAdd, #TextSearchModel_Text').on('typeahead:render', function (e) {
             $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
         });
 
-        $('#LocalAuthorityToAdd').on('typeahead:open', function (e) {
+        $('#LocalAuthorityToAdd, #TextSearchModel_Text').on('typeahead:open', function (e) {
             $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
         });
 
