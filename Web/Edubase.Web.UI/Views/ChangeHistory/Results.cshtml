@@ -101,11 +101,11 @@
                             @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null)
                         }
                     }
-                    @DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
+                    @*@DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
                     @if (Model.IsEstablishmentSearch)
                     {
                         @DropdownSelector("Approved By", ChangeHistoryViewModel.BIND_ALIAS_APPROVED_BY, Model.ApproverGroups, m => m.ApprovedBy)
-                    }
+                    }*@
                 </div>
             </div>
         </div>
