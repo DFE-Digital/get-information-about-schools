@@ -23,6 +23,7 @@ namespace Edubase.Services.Groups
         Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal);
 
         Task<bool> CanEditAsync(int uid, IPrincipal principal);
+        Task<bool> CanEditGovernanceAsync(int uid, IPrincipal principal);
 
         /// <summary>
         /// Retrieves the list of Establishment Groups associated with a Group

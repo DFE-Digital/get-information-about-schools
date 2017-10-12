@@ -13,6 +13,7 @@
     public class GroupDetailViewModel
     {
         public bool CanUserEdit { get; set; }
+        public bool CanUserEditGovernance { get; set; }
         public bool IsUserLoggedOn { get; set; }
         public GroupModel Group { get; set; }
         public string Address { get; set; }
