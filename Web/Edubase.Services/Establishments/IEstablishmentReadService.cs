@@ -17,7 +17,7 @@ namespace Edubase.Services.Establishments
     {
         Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal);
         Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal);
-        Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, IPrincipal user);
+        Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, string sortBy, IPrincipal user);
         Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, EstablishmentChangeHistoryFilters filters, IPrincipal user);
 
         /// <summary>

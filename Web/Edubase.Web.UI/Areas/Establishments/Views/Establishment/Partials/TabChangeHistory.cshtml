@@ -24,14 +24,13 @@
         <table class="approval-changes edubase-table">
             <thead>
             <tr>
-                <th>Date changed</th>
-                <th>Updated field</th>
+                <th><a href="@Url.SortUrl("effectiveDateUtc", "#school-change-history")">Date changed</a></th>
+                <th><a href="@Url.SortUrl("fieldName", "#school-change-history")">Updated field</a></th>
                 <th>Old value</th>
-                <th>New value</th>
-                <th>Date requested</th>
-                <th>Suggested from</th>
-                <th>Approved by</th>
-                <th>Reason</th>
+                <th>New value</th> <!-- Apparently, Texuna aren't delivering sorting on old/new value cols -->
+                <th><a href="@Url.SortUrl("requestedDateUtc", "#school-change-history")">Date requested</a></th>
+                <th><a href="@Url.SortUrl("originatorUserName", "#school-change-history")">Suggested from</a></th>
+                <th><a href="@Url.SortUrl("approverUserName", "#school-change-history")">Approved by</a></th>
             </tr>
             </thead>
             <tbody>
@@ -45,7 +44,6 @@
                     <td aria-label="Date requested">@item.RequestedDateUtc</td>
                     <td aria-label="Suggested from">@item.OriginatorUserName</td>
                     <td aria-label="Approved by">@(item.ApproverUserName ?? "--")</td>
-                    <td aria-label="Reason">--</td>
                 </tr>
             }
             </tbody>

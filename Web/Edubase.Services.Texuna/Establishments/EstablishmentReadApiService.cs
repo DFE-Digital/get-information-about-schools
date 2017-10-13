@@ -46,9 +46,9 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal)
             => new ServiceResultDto<EstablishmentModel>((await _httpClient.GetAsync<EstablishmentModel>($"establishment/{urn}", principal, false)).Response);
 
-        public async Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, IPrincipal user)
+        public async Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, string sortBy, IPrincipal user)
         {
-            var changes = (await _httpClient.GetAsync<ApiPagedResult<EstablishmentChangeDto>>($"establishment/{urn}/changes?skip={skip}&take={take}", user)).GetResponse();
+            var changes = (await _httpClient.GetAsync<ApiPagedResult<EstablishmentChangeDto>>($"establishment/{urn}/changes?skip={skip}&take={take}&sortby={sortBy}", user)).GetResponse();
             return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Items);
         }
 
