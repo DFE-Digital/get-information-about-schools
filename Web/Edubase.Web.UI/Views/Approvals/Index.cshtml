@@ -117,18 +117,18 @@
             <thead>
                 <tr>
                     <td class="cell-checkbox">&nbsp;</td>
-                    <th scope="col" class="cell-urn">
+                    <th scope="col" class="cell-urn" data-sortkey="establishmentUrn">
                         <abbr title="Unique reference number">
                             URN
                         </abbr>
                     </th>
-                    <th scope="col" class="cell-estab">Establishment</th>
-                    <th scope="col" class="cell-updatedfield">Updated field</th>
-                    <th scope="col" class="cell-oldvalue">Old value</th>
-                    <th scope="col" class="cell-newvalue">New value</th>
-                    <th scope="col" class="cell-edate">Effective date</th>
-                    <th scope="col" class="cell-rdate">Date requested</th>
-                    <th scope="col" class="cell-suggested">Suggested from</th>
+                    <th scope="col" class="cell-estab" data-sortkey="establishmentName">Establishment</th>
+                    <th scope="col" class="cell-updatedfield" data-sortkey="establishmentUrn">Updated field</th>
+                    <th scope="col" class="cell-oldvalue" data-sortkey="oldValue">Old value</th>
+                    <th scope="col" class="cell-newvalue" data-sortkey="newValue">New value</th>
+                    <th scope="col" class="cell-edate" data-sortkey="effectiveDateUtc">Effective date</th>
+                    <th scope="col" class="cell-rdate" data-sortkey="originatorFullName">Date requested</th>
+                    <th scope="col" class="cell-suggested" data-sortkey="establishmentUrn">Suggested from</th>
                 </tr>
             </thead>
             <tbody v-if="pages.length > 0">
@@ -162,7 +162,6 @@
 
 </script>
 
-@*<script src="/public/assets/scripts/standalone/approvals.js"></script>*@
 <script src="/Assets/Scripts/standalone/approvals.js"></script>
 
 }

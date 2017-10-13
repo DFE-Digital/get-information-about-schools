@@ -94,7 +94,8 @@
                         url: defaults.apiUrl,
                         data: {
                             take: defaults.pageSize,
-                            skip: skip || 0
+                            skip: skip || 0,
+                            sortBy: "establishmentUrn-asc" // Jon: put `th.data-sortkey` value into here and concat '-asc' or '-desc'
                         },
                         success: function (data) {
                             self.currentCount = data.count;

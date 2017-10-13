@@ -7,7 +7,7 @@ namespace Edubase.Services.Approvals
 {
     public interface IApprovalService
     {
-        Task<ApiResponse<PendingApprovalsResult>> GetAsync(int skip, int take, IPrincipal principal);
+        Task<ApiResponse<PendingApprovalsResult>> GetAsync(int skip, int take, string sortBy, IPrincipal principal);
         Task<int> CountAsync(IPrincipal principal);
         Task<ApiResponse> ActionAsync(PendingChangeRequestAction payload, IPrincipal principal);
     }

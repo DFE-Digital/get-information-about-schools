@@ -17,9 +17,9 @@ namespace Edubase.Web.UI.Controllers.Api
         }
 
         [Route("api/approvals/change-requests"), HttpGet]
-        public async Task<PendingApprovalsResult> GetAsync(int skip, int take)
+        public async Task<PendingApprovalsResult> GetAsync(int skip, int take, string sortBy)
         {
-            return (await _approvalService.GetAsync(skip, take, User)).Response;
+            return (await _approvalService.GetAsync(skip, take, sortBy, User)).GetResponse();
         }
 
         [Route("api/approvals/change-request"), HttpPost]
