@@ -327,7 +327,7 @@
             }, 0);
         });
 
-        $('#LocalAuthorityToAdd, #TextSearchModel_Text, #GroupSearchModel_Text').on('typeahead:render', function (e) {
+        $('#LocalAuthorityToAdd').on('typeahead:render', function (e) {
             $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
         });
 
