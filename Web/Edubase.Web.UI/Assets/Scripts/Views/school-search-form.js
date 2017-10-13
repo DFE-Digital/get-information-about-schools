@@ -9,8 +9,14 @@
         }
         
     },
-    init: function () {
+    init: function (options) {
         'use strict';
+
+        var defaults = {
+            highlightFirstSuggestion: false
+        }
+
+         this.opts = $.extend({}, defaults, options);
 
         var self = this,
            jScriptVersion;
@@ -60,11 +66,7 @@
                     'Please enter an establishment name, URN, LAESTAB or UKPRN to start a search');
 
             }
-            //else if (suggestionCount === 0 && !numericValue) { // temp workaround until autosuggest matches partials
-            //    e.preventDefault();
-            //    self.showWarning($('#searchby-name-ref'),
-            //        'We couldn’t find any establishments matching your search criteria');
-            //}
+           
         });
 
         $('#la-search-submit').on('click', function (e) {
@@ -327,12 +329,25 @@
             }, 0);
         });
 
+        function highLightFirstSuggestion() {
+            $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
+        }
+
+        if (self.opts.highlightFirstSuggestion) {
+            $('#TextSearchModel_Text, #GroupSearchModel_Text').on('typeahead:render', function (e) {
+                highLightFirstSuggestion.call(this);
+                //$(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
+            });
+        }
+
         $('#LocalAuthorityToAdd').on('typeahead:render', function (e) {
-            $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
+           // $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
+            highLightFirstSuggestion.call(this);
         });
 
         $('#LocalAuthorityToAdd, #TextSearchModel_Text').on('typeahead:open', function (e) {
-            $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
+            highLightFirstSuggestion.call(this);
+            //$(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
         });
 
         $('#LocalAuthorityToAdd').on('keydown', function (e) {
@@ -371,7 +386,4 @@
 
 };
 
-if ($('#content').find('.has-typeahead').length > 0) {
-    DfE.Views.schoolSearch.init();
-}
 
