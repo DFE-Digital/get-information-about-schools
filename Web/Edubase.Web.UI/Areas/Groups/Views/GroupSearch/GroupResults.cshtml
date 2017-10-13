@@ -114,7 +114,9 @@
                             </div>
                         </div>
                     }
-
+                    <div id="filter-addtional-controls">
+                        <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>                        
+                    </div>
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
                     @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)
                     @Html.HiddenFor(!Model.GroupSearchModel.AutoSuggestValue.IsEmpty(), x => x.GroupSearchModel.AutoSuggestValue)
