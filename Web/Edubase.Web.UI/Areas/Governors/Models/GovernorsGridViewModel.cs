@@ -169,6 +169,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 }
 
                 grid.Rows = grid.Rows.OrderByDescending(x => x.SortValue).ThenBy(x => x.Model.GetFullName()).ToList();
+                HistoricGovernors = HistoricGovernors.OrderByDescending(x => x.AppointmentEndDate).ThenBy(x => x.FullName).ToList();
 
                 if (isHistoric)
                 {
