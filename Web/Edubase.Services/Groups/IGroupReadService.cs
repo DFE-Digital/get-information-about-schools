@@ -34,7 +34,7 @@ namespace Edubase.Services.Groups
 
         Task<bool> ExistsAsync(IPrincipal principal, CompaniesHouseNumber? companiesHouseNumber = null, string groupId = null, int? existingGroupUId = null, string name = null, int? localAuthorityId = null);
 
-        Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, IPrincipal principal);
+        Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, string sortBy, IPrincipal principal);
         Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, DateTime? dateFrom, DateTime? dateTo, string suggestedBy, IPrincipal principal);
     }
 }

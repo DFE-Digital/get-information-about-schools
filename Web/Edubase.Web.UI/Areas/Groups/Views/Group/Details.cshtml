@@ -319,18 +319,34 @@
                             <table class="edubase-table">
                                 <thead>
                                 <tr>
-                                    <th>Date changed</th>
-                                    <th>Request type</th>
+                                    <th>
+                                        <a href="@Url.SortUrl("requestedDateUtc", "#change-history")">
+                                            Date changed
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="@Url.SortUrl("requestType", "#change-history")">
+                                            Request type    
+                                        </a>
+                                    </th>
                                     <th>Change</th>
-                                    <th>Suggested by</th>
+                                    <th>
+                                        <a href="@Url.SortUrl("originatorUserName", "#change-history")">
+                                            Suggested by
+                                        </a>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model.ChangeHistory.Items)
                                     {
                                         <tr>
-                                            <td aria-label="Date changed">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
-                                            <td aria-label="Request type">@item.RequestType.GetEnumMember()</td>
+                                            <td aria-label="Date changed">
+                                                @(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))
+                                            </td>
+                                            <td aria-label="Request type">
+                                                @item.RequestType.GetEnumMember()
+                                            </td>
                                             <td aria-label="Change">
                                                 <dl>
                                                     @if (item.RequestType == GroupChangeRequestType.GroupChange)
@@ -345,10 +361,11 @@
                                                         <dt>Link date</dt><dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
                                                         <dt>Type</dt><dd>@(item.LinkType?.ToString() ?? "Not recorded")</dd>
                                                     }
-                                                    
                                                 </dl>
                                             </td>
-                                            <td aria-label="Suggested by">@item.OriginatorUserName</td>
+                                            <td aria-label="Suggested by">
+                                                @item.OriginatorUserName
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>

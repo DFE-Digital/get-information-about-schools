@@ -55,9 +55,9 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<bool> CanEditGovernanceAsync(int uid, IPrincipal principal) => (await _httpClient.GetAsync<BoolResult>($"group/{uid}/governance/canedit", principal)).GetResponse().Value;
 
-        public async Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, IPrincipal principal)
+        public async Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, string sortBy, IPrincipal principal)
         {
-            var changes = (await _httpClient.GetAsync<ApiPagedResult<GroupChangeDto>>($"group/{uid}/changes?skip={skip}&take={take}", principal)).GetResponse(); 
+            var changes = (await _httpClient.GetAsync<ApiPagedResult<GroupChangeDto>>($"group/{uid}/changes?skip={skip}&take={take}&sortby={sortBy}", principal)).GetResponse(); 
             return new PaginatedResult<GroupChangeDto>(skip, take, changes.Count, changes.Items);
         }
 
