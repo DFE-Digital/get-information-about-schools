@@ -13,6 +13,8 @@ namespace Edubase.Web.UI.Models.Grid
         
         public T Model { get; set; }
 
+        public object SortValue { get; set; }
+
         public GridRowViewModel<T> AddCell(object content)
         {
             var cell = new GridCellViewModel(content?.ToString());

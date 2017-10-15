@@ -43,9 +43,9 @@ namespace Edubase.Web.UI.Models.Grid
             return this;
         }
 
-        public GridRowViewModel<T> AddRow(T domainModel)
+        public GridRowViewModel<T> AddRow(T domainModel, object sortValue = null)
         {
-            var row = new GridRowViewModel<T>(this) { Model = domainModel };
+            var row = new GridRowViewModel<T>(this) { Model = domainModel, SortValue = sortValue };
             Rows.Add(row);
             return row;
         }

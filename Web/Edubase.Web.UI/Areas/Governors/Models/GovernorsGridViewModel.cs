@@ -139,17 +139,19 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     var startDate = (isShared && appointment != null) ? appointment.AppointmentStartDate : governor.AppointmentStartDate;
                     var endDate = (isShared && appointment != null) ? appointment.AppointmentEndDate : governor.AppointmentEndDate;
 
-                    var row = grid.AddRow(governor).AddCell(governor.GetFullName(), displayPolicy.FullName)
-                                                    .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
-                                                    .AddCell(governor.Id, displayPolicy.Id)
-                                                    .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name, displayPolicy.AppointingBodyId)
-                                                    .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
-                                                    .AddCell(endDate?.ToString("dd/MM/yyyy"), includeEndDate)
-                                                    .AddCell(governor.PostCode, displayPolicy.PostCode)
-                                                    .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
-                                                    .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
-                                                    .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
-                                                    .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
+                    var row = grid.AddRow(governor, endDate)
+                        .AddCell(governor.GetFullName(), displayPolicy.FullName)
+                        .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
+                        .AddCell(governor.Id, displayPolicy.Id)
+                        .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name, displayPolicy.AppointingBodyId)
+                        .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
+                        .AddCell(endDate?.ToString("dd/MM/yyyy"), includeEndDate)
+                        .AddCell(governor.PostCode, displayPolicy.PostCode)
+                        .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
+                        .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
+                        .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
+                        .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
+
                     if (isHistoric)
                     {
                         var gov = new HistoricGovernorViewModel
@@ -165,6 +167,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         HistoricGovernors.Add(gov);
                     }
                 }
+
+                grid.Rows = grid.Rows.OrderByDescending(x => x.SortValue).ThenBy(x => x.Model.GetFullName()).ToList();
 
                 if (isHistoric)
                 {
