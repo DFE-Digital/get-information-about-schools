@@ -113,8 +113,8 @@
                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentName' ? 'selected-sort': '' ]">Establishment</a>
                                 </th>
                                 <th scope="col" class="cell-updatedfield">
-                                    <a href="#" v-on:click.prevent="setSort('updatedField')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='updatedField' ? 'selected-sort': '' ]">Updated field</a>
+                                    <a href="#" v-on:click.prevent="setSort('fieldName')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='fieldName' ? 'selected-sort': '' ]">Updated field</a>
                                 </th>
                                 <th scope="col" class="cell-oldvalue">
                                     <a href="#" v-on:click.prevent="setSort('oldValue')"
