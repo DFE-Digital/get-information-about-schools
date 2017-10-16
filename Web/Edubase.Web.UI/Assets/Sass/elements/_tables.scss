@@ -161,6 +161,7 @@ table tbody .url {
     table-layout: fixed;
     display: table;
     border-top: 0;
+
     th, td {
         word-wrap: break-word;
         text-align: left;
@@ -177,24 +178,33 @@ table tbody .url {
             padding-top: 8px;
         }
     }
+
+    thead .cell-checkbox {
+        height: auto;
+    }
+
     .cell-checkbox {
         height: 52px;
         position: relative;
 
+
+
         .edubase-button-checkbox {
             padding: 0;
         }
-        
+
         @include media(desktop) {
             width: 28px;
         }
+
         @media(max-width: 940px) {
             &:after {
-                 content: attr(aria-label);
-                 position: relative;
-                 top: 14px;
-                 left: 44px;
+                content: attr(aria-label);
+                position: relative;
+                top: 14px;
+                left: 44px;
             }
+
             &:before {
                 content: "";
             }
@@ -202,34 +212,33 @@ table tbody .url {
     }
 
     .cell-urn {
-         @include media(desktop) {
+        @include media(desktop) {
             width: 40px;
         }
     }
 
     .cell-estab {
         @include media(desktop) {
-            width:80px;
+            width: 80px;
         }
     }
 
     .cell-updatedfield {
         @include media(desktop) {
-            width:80px;
+            width: 80px;
         }
     }
 
     .cell-oldvalue {
-       @include media(desktop) {
-            width:80px;
+        @include media(desktop) {
+            width: 80px;
         }
-
     }
+
     .cell-newvalue {
         @include media(desktop) {
-            width:80px;
+            width: 80px;
         }
-
     }
 
     .cell-edate {
@@ -239,7 +248,7 @@ table tbody .url {
     }
 
     .cell-rdate {
-       @include media(desktop) {
+        @include media(desktop) {
             width: 58px;
         }
     }
@@ -249,7 +258,6 @@ table tbody .url {
             width: 63px;
         }
     }
-
 }
 
 
@@ -489,6 +497,10 @@ p.table-caption {
             outline: 0;
         }
 
+        &:visited {
+            color: $govuk-blue;
+        }
+
         &:hover {
             text-decoration: underline;
         }
@@ -529,7 +541,6 @@ p.table-caption {
 
         .multi-line & {
             padding-right: 6px;
-            
         }
     }
 }

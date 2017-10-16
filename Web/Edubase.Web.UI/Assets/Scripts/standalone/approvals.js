@@ -109,7 +109,6 @@
                     var self = this;
                     this.isProcessing = true;
                     var sortDir = this.sortAscending ? '-asc' : '-desc';
-                    console.log(this.sortType);
                     $('#changes-table').find(':checkbox').prop('checked', false);
                     
                     $.ajax({
