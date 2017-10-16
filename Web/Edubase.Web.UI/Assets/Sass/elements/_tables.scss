@@ -171,6 +171,11 @@ table tbody .url {
 
     thead th {
         padding-bottom: 0;
+        padding-top: 18px;
+
+        &.multi-line {
+            padding-top: 8px;
+        }
     }
     .cell-checkbox {
         height: 52px;
