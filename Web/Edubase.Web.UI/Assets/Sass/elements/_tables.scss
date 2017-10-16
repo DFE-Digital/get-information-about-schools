@@ -177,6 +177,10 @@ table tbody .url {
         &.multi-line {
             padding-top: 8px;
         }
+
+        a {
+            padding-bottom: 8px;
+        }
     }
 
     thead .cell-checkbox {
