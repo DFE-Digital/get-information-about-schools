@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Repositories;
+﻿using Edubase.Common;
+using Edubase.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,11 +13,11 @@ namespace Edubase.Web.UI.Helpers.ValueProviders
     {
         public override IValueProvider GetValueProvider(ControllerContext controllerContext)
         {
-            var queryString = controllerContext.RequestContext.HttpContext.Request.QueryString.ToString();
-            if (queryString.Length > 4 && queryString.Length < 12 && !queryString.Contains("="))
+            var tokenId = controllerContext.RequestContext.HttpContext.Request.QueryString["tok"];
+            if (tokenId.Clean() != null)
             {
                 var repo = DependencyResolver.Current.GetService<ITokenRepository>();
-                var token = repo.Get(queryString);
+                var token = repo.Get(tokenId);
                 if (token != null)
                 {
                     var nvp = HttpUtility.ParseQueryString(token.Data);
