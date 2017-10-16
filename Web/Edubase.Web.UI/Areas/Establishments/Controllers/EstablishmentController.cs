@@ -726,6 +726,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             viewModel.TypeName = await _cachedLookupService.GetNameAsync(() => viewModel.TypeId);
             viewModel.LegalParentGroup = GetLegalParent(viewModel.Urn.Value, await _groupReadService.GetAllByEstablishmentUrnAsync(viewModel.Urn.Value, User), User);
+
+            viewModel.CCOperationalHours = (await _cachedLookupService.CCOperationalHoursGetAllAsync()).ToSelectList(viewModel.CCOperationalHoursId);
+            viewModel.CCGovernanceList = (await _cachedLookupService.CCGovernanceGetAllAsync()).ToSelectList(viewModel.CCGovernanceId);
+            viewModel.CCDeliveryModels = (await _cachedLookupService.CCDeliveryModelsGetAllAsync()).ToSelectList(viewModel.CCDeliveryModelId);
+            viewModel.CCGroupLead = (await _cachedLookupService.CCGroupLeadsGetAllAsync()).ToSelectList(viewModel.CCGroupLeadId);
+            viewModel.CCPhaseTypes = (await _cachedLookupService.CCPhaseTypesGetAllAsync()).ToSelectList(viewModel.CCPhaseTypeId);
+            viewModel.CCDisadvantagedAreas = (await _cachedLookupService.CCDisadvantagedAreasGetAllAsync()).ToSelectList(viewModel.CCDisadvantagedAreaId);
+            viewModel.CCDirectProvisionOfEarlyYears = (await _cachedLookupService.DirectProvisionOfEarlyYearsGetAllAsync()).ToSelectList(viewModel.CCDirectProvisionOfEarlyYearsId);
         }
 
         /// <summary>

@@ -155,6 +155,16 @@ namespace Edubase.UnitTest
             cls.Setup(c => c.GovernorAppointingBodiesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
             cls.Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
             cls.Setup(c => c.BoardingEstablishmentGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+
+            cls.Setup(c => c.CCOperationalHoursGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+            cls.Setup(c => c.CCGovernanceGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+            cls.Setup(c => c.CCDeliveryModelsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+            cls.Setup(c => c.CCGroupLeadsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+            cls.Setup(c => c.CCPhaseTypesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+            cls.Setup(c => c.CCDisadvantagedAreasGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+            cls.Setup(c => c.DirectProvisionOfEarlyYearsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+
+
             GetMock<IEstablishmentReadService>().Setup(e => e.GetEstabType2EducationPhaseMap()).Returns(new Dictionary<eLookupEstablishmentType, eLookupEducationPhase[]>());
         }
 

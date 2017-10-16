@@ -9,7 +9,7 @@ DfE.searchResults = (function () {
     var searchType = null;
     var filterIntent = null;
     var seenOpenDateWarning = false;
-    var downloadBaseUrl = '/Establishments/Search/PrepareDownload?token=';
+    var downloadBaseUrl = '/Establishments/Search/PrepareDownload';
     var $additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera');
     var $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear');
     var $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]');
@@ -252,16 +252,16 @@ DfE.searchResults = (function () {
                 success: function (data, status, xhr) {
                     token = data.token;
                     if (GOVUK.support.history()) {
-                        history.pushState({}, null, window.location.href.split('?')[0] + '?token=' + token);
+                        history.pushState({}, null, window.location.href.split('?')[0] + '?tok=' + token);
                     }
                     
                     $.ajax({
                         url: 'Search/results-js',
-                        data: token,
+                        data: "tok=" + token,
                         dataType: 'html',
                         success: function (results, status, xhr) {
                             $resultsContainer.html(results);
-                            $downloadLink.attr('href', downloadBaseUrl + searchParams);
+                            $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
                             $downloadLink.removeClass('hidden');
                             $resultsContainer.removeClass('pending-results-update');
 
