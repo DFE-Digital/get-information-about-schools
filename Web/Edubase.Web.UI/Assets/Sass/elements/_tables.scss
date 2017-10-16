@@ -169,6 +169,9 @@ table tbody .url {
         padding-top: 12px;
     }
 
+    thead th {
+        padding-bottom: 0;
+    }
     .cell-checkbox {
         height: 52px;
         position: relative;
@@ -178,7 +181,7 @@ table tbody .url {
         }
         
         @include media(desktop) {
-            width: 40px;
+            width: 28px;
         }
         @media(max-width: 940px) {
             &:after {
@@ -226,19 +229,19 @@ table tbody .url {
 
     .cell-edate {
         @include media(desktop) {
-            width: 55px;
+            width: 58px;
         }
     }
 
     .cell-rdate {
        @include media(desktop) {
-            width: 55px;
+            width: 58px;
         }
     }
 
     .cell-suggested {
         @include media(desktop) {
-            width: 60px;
+            width: 63px;
         }
     }
 
@@ -472,44 +475,57 @@ p.table-caption {
 .sortable-table {
     thead a {
         text-decoration: none;
+        font-weight: normal;
+        display: block;
+        float: left;
 
         &:focus, &:active {
             background-color: transparent;
             outline: 0;
         }
+
         &:hover {
             text-decoration: underline;
         }
     }
-}
-.selected-sort {
-    font-weight: bold;
-    position: relative;
-    padding-right: 14px;
-    display: inline-block;
 
-    &.sorted-asc:after {
-        width: 0;
-        height: 0;
-        position: absolute;
-        content: '';
-        right: 0;
-        top: 5px;
-        border-left: 4px solid transparent;
-        border-right: 4px solid transparent;
-        border-bottom: 7px solid $govuk-blue;
-    }
+    .selected-sort {
+        font-weight: bold;
+        position: relative;
+        padding-right: 14px;
+        padding-bottom: 8px;
 
-    &.sorted-desc:after {
-        width: 0;
-        height: 0;
-        position: absolute;
-        content: '';
-        right: 0;
-        top: 6px;
-        border-left: 4px solid transparent;
-        border-right: 4px solid transparent;
-        border-top: 7px solid $govuk-blue;
+
+        &.sorted-asc:after {
+            width: 0;
+            height: 0;
+            position: absolute;
+            content: '';
+            right: 0;
+            top: 50%;
+            margin-top: -8px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 7px solid $govuk-blue;
+        }
+
+        &.sorted-desc:after {
+            width: 0;
+            height: 0;
+            position: absolute;
+            content: '';
+            right: 0;
+            top: 50%;
+            margin-top: -8px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 7px solid $govuk-blue;
+        }
+
+        .multi-line & {
+            padding-right: 6px;
+            
+        }
     }
 }
 

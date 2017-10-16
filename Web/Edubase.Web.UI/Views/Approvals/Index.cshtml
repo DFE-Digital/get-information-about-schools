@@ -100,7 +100,72 @@
                     </div>
                 </div>
                 <div class="changes-list-wrapper" v-show="!isProcessing">
-                    <changes-table :pages="changes" :current-page="currentPage"></changes-table>
+                    <table class="edubase-table approval-changes sortable-table" id="changes-table">
+                        <thead>
+                            <tr>
+                                <td class="cell-checkbox">&nbsp;</td>
+                                <th scope="col" class="cell-urn">
+                                    <a href="#" v-on:click.prevent="setSort('establishmentUrn')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentUrn' ? 'selected-sort': '' ]">URN</a>
+                                </th>
+                                <th scope="col" class="cell-estab">
+                                    <a href="#" v-on:click.prevent="setSort('establishmentName')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentName' ? 'selected-sort': '' ]">Establishment</a>
+                                </th>
+                                <th scope="col" class="cell-updatedfield">
+                                    <a href="#" v-on:click.prevent="setSort('updatedField')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='updatedField' ? 'selected-sort': '' ]">Updated field</a>
+                                </th>
+                                <th scope="col" class="cell-oldvalue">
+                                    <a href="#" v-on:click.prevent="setSort('oldValue')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='oldValue' ? 'selected-sort': '' ]">Old value</a>
+                                </th>
+                                <th scope="col" class="cell-newvalue">
+                                    <a href="#" v-on:click.prevent="setSort('newValue')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='newValue' ? 'selected-sort': '' ]">New value</a>
+                                </th>
+                                <th scope="col" class="cell-edate multi-line">
+                                    <a href="#" v-on:click="setSort('effectiveDateUtc')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='effectiveDateUtc' ? 'selected-sort': '' ]">Effective<br/>date</a>
+                                </th>
+                                <th scope="col" class="cell-rdate multi-line">
+                                    <a href="#" v-on:click.prevent="setSort('requestedDateUtc')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='requestedDateUtc' ? 'selected-sort': '' ]">Date<br/>requested</a>
+                                </th>
+                                <th scope="col" class="cell-suggested multi-line">
+                                    <a href="#" v-on:click="setSort('originatorFullName')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='originatorFullName' ? 'selected-sort': '' ]">Suggested<br/>from</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="changes.length > 0">
+                            <tr v-for="(entry, index) in changes">
+                                <td class="cell-checkbox" aria-label="Select item">
+                                    <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox">
+                                    <label class="edubase-label edubase-button-checkbox" :for="'change-'+entry.id">
+                                        <span class="visuallyhidden">Select this change for approval or rejection</span>
+                                    </label>
+                                </td>
+                                <td aria-label="URN">
+                                    <a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentUrn}}</a>
+                                </td>
+                                <td aria-label="Establishment"><a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentName}}</a></td>
+                                <td aria-label="Updated field">{{entry.fieldName}}</td>
+                                <td aria-label="Old value">{{entry.oldValue}}</td>
+                                <td aria-label="New value">{{entry.newValue}}</td>
+                                <td aria-label="Effective date">{{formatDate(entry.effectiveDateUtc)}}</td>
+                                <td aria-label="Date requested">{{formatDate(entry.requestedDateUtc)}}</td>
+                                <td aria-label="Suggested from">{{entry.originatorFullName}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="9">
+                                    <p> You have no items requiring approval.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -110,58 +175,10 @@
 
 
 
-@section ViewScripts{
-
-    <script type="text/x-template" id="table-template">
-        <table class="edubase-table approval-changes" id="changes-table">
-            <thead>
-                <tr>
-                    <td class="cell-checkbox">&nbsp;</td>
-                    <th scope="col" class="cell-urn" data-sortkey="establishmentUrn">
-                        <abbr title="Unique reference number">
-                            URN
-                        </abbr>
-                    </th>
-                    <th scope="col" class="cell-estab" data-sortkey="establishmentName">Establishment</th>
-                    <th scope="col" class="cell-updatedfield" data-sortkey="establishmentUrn">Updated field</th>
-                    <th scope="col" class="cell-oldvalue" data-sortkey="oldValue">Old value</th>
-                    <th scope="col" class="cell-newvalue" data-sortkey="newValue">New value</th>
-                    <th scope="col" class="cell-edate" data-sortkey="effectiveDateUtc">Effective date</th>
-                    <th scope="col" class="cell-rdate" data-sortkey="originatorFullName">Date requested</th>
-                    <th scope="col" class="cell-suggested" data-sortkey="establishmentUrn">Suggested from</th>
-                </tr>
-            </thead>
-            <tbody v-if="pages.length > 0">
-                <tr v-for="(entry, index) in page">
-                    <td class="cell-checkbox" aria-label="Select item">     
-                        <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox">
-                        <label class="edubase-label edubase-button-checkbox" :for="'change-'+entry.id">
-                            <span class="visuallyhidden">Select this change for approval or rejection</span>
-                        </label>
-                    </td>
-                    <td aria-label="URN">
-                        <a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentUrn}}</a>
-                    </td>
-                    <td aria-label="Establishment"><a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentName}}</a></td>
-                    <td aria-label="Updated field">{{entry.fieldName}}</td>
-                    <td aria-label="Old value">{{entry.oldValue}}</td>
-                    <td aria-label="New value">{{entry.newValue}}</td>
-                    <td aria-label="Effective date">{{formatDate(entry.effectiveDateUtc)}}</td>
-                    <td aria-label="Date requested">{{formatDate(entry.requestedDateUtc)}}</td>
-                    <td aria-label="Suggested from">{{entry.originatorFullName}}</td>
-                </tr>
-            </tbody>
-            <tbody v-else>
-                <tr>
-                    <td colspan="9">
-                        <p> You have no items requiring approval.</p>        
-                    </td>
-                </tr>
-            </tbody>
-         </table>
-
-</script>
-
-<script src="/Assets/Scripts/standalone/approvals.js"></script>
+@section ViewScripts
+    {
+   <script src="/Assets/Scripts/standalone/approvals.js">
+    </script>
+    @*<script src="/public/assets/scripts/standalone/approvals.js"></script>*@
 
 }
