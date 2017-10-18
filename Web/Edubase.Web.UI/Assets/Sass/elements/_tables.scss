@@ -549,6 +549,36 @@ p.table-caption {
     }
 }
 
+.list-table.sortable-table {
+    .selected-sort {
+        padding-bottom: 4px;
+
+        &:after {
+            margin-top: -4px;
+        }
+    }
+}
+
+.unsortable {
+    thead a {
+        color: $black;
+
+        &:focus, &:active {
+            background-color: transparent;
+            outline: 0;
+        }
+
+        &:visited {
+            color: $black;
+        }
+
+        &:hover {
+            color: $black;
+            text-decoration: none;
+        }
+    }
+}
+
 table.change-history {
     margin-bottom: 20px;
 }

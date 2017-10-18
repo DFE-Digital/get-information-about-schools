@@ -443,6 +443,7 @@
     <Content Include="404.aspx" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
+    <Content Include="Assets\Scripts\Elements\clientside-sorting.js" />
     <Content Include="Assets\Scripts\Elements\Forms\search-within-filters.js" />
     <Content Include="Assets\Scripts\Elements\Forms\select-all-filters.js" />
     <Content Include="Assets\Scripts\libs\leaflet\leaflet-src.js" />

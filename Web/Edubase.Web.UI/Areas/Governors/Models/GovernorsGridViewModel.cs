@@ -184,12 +184,12 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         private void SetupHeader(GR role, GridViewModel<GovernorModel> grid, GovernorDisplayPolicy displayPolicy, bool includeEndDate)
         {
-            grid.AddHeaderCell("Name", displayPolicy.FullName)
-                .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
-                .AddHeaderCell("GID", displayPolicy.Id)
-                .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId)
-                .AddHeaderCell("From", displayPolicy.AppointmentStartDate)
-                .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate)
+            grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
+                .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody), "shared", "sortText")
+                .AddHeaderCell("GID", displayPolicy.Id, "gid")
+                .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId, "appointed", "sortText")
+                .AddHeaderCell("From", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
+                .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate, "toDate", "sortDate")
                 .AddHeaderCell("Postcode", displayPolicy.PostCode)
                 .AddHeaderCell("Date of birth", displayPolicy.DOB)
                 .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
