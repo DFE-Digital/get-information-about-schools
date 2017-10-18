@@ -959,7 +959,6 @@
     <Content Include="Views\Shared\FullErrorDetail.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AgeRangeFilterViewModel.cshtml" />
     <Content Include="Views\Shared\_GenericPaginationV2.cshtml" />
-    <Content Include="Views\Home\KnownIssues.cshtml" />
     <Content Include="Views\Prototype\TabsTestPage.cshtml" />
     <Content Include="Views\Tools\ApiSessionRecorder.cshtml" />
     <Content Include="Views\Glossary\Index.cshtml" />
