@@ -6,6 +6,16 @@
 @{
     ViewBag.Title = Model.Group.Name;
     ViewBag.PageClass = "mat-details";
+    
+    var request = HttpContext.Current.Request;
+    var sortDir = "desc";
+    var sortField = "effectiveDateUtc";
+    if (request.QueryString["sortby"] != null)
+    {
+        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "desc" : "asc";
+    }
+
 }
     <div class="breadcrumbs">
         @if (Model.SearchQueryString.IsNullOrWhiteSpace())
@@ -316,22 +326,25 @@
                                 </div>
                             }
 
-                            <table class="edubase-table">
+                            <table class="edubase-table approval-changes sortable-table">
                                 <thead>
                                 <tr>
                                     <th>
-                                        <a href="@Url.SortUrl("requestedDateUtc", "#change-history")">
+                                        <a href="@Url.SortUrl("requestedDateUtc", "#change-history")"
+                                           class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
                                             Date changed
                                         </a>
                                     </th>
                                     <th>
-                                        <a href="@Url.SortUrl("requestType", "#change-history")">
+                                        <a href="@Url.SortUrl("requestType", "#change-history")"
+                                           class="@Html.Conditional(sortField == "requestType", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
                                             Request type    
                                         </a>
                                     </th>
                                     <th>Change</th>
                                     <th>
-                                        <a href="@Url.SortUrl("originatorUserName", "#change-history")">
+                                        <a href="@Url.SortUrl("originatorUserName", "#change-history")"
+                                           class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
                                             Suggested by
                                         </a>
                                     </th>
@@ -384,3 +397,9 @@
             </div>
         </div>
     </div>
+@section ViewScripts
+{
+    <script>
+        $('#governance').find('.sortable-table').clientSort();
+    </script>
+}
