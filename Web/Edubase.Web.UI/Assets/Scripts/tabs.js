@@ -48,7 +48,7 @@
                 if (hasPagination) {
                     $tabContent.find('.pagination-links a').each(function () {
                         var linkHref = $(this).prop('href');
-                        $(this).prop('href', linkHref + '#' + validHashes[n]);
+                        $(this).prop('href', linkHref + '#' + $tabContent.attr('id'));
                     });
                 }
             });
