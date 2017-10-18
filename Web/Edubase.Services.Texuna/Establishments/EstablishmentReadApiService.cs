@@ -52,9 +52,9 @@ namespace Edubase.Services.Texuna.Establishments
             return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Items);
         }
 
-        public async Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, EstablishmentChangeHistoryFilters filters, IPrincipal user)
+        public async Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, string sortBy, EstablishmentChangeHistoryFilters filters, IPrincipal user)
         {
-            var changes = (await _httpClient.PostAsync<ApiPagedResult<EstablishmentChangeDto>>($"establishment/{urn}/changes?skip={skip}&take={take}", filters, user)).GetResponse();
+            var changes = (await _httpClient.PostAsync<ApiPagedResult<EstablishmentChangeDto>>($"establishment/{urn}/changes?skip={skip}&take={take}&sortby={sortBy}", filters, user)).GetResponse();
             return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Items);
         }
 

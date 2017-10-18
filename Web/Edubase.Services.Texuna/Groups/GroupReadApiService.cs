@@ -61,10 +61,9 @@ namespace Edubase.Services.Texuna.Groups
             return new PaginatedResult<GroupChangeDto>(skip, take, changes.Count, changes.Items);
         }
 
-        public async Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, DateTime? dateFrom, DateTime? dateTo, string suggestedBy,
-            IPrincipal principal)
+        public async Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, string sortBy, DateTime? dateFrom, DateTime? dateTo, string suggestedBy, IPrincipal principal)
         {
-            var changes = (await _httpClient.GetAsync<ApiPagedResult<GroupChangeDto>>($"group/{uid}/changes?skip={skip}&take={take}&dateFrom={(dateFrom != null ? JsonConvert.SerializeObject(dateFrom) : "")}&dateTo={(dateTo != null ? JsonConvert.SerializeObject(dateTo) : "")}&suggestedBy={suggestedBy}", principal)).GetResponse();
+            var changes = (await _httpClient.GetAsync<ApiPagedResult<GroupChangeDto>>($"group/{uid}/changes?skip={skip}&take={take}&sortby={sortBy}&dateFrom={(dateFrom != null ? JsonConvert.SerializeObject(dateFrom) : "")}&dateTo={(dateTo != null ? JsonConvert.SerializeObject(dateTo) : "")}&suggestedBy={suggestedBy}", principal)).GetResponse();
             return new PaginatedResult<GroupChangeDto>(skip, take, changes.Count, changes.Items);
         }
 

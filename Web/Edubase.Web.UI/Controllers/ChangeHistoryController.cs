@@ -140,7 +140,7 @@ namespace Edubase.Web.UI.Controllers
                     var urn = Int32.Parse(viewModel.TextSearchModel.Text);
                     var establishmentName = (await _establishmentReadService.GetEstablishmentNameAsync(urn, User)) ?? "";
                     viewModel.EstablishmentName = establishmentName;
-                    var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn, viewModel.Skip, viewModel.Take, GetEstablishmentChangeHistoryFilters(viewModel), User);
+                    var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn, viewModel.Skip, viewModel.Take, viewModel.Sortby, GetEstablishmentChangeHistoryFilters(viewModel), User);
                     viewModel.Items = ConvertEstablishmentChanges(establishmentChanges, establishmentName);
                     viewModel.Count = establishmentChanges.Count;
                     viewModel.SingleEstablishment = true;
@@ -164,9 +164,7 @@ namespace Edubase.Web.UI.Controllers
                     if (urn != null)
                     {
                         viewModel.EstablishmentName = name;
-                        var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(
-                            urn.Value, viewModel.Skip, viewModel.Take, GetEstablishmentChangeHistoryFilters(viewModel),
-                            User);
+                        var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn.Value, viewModel.Skip, viewModel.Take, viewModel.Sortby, GetEstablishmentChangeHistoryFilters(viewModel), User);
                         viewModel.Items = ConvertEstablishmentChanges(establishmentChanges, name);
                         viewModel.Count = establishmentChanges.Count;
                         viewModel.SingleEstablishment = true;
@@ -223,7 +221,6 @@ namespace Edubase.Web.UI.Controllers
                 case eSearchType.Group:
                     int? groupUid = null;
                     var groupName = "";
-                    var found = false;
 
                     if (viewModel.GroupSearchModel.AutoSuggestValueAsInt.HasValue)
                     {
@@ -232,7 +229,6 @@ namespace Edubase.Web.UI.Controllers
                         if (group.Success)
                         {
                             groupName = group.ReturnValue.Name;
-                            found = true;
                         }
                     }
 
@@ -248,7 +244,7 @@ namespace Edubase.Web.UI.Controllers
 
                     if (groupUid.HasValue)
                     {
-                        var changes = await _groupReadService.GetChangeHistoryAsync(groupUid.Value, viewModel.Skip, viewModel.Take, viewModel.DateFilterFrom?.ToDateTime(), viewModel.DateFilterTo?.ToDateTime(), viewModel.SuggestedBy, User);
+                        var changes = await _groupReadService.GetChangeHistoryAsync(groupUid.Value, viewModel.Skip, viewModel.Take, viewModel.Sortby, viewModel.DateFilterFrom?.ToDateTime(), viewModel.DateFilterTo?.ToDateTime(), viewModel.SuggestedBy, User);
                         viewModel.Items = ConvertGroupChanges(changes, groupName);
                         viewModel.Count = changes.Count;
                         viewModel.SingleGroup = true;
@@ -332,6 +328,7 @@ namespace Edubase.Web.UI.Controllers
             payload.EntityName = vm.IsEstablishmentSearch ? "establishments" : "groups";
             payload.ApproverUserGroupCode = vm.ApprovedBy.Clean();
             payload.SuggesterUserGroupCode = vm.SuggestedBy.Clean();
+            payload.SortBy = vm.Sortby;
 
             if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED)
             {
