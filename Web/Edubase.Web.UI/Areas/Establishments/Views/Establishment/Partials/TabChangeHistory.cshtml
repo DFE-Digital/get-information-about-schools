@@ -42,8 +42,14 @@
                     <a href="@Url.SortUrl("fieldName", "#school-change-history")"
                        class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated field</a>
                 </th>
-                <th>Old value</th>
-                <th>New value</th> <!-- Apparently, Texuna aren't delivering sorting on old/new value cols --> @*Boo hiss. that sucks*@
+                <th>
+                    <a href="@Url.SortUrl("oldValue", "#school-change-history")"
+                       class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old value</a>
+                </th>
+                <th>
+                    <a href="@Url.SortUrl("newValue", "#school-change-history")"
+                       class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New value</a>
+                </th>
                 <th>
                     <a href="@Url.SortUrl("requestedDateUtc", "#school-change-history")"
                        class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date requested</a>
