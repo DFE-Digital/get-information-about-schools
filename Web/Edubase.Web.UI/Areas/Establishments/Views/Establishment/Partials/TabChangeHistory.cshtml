@@ -3,7 +3,7 @@
 
 @{
     var request = HttpContext.Current.Request;
-    var sortDir = "desc";
+    var sortDir = "asc";
     var sortField = "effectiveDateUtc";
     if (request.QueryString["sortby"] != null)
     {
