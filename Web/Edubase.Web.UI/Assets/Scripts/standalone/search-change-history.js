@@ -148,9 +148,25 @@
         openState = !openState;
         if (openState) {
             $('#filter-toggle').text('Hide filters');
+            $('#changes-table thead a').each(function(n, link) {
+                var text = $(link).html();
+                var hasSpace = text.indexOf(' ') > -1;
+                $(link).html(text.replace(' ', '<br>'));
+                if (hasSpace) {
+                    $(link).parent('th').addClass('multi-line');
+                }
+                
+            });
             
         } else {
             $('#filter-toggle').text('Show filters');
+            $('#changes-table thead a').each(function (n, link) {
+                var text = $(link).html();
+                $(link).html(text.replace('<br>', ' '));
+
+                $(link).parent('th').removeClass('multi-line');
+            });
+
         }
 
         $('#filters-open-state').val(openState);
