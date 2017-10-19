@@ -81,7 +81,7 @@
             } else {
                 var fromDate = new Date(fromDateValues[2], fromDateValues[1], fromDateValues[0]);
                 var toDate = new Date(toDateValues[2], toDateValues[1], toDateValues[0]);
-                if (toDate < fromDate) {
+                if (toDate <= fromDate) {
                     canSubmit = false;
                     rangeError = true;
                 }
