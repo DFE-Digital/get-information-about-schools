@@ -3,7 +3,7 @@
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
     var sortField = "effectiveDateUtc";
-    if (request.QueryString["sortby"] != null)
+    if (!string.IsNullOrEmpty(request.QueryString["sortby"]))
     {
         sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
         sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
@@ -50,7 +50,7 @@
                     <a href="@Url.SortUrl("originatorUserName")"                           
                        class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested by</a>
                 </th>
-                <th scope="col" class="cell-suggested">
+                <th scope="col" class="cell-suggested cell-approvedby">
                     <a href="@Url.SortUrl("approverUserName")"                           
                        class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved by</a>
                 </th>
