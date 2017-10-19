@@ -9,7 +9,7 @@
     
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
-    var sortField = "effectiveDateUtc";
+    var sortField = "requestedDateUtc";
     if (request.QueryString["sortby"] != null)
     {
         sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
