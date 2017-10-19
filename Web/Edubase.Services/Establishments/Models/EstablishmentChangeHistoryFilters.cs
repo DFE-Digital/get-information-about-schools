@@ -19,6 +19,5 @@ namespace Edubase.Services.Establishments.Models
 
         [JsonProperty("fieldsUpdate")]
         public string[] FieldsUpdated { get; set; }
-
     }
 }

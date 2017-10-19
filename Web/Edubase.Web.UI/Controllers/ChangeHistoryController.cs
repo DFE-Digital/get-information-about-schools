@@ -2,10 +2,13 @@
 using System.Linq;
 using Edubase.Common;
 using Edubase.Services.Core;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Groups;
+using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Web.UI.Models.Search;
@@ -29,13 +32,15 @@ namespace Edubase.Web.UI.Controllers
         private readonly ICachedLookupService _lookupService;
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
+        private readonly IGroupDownloadService _groupDownloadService;
 
-        public ChangeHistoryController(IChangeHistoryService svc, ICachedLookupService lookupService, IEstablishmentReadService establishmentReadService, IGroupReadService groupReadService)
+        public ChangeHistoryController(IChangeHistoryService svc, ICachedLookupService lookupService, IEstablishmentReadService establishmentReadService, IGroupReadService groupReadService, IGroupDownloadService groupDownloadService)
         {
             _svc = svc;
             _lookupService = lookupService;
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
+            _groupDownloadService = groupDownloadService;
         }
 
         [HttpGet, Route(Name = "ChangeHistoryCriteria")]
@@ -122,57 +127,99 @@ namespace Edubase.Web.UI.Controllers
         {
             if (!viewModel.DownloadFormat.HasValue)
             {
-                //viewModel.SearchQueryString = Request.QueryString.ToString();
+
                 return View("Download", viewModel);
             }
 
-            var payload = PopulatePayload(viewModel, new SearchChangeHistoryDownloadPayload(viewModel.DownloadFormat.Value));
-            var progress = await _svc.SearchWithDownloadGenerationAsync(payload, User);
-            return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new { id = progress.Id }), "?", Request.QueryString));
+            if (viewModel.IsEstablishmentSearch)
+            {
+                if (viewModel.SearchType == eSearchType.Text)
+                {
+                    var result = await TryGetEstablishment(viewModel);
+
+                    var payload = new EstablishmentChangeHistoryDownloadFilters
+                    {
+                        ApprovedBy = viewModel.ApprovedBy,
+                        FieldsUpdated = viewModel.SelectedEstablishmentFields.Any() ? viewModel.SelectedEstablishmentFields.ToArray() : null,
+                        FileFormat = viewModel.DownloadFormat == eFileFormat.CSV ? DownloadType.csv : DownloadType.xlsx,
+                        SuggestedBy = viewModel.SuggestedBy
+                    };
+
+                    if (viewModel.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED)
+                    {
+                        payload.DateAppliedFrom = viewModel.DateFilterFrom?.ToDateTime();
+                        payload.DateAppliedTo = viewModel.DateFilterTo?.ToDateTime();
+                    }
+                    else if (viewModel.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED)
+                    {
+                        payload.DateApprovedFrom = viewModel.DateFilterFrom?.ToDateTime();
+                        payload.DateApprovedTo = viewModel.DateFilterTo?.ToDateTime();
+                    }
+                    else if (viewModel.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE)
+                    {
+                        payload.DateEffectiveFrom = viewModel.DateFilterFrom?.ToDateTime();
+                        payload.DateEffectiveTo = viewModel.DateFilterTo?.ToDateTime();
+                    }
+
+                    var progress = await _establishmentReadService.GetChangeHistoryDownloadAsync(result.Item1, payload, User);
+                    return View("ReadyToDownload",
+                        new Tuple<ProgressDto, ChangeHistoryViewModel>(
+                            new ProgressDto
+                            {
+                                FileLocationUri = progress.Url,
+                                FileSizeInBytes = progress.FileSizeInBytes
+                            }, viewModel));
+                }
+                else
+                {
+                    var payload = PopulatePayload(viewModel,
+                        new SearchChangeHistoryDownloadPayload(viewModel.DownloadFormat.Value));
+                    var progress = await _svc.SearchWithDownloadGenerationAsync(payload, User);
+                    return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new { id = progress.Id }),
+                        "?", Request.QueryString));
+                }
+            }
+
+            if (viewModel.SearchType == eSearchType.Group)
+            {
+                var groupInfo = await TryGetGoupUid(viewModel);
+                var progress = await _groupDownloadService.DownloadGroupHistory(groupInfo.Item1,
+                    viewModel.DownloadFormat == eFileFormat.CSV ? DownloadType.csv : DownloadType.xlsx,
+                    viewModel.DateFilterFrom?.ToDateTime(), viewModel.DateFilterTo?.ToDateTime(),
+                    viewModel.SuggestedBy, User);
+                return View("ReadyToDownload",
+                    new Tuple<ProgressDto, ChangeHistoryViewModel>(
+                        new ProgressDto
+                        {
+                            FileLocationUri = progress.Url,
+                            FileSizeInBytes = progress.FileSizeInBytes
+                        }, viewModel));
+            }
+
+            var payloadAll = PopulatePayload(viewModel,
+                new SearchChangeHistoryDownloadPayload(viewModel.DownloadFormat.Value));
+            var progressAll = await _svc.SearchWithDownloadGenerationAsync(payloadAll, User);
+            return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new {id = progressAll.Id}),
+                "?", Request.QueryString));
+            
         }
 
         private async Task<ChangeHistoryViewModel> ProcessEstablishmentSearch(ChangeHistoryViewModel viewModel)
         {
             if (viewModel.SearchType == eSearchType.Text)
             {
-                if (viewModel.TextSearchType == ChangeHistoryViewModel.eTextSearchType.URN)
+                var result = await TryGetEstablishment(viewModel);
+                if (result != null)
                 {
-                    var urn = Int32.Parse(viewModel.TextSearchModel.Text);
-                    var establishmentName = (await _establishmentReadService.GetEstablishmentNameAsync(urn, User)) ?? "";
-                    viewModel.EstablishmentName = establishmentName;
-                    var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn, viewModel.Skip, viewModel.Take, viewModel.Sortby, GetEstablishmentChangeHistoryFilters(viewModel), User);
-                    viewModel.Items = ConvertEstablishmentChanges(establishmentChanges, establishmentName);
+                    viewModel.EstablishmentName = result.Item2;
+                    var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(result.Item1, viewModel.Skip, viewModel.Take, viewModel.Sortby, GetEstablishmentChangeHistoryFilters(viewModel), User);
+                    viewModel.Items = ConvertEstablishmentChanges(establishmentChanges, result.Item2);
                     viewModel.Count = establishmentChanges.Count;
                     viewModel.SingleEstablishment = true;
                 }
                 else
                 {
-                    int? urn;
-                    string name;
-                    if (viewModel.TextSearchModel.AutoSuggestValueAsInt.HasValue)
-                    {
-                        urn = viewModel.TextSearchModel.AutoSuggestValueAsInt;
-                        name = (await _establishmentReadService.GetEstablishmentNameAsync(urn.Value, User)) ?? "";
-                    }
-                    else
-                    {
-                        var result = await TryGetEstablishmentUrn(viewModel);
-                        urn = result?.Urn;
-                        name = result?.Name;
-                    }
-
-                    if (urn != null)
-                    {
-                        viewModel.EstablishmentName = name;
-                        var establishmentChanges = await _establishmentReadService.GetChangeHistoryAsync(urn.Value, viewModel.Skip, viewModel.Take, viewModel.Sortby, GetEstablishmentChangeHistoryFilters(viewModel), User);
-                        viewModel.Items = ConvertEstablishmentChanges(establishmentChanges, name);
-                        viewModel.Count = establishmentChanges.Count;
-                        viewModel.SingleEstablishment = true;
-                    }
-                    else
-                    {
-                        viewModel.NoResultsForName = true;   
-                    }
+                    viewModel.NoResultsForName = true;
                 }
             }
             else
@@ -219,36 +266,15 @@ namespace Edubase.Web.UI.Controllers
             switch (viewModel.SearchType)
             {
                 case eSearchType.Group:
-                    int? groupUid = null;
-                    var groupName = "";
+                    var groupInfo = await TryGetGoupUid(viewModel);
 
-                    if (viewModel.GroupSearchModel.AutoSuggestValueAsInt.HasValue)
+                    if (groupInfo != null)
                     {
-                        groupUid = viewModel.GroupSearchModel.AutoSuggestValueAsInt.Value;
-                        var group = await _groupReadService.GetAsync(groupUid.Value, User);
-                        if (group.Success)
-                        {
-                            groupName = group.ReturnValue.Name;
-                        }
-                    }
-
-                    if (groupUid == null || string.IsNullOrWhiteSpace(groupName))
-                    {
-                        var result = await TryGetGoupUid(viewModel);
-                        if (result != null)
-                        {
-                            groupUid = result.GroupUId;
-                            groupName = result.Name;
-                        }
-                    }
-
-                    if (groupUid.HasValue)
-                    {
-                        var changes = await _groupReadService.GetChangeHistoryAsync(groupUid.Value, viewModel.Skip, viewModel.Take, viewModel.Sortby, viewModel.DateFilterFrom?.ToDateTime(), viewModel.DateFilterTo?.ToDateTime(), viewModel.SuggestedBy, User);
-                        viewModel.Items = ConvertGroupChanges(changes, groupName);
+                        var changes = await _groupReadService.GetChangeHistoryAsync(groupInfo.Item1, viewModel.Skip, viewModel.Take, viewModel.Sortby, viewModel.DateFilterFrom?.ToDateTime(), viewModel.DateFilterTo?.ToDateTime(), viewModel.SuggestedBy, User);
+                        viewModel.Items = ConvertGroupChanges(changes, groupInfo.Item2);
                         viewModel.Count = changes.Count;
                         viewModel.SingleGroup = true;
-                        viewModel.GroupName = groupName;
+                        viewModel.GroupName = groupInfo.Item2;
                     }
                     else
                     {
@@ -332,18 +358,18 @@ namespace Edubase.Web.UI.Controllers
 
             if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED)
             {
-                payload.AppliedDateFrom = vm.DateFilterFrom.ToDateTime();
-                payload.AppliedDateTo = vm.DateFilterTo.ToDateTime();
+                payload.AppliedDateFrom = vm.DateFilterFrom?.ToDateTime();
+                payload.AppliedDateTo = vm.DateFilterTo?.ToDateTime();
             }
             else if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED)
             {
-                payload.ApprovedDateFrom = vm.DateFilterFrom.ToDateTime();
-                payload.ApprovedDateTo = vm.DateFilterTo.ToDateTime();
+                payload.ApprovedDateFrom = vm.DateFilterFrom?.ToDateTime();
+                payload.ApprovedDateTo = vm.DateFilterTo?.ToDateTime();
             }
             else if (vm.DateFilterMode == ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE)
             {
-                payload.EffectiveDateFrom = vm.DateFilterFrom.ToDateTime();
-                payload.EffectiveDateTo = vm.DateFilterTo.ToDateTime();
+                payload.EffectiveDateFrom = vm.DateFilterFrom?.ToDateTime();
+                payload.EffectiveDateTo = vm.DateFilterTo?.ToDateTime();
             }
             return payload;
         }
@@ -357,58 +383,111 @@ namespace Edubase.Web.UI.Controllers
             model.EstablishmentFields = (await _svc.GetEstablishmentFieldsAsync(User)).OrderBy(e => e.Text).Select(s => new StringLookupItemViewModel(s.Key, s.Text));
         }
 
-        private async Task<EstablishmentSearchResultModel> TryGetEstablishmentUrn(ChangeHistoryViewModel model)
+        private async Task<Tuple<int, string>> TryGetEstablishment(ChangeHistoryViewModel viewModel)
         {
-            var payload = new EstablishmentSearchPayload(model.Skip, model.Take);
-            var filters = payload.Filters;
-
-            if (model.SearchType == eSearchType.Text || model.SearchType == eSearchType.EstablishmentAll)
+            if (viewModel.TextSearchType == ChangeHistoryViewModel.eTextSearchType.URN)
             {
-                if (model.TextSearchType == ChangeHistoryViewModel.eTextSearchType.UKPRN)
-                {
-                    filters.UKPRN = model.TextSearchModel.Text;
-                }
-                else if (model.TextSearchType == ChangeHistoryViewModel.eTextSearchType.LAESTAB)
-                {
-                    var laestab = LAESTAB.TryParse(model.TextSearchModel.Text).Value;
-                    var localAuthorityId = (await _lookupService.LocalAuthorityGetAllAsync()).FirstOrDefault(x => x.Code == laestab.LocalAuthorityCode)?.Id;
-                    if (localAuthorityId.HasValue) filters.LocalAuthorityIds = new int[] { localAuthorityId.Value };
-                    filters.EstablishmentNumber = laestab.EstablishmentNumber;
-                }
-                else if (model.TextSearchType == ChangeHistoryViewModel.eTextSearchType.EstablishmentName)
-                {
-                    payload.Text = model.TextSearchModel.Text;
-                }
-                else return null;
+                var urn = Int32.Parse(viewModel.TextSearchModel.Text);
+                var establishmentName = (await _establishmentReadService.GetEstablishmentNameAsync(urn, User)) ?? "";
+                return new Tuple<int, string>(urn, establishmentName);
             }
-
-            var results = await _establishmentReadService.SearchAsync(payload, User);
-
-            return results.Count >= 1 ? results.Items.First() : null;
-        }
-
-        private async Task<SearchGroupDocument> TryGetGoupUid(ChangeHistoryViewModel model)
-        {
-            ApiPagedResult<SearchGroupDocument> results = null;
-            var searchText = model.GroupSearchModel.Text.Clean();
-            if (searchText != null) results = await _groupReadService.SearchByIdsAsync(searchText, searchText.ToInteger(), searchText, User);
-
-            if (results == null || results.Count == 0)
+            else
             {
-                var payload = new GroupSearchPayload(model.Skip, model.Take)
+                int? urn = null;
+                string name = null;
+                if (viewModel.TextSearchModel.AutoSuggestValueAsInt.HasValue)
                 {
-                    Text = model.GroupSearchModel.Text.Clean()
-                };
+                    urn = viewModel.TextSearchModel.AutoSuggestValueAsInt;
+                    name = (await _establishmentReadService.GetEstablishmentNameAsync(urn.Value, User)) ?? "";
+                }
+                else
+                {
+                    var payload = new EstablishmentSearchPayload(viewModel.Skip, viewModel.Take);
+                    var filters = payload.Filters;
 
-                results = await _groupReadService.SearchAsync(payload, User);
-            }
+                    if (viewModel.SearchType == eSearchType.Text || viewModel.SearchType == eSearchType.EstablishmentAll)
+                    {
+                        if (viewModel.TextSearchType == ChangeHistoryViewModel.eTextSearchType.UKPRN)
+                        {
+                            filters.UKPRN = viewModel.TextSearchModel.Text;
+                        }
+                        else if (viewModel.TextSearchType == ChangeHistoryViewModel.eTextSearchType.LAESTAB)
+                        {
+                            var laestab = LAESTAB.TryParse(viewModel.TextSearchModel.Text).Value;
+                            var localAuthorityId = (await _lookupService.LocalAuthorityGetAllAsync()).FirstOrDefault(x => x.Code == laestab.LocalAuthorityCode)?.Id;
+                            if (localAuthorityId.HasValue) filters.LocalAuthorityIds = new int[] { localAuthorityId.Value };
+                            filters.EstablishmentNumber = laestab.EstablishmentNumber;
+                        }
+                        else if (viewModel.TextSearchType == ChangeHistoryViewModel.eTextSearchType.EstablishmentName)
+                        {
+                            payload.Text = viewModel.TextSearchModel.Text;
+                        }
+                        else return null;
+                    }
 
-            if (results != null && results.Count > 0)
-            {
-                return results.Items.First();
+                    var results = await _establishmentReadService.SearchAsync(payload, User);
+
+                    if (results != null && results.Items.Any())
+                    {
+                        urn = results.Items.First().Urn;
+                        name = results.Items.First().Name;
+                    }
+                }
+
+                if (urn.HasValue)
+                {
+                    return new Tuple<int, string>(urn.Value, name);
+                }
             }
 
             return null;
+        }
+
+        private async Task<Tuple<int, string>> TryGetGoupUid(ChangeHistoryViewModel model)
+        {
+            int? groupUid= null;
+            var groupName = "";
+
+            if (model.GroupSearchModel.AutoSuggestValueAsInt.HasValue)
+            {
+                groupUid = model.GroupSearchModel.AutoSuggestValueAsInt.Value;
+                var group = await _groupReadService.GetAsync(groupUid.Value, User);
+                if (group.Success)
+                {
+                    groupName = group.ReturnValue.Name;
+                }
+            }
+
+            if (groupUid == null || string.IsNullOrWhiteSpace(groupName))
+            {
+                ApiPagedResult<SearchGroupDocument> results = null;
+                var searchText = model.GroupSearchModel.Text.Clean();
+                if (searchText != null)
+                    results =
+                        await _groupReadService.SearchByIdsAsync(searchText, searchText.ToInteger(), searchText, User);
+
+                if (results == null || results.Count == 0)
+                {
+                    var payload = new GroupSearchPayload(model.Skip, model.Take)
+                    {
+                        Text = model.GroupSearchModel.Text.Clean()
+                    };
+
+                    results = await _groupReadService.SearchAsync(payload, User);
+                }
+
+                if (results != null && results.Count > 0)
+                {
+                    groupUid = results.Items.First().GroupUId;
+                    groupName = results.Items.First().Name;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            return new Tuple<int, string>(groupUid.Value, groupName);
         }
     }
 }
