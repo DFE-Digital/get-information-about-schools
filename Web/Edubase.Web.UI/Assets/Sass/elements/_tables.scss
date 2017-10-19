@@ -447,7 +447,7 @@ p.table-caption {
     }
 
     .cell-edate {
-        width: 10%;
+        width: 11%;
         padding-top: $changeTableThPadding;
     }
 
@@ -554,7 +554,7 @@ p.table-caption {
         padding-bottom: 4px;
 
         &:after {
-            margin-top: -4px;
+            margin-top: -5px;
         }
     }
 }
@@ -581,4 +581,45 @@ p.table-caption {
 
 table.change-history {
     margin-bottom: 20px;
+}
+
+.expanding-table {
+    .not-a-link {
+        display: block;
+        padding-top: 12px;
+    }
+    thead th {
+        padding-top: 8px;
+
+        a {
+            padding-top: 12px;
+            &:after {
+                top: 65% !important;
+            }
+        }
+
+        &.cell-edate {
+            width: 12%;
+        }
+    }
+    .multi-line {
+        a {
+            padding-top: 0;
+        }
+        .selected-sort {
+            &:after {
+                top: 76%;
+            }
+        }
+    }
+}
+
+.expanded-table {
+    .multi-line a {
+        padding-top: 12px;
+        .selected-sort:after {
+            top: 65%;
+        }
+        
+    }
 }

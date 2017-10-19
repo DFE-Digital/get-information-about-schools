@@ -64,7 +64,9 @@
 
             function dateFromString(dateString) {
                 var dateParts = dateString.split('/');
-
+                if (dateParts.length < 3) { // probably says not recorded or something similar
+                    return new Date(1900, 0, 1);
+                }
                 return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
             }
 

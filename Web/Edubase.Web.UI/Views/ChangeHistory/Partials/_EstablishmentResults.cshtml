@@ -1,4 +1,14 @@
 ﻿@model ChangeHistoryViewModel
+@{
+    var request = HttpContext.Current.Request;
+    var sortDir = "desc";
+    var sortField = "effectiveDateUtc";
+    if (request.QueryString["sortby"] != null)
+    {
+        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+    }
+}
 
 
 @if (Model.Items.Any())
@@ -6,26 +16,44 @@
     <div>
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
-    <table class="edubase-table change-history establishment-changes" id="changes-table">
+    <table class="edubase-table change-history establishment-changes sortable-table expanding-table" id="changes-table">
         <thead>
             <tr>
-                <th scope="col" class="cell-edate"><a href="@Url.SortUrl("effectiveDateUtc")">Date changed</a></th>
+                <th scope="col" class="cell-edate multi-line">
+                    <a href="@Url.SortUrl("effectiveDateUtc")"
+                       class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date changed</a>
+                </th>
                 @if (!Model.SingleEstablishment)
                 {
                     <th scope="col" class="cell-urn">
-                        <a href="@Url.SortUrl("establishmentUrn")">
-                            <abbr title="Unique reference number">
-                                URN
-                            </abbr>
-                        </a>
+                        <a href="@Url.SortUrl("establishmentUrn")"                           
+                           class="@Html.Conditional(sortField == "establishmentUrn", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">URN</a>
                     </th>
-                    <th scope="col" class="cell-estab"><a href="@Url.SortUrl("establishmentName")">Establishment</a></th>
+                    <th scope="col" class="cell-estab">
+                        <a href="@Url.SortUrl("establishmentName")"                           
+                           class="@Html.Conditional(sortField == "establishmentName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Establishment</a>
+                    </th>
                 }
-                <th scope="col" class="cell-updatedfield"><a href="@Url.SortUrl("fieldName")">Updated field</a></th>
-                <th scope="col" class="cell-oldvalue"><a href="@Url.SortUrl("oldValue")">Old value</a></th>
-                <th scope="col" class="cell-newvalue"><a href="@Url.SortUrl("newValue")">New value</a></th>
-                <th scope="col" class="cell-suggested"><a href="@Url.SortUrl("originatorUserName")">Suggested by</a></th>
-                <th scope="col" class="cell-suggested"><a href="@Url.SortUrl("approverUserName")">Approved by</a></th>
+                <th scope="col" class="cell-updatedfield @Html.Conditional(!Model.SingleEstablishment, "multi-line" )">
+                    <a href="@Url.SortUrl("fieldName")"                           
+                       class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated field</a>
+                </th>
+                <th scope="col" class="cell-oldvalue">
+                    <a href="@Url.SortUrl("oldValue")"                           
+                       class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old value</a>
+                </th>
+                <th scope="col" class="cell-newvalue">
+                    <a href="@Url.SortUrl("newValue")"                           
+                       class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New value</a>
+                </th>
+                <th scope="col" class="cell-suggested multi-line">
+                    <a href="@Url.SortUrl("originatorUserName")"                           
+                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested by</a>
+                </th>
+                <th scope="col" class="cell-suggested">
+                    <a href="@Url.SortUrl("approverUserName")"                           
+                       class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved by</a>
+                </th>
             </tr>
         </thead>
         <tbody>

@@ -6,6 +6,18 @@ DfE.searchUtils = (function () {
     var errorSummary = $('#js-filter-error-summary');
         
     return {
+        getUrlParam: function (name) {
+            var p = {};
+            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+                function (m, key, value) {
+                    p[key] = value;
+                });
+
+            if (name) {
+                return p[name];
+            } 
+            return p;
+        },
         updateSearchedLas: function () {
             var laCount = 0;
             selectedLas = [];

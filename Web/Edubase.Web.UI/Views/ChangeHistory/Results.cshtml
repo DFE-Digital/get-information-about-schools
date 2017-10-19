@@ -4,6 +4,8 @@
 @{
     ViewBag.Title = "";
     ViewBag.PageClass = "search-history-results search-results";
+
+    
 }
 
 <div class="grid-row">
@@ -57,6 +59,8 @@
         @Html.HiddenFor(m => m.GroupSearchModel.Text)
         @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValue)
         @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValueAsInt)
+        @Html.HiddenFor(m=> m.Sortby)
+        <input type="hidden" value="true" name="filteropen" id="filters-open-state"/>
 
         <div class="column-third" id="filter-container">
             <div class="filter-form" id="filter-form">

@@ -8,7 +8,7 @@
     if (request.QueryString["sortby"] != null)
     {
         sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "desc" : "asc";
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
     }
 
 }
