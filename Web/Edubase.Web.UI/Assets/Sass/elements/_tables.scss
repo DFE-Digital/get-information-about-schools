@@ -433,14 +433,17 @@ p.table-caption {
 
     .key-value-list {
         margin-bottom: 0;
+
         dt {
             font-weight: bold;
             margin-right: 4px;
             margin-top: 1px;
+
             &:after {
                 content: ":";
             }
         }
+
         dd {
             word-wrap: break-word;
         }
@@ -455,17 +458,21 @@ p.table-caption {
         width: 11%;
         padding-top: $changeTableThPadding;
     }
+
     .cell-urn {
-        width: 7%;      
+        width: 7%;
     }
+
     .cell-estab {
-        width: 16%;
+        width: 17%;
         padding-top: $changeTableThPadding;
     }
+
     .cell-change {
         width: 44%;
         padding-top: $changeTableThPadding;
     }
+
     .cell-suggested {
         width: 12%;
         padding-top: $changeTableThPadding;
@@ -474,7 +481,8 @@ p.table-caption {
     &.establishment-changes .cell-urn {
         padding-top: $changeTableThPadding;
     }
-    .cell-updatedfield, 
+
+    .cell-updatedfield,
     .cell-oldvalue,
     .cell-newvalue,
     .cell-suggested {
@@ -483,6 +491,10 @@ p.table-caption {
 
     tbody td {
         word-wrap: break-word;
+    }
+
+    .single-line .selected-sort.sorted-asc::after {
+        top: 65%;
     }
 }
 
@@ -507,6 +519,15 @@ p.table-caption {
 
         &:hover {
             text-decoration: underline;
+        }
+    }
+
+    .cell-requesttype {
+        padding-right: 4px;
+        width: 13%;
+        a {
+            display: block;
+            max-width: 80%;
         }
     }
 
@@ -588,28 +609,40 @@ table.change-history {
         display: block;
         padding-top: 12px;
     }
+
     thead th {
         padding-top: 8px;
 
         a {
             padding-top: 12px;
+
             &:after {
-                top: 65% !important;
+                //top: 65% !important;
             }
         }
 
         &.cell-edate {
-            width: 12%;
+            width: 13%;
         }
     }
+
     .multi-line {
         a {
             padding-top: 0;
         }
+
         .selected-sort {
             &:after {
                 top: 76%;
             }
+        }
+    }
+
+    .cell-suggested {
+        width:14%;
+        a {
+            display: block;
+            max-width: 70%;
         }
     }
 }
@@ -621,5 +654,38 @@ table.change-history {
             top: 65%;
         }
         
+    }
+}
+
+.multi-estab-changes {
+    .cell-oldvalue, .cell-newvalue {
+        width: 8%;
+    }
+
+    .cell-suggested {
+        width: 13%;
+    }
+    thead th {
+        padding-right: 3px;
+        a {
+            max-width: 95%;
+            display: block;    
+        }
+    }
+}
+
+.group-change-history {
+    .cell-edate {
+        padding-right: 4px;
+    }
+    .cell-suggested {
+        width: 16%;
+    }
+}
+
+.establishment-changes {
+    thead .cell-updatedfield a {
+        display: block;
+        max-width: 75%;
     }
 }
