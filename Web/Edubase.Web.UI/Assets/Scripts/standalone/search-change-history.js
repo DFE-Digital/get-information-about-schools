@@ -8,6 +8,7 @@
     var filterIntent = null;
     var searchParams = '';
     var plsWait = '<div class="progress-indicator"><span class="visually-hidden">Please wait</span></div>';
+    var $sortLinks = $('#changes-table thead').find('a');
 
      function okClick() {
         this.closeModal();
@@ -96,7 +97,6 @@
                     } else {
                         $('#date-filter').find('.error-message').slice(0, 1).removeClass('hidden');
                     }
-                    //
                 }
                 filterError = canSubmit;
 
@@ -148,12 +148,26 @@
         openState = !openState;
         if (openState) {
             $('#filter-toggle').text('Hide filters');
+            
         } else {
             $('#filter-toggle').text('Show filters');
         }
+
+        $('#filters-open-state').val(openState);
+        
+
+        $sortLinks.each(function () {
+            var href = $(this).attr('href');
+            if (href.indexOf('filtersopen=') > -1) {
+                $(this).attr('href', href.substr(0,href.indexOf('filtersopen=')) + 'filtersopen=' + openState);
+            } else {
+                $(this).attr('href', href + '&filtersopen=' + openState);
+            }
+        });
         $('#filter-toggle').toggleClass('filters-closed');
         filterPanel.toggleClass('hidden');
         resultsPanel.toggleClass('column-full column-two-thirds');
+        $('#changes-table').toggleClass('expanded-table');
     }
 
 
@@ -165,6 +179,10 @@
             e.preventDefault();
             toggleFilters();
         });
+
+        if (DfE.searchUtils.getUrlParam('filtersopen') === 'false') {
+            $('#filter-toggle').click();
+        }
 
         $('#date-type-filter').on('change', function () {
             $('#date-filter-type-label').text('Date ' + $('#date-type-filter option:selected').text().toLowerCase());
