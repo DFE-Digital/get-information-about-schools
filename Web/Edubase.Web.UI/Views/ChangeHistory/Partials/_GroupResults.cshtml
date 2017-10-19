@@ -5,7 +5,7 @@
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
     var sortField = "requestedDateUtc";
-    if !(string.IsNullOrEmpty(request.QueryString["sortby"])) 
+    if (!string.IsNullOrEmpty(request.QueryString["sortby"])) 
     {
         sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
         sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
