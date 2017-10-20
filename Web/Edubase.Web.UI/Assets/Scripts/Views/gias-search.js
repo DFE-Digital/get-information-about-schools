@@ -390,7 +390,6 @@ DfE.searchResults = (function () {
                 DfE.searchUtils.updateSearchedLas();
             }
 
-            console.log(searchType);
             
             self.bindEvents();
             if (DfE.hasOwnProperty('searchMap')) {
