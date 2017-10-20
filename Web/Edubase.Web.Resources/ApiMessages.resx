@@ -221,4 +221,28 @@ Please check the 'Establishment open date'</value>
   <data name="field.validation.WebsiteAddress" xml:space="preserve">
     <value>Please enter a valid website address</value>
   </data>
+  <data name="error.code.required_administrativeDistrictId" xml:space="preserve">
+    <value>Please select a district</value>
+  </data>
+  <data name="error.code.required_administrativeWardId" xml:space="preserve">
+    <value>Please select a ward</value>
+  </data>
+  <data name="error.code.required_casWardId" xml:space="preserve">
+    <value>Please select a census ward</value>
+  </data>
+  <data name="error.code.required_governmentOfficeRegionId" xml:space="preserve">
+    <value>Please select a government office region</value>
+  </data>
+  <data name="error.code.required_GSSLAId" xml:space="preserve">
+    <value>Please select a GSS LA code</value>
+  </data>
+  <data name="error.code.required_parliamentaryConstituencyId" xml:space="preserve">
+    <value>Please select a parliamentary constituency</value>
+  </data>
+  <data name="error.code.required_rscRegionId" xml:space="preserve">
+    <value>Please select an RSC region</value>
+  </data>
+  <data name="error.code.required_urbanRuralId" xml:space="preserve">
+    <value>Please select an urban/rural description</value>
+  </data>
 </root>

@@ -66,8 +66,8 @@
         <div class="error-summary hidden" id="js-filter-error-summary">
             <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
             <ul class="error-summary-list">
-                <li class="summary-date-error error-message hidden">Your date format is not recognised</li>
-                <li class="summary-range-error error-message hidden">Your age range format is not recognised</li>
+                <li class="summary-date-error error-message hidden">Please enter the date in the format DD/MM/YYYY</li>
+                <li class="summary-range-error error-message hidden">Please enter the age in the correct format, for example 5 to 11</li>
             </ul>
         </div>
         <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
