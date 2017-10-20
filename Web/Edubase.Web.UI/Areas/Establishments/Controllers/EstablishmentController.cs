@@ -26,9 +26,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Establishments.DisplayPolicies;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
@@ -130,7 +133,45 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
         public async Task<ActionResult> EditLocation(ViewModel model)
         {
-            return await SaveEstablishment(model);
+            var oldModel = await CreateEditViewModel(model.Urn);
+
+            SetProperty(oldModel, model, m => m.RSCRegionId);
+            SetProperty(oldModel, model, m => m.GovernmentOfficeRegionId);
+            SetProperty(oldModel, model, m => m.AdministrativeDistrictId);
+            SetProperty(oldModel, model, m => m.AdministrativeWardId);
+            SetProperty(oldModel, model, m => m.ParliamentaryConstituencyId);
+            SetProperty(oldModel, model, m => m.UrbanRuralId);
+            SetProperty(oldModel, model, m => m.GSSLAId);
+            SetProperty(oldModel, model, m => m.Easting);
+            SetProperty(oldModel, model, m => m.Northing);
+            SetProperty(oldModel, model, m => m.CASWardId);
+            SetProperty(oldModel, model, m => m.MSOAId);
+            SetProperty(oldModel, model, m => m.LSOAId);
+
+            oldModel.Action = model.Action;
+            oldModel.SelectedTab = model.SelectedTab;
+            oldModel.OverrideCRProcess = model.OverrideCRProcess;
+            oldModel.ChangeEffectiveDate = model.ChangeEffectiveDate;
+
+            return await SaveEstablishment(oldModel);
+        }
+
+        private void SetProperty<TProperty>(ViewModel oldModel, ViewModel newModel, Expression<Func<ViewModel, TProperty>> property)
+        {
+            var memberExpression = property.Body as MemberExpression;
+            if (memberExpression != null)
+            {
+                var propertyInfo = memberExpression.Member as PropertyInfo;
+                if (propertyInfo != null)
+                {
+                    var propertyName = propertyInfo.Name;
+                    var policyGetter = typeof(EstablishmentDisplayEditPolicy).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance)?.GetGetMethod();
+                    if (policyGetter == null || (bool)policyGetter.Invoke(oldModel.EditPolicy, null))
+                    {
+                        propertyInfo.SetValue(oldModel, propertyInfo.GetValue(newModel));
+                    }
+                }
+            }
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
