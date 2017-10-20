@@ -404,7 +404,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     {
                         foreach (var error in response.Errors)
                         {
-                            ModelState.AddModelError(error.Fields, error.Message);
+                            ModelState.AddModelError(error.Fields, error.GetMessage());
                         }
                     }
                 }
