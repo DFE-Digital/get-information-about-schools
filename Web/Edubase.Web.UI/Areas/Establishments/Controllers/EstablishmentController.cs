@@ -571,7 +571,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
-            if (keys.Contains(nameof(viewModel.SENIds))) domainModel.SENIds = viewModel.SENIds ?? new int[0];
+            if(keys.Contains("SENList")) domainModel.SENIds = viewModel.SENIds ?? new int[0];
             if (keys.Contains(nameof(viewModel.MSOACode))) domainModel.MSOAId = viewModel.MSOAId;
             if (keys.Contains(nameof(viewModel.LSOACode))) domainModel.LSOAId = viewModel.LSOAId;
         }
