@@ -22,12 +22,24 @@
         {
             if (!User.Identity.IsAuthenticated)
             {
-                <table class="edubase-table list-table">
+                <table class="edubase-table list-table sortable-table">
                     <thead>
                     <tr>
                         @foreach (var column in Model.HeaderCells)
                         {
-                            <th>@(column.Text ?? "Not recorded")</th>
+                            if (!String.IsNullOrEmpty(column.SortKey))
+                            {
+                                <th>
+                                    <a href="#" class="sort-header" data-sort-key="@column.SortKey" data-sort-type="@column.SortType">@(column.Text ?? "Not recorded")</a>
+                                </th>
+                            }
+                            else
+                            {
+                                <th>
+                                    @(column.Text ?? "Not recorded")
+                                </th>
+                            }
+
                         }
                     </tr>
                     </thead>

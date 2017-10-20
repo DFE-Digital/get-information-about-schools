@@ -1,269 +1,251 @@
-﻿var changesPages = [];
+﻿(function () {
+    var openState = true;
+    var resultsPanel = $('#results-panel');
+    var filterPanel = $('#filter-container');
+    var filterError = false;
+    var downloadLink = $('.download-link');
+    var downloadBaseUrl = '/ChangeHistory/Search/Download/?';
+    var filterIntent = null;
+    var searchParams = '';
+    var plsWait = '<div class="progress-indicator"><span class="visually-hidden">Please wait</span></div>';
+    var $sortLinks = $('#changes-table thead').find('a');
 
-
-function buildPages(changes, pageSize) {    
-    var count = 0,
-        changesPages = [];
-    for (count; count < changes.length;) {
-        var page = changes.slice(count, (count + pageSize));
-        changesPages.push(page);
-        count += pageSize;
+     function okClick() {
+        this.closeModal();
+     }
+     function attachOkCancel () {
+         $('#content').find('.download-link').okCancel({
+            ok: okClick,
+            cancel: null,
+            title: 'Too many records',
+            content: 'Please filter your search to fewer than 20,000 changes.',
+            triggerEvent: 'click'
+        });
     }
 
-    return changesPages;
-}
+
+    function validateFilters() {
+        var filters = $('.date-filters').filter(':visible');
+        var canSubmit = true;
+        var rangeError = false;
+        filters.each(function (n, elem) {
+            $(elem).find('.form-group').slice(0, 2).removeClass('error');
+            $(elem).find('.error-message').addClass('hidden');
+
+            var validDate = true;
+            var dateObj = {};
+            var fromDateFields = $(elem).find('.search-from-date .form-control');
+            var toDateFields = $(elem).find('.search-to-date .form-control');
+
+            var fromDateValues = $.map(fromDateFields, function (field) {
+                if (field.value.trim() !== '') {
+                    return field.value;
+                }
+            });
+
+            var toDateValues = $.map(toDateFields, function (field) {
+                if (field.value.trim() !== '') {
+                    return field.value;
+                }
+            });
+
+            if (fromDateValues.length > 0 && fromDateValues.length < 3) {
+                validDate = false;
+            }
+            if (toDateValues.length > 0 && toDateValues.length < 3) {
+                validDate = false;
+            }
+
+
+            if (fromDateValues.length === 3 && validDate) {
+                dateObj.day = fromDateValues[0];
+                dateObj.month = fromDateValues[1] - 1;
+                dateObj.year = fromDateValues[2];
+
+                validDate = !DfE.searchUtils.validateDate(dateObj);
+            }
+
+            if (toDateValues.length === 3 && validDate) {
+                dateObj.day = toDateValues[0];
+                dateObj.month = toDateValues[1] - 1;
+                dateObj.year = toDateValues[2];
+
+                validDate = !DfE.searchUtils.validateDate(dateObj);
+            }
+
+            if (!validDate) {
+                $(elem).find('.form-group').slice(0, 2).addClass('error');
+                $(elem).find('.error-message').removeClass('hidden');
+                canSubmit = false;
+
+            } else {
+                var fromDate = new Date(fromDateValues[2], fromDateValues[1], fromDateValues[0]);
+                var toDate = new Date(toDateValues[2], toDateValues[1], toDateValues[0]);
+                if (toDate <= fromDate) {
+                    canSubmit = false;
+                    rangeError = true;
+                }
+            }
 
 
 
-Vue.component('changes-table',
-{
-    template: '#table-template',
-    props: {
-        currentPage: {
-            type: Number,
-            default: 0
-        },
-        maxPageSize: {
-            type: Number,
-            default: 10
-        },
-        pages: Array
-    },
+            if (n + 1 === filters.length) {
+                if (!canSubmit) {
+                    $('#date-filter').find('.form-group').addClass('error');
+                    if (rangeError) {
+                        $('#date-filter').find('.date-range-error').slice(0, 1).removeClass('hidden');
+                    } else {
+                        $('#date-filter').find('.error-message').slice(0, 1).removeClass('hidden');
+                    }
+                }
+                filterError = canSubmit;
 
-    computed: {
-        page: function () {
-            return this.pages[this.currentPage];
-        }
-    },
-    methods: {
-        detailUrl: function (urn) {
-            return '/Establishments/Establishment/Details/' + urn;
-        }
+            }
+        });
+
     }
-});
 
+    function getResults() {
+        $('#ajax-error-message').addClass('hidden');
+        filterPanel.find(':input').prop('disabled', 'disabled');
+        filterPanel.find('.filter-clear').addClass('clear-disabled');
+        var resultsUrl = isEstabSearch
+            ? '/ChangeHistory/Search/Establishments/results-js'
+            : '/ChangeHistory/Search/Groups/results-js';
+        if (GOVUK.support.history()) {
+            history.pushState({}, null, window.location.href.split('?')[0] + '?' + searchParams);
+        }
+        $.ajax({
+            url: resultsUrl,
+            data: searchParams,
+            success: function (data, status, xhr) {
+                resultsPanel.html(data);
+                downloadLink.removeClass('hidden');
 
-var SearchChangeHistory = new Vue({
-    el: '#change-history-app',
-    data: {
-        errorFromDate: false,
-        errorToDate: false,
-        filterTypeSelectedError: false,
-        ajaxError: false,
-        changeHistory: [],
-        resultsUrl: '/public/assets/scripts/JSON/establishmentChanges.js',
-        filterView: true,
-        fakeWait: false,
-        resultsView: false,
+                downloadLink.attr('href', downloadBaseUrl + searchParams);
+                resultsPanel.removeClass('pending-results-update');
+                filterPanel.find(':input').removeAttr('disabled');
+                filterPanel.find('.filter-clear').removeClass('clear-disabled');
+                if (Number(xhr.getResponseHeader("x-count")) === 0) {
+                    downloadLink.addClass('hidden');
+                }
+                if (Number(xhr.getResponseHeader('x-count')) > 19999) {
+                    attachOkCancel();
+                } else if ($('#content').find('.download-link').data().hasOwnProperty('okCancel')) {
+                    $('#content').find('.download-link').data().okCancel.unbind();
+                }
+            },
+            error: function () {
+                $('#ajax-error-message').removeClass('hidden');
+                resultsPanel.removeClass('pending-results-update').html('');
+                filterPanel.find(':input').removeAttr('disabled');
+                downloadLink.addClass('hidden');
+            }
+        });
+    }
 
+    function toggleFilters() {
+        openState = !openState;
+        if (openState) {
+            $('#filter-toggle').text('Hide filters');
+            $('#changes-table thead a').each(function(n, link) {
+                var text = $(link).html();
+                var hasSpace = text.indexOf(' ') > -1;
+                $(link).html(text.replace(' ', '<br>'));
+                if (hasSpace) {
+                    $(link).parent('th').addClass('multi-line');
+                }
+                
+            });
+            
+        } else {
+            $('#filter-toggle').text('Show filters');
+            $('#changes-table thead a').each(function (n, link) {
+                var text = $(link).html();
+                $(link).html(text.replace('<br>', ' '));
 
-        // shared
-        searchType: '',
-        dateType: 'applied',
-        fromDateDay: '',
-        fromDateMonth: '',
-        fromDateYear: '',
-        toDateDay: '',
-        toDateMonth: '',
-        toDateYear: '',
+                $(link).parent('th').removeClass('multi-line');
+            });
+
+        }
+
+        $('#filters-open-state').val(openState);
         
-        fromDate: null,
-        toDate: null,
-        changeSuggestedBy: 0,
-        changeApprovedBy: 0,
 
-        establishmentTypes: [
-            'academies',
-            'children-centres',
-            'free-schools',
-            'higher-education',
-            'independent',
-            'la-maintained',
-            'non-maintained',
-            'other'],
-        establishmentTypesCleared: false,
-
-        establishmentFields: [
-            'name',
-            'locality',
-            'city',
-            'postcode',
-            'additional-address',
-            'head-title',
-            'head-name',
-            'statutory-low-age',
-            'statutory-high-age',
-            'education-phase',
-            'type',
-            'further-education-type',
-            'gender',
-            'la',
-            'establishment-number',
-            'ukprn',
-            'status',
-            'admissions-policy',
-            'website',
-            'phone',
-            'inspectorate',
-            'proprieter-name',
-            'religious-character',
-            'diocese',
-            'religious-ethos',
-            'provision-boarding',
-            'provision-nursery',
-            'provision-6thform',
-            'capacity',
-            'section41',
-            'opendate',
-            'reason-opened',
-            'closedate',
-            'reason-closed',
-            'special-classes',
-            'sen1',
-            'sen2',
-            'sen3',
-            'sen4',
-            'type-provision',
-            'provision-roll',
-            'sen-roll',
-            'sen-unit-capacity',
-            'bso-inspectorate',
-            'bso-last-inspectorate-visit',
-            'bso-next-inspectorate-visit',
-            'rsc-region',
-            'gov-region',
-            'admin-district',
-            'admin-ward',
-            'constituency',
-            'urban-rural',
-            'gssla',
-            'easting',
-            'northing',
-            'casward',
-            'msoa',
-            'lsoa'
-        ],
-        establishmentFieldsCleared: false,
-        groupTypes: [
-            'academies',
-            'academy',
-            'sponsor',
-            'trust',
-            'federation',
-            'childrens-group',
-            'childrens-collaboration'
-        ],
-        groupTypesCleared: false,
-
-        //download view
-        downloadType: 'csv',
-        currentPage: 0,
-        pages: [],
-        currentCount: 0,
-        pageSize: 100,
-        preparingDownload: false,
-        availableDownload: false
-
-    },
-    computed: {
-        datesFromInput: function() {
-            if (this.fromDateDay !== '' && this.fromDateMonth !== '' && this.fromDateYear !== '') {
-                this.fromDate = new Date(this.fromDateYear, this.fromDateMonth - 1, this.fromDateDay).toISOString();
+        $sortLinks.each(function () {
+            var href = $(this).attr('href');
+            if (href.indexOf('filtersopen=') > -1) {
+                $(this).attr('href', href.substr(0,href.indexOf('filtersopen=')) + 'filtersopen=' + openState);
+            } else {
+                $(this).attr('href', href + '&filtersopen=' + openState);
             }
-            if (this.toDateDay !== '' && this.toDateMonth !== '' && this.toDateYear !== '') {
-                this.toDate = new Date(this.toDateYear, this.toDateMonth - 1, this.toDateDay).toISOString();
-            }
-        },
-        pageCount: function () {
-            return this.currentPage * this.pageSize;
-        },
-        paginationDescription: function () {
-            var starting = this.currentPage * this.pageSize + 1,
-                ending = this.currentPage * this.pageSize + this.pageSize;
+        });
+        $('#filter-toggle').toggleClass('filters-closed');
+        filterPanel.toggleClass('hidden');
+        resultsPanel.toggleClass('column-full column-two-thirds');
+        $('#changes-table').toggleClass('expanded-table');
+    }
 
-            ending = ending > this.currentCount ? this.currentCount : ending;
 
-            return starting + " - " + ending;
-        },
-        globalError: function() {
-            return (this.ajaxError || this.filterTypeSelectedError || this.errorFromDate || this.errorToDate);
-        },
-        downloadLinkText: function() {
-            return 'Establishment change history in '+ this.downloadType.toUpperCase() +' format'
+    function bindEvents() {
+
+        DfE.searchResults.setupGovUkSelects();
+
+        $('#filter-toggle').on('click', function (e) {
+            e.preventDefault();
+            toggleFilters();
+        });
+
+        if (DfE.searchUtils.getUrlParam('filtersopen') === 'false') {
+            $('#filter-toggle').click();
         }
-    },
-    methods: {
-        getResults: function () {
-            this.filterTypeSelectedError = this.searchType === '';
 
-            if (this.filterTypeSelectedError){
-                return false;
-            }
-            var url = this.resultsUrl;
-            var self = this;
-            self.fakeWait = true;
-            self.filterView = false;
-            $.getScript(url)
-                .done(function(data) {
-                    self.changeHistory = JSON.parse(data);
-                    self.pages = buildPages(self.changeHistory, self.pageSize);
-                    self.currentCount = self.changeHistory.length;
-                    self.ajaxError = false;
-                    window.setTimeout(function() {
-                        self.resultsView = true;
-                        self.fakeWait = false;
-                    }, 1500);
-                    
+        $('#date-type-filter').on('change', function () {
+            $('#date-filter-type-label').text('Date ' + $('#date-type-filter option:selected').text().toLowerCase());
+            $(this).parents('.govuk-option-select').find('.clear-selections')
+                .css({ left: $('#date-filter-type-label').width() + 12 + 'px' });
+        });
 
-                })
-                .fail(function() {
-                    self.ajaxError = true;
-                    self.fakeWait = false;
-                });
-        },
-        prepareDownload: function () {
-            var self = this;
-            this.fakeWait = true;
-            this.preparingDownload = true;
-            this.resultsView = false;
+        filterPanel.find('.trigger-result-update').on('change', function () {
+            window.clearTimeout(filterIntent);
+            validateFilters();
 
-            window.setTimeout(function(){
-                self.fakeWait = false;
-                self.preparingDownload = false;
+            if (filterError) {
+                resultsPanel.addClass('pending-results-update');
+                filterIntent = window.setTimeout(function () {
+                    resultsPanel.html(plsWait);
+                    searchParams = $('#change-history-filters').serialize();
 
-                self.availableDownload = true;
-            }, 3000);
-        },
-        setCurrentPage: function (pageIndex) {
-            this.currentPage = pageIndex;
-        },
-        resetForm: function(){
-            this.groupTypes = [];
-            this.establishmentFields = [];
-            this.establishmentTypes = [];
-        },
-        selectSingle: function (panel, item) {
-            if (!this[panel + 'Cleared']) {
-                this[panel] = [];
-                this[panel].push(item);
-                this[panel + 'Cleared'] = true;
+                    getResults();
+                }, 1200);
             }
             
+        });
+
+        filterPanel.find('.form-control').on('focus', function () {
+            window.clearTimeout(filterIntent);
+        });
+
+        filterPanel.find('.filter-button').on('click', function (e) {
+            e.preventDefault();
+            window.clearTimeout(filterIntent);
+            validateFilters();
+
+            if (filterError) {
+                resultsPanel.html(plsWait);
+                searchParams = $('#change-history-filters').serialize();
+                getResults();
+            }
+        });
+
+        var resultCount = Number($('#results-panel').find('.pagination p').slice(0,1).text().split(' ').slice(-1));
+        if (resultCount > 19999) {
+            attachOkCancel();
         }
     }
 
-});
-
-/// accordions
-(function() {
-    var panels = document.querySelectorAll('.expander-panel');
     
-    Array.prototype.forEach.call(panels, function(el) {
-        var trigger = el.querySelectorAll('.panel-trigger')[0];
+    bindEvents();
+    
 
-        trigger.addEventListener('click', function (e) {
-            e.preventDefault();
-            el.classList.toggle('open-expander');
-        });
-    });
 }());

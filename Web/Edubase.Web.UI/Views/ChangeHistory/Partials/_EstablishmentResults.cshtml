@@ -1,0 +1,85 @@
+﻿@model ChangeHistoryViewModel
+@{
+    var request = HttpContext.Current.Request;
+    var sortDir = "desc";
+    var sortField = "effectiveDateUtc";
+    if (!string.IsNullOrEmpty(request.QueryString["sortby"]))
+    {
+        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+    }
+}
+
+
+@if (Model.Items.Any())
+{
+    <div>
+        @Html.Partial("_GenericPaginationV2", Model)
+    </div>
+    <table class="edubase-table change-history establishment-changes sortable-table expanding-table @Html.Conditional(!Model.SingleEstablishment, "multi-estab-changes")" id="changes-table">
+        <thead>
+            <tr>
+                <th scope="col" class="cell-edate multi-line">
+                    <a href="@Url.SortUrl("effectiveDateUtc")"
+                       class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date<br>changed</a>
+                </th>
+                @if (!Model.SingleEstablishment)
+                {
+                    <th scope="col" class="cell-urn  single-line">
+                        <a href="@Url.SortUrl("establishmentUrn")"                           
+                           class="@Html.Conditional(sortField == "establishmentUrn", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">URN</a>
+                    </th>
+                    <th scope="col" class="cell-estab  single-line">
+                        <a href="@Url.SortUrl("establishmentName")"                           
+                           class="@Html.Conditional(sortField == "establishmentName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Establishment</a>
+                    </th>
+                }
+                <th scope="col" class="cell-updatedfield multi-line">
+                    <a href="@Url.SortUrl("fieldName")"                           
+                       class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated<br>field</a>
+                </th>
+                <th scope="col" class="cell-oldvalue multi-line">
+                    <a href="@Url.SortUrl("oldValue")"                           
+                       class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old<br>value</a>
+                </th>
+                <th scope="col" class="cell-newvalue multi-line">
+                    <a href="@Url.SortUrl("newValue")"                           
+                       class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New<br/>value</a>
+                </th>
+                <th scope="col" class="cell-suggested multi-line">
+                    <a href="@Url.SortUrl("originatorUserName")"                           
+                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested<br />by</a>
+                </th>
+                <th scope="col" class="cell-suggested cell-approvedby multi-line">
+                    <a href="@Url.SortUrl("approverUserName")"                           
+                       class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved<br>by</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td aria-label="Date changed">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
+                    @if (!Model.SingleEstablishment)
+                    {
+                        <td aria-label="URN">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
+                        <td aria-label="Establishment">@Html.RouteLink(item.EstablishmentName ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
+                    }
+                    <td aria-label="Updated field">@item.FieldName</td>
+                    <td aria-label="Old value">@item.OldValue</td>
+                    <td aria-label="New value">@item.NewValue</td>
+                    <td aria-label="Suggested by">@item.SuggesterName</td>
+                    <td aria-label="Approved by">@item.ApproverName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        @Html.Partial("_GenericPaginationV2", Model)
+    </div>
+}
+else
+{
+    <p>There are no results, please widen your search with the filters.</p>
+}

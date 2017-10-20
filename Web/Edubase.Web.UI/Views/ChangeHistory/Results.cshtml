@@ -1,0 +1,232 @@
+﻿@using System.Linq.Expressions
+@using Edubase.Common
+@model ChangeHistoryViewModel
+@{
+    ViewBag.Title = "";
+    ViewBag.PageClass = "search-history-results search-results";
+
+    
+}
+
+<div class="grid-row">
+    <div class="column-full results-heading change-history-results-heading">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = ""}, null)
+                </li>
+            </ul>
+        </div>
+        @{
+            var heading = (Model.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll)) ? "Group change history" : "Establishment change history";
+            if (Model.SingleEstablishment && !string.IsNullOrWhiteSpace(Model.EstablishmentName))
+            {
+                heading = Model.EstablishmentName;
+            }
+
+            if (Model.SingleGroup && !string.IsNullOrWhiteSpace(Model.GroupName))
+            {
+                heading = Model.GroupName;
+            }
+        }
+        <h1 class="heading-xlarge">@heading</h1>
+        <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href=@($"{Url.RouteUrl("DownloadChangeHistory")}?{Request.QueryString}")>Download change history</a>
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="error-summary hidden" id="ajax-error-message">
+            <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
+            <p>Please refresh the page to try again</p>
+        </div>
+        <p>
+            <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters</a>
+        </p>
+    </div>
+    <form id="change-history-filters">
+        @Html.HiddenFor(m => m.SelectedTab)
+        @Html.HiddenFor(m => m.SearchType)
+        @Html.HiddenFor(m => m.TextSearchModel.Text)
+        @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValue)
+        @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValueAsInt)
+        @Html.HiddenFor(m => m.GroupSearchModel.Text)
+        @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValue)
+        @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValueAsInt)
+        @Html.HiddenFor(m=> m.Sortby)
+        <input type="hidden" value="true" name="filteropen" id="filters-open-state"/>
+
+        <div class="column-third" id="filter-container">
+            <div class="filter-form" id="filter-form">
+                <div id="EditSearchCollapse" class="blanket-container">
+
+                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
+                        <div class="container-head js-container-head">
+                            <div class="option-select-label">Date changes</div>
+                            <div class="js-selected-counter">
+                                <span class="js-selected-counter-text" id="date-filter-type-label">Date applied</span>
+                            </div>                            
+                        </div>
+                        <a href="#" class="clear-selections filter-clear">Clear</a>
+                        <div class="options-container" id="">
+                            <div class="js-auto-height-inner">
+                                <fieldset>
+                                    @if (Model.IsEstablishmentSearch)
+                                    {
+                                        @Html.DropDownListFor(m => m.DateFilterMode, Model.DateFilterOptions, new {@class = "form-control in-filters", id = "date-type-filter"})
+                                    }
+                                    @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
+                                    @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
+                                    <div class="form-group">
+                                        <a href="#" class="button button-grey filter-button">Apply</a>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.IsEstablishmentSearch)
+                    {
+                        if (!Model.SingleEstablishment)
+                        {
+                            @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds, null)
+                        }
+                        @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields, null)
+                    }
+                    else
+                    {
+                        if (!Model.SingleGroup)
+                        {
+                            @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null)
+                        }
+                    }
+                    @*@DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
+                    @if (Model.IsEstablishmentSearch)
+                    {
+                        @DropdownSelector("Approved By", ChangeHistoryViewModel.BIND_ALIAS_APPROVED_BY, Model.ApproverGroups, m => m.ApprovedBy)
+                    }*@
+                </div>
+            </div>
+        </div>
+    </form>
+<div class="column-two-thirds" id="results-panel">
+    @if (Model.Count == 0)
+    {
+        <p>There are no results, please widen your search with the filters.</p>
+    }
+    else
+    {
+        Html.RenderPartial(Model.IsEstablishmentSearch ? "Partials/_EstablishmentResults" : "Partials/_GroupResults", Model);
+    }
+</div>
+
+</div>
+
+@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "")
+{
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">@label</div>
+            <div class="js-selected-counter">
+                <span class="js-selected-counter-text"></span>
+
+            </div>
+        </div>
+        <a href="#" class="clear-selections filter-clear">Clear</a>
+        <div class="options-container" id="">
+            <div class="js-auto-height-inner">
+                <fieldset>
+                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="filter-wrapper select-all-wrap">
+                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
+                        <label for="@(name)_all" class="filter-radio">
+                            All
+                        </label>
+                    </div>
+                    @foreach (var item in items)
+                    {
+                        <div class="filter-wrapper">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <label for="@(name)_@item.Id" class="filter-radio">
+                                @item
+                            </label>
+                        </div>
+                    }
+                </fieldset>
+            </div>
+        </div>
+    </div>
+}
+
+@helper Selector(string label, string name, IEnumerable<StringLookupItemViewModel> items, List<string> selectedItems, string additionalClassName = "")
+{
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">@label</div>
+            <div class="js-selected-counter">
+                <span class="js-selected-counter-text"></span>
+
+            </div>
+        </div>
+        <a href="#" class="clear-selections filter-clear">Clear</a>
+        <div class="options-container" id="">
+            <div class="js-auto-height-inner">
+                <fieldset>
+                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="filter-wrapper select-all-wrap">
+                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
+                        <label for="@(name)_all" class="filter-radio">
+                            All
+                        </label>
+                    </div>
+                    @foreach (var item in items)
+                    {
+                        <div class="filter-wrapper">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <label for="@(name)_@item.Id" class="filter-radio">
+                                @item
+                            </label>
+                        </div>
+                    }
+                </fieldset>
+            </div>
+        </div>
+    </div>
+}
+
+@helper DropdownSelector(string label, string name, IEnumerable<SelectListItem> items, Expression<Func<ChangeHistoryViewModel, string>> expression, string additionalClassName = "")
+{
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">@label</div>
+            <div class="js-selected-counter">
+                <span class="js-selected-counter-text"></span>
+
+            </div>
+        </div>
+        <div class="options-container" id="">
+            <div class="js-auto-height-inner">
+                <fieldset>
+                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    @Html.DropDownListFor(expression, items, "Please select", new { @class = "form-control in-filters trigger-result-update"})
+                </fieldset>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section ViewScripts {
+    <script>
+        var isEstabSearch = @Model.IsEstablishmentSearch.ToString().ToLower()
+    </script>
+    <script src="/public/assets/scripts/standalone/search-change-history.js"></script>
+    
+}
+
+

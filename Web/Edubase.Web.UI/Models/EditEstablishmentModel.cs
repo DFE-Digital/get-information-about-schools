@@ -356,10 +356,42 @@ namespace Edubase.Web.UI.Models
         public int? HelpdeskPreviousLocalAuthorityId { get; set; }
         public int? HelpdeskPreviousEstablishmentNumber { get; set; }
 
+
+        #region Children's Centre fields
+        public int? CCOperationalHoursId { get; set; }
+        public int? CCUnder5YearsOfAgeCount { get; set; }
+        public int? CCGovernanceId { get; set; }
+        public string CCGovernanceDetail { get; set; }
+        public int? CCDeliveryModelId { get; set; }
+        public int? CCGroupLeadId { get; set; }
+        public int? CCPhaseTypeId { get; set; }
+        public int? CCDisadvantagedAreaId { get; set; }
+        public int? CCDirectProvisionOfEarlyYearsId { get; set; }
+
+        public IEnumerable<SelectListItem> CCOperationalHours { get; internal set; }
+        public IEnumerable<SelectListItem> CCGovernanceList { get; internal set; }
+        public IEnumerable<SelectListItem> CCDeliveryModels { get; internal set; }
+        public IEnumerable<SelectListItem> CCGroupLead { get; internal set; }
+        public IEnumerable<SelectListItem> CCPhaseTypes { get; internal set; }
+        public IEnumerable<SelectListItem> CCDisadvantagedAreas { get; internal set; }
+        public IEnumerable<SelectListItem> CCDirectProvisionOfEarlyYears { get; internal set; }
+
+        #endregion
+
         public Dictionary<int, int[]> Type2PhaseMap { get; set; }
 
         public bool CCIsDemoting { get; set; }
         public bool CCIsPromoting { get; set; }
+
+        /// <summary>
+        /// When the name, LA and post code match another record
+        /// </summary>
+        public bool ShowDuplicateRecordError { get; set; }
+
+        /// <summary>
+        /// When the name and LA match another record
+        /// </summary>
+        public bool ShowDuplicateRecordWarning { get; set; }
 
         public EditEstablishmentModel()
         {

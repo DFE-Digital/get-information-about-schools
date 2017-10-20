@@ -29,9 +29,9 @@ namespace Edubase.Services.Texuna.Approvals
             else throw new Exception("Unexpected errors returned from API");
         }
 
-        public async Task<ApiResponse<PendingApprovalsResult>> GetAsync(int skip, int take, IPrincipal principal)
+        public async Task<ApiResponse<PendingApprovalsResult>> GetAsync(int skip, int take, string sortBy, IPrincipal principal)
         {
-            var result = await _httpClient.GetAsync<PendingApprovalsResult>($"approvals/pending?skip={skip}&take={take}", principal);
+            var result = await _httpClient.GetAsync<PendingApprovalsResult>($"approvals/pending?skip={skip}&take={take}&sortby={sortBy}", principal);
             if (result.Success) return result;
             else throw new Exception("Unexpected errors returned from API");
         }

@@ -9,7 +9,7 @@ namespace Edubase.Web.UI.Helpers
 {
     public static class UrlHelperExtensions
     {
-        public static MvcHtmlString Current(this UrlHelper helper, object substitutes)
+        public static MvcHtmlString Current(this UrlHelper helper, object substitutes, string fragment = null)
         {
             var url = helper.RequestContext.HttpContext.Request.Url;
             var uriBuilder = new UriBuilder(url);
@@ -27,9 +27,16 @@ namespace Edubase.Web.UI.Helpers
             
             uriBuilder.Query = query.ToString();
             
-            return new MvcHtmlString(uriBuilder.Uri.MakeRelativeUri(uriBuilder.Uri).ToString());
+            return new MvcHtmlString(uriBuilder.Uri.MakeRelativeUri(uriBuilder.Uri).ToString() + fragment);
         }
-
+        public static MvcHtmlString SortUrl(this UrlHelper helper, string sortKey, string fragment = null)
+        {
+            var request = helper.RequestContext.HttpContext.Request;
+            var url = request.Url;
+            var modifier = (request.QueryString["sortby"] ?? "").Contains($"{sortKey}-asc") ? $"{sortKey}-desc" : $"{sortKey}-asc";
+            return Current(helper, new { sortby = modifier }, fragment);
+        }
+        
         public static MvcHtmlString CurrentQueryString(this UrlHelper helper, object substitutes = null)
         {
             var url = helper.RequestContext.HttpContext.Request.Url;

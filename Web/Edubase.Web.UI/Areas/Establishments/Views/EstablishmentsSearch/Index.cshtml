@@ -21,16 +21,7 @@
         {
             <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
         }
-        <div class="error-summary hidden" id="js-filter-error-summary">
-            <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
-            <ul class="error-summary-list">
-                <li class="summary-date-error error-message hidden">Your date format is not recognised</li>
-                <li class="summary-range-error error-message hidden">Your age range format is not recognised</li>
-            </ul>
-        </div>
-        <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
-            <p>Incomplete historical data means a number of records have no open date recorded and do not appear in this search.</p>
-        </div>
+        
         <p>
             @if (Model.SearchType == eSearchType.Text)
             {
@@ -76,7 +67,19 @@
             {
                 <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
             }*@
-        </p>
+    </p>
+    </div>
+    <div class="column-full">
+        <div class="error-summary hidden" id="js-filter-error-summary">
+            <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
+            <ul class="error-summary-list">
+                <li class="summary-date-error error-message hidden">Your date format is not recognised</li>
+                <li class="summary-range-error error-message hidden">Your age range format is not recognised</li>
+            </ul>
+        </div>
+        <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
+            <p>Incomplete historical data means a number of records have no open date recorded and do not appear in this search.</p>
+        </div>
     </div>
 </div>
 
@@ -103,11 +106,11 @@
 
                     @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases.OrderBy(x => x.Name), Model.SelectedEducationPhaseIds)
 
-                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds)
+                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true)
 
 
 
-                    @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds)
+                    @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds, filterRefine: true)
 
 
                     <!-- begin opted in filters -->
@@ -124,9 +127,9 @@
                     @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions.OrderBy(x => x.Name), Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
 
 
-                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true)
+                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true, true)
 
-                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true)
+                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true, true)
 
                     @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes.OrderBy(x => x.Name), Model.SelectedFETypeIds, "additional-search-critera hidden", true)
 
@@ -139,9 +142,9 @@
 
                     @Selector("Ofsted rating", M.BIND_ALIAS_OFSTEDRATINGS, Model.OfstedRatings.OrderBy(x => x.Name), Model.SelectedOfstedRatingIds, "additional-search-critera hidden", true)
 
-                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true)
+                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true, true)
 
-                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true)
+                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true, true)
 
                     @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions.OrderBy(x => x.Name), Model.SelectedRSCRegionIds, "additional-search-critera hidden", true)
 
@@ -183,7 +186,7 @@
                 </div>
 
             <div id="additional-filter-wrap" class="hidden">
-                <div class="govuk-option-select js-collapsible " data-closed-on-load="false" id="option-select-additional-filters">
+                <div class="govuk-option-select js-collapsible searchable-filters" data-closed-on-load="false" id="option-select-additional-filters">
                     <div class="container-head js-container-head">
                         <div class="option-select-label">Add more filters</div>
                         <div class="js-selected-counter">
@@ -191,8 +194,10 @@
                         </div>
                     </div>
                     <a href="#" class="clear-selections filter-clear">Clear</a>
+                    @SearchWithin()
                     <div class="options-container" id="">
                         <div class="js-auto-height-inner">
+                            <div class="suggestion-target"></div>
                             <fieldset id="filter-type-target"></fieldset>
                         </div>
                     </div>
@@ -214,15 +219,25 @@
     </form>
 </div>
 
+@helper SearchWithin()
+{
+    <div class="search-field-wrap">
+        <label class="filter-searchwithin-label">
+            <span class="visually-hidden">Search within this filter</span>
+            <input type="text" class="filter-search" />
+            <button class="field-clear hidden"><span class="visually-hidden">Clear</span></button>
+        </label>        
+    </div>
+}
 
-@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
+@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false, bool filterRefine = false)
 {
     var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
     if (!closed)
     {
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
+    <div class="govuk-option-select js-collapsible @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
@@ -232,18 +247,29 @@
             </div>
         </div>
         <a href="#" class="clear-selections filter-clear">Clear</a>
+    @if (filterRefine)
+    {
+        @SearchWithin()
+    }
         <div class="options-container" id="">
+            <div class="suggestion-target"></div>
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="filter-wrapper select-all-wrap">
+                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
+                        <label for="@(name)_all" class="filter-radio">
+                            All
+                        </label>
+                    </div>
                     @foreach (var item in items)
                     {
                         <div class="filter-wrapper">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
                             <label for="@(name)_@item.Id" class="filter-radio">
                                 @item
                             </label>
-                        </div>                        
+                        </div>
                     }
                 </fieldset>
             </div>
@@ -251,14 +277,16 @@
     </div>
 }
 
-@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
+
+
+@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false,  bool filterRefine = false)
 {
     var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
     if (!closed)
     {
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
-    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
+    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
@@ -267,15 +295,26 @@
             </div>
         </div>
         <a href="#" class="clear-selections filter-clear">Clear</a>
-        <div class="options-container">
+        @if (filterRefine)
+        {
+           @SearchWithin()
+        }
+        <div class="options-container">            
+            <div class="suggestion-target"></div>
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="filter-wrapper select-all-wrap">
+                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
+                        <label for="@(name)_all" class="filter-radio">
+                            All
+                        </label>
+                    </div>
                     @foreach (var item in items)
                     {
                         <dl class="nested-items">
                             <dt>
-                                <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                                <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
                                 <label for="@(name)_@item.Id" class="filter-radio">
                                     @item
                                     <a href="#" class="child-option-toggle"></a>
@@ -285,14 +324,14 @@
                                 @foreach (var child in item.ChildItems)
                                 {
                                     <div class="filter-wrapper">
-                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked") />
+                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
                                         <label for="@(name)_@(item.Id)_@child.Id" class="filter-radio">
                                             @child
                                         </label>
-                                    </div>                                    
+                                    </div>
                                 }
                             </dd>
-                        </dl>                        
+                        </dl>
                     }
                 </fieldset>
             </div>
@@ -371,6 +410,8 @@
 
 @section ViewScripts
 {
+    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
+    <script src="/public/assets/scripts/standalone/search-map.js"></script>
     <script language="javascript">
         var $openSelector = $("#b_1");
         var $openClosedSelector = $("#b_4");
@@ -380,13 +421,9 @@
                 $openClosedSelector.prop('checked', true);
             }
         });
-    </script>
-    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
-    <script src="/public/assets/scripts/standalone/search-map.js"></script>
     
-    <script>
-        //DfE.searchMap.bindActions();
         DfE.searchResults.init();
+        $('#filter-form').find('.searchable-filters').searchWithinFilters();       
     </script>
     
 }

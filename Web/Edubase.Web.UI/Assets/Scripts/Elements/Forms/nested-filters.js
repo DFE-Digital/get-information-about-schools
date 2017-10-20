@@ -20,7 +20,7 @@
                 trigger = $el.find(opts.expander),
                 optionsPanel = $el.find('.filter-group'),
                 childControls = optionsPanel.find('input'),
-                checkedChildren = childControls.filter(function(nguid, elem) {
+                checkedChildren = childControls.filter(function(n, elem) {
                     return elem.checked;
                 });
 

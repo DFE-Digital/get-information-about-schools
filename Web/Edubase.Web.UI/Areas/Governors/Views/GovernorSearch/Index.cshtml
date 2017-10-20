@@ -62,10 +62,7 @@
     <div class="column-third">
         <div class="filter-form" id="filter-form">
             <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
-                <div class="blanket"></div>
-                <div class="filter-divider"></div>
                 <form method="get" action="@Url.Action("Index", "GovernorSearch", new { area = "Governors" })">
-
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-sort-by">
                         <div class="container-head js-container-head">
@@ -81,14 +78,21 @@
                     <div class="govuk-option-select js-collapsible" id="option-select-role-type">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Role</div>
-                            <div class="js-selected-counter"></div>
+                            <div class="js-selected-counter">
+                                <span class="js-selected-counter-text"></span>                
+                            </div>
                         </div>
-                        <a href="#" class="clear-selections">Clear</a>
+                        <a href="#" class="clear-selections filter-clear">Clear</a>
                         <div class="options-container" id="">
                             <div class="js-auto-height-inner">
                                 <fieldset>
-                                    <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
+                                    <div class="filter-wrapper select-all-wrap">
+                                        <input id="govrole_all" class="filter-input select-all" type="checkbox" />
+                                        <label for="govrole_all" class="filter-radio">
+                                            All
+                                        </label>
+                                    </div>
                                     @foreach (var item in Model.GovernorRoles.OrderBy(x => x.Name))
                                     {
                                         <div class="filter-wrapper">
@@ -107,14 +111,21 @@
                     <div class="govuk-option-select js-collapsible" id="option-select-group-type">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Establishment/group type</div>
-                            <div class="js-selected-counter"></div>
+                            <div class="js-selected-counter">
+                                <span class="js-selected-counter-text"></span>                
+                            </div>
                         </div>
-                        <a href="#" class="clear-selections">Clear</a>
+                        <a href="#" class="clear-selections filter-clear">Clear</a>
                         <div class="options-container" id="">
                             <div class="js-auto-height-inner">
                                 <fieldset>
-                                    <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
+                                    <div class="filter-wrapper select-all-wrap">
+                                        <input id="grouptype_all" class="filter-input select-all" type="checkbox" />
+                                        <label for="grouptype_all" class="filter-radio">
+                                            All
+                                        </label>
+                                    </div>
                                     @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
                                     {
                                         <div class="filter-wrapper">
@@ -127,6 +138,10 @@
                                 </fieldset>
                             </div>
                         </div>
+                        
+                    </div>
+                    <div id="filter-addtional-controls">
+                        <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
                     </div>
 
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />

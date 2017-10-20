@@ -5,7 +5,6 @@ using Edubase.Services.Domain;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
-using System;
 using Edubase.Services.Enums;
 using Edubase.Services.Core;
 
@@ -18,7 +17,8 @@ namespace Edubase.Services.Establishments
     {
         Task<ServiceResultDto<EstablishmentModel>> GetAsync(int urn, IPrincipal principal);
         Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal);
-        Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, IPrincipal user);
+        Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, string sortBy, IPrincipal user);
+        Task<PaginatedResult<EstablishmentChangeDto>> GetChangeHistoryAsync(int urn, int skip, int take, string sortBy, EstablishmentChangeHistoryFilters filters, IPrincipal user);
 
         /// <summary>
         /// Returns whether the current principal can edit a given establishment
@@ -45,6 +45,7 @@ namespace Edubase.Services.Establishments
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal);
         Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model);
         Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, DownloadType format, IPrincipal principal);
+        Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, EstablishmentChangeHistoryDownloadFilters filters, IPrincipal principal);
         Task<FileDownloadDto> GetDownloadAsync(int urn, DownloadType format, IPrincipal principal);
         Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap();
         Task<IEnumerable<LookupDto>> GetPermissibleLocalGovernorsAsync(int urn, IPrincipal principal);

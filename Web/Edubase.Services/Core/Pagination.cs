@@ -1,25 +1,25 @@
-﻿using Edubase.Services.Domain;
-using System;
-using System.Collections.Generic;
-
-namespace Edubase.Services.Core
+﻿namespace Edubase.Services.Core
 {
+    using System;
+    using System.Collections.Generic;
+    using Domain;
+
     public class Pagination : IPagination
     {
         /// <summary>
         /// Total number of records available
         /// </summary>
-        public int Count { get; set; }
+        public virtual int Count { get; set; }
 
         /// <summary>
         /// The page size
         /// </summary>
-        public int Take { get; private set; }
+        public int Take { get; set; }
 
         /// <summary>
         /// How many records to skip
         /// </summary>
-        public int Skip { get; private set; }
+        public int Skip { get; set; }
 
         /// <summary>
         /// How many pages based on the Take value / page size
@@ -48,7 +48,7 @@ namespace Edubase.Services.Core
         }
     }
 
-    public class PaginatedResult<T> : Pagination where T : class
+    public class PaginatedResult<T> : Pagination, IPagedResult<T> where T : class
     {
         public IList<T> Items { get; set; } = new List<T>();
 
@@ -62,14 +62,20 @@ namespace Edubase.Services.Core
 
         }
 
-        public PaginatedResult(int skip, int take, int totalCount, List<T> items) : base(skip, take, totalCount)
+        public PaginatedResult(int skip, int take, int totalCount, IList<T> items) : base(skip, take, totalCount)
         {
             Items = items;
         }
 
-        public PaginatedResult(int skip, int take, ApiPagedResult<T> inner) : this(skip, take, inner.Count, inner.Items)
+        public PaginatedResult(int skip, int take, IPagedResult<T> inner) : this(skip, take, inner.Count, inner.Items)
         {
             
         }
+    }
+
+    public interface IPagedResult<T> where T : class
+    {
+        IList<T> Items { get; set; }
+        int Count { get; set; }
     }
 }

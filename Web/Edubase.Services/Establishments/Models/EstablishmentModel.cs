@@ -232,31 +232,31 @@ namespace Edubase.Services.Establishments.Models
 
         public int? FurtherEducationTypeId { get; set; }
 
-        [JsonProperty("ccGovernanceId")]
+        [DisplayName("Governance"), JsonProperty("ccGovernanceId")]
         public int? CCGovernanceId { get; set; }
 
-        [JsonProperty("ccGovernanceDetail")]
+        [DisplayName("Governance detail"), JsonProperty("ccGovernanceDetail")]
         public string CCGovernanceDetail { get; set; }
 
-        [JsonProperty("ccOperationalHoursId")]
+        [DisplayName("Operational hours"), JsonProperty("ccOperationalHoursId")]
         public int? CCOperationalHoursId { get; set; }
 
-        [JsonProperty("ccPhaseTypeId")]
+        [DisplayName("Phase"), JsonProperty("ccPhaseTypeId")]
         public int? CCPhaseTypeId { get; set; }
 
-        [JsonProperty("ccGroupLeadId")]
+        [DisplayName("Group lead centre"), JsonProperty("ccGroupLeadId")]
         public int? CCGroupLeadId { get; set; }
 
-        [JsonProperty("ccDisadvantagedAreaId")]
+        [DisplayName("Disadvantaged area"), JsonProperty("ccDisadvantagedAreaId")]
         public int? CCDisadvantagedAreaId { get; set; }
 
-        [JsonProperty("ccDirectProvisionOfEarlyYearsId")]
+        [DisplayName("Direct provision of early years"), JsonProperty("ccDirectProvisionOfEarlyYearsId")]
         public int? CCDirectProvisionOfEarlyYearsId { get; set; }
 
-        [JsonProperty("ccDeliveryModelId")]
+        [DisplayName("Delivery model"), JsonProperty("ccDeliveryModelId")]
         public int? CCDeliveryModelId { get; set; }
 
-        [JsonProperty("ccUnder5YearsOfAgeCount")]
+        [DisplayName("Number of under 5s"), JsonProperty("ccUnder5YearsOfAgeCount")]
         public int? CCUnder5YearsOfAgeCount { get; set; }
 
         public int? SenUnitOnRoll { get; set; }
@@ -302,5 +302,6 @@ namespace Edubase.Services.Establishments.Models
         public bool ConfirmationUpToDateGovernanceRequired { get; set; }
         public DateTime? ConfirmationUpToDate_LastConfirmationDate { get; set; }
         public DateTime? ConfirmationUpToDateGovernance_LastConfirmationDate { get; set; }
+        
     }
 }

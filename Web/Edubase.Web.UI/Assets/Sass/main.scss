@@ -74,7 +74,7 @@ $ie-version: 9;
 @import "elements/forms/form-validation";
 
 @import "elements/forms/filter-form/option-select";
-
+@import "elements/forms/filter-form/_search-within-filters.scss";
 
 // Form validation
 @import "elements/forms/form-validation";
@@ -101,6 +101,7 @@ $ie-version: 9;
 
 // Views
 // ==========================================================================
+@import "views/change-history";
 @import "views/base";
 @import "views/school-details";
 @import "views/group-details";

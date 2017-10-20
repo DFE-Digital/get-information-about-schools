@@ -7,18 +7,18 @@ DfE.searchResults = (function () {
     var $resultsContainer = $('#results-container');
     var $downloadLink = $('.download-link');
     var searchType = null;
-    var filterLimit = 200;
     var filterIntent = null;
     var seenOpenDateWarning = false;
-    var downloadBaseUrl = '/Establishments/Search/PrepareDownload?';
+    var downloadBaseUrl = '/Establishments/Search/PrepareDownload';
     var $additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera');
     var $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear');
     var $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]');
     var $extraFiltersLink = $('#EditSearchCollapse').find('.add-filters-link');
-    var optionTemplate = '<div class="filter-wrap"><input type="checkbox" value="#{0}" data-alias="{2}" id="ctrl-{0}" class="additional-filter-type filter-input" /><label  for="ctrl-{0}" class="filter-radio">{1}</label></div>';
+    var optionTemplate = '<div class="filter-wrapper"><input type="checkbox" value="#{0}" data-alias="{2}" id="ctrl-{0}" class="additional-filter-type filter-input" /><label  for="ctrl-{0}" class="filter-radio">{1}</label></div>';
     var searchParams = deDupeParams($filterForm.find(':input').filter(function (n, ele) {
         return ele.value !== '';
     }).serialize());
+    var token = '';
 
     var plsWait = '<div class="progress-indicator"><span class="visually-hidden">Please wait</span></div>';
 
@@ -146,6 +146,31 @@ DfE.searchResults = (function () {
                         !$(this).hasClass('date-filters')) {
                         $(this).find('.clear-selections').addClass('active-clear');
                     }
+
+                    if ($(this).hasClass('age-filter') || $(this).hasClass('date-filters')) {
+                        var valuesOnLoad = $(this).find('input.form-control')
+                            .filter(function (n, elem) {
+                                return elem.value.length > 0;
+                            }).length > 0;
+
+                        if (valuesOnLoad) {
+                            $(this).find('.clear-selections').addClass('active-clear');
+                        }
+                    }
+                });
+
+            $('#EditSearchCollapse').find('.age-filter .form-control, .date-filters .form-control').on('blur',
+                function() {
+                    var somethingHasValue = $(this).parents('.js-auto-height-inner').find('input.form-control')
+                        .filter(function(n, elem) {
+                            return elem.value.length > 0;
+                        }).length >
+                        0;
+                    if (somethingHasValue) {
+                        $(this).parents('.govuk-option-select').find('.clear-selections').addClass('active-clear');
+                    } else {
+                        $(this).parents('.govuk-option-select').find('.clear-selections').removeClass('active-clear');
+                    }
                 });
 
             $clearLinks.on('click',
@@ -155,21 +180,27 @@ DfE.searchResults = (function () {
                         var $govUkSelect = $(this).parents('.govuk-option-select');
                         if ($govUkSelect.hasClass('date-filters') || $govUkSelect.hasClass('age-filter')) {
                             $govUkSelect.find('input[type="text"]').val('');
+                            $(this).removeClass('active-clear');
 
                         } else {
-                            var selectedFilters = $(this)
-                                .next('.options-container')
-                                .find('input')
+                            var selectedFilters = $(this).parents('.govuk-option-select')
+                                .find('.options-container .trigger-result-update')
                                 .filter(function (n, item) {
                                     return $(item).prop('checked');
                                 });
 
-                            selectedFilters.click();
-                            $(this).removeClass('active-clear');
-                            if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
-                                selectedFilters.prop('checked', false);
-                                $(this).next('.options-container').find('.filter-radio').removeClass('partial-selection');
+                            selectedFilters.slice(0, 1).trigger('change');
+                            selectedFilters.prop('checked', false);
 
+                            $govUkSelect.find('.select-all').next('label').removeClass('partial-selection');
+                            $govUkSelect.find('.select-all').prop('checked', false);
+
+                            $govUkSelect.find('.js-selected-counter-text').text('');
+                            $(this).removeClass('active-clear');
+
+                            if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
+                                $govUkSelect.find('.filter-group-title').prop('checked', false);
+                                $govUkSelect.find('.filter-group-title').next('label').removeClass('partial-selection');                                
                             }
                         }
                     }
@@ -177,23 +208,30 @@ DfE.searchResults = (function () {
 
             $('.govuk-option-select').on('countUpdated',
                 function (e, d) {
+                    var os = this;
                     if (d.selectedCount) {
                         $(this).find('.filter-clear, .additional-filter-clear').addClass('active-clear');
                     } else {
                         $(this).find('.filter-clear, .additional-filter-clear').removeClass('active-clear');
                     }
+                    window.setTimeout(function() {                        
+                        var clearLeftPos = $(os).find('.js-selected-counter').width() + 12 + 'px';
+                        $(os).find('.clear-selections').css({ left: clearLeftPos });
+                    },0);
                 });
 
             
         },
         disableFilters: function () {
             $filters.prop('disabled', true);
+            $filterForm.find('.filter-clone').prop('disabled', true);
             $('#filter-form').find('.active-clear').addClass('clear-disabled');
             $('#filter-form').find('input[type="text"]').prop('disabled', true);
             $('#filter-addtional-controls a').addClass('hidden');
         },
         enableFilters: function () {
             $filters.prop('disabled', false);
+            $filterForm.find('.filter-clone').prop('disabled', false);
             $('#filter-form').find('.active-clear').removeClass('clear-disabled');
             $('#filter-form').find('input[type="text"]').prop('disabled', false);
             $('#filter-addtional-controls a').removeClass('hidden');
@@ -204,36 +242,49 @@ DfE.searchResults = (function () {
             $('.date-filter-warning').addClass('hidden');
 
             $resultsContainer.html(plsWait);
-            if (GOVUK.support.history()) {
-                history.pushState({}, null, window.location.href.split('?')[0] + '?' + searchParams);
-            }
-
+            
             $.ajax({
-                url: 'Search/results-js',
+                //url: 'Search/results-js',
+                type: "POST",
+                url: '/api/tokenize',
+               
                 data: searchParams,
                 success: function (data, status, xhr) {
-                    $resultsContainer.html(data);
-                    $downloadLink.removeClass('hidden');
-
-                    $downloadLink.attr('href', downloadBaseUrl + searchParams);
-                    $resultsContainer.removeClass('pending-results-update');
+                    token = data.token;
+                    if (GOVUK.support.history()) {
+                        history.pushState({}, null, window.location.href.split('?')[0] + '?tok=' + token);
+                    }
                     
-                    if (Number(xhr.getResponseHeader("x-count")) === 0) {
-                        $downloadLink.addClass('hidden');
-                    }
+                    $.ajax({
+                        url: 'Search/results-js',
+                        data: "tok=" + token,
+                        dataType: 'html',
+                        success: function (results, status, xhr) {
+                            $resultsContainer.html(results);
+                            $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
+                            $downloadLink.removeClass('hidden');
+                            $resultsContainer.removeClass('pending-results-update');
 
-                    if (DfE.searchMap.currentView !== 'map') {
-                        DfE.searchResults.enableFilters();
-                    }
+                            if (Number(xhr.getResponseHeader("x-count")) === 0) {
+                                $downloadLink.addClass('hidden');
+                            }
 
-                    if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
-                        $('.date-filter-warning').removeClass('hidden');
-                        if (!seenOpenDateWarning) {
-                            window.scrollTo(0, 0);
-                            seenOpenDateWarning = true;
+                            if (DfE.searchMap.currentView !== 'map') {
+                                DfE.searchResults.enableFilters();
+                            }
+
+                            if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
+                                $('.date-filter-warning').removeClass('hidden');
+                                if (!seenOpenDateWarning) {
+                                    window.scrollTo(0, 0);
+                                    seenOpenDateWarning = true;
+                                }
+                            }
                         }
-                    }
-                    
+
+                    });
+
+
                 },
                 error: function(xhr) {
                     DfE.searchResults.enableFilters();
@@ -249,72 +300,57 @@ DfE.searchResults = (function () {
                 var chxName = $(this).prop('name');
                 var isChecked = this.checked;
                 var filterCount = $filters.filter(':checked, :selected').length;
-
-                if (filterCount >= filterLimit) {
-                    $(this).okCancel({
-                        cancel: null,
-                        ok: function () {
-                            return true;
-                        },
-                        immediate: true,
-                        title: 'Filter limit reached',
-                        content:
-                            'You\'ve selected too many filters. You can either reduce the number of filters, or download the data and filter it offline.'
-                    });
-                    $(this).removeData('okCancel');
-                    $(this).prop('checked', false);
-
-                } else {
-
+                
                 var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').filter(function (n, input) {
                 if (input.value === chxVal) {
-                            return input;
-                        }
-                    }).not(currentInput);
+                        return input;
+                    }
+                }).not(currentInput);
 
-                    similarInput.prop('checked', isChecked);
-                    if (isChecked) {
-                        similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
+                similarInput.prop('checked', isChecked);
+                if (isChecked) {
+                    similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
+                } else {
+
+                    var siblingChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
+                    if (siblingChxCount === 0) {
+                        similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
+                        similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
                     } else {
-
-                        var siblingChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
-                        if (siblingChxCount === 0) {
-                            similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
-                            similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
-                        } else {
-                            similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
-                        }
-
+                        similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
                     }
 
-                    if (filterIntent) {
-                        window.clearTimeout(filterIntent);
-                    }
-                    if (DfE.searchMap != null && DfE.searchMap.scriptsLoaded) {
-                        DfE.searchMap.clearPoints();
-                    }
-
-                    $resultsContainer.addClass('pending-results-update');
-                    searchParams = deDupeParams($filterForm.find(':input').filter(function(n, ele) {
-                        return ele.value !== '';
-                    }).serialize());
-
-                    filterIntent = window.setTimeout(function () {
-                        self.getResults();
-                        if (DfE.searchMap.currentView === 'map') {
-                            DfE.searchMap.getSearchData();
-                        } else {
-                            DfE.searchMap.dataRefreshRequired = true;
-                        }
-                        if (searchType === 'ByLocalAuthority') {
-                            DfE.searchUtils.updateSearchedLas();
-                        }
-                        if (searchType === 'Governor') {
-                            DfE.searchUtils.updateGovernorRoles();
-                        }
-
-                    }, 1500);
                 }
+
+                if (filterIntent) {
+                    window.clearTimeout(filterIntent);
+                }
+                if (DfE.searchMap != null && DfE.searchMap.scriptsLoaded) {
+                    DfE.searchMap.clearPoints();
+                }
+
+                $resultsContainer.addClass('pending-results-update');
+                searchParams = deDupeParams($filterForm.find(':input').filter(function(n, ele) {
+                    return ele.value !== '';
+                }).serialize());
+                    
+              
+                filterIntent = window.setTimeout(function () {
+                    self.getResults();
+                    if (DfE.searchMap.currentView === 'map') {
+                        DfE.searchMap.getSearchData();
+                    } else {
+                        DfE.searchMap.dataRefreshRequired = true;
+                    }
+                    if (searchType === 'ByLocalAuthority') {
+                        DfE.searchUtils.updateSearchedLas();
+                    }
+                    if (searchType === 'Governor') {
+                        DfE.searchUtils.updateGovernorRoles();
+                    }
+
+                }, 1500);                
+                
             });
 
             $('.age-filter').find('.filter-button').on('click',
@@ -337,16 +373,17 @@ DfE.searchResults = (function () {
             });
         },
 
-        init: function() {
-            searchType = DfE.Util.QueryString.get('searchtype');
+        init: function () {
             var self = this;
+            self.setupGovUkSelects();
+            self.setupAdditionalFilters();
+            searchType = DfE.Util.QueryString.get('searchtype');
+            
             if (searchType === 'ByLocalAuthority') {
                 DfE.searchUtils.updateSearchedLas();
             }
 
-
-            self.setupGovUkSelects();
-            self.setupAdditionalFilters();
+            
             self.bindEvents();
             if (DfE.hasOwnProperty('searchMap')) {
                 DfE.searchMap.bindActions();

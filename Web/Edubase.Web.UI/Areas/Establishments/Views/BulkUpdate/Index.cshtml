@@ -26,7 +26,11 @@
             }
             <h1 class="heading-xlarge">Establishment bulk update</h1>
             
-            <p>Update establishment records by uploading a CSV or XLSX file.</p>
+            <p>
+                Update establishment records by uploading a CSV or XLSX file.<br>
+                Multiple column must be XLSX.<br>
+                Edubase Bulk Upload can be XLSX or Tab delimited text file (not Comma Separated Value files).
+            </p>
         </div>
         <div class="column-full">
 
@@ -42,24 +46,67 @@
                 </div>
             </div>
 
-            @if (Model.Result != null && Model.Result.IsFailure())
+            @if (Model.Result != null)
             {
-                <div class="form-group error" id="error-log">
-                    <p class="error-message">Please download the error log to correct your data before resubmitting</p>
-                    <p class="download-list-item">
-                        <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
-                    </p>
-                </div>
-            }
-            
-            @if (Model.Result != null && Model.Result.CompletedWithErrors())
-            {
-                <div class="form-group error" id="error-log">
-                    <p class="error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
-                    <p class="download-list-item">
-                        <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
-                    </p>
-                </div>
+                if (Model.Result.Errors.Any(x => x.Code == "error.maxRowsLimitReached.payload.bulkUpload"))
+                {
+                    <div class="validation-summary-errors error-summary">
+                        <span>Information missing or incorrect</span>
+                        <p>The file size is too large. Please use a file size smaller than 1MB. There are also limits of:
+                            <ul class="list-bullet inside">
+                                <li>
+                                    5,000 rows per file for back office users
+                                </li>
+                                <li>
+                                    1,000 rows per file for EFADO, SFC and DDCE users
+                                </li>
+                                <li>
+                                    200 rows per file for establishment and MAT users
+                                </li>
+                            </ul>
+                        </p>
+                    </div>
+                }
+                else if (Model.Result.Errors.Any(x => x.Code == "error.mismatchType.EduBaseBulkUpload-MultipleColumnsfile.type.bulkUpload"))
+                {
+                    <div class="validation-summary-errors error-summary">
+                        <span>Information missing or incorrect</span>
+                        <p>
+                            Multiple column files must be XLSX and bulk upload files can be XLSX or tab delimited text files. For more information, see <a href="/guidance">the Establishment bulk update guidance document</a>
+                        </p>
+                    </div>
+                }
+                else if (Model.Result.Errors.Any())
+                {
+                    <div class="validation-summary-errors error-summary">
+                        <span>Information missing or incorrect</span>
+                        <p>
+                            @Model.Result.Errors.First().Message
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    if (Model.Result.IsFailure())
+                    {
+                        <div class="form-group error" id="error-log">
+                            <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                            <p class="download-list-item">
+                                <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
+                            </p>
+                        </div>
+                    }
+
+                    if (Model.Result.CompletedWithErrors())
+                    {
+                        <div class="form-group error" id="error-log">
+                            <p class="error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
+                            <p class="download-list-item">
+                                <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
+                            </p>
+                        </div>
+                    }
+                }
             }
 
         </div>

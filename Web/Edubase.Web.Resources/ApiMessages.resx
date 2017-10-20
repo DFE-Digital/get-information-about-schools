@@ -117,7 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="error.code.required_statusId" xml:space="preserve">
+    <value>Please select a establishment status</value>
+  </data>
+  <data name="error.code.required_typeId" xml:space="preserve">
+    <value>Please select an establishment type</value>
+  </data>
   <data name="error.establishment.group.link.cannot.have.trusts" xml:space="preserve">
     <value>Establishment is not LA maintained, please select another one.</value>
+  </data>
+  <data name="field.validation.headFirstName.can.not.be.empty" xml:space="preserve">
+    <value>Please enter a headteacher/principal first name</value>
+  </data>
+  <data name="field.validation.headLastName.can.not.be.empty" xml:space="preserve">
+    <value>Please enter a headteacher/principal last name</value>
+  </data>
+  <data name="field.validation.ReligiousCharacter" xml:space="preserve">
+    <value>Please select 'Does not apply' for Religious Character</value>
+    <comment> </comment>
   </data>
 </root>

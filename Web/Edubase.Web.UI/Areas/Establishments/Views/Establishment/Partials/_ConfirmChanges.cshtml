@@ -46,7 +46,7 @@
                         <li>I have demoted this children's centre record because it's no longer a children's centre in its own right but continues to contribute to our children's centre provision.</li>
                     </ul>
                     
-                <p>Before you save this record, please link this linked site centre to a children's centre using the links tab. If you don't make this link, the children's centre linked site will be automatically deleted.</p>
+                    <p>Before you save this record, please link this linked site centre to a children's centre using the links tab. If you don't make this link, the children's centre linked site will be automatically deleted.</p>
                 }
                 else if (Model.CCIsPromoting)
                 {
@@ -56,6 +56,15 @@
                         <li>I have promoted this linked site record because it fulfils the legal definition of a children's centre in its own right.</li>
                     </ul>
                 }
+            </div>
+        }
+
+        @if (Model.ShowDuplicateRecordWarning)
+        {
+            <div class="warning-message">
+                <p>
+                    There is already an establishment with the same name and local authority recorded. By confirming this change you acknowledge you may be duplicating the record.
+                </p>
             </div>
         }
 

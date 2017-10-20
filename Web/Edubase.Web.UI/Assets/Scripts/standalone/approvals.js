@@ -59,7 +59,9 @@
                 itemsConfirmedRejected: false,
                 isProcessing: true,
                 apiError: '',
-                apiBork: {}
+                apiBork: {},
+                sortAscending: true,
+                sortType: 'effectiveDateUtc'
 
             },
             created: function() {
@@ -84,17 +86,37 @@
 
             },
             methods: {
+                setSort: function(sort) {
+                    if (sort === this.sortType) {
+                        this.sortAscending = !this.sortAscending;
+                    } else {
+                        this.sortType = sort;
+                    }
+
+                    this.getChangesData();
+                },
+                detailUrl: function (urn) {
+                    return '/Establishments/Establishment/Details/' + urn;
+                },
+                formatDate: function (utcDate) {
+                    if (utcDate === null) {
+                        return 'unknown';
+                    }
+                    var d = new Date(utcDate);
+                    return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/');
+                },
                 getChangesData: function (skip, callback) {
                     var self = this;
                     this.isProcessing = true;
-
+                    var sortDir = this.sortAscending ? '-asc' : '-desc';
                     $('#changes-table').find(':checkbox').prop('checked', false);
                     
                     $.ajax({
                         url: defaults.apiUrl,
                         data: {
                             take: defaults.pageSize,
-                            skip: skip || 0
+                            skip: skip || 0,
+                            sortBy: this.sortType + sortDir // Jon: put `th.data-sortkey` value into here and concat '-asc' or '-desc'
                         },
                         success: function (data) {
                             self.currentCount = data.count;

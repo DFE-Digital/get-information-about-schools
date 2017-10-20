@@ -16,7 +16,7 @@
                     @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
                 </li>
                 <li>
-                    Change history
+                    @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = "" }, null)
                 </li>
             </ul>
         </div>
@@ -37,7 +37,7 @@
                 </li>
             </ul>
 
-            <p><a class="button button-grey" href="@Url.RouteUrl("ChangeHistorySearch")?@Request.QueryString.RemoveKeys(nameof(Model.Item2.StartDownload))">Search results</a></p>
+            <p><a class="button button-grey" href="@Url.RouteUrl("ChangeHistorySearch")?@Request.QueryString.RemoveKeys(nameof(Model.Item2.DownloadFormat))">« Go back</a></p>
             
         </div>
     </div>

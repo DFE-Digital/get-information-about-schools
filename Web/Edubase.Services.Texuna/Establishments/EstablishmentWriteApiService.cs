@@ -59,39 +59,16 @@ namespace Edubase.Services.Texuna.Establishments
             return (await _httpClient.PostAsync<ValidationEnvelopeDto>($"establishment/validate?autogenestabno={generateEstablishmentNumber.ToString().ToLower()}", model, principal)).Response;
         }
 
-        /// <summary>
-        /// Creates a new establishment and returns its URN
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="principal"></param>
-        /// <returns></returns>
-        public async Task<ApiResponse<int>> CreateNewAsync(NewEstablishmentModel model, IPrincipal principal)
-        {
-            var apiModel = new EstablishmentModel
-            {
-                Name = model.Name,
-                EstablishmentNumber = model.EstablishmentNumber.ToInteger(),
-                EducationPhaseId = model.EducationPhaseId,
-                TypeId = model.EstablishmentTypeId,
-                LocalAuthorityId = model.LocalAuthorityId,
-                CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(),
-                IEBTModel = new IEBTModel(),
-                StatusId = (int) eLookupEstablishmentStatus.ProposedToOpen
-            };
-
-            return Unwrap(await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={model.GenerateEstabNumber.ToString().ToLower()}", apiModel, principal));
-        }
-
         public async Task<ApiResponse<int>> CreateNewAsync(EstablishmentModel model, bool generateEstablishmentNumber, IPrincipal principal)
         {
             return Unwrap(await _httpClient.PostAsync<ApiResultDto<int>>($"establishment?autogenestabno={generateEstablishmentNumber.ToString().ToLower()}", model, principal));
         }
 
-        public async Task<BulkUpdateProgressModel> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)
+        public async Task<ApiResponse<BulkUpdateProgressModel>> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)
         {
             var overrideCRFlag = bulkUpdateInfo.OverrideCRProcess ? "?overridecr=true" : string.Empty;
             return (await _httpClient.PostMultipartAsync<BulkUpdateProgressModel>("establishment/bulk-update" + overrideCRFlag, 
-                bulkUpdateInfo, bulkUpdateInfo.FileName, principal)).GetResponse();
+                bulkUpdateInfo, bulkUpdateInfo.FileName, principal));
         }
 
         public async Task<BulkUpdateProgressModel> BulkUpdateAsync_GetProgressAsync(Guid taskId, IPrincipal principal)

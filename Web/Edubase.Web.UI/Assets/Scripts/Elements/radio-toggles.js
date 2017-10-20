@@ -9,7 +9,7 @@
         panelDataKey: 'togglePanel',
         untoggle: false,
         toggleCallBack: null
-}
+    }
 
     function RadioToggle(el, opts) {
         this.el = el;

@@ -34,7 +34,7 @@
                                 </a>
                             </label>
                             <div class="form-group">
-                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=" })
+                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200" })
                             </div>
 
                             @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)

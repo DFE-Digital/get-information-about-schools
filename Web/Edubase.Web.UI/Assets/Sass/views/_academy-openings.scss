@@ -24,7 +24,7 @@
 
     .pagination {
         border-bottom: 2px solid $black;
-        margin-bottom: 20px;
+        margin-bottom: 8px;
     }
 
     .academy-openings + .pagination {
@@ -44,13 +44,12 @@
             }
 
             th {
-                font-weight: bold;
                 text-align: left;
             }
         }
 
         .cell-openingdate {
-            width: 12%;
+            width: 13%;
         }
 
         .cell-urn {
@@ -58,19 +57,19 @@
         }
 
         .cell-estabname {
-            width: 18%;
+            width: 19%;
         }
 
         .cell-estabtype {
-            width: 15%;
+            width: 17%;
         }
 
         .cell-predecessor-urn {
-            width: 12%;
+            width: 16%;
         }
 
         .cell-predecessor-name {
-            width: 18%;
+            width: 19%;
         }
 
         .cell-edit {
