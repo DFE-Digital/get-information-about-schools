@@ -359,6 +359,12 @@ DfE.searchResults = (function () {
                     DfE.searchUtils.validateAgeFilters();
                 });
 
+            $('.radius-filter').find('.filter-button').on('click',
+                function (e) {
+                    e.preventDefault();
+                    DfE.searchUtils.validateRadiusFilter();
+                });
+
             $('.date-filters').find('.filter-button').on('click',
                 function (e) {
                     e.preventDefault();

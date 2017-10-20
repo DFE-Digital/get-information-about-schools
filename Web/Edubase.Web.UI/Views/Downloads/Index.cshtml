@@ -74,9 +74,7 @@
                     <div id="scheduled-extracts" class="tab-content">
                         
                         <p>
-                            This is full data that can be found on the Register of educational establishments (Edubase).
-                            When you request a file the data will be generated and then ready for download a short time
-                            after the request.
+                            This is full data that can be found on Get information about schools. Not all files are date stamped, so it's a good idea to make a note of when you download the file. 
                         </p>
                         
                         @if (Model.ScheduledExtracts.PageCount > 1)
@@ -120,17 +118,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-@if (Model.AreScheduledExtractsAvailable)
-{
-   
-    @*
-        @Model.Skip - number of records to skip, so /?skip=10 in the qs
-        @Model.Take - number of records to take, so /?skip=15&take=20 will skip the first 15 scheduled extract records and then take 20
-        @Model.ScheduledExtractsCount - the total number of records in the entire data set.
-    *@
-}
-
