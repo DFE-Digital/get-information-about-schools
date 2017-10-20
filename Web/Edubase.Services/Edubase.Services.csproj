@@ -223,6 +223,7 @@
     <Compile Include="Establishments\Models\BulkUpdateDto.cs" />
     <Compile Include="Establishments\Models\CreateNewEstablishment.cs" />
     <Compile Include="Establishments\Models\Establishment2JsonPropertyMap.cs" />
+    <Compile Include="Establishments\Models\EstablishmentChangeHistoryDownloadFilters.cs" />
     <Compile Include="Establishments\Models\EstablishmentChangeHistoryFilters.cs" />
     <Compile Include="Establishments\Models\EstablishmentSearchResultModel.cs" />
     <Compile Include="Establishments\Models\IEBTModel.cs" />

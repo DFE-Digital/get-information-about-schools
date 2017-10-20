@@ -633,7 +633,7 @@ table.change-history {
 
         .selected-sort {
             &:after {
-                top: 76%;
+                //top: 76%;
             }
         }
     }
@@ -642,18 +642,17 @@ table.change-history {
         width:14%;
         a {
             display: block;
-            max-width: 70%;
+            max-width: 77%;
         }
     }
 }
 
-.expanded-table {
-    .multi-line a {
-        padding-top: 12px;
-        .selected-sort:after {
-            top: 65%;
+table.expanded-table {
+    thead th {
+        a.selected-sort.sorted-asc::after ,
+        a.selected-sort.sorted-desc::after {
+            margin-top: 0;
         }
-        
     }
 }
 
