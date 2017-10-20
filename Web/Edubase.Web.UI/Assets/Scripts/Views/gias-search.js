@@ -260,6 +260,10 @@ DfE.searchResults = (function () {
                         data: "tok=" + token,
                         dataType: 'html',
                         success: function (results, status, xhr) {
+                            var count;
+                            if (xhr.getResponseHeader("x-count")) {
+                                count = xhr.getResponseHeader("x-count");
+                            }
                             $resultsContainer.html(results);
                             $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
                             $downloadLink.removeClass('hidden');
@@ -268,7 +272,10 @@ DfE.searchResults = (function () {
                             if (Number(xhr.getResponseHeader("x-count")) === 0) {
                                 $downloadLink.addClass('hidden');
                             }
-
+                            $(window).trigger({
+                                type: 'ajaxResultLoad',
+                                count: count
+                            });
                             if (DfE.searchMap.currentView !== 'map') {
                                 DfE.searchResults.enableFilters();
                             }
@@ -383,12 +390,13 @@ DfE.searchResults = (function () {
             var self = this;
             self.setupGovUkSelects();
             self.setupAdditionalFilters();
-            searchType = DfE.Util.QueryString.get('searchtype');
+            searchType = document.getElementById('client-only-searchtype');
             
             if (searchType === 'ByLocalAuthority') {
                 DfE.searchUtils.updateSearchedLas();
             }
 
+            console.log(searchType);
             
             self.bindEvents();
             if (DfE.hasOwnProperty('searchMap')) {

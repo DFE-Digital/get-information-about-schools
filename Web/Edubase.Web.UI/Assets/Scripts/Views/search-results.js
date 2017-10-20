@@ -115,7 +115,7 @@
 //                    }
 //                }
 //            }
-                        $(this).next('.options-container').find('.filter-radio').removeClass('partial-selection');
+                     //   $(this).next('.options-container').find('.filter-radio').removeClass('partial-selection');
 //        });
 
 //    $additionalFilterClear.on('click', function(e) {
