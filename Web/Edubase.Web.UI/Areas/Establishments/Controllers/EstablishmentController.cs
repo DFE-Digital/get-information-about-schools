@@ -571,7 +571,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
-            domainModel.SENIds = viewModel.SENIds ?? new int[0];
+            if (keys.Contains(nameof(viewModel.SENIds))) domainModel.SENIds = viewModel.SENIds ?? new int[0];
+            if (keys.Contains(nameof(viewModel.MSOACode))) domainModel.MSOAId = viewModel.MSOAId;
+            if (keys.Contains(nameof(viewModel.LSOACode))) domainModel.LSOAId = viewModel.LSOAId;
         }
 
         private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)

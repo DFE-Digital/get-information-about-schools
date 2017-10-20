@@ -236,6 +236,12 @@ Please check the 'Establishment open date'</value>
   <data name="error.code.required_GSSLAId" xml:space="preserve">
     <value>Please select a GSS LA code</value>
   </data>
+  <data name="error.code.required_LSOAId" xml:space="preserve">
+    <value>Please enter a valid Lower Super Output Area (LSOA)</value>
+  </data>
+  <data name="error.code.required_MSOAId" xml:space="preserve">
+    <value>Please enter a valid Middle Super Output Area (MSOA)</value>
+  </data>
   <data name="error.code.required_parliamentaryConstituencyId" xml:space="preserve">
     <value>Please select a parliamentary constituency</value>
   </data>
