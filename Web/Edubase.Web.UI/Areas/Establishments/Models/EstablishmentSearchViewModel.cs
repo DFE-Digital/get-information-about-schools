@@ -74,6 +74,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
             UKPRN
         }
 
+
+        private readonly int[] _radiuses = new int[] { 1, 3, 5, 10, 15, 20, 25 };
+        public int[] GetRadiusOptions() => _radiuses;
+
         public IList<EstablishmentSearchResultModel> Results { get; set; }
         public string Error { get; set; }
 
