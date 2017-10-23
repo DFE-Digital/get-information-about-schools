@@ -16,7 +16,7 @@ namespace Edubase.Web.UI.Validation
                     !controllerContext.Controller.ViewData.ModelState.ContainsKey(error.Fields) || 
                     !controllerContext.Controller.ViewData.ModelState[error.Fields].Errors.Any())
                 {
-                    controllerContext.Controller.ViewData.ModelState.AddModelError(error.Fields, error.Message);
+                    controllerContext.Controller.ViewData.ModelState.AddModelError(error.Fields, error.GetMessage());
                 }
             }
         }
@@ -25,7 +25,7 @@ namespace Edubase.Web.UI.Validation
         {
             foreach (var error in validationEnvelope.Errors)
             {
-                controllerContext.Controller.ViewData.ModelState.AddModelError($"{baseProperty}.{error.Fields}", error.Message);
+                controllerContext.Controller.ViewData.ModelState.AddModelError($"{baseProperty}.{error.Fields}", error.GetMessage());
             }
         }
 
@@ -35,7 +35,7 @@ namespace Edubase.Web.UI.Validation
             {
                 foreach (var error in apiResponse.Errors)
                 {
-                    controllerContext.Controller.ViewData.ModelState.AddModelError(error.Fields, error.Message);
+                    controllerContext.Controller.ViewData.ModelState.AddModelError(error.Fields, error.GetMessage());
                 }
             }
         }

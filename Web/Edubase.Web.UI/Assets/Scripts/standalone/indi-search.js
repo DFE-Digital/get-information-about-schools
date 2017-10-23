@@ -174,6 +174,10 @@
         }
     });
 
+    $('#filter-form-ind').find('.govuk-option-select').map(function () {
+      return new GOVUK.OptionSelect({ $el: $(this) });
+    });
+
     $('#set-saver').on('click',
         function(e) {
             e.preventDefault();

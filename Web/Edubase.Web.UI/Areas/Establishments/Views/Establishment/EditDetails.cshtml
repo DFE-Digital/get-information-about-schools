@@ -191,9 +191,12 @@
 
                     @if (Model.EditPolicy.AgeRange)
                     {
-                        <div class="form-group range-group">
+                        <div class="form-group range-group @Html.ValidationCssClassFor(x=>x.StatutoryHighAge) @Html.ValidationCssClassFor(x=>x.StatutoryLowAge)">
                             <fieldset>
                                 <legend class="bold">Age range</legend>
+                                @Html.ValidationMessageFor(x=>x.StatutoryLowAge)
+                                @Html.ValidationMessageFor(x => x.StatutoryHighAge)
+
                                 <span class="inline-form-control">
                                     <label for="agerange-from" class="form-label">
                                         Low
@@ -595,6 +598,8 @@
                             }
                             </fieldset>
                         </div>
+                        @* Flags the SEN list has been included in the request - DO NOT REMOVE. *@
+                        <input type="hidden" name="SENList" value="1" />
                     }
 
                     @if (Model.EditPolicy.TeenageMothersProvisionId)

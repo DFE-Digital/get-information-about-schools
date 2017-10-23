@@ -27,104 +27,110 @@
 
                 @if (Model.EditPolicy.RSCRegionId)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.RSCRegionId)">
                         <label for="RSCRegionId" class="form-label" title="Regional School Comissioner">
                             <abbr title="Regional Schools Commissioner">RSC</abbr> region
                         </label>
+                        @Html.ValidationMessageFor(x => x.RSCRegionId)
                         @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegions, "", new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.GovernmentOfficeRegionId)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.GovernmentOfficeRegionId)">
                         <label for="GovernmentOfficeRegionId" class="form-label">Government office region</label>
+                        @Html.ValidationMessageFor(x => x.GovernmentOfficeRegionId)
                         @Html.DropDownListFor(x => x.GovernmentOfficeRegionId, Model.GovernmentOfficeRegions, "", new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.AdministrativeDistrictId)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeDistrictId)">
                         <label for="AdministrativeDistrictId" class="form-label">District</label>
+                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictId)
                         @Html.DropDownListFor(x => x.AdministrativeDistrictId, Model.AdministrativeDistricts, "", new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.AdministrativeWardId)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeWardId)">
                         <label for="AdministrativeWardId" class="form-label">Ward</label>
+                        @Html.ValidationMessageFor(x => x.AdministrativeWardId)
                         @Html.DropDownListFor(x => x.AdministrativeWardId, Model.AdministrativeWards, "", new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.ParliamentaryConstituencyId)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyId)">
                         <label for="ParliamentaryConstituencyId" class="form-label">Parliamentary constituency</label>
+                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyId)
                         @Html.DropDownListFor(x => x.ParliamentaryConstituencyId, Model.ParliamentaryConstituencies, "", new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.UrbanRuralId)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.UrbanRuralId)">
                         <label for="UrbanRuralId" class="form-label">Urban/rural description</label>
+                        @Html.ValidationMessageFor(x => x.UrbanRuralId)
                         @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.GSSLAId)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.GSSLAId)">
                         <label for="GSSLAId" class="form-label"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
+                        @Html.ValidationMessageFor(x => x.GSSLAId)
                         @Html.DropDownListFor(x => x.GSSLAId, Model.GSSLALookup, "", new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.Easting)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.Easting)">
                         <label for="Easting">Easting</label>
+                        @Html.ValidationMessageFor(x => x.Easting)
                         @Html.TextBoxFor(x => x.Easting, new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.Northing)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.Northing)">
                         <label for="Northing">Northing</label>
+                        @Html.ValidationMessageFor(x => x.Northing)
                         @Html.TextBoxFor(x => x.Northing, new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.CASWardId)
                 {
-                    <div class="form-group">
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.CASWardId)">
                         <label for="CASWardId" class="form-label">Census ward</label>
+                        @Html.ValidationMessageFor(x => x.CASWardId)
                         @Html.DropDownListFor(x => x.CASWardId, Model.CASWards, "", new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.MSOAId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.MSOACode)">
-                        <label for="msoa">
-                            Middle Super Output Area (MSOA)
-                        </label>
-                        @Html.ValidationMessageFor(x => x.MSOACode)
+                    <div class="form-group @Html.ValidationCssClass("MSOAId")">
+                        <label for="MSOACode">Middle Super Output Area (MSOA)</label>
+                        @Html.ValidationMessage("MSOAId")
                         @Html.TextBoxFor(x => x.MSOACode, new { @class = "form-control" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.LSOAId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.LSOACode)">
-                        <label for="lsoa">
-                            Lower Super Output Area (LSOA)
-                        </label>
-                        @Html.ValidationMessageFor(x => x.LSOACode)
+                    <div class="form-group @Html.ValidationCssClass("LSOAId")">
+                        <label for="LSOACode">Lower Super Output Area (LSOA)</label>
+                        @Html.ValidationMessage("LSOAId")
                         @Html.TextBoxFor(x => x.LSOACode, new { @class = "form-control" })
                     </div>
                 }

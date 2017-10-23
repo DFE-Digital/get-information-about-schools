@@ -28,7 +28,7 @@ namespace Edubase.Services.Establishments.Search
 
         public int Take { get; set; } = 10;
 
-        public int? RadiusInMiles { get; set; }
+        public double? RadiusInMiles { get; set; }
 
         public LatLon GeoSearchLocation { get; set; }
 

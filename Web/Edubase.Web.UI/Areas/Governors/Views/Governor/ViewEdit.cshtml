@@ -206,7 +206,7 @@ else
                             More details
                         </a>
                         <div class="expanding-content panel-indent">
-                            <table class="edubase-table list-table sortable-table">
+                            <table class="edubase-table list-table sortable-table historical governors">
                                 <thead>
                                 <tr>
                                     <th><a href="#" class="sort-header" data-sort-key="name" data-sort-type="sortText">Name</a></th>
@@ -311,7 +311,7 @@ else
                             {
                                 <div class="governor-edit-panel">
 
-                                    @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post))
+                                    @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post, new { id = "removal-form" }))
                                     {
                                         @Html.HiddenFor(x => x.RemovalGid)
                                         @Html.HiddenFor(x => x.EstablishmentUrn)
@@ -350,7 +350,7 @@ else
                                         {
                                             <div class="remove-governor date-group-wrap panel-indent">
                                                 <p>Confirm you wish to remove this person</p>
-                                                <input type="submit" name="action" value="Remove" class="button"/>
+                                                <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="button"/>
 
                                                 @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId}, new {@class = "button button-grey"})
                                             </div>
@@ -421,4 +421,35 @@ else
             @Html.RouteLink("Edit", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-grey" })
         }
     }
+}
+
+@section ViewScripts{
+    
+    <script>
+        $(function () {
+            var dismissed = false;
+            var form = $('form#removal-form');
+            if ($("#remove-shared-governor").length > 0) {
+                form.on('submit', function (e) {
+                    if (!dismissed) {
+                        e.preventDefault();
+                        $(this).okCancel({
+                            ok: function () {
+                                dismissed = true;
+                                $(e.target).find("#remove-shared-governor").click();
+                            },
+                            okLabel: "Proceed",
+                            immediate: true,
+                            idPrefix: 'close-continue',
+                            title: 'Are you sure you want to remove this role?',
+                            content: 'If you do, the role will also be removed from the multi-academy trust and any academies within the trust that share the role.'
+                        });
+                        $(this).removeData('okCancel');
+                    }
+                });
+            }
+        });
+
+    </script>
+
 }

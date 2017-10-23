@@ -24,7 +24,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
             RuleFor(x => x.GenerateEstabNumber).NotNull().WithMessage("Please select to enter a number or have one generated for you");
 
             RuleFor(x => x.EstablishmentNumber)
-                .NotEmpty().WithMessage("Please check the number you've entered")
+                .NotEmpty().WithMessage("Please enter an establishment number")
                 .When(x => x.GenerateEstabNumber.HasValue && !x.GenerateEstabNumber.GetValueOrDefault());
         }
     }
