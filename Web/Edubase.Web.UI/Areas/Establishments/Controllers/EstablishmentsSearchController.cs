@@ -376,6 +376,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                             .ToList()
                     })
                     .ToList();
+
+                model.EstablishmentTypeLookup = establishmentTypes.ToDictionary(e => e.Id, e => e.Name);
                 
                 model.EstablishmentStatuses = (await _lookupService.EstablishmentStatusesGetAllAsync())
                     .Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id))

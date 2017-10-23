@@ -1,0 +1,19 @@
+﻿.search-history-results {
+
+    @include media($max-width: 952px) {
+        #filter-container {
+            width: 100%;
+            float: none;
+        }
+
+        .date-filters.govuk-option-select .filter-button {
+            width: calc(100%-64px);
+            margin-left: 32px;
+            float: none;
+        }
+        
+        #results-panel {
+            width: 100%;
+        }
+    }
+}

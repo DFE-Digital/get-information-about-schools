@@ -1,7 +1,17 @@
 ﻿@using Edubase.Services.Domain
 @model EstablishmentDetailViewModel
 
+@{
+    var request = HttpContext.Current.Request;
+    var sortDir = "desc";
+    var sortField = "effectiveDateUtc";
+    if (request.QueryString["sortby"] != null)
+    {
+        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+    }
 
+}
 <div id="school-change-history" class="tab-content approval-data">
     <h2 class="bold-small">Change History</h2>
     @if (!Model.ChangeHistory.Items.Any())
@@ -21,31 +31,48 @@
                 @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
             </div>
         }
-        <table class="approval-changes edubase-table">
+        <table class="approval-changes edubase-table sortable-table">
             <thead>
             <tr>
-                <th>Date changed</th>
-                <th>Updated field</th>
-                <th>Old value</th>
-                <th>New value</th>
-                <th>Date requested</th>
-                <th>Suggested from</th>
-                <th>Approved by</th>
-                <th>Reason</th>
+                <th>
+                    <a href="@Url.SortUrl("effectiveDateUtc", "#school-change-history")"
+                            class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date changed</a>
+                </th>
+                <th>
+                    <a href="@Url.SortUrl("fieldName", "#school-change-history")"
+                       class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated field</a>
+                </th>
+                <th>
+                    <a href="@Url.SortUrl("oldValue", "#school-change-history")"
+                       class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old value</a>
+                </th>
+                <th>
+                    <a href="@Url.SortUrl("newValue", "#school-change-history")"
+                       class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New value</a>
+                </th>
+                <th>
+                    <a href="@Url.SortUrl("requestedDateUtc", "#school-change-history")"
+                       class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date requested</a>
+                </th>
+                <th>
+                    <a href="@Url.SortUrl("originatorUserName", "#school-change-history")"
+                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested from</a>
+                </th>
+                <th><a href="@Url.SortUrl("approverUserName", "#school-change-history")"
+                       class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved by</a></th>
             </tr>
             </thead>
             <tbody>
             @foreach (var item in Model.ChangeHistory.Items)
             {
                 <tr>
-                    <td aria-label="Date changed">@item.EffectiveDateUtc</td>
+                    <td aria-label="Date changed">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
                     <td aria-label="Updated field">@item.Name</td>
                     <td aria-label="Old value">@item.OldValue</td>
                     <td aria-label="New value">@item.NewValue</td>
-                    <td aria-label="Date requested">@item.RequestedDateUtc</td>
+                    <td aria-label="Date requested">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
                     <td aria-label="Suggested from">@item.OriginatorUserName</td>
                     <td aria-label="Approved by">@(item.ApproverUserName ?? "--")</td>
-                    <td aria-label="Reason">--</td>
                 </tr>
             }
             </tbody>

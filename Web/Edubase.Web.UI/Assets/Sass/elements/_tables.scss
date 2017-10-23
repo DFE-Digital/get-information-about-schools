@@ -161,6 +161,7 @@ table tbody .url {
     table-layout: fixed;
     display: table;
     border-top: 0;
+
     th, td {
         word-wrap: break-word;
         text-align: left;
@@ -169,24 +170,45 @@ table tbody .url {
         padding-top: 12px;
     }
 
+    thead th {
+        padding-bottom: 0;
+        padding-top: 18px;
+
+        &.multi-line {
+            padding-top: 8px;
+        }
+
+        a {
+            padding-bottom: 8px;
+        }
+    }
+
+    thead .cell-checkbox {
+        height: auto;
+    }
+
     .cell-checkbox {
         height: 52px;
         position: relative;
 
+
+
         .edubase-button-checkbox {
             padding: 0;
         }
-        
+
         @include media(desktop) {
-            width: 40px;
+            width: 28px;
         }
+
         @media(max-width: 940px) {
             &:after {
-                 content: attr(aria-label);
-                 position: relative;
-                 top: 14px;
-                 left: 44px;
+                content: attr(aria-label);
+                position: relative;
+                top: 14px;
+                left: 44px;
             }
+
             &:before {
                 content: "";
             }
@@ -194,54 +216,52 @@ table tbody .url {
     }
 
     .cell-urn {
-         @include media(desktop) {
+        @include media(desktop) {
             width: 40px;
         }
     }
 
     .cell-estab {
         @include media(desktop) {
-            width:80px;
+            width: 80px;
         }
     }
 
     .cell-updatedfield {
         @include media(desktop) {
-            width:80px;
+            width: 80px;
         }
     }
 
     .cell-oldvalue {
-       @include media(desktop) {
-            width:80px;
+        @include media(desktop) {
+            width: 80px;
         }
-
     }
+
     .cell-newvalue {
         @include media(desktop) {
-            width:80px;
+            width: 80px;
         }
-
     }
 
     .cell-edate {
         @include media(desktop) {
-            width: 55px;
+            width: 58px;
         }
     }
 
     .cell-rdate {
-       @include media(desktop) {
-            width: 55px;
+        @include media(desktop) {
+            width: 58px;
         }
     }
 
     .cell-suggested {
         @include media(desktop) {
-            width: 60px;
+            width: 63px;
         }
     }
-
 }
 
 
@@ -413,21 +433,24 @@ p.table-caption {
 
     .key-value-list {
         margin-bottom: 0;
+
         dt {
             font-weight: bold;
             margin-right: 4px;
             margin-top: 1px;
+
             &:after {
                 content: ":";
             }
         }
+
         dd {
             word-wrap: break-word;
         }
     }
 
     .cell-edate {
-        width: 10%;
+        width: 11%;
         padding-top: $changeTableThPadding;
     }
 
@@ -435,17 +458,21 @@ p.table-caption {
         width: 11%;
         padding-top: $changeTableThPadding;
     }
+
     .cell-urn {
-        width: 7%;      
+        width: 7%;
     }
+
     .cell-estab {
-        width: 16%;
+        width: 17%;
         padding-top: $changeTableThPadding;
     }
+
     .cell-change {
         width: 44%;
         padding-top: $changeTableThPadding;
     }
+
     .cell-suggested {
         width: 12%;
         padding-top: $changeTableThPadding;
@@ -454,7 +481,8 @@ p.table-caption {
     &.establishment-changes .cell-urn {
         padding-top: $changeTableThPadding;
     }
-    .cell-updatedfield, 
+
+    .cell-updatedfield,
     .cell-oldvalue,
     .cell-newvalue,
     .cell-suggested {
@@ -464,6 +492,10 @@ p.table-caption {
     tbody td {
         word-wrap: break-word;
     }
+
+    .single-line .selected-sort.sorted-asc::after {
+        top: 65%;
+    }
 }
 
 // sortable tables
@@ -472,47 +504,187 @@ p.table-caption {
 .sortable-table {
     thead a {
         text-decoration: none;
+        font-weight: normal;
+        display: block;
+        float: left;
 
         &:focus, &:active {
             background-color: transparent;
             outline: 0;
         }
+
+        &:visited {
+            color: $govuk-blue;
+        }
+
         &:hover {
             text-decoration: underline;
         }
     }
-}
-.selected-sort {
-    font-weight: bold;
-    position: relative;
-    padding-right: 14px;
-    display: inline-block;
 
-    &.sorted-asc:after {
-        width: 0;
-        height: 0;
-        position: absolute;
-        content: '';
-        right: 0;
-        top: 5px;
-        border-left: 4px solid transparent;
-        border-right: 4px solid transparent;
-        border-bottom: 7px solid $govuk-blue;
+    .cell-requesttype {
+        padding-right: 4px;
+        width: 13%;
+        a {
+            display: block;
+            max-width: 80%;
+        }
     }
 
-    &.sorted-desc:after {
-        width: 0;
-        height: 0;
-        position: absolute;
-        content: '';
-        right: 0;
-        top: 6px;
-        border-left: 4px solid transparent;
-        border-right: 4px solid transparent;
-        border-top: 7px solid $govuk-blue;
+    .selected-sort {
+        font-weight: bold;
+        position: relative;
+        padding-right: 14px;
+        padding-bottom: 8px;
+
+
+        &.sorted-asc:after {
+            width: 0;
+            height: 0;
+            position: absolute;
+            content: '';
+            right: 0;
+            top: 50%;
+            margin-top: -8px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 7px solid $govuk-blue;
+        }
+
+        &.sorted-desc:after {
+            width: 0;
+            height: 0;
+            position: absolute;
+            content: '';
+            right: 0;
+            top: 50%;
+            margin-top: -8px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 7px solid $govuk-blue;
+        }
+
+        .multi-line & {
+            padding-right: 6px;
+        }
+    }
+}
+
+.list-table.sortable-table {
+    .selected-sort {
+        padding-bottom: 4px;
+
+        &:after {
+            margin-top: -5px;
+        }
+    }
+}
+
+.unsortable {
+    thead a {
+        color: $black;
+
+        &:focus, &:active {
+            background-color: transparent;
+            outline: 0;
+        }
+
+        &:visited {
+            color: $black;
+        }
+
+        &:hover {
+            color: $black;
+            text-decoration: none;
+        }
     }
 }
 
 table.change-history {
     margin-bottom: 20px;
+}
+
+.expanding-table {
+    .not-a-link {
+        display: block;
+        padding-top: 12px;
+    }
+
+    thead th {
+        padding-top: 8px;
+
+        a {
+            padding-top: 12px;
+
+            &:after {
+                //top: 65% !important;
+            }
+        }
+
+        &.cell-edate {
+            width: 13%;
+        }
+    }
+
+    .multi-line {
+        a {
+            padding-top: 0;
+        }
+
+        .selected-sort {
+            &:after {
+                //top: 76%;
+            }
+        }
+    }
+
+    .cell-suggested {
+        width:14%;
+        a {
+            display: block;
+            max-width: 77%;
+        }
+    }
+}
+
+table.expanded-table {
+    thead th {
+        a.selected-sort.sorted-asc::after ,
+        a.selected-sort.sorted-desc::after {
+            margin-top: 0;
+        }
+    }
+}
+
+.multi-estab-changes {
+    .cell-oldvalue, .cell-newvalue {
+        width: 8%;
+    }
+
+    .cell-suggested {
+        width: 13%;
+    }
+    thead th {
+        padding-right: 3px;
+        a {
+            max-width: 95%;
+            display: block;    
+        }
+    }
+}
+
+.group-change-history {
+    .cell-edate {
+        padding-right: 4px;
+    }
+    .cell-suggested {
+        width: 16%;
+    }
+}
+
+.establishment-changes {
+    thead .cell-updatedfield a {
+        display: block;
+        max-width: 75%;
+    }
 }

@@ -97,7 +97,7 @@ namespace Edubase.Web.UI.Controllers
         {
             if (groupId != null)
             {
-                return Redirect((await _groupDownloadService.DownloadGroupHistory(groupId.Value, downloadType, User)).Url);
+                return Redirect((await _groupDownloadService.DownloadGroupHistory(groupId.Value, downloadType, null, null, null, User)).Url);
             }
 
             if (establishmentUrn != null)

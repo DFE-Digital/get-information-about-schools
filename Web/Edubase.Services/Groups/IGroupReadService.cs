@@ -1,4 +1,5 @@
-﻿using Edubase.Data.Entity;
+﻿using System;
+using Edubase.Data.Entity;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Groups.Models;
@@ -22,6 +23,7 @@ namespace Edubase.Services.Groups
         Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal);
 
         Task<bool> CanEditAsync(int uid, IPrincipal principal);
+        Task<bool> CanEditGovernanceAsync(int uid, IPrincipal principal);
 
         /// <summary>
         /// Retrieves the list of Establishment Groups associated with a Group
@@ -32,6 +34,7 @@ namespace Edubase.Services.Groups
 
         Task<bool> ExistsAsync(IPrincipal principal, CompaniesHouseNumber? companiesHouseNumber = null, string groupId = null, int? existingGroupUId = null, string name = null, int? localAuthorityId = null);
 
-        Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, IPrincipal principal);
+        Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, string sortBy, IPrincipal principal);
+        Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, string sortBy, DateTime? dateFrom, DateTime? dateTo, string suggestedBy, IPrincipal principal);
     }
 }

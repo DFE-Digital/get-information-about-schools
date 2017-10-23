@@ -191,9 +191,12 @@
 
                     @if (Model.EditPolicy.AgeRange)
                     {
-                        <div class="form-group range-group">
+                        <div class="form-group range-group @Html.ValidationCssClassFor(x=>x.StatutoryHighAge) @Html.ValidationCssClassFor(x=>x.StatutoryLowAge)">
                             <fieldset>
                                 <legend class="bold">Age range</legend>
+                                @Html.ValidationMessageFor(x=>x.StatutoryLowAge)
+                                @Html.ValidationMessageFor(x => x.StatutoryHighAge)
+
                                 <span class="inline-form-control">
                                     <label for="agerange-from" class="form-label">
                                         Low
@@ -251,6 +254,7 @@
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
                             <label for="LocalAuthorityId" class="form-label">Local authority</label>
+                            @Html.ValidationMessageFor(x => x.LocalAuthorityId)
                             @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
                         </div>
                     }
@@ -434,6 +438,89 @@
                         </div>
                     }
 
+
+                    @if (Model.EditPolicy.CCOperationalHoursId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CCOperationalHoursId)">
+                            @Html.LabelFor(x => x.CCOperationalHoursId, "Operational hours", new { @class = "form-label" })
+                            @Html.ValidationMessageFor(x => x.CCOperationalHoursId)
+                            @Html.DropDownListFor(x => x.CCOperationalHoursId, Model.CCOperationalHours, "", new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.CCUnder5YearsOfAgeCount)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CCUnder5YearsOfAgeCount)">
+                            @Html.LabelFor(x => x.CCUnder5YearsOfAgeCount, "Number of under 5s", new { @class = "form-label" })
+                            @Html.ValidationMessageFor(x => x.CCUnder5YearsOfAgeCount)
+                            @Html.TextBoxFor(x => x.CCUnder5YearsOfAgeCount, new { maxlength = 120, type = "number", min = 0, @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.CCGovernanceId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CCGovernanceId)">
+                            @Html.LabelFor(x => x.CCGovernanceId, "Governance", new { @class = "form-label" })
+                            @Html.ValidationMessageFor(x => x.CCGovernanceId)
+                            @Html.DropDownListFor(x => x.CCGovernanceId, Model.CCGovernanceList, "", new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.CCGovernanceDetail)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CCGovernanceDetail)">
+                            @Html.LabelFor(x => x.CCGovernanceDetail, "Governance detail", new { @class = "form-label" })
+                            @Html.ValidationMessageFor(x => x.CCGovernanceDetail)
+                            @Html.TextBoxFor(x => x.CCGovernanceDetail, new { maxlength = 240, @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.CCDeliveryModelId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CCDeliveryModelId)">
+                            @Html.LabelFor(x => x.CCDeliveryModelId, "Delivery model", new { @class = "form-label" })
+                            @Html.ValidationMessageFor(x => x.CCDeliveryModelId)
+                            @Html.DropDownListFor(x => x.CCDeliveryModelId, Model.CCDeliveryModels, "", new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.CCGroupLeadId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CCGroupLeadId)">
+                            @Html.LabelFor(x => x.CCGroupLeadId, "Group lead centre", new { @class = "form-label" })
+                            @Html.ValidationMessageFor(x => x.CCGroupLeadId)
+                            @Html.DropDownListFor(x => x.CCGroupLeadId, Model.CCGroupLead, "", new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.CCPhaseTypeId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CCPhaseTypeId)">
+                            @Html.LabelFor(x => x.CCPhaseTypeId, "Phase", new { @class = "form-label" })
+                            @Html.ValidationMessageFor(x => x.CCPhaseTypeId)
+                            @Html.DropDownListFor(x => x.CCPhaseTypeId, Model.CCPhaseTypes, "", new { @class = "form-control" })
+                        </div>
+                    }
+                    
+                    @if (Model.EditPolicy.CCDisadvantagedAreaId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CCDisadvantagedAreaId)">
+                            @Html.LabelFor(x => x.CCDisadvantagedAreaId, "Disadvantaged area", new { @class = "form-label" })
+                            @Html.ValidationMessageFor(x => x.CCDisadvantagedAreaId)
+                            @Html.DropDownListFor(x => x.CCDisadvantagedAreaId, Model.CCDisadvantagedAreas, "", new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.CCDirectProvisionOfEarlyYearsId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CCDirectProvisionOfEarlyYearsId)">
+                            @Html.LabelFor(x => x.CCDirectProvisionOfEarlyYearsId, "Direct provision of early years", new { @class = "form-label" })
+                            @Html.ValidationMessageFor(x => x.CCDirectProvisionOfEarlyYearsId)
+                            @Html.DropDownListFor(x => x.CCDirectProvisionOfEarlyYearsId, Model.CCDirectProvisionOfEarlyYears, "", new { @class = "form-control" })
+                        </div>
+                    }
+
+
                     @if (Model.EditPolicy.ProvisionSpecialClassesId)
                     {
                         <div class="form-group">
@@ -511,6 +598,8 @@
                             }
                             </fieldset>
                         </div>
+                        @* Flags the SEN list has been included in the request - DO NOT REMOVE. *@
+                        <input type="hidden" name="SENList" value="1" />
                     }
 
                     @if (Model.EditPolicy.TeenageMothersProvisionId)

@@ -8,6 +8,7 @@
     var filterIntent = null;
     var searchParams = '';
     var plsWait = '<div class="progress-indicator"><span class="visually-hidden">Please wait</span></div>';
+    var $sortLinks = $('#changes-table thead').find('a');
 
      function okClick() {
         this.closeModal();
@@ -80,7 +81,7 @@
             } else {
                 var fromDate = new Date(fromDateValues[2], fromDateValues[1], fromDateValues[0]);
                 var toDate = new Date(toDateValues[2], toDateValues[1], toDateValues[0]);
-                if (toDate < fromDate) {
+                if (toDate <= fromDate) {
                     canSubmit = false;
                     rangeError = true;
                 }
@@ -96,7 +97,6 @@
                     } else {
                         $('#date-filter').find('.error-message').slice(0, 1).removeClass('hidden');
                     }
-                    //
                 }
                 filterError = canSubmit;
 
@@ -107,7 +107,7 @@
 
     function getResults() {
         $('#ajax-error-message').addClass('hidden');
-        filterPanel.find('input').prop('disabled', 'disabled');
+        filterPanel.find(':input').prop('disabled', 'disabled');
         filterPanel.find('.filter-clear').addClass('clear-disabled');
         var resultsUrl = isEstabSearch
             ? '/ChangeHistory/Search/Establishments/results-js'
@@ -124,7 +124,7 @@
 
                 downloadLink.attr('href', downloadBaseUrl + searchParams);
                 resultsPanel.removeClass('pending-results-update');
-                filterPanel.find('input').removeAttr('disabled');
+                filterPanel.find(':input').removeAttr('disabled');
                 filterPanel.find('.filter-clear').removeClass('clear-disabled');
                 if (Number(xhr.getResponseHeader("x-count")) === 0) {
                     downloadLink.addClass('hidden');
@@ -138,7 +138,7 @@
             error: function () {
                 $('#ajax-error-message').removeClass('hidden');
                 resultsPanel.removeClass('pending-results-update').html('');
-                filterPanel.find('input').removeAttr('disabled');
+                filterPanel.find(':input').removeAttr('disabled');
                 downloadLink.addClass('hidden');
             }
         });
@@ -148,12 +148,42 @@
         openState = !openState;
         if (openState) {
             $('#filter-toggle').text('Hide filters');
+            $('#changes-table thead a').each(function(n, link) {
+                var text = $(link).html();
+                var hasSpace = text.indexOf(' ') > -1;
+                $(link).html(text.replace(' ', '<br>'));
+                if (hasSpace) {
+                    $(link).parent('th').addClass('multi-line');
+                }
+                
+            });
+            
         } else {
             $('#filter-toggle').text('Show filters');
+            $('#changes-table thead a').each(function (n, link) {
+                var text = $(link).html();
+                $(link).html(text.replace('<br>', ' '));
+
+                $(link).parent('th').removeClass('multi-line');
+            });
+
         }
+
+        $('#filters-open-state').val(openState);
+        
+
+        $sortLinks.each(function () {
+            var href = $(this).attr('href');
+            if (href.indexOf('filtersopen=') > -1) {
+                $(this).attr('href', href.substr(0,href.indexOf('filtersopen=')) + 'filtersopen=' + openState);
+            } else {
+                $(this).attr('href', href + '&filtersopen=' + openState);
+            }
+        });
         $('#filter-toggle').toggleClass('filters-closed');
         filterPanel.toggleClass('hidden');
         resultsPanel.toggleClass('column-full column-two-thirds');
+        $('#changes-table').toggleClass('expanded-table');
     }
 
 
@@ -166,8 +196,14 @@
             toggleFilters();
         });
 
+        if (DfE.searchUtils.getUrlParam('filtersopen') === 'false') {
+            $('#filter-toggle').click();
+        }
+
         $('#date-type-filter').on('change', function () {
             $('#date-filter-type-label').text('Date ' + $('#date-type-filter option:selected').text().toLowerCase());
+            $(this).parents('.govuk-option-select').find('.clear-selections')
+                .css({ left: $('#date-filter-type-label').width() + 12 + 'px' });
         });
 
         filterPanel.find('.trigger-result-update').on('change', function () {

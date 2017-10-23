@@ -18,151 +18,191 @@
         </code>
     </div>
 </div>
-<div v-show="Object.keys(apiBork).length === 0">
-    <div class="breadcrumbs">
-        <ul>
-            <li>
-                @Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)
-            </li>
-            <li>
-                @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)
-            </li>
-        </ul>
-    </div>
-    <div class="grid-row">
-        <div class="column-full">
-            <div class="wait-spinner" v-show="isProcessing" aria-live="polite">
-                <p class="visually-hidden">Please wait</p>
-            </div>
-            <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
-            <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRemoved">
-                <div class="tick"></div>
-                <p>Items approved. The editor has been notified by email.</p>
-                <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false"><span class="visually-hidden">Dismiss notification</span></a>
-            </div>
-
-            <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRejected">
-                <div class="tick"></div>
-                <p>Items rejected. The editor has been notified by email.</p>
-                <a class="cross" href="#" v-on:click="itemsConfirmedRejected = false"><span class="visually-hidden">Dismiss notification</span></a>
-            </div>
-            <p v-show="!isProcessing">
-                You have <span class="heading-xlarge count">{{currentCount}}</span> items that require your approval.
-            </p>
-
-            <div class="approve-reject" v-show="!isProcessing">
-                <form>
-                    <div class="error-summary" v-show="approvalError || noneSelectedError || apiError.length > 0">
-                        <p class="error-message" v-show="approvalError">Please select some changes to approve</p>
-                        <p class="error-message" v-show="noneSelectedError">Please select some changes to reject</p>
-                        <p class="error-message" v-show="apiError.length > 0" v-html="apiError"></p>
-                    </div>
-                    <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
-                        <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
-                        <button type="submit" name="action" value="" class="button"
-                                v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false, reason=''">Reject</button>
-                    </div>
-
-                    <div v-show="pendingRejection">
-                        <div v-bind:class="['form-group', (invalidReason || reasonLength) ? 'error' : '']">
-                            <label for="reason">Reason for rejecting updates</label>
-                            <span class="error-message" v-show="invalidReason">Please enter a reason for the rejection.</span>
-                            <span class="error-message" v-show="reasonLength">Please enter a reason less than 1024 characters</span>
-                            <textarea id="reason" class="edubase-textarea" v-model="reason"></textarea>
-                        </div>
-                        <div class="submit-cancel-panel">
-                            <button type="submit" name="action" class="button" v-on:click.prevent="confirmRejection">Confirm</button>
-                            <button type="submit" name="action" class="button button-grey cancel mobile-full-width"
-                                    v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false, apiError = false">Cancel</button>
-                        </div>
-                    </div>
-
-
-                </form>
-                <div>
-                    <div class="pagination" v-show="!isProcessing">
-                        <p class="pagination-info">
-                            Showing
-                            <span class="pagination-range">
-                                {{ paginationDescription }}
-                            </span>
-                            of
-                            <span class="result-count">{{currentCount}}</span>
-                        </p>
-                        <ul class="pagination-links">
-                            <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                            <li v-for="item in totalPages">
-                                <span v-if="item === currentPage + 1" class="numeric-pagination go-nowhere">{{ item }}</span>
-                                <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(item -1)">{{ item }}</a>
-                            </li>
-                            <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
-                        </ul>
-                    </div>
+    <div v-show="Object.keys(apiBork).length === 0">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)
+                </li>
+            </ul>
+        </div>
+        <div class="grid-row">
+            <div class="column-full">
+                <div class="wait-spinner" v-show="isProcessing" aria-live="polite">
+                    <p class="visually-hidden">Please wait</p>
                 </div>
-                <div class="changes-list-wrapper" v-show="!isProcessing">
-                    <changes-table :pages="changes" :current-page="currentPage"></changes-table>
+                <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
+                <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRemoved">
+                    <div class="tick"></div>
+                    <p>Items approved. The editor has been notified by email.</p>
+                    <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false"><span class="visually-hidden">Dismiss notification</span></a>
+                </div>
+
+                <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRejected">
+                    <div class="tick"></div>
+                    <p>Items rejected. The editor has been notified by email.</p>
+                    <a class="cross" href="#" v-on:click="itemsConfirmedRejected = false"><span class="visually-hidden">Dismiss notification</span></a>
+                </div>
+                <p v-show="!isProcessing">
+                    You have <span class="heading-xlarge count">{{currentCount}}</span> items that require your approval.
+                </p>
+
+                <div class="approve-reject" v-show="!isProcessing">
+                    <form>
+                        <div class="error-summary" v-show="approvalError || noneSelectedError || apiError.length > 0">
+                            <p class="error-message" v-show="approvalError">Please select some changes to approve</p>
+                            <p class="error-message" v-show="noneSelectedError">Please select some changes to reject</p>
+                            <p class="error-message" v-show="apiError.length > 0" v-html="apiError"></p>
+                        </div>
+                        <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
+                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
+                            <button type="submit" name="action" value="" class="button"
+                                    v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false, reason=''">Reject</button>
+                        </div>
+
+                        <div v-show="pendingRejection">
+                            <div v-bind:class="['form-group', (invalidReason || reasonLength) ? 'error' : '']">
+                                <label for="reason">Reason for rejecting updates</label>
+                                <span class="error-message" v-show="invalidReason">Please enter a reason for the rejection.</span>
+                                <span class="error-message" v-show="reasonLength">Please enter a reason less than 1024 characters</span>
+                                <textarea id="reason" rows="7" class="form-control-3-4" v-model="reason"></textarea>
+                                <p>
+                                    <a href="#" v-on:click.prevent="showRejections=true" class="plus-link">Add a preset reason</a>
+                                </p>
+                            </div>
+                            <div class="button-row">
+                                <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection">Submit</button>
+                                <button type="submit" name="action" class="button button-grey cancel mobile-full-width"
+                                        v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false, apiError = false">Cancel</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                    <div>
+                        <div class="pagination" v-show="!isProcessing">
+                            <p class="pagination-info">
+                                Showing
+                                <span class="pagination-range">
+                                    {{ paginationDescription }}
+                                </span>
+                                of
+                                <span class="result-count">{{currentCount}}</span>
+                            </p>
+                            <ul class="pagination-links">
+                                <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
+                                <li v-for="item in totalPages">
+                                    <span v-if="item === currentPage + 1" class="numeric-pagination go-nowhere">{{ item }}</span>
+                                    <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(item -1)">{{ item }}</a>
+                                </li>
+                                <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="changes-list-wrapper" v-show="!isProcessing">
+                        <table class="edubase-table approval-changes sortable-table" id="changes-table">
+                            <thead>
+                            <tr>
+                                <td class="cell-checkbox">&nbsp;</td>
+                                <th scope="col" class="cell-urn">
+                                    <a href="#" v-on:click.prevent="setSort('establishmentUrn')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentUrn' ? 'selected-sort': '' ]">URN</a>
+                                </th>
+                                <th scope="col" class="cell-estab">
+                                    <a href="#" v-on:click.prevent="setSort('establishmentName')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentName' ? 'selected-sort': '' ]">Establishment</a>
+                                </th>
+                                <th scope="col" class="cell-updatedfield">
+                                    <a href="#" v-on:click.prevent="setSort('fieldName')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='fieldName' ? 'selected-sort': '' ]">Updated field</a>
+                                </th>
+                                <th scope="col" class="cell-oldvalue">
+                                    <a href="#" v-on:click.prevent="setSort('oldValue')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='oldValue' ? 'selected-sort': '' ]">Old value</a>
+                                </th>
+                                <th scope="col" class="cell-newvalue">
+                                    <a href="#" v-on:click.prevent="setSort('newValue')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='newValue' ? 'selected-sort': '' ]">New value</a>
+                                </th>
+                                <th scope="col" class="cell-edate multi-line">
+                                    <a href="#" v-on:click="setSort('effectiveDateUtc')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='effectiveDateUtc' ? 'selected-sort': '' ]">Effective<br/>date</a>
+                                </th>
+                                <th scope="col" class="cell-rdate multi-line">
+                                    <a href="#" v-on:click.prevent="setSort('requestedDateUtc')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='requestedDateUtc' ? 'selected-sort': '' ]">Date<br/>requested</a>
+                                </th>
+                                <th scope="col" class="cell-suggested multi-line">
+                                    <a href="#" v-on:click="setSort('originatorFullName')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='originatorFullName' ? 'selected-sort': '' ]">Suggested<br/>from</a>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody v-if="changes.length > 0">
+                            <tr v-for="(entry, index) in changes">
+                                <td class="cell-checkbox" aria-label="Select item">
+                                    <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox">
+                                    <label class="edubase-label edubase-button-checkbox" :for="'change-'+entry.id">
+                                        <span class="visuallyhidden">Select this change for approval or rejection</span>
+                                    </label>
+                                </td>
+                                <td aria-label="URN">
+                                    <a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentUrn}}</a>
+                                </td>
+                                <td aria-label="Establishment"><a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentName}}</a></td>
+                                <td aria-label="Updated field">{{entry.fieldName}}</td>
+                                <td aria-label="Old value">{{entry.oldValue}}</td>
+                                <td aria-label="New value">{{entry.newValue}}</td>
+                                <td aria-label="Effective date">{{formatDate(entry.effectiveDateUtc)}}</td>
+                                <td aria-label="Date requested">{{formatDate(entry.requestedDateUtc)}}</td>
+                                <td aria-label="Suggested from">{{entry.originatorFullName}}</td>
+                            </tr>
+                            </tbody>
+                            <tbody v-else>
+                            <tr>
+                                <td colspan="9">
+                                    <p> You have no items requiring approval.</p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
-
-
-
-@section ViewScripts{
-
-    <script type="text/x-template" id="table-template">
-        <table class="edubase-table approval-changes" id="changes-table">
-            <thead>
-                <tr>
-                    <td class="cell-checkbox">&nbsp;</td>
-                    <th scope="col" class="cell-urn">
-                        <abbr title="Unique reference number">
-                            URN
-                        </abbr>
-                    </th>
-                    <th scope="col" class="cell-estab">Establishment</th>
-                    <th scope="col" class="cell-updatedfield">Updated field</th>
-                    <th scope="col" class="cell-oldvalue">Old value</th>
-                    <th scope="col" class="cell-newvalue">New value</th>
-                    <th scope="col" class="cell-edate">Effective date</th>
-                    <th scope="col" class="cell-rdate">Date requested</th>
-                    <th scope="col" class="cell-suggested">Suggested from</th>
-                </tr>
-            </thead>
-            <tbody v-if="pages.length > 0">
-                <tr v-for="(entry, index) in page">
-                    <td class="cell-checkbox" aria-label="Select item">     
-                        <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox">
-                        <label class="edubase-label edubase-button-checkbox" :for="'change-'+entry.id">
-                            <span class="visuallyhidden">Select this change for approval or rejection</span>
+    <div class="modal-overlay" v-show="showRejections"></div>
+    <div class="modal-content" v-show="showRejections">
+        <a class="modal-exit" href="#" v-on:click.prevent="showRejections=false; reasonIds=[]">Close</a>
+        <div class="modal-inner">
+            <h2 class="heading-medium">Add reason(s) for rejection</h2>
+            <p class="error-message" v-show="noReasonSelectedError">Please select at least one reason to add.</p>
+            <div class="reasons-wrapper scroll-wrapper">
+                <div class="scroll-content">
+                    <div class="filter-wrapper" v-for="(reason, index) in cannedRejections">
+                        <input :id="'reason-' + reason.id" class="filter-input" :value="reason.id" type="checkbox" v-model="reasonIds">
+                        <label :for="'reason-'+ reason.id" class="filter-radio">
+                            {{reason.title}}
                         </label>
-                    </td>
-                    <td aria-label="URN">
-                        <a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentUrn}}</a>
-                    </td>
-                    <td aria-label="Establishment"><a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentName}}</a></td>
-                    <td aria-label="Updated field">{{entry.fieldName}}</td>
-                    <td aria-label="Old value">{{entry.oldValue}}</td>
-                    <td aria-label="New value">{{entry.newValue}}</td>
-                    <td aria-label="Effective date">{{formatDate(entry.effectiveDateUtc)}}</td>
-                    <td aria-label="Date requested">{{formatDate(entry.requestedDateUtc)}}</td>
-                    <td aria-label="Suggested from">{{entry.originatorFullName}}</td>
-                </tr>
-            </tbody>
-            <tbody v-else>
-                <tr>
-                    <td colspan="9">
-                        <p> You have no items requiring approval.</p>        
-                    </td>
-                </tr>
-            </tbody>
-         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="button-row">
+            <a href="#" class="button mobile-full-width" v-on:click.prevent="selectReason">OK</a>
+            <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="showRejections = false; reasonIds =[]">Cancel</a>
+        </div>        
+    </div>
+</div>
 
-</script>
+@{ Html.RenderPartial("Partials/_RejectionReasons"); }
 
-@*<script src="/public/assets/scripts/standalone/approvals.js"></script>*@
-<script src="/Assets/Scripts/standalone/approvals.js"></script>
+@section ViewScripts
+    {
+   @*<script src="/Assets/Scripts/standalone/approvals.js"></script>*@
+    <script src="/public/assets/scripts/standalone/approvals.js"></script>
 
 }

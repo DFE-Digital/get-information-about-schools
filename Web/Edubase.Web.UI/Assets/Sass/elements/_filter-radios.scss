@@ -72,20 +72,15 @@ input:checked + .filter-radio:after,
 }
 
 .select-all-wrap {
-    background-color: $grey-3;
+    background-color: $grey-4;
 
     .filter-radio{
         &:hover {
-            background-color: $grey-3;
+            background-color: $grey-4;
         }
         &:before {
             background-color: $white;
         }
     }
 
-    input:disabled + .filter-radio {
-        &:before, &:after {
-            border-color: $grey-2;
-        }
-    }
 }

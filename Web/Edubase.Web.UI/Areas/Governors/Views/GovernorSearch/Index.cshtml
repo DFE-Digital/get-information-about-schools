@@ -15,46 +15,48 @@
         </div>
         <h1 class="heading-xlarge">Search results</h1>
         <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
-            <p>
-                Governor@(Model.Count == 1 ? "" : "s") 
-                
-                @if (Model.GovernorSearchModel.Forename.Clean() != null ||
-                     Model.GovernorSearchModel.Surname.Clean() != null ||
-                     Model.SelectedRoleIds.Any())
-                {
-                    <text>matching</text>
+    </div>
+    <div class="column-full">        
+        <p>
+            Governor@(Model.Count == 1 ? "" : "s")
 
+            @if (Model.GovernorSearchModel.Forename.Clean() != null ||
+                 Model.GovernorSearchModel.Surname.Clean() != null ||
+                 Model.SelectedRoleIds.Any())
+            {
+                <text>matching</text>
+
+                if (Model.GovernorSearchModel.Forename.Clean() != null)
+                {
+                    <text>first name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
+
+                }
+
+                if (Model.GovernorSearchModel.Surname.Clean() != null)
+                {
                     if (Model.GovernorSearchModel.Forename.Clean() != null)
                     {
-                        <text>first name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
-
+                        <text>, </text>
                     }
-
-                    if (Model.GovernorSearchModel.Surname.Clean() != null)
-                    {
-                        if (Model.GovernorSearchModel.Forename.Clean() != null)
-                        {
-                            <text>, </text>
-                        }
-                        <text>last name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
-                    }
-
-                    if (Model.SelectedRoleIds.Any())
-                    {
-                        if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
-                        {
-                            <text>and </text>
-                        }
-                        else
-                        {
-                            <text>for </text>
-                        }
-                        <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
-                    }
+                    <text>last name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
                 }
-                
-            </p>
-        </div>
+
+                if (Model.SelectedRoleIds.Any())
+                {
+                    if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
+                    {
+                        <text>and </text>
+                    }
+                    else
+                    {
+                        <text>for </text>
+                    }
+                    <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
+                }
+            }
+
+        </p>
+    </div>
 </div>
 
 <div class="grid-row">
@@ -62,10 +64,8 @@
     <div class="column-third">
         <div class="filter-form" id="filter-form">
             <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
-                <div class="blanket"></div>
-                <div class="filter-divider"></div>
-                <form method="get" action="@Url.Action("Index", "GovernorSearch", new { area = "Governors" })">
-
+                <form method="get" action="@Url.Action("Index", "GovernorSearch", new {area = "Governors"})">
+                    <input type="hidden" id="client-only-searchtype" value="Governors" />
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-sort-by">
                         <div class="container-head js-container-head">
@@ -81,14 +81,21 @@
                     <div class="govuk-option-select js-collapsible" id="option-select-role-type">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Role</div>
-                            <div class="js-selected-counter"></div>
+                            <div class="js-selected-counter">
+                                <span class="js-selected-counter-text"></span>
+                            </div>
                         </div>
-                        <a href="#" class="clear-selections">Clear</a>
+                        <a href="#" class="clear-selections filter-clear">Clear</a>
                         <div class="options-container" id="">
                             <div class="js-auto-height-inner">
                                 <fieldset>
-                                    <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
+                                    <div class="filter-wrapper select-all-wrap">
+                                        <input id="govrole_all" class="filter-input select-all" type="checkbox"/>
+                                        <label for="govrole_all" class="filter-radio">
+                                            All
+                                        </label>
+                                    </div>
                                     @foreach (var item in Model.GovernorRoles.OrderBy(x => x.Name))
                                     {
                                         <div class="filter-wrapper">
@@ -97,39 +104,50 @@
                                                 @item
                                             </label>
                                         </div>
-                                        
-                                    }
-                                </fieldset>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="govuk-option-select js-collapsible" id="option-select-group-type">
-                        <div class="container-head js-container-head">
-                            <div class="option-select-label">Establishment/group type</div>
-                            <div class="js-selected-counter"></div>
-                        </div>
-                        <a href="#" class="clear-selections">Clear</a>
-                        <div class="options-container" id="">
-                            <div class="js-auto-height-inner">
-                                <fieldset>
-                                    <span class="visuallyhidden">- changing the selection will refresh the results</span>
-                                    <legend class="visuallyhidden">Select an option below to filter the results</legend>
-                                    @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
-                                    {
-                                        <div class="filter-wrapper">
-                                            <input name="g" class="trigger-result-update filter-input" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked") />
-                                            <label for="group-type_@item.Id" class="filter-radio">
-                                                @item
-                                            </label>
-                                        </div>                                        
+
                                     }
                                 </fieldset>
                             </div>
                         </div>
                     </div>
 
-                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
+                    <div class="govuk-option-select js-collapsible" id="option-select-group-type">
+                        <div class="container-head js-container-head">
+                            <div class="option-select-label">Establishment/group type</div>
+                            <div class="js-selected-counter">
+                                <span class="js-selected-counter-text"></span>
+                            </div>
+                        </div>
+                        <a href="#" class="clear-selections filter-clear">Clear</a>
+                        <div class="options-container" id="">
+                            <div class="js-auto-height-inner">
+                                <fieldset>
+                                    <legend class="visuallyhidden">Select an option below to filter the results</legend>
+                                    <div class="filter-wrapper select-all-wrap">
+                                        <input id="grouptype_all" class="filter-input select-all" type="checkbox"/>
+                                        <label for="grouptype_all" class="filter-radio">
+                                            All
+                                        </label>
+                                    </div>
+                                    @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
+                                    {
+                                        <div class="filter-wrapper">
+                                            <input name="g" class="trigger-result-update filter-input" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked")/>
+                                            <label for="group-type_@item.Id" class="filter-radio">
+                                                @item
+                                            </label>
+                                        </div>
+                                    }
+                                </fieldset>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="filter-addtional-controls">
+                        <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
+                    </div>
+
+                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit"/>
                     @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
                     @Html.HiddenFor(!Model.GovernorSearchModel.Surname.IsEmpty(), x => x.GovernorSearchModel.Surname)
                     @Html.HiddenFor(Model.GovernorSearchModel.IncludeHistoric, x => x.GovernorSearchModel.IncludeHistoric)

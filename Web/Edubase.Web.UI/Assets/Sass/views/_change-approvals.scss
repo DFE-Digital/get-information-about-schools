@@ -2,7 +2,7 @@
 
 .changes-list-wrapper {
     border-top: 1px $black solid;
-    padding-top: 12px;
+    padding-top: 4px;
 }
 
 
@@ -23,8 +23,6 @@
 }
 
 .change-approvals {
-
-
     .pending-updates-message {
         padding-left: 50px;
     }
@@ -296,6 +294,26 @@ input:focus + .edubase-button-radio:before {
 
         .edubase-button-checkbox {
             font-size: 19px;
+        }
+    }
+}
+
+.modal-content {
+    .scroll-wrapper {
+        width: 100%;
+    }
+
+    .filter-wrapper {
+        .filter-input {
+            @include opacity(0);
+            position: absolute;
+        }
+
+        .filter-radio {
+            display: block;
+            float: none;
+            font-size: 16px;
+            padding: 8px 0 8px 32px;
         }
     }
 }

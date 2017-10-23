@@ -31,21 +31,21 @@ namespace Edubase.Web.UI.Models.Grid
             Title = title;
         }
 
-        public GridViewModel<T> AddHeaderCell(string text)
+        public GridViewModel<T> AddHeaderCell(string text, string sortKey)
         {
-            HeaderCells.Add(new GridCellViewModel(text));
+            HeaderCells.Add(new GridCellViewModel(text, sortKey));
             return this;
         }
 
-        public GridViewModel<T> AddHeaderCell(string text, bool condition)
+        public GridViewModel<T> AddHeaderCell(string text, bool condition, string sortKey = "", string sortType = "")
         {
-            if(condition) HeaderCells.Add(new GridCellViewModel(text));
+            if(condition) HeaderCells.Add(new GridCellViewModel(text, sortKey, sortType));
             return this;
         }
 
-        public GridRowViewModel<T> AddRow(T domainModel)
+        public GridRowViewModel<T> AddRow(T domainModel, object sortValue = null)
         {
-            var row = new GridRowViewModel<T>(this) { Model = domainModel };
+            var row = new GridRowViewModel<T>(this) { Model = domainModel, SortValue = sortValue };
             Rows.Add(row);
             return row;
         }

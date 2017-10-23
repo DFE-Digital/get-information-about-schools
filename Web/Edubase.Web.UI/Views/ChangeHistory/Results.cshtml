@@ -4,10 +4,12 @@
 @{
     ViewBag.Title = "";
     ViewBag.PageClass = "search-history-results search-results";
+
+    
 }
 
 <div class="grid-row">
-    <div class="column-full results-heading">
+    <div class="column-full results-heading change-history-results-heading">
         <div class="breadcrumbs">
             <ul>
                 <li>
@@ -50,17 +52,26 @@
     </div>
     <form id="change-history-filters">
         @Html.HiddenFor(m => m.SelectedTab)
-        @Html.HiddenFor(m=>m.SearchType)
+        @Html.HiddenFor(m => m.SearchType)
+        @Html.HiddenFor(m => m.TextSearchModel.Text)
+        @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValue)
+        @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValueAsInt)
+        @Html.HiddenFor(m => m.GroupSearchModel.Text)
+        @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValue)
+        @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValueAsInt)
+        @Html.HiddenFor(m=> m.Sortby)
+        <input type="hidden" value="true" name="filteropen" id="filters-open-state"/>
+
         <div class="column-third" id="filter-container">
             <div class="filter-form" id="filter-form">
                 <div id="EditSearchCollapse" class="blanket-container">
 
-                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="true" id="date-filter">
+                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Date changes</div>
                             <div class="js-selected-counter">
                                 <span class="js-selected-counter-text" id="date-filter-type-label">Date applied</span>
-                            </div>
+                            </div>                            
                         </div>
                         <a href="#" class="clear-selections filter-clear">Clear</a>
                         <div class="options-container" id="">
@@ -83,19 +94,22 @@
                     {
                         if (!Model.SingleEstablishment)
                         {
-                            @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds, null, true)
+                            @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds, null)
                         }
-                        @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields, null, true)
+                        @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields, null)
                     }
                     else
                     {
-                        @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null, false)
+                        if (!Model.SingleGroup)
+                        {
+                            @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null)
+                        }
                     }
-                    @DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
+                    @*@DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
                     @if (Model.IsEstablishmentSearch)
                     {
                         @DropdownSelector("Approved By", ChangeHistoryViewModel.BIND_ALIAS_APPROVED_BY, Model.ApproverGroups, m => m.ApprovedBy)
-                    }
+                    }*@
                 </div>
             </div>
         </div>
@@ -113,10 +127,9 @@
 
 </div>
 
-@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
+@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "")
 {
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
@@ -150,10 +163,9 @@
     </div>
 }
 
-@helper Selector(string label, string name, IEnumerable<StringLookupItemViewModel> items, List<string> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
+@helper Selector(string label, string name, IEnumerable<StringLookupItemViewModel> items, List<string> selectedItems, string additionalClassName = "")
 {
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
@@ -187,10 +199,9 @@
     </div>
 }
 
-@helper DropdownSelector(string label, string name, IEnumerable<SelectListItem> items, Expression<Func<ChangeHistoryViewModel, string>> expression, string additionalClassName = "", bool isExtraFilter = false)
+@helper DropdownSelector(string label, string name, IEnumerable<SelectListItem> items, Expression<Func<ChangeHistoryViewModel, string>> expression, string additionalClassName = "")
 {
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">

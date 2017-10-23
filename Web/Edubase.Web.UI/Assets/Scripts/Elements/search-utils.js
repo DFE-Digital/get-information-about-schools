@@ -6,6 +6,18 @@ DfE.searchUtils = (function () {
     var errorSummary = $('#js-filter-error-summary');
         
     return {
+        getUrlParam: function (name) {
+            var p = {};
+            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+                function (m, key, value) {
+                    p[key] = value;
+                });
+
+            if (name) {
+                return p[name];
+            } 
+            return p;
+        },
         updateSearchedLas: function () {
             var laCount = 0;
             selectedLas = [];
@@ -192,6 +204,46 @@ DfE.searchUtils = (function () {
                         DfE.searchResults.getResults();
                     }
                     
+                }
+            });
+        },
+        validateRadiusFilter: function () {
+            var filters = $('#EditSearchCollapse').find('.radius-filter');
+            var canSubmit = true;
+            errorSummary.addClass('hidden');
+            errorSummary.find('.summary-range-error').addClass('hidden');
+            filters.each(function (n, elem) {
+                $(elem).find('.form-group').removeClass('error');
+                $(elem).find('.error-message').addClass('hidden');
+
+                var fields = $(elem).find('.form-control');
+                var valid = true;
+                $.each(fields,
+                    function (m, field) {
+                        if (isNaN(field.value)) {
+                            valid = false;
+                            canSubmit = false;
+                        }
+                    });
+
+                if (!valid) {
+                    $(elem).find('.form-group').addClass('error');
+                    $(elem).find('.error-message').removeClass('hidden');
+                    errorSummary.removeClass('hidden');
+                    errorSummary.find('.summary-range-error').removeClass('hidden');
+                    return;
+                }
+
+                if (n + 1 === filters.length && canSubmit) {
+
+                    if (DfE.searchMap.currentView === 'map') {
+                        DfE.searchMap.getSearchData();
+                    } else {
+                        DfE.searchMap.dataRefreshRequired = true;
+                        DfE.searchResults.setSearchParams();
+                        DfE.searchResults.getResults();
+                    }
+
                 }
             });
         }

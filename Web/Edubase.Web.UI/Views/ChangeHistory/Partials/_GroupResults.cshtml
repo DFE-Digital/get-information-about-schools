@@ -1,24 +1,49 @@
 ﻿@using Edubase.Services.Enums
 @model ChangeHistoryViewModel
 
+@{
+    var request = HttpContext.Current.Request;
+    var sortDir = "desc";
+    var sortField = "requestedDateUtc";
+    if (!string.IsNullOrEmpty(request.QueryString["sortby"])) 
+    {
+        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+    }
+}
 
    @if (Model.Items.Any())
    {
     <div>
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
-    <table class="edubase-table change-history" id="changes-table">
+    <table class="edubase-table change-history sortable-table expanding-table group-change-history" id="changes-table">
         <thead>
             <tr>
-                <th scope="col" class="cell-edate">Date changed</th>
+                <th scope="col" class="cell-edate multi-line">
+                    <a href="@Url.SortUrl("requestedDateUtc")"
+                       class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date<br/>changed</a>
+                </th>
                 @if (!Model.SingleGroup)
                 {
-                    <th scope="col" class="cell-urn">Group UID</th>
-                    <th scope="col" class="cell-estab">Group</th>
+                    <th scope="col" class="cell-requesttype multi-line">
+                        <a href="@Url.SortUrl("uid")"
+                           class="@Html.Conditional(sortField == "uid", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Group<br/>UID</a>
+                    </th>
+                    <th scope="col" class="cell-estab single-line">
+                        <a href="@Url.SortUrl("groupName")"
+                           class="@Html.Conditional(sortField == "groupName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Group</a>
+                    </th>
                 }
-                <th scope="col" class="cell-requesttype">Request type</th>
-                <th scope="col" class="cell-change">Change</th>
-                <th scope="col" class="cell-suggested">Suggested by</th>
+                <th scope="col" class="cell-requesttype multi-line">
+                    <a href="@Url.SortUrl("requestType")"
+                       class="@Html.Conditional(sortField == "requestType", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Request<br/>type</a>
+                </th>
+                <th scope="col" class="cell-change"><span class="not-a-link">Change</span></th>
+                <th scope="col" class="cell-suggested multi-line">
+                    <a href="@Url.SortUrl("originatorUserName")"
+                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested<br/> by</a>
+                </th>
             </tr>
         </thead>
         <tbody>

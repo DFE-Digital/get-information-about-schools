@@ -5,40 +5,7 @@
         confirmUrl: '/api/approvals/change-request'
         
     };
-    Vue.component('changes-table',
-        {
-            template: '#table-template',
-            props: {
-                currentPage: {
-                    type: Number,
-                    default: 1
-                },
-                maxPageSize: {
-                    type: Number,
-                    default: 10
-                },
-                pages: Array
-            },
-
-            computed: {
-                page: function () {
-                    return this.pages;
-                }
-            },
-            methods: {
-                detailUrl: function (urn) {
-                    return '/Establishments/Establishment/Details/' + urn;
-                },
-                formatDate: function (utcDate) {
-                    if (utcDate === null) {
-                        return 'unknown';
-                    }
-                    var d = new Date(utcDate);
-                    return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/');
-                }
-            }
-        });
-
+    
     var approvalApp = new Vue({
             el: '#change-approvals',
             data: {
@@ -59,7 +26,13 @@
                 itemsConfirmedRejected: false,
                 isProcessing: true,
                 apiError: '',
-                apiBork: {}
+                apiBork: {},
+                sortAscending: true,
+                sortType: 'effectiveDateUtc',
+                cannedRejections: window.GIASRejections || [],
+                showRejections: false,
+                noReasonSelectedError: false,
+                reasonIds: []
 
             },
             created: function() {
@@ -84,17 +57,64 @@
 
             },
             methods: {
+                selectReason: function () {
+                    var reasonText = this.reason;
+                    var self = this;
+                    this.noReasonSelectedError = false;
+
+                    if (this.reasonIds.length === 0) {
+                        return this.noReasonSelectedError = true;
+                    }
+                    if (reasonText.length > 0) {
+                        reasonText = reasonText + '\n';
+                    }
+
+                    for (var i = 0, len = this.reasonIds.length; i < len; i++) {
+                        var reason = this.cannedRejections.filter(function(r) {
+                            if (r.id === Number(self.reasonIds[i])) {
+                                return r;
+                            }
+                        })[0];
+
+                        reasonText += reason.title + '\n' + reason.content + '\n';
+                       
+                    }
+                    this.reason = reasonText;
+                    this.reasonIds = [];
+                    this.showRejections = false;
+                    $('#reason').focus().trigger('drop');
+                },
+                setSort: function(sort) {
+                    if (sort === this.sortType) {
+                        this.sortAscending = !this.sortAscending;
+                    } else {
+                        this.sortType = sort;
+                    }
+
+                    this.getChangesData();
+                },
+                detailUrl: function (urn) {
+                    return '/Establishments/Establishment/Details/' + urn;
+                },
+                formatDate: function (utcDate) {
+                    if (utcDate === null) {
+                        return 'unknown';
+                    }
+                    var d = new Date(utcDate);
+                    return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/');
+                },
                 getChangesData: function (skip, callback) {
                     var self = this;
                     this.isProcessing = true;
-
+                    var sortDir = this.sortAscending ? '-asc' : '-desc';
                     $('#changes-table').find(':checkbox').prop('checked', false);
                     
                     $.ajax({
                         url: defaults.apiUrl,
                         data: {
                             take: defaults.pageSize,
-                            skip: skip || 0
+                            skip: skip || 0,
+                            sortBy: this.sortType + sortDir // Jon: put `th.data-sortkey` value into here and concat '-asc' or '-desc'
                         },
                         success: function (data) {
                             self.currentCount = data.count;

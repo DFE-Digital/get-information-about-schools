@@ -65,3 +65,36 @@
         min-width: 112px;
     }
 }
+
+.radius-filter.govuk-option-select {
+    label {
+        width: auto;
+        display: block;
+        padding: 0;
+        border: 0;
+
+        &:hover {
+            background-color: #fff;
+        }
+    }
+
+    .filter-button {
+        @include core-19;
+        width: 70%;
+        float: right;
+        margin-bottom: 12px;
+        margin-right: 44px;
+    }
+
+    .range-group {
+        margin: 12px;
+    }
+
+    .inline-form-control {
+        margin-right: 8px;
+    }
+
+    .form-control {
+        min-width: 112px;
+    }
+}

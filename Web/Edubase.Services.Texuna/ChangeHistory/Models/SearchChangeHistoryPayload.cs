@@ -16,6 +16,6 @@ namespace Edubase.Services.Texuna.ChangeHistory.Models
         public DateTime? EffectiveDateTo { get; set; }
         public DateTime? ApprovedDateFrom { get; set; }
         public DateTime? ApprovedDateTo { get; set; }
-
+        public string SortBy { get; set; }
     }
 }

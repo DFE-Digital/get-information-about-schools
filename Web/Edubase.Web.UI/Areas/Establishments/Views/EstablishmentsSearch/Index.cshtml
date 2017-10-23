@@ -13,7 +13,7 @@
 <div class="grid-row" id="search-results">
     <div class="column-full results-heading">
         <div class="breadcrumbs">            
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = @Model.SearchType})">Back to find an establishment</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = Model.SearchType})">Back to find an establishment</a>
         </div>
 
         <h1 class="heading-xlarge">Search results</h1>
@@ -21,29 +21,18 @@
         {
             <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
         }
-        <div class="error-summary hidden" id="js-filter-error-summary">
-            <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
-            <ul class="error-summary-list">
-                <li class="summary-date-error error-message hidden">Your date format is not recognised</li>
-                <li class="summary-range-error error-message hidden">Your age range format is not recognised</li>
-            </ul>
-        </div>
-        <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
-            <p>Incomplete historical data means a number of records have no open date recorded and do not appear in this search.</p>
-        </div>
+    </div>
+    <div class="column-full">
         <p>
             @if (Model.SearchType == eSearchType.Text)
             {
                 if (Model.TextSearchType == M.eTextSearchType.EstablishmentName || 
                     Model.TextSearchType == M.eTextSearchType.Unknown)
                 {
-                    <text>
-                        @*We found <span class="heading-xlarge count">@Model.Count</span> establishments*@
-                        @if (!Model.TextSearchModel.Text.IsEmpty())
-                        {
-                            <text>Establishments matching &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
-                        }
-                    </text>
+                    if (!Model.TextSearchModel.Text.IsEmpty())
+                    {
+                        <text>Establishments matching &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
+                    }
                 }
                 else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
                 {
@@ -72,17 +61,26 @@
                 }
                 <text>Establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
             }
-            @*else
-            {
-                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
-            }*@
-        </p>
+    </p>
+    </div>
+    <div class="column-full">
+        <div class="error-summary hidden" id="js-filter-error-summary">
+            <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
+            <ul class="error-summary-list">
+                <li class="summary-date-error error-message hidden">Please enter the date in the format DD/MM/YYYY</li>
+                <li class="summary-range-error error-message hidden">Please enter the age in the correct format, for example 5 to 11</li>
+            </ul>
+        </div>
+        <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
+            <p>Incomplete historical data means a number of records have no open date recorded and do not appear in this search.</p>
+        </div>
     </div>
 </div>
 
 
 <div class="grid-row">
     <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new {area = ""})">
+        <input type="hidden" id="client-only-searchtype" value="@Model.SearchType" />
         <div class="filter-form" id="filter-form">
             <div class="column-third">
 
@@ -92,7 +90,6 @@
                     @if (Model.SearchType == eSearchType.Location)
                     {
                         @RadiusSelector("Within radius of")
-
                     }
 
 
@@ -115,9 +112,9 @@
 
                     @CloseDateFilter()
 
-                    @Html.EditorFor(x => x.AgeRangeLow, new { title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM })
+                    @Html.EditorFor(x => x.AgeRangeLow, new {title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM})
 
-                    @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM })
+                    @Html.EditorFor(x => x.AgeRangeHigh, new {title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM})
 
                     @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies.OrderBy(x => x.Name), Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
 
@@ -157,11 +154,11 @@
 
                     <div id="filter-addtional-controls">
                         <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
-                        <a href="#" class="add-filters-link add-clear-filters">+ Add more filters</a>
+                        <a href="#" class="add-filters-link add-clear-filters">Add/remove filters</a>
                     </div>
 
 
-                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
+                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit"/>
 
                     @if (Model.SearchType == eSearchType.Text)
                     {
@@ -174,7 +171,7 @@
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                     }
 
-                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
+                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters"/>
 
                     @Html.HiddenFor(x => x.SearchType)
 
@@ -182,29 +179,29 @@
 
                 </div>
 
-            <div id="additional-filter-wrap" class="hidden">
-                <div class="govuk-option-select js-collapsible searchable-filters" data-closed-on-load="false" id="option-select-additional-filters">
-                    <div class="container-head js-container-head">
-                        <div class="option-select-label">Add more filters</div>
-                        <div class="js-selected-counter">
-                            <span class="js-selected-counter-text"></span>
+                <div id="additional-filter-wrap" class="hidden">
+                    <div class="searchable-filters govuk-option-select additional-filters" data-closed-on-load="false" id="option-select-additional-filters">
+                        <div class="container-head js-container-head">
+                            <div class="option-select-label">Add/remove filters</div>
+                            <div class="js-selected-counter">
+                                <span class="js-selected-counter-text"></span>
+                            </div>
+                        </div>
+                        <a href="#" class="clear-selections filter-clear">Clear</a>
+                        @SearchWithin()
+                        <div class="options-container" id="">
+                            <div class="js-auto-height-inner">
+                                <div class="suggestion-target"></div>
+                                <fieldset id="filter-type-target"></fieldset>
+                            </div>
                         </div>
                     </div>
-                    <a href="#" class="clear-selections filter-clear">Clear</a>
-                    @SearchWithin()
-                    <div class="options-container" id="">
-                        <div class="js-auto-height-inner">
-                            <div class="suggestion-target"></div>
-                            <fieldset id="filter-type-target"></fieldset>
-                        </div>
-                    </div>
+
+                    <input value="Add/remove" class="button " id="filter-refine" type="submit">
+                    <button class="button button-grey " id="add-filter-cancel">Cancel</button>
                 </div>
 
-                <input value="Add" class="button " id="filter-refine" type="submit">
-                <button class="button button-grey " id="add-filter-cancel">Cancel</button>
             </div>
-
-                </div>
 
             <div class="column-two-thirds" id="results-container">
 
@@ -253,6 +250,12 @@
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="filter-wrapper select-all-wrap">
+                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
+                        <label for="@(name)_all" class="filter-radio">
+                            All
+                        </label>
+                    </div>
                     @foreach (var item in items)
                     {
                         <div class="filter-wrapper">
@@ -295,6 +298,12 @@
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="filter-wrapper select-all-wrap">
+                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
+                        <label for="@(name)_all" class="filter-radio">
+                            All
+                        </label>
+                    </div>
                     @foreach (var item in items)
                     {
                         <dl class="nested-items">
@@ -390,6 +399,34 @@
         </select>
     </div>
     
+}
+
+@helper RadiusSelector2() {
+
+    <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS">
+
+        <div class="container-head js-container-head">
+            <div class="option-select-label">Within radius of</div>
+            <div class="js-selected-counter"></div>
+        </div>
+        <div class="options-container" id="">
+            <div class="js-auto-height-inner">
+                <div class="form-group">
+                    <fieldset class="range-group">
+                        <span class="error-message hidden">Please check the radius you have entered</span>
+                        <span class="inline-form-control">
+                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="form-control" maxlength="5" />
+                        </span>
+                        <a href="#" class="button button-grey filter-button" style="width:30px;">Apply</a>
+                    </fieldset>
+                </div>
+                <div class="form-group">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
 }
 
 

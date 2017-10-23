@@ -6,52 +6,62 @@
 @{
     ViewBag.Title = Model.Group.Name;
     ViewBag.PageClass = "mat-details";
-}
-<div class="breadcrumbs">
-    @if (Model.SearchQueryString.IsNullOrWhiteSpace())
-    {
-        <ul>
-            <li>
-                @Html.ActionLink("Home", "Index", "Search", new {area = "", selectedTab = "Groups"}, null)
-            </li>
-        </ul>
-        
-    }
-    else
-    {
-        if (Model.SearchSource == eLookupSearchSource.Governors)
-        {
-            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
-        }
-        else
-        {
-            <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")>Back to search results</a>
-        }
-    }
     
-    @if (Model.IsClosed && Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+    var request = HttpContext.Current.Request;
+    var sortDir = "desc";
+    var sortField = "requestedDateUtc";
+    if (request.QueryString["sortby"] != null)
     {
-        if (Model.IsClosedInError)
-        {
-            <div class="grey-warning dismissable-message">
-                <p>
-                    This multi-academy trust was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
-                </p>
-                <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
-            </div>
-        }
-        else
-        {
-            <div class="grey-warning dismissable-message">
-                <p>
-                    This multi-academy trust closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
-                </p>
-                <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
-            </div>
-        }
+        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
     }
 
-</div>
+}
+    <div class="breadcrumbs">
+        @if (Model.SearchQueryString.IsNullOrWhiteSpace())
+        {
+            <ul>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new {area = "", selectedTab = "Groups"}, null)
+                </li>
+            </ul>
+        
+        }
+        else
+        {
+            if (Model.SearchSource == eLookupSearchSource.Governors)
+            {
+                <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+            }
+            else
+            {
+                <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")>Back to search results</a>
+            }
+        }
+    
+        @if (Model.IsClosed && Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+        {
+            if (Model.IsClosedInError)
+            {
+                <div class="grey-warning dismissable-message">
+                    <p>
+                        This multi-academy trust was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                    </p>
+                    <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
+                </div>
+            }
+            else
+            {
+                <div class="grey-warning dismissable-message">
+                    <p>
+                        This multi-academy trust closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                    </p>
+                    <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
+                </div>
+            }
+        }
+
+    </div>
     <h1 class="heading-large">@Model.Group.Name</h1>
 
     <p class="uid">UID: @Model.Group.GroupUId</p>
@@ -273,7 +283,7 @@
                 {
                     <div id="governance" class="tab-content">
 
-                        @if (Model.CanUserEdit)
+                        @if (Model.CanUserEditGovernance)
                         {
                             <div class="button-wrap">
                                 @Html.ActionLink("Edit", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
@@ -283,7 +293,7 @@
 
                         @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUId, viewModel = null as Edubase.Web.UI.Areas.Governors.Models.GovernorsGridViewModel, area = "Governors" });}
                         
-                        @if (Model.CanUserEdit)
+                        @if (Model.CanUserEditGovernance)
                         {
                             <div class="button-wrap">
                                 @Html.ActionLink("Edit", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-grey mobile-full-width" })
@@ -316,21 +326,40 @@
                                 </div>
                             }
 
-                            <table class="edubase-table">
+                            <table class="edubase-table approval-changes sortable-table">
                                 <thead>
                                 <tr>
-                                    <th>Date changed</th>
-                                    <th>Request type</th>
+                                    <th>
+                                        <a href="@Url.SortUrl("requestedDateUtc", "#change-history")"
+                                           class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
+                                            Date changed
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="@Url.SortUrl("requestType", "#change-history")"
+                                           class="@Html.Conditional(sortField == "requestType", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
+                                            Request type    
+                                        </a>
+                                    </th>
                                     <th>Change</th>
-                                    <th>Suggested by</th>
+                                    <th>
+                                        <a href="@Url.SortUrl("originatorUserName", "#change-history")"
+                                           class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
+                                            Suggested by
+                                        </a>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model.ChangeHistory.Items)
                                     {
                                         <tr>
-                                            <td aria-label="Date changed">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
-                                            <td aria-label="Request type">@item.RequestType.GetEnumMember()</td>
+                                            <td aria-label="Date changed">
+                                                @(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))
+                                            </td>
+                                            <td aria-label="Request type">
+                                                @item.RequestType.GetEnumMember()
+                                            </td>
                                             <td aria-label="Change">
                                                 <dl>
                                                     @if (item.RequestType == GroupChangeRequestType.GroupChange)
@@ -345,10 +374,11 @@
                                                         <dt>Link date</dt><dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
                                                         <dt>Type</dt><dd>@(item.LinkType?.ToString() ?? "Not recorded")</dd>
                                                     }
-                                                    
                                                 </dl>
                                             </td>
-                                            <td aria-label="Suggested by">@item.OriginatorUserName</td>
+                                            <td aria-label="Suggested by">
+                                                @item.OriginatorUserName
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
@@ -367,3 +397,9 @@
             </div>
         </div>
     </div>
+@section ViewScripts
+{
+    <script>
+        $('#governance').find('.sortable-table').clientSort();
+    </script>
+}

@@ -31,6 +31,6 @@ namespace Edubase.Services.Establishments.Models
         public eBulkUpdateType BulkFileType { get; set; }
 
         [JsonProperty("type")]
-        public string BulkFileTypeDescription => BulkFileType == eBulkUpdateType.EduBaseBulkUpload ? "EduBase Bulk Upload" : "Multiple Columns File";
+        public string BulkFileTypeDescription => BulkFileType == eBulkUpdateType.EduBaseBulkUpload ? "EduBase Bulk Upload" : "Multiple Columns file";
     }
 }
