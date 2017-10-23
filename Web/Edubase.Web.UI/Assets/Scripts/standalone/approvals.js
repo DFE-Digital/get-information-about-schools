@@ -66,7 +66,7 @@
                         return this.noReasonSelectedError = true;
                     }
                     if (reasonText.length > 0) {
-                        reasonText = reasonText + '\n';
+                        reasonText = reasonText + '\n\n';
                     }
 
                     for (var i = 0, len = this.reasonIds.length; i < len; i++) {
@@ -76,7 +76,7 @@
                             }
                         })[0];
 
-                        reasonText += reason.title + '\n' + reason.content + '\n';
+                        reasonText += reason.title + '\n' + reason.content + '\n\n';
                        
                     }
                     this.reason = reasonText;
