@@ -5,40 +5,7 @@
         confirmUrl: '/api/approvals/change-request'
         
     };
-    Vue.component('changes-table',
-        {
-            template: '#table-template',
-            props: {
-                currentPage: {
-                    type: Number,
-                    default: 1
-                },
-                maxPageSize: {
-                    type: Number,
-                    default: 10
-                },
-                pages: Array
-            },
-
-            computed: {
-                page: function () {
-                    return this.pages;
-                }
-            },
-            methods: {
-                detailUrl: function (urn) {
-                    return '/Establishments/Establishment/Details/' + urn;
-                },
-                formatDate: function (utcDate) {
-                    if (utcDate === null) {
-                        return 'unknown';
-                    }
-                    var d = new Date(utcDate);
-                    return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/');
-                }
-            }
-        });
-
+    
     var approvalApp = new Vue({
             el: '#change-approvals',
             data: {
@@ -61,7 +28,11 @@
                 apiError: '',
                 apiBork: {},
                 sortAscending: true,
-                sortType: 'effectiveDateUtc'
+                sortType: 'effectiveDateUtc',
+                cannedRejections: window.GIASRejections || [],
+                showRejections: false,
+                noReasonSelectedError: false,
+                reasonIds: []
 
             },
             created: function() {
@@ -86,6 +57,33 @@
 
             },
             methods: {
+                selectReason: function () {
+                    var reasonText = this.reason;
+                    var self = this;
+                    this.noReasonSelectedError = false;
+
+                    if (this.reasonIds.length === 0) {
+                        return this.noReasonSelectedError = true;
+                    }
+                    if (reasonText.length > 0) {
+                        reasonText = reasonText + '\n';
+                    }
+
+                    for (var i = 0, len = this.reasonIds.length; i < len; i++) {
+                        var reason = this.cannedRejections.filter(function(r) {
+                            if (r.id === Number(self.reasonIds[i])) {
+                                return r;
+                            }
+                        })[0];
+
+                        reasonText += reason.title + '\n' + reason.content + '\n';
+                       
+                    }
+                    this.reason = reasonText;
+                    this.reasonIds = [];
+                    this.showRejections = false;
+                    $('#reason').focus().trigger('drop');
+                },
                 setSort: function(sort) {
                     if (sort === this.sortType) {
                         this.sortAscending = !this.sortAscending;
