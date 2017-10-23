@@ -49,7 +49,8 @@ else if (Model.Results.Count > 0)
                     <dt>Phase / type:</dt>
                     <dd>
                         @(Model.EducationPhases.FirstOrDefault(x => x.Id == result.EducationPhaseId)?.Name ?? "Not recorded"),
-                        @(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == result.TypeId)?.Name ?? "Not recorded")
+                        @((result.TypeId != null && Model.EstablishmentTypeLookup.ContainsKey(result.TypeId.Value)) ? Model.EstablishmentTypeLookup[result.TypeId.Value] : "Not recorded")
+                        @*@(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == result.TypeId)?.Name ?? "Not recorded")*@
                     </dd>
                     <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                     <dd>@result.Urn</dd>
