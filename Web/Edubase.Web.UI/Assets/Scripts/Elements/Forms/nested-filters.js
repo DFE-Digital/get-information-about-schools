@@ -87,6 +87,25 @@
                 }
             });
 
+        },
+        //Set visual state of nested filters without triggering a result update
+        setPartialState: function() { 
+            var $el = $(this.el), opts = this.opts;
+            var childControls = $el.find('.filter-group input');
+            var parent = $el.find(opts.parentControl);
+            var checkedChildren = childControls.filter(function (n, elem) {
+                return elem.checked;
+            });
+
+            parent.next('label').removeClass('partial-selection');
+           
+            if (checkedChildren.length === 0) {
+                parent.prop('checked', false);
+            } else if (checkedChildren.length < childControls.length) {
+                parent.prop('checked', true);
+                parent.next('label').addClass('partial-selection');
+
+            }
         }
     };
 
