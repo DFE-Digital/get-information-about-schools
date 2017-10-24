@@ -40,13 +40,13 @@
                  <div class="column-full">
                      <div class="error-summary" v-show="showGlobalError">
                          <h2 class="heading-medium error-summary-heading invalid-urn" v-show="duplicateUrn || invalidUrn">
-                             Invalid <abbr title="Unique reference number">URN</abbr>.
+                             Information missing or incorrect
                          </h2>
                          <h2 class="heading-medium error-summary-heading missing-date" v-show="openDateError">
-                             Information missing.
+                             Information missing or incorrect
                          </h2>
                          <h2 class="heading-medium error-summary-heading missing-date" v-show="urnLookUpError!=='' || apiValidationError!==''">
-                             There was a problem.
+                             Information missing or incorrect
                          </h2>
                          <h2 class="heading-medium error-summary-heading no-academies hidden">
                              No academies have been specified
@@ -54,7 +54,7 @@
                          <p class="invalid-urn error-sub-heading hidden">Predecessor school not recognised</p>
                          <p class="missing-date error-sub-heading hidden">Please specify an opening date</p>
                          <ul class="error-summary-list">
-                             <li class="error-message" v-show="invalidUrn"><a href="#establishment-urn">URN is invalid</a></li>
+                             <li class="error-message" v-show="invalidUrn"><a href="#establishment-urn">Please enter a valid URN</a></li>
                              <li class="error-message" v-show="duplicateUrn"><a href="#establishment-urn">URN is a duplicate</a></li>
                              <li class="error-message" v-show="urnLookUpError!==''"><a href="#establishment-urn">{{urnLookUpError}}</a></li>
                              <li class="error-message" v-show="apiValidationError!==''"><a href="#establishment-urn">{{apiValidationError}}</a></li>
@@ -71,7 +71,7 @@
                          <div v-bind:class="['form-group', 'inline-with-button', (invalidUrn || duplicateUrn ||urnLookUpError!=='') ? 'error' : '']">
                              <label for="establishment-urn" class="form-label">
                                  Establishment URN
-                                 <span class="error-message" v-show="invalidUrn">Invalid URN. Please enter a valid URN.</span>
+                                 <span class="error-message" v-show="invalidUrn">Please enter a valid URN</span>
                                  <span class="error-message" v-show="duplicateUrn">This establishment has already been added.</span>
                                  <span class="error-message" v-show="estabTypeError">This establishment is already an academy.</span>
                                  <span class="error-message" v-show="urnLookUpError !== ''">{{urnLookUpError}}</span>
