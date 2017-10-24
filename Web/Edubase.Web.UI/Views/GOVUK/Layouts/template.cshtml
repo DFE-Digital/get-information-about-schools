@@ -141,12 +141,14 @@
                             @if (Request.IsAuthenticated)
                             {
                                 <li><a href="/Tools">Tools</a></li>
+                                <li><a href="/help">Help</a></li>
                                 <li>
                                     @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id="logout-link"})
                                 </li>
                             }
                             else
                             {
+                                <li><a href="/help">Help</a></li>
                                 <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)</li>
                             }
                         </ul>
