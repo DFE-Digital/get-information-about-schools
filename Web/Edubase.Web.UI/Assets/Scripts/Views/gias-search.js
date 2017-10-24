@@ -70,10 +70,7 @@ DfE.searchResults = (function () {
 
                     var $selectedFilters = $('#additional-filter-wrap').find('input:checked');
 
-                    $selectedFilters.length === $additionalFilters.length
-                        ? $extraFiltersLink.text('Remove addtional filters')
-                        : $extraFiltersLink.text('+ Add filters');
-
+                    
                     $additionalFilters.addClass('hidden');
 
                     var $ele = $('#selected-search-filters');

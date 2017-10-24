@@ -69,9 +69,9 @@
                                 <span class="error-message" v-show="invalidReason">Please enter a reason for the rejection.</span>
                                 <span class="error-message" v-show="reasonLength">Please enter a reason less than 1024 characters</span>
                                 <textarea id="reason" rows="7" class="form-control-3-4" v-model="reason"></textarea>
-                                <p>
+                                <div class="approvals-canned">
                                     <a href="#" v-on:click.prevent="showRejections=true" class="plus-link">Add a preset reason</a>
-                                </p>
+                                </div>
                             </div>
                             <div class="button-row">
                                 <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection">Submit</button>
@@ -137,7 +137,7 @@
                                 </th>
                                 <th scope="col" class="cell-suggested multi-line">
                                     <a href="#" v-on:click="setSort('originatorFullName')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='originatorFullName' ? 'selected-sort': '' ]">Suggested<br/>from</a>
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='originatorFullName' ? 'selected-sort': '' ]">Suggested<br/>by</a>
                                 </th>
                             </tr>
                             </thead>
@@ -158,7 +158,7 @@
                                 <td aria-label="New value">{{entry.newValue}}</td>
                                 <td aria-label="Effective date">{{formatDate(entry.effectiveDateUtc)}}</td>
                                 <td aria-label="Date requested">{{formatDate(entry.requestedDateUtc)}}</td>
-                                <td aria-label="Suggested from">{{entry.originatorFullName}}</td>
+                                <td aria-label="Suggested by">{{entry.originatorFullName}}</td>
                             </tr>
                             </tbody>
                             <tbody v-else>
