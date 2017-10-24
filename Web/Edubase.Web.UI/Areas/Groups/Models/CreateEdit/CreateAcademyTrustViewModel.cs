@@ -36,10 +36,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public string Name { get; set; }
 
-        [Required, DisplayName("Trust type")]
+        [Required(ErrorMessage = "Please select the trust type"), DisplayName("Trust type")]
         public int? TypeId { get; set; }
 
-        [Required, DisplayName("Group ID")]
+        [Required(ErrorMessage = "Please enter a group ID"), DisplayName("Group ID")]
         public string GroupId { get; set; }
 
         public DateTime? OpenDate { get; set; }

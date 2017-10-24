@@ -272,4 +272,7 @@ Please check the 'Establishment open date'</value>
   <data name="error.isEmpty.validate.field.edit.governor_telephoneNumber" xml:space="preserve">
     <value>Please enter the telephone number</value>
   </data>
+  <data name="error.validation.link.cc.wrong.establishment.type" xml:space="preserve">
+    <value>This URN is not a children's centre URN. Please enter a valid URN</value>
+  </data>
 </root>

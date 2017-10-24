@@ -46,7 +46,7 @@
                         <p>You have entered an invalid URN</p>
                         <ul>
                             <li class="error-message">
-                                <a href="#academy-search-field">Please correct the URN to continue</a>
+                                <a href="#academy-search-field">Please enter a valid URN</a>
                             </li>
                         </ul>
                     </div>
@@ -171,7 +171,7 @@
                                         <label class="form-label" for="academy-search-field">
                                             Enter establishment URN
                                         </label>
-                                        <span class="error-message" v-show="searchError">Please correct the URN</span>
+                                        <span class="error-message" v-show="searchError">Please enter a valid URN</span>
                                         <input type="text" class="form-control  desktop-inline" id="academy-search-field" v-model.trim="searchUrn" />
 
                                         <input type="submit" class="button inline-submit" value="Find establishment" v-on:click.prevent="validateUrn" />
@@ -220,7 +220,7 @@
 
                 <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
                     <label class="form-label">Establishment name </label>
-                    <span class="error-message" v-show="updateNameError">Please check the new establishment name</span>
+                    <span class="error-message" v-show="updateNameError">Please enter the establishment name</span>
                     <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" />
                 </div>
 

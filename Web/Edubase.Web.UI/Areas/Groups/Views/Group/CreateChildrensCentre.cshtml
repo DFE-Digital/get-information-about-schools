@@ -94,7 +94,7 @@
                         {{groupNameApiError}}
                     </li>
                     <li class="error-message" v-show="groupNameError">
-                        Please check the {{groupTypeName}} name
+                        Please enter the {{groupTypeName}} name
                     </li>
                     <li class="error-message" v-show="openDateError">
                         Please check the opening date you have entered
@@ -191,7 +191,7 @@
                 </ul>
             </div>
             <div class="error-summary" v-show="duplicateUrnError">
-                <h2 class="error-summary-heading heading-medium">Please check the URN </h2>
+                <h2 class="error-summary-heading heading-medium">Please check the URN</h2>
                 <ul class="error-summary=list">
                     <li class="error-message">
                         The URN is a duplicate.
@@ -226,7 +226,7 @@
                 <label class="form-label">
                     Establishment <abbr title="Unique Reference Number">URN</abbr>
                 </label>
-                <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please check the URN</span>
+                <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid URN</span>
                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 search-box", v_model = "searchUrn"})
                 <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn">Find</button>
             </div>
@@ -252,7 +252,6 @@
                         <td aria-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
                             <span class="radio-button-wrap">
                                 <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
-                                @*@Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new {id = "lead-" + Model.LinkedEstablishments.Establishments[i].Urn})*@
                                 <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
                                     <span class="visuallyhidden">Set as lead establishment</span>
                                 </label>
