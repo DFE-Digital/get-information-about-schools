@@ -23,19 +23,16 @@ namespace Edubase.Web.UI.Controllers
         }
         
         [Route("~/cookies")]
-        public ActionResult Cookies()
-        {
-            return View();
-        }
+        public ActionResult Cookies() => View();
 
         [Route("~/guidance")]
-        public ActionResult Guidance()
-        {
-            return View();
-        }
+        public ActionResult Guidance() => View();
         
         [Route("~/news")]
         public async Task<ActionResult> News() => View(new MvcHtmlString(await GetHtmlBlob("newsblog.html")));
+
+        [Route("~/help")]
+        public ActionResult Help() => View();
         
         [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
         public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
