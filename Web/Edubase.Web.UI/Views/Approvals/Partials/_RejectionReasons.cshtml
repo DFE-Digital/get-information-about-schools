@@ -1,0 +1,147 @@
+﻿<script>
+
+
+    var GIASRejections = [
+        {
+            id: 0,
+            title: "Academy name",
+            content:
+                "The funding agreement states the name of the academy should be [Insert academy name]. If the academy wishes to amend this, a deed of variation to the funding agreement is required.To start this process, contact: academy.questions@education.gov.uk."
+        },
+        {
+            id: 1,
+            title: "Academy type",
+            content:
+                "The academy ‘establishment type’ listed on GIAS generally reflects the route by which a school first became an academy and not necessarily its current status.Therefore, we do not change this on GIAS in response to requests.It is of course important that parents and the community have up- to - date information on schools and this is available from performance tables and Ofsted reports."
+        },
+        {
+            id: 2,
+            title: "Address",
+            content: "A change of address is a material change that must be approved by the DfE."
+        },
+        {
+            id: 3,
+            title: "Admissions policy",
+            content:
+                "The admissions policy field is reserved for academies where the predecessor school was a grammar school, and for 16- 19 free schools.Therefore, it doesn’t apply in this case. If you have any concerns, please email: academy.questions@education.gov.uk."
+        },
+        {
+            id: 4,
+            title: "Age range (by 2 or less years)",
+            content:
+                "The funding agreement for the academy states the lower age limit should be 3. If an academy wishes to change its age range, they will need to seek approval from the Secretary of State, through the EFA following the significant change guidance located on GOV.UK. https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy.  As detailed in the guidance, this request falls within the ‘fast track changes’, and the steps the academy trust needs to follow are on page 13. If you have concerns about this please email: academy.questions@education.gov.uk."
+        },
+        {
+            id: 5,
+            title: "Age range (more than 2 years)",
+            content:
+                "‎The academy's funding agreement states the lower age of the academy should be 4. Academies wishing to make a change to their existing arrangements should consult the ‘Making significant changes to an existing academy’ guidance on GOV.UK. https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy.  It includes information on what trusts should do if they are considering expanding or reducing their academy. It also explains what changes will require a formal business case. The business case guide sets out the type of information academy trusts should include to be able to make a significant change to their arrangements."
+        },
+        {
+            id: 6,
+            title: "Boarders",
+            content:
+                "A change to the boarders field on GIAS is not one that can be automatically approved as it is a material change that must be agreed with the DfE."
+        },
+        {
+            id: 7,
+            title: "Capacity",
+            content:
+                "The academy's funding agreement states the capacity should be 365. If the academy wishes to amend this, a deed of variation to the funding agreement is required. To start this process, contact: academy.questions@education.gov.uk."
+        },
+        {
+            id: 8,
+            title: "Designated religious character",
+            content:
+                "Unlike a change to the school’s religious ethos, a change to the school’s designated religious character is one that needs to be applied for and agreed by the DfE."
+        },
+        {
+            id: 9,
+            title: "Designated religious character of a school",
+            content:
+                "For making changes to the designated religious character of a school, please refer to our guidance.."
+        },
+        {
+            id: 10,
+            title: "Deed of variation not complete yet",
+            content:
+                "Thanks for your request.Unfortunately, our records tell us your deed of variation is not yet complete, so we can’t accept your change request.If you have any queries about this please contact us at: academy.questions@education.gov.uk."
+        },
+        {
+            id: 11,
+            title: "Gender",
+            content:
+                "A change to the gender field in GIAS is not one that can be automatically approved, as it is a material change that must be approved by the DfE."
+        },
+        {
+            id: 12,
+            title: "Headteacher",
+            content:
+                "Thanks for your request.The headteacher email address section of an academy can’t be left blank.If you wish to update this section, please provide a replacement after you have removed the previous email.If you have any queries about this please contact us at: academy.questions@education.gov.uk."
+        },
+        {
+            id: 13,
+            title: "Maintained schools",
+            content:
+                "For making changes to maintained schools, please refer to our guidance: https://www.gov.uk/government/publications/school-organisation-maintained-schools."
+        },
+        {
+            id: 14,
+            title: "No funding agreement",
+            content:
+                "Thanks for your request.If an academy wishes to make changes to its age range a deed of variation to the funding agreement is required.To start this process, contact: academy.questions@education.gov.uk.If you have already received EFA approval or your funding agreement already reflects this change, please attach a copy of this to an email to: academy.questions@education.gov.uk and we will investigate for you."
+        },
+        {
+            id: 15,
+            title: "Religious ethos",
+            content:
+                "The academy has a designated religious character of Church of England/ Christian which is already shown on the academy record.The religious ethos field is not suitable for this academy.If you have concerns, please email: academy.questions@education.gov.uk showing the section of the funding agreement declaring the academy has the religious ethos."
+        },
+        {
+            id: 16,
+            title: "Resourced provision",
+            content:
+                "The academy's funding agreement makes no reference to offering resourced provision. If you have concerns about this please email: academy.questions@education.gov.uk."
+        },
+        {
+            id: 17,
+            title: "School capacity",
+            content: "Any change to the school’s capacity is a material change that must be agreed with the DfE."
+        },
+        {
+            id: 18,
+            title: "Sixth form",
+            content: "Sixth form – this field is linked the statutory highest pupil age field and so is also rejected."
+        },
+        {
+            id: 19,
+            title: "Special classes/ SEN",
+            content:
+                "The academy's funding agreement makes no reference to special classes. If you have any concerns, please contact: academy.questions@education.gov.uk. The academy's funding agreement states the school should have special classes. If you have any concerns please contact: academy.questions@education.gov.uk."
+        },
+        {
+            id: 20,
+            title: "Statutory highest pupil age",
+            content:
+                "A change to the school’s statutory highest pupil age is a material change that must be agreed with the DfE."
+        },
+        {
+            id: 21,
+            title: "Statutory highest and lowest pupil ages",
+            content:
+                "Changes to the school’s statutory highest and lowest pupil ages are both material changes that must be agreed with the DfE."
+        },
+        {
+            id: 22,
+            title: "Statutory lowest pupil age",
+            content:
+                "A change to the school’s statutory lowest pupil age is a material change that must be agreed with the DfE."
+        },
+        {
+            id: 23,
+            title: "Statutory lowest pupil age below 2",
+            content:
+                "A change to the school’s statutory lowest pupil age to below age 2 is a material change that must be agreed with both the DfE and Ofsted Early Years."
+        }
+    ];    
+</script>

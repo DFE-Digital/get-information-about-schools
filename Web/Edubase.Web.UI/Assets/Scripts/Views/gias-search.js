@@ -70,10 +70,7 @@ DfE.searchResults = (function () {
 
                     var $selectedFilters = $('#additional-filter-wrap').find('input:checked');
 
-                    $selectedFilters.length === $additionalFilters.length
-                        ? $extraFiltersLink.text('Remove addtional filters')
-                        : $extraFiltersLink.text('+ Add filters');
-
+                    
                     $additionalFilters.addClass('hidden');
 
                     var $ele = $('#selected-search-filters');
@@ -314,21 +311,13 @@ DfE.searchResults = (function () {
                     }
                 }).not(currentInput);
 
-                similarInput.prop('checked', isChecked);
-                if (isChecked) {
-                    similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
-                } else {
-
-                    var siblingChxCount = similarInput.parents('.filter-group').find('.filter-input').filter(':checked').length;
-                    if (siblingChxCount === 0) {
-                        similarInput.parents('.nested-items').find('.filter-group-title').next('label').removeClass('partial-selection');
-                        similarInput.parents('.nested-items').find('.filter-group-title').prop('checked', false);
-                    } else {
-                        similarInput.parents('.nested-items').find('.filter-group-title').next('label').addClass('partial-selection');
-                    }
-
+                if (similarInput.length > 0) {
+                    similarInput.prop('checked', isChecked);                    
+                    window.setTimeout(function() {
+                        similarInput.parents('.nested-items').data().nestedFilters.setPartialState();
+                    },0);                    
                 }
-
+                
                 if (filterIntent) {
                     window.clearTimeout(filterIntent);
                 }

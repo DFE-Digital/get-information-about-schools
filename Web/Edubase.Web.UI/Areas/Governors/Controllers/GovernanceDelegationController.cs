@@ -64,7 +64,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     var updatedGroup = new SaveGroupDto(group);
                     await _groupWriteService.SaveAsync(updatedGroup, User);
                 }
-                return RedirectToRoute("GroupEditGovernance", new { GroupUId = model.GroupUId });
+
+
+                var url = Url.RouteUrl("GroupDetails", new { id = model.GroupUId });
+                return Redirect($"{url}#governance");
             }
 
             result.EduBaseAddToModelState(ModelState, null);

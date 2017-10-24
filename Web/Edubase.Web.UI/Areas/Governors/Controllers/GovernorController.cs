@@ -176,9 +176,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    return RedirectToRoute(
-                        viewModel.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
-                        new {viewModel.EstablishmentUrn, viewModel.GroupUId});
+                    var url = viewModel.EstablishmentUrn.HasValue
+                        ? $"{Url.RouteUrl("EstabDetails", new { id = viewModel.EstablishmentUrn })}#school-governance"
+                        : $"{Url.RouteUrl("GroupDetails", new { id = viewModel.GroupUId })}#governance";
+
+                    return Redirect(url);
                 }
             }
 
@@ -376,8 +378,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.GID = response.Response;
                     ModelState.Clear();
 
-                    return RedirectToRoute(viewModel.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
-                        new { establishmentUrn = viewModel.EstablishmentUrn, groupUId = viewModel.GroupUId });
+                    var url = viewModel.EstablishmentUrn.HasValue
+                        ? $"{Url.RouteUrl("EstabDetails", new { id = viewModel.EstablishmentUrn })}#school-governance"
+                        : $"{Url.RouteUrl("GroupDetails", new { id = viewModel.GroupUId })}#governance";
+
+                    return Redirect(url);
                 }
 
                 ErrorsToModelState<GovernorModel>(response.Errors);
@@ -446,7 +451,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         model.DateTermEnds.ToDateTime().Value.AddDays(1),
                         newGovernor.AppointmentEndDate.ToDateTime(), User);
 
-                    return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = model.Urn });
+                    var url = $"{Url.RouteUrl("EstabDetails", new { id = model.Urn })}#school-governance";
+                    return Redirect(url);
                 }
                 else
                 {
@@ -476,7 +482,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     if (!validation.HasErrors)
                     {
                         await _governorsWriteService.SaveAsync(newGovernor, User);
-                        return RedirectToRoute("EstabEditGovernance", new { establishmentUrn = model.Urn });
+                        var url = $"{Url.RouteUrl("EstabDetails", new { id = model.Urn })}#school-governance";
+                        return Redirect(url);
                     }
                     
                     validation.ApplyToModelState(ControllerContext, nameof(model.NewLocalGovernor));
