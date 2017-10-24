@@ -237,10 +237,10 @@ Please check the 'Establishment open date'</value>
     <value>Please select a GSS LA code</value>
   </data>
   <data name="error.code.required_LSOAId" xml:space="preserve">
-    <value>Please enter a valid Lower Super Output Area (LSOA)</value>
+    <value>Please enter a valid LSOA code</value>
   </data>
   <data name="error.code.required_MSOAId" xml:space="preserve">
-    <value>Please enter a valid Middle Super Output Area (MSOA)</value>
+    <value>Please enter a valid MSOA code</value>
   </data>
   <data name="error.code.required_parliamentaryConstituencyId" xml:space="preserve">
     <value>Please select a parliamentary constituency</value>
@@ -250,5 +250,26 @@ Please check the 'Establishment open date'</value>
   </data>
   <data name="error.code.required_urbanRuralId" xml:space="preserve">
     <value>Please select an urban/rural description</value>
+  </data>
+  <data name="error.isEmpty.validate.field.edit.governor_appointingBodyId" xml:space="preserve">
+    <value>Please select the appointing body</value>
+  </data>
+  <data name="error.isEmpty.validate.field.edit.governor_appointmentEndDate" xml:space="preserve">
+    <value>Please enter the date term ends</value>
+  </data>
+  <data name="error.isEmpty.validate.field.edit.governor_appointmentStartDate" xml:space="preserve">
+    <value>Please enter the date of appointment</value>
+  </data>
+  <data name="error.isEmpty.validate.field.edit.governor_emailAddress" xml:space="preserve">
+    <value>Please enter the email address</value>
+  </data>
+  <data name="error.isEmpty.validate.field.edit.governor_firstName" xml:space="preserve">
+    <value>Please enter the first name</value>
+  </data>
+  <data name="error.isEmpty.validate.field.edit.governor_lastName" xml:space="preserve">
+    <value>Please enter the last name</value>
+  </data>
+  <data name="error.isEmpty.validate.field.edit.governor_telephoneNumber" xml:space="preserve">
+    <value>Please enter the telephone number</value>
   </data>
 </root>
