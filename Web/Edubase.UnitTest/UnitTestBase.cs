@@ -10,9 +10,6 @@ using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Lookup;
-using Edubase.Web.UI;
-using Edubase.Web.UI.Validation;
-using FluentValidation.Mvc;
 using Moq;
 using MoreLinq;
 
@@ -26,9 +23,9 @@ namespace Edubase.UnitTest
 
         protected T ObjectUnderTest { get; private set; }
 
-        protected Mock<TMock> AddMock<TMock>() where TMock: class
+        protected Mock<TMock> AddMock<TMock>(bool strict = true) where TMock: class
         {
-            var mock = new Mock<TMock>(MockBehavior.Strict);
+            var mock = strict ? new Mock<TMock>(MockBehavior.Strict) : new Mock<TMock>(MockBehavior.Loose);
             mocks.Add(typeof(TMock), mock);
             return mock;
         }
@@ -69,6 +66,7 @@ namespace Edubase.UnitTest
             {
                 controller.ControllerContext = GetMock<ControllerContext>().Object;
                 GetMock<ControllerContext>().SetupGet(c => c.Controller).Returns(controller);
+                controller.Url = GetMock<UrlHelper>().Object;
             }
         }
 
@@ -90,6 +88,10 @@ namespace Edubase.UnitTest
             AddMock<IPrincipal>();
             AddMock<IIdentity>();
             AddMock<ControllerContext>();
+            AddMock<UrlHelper>(false);
+            GetMock<UrlHelper>()
+                .Setup(u => u.RouteUrl(It.IsAny<string>(), It.IsAny<object>()))
+                .Returns("fake url");
         }
 
         private void SetupHttpRequest()
