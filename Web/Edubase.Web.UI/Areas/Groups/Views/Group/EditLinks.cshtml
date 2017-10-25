@@ -145,7 +145,7 @@
         <div class="column-half">
             @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
             {
-                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Submit</button>
+                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save</button>
             }
             @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
 
