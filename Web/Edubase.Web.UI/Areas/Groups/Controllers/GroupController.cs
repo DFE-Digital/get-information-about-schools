@@ -61,8 +61,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
 
         [Route(nameof(Details) + "/{id:int}", Name ="GroupDetails"), HttpGet]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups, int skip = 0, string sortBy = null)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups, int skip = 0, string sortBy = null, bool saved = false)
         {
+            ViewBag.ShowSaved = saved;
+
             var model = (await _groupReadService.GetAsync(id, User)).GetResult();
 
             var viewModel = new GroupDetailViewModel
@@ -245,8 +247,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         [HttpGet]
         [Route("Edit/{id:int}/Links"), EdubaseAuthorize]
-        public async Task<ActionResult> EditLinks(int id)
+        public async Task<ActionResult> EditLinks(int id, bool saved = false)
         {
+            ViewBag.ShowSaved = saved;
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
             var viewModel = new GroupEditorViewModel
             {
@@ -431,7 +434,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 suppressClearModelState = true;
                 var apiResponse = await SaveGroup(viewModel);
                 if (apiResponse.HasErrors) apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
-                else return RedirectToAction(nameof(Details), new { id = viewModel.GroupUId.Value });
+                else return RedirectToAction(nameof(Details), new { id = viewModel.GroupUId.Value, saved = true });
             }
             else throw new InvalidParameterException("The action parameter is invalid");
             

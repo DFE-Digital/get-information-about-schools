@@ -70,7 +70,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    var url = $"{Url.RouteUrl("EstabDetails", new { id = model.Urn })}#school-governance";
+                    var url = $"{Url.RouteUrl("EstabDetails", new { id = model.Urn, saved = true })}#school-governance";
 
                     return Redirect(url);
                 }
@@ -118,7 +118,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (ModelState.IsValid)
             {
                 await _governorsWriteService.UpdateDatesAsync(model.Governor.Id, model.Governor.AppointmentStartDate.ToDateTime().Value, model.Governor.AppointmentEndDate.ToDateTime().Value, User);
-                var url = $"{Url.RouteUrl("EstabDetails", new { id = model.Urn })}#school-governance";
+                var url = $"{Url.RouteUrl("EstabDetails", new { id = model.Urn, saved = true })}#school-governance";
 
                 return Redirect(url);
             }

@@ -60,6 +60,15 @@
     }
 }
 
+@if (ViewBag.ShowSaved)
+{
+    <div class="pending-updates-message dismissable-message">
+        <div class="tick"></div>
+        Your changes have been saved
+        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+    </div>
+}
+
 @if (ViewBag.ShowApproved)
 {
     <div class="pending-updates-message dismissable-message">

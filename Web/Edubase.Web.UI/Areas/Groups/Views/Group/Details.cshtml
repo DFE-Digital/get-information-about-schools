@@ -17,52 +17,62 @@
     }
 
 }
-    <div class="breadcrumbs">
-        @if (Model.SearchQueryString.IsNullOrWhiteSpace())
-        {
-            <ul>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new {area = "", selectedTab = "Groups"}, null)
-                </li>
-            </ul>
+<div class="breadcrumbs">
+    @if (Model.SearchQueryString.IsNullOrWhiteSpace())
+    {
+        <ul>
+            <li>
+                @Html.ActionLink("Home", "Index", "Search", new {area = "", selectedTab = "Groups"}, null)
+            </li>
+        </ul>
         
+    }
+    else
+    {
+        if (Model.SearchSource == eLookupSearchSource.Governors)
+        {
+            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
         else
         {
-            if (Model.SearchSource == eLookupSearchSource.Governors)
-            {
-                <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
-            }
-            else
-            {
-                <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")>Back to search results</a>
-            }
+            <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
+    }
     
-        @if (Model.IsClosed && Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+    @if (Model.IsClosed && Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+    {
+        if (Model.IsClosedInError)
         {
-            if (Model.IsClosedInError)
-            {
-                <div class="grey-warning dismissable-message">
-                    <p>
-                        This multi-academy trust was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
-                    </p>
-                    <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
-                </div>
-            }
-            else
-            {
-                <div class="grey-warning dismissable-message">
-                    <p>
-                        This multi-academy trust closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
-                    </p>
-                    <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
-                </div>
-            }
+            <div class="grey-warning dismissable-message">
+                <p>
+                    This multi-academy trust was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                </p>
+                <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
+            </div>
         }
+        else
+        {
+            <div class="grey-warning dismissable-message">
+                <p>
+                    This multi-academy trust closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                </p>
+                <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
+            </div>
+        }
+    }
 
+</div>
+
+@if (ViewBag.ShowSaved)
+{
+    <div class="pending-updates-message dismissable-message">
+        <div class="tick"></div>
+        Your changes have been saved
+        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
     </div>
-    <h1 class="heading-large">@Model.Group.Name</h1>
+}
+
+<h1 class="heading-large">@Model.Group.Name</h1>
 
     <p class="uid">UID: @Model.Group.GroupUId</p>
     <p class="group-type">@Model.GroupTypeName</p>

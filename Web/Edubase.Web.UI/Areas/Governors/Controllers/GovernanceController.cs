@@ -78,7 +78,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             try
             {
                 await _establishmentWriteService.UpdateGovernanceModeAsync(viewModel.Urn.Value, viewModel.GovernanceMode.Value, User);
-                var url = Url.RouteUrl("EstabDetails", new {id = viewModel.Urn});
+                var url = Url.RouteUrl("EstabDetails", new {id = viewModel.Urn, saved = true });
                 return Redirect($"{url}#school-governance");
             }
             catch (EduSecurityException) // for some reason the API responds with a 403 for this one, even though it's nothing to do with authentication/authorization.
