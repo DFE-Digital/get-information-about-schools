@@ -66,7 +66,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 }
 
 
-                var url = Url.RouteUrl("GroupDetails", new { id = model.GroupUId });
+                var url = Url.RouteUrl("GroupDetails", new { id = model.GroupUId, saved = true });
                 return Redirect($"{url}#governance");
             }
 

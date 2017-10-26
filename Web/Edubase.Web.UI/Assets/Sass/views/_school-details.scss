@@ -320,15 +320,20 @@
     dl {
         overflow: hidden;
         margin: 16px 0;
-        font-size: 16px;
+        font-size: 14px;
     }
 
     dt {
         float: left;
         clear: left;
-        width: 36%;
+        width: 26.05%;
         margin-right: 12px;
         padding: 8px 0;
+        line-height: auto;
+
+        &.bold {
+            font-weight: bold;
+        }
 
         @include media(mobile) {
             width: 40%;
@@ -338,5 +343,23 @@
     dd {
         float: left;
         padding: 8px 0;
+        max-width: 68.5%;
+    }
+
+    #school-dashboard & {
+        clear: left;
+        max-width: 60%;
+
+        @include media(mobile) {
+            max-width: 100%;
+        }
+
+        dt {
+            width: 43.5%;
+        }
+
+        dd {
+            max-width: 53.5%;
+        }
     }
 }

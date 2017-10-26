@@ -261,8 +261,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links", Name = "EditEstabLinks")]
-        public async Task<ActionResult> EditLinks(int? id)
+        public async Task<ActionResult> EditLinks(int? id, bool saved = false)
         {
+            ViewBag.ShowSaved = saved;
+
             if (!id.HasValue) return HttpNotFound();
 
             var viewModel = new EditEstablishmentLinksViewModel();
@@ -346,7 +348,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                             await _establishmentWriteService.AddLinkedEstablishmentAsync(link.Urn.Value, viewModel.Urn.Value, viewModel.ActiveRecord.ReverseLinkTypeId.Value,
                                 (viewModel.ActiveRecord.ReverseLinkDateEditable.ToDateTime() ?? viewModel.ActiveRecord.LinkDateEditable.ToDateTime()).Value, User);
                         }
-                        return RedirectToRoute("EditEstabLinks", new { id = deltaViewModel.Urn });
+                        return RedirectToRoute("EditEstabLinks", new { id = deltaViewModel.Urn, saved = true });
                     }
                 }
                 return View("AddEditLink", viewModel);
@@ -354,10 +356,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, bool pendingApproval = false, int skip = 0, string sortBy = null)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, bool pendingApproval = false, int skip = 0, string sortBy = null, bool saved = false)
         {
             ViewBag.ShowApproved = approved;
             ViewBag.PendingApproval = pendingApproval;
+            ViewBag.ShowSaved = saved;
 
             var viewModel = new EstablishmentDetailViewModel
             {

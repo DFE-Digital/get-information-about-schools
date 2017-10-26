@@ -663,10 +663,10 @@ namespace Edubase.UnitTest.Controllers
 
             var result = await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel { GroupUId = groupId, EstablishmentUrn = estabId, Action = "Save", RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now), RemovalGid = governorId });
 
-            var viewResult = result as RedirectToRouteResult;
+            var viewResult = result as RedirectResult;
             viewResult.ShouldNotBeNull();
 
-            viewResult.RouteName.ShouldBe(groupId == null ? "EstabEditGovernance" : "GroupEditGovernance");
+            viewResult.Url.ShouldContain(estabId.HasValue ? "#school-governance" : "#governance");
             GetMock<IGovernorsWriteService>().Verify(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
         }
 
@@ -773,6 +773,7 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorAsync(governorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
             GetMock<IGovernorsWriteService>().Setup(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => error);
             SetupCachedLookupService();
+            
 
             var result = await ObjectUnderTest.DeleteOrRetireGovernor(new GovernorsGridViewModel
             {
@@ -783,10 +784,10 @@ namespace Edubase.UnitTest.Controllers
                 GovernorShared = true
             });
 
-            var viewResult = result as RedirectToRouteResult;
+            var viewResult = result as RedirectResult;
             viewResult.ShouldNotBeNull();
 
-            viewResult.RouteName.ShouldBe("EstabEditGovernance");
+            viewResult.Url.ShouldContain("#school-governance");
             GetMock<IGovernorsWriteService>().Verify(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
         }
 
@@ -829,10 +830,10 @@ namespace Edubase.UnitTest.Controllers
                 GovernorShared = true
             });
 
-            var viewResult = result as RedirectToRouteResult;
+            var viewResult = result as RedirectResult;
             viewResult.ShouldNotBeNull();
 
-            viewResult.RouteName.ShouldBe("EstabEditGovernance");
+            viewResult.Url.ShouldContain("#school-governance");
             GetMock<IGovernorsWriteService>().Verify(g => g.DeleteSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<IPrincipal>()), Times.Once);
         }
 
@@ -874,10 +875,10 @@ namespace Edubase.UnitTest.Controllers
                 RemovalGid = governorId
             });
 
-            var viewResult = result as RedirectToRouteResult;
+            var viewResult = result as RedirectResult;
             viewResult.ShouldNotBeNull();
 
-            viewResult.RouteName.ShouldBe("EstabEditGovernance");
+            viewResult.Url.ShouldContain("#school-governance");
             GetMock<IGovernorsWriteService>().Verify(g => g.DeleteAsync(governorId, It.IsAny<IPrincipal>()), Times.Once);
         }
 
@@ -996,10 +997,9 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IGovernorsWriteService>().Setup(g => g.AddSharedGovernorAppointmentAsync(newGovId, estabUrn, It.IsAny<DateTime>(),It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
             
             var result = await ObjectUnderTest.ReplaceChair(model);
-            var redirectResult = result as RedirectToRouteResult;
+            var redirectResult = result as RedirectResult;
             redirectResult.ShouldNotBeNull();
-            redirectResult.RouteName.ShouldBe("EstabEditGovernance");
-            redirectResult.RouteValues["establishmentUrn"].ShouldBe(estabUrn);
+            redirectResult.Url.ShouldContain("#school-governance");
 
             GetMock<IGovernorsWriteService>().Verify(g => g.AddSharedGovernorAppointmentAsync(newGovId, estabUrn, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
         }
@@ -1027,10 +1027,9 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IGovernorsWriteService>().Setup(g => g.SaveAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse<int>(true));
 
             var result = await ObjectUnderTest.ReplaceChair(model);
-            var redirectResult = result as RedirectToRouteResult;
+            var redirectResult = result as RedirectResult;
             redirectResult.ShouldNotBeNull();
-            redirectResult.RouteName.ShouldBe("EstabEditGovernance");
-            redirectResult.RouteValues["establishmentUrn"].ShouldBe(estabUrn);
+            redirectResult.Url.ShouldContain("#school-governance");
         }
 
         [Test]
