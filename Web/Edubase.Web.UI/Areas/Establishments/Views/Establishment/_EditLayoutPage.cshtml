@@ -18,7 +18,7 @@
     </ul>
 </div>
 
-@if (ViewBag.ShowSaved)
+@if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
 {
     <div class="pending-updates-message dismissable-message">
         <div class="tick"></div>
