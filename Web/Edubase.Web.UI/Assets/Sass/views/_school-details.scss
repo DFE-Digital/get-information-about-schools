@@ -5,17 +5,7 @@
         margin-bottom: 0;
     }
 
-    p.urn {
-        font-size: 14px;
-        color: $grey-1;
-        font-weight: bold;
-        margin: 8px 25px 8px 0;
-
-
-        @include media (tablet) {
-            float: left;
-        }
-    }
+    
 
     p.establishment-type {
         font-size: 14px;
@@ -361,5 +351,18 @@
         dd {
             max-width: 53.5%;
         }
+    }
+}
+
+
+p.urn {
+    font-size: 14px;
+    color: $grey-1;
+    font-weight: bold;
+    margin: 8px 25px 8px 0;
+
+
+    @include media (tablet) {
+        float: left;
     }
 }
