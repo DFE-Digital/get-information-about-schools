@@ -140,7 +140,7 @@
                         <dl>
                             @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                             {
-                            <dt>Companies House Number</dt>
+                            <dt>Companies House Number:</dt>
                             <dd>
                                 @if (Model.Group.CompaniesHouseNumber.IsNullOrEmpty())
                                 {
@@ -152,45 +152,45 @@
                                 }
                             </dd>
                             }
-                            <dt>Type</dt>
+                            <dt>Type:</dt>
                             <dd>@Model.GroupTypeName</dd>
 
-                            <dt>@Model.OpenDateLabel</dt>
+                            <dt>@Model.OpenDateLabel:</dt>
                             <dd>@(Model.Group.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
                             @if (Model.IsUserLoggedOn)
                             {
-                            <dt>Closed date</dt>
+                            <dt>Closed date:</dt>
                             <dd>@(Model.Group.ClosedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
-                            <dt>Status</dt>
+                            <dt>Status:</dt>
                             <dd>@(Model.GroupStatusName ?? "Not recorded")</dd>
                             }
 
                             @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
                             {
-                            <dt>Address</dt>
+                            <dt>Address:</dt>
                             <dd>@(Model.Address ?? "Not recorded")</dd>
                             }
 
                             @if (Model.Group.GroupTypeId == (int)eLookupGroupType.ChildrensCentresGroup)
                             {
-                            <dt>Group manager email</dt>
+                            <dt>Group manager email:</dt>
                             <dd>@(Model.Group.ManagerEmailAddress ?? "Not recorded")</dd>
                             }
 
                             @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration))
                             {
-                            <dt>Local authority</dt>
+                            <dt>Local authority:</dt>
                             <dd>@(Model.LocalAuthorityName ?? "Not recorded")</dd>
                             }
 
                             @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
                             {
-                            <dt>Group ID</dt>
+                            <dt>Group ID:</dt>
                             <dd>@(Model.Group.GroupId.Clean() ?? "Not recorded")</dd>
                             }
 
-                            <dt>UID</dt>
+                            <dt>UID:</dt>
                             <dd>@Model.Group.GroupUId</dd>
                         </dl>
                     </div>
