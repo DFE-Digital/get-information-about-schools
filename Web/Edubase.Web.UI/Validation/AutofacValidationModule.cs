@@ -46,6 +46,10 @@ namespace Edubase.Web.UI.Validation
                 .Keyed<IValidator>(typeof(IValidator<BulkUpdateViewModel>))
                 .As<IValidator>();
 
+            builder.RegisterType<BulkCreateFreeSchoolsViewModelValidator>()
+                .Keyed<IValidator>(typeof(IValidator<BulkCreateFreeSchoolsViewModel>))
+                .As<IValidator>();
+
             builder.RegisterType<GovernorsBulkUpdateViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<GovernorsBulkUpdateViewModel>))
                 .As<IValidator>();

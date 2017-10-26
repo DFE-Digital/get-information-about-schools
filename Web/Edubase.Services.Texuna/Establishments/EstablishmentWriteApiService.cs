@@ -71,6 +71,15 @@ namespace Edubase.Services.Texuna.Establishments
                 bulkUpdateInfo, bulkUpdateInfo.FileName, principal));
         }
 
+        public async Task<ApiResponse<BulkCreateFreeSchoolsResult>> BulkCreateFreeSchoolsAsync(string filename, IPrincipal principal) 
+            => (await _httpClient.PostMultipartAsync<BulkCreateFreeSchoolsResult>("establishment/bulk-create-free-schools", null, filename, principal));
+
+        public async Task<ApiResponse<BulkCreateFreeSchoolsResult>> BulkCreateFreeSchoolsGetProgressAsync(Guid taskId, IPrincipal principal)
+        {
+            return (await _httpClient.GetAsync<BulkCreateFreeSchoolsResult>($"establishment/bulk-create-free-schools/progress/{taskId}", principal));
+        }
+
+
         public async Task<BulkUpdateProgressModel> BulkUpdateAsync_GetProgressAsync(Guid taskId, IPrincipal principal)
         {
             return (await _httpClient.GetAsync<BulkUpdateProgressModel>($"bulk-update/progress/{taskId}", principal)).GetResponse();
