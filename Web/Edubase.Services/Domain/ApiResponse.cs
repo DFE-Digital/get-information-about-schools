@@ -84,15 +84,34 @@ namespace Edubase.Services.Domain
 
     public class ApiResponse<TSuccess, TValidationEnvelope> where TValidationEnvelope : class
     {
+        private TValidationEnvelope _validationEnvelope;
+
         public ApiError[] Errors { get; set; }
 
-        public TValidationEnvelope ValidationEnvelope { get; set; }
+        public TValidationEnvelope ValidationEnvelope
+        {
+            get => _validationEnvelope;
+            set
+            {
+                _validationEnvelope = value;
+                var envelope = _validationEnvelope as ValidationEnvelopeDto;
+                var envelopeArray = _validationEnvelope as ValidationEnvelopeDto[];
+                if (envelope != null)
+                {
+                    Errors = envelope.Errors.ToArray();
+                }
+                if (envelopeArray != null)
+                {
+                    Errors = envelopeArray.SelectMany(e => e.Errors).ToArray();
+                }
+            }
+        }
 
         public TSuccess Response { get; set; }
 
         public bool Successful { get; set; }
 
-        public bool HasErrors => (Errors != null && Errors.Any()) || ValidationEnvelope != null;
+        public bool HasErrors => Errors != null && Errors.Any();
 
         public ApiResponse()
         {
