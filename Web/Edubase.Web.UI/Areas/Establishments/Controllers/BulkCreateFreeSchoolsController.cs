@@ -61,8 +61,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.Result = apiResponse.GetResponse();
                 if (viewModel.Result.IsProgressing()) return View("InProgress");
                 else if (viewModel.Result.IsCompleted())
-                {
-                    if (viewModel.Result.HasCreatedEstablishments) // either complete or partial success
+                { 
+                    if (viewModel.Result.HasCreatedEstablishments) // NOTE: You _ONLY_ ever get HasCreatedEstablishments==true, when the ENTIRE operation has succeeded.
                     {
                         return View("Completed", viewModel);
                     }

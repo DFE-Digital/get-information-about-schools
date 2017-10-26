@@ -9,9 +9,46 @@
 
 <div class="grid-row">
     <div class="column-full">
-        <h1 class="heading-xlarge">SUCCESS</h1>
+        <h1 class="heading-xlarge">Free schools created</h1>
+        <p>Your free schools have been created and are pending approval.</p>
     </div>
-
-
-
+    <div class="column-full">
+        <div class="top-pagination">
+            <div class="pagination">
+                <p>Showing 1 - @Model.Result.CreatedEstablishments.Length of @Model.Result.CreatedEstablishments.Length</p>
+            </div>
+        </div>
+        <table class="edubase-table">
+            <thead>
+                <tr>
+                    <th><abbr title="Unique Reference Number">URN</abbr></th>
+                    <th>Name</th>
+                    <th>Phase of education</th>
+                    <th>Establishment type</th>
+                    <th>Opening date</th>
+                    <th>Opening reason</th>
+                    <th>Establishment status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Result.CreatedEstablishments)
+                {
+                    <tr>
+                        <td class="fixed-width" aria-label="URN">@Html.RouteLink(e.Urn.ToString(), "EstabDetails", new { id = e.Urn })</td>
+                        <td class="fixed-width" aria-label="Name of establishment">@Html.RouteLink(e.Name, "EstabDetails", new { id = e.Urn })</td>
+                        <td class="fixed-width" aria-label="Phase of education">@e.PhaseOfEducationName</td>
+                        <td class="fixed-width" aria-label="Establishment type">@e.EstablishmentTypeName</td>
+                        <td class="fixed-width" aria-label="Opening date">@(e.OpenDate.ToString("dd/MM/yyyy"))</td>
+                        <td class="fixed-width" aria-label="Opening reason">@e.ReasonForOpening</td>
+                        <td class="fixed-width" aria-label="Establishment status">@e.EstablishmentStatusName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="lower-pagination">
+            <div class="pagination">
+                <p>Showing 1 - @Model.Result.CreatedEstablishments.Length of @Model.Result.CreatedEstablishments.Length</p>
+            </div>
+        </div>
+    </div>
 </div>
