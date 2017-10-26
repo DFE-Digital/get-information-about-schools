@@ -326,10 +326,10 @@
     dt {
         float: left;
         clear: left;
-        width: 26.05%;
+        width: 20.84%;
         margin-right: 12px;
         padding: 8px 0;
-        line-height: auto;
+        word-wrap: break-word;
 
         &.bold {
             font-weight: bold;
@@ -355,7 +355,7 @@
         }
 
         dt {
-            width: 43.5%;
+            width: 34.8%;
         }
 
         dd {
