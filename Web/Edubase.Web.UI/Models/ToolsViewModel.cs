@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Models
             if (UserCanCreateSchoolTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new school trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null), Description = "Enter the trust's name and select the opening date and status." });
             if (UserCanCreateAcademySponsor) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new sponsor", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null), Description = "Enter the sponsor's name and select the open date and status." });
             if (UserCanMergeOrAmalgamateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Merge & amalgamate establishments", "MergersTool", "Tools"), Description = "Carry out mergers and amalgamations using this wizard." });
-            if (UserCanBulkCreateFreeSchools) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools"), Description = "Creates free schools in bulk" });
+            if (UserCanBulkCreateFreeSchools) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools"), Description = "Set up a new free schools records as a collection, rather than by individual entries." });
             return retVal;
         }
 
