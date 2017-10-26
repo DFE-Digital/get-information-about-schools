@@ -1,84 +1,70 @@
 ﻿@model EstablishmentDetailViewModel
 
 <div id="school-location" class="tab-content">
+
     @if (Model.UserCanEdit)
     {
         @Html.ActionLink("Edit", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
     }
-    <table class="borderless">
-        <caption class="visually-hidden">Location information for @Model.Establishment.Name</caption>
-        <tr>
-            <th scope="row"><abbr title="Regional Schools Commissioner">RSC</abbr> Region:</th>
-            <td>@Model.RSCRegionName</td>
-        </tr>
-        <tr>
-            <th scope="row">Government Office Region:</th>
-            <td>@Model.GovernmentOfficeRegionName</td>
-        </tr>
-        <tr>
-            <th scope="row">District:</th>
-            <td>@Model.AdministrativeDistrictName</td>
-        </tr>
-        <tr>
-            <th scope="row">Ward:</th>
-            <td>@Model.AdministrativeWardName</td>
-        </tr>
-        <tr>
-            <th scope="row">Parliamentary Constituency:</th>
-            <td>@Model.ParliamentaryConstituencyName</td>
-        </tr>
-        <tr>
-            <th scope="row">Urban/Rural Description:</th>
-            <td>@Model.UrbanRuralName</td>
-        </tr>
-        <tr>
-            <th scope="row"><abbr title="Government Statistical Service">GSS</abbr> LA Code:</th>
-            <td>@Model.GSSLAName</td>
-        </tr>
-        <tr>
-            <th scope="row">Easting:</th>
-            <td>@Model.Establishment.Easting</td>
-        </tr>
-        <tr>
-            <th scope="row">Northing:</th>
-            <td>@Model.Establishment.Northing</td>
-        </tr>
-        <tr>
-            <th scope="row">Census Ward: </th>
-            <td>@Model.CASWardName</td>
-        </tr>
-        <tr>
-            <th scope="row">Middle Super Output Area (MSOA): </th>
-            <td>@Model.MSOAName</td>
-        </tr>
-        <tr>
-            <th scope="row">Lower Super Output Area (LSOA):</th>
-            <td>@Model.LSOAName</td>
-        </tr>
-    </table>
+
+    <div class="detail-summary">
+        <dl>
+            <dt><abbr title="Regional Schools Commissioner">RSC</abbr> Region:</dt>
+            <dd>@Model.RSCRegionName</dd>
+
+            <dt>Government Office Region:</dt>
+            <dd>@Model.GovernmentOfficeRegionName</dd>
+
+            <dt>District:</dt>
+            <dd>@Model.AdministrativeDistrictName</dd>
+
+            <dt>Ward:</dt>
+            <dd>@Model.AdministrativeWardName</dd>
+
+            <dt>Parliamentary Constituency:</dt>
+            <dd>@Model.ParliamentaryConstituencyName</dd>
+
+            <dt>Urban/Rural Description:</dt>
+            <dd>@Model.UrbanRuralName</dd>
+
+            <dt><abbr title="Government Statistical Service">GSS</abbr> LA Code:</dt>
+            <dd>@Model.GSSLAName</dd>
+
+            <dt>Easting:</dt>
+            <dd>@Model.Establishment.Easting</dd>
+
+            <dt>Northing:</dt>
+            <dd>@Model.Establishment.Northing</dd>
+
+            <dt>Census Ward: </dt>
+            <dd>@Model.CASWardName</dd>
+
+            <dt>Middle Super Output Area (MSOA): </dt>
+            <dd>@Model.MSOAName</dd>
+
+            <dt>Lower Super Output Area (LSOA):</dt>
+            <dd>@Model.LSOAName</dd>
+        </dl>
+    </div>
+    
 
     @if (Model.DisplayPolicy.AltSiteName.GetValueOrDefault(true))
     {
         <h3 class="font-small">Other site</h3>
-        <table class="borderless">
-            <caption class="visually-hidden">Additional site information for @Model.Establishment.Name</caption>
+        if (Model.Establishment.AltSiteName != null)
+        {
+            <h4 class="font-small">@Model.Establishment.AltSiteName</h4>
+        }
 
-            <tr>
-                <th colspan="2">@Model.Establishment.AltSiteName</th>
-            </tr>
-            <tr>
-                <th scope="row">
-                    Address:
-                </th>
-                <td>
-                    @Model.GetAltAddress()
-                </td>
-            </tr>
-            @*<tr>
-                <th scope="row">Telephone</th>
-                <td>@(address.TelephoneNumber ?? "Not recorded")</td>
-            </tr>*@
-        </table>
+        <div class="detail-summary">
+            <dl>
+                <dt>Address:</dt>
+                <dd>@Model.GetAltAddress()</dd>
+
+                @*<dt>Telephone</dt>
+                    <dd>@(address.TelephoneNumber ?? "Not recorded")</dd>*@
+            </dl>
+        </div>
     }
 
     @if (Model.UserCanEdit)

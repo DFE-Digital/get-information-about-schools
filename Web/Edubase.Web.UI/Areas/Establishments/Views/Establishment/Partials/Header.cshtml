@@ -2,13 +2,13 @@
 @using Edubase.Web.UI.Areas.Establishments.Models.Search;
 @model EstablishmentDetailViewModel
 
-    <tr>
-        <th scope="row">Address:</th>
-        <td>@Model.GetAddress()</td>
-    </tr>
-    <tr>
-        <th scope="row">Local authority:</th>
-        <td>
+
+
+
+        <dt>Address:</dt>
+        <dd>@Model.GetAddress()</dd>
+        <dt>Local authority:</dt>
+        <dd>
             @if (Model.Establishment.LocalAuthorityId.HasValue)
             {
                 <a href="/Establishments/Search?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
@@ -16,11 +16,10 @@
                 </a>
                 <text>(@Model.LocalAuthorityCode)</text>
             }
-        </td>
-    </tr>
-    <tr>
-        <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel):</th>
-        <td>
+        </dd>
+ 
+        <dt>@(Model.DisplayPolicy.HeadteacherLabel):</dt>
+        <dd>
             @if (Model.DisplayPolicy.HeadTitleId)
             {
                 <text>@Model.HeadTitleName.Replace("Not recorded", string.Empty)</text>
@@ -33,88 +32,74 @@
             {
                 <text>@Model.Establishment.HeadLastName</text>
             }
-        </td>
-    </tr>
+        </dd>
 
     @if (Model.DisplayPolicy.HeadEmailAddress)
     {
-        <tr>
-            <th scope="row">@(Model.DisplayPolicy.HeadteacherLabel) appointment date</th>
-            <td>
+            <dt>@(Model.DisplayPolicy.HeadteacherLabel) appointment date</dt>
+            <dd>
                 @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">@(Model.DisplayPolicy.HeadEmailAddressLabel):</th>
-            <td>
+            </dd>
+        
+            <dt>@(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
+            <dd>
                 @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
-            </td>
-        </tr>
+            </dd>       
     }
 
     @if (Model.DisplayPolicy.AgeRange)
     {
-        <tr>
-            <th scope="col">Age range: <a href="#help-text-age-range" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></th>
-            <td>
+            <dt scope="col">Age range: <a href="#help-text-age-range" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
+            <dd>
                 @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
                 {
                     <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
                 }
-            </td>
-        </tr>
+            </dd>
     }
 
-    <tr>
-        <th scope="row">Phase of education:</th>
-        <td>
+  
+        <dt>Phase of education:</dt>
+        <dd>
             @Model.EducationPhaseName
-        </td>
-    </tr>
+        </dd>
 
     @if (Model.DisplayPolicy.TypeId)
     {
-        <tr>
-            <th scope="row">@(Model.DisplayPolicy.EstablishmentTypeLabel):</th>
-            <td>
+        
+            <dt>@(Model.DisplayPolicy.EstablishmentTypeLabel):</dt>
+            <dd>
                 @Model.TypeName
-            </td>
-        </tr>
+            </dd>
+        
     }
 
     @if (Model.DisplayPolicy.FurtherEducationTypeId)
     {
-        <tr>
-            <th scope="row">Further education type:</th>
-            <td>
+            <dt>Further education type:</dt>
+            <dd>
                 @Model.FurtherEducationTypeName
-            </td>
-        </tr>
+            </dd>
     }
 
     @foreach (var group in Model.Groups.OrderByDescending(g => Model.GetGroupFieldLabel(g))) 
     {
-        <tr>
-            <th scope="row">@(Model.GetGroupFieldLabel(group)):</th>
-            <td>
+            <dt>@(Model.GetGroupFieldLabel(group)):</dt>
+            <dd>
                 @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUId, area = "Groups" }, null)
-            </td>
-        </tr>
+            </dd>
     }
     
     @if (Model.DisplayPolicy.GenderId)
     {
-        <tr>
-            <th scope="row">Gender of entry:</th>
-            <td>
+            <dt>Gender of entry:</dt>
+            <dd>
                 @Model.GenderName
-            </td>
-        </tr>
+            </dd>
     }
 
-    <tr>
-        <th scope="row">ID:</th>
-        <td>
+        <dt>ID:</dt>
+        <dd>
             <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
             @if (Model.DisplayPolicy.EstablishmentNumber)
             {
@@ -124,12 +109,11 @@
             { 
                 <text><abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN</text>
             }
-        </td>
-    </tr>
+        </dd>
 
-    <tr>
-        <th scope="row">Establishment status:</th>
-        <td>
+    
+        <dt>Establishment status:</dt>
+        <dd>
             @if (Model.IsClosed)
             {
                 <span class="pending-closure">
@@ -140,24 +124,20 @@
             {
                 @Model.StatusName
             }
-        </td>
-    </tr>
+        </dd>
 
     @if (Model.DisplayPolicy.AdmissionsPolicyId)
     {
-        <tr>
-            <th scope="row">Admissions policy:</th>
-            <td>
+            <dt>Admissions policy:</dt>
+            <dd>
                 @Model.AdmissionsPolicyName
-            </td>
-        </tr>
+            </dd>
     }
 
     @if (Model.DisplayPolicy.Contact_WebsiteAddress)
     {
-        <tr>
-            <th scope="row">Website:</th>
-            <td>
+            <dt>Website:</dt>
+            <dd>
                 @if (Model.Establishment.Contact_WebsiteAddress == null)
                 {
                     <text>Not recorded</text>
@@ -168,20 +148,19 @@
                         @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
                     </a>
                 }
-            </td>
-        </tr>
+            </dd>
     }
 
     @if (Model.DisplayPolicy.Contact_TelephoneNumber)
     {
-        <tr><th scope="row">Telephone:</th><td>@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</td></tr>
+        <dt>Telephone:</dt>
+        <dd>@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</dd>
     }
 
     @if (Model.DisplayPolicy.OfstedRatingId)
     {
-        <tr>
-            <th scope="row">Ofsted rating:</th>
-            <td>
+            <dt>Ofsted rating:</dt>
+            <dd>
                 @if (Model.Establishment.OfstedRatingId.HasValue)
                 {
                     <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
@@ -200,22 +179,21 @@
                     <br />
                     <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report</a>
                 }
-            </td>
-        </tr>
+            </dd>
     }
 
     @if (Model.DisplayPolicy.InspectorateId)
     {
-        <tr>
-            <th scope="row">Inspectorate:</th>
-            <td>
+            <dt>Inspectorate:</dt>
+            <dd>
                 @Model.InspectorateName
-            </td>
-        </tr>
+            </dd>
     }
 
     @if (Model.DisplayPolicy.ProprietorName)
     {
-        <tr><th scope="row">Proprietor's name:</th><td>@Model.Establishment.ProprietorName</td></tr>
+            <dt>Proprietor's name:</dt>
+            <dd>@Model.Establishment.ProprietorName</dd>
+
     }
 
