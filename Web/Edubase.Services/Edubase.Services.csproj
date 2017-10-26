@@ -184,6 +184,7 @@
     <Compile Include="Domain\ApiPagedResult.cs" />
     <Compile Include="Domain\ApiResultDto.cs" />
     <Compile Include="Domain\ApiWarningCodes.cs" />
+    <Compile Include="Domain\BulkCreateFreeSchoolsResult.cs" />
     <Compile Include="Domain\BulkUpdateProgressModel.cs" />
     <Compile Include="Domain\CreateEstablishmentPermissionDto.cs" />
     <Compile Include="Domain\CreateGroupPermissionDto.cs" />

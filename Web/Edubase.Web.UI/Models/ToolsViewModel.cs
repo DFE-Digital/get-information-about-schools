@@ -32,6 +32,7 @@ namespace Edubase.Web.UI.Models
         public bool UserCanSearchChangeHistory { get; internal set; }
         public bool UserCanConvertAcademyTrusts { get; internal set; }
         public bool UserCanViewIndependentSchoolsSignificantDates { get; internal set; }
+        public bool UserCanBulkCreateFreeSchools { get; internal set; }
 
         public List<LinkAction> GetCreateActions(HtmlHelper htmlHelper)
         {
@@ -45,6 +46,7 @@ namespace Edubase.Web.UI.Models
             if (UserCanCreateSchoolTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new school trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null), Description = "Enter the trust's name and select the opening date and status." });
             if (UserCanCreateAcademySponsor) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new sponsor", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null), Description = "Enter the sponsor's name and select the open date and status." });
             if (UserCanMergeOrAmalgamateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Merge & amalgamate establishments", "MergersTool", "Tools"), Description = "Carry out mergers and amalgamations using this wizard." });
+            if (UserCanBulkCreateFreeSchools) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools"), Description = "Creates free schools in bulk" });
             return retVal;
         }
 
