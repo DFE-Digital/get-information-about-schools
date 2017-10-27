@@ -14,9 +14,16 @@
             @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors", gsearch = gSearch }, null)                        
         </div>
         <h1 class="heading-xlarge">Search results</h1>
-        <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
+        <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>        
     </div>
-    <div class="column-full">        
+    <div class="column-full">
+        <div class="warning-message @Html.Conditional(!Model.SelectedLocalAuthorityIds.Any(), "hidden")" id="gov-la-warning">
+            <p>You can only view governors of establishments by local authority. For multi academy trust governors clear the local authority filter.</p>
+        </div>
+    </div>
+</div>
+<div class="grid-row">
+    <div class="column-full results-heading">
         <p>
             Governor@(Model.Count == 1 ? "" : "s")
 
@@ -85,7 +92,6 @@
                                 <span class="js-selected-counter-text"></span>
                             </div>
                         </div>
-                        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
                         <div class="options-container" id="">
                             <div class="js-auto-height-inner">
                                 <fieldset>
@@ -118,7 +124,6 @@
                                 <span class="js-selected-counter-text"></span>
                             </div>
                         </div>
-                        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
                         <div class="options-container" id="">
                             <div class="js-auto-height-inner">
                                 <fieldset>
@@ -143,6 +148,9 @@
                         </div>
 
                     </div>
+                    
+                    @Selector("Local authority", GovernorSearchViewModel.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true, isExtraFilter: true)
+
                     <div id="filter-addtional-controls">
                         <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
                     </div>
@@ -169,6 +177,63 @@
 {
     <script language="javascript">
         DfE.searchResults.init();
-        
+        $('#filter-form').find('.searchable-filters').searchWithinFilters(); 
     </script>
+}
+
+
+@helper SearchWithin()
+{
+    <div class="search-field-wrap">
+        <label class="filter-searchwithin-label">
+            <span class="visually-hidden">Search within this filter</span>
+            <input type="text" class="filter-search" />
+            <button class="field-clear hidden"><span class="visually-hidden">Clear</span></button>
+        </label>        
+    </div>
+}
+
+@helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false, bool filterRefine = false, bool closed = false)
+{
+    if (!closed)
+    {
+        additionalClassName = additionalClassName.RemoveSubstring("hidden");
+    }
+    <div class="govuk-option-select js-collapsible @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
+         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">@label</div>
+            <div class="js-selected-counter">
+                <span class="js-selected-counter-text"></span>
+                
+            </div>
+        </div>
+        @if (filterRefine)
+        {
+            @SearchWithin()
+        }
+        <div class="options-container" id="">
+            <div class="suggestion-target"></div>
+            <div class="js-auto-height-inner">
+                <fieldset>
+                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="filter-wrapper select-all-wrap">
+                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
+                        <label for="@(name)_all" class="filter-radio">
+                            All
+                        </label>
+                    </div>
+                    @foreach (var item in items)
+                    {
+                        <div class="filter-wrapper">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                            <label for="@(name)_@item.Id" class="filter-radio">
+                                @item
+                            </label>
+                        </div>
+                    }
+                </fieldset>
+            </div>
+        </div>
+    </div>
 }

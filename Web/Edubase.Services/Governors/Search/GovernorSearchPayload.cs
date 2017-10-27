@@ -43,6 +43,8 @@ namespace Edubase.Services.Governors.Search
 
         public string[] GovernorTypes => GovernorTypesFlags.Select(x => _govTypesMap[x]).ToArray();
 
+        public int[] LocalAuthorityIds { get; set; }
+
         [JsonIgnore]
         public eSortBy SortBy { get; set; }
 

@@ -5,23 +5,15 @@ using Edubase.Services.Governors;
 using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Governors.Search;
 using Edubase.Services.Groups;
-using Edubase.Services.Groups.Downloads;
-using Edubase.Services.Groups.Models;
-using Edubase.Services.Groups.Search;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
-using System.Web.Routing;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -122,6 +114,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             model.SearchQueryString = Request.QueryString.ToString();
             model.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
             model.AppointingBodies = (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
+            model.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
 
             var payload = CreateSearchPayload(model);
             var results = await _governorsReadService.SearchAsync(payload, User);
@@ -140,7 +133,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             RoleIds = model.SelectedRoleIds.ToArray(),
             SortBy = model.SortOption,
             IncludeHistoric = model.GovernorSearchModel.IncludeHistoric,
-            GovernorTypesFlags = model.SelectedGovernorTypeFlagIds.Select(x => (eGovernorTypesFlag)x).ToArray()
+            GovernorTypesFlags = model.SelectedGovernorTypeFlagIds.Select(x => (eGovernorTypesFlag)x).ToArray(),
+            LocalAuthorityIds = model.SelectedLocalAuthorityIds.ToArray()
         };
 
     }
