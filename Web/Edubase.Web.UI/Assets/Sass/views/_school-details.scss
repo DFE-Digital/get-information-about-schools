@@ -364,5 +364,7 @@ p.urn {
 
     @include media (tablet) {
         float: left;
+        overflow: hidden;
+        margin-bottom: 24px;
     }
 }
