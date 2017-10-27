@@ -10,23 +10,19 @@
 <div class="grid-row">
     <div class="column-full results-heading">
         <div class="breadcrumbs">
-            @Html.ActionLink("Back to find an establishment group", "Index", "Search", new { area = "", SelectedTab = "Groups" })
+            @Html.ActionLink("Back to find an establishment group", "Index",  new { controller="Search", area = "", SelectedTab = "Groups" })
         </div>
         <h1 class="heading-xlarge">Search results</h1>
         <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
-            <p>
-                
-                Establishment groups
-                @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
-                {
-                    <text>matching &lsquo;<span class="bold-small">@Model.GroupSearchModel.Text</span>&rsquo;.</text>
-                }
-                
-                
-            </p>
-        </div>
-</div>
 
+    </div>
+    @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
+            {
+        <div class="column-full">
+            <p>Establishment groups matching &lsquo;<span class="bold-small">@Model.GroupSearchModel.Text</span>&rsquo;.</p>
+        </div>
+    }
+</div>
 
 <div class="grid-row">
 

@@ -22,49 +22,49 @@
         </div>
     </div>
 </div>
-<div class="grid-row">
-    <div class="column-full results-heading">
-        <p>
-            Governor@(Model.Count == 1 ? "" : "s")
-
-            @if (Model.GovernorSearchModel.Forename.Clean() != null ||
-                 Model.GovernorSearchModel.Surname.Clean() != null ||
-                 Model.SelectedRoleIds.Any())
-            {
+@if (Model.GovernorSearchModel.Forename.Clean() != null ||
+     Model.GovernorSearchModel.Surname.Clean() != null ||
+     Model.SelectedRoleIds.Any())
+{
+    <div class="grid-row">
+        <div class="column-full">
+            <p>
+                Governor@(Model.Count == 1 ? "" : "s")
                 <text>matching</text>
 
-                if (Model.GovernorSearchModel.Forename.Clean() != null)
+                @if (Model.GovernorSearchModel.Forename.Clean() != null)
                 {
-                    <text>first name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
+                <text>first name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
 
                 }
 
-                if (Model.GovernorSearchModel.Surname.Clean() != null)
+                @if (Model.GovernorSearchModel.Surname.Clean() != null)
                 {
                     if (Model.GovernorSearchModel.Forename.Clean() != null)
                     {
-                        <text>, </text>
+                    <text>, </text>
                     }
-                    <text>last name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
+                <text>last name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
                 }
 
-                if (Model.SelectedRoleIds.Any())
+                @if (Model.SelectedRoleIds.Any())
                 {
-                    if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
-                    {
-                        <text>and </text>
-                    }
-                    else
-                    {
-                        <text>for </text>
-                    }
-                    <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
+                if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
+                {
+                <text>and </text>
                 }
-            }
+                else
+                {
+                <text>for </text>
+                }
+                <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
+                }
 
-        </p>
+
+            </p>
+        </div>
     </div>
-</div>
+}
 
 <div class="grid-row">
 
