@@ -220,10 +220,7 @@ DfE.searchUtils = (function () {
                 var valid = true;
                 $.each(fields,
                     function (m, field) {
-                        if (isNaN(field.value)) {
-                            valid = false;
-                            canSubmit = false;
-                        } else if (field.value < 0 || field.value > 99.99) {
+                        if (!field.value.match(/^[0-9]{1,2}(\.[0-9]{1,2})?$/)) {
                             valid = false;
                             canSubmit = false;
                         }
