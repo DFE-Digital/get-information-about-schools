@@ -13,19 +13,17 @@
         <div class="breadcrumbs">            
             @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors", gsearch = gSearch }, null)                        
         </div>
-    </div>
-</div>
-<div class="grid-row">
-    <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
-    <div class="column-full">
         <h1 class="heading-xlarge">Search results</h1>
-        <div class="warning-message @Html.Conditional(!Model.SelectedLocalAuthorityIds.Any(), "hidden")">
+        <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>        
+    </div>
+    <div class="column-full">
+        <div class="warning-message @Html.Conditional(!Model.SelectedLocalAuthorityIds.Any(), "hidden")" id="gov-la-warning">
             <p>You can only view governors of establishments by local authority. For multi academy trust governors clear the local authority filter.</p>
         </div>
     </div>
 </div>
 <div class="grid-row">
-    <div class="column-full">
+    <div class="column-full results-heading">
         <p>
             Governor@(Model.Count == 1 ? "" : "s")
 
@@ -94,7 +92,6 @@
                                 <span class="js-selected-counter-text"></span>
                             </div>
                         </div>
-                        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
                         <div class="options-container" id="">
                             <div class="js-auto-height-inner">
                                 <fieldset>
@@ -127,7 +124,6 @@
                                 <span class="js-selected-counter-text"></span>
                             </div>
                         </div>
-                        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
                         <div class="options-container" id="">
                             <div class="js-auto-height-inner">
                                 <fieldset>
@@ -181,7 +177,7 @@
 {
     <script language="javascript">
         DfE.searchResults.init();
-        
+        $('#filter-form').find('.searchable-filters').searchWithinFilters(); 
     </script>
 }
 
@@ -212,7 +208,6 @@
                 
             </div>
         </div>
-        <a href="#" class="clear-selections filter-clear">Clear</a>
         @if (filterRefine)
         {
             @SearchWithin()

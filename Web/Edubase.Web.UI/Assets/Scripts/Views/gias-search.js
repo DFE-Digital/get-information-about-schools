@@ -284,7 +284,8 @@ DfE.searchResults = (function () {
                                     seenOpenDateWarning = true;
                                 }
                             }
-                        }
+
+                          }
 
                     });
 
@@ -295,7 +296,9 @@ DfE.searchResults = (function () {
                 }
             });
         },
-
+        shouldShowGovWarning: function() {
+            return $('#option-select-local-authority').find(':checkbox').filter(':checked').length > 0;
+        },
         bindEvents: function () {
             var self = this;
             $(document).on("change", ".trigger-result-update", function () {
@@ -341,8 +344,13 @@ DfE.searchResults = (function () {
                     if (searchType === 'ByLocalAuthority') {
                         DfE.searchUtils.updateSearchedLas();
                     }
-                    if (searchType === 'Governor') {
+                    if (searchType === 'Governors') {
                         DfE.searchUtils.updateGovernorRoles();
+
+                        $('#gov-la-warning').addClass('hidden');
+                        if (self.shouldShowGovWarning()) {
+                            $('#gov-la-warning').removeClass('hidden');
+                        }
                     }
 
                 }, 1500);                
@@ -379,14 +387,16 @@ DfE.searchResults = (function () {
             var self = this;
             self.setupGovUkSelects();
             self.setupAdditionalFilters();
-            searchType = document.getElementById('client-only-searchtype');
+             if (document.getElementById('client-only-searchtype')) {
+                 searchType = document.getElementById('client-only-searchtype').value;
+             } 
             
             if (searchType === 'ByLocalAuthority') {
                 DfE.searchUtils.updateSearchedLas();
             }
 
-            
             self.bindEvents();
+
             if (DfE.hasOwnProperty('searchMap')) {
                 DfE.searchMap.bindActions();
             } else {
