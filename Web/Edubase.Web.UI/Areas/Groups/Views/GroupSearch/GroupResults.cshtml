@@ -10,7 +10,7 @@
 <div class="grid-row">
     <div class="column-full results-heading">
         <div class="breadcrumbs">
-            @Html.ActionLink("Back to find an establishment group", "Index", "Search", new { area = "", SelectedTab = "Groups" }, new { @class = "home-link" })
+            @Html.ActionLink("Back to find an establishment group", "Index", "Search", new { area = "", SelectedTab = "Groups" })
         </div>
         <h1 class="heading-xlarge">Search results</h1>
         <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
@@ -55,7 +55,7 @@
                                 <span class="js-selected-counter-text"></span>                
                             </div>
                         </div>
-                        <a href="#" class="clear-selections filter-clear">Clear</a>
+                        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
                         <div class="options-container">
                             <div class="js-auto-height-inner">
                                 <fieldset>
@@ -89,7 +89,7 @@
                                     <span class="js-selected-counter-text"></span>                
                                 </div>
                             </div>
-                            <a href="#" class="clear-selections filter-clear">Clear</a>
+                            @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
                             <div class="options-container" id="">
                                 <div class="js-auto-height-inner">
                                     <fieldset><span class="visuallyhidden">- changing the selection will refresh the results</span>
