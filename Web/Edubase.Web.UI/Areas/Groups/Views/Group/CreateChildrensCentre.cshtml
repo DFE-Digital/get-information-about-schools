@@ -65,7 +65,7 @@
 
         </div>
         <div class="column-full">
-            <div class="button-row">
+            <div class="submit-cancel-panel">
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="step0Continue">
                     Continue
                 </a>
@@ -139,7 +139,7 @@
             </div>
         </div>
         <div class="column-full">
-            <div class="button-row">
+            <div class="submit-cancel-panel">
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="step1Continue">
                     Continue
                 </a>
@@ -272,7 +272,7 @@
                 </table>
                 <p class="table-caption">{{tableCount}}</p>
             </div>
-            <div class="button-row">
+            <div class="submit-cancel-panel">
 
                 <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true,tooFewCentresError=false">&laquo; Go back</a>
                 @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
@@ -331,7 +331,7 @@
             <input type="hidden" name="@(nameof(GroupEditorViewModel.ProcessedWarnings))" id="processed-warnings" />
         </div>
         <div class="column-full">
-            <div class="button-row">
+            <div class="submit-cancel-panel">
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup">
                     <span v-show="!pendingEdit">Add</span>
                     <span v-show="pendingEdit">Update</span>
