@@ -211,7 +211,7 @@ DfE.searchUtils = (function () {
             var filters = $('#EditSearchCollapse').find('.radius-filter');
             var canSubmit = true;
             errorSummary.addClass('hidden');
-            errorSummary.find('.summary-range-error').addClass('hidden');
+            errorSummary.find('.summary-radius-error').addClass('hidden');
             filters.each(function (n, elem) {
                 $(elem).find('.form-group').removeClass('error');
                 $(elem).find('.error-message').addClass('hidden');
@@ -223,6 +223,9 @@ DfE.searchUtils = (function () {
                         if (isNaN(field.value)) {
                             valid = false;
                             canSubmit = false;
+                        } else if (field.value < 0 || field.value > 99.99) {
+                            valid = false;
+                            canSubmit = false;
                         }
                     });
 
@@ -230,7 +233,7 @@ DfE.searchUtils = (function () {
                     $(elem).find('.form-group').addClass('error');
                     $(elem).find('.error-message').removeClass('hidden');
                     errorSummary.removeClass('hidden');
-                    errorSummary.find('.summary-range-error').removeClass('hidden');
+                    errorSummary.find('.summary-radius-error').removeClass('hidden');
                     return;
                 }
 

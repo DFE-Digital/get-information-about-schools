@@ -69,6 +69,7 @@
             <ul class="error-summary-list">
                 <li class="summary-date-error error-message hidden">Please enter the date in the format DD/MM/YYYY</li>
                 <li class="summary-range-error error-message hidden">Please enter the age in the correct format, for example 5 to 11</li>
+                <li class="summary-radius-error error-message hidden">Please enter a radius between 0 and 99.99</li>
             </ul>
         </div>
         <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
@@ -89,7 +90,7 @@
 
                     @if (Model.SearchType == eSearchType.Location)
                     {
-                        @RadiusSelector("Within radius of")
+                        @RadiusFilter()
                     }
 
 
@@ -401,7 +402,7 @@
     
 }
 
-@helper RadiusSelector2() {
+@helper RadiusFilter() {
 
     <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS">
 
@@ -415,13 +416,11 @@
                     <fieldset class="range-group">
                         <span class="error-message hidden">Please check the radius you have entered</span>
                         <span class="inline-form-control">
-                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="form-control" maxlength="5" />
+                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="form-control" maxlength="5" min="0" max="99.99" step="0.01" />
+                            &nbsp;miles
                         </span>
-                        <a href="#" class="button button-grey filter-button" style="width:30px;">Apply</a>
+                        <a href="#" class="button button-grey filter-button">Apply</a>
                     </fieldset>
-                </div>
-                <div class="form-group">
-                    
                 </div>
             </div>
         </div>

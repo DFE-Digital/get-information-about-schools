@@ -80,10 +80,10 @@
 
     .filter-button {
         @include core-19;
-        width: 70%;
         float: right;
-        margin-bottom: 12px;
+        margin-bottom: 4px;
         margin-right: 44px;
+        margin-top: 3px;
     }
 
     .range-group {
@@ -91,10 +91,17 @@
     }
 
     .inline-form-control {
-        margin-right: 8px;
+        margin-top: 3px;
+        margin-right: 12px;
     }
 
     .form-control {
-        min-width: 112px;
+        width: 85px;
+        height: 39.6458px;
+        padding-bottom: 0;
+    }
+
+    .form-group {
+        margin-bottom: 0;
     }
 }
