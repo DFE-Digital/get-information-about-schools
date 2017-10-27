@@ -79,11 +79,13 @@
     }
 
     .filter-button {
-        @include core-19;
+        @include core-16;
         float: right;
         margin-bottom: 4px;
-        margin-right: 44px;
+        margin-right: 24px;
         margin-top: 3px;
+        height:20.664px;
+
     }
 
     .range-group {
@@ -97,11 +99,11 @@
 
     .form-control {
         width: 85px;
-        height: 39.6458px;
-        padding-bottom: 0;
     }
 
     .form-group {
         margin-bottom: 0;
     }
+
+
 }
