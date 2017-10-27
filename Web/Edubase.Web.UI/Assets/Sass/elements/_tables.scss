@@ -153,6 +153,12 @@ table tbody .url {
             &:last-child {
                 border: 0;
             }
+
+            &.fixed-width {
+                &:before {
+                    width:150px;
+                }
+            }
         }
     }
 }

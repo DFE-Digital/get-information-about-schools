@@ -74,7 +74,7 @@
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 
-    <p class="uid">UID: @Model.Group.GroupUId</p>
+    <p class="urn">UID: @Model.Group.GroupUId</p>
     <p class="group-type">@Model.GroupTypeName</p>
 
     <p class="group-data-download">
@@ -136,88 +136,64 @@
                     {
                         @Html.ActionLink("Edit", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
                     }
+                    <div class="detail-summary">
+                        <dl>
+                            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+                            {
+                            <dt>Companies House Number:</dt>
+                            <dd>
+                                @if (Model.Group.CompaniesHouseNumber.IsNullOrEmpty())
+                                {
+                                <text>Not recorded</text>
+                                }
+                                else
+                                {
+                                <a href="@Model.CompaniesHouseUrl">@Model.Group.CompaniesHouseNumber</a>
+                                }
+                            </dd>
+                            }
+                            <dt>Type:</dt>
+                            <dd>@Model.GroupTypeName</dd>
 
-                    <table class="borderless no-padding">
-                        @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
-                        {
-                            <tr>
-                                <th scope="row">Companies House Number</th>
-                                <td>
-                                    @if (Model.Group.CompaniesHouseNumber.IsNullOrEmpty())
-                                    {
-                                        <text>Not recorded</text>
-                                    }
-                                    else
-                                    {
-                                        <a href="@Model.CompaniesHouseUrl">@Model.Group.CompaniesHouseNumber</a>
-                                    }
-                                </td>
-                            </tr>
-                        }
+                            <dt>@Model.OpenDateLabel:</dt>
+                            <dd>@(Model.Group.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
 
-                        <tr>
-                            <th scope="row">Type</th>
-                            <td>@Model.GroupTypeName</td>
-                        </tr>
+                            @if (Model.IsUserLoggedOn)
+                            {
+                            <dt>Closed date:</dt>
+                            <dd>@(Model.Group.ClosedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                            <dt>Status:</dt>
+                            <dd>@(Model.GroupStatusName ?? "Not recorded")</dd>
+                            }
 
-                        <tr>
-                            <th scope="col">@Model.OpenDateLabel</th>
-                            <td>@(Model.Group.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
-                        </tr>
+                            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
+                            {
+                            <dt>Address:</dt>
+                            <dd>@(Model.Address ?? "Not recorded")</dd>
+                            }
 
-                        @if (Model.IsUserLoggedOn)
-                        {
-                            <tr>
-                                <th scope="col">Closed date</th>
-                                <td>@(Model.Group.ClosedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</td>
-                            </tr>
+                            @if (Model.Group.GroupTypeId == (int)eLookupGroupType.ChildrensCentresGroup)
+                            {
+                            <dt>Group manager email:</dt>
+                            <dd>@(Model.Group.ManagerEmailAddress ?? "Not recorded")</dd>
+                            }
 
-                            <tr>
-                                <th scope="col">Status</th>
-                                <td>@(Model.GroupStatusName ?? "Not recorded")</td>
-                            </tr>
-                        }
+                            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration))
+                            {
+                            <dt>Local authority:</dt>
+                            <dd>@(Model.LocalAuthorityName ?? "Not recorded")</dd>
+                            }
 
-                        @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
-                        {
-                            <tr>
-                                <th scope="col">Address</th>
-                                <td>@(Model.Address ?? "Not recorded")</td>
-                            </tr>
-                        }
+                            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
+                            {
+                            <dt>Group ID:</dt>
+                            <dd>@(Model.Group.GroupId.Clean() ?? "Not recorded")</dd>
+                            }
 
-                        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.ChildrensCentresGroup)
-                        {
-                            <tr>
-                                <th scope="col">Group manager email</th>
-                                <td>@(Model.Group.ManagerEmailAddress ?? "Not recorded")</td>
-                            </tr>
-                        }
-
-                        @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration))
-                        {
-                            <tr>
-                                <th scope="col">Local authority</th>
-                                <td>@(Model.LocalAuthorityName ?? "Not recorded")</td>
-                            </tr>
-                        }
-
-                        @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
-                        {
-                            <tr>
-                                <th scope="col">Group ID</th>
-                                <td>@(Model.Group.GroupId.Clean() ?? "Not recorded")</td>
-                            </tr>
-                        }
-
-                        <tr>
-                            <th scope="col">UID</th>
-                            <td>@Model.Group.GroupUId</td>
-                        </tr>
-
-
-                    </table>
-
+                            <dt>UID:</dt>
+                            <dd>@Model.Group.GroupUId</dd>
+                        </dl>
+                    </div>
 
                     @if (Model.CanUserEdit)
                     {
@@ -233,9 +209,8 @@
                         @Html.ActionLink("Edit", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
                     }
 
-                    <div style="float:none; clear:both;"></div>
 
-                    <div class="column-full2">
+                    <div class="column-full">
                         <ul class="school-results-listing">
                             @foreach (var result in Model.Establishments)
                             {

@@ -1,0 +1,28 @@
+﻿@section Head {
+    <meta http-equiv="refresh" content="2">
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.RouteLink("Home", "Homepage")</li>
+        <li>@Html.RouteLink("Tools", "Tools")</li>        
+        <li>@Html.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools")</li>       
+    </ul>
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">Creating free schools</h1>
+    </div>
+    <div class="download-step">
+        <div class="column-two-thirds">
+            <h2 class="bold-medium">Please wait...</h2>
+            <p class="font-small"></p>
+        </div>
+        <div class="column-full">
+            <div class="progress-indicator">
+                <span class="visually-hidden">Please wait.</span>
+            </div>
+        </div>
+    </div>
+</div>

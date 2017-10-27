@@ -1,0 +1,75 @@
+﻿@model BulkCreateFreeSchoolsViewModel
+
+@{
+    ViewBag.Title = "Bulk create new free schools";
+}
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.RouteLink("Home", "Homepage")</li>
+        <li>@Html.RouteLink("Tools", "Tools")</li>
+    </ul>
+</div>
+
+@Html.ValidationSummary("Incorrect or missing details")
+
+@using (Html.BeginRouteForm("BulkCreateFreeSchoolsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="grid-row spaced-groups">
+        <div class="column-full">
+            <h1 class="heading-xlarge">Bulk create new free schools</h1>
+            <p>Follow these steps to bulk create new free schools.</p>
+        </div>
+        <div class="column-full">
+            <div class="expanding-content-wrapper no-bottom-margin" data-update-text="false">
+                <a href="#" class="expanding-content-trigger">
+                    Help with preparing files
+                </a>
+                <div class="expanding-content panel-indent">
+                    <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
+                    <p class="download-list-item">
+                        <a href="#" target="_blank" rel="nofollow" class="js-track" data-track="bulkcreatefreeschools|establishments|download">FreeSchoolsTemplateUserGuide.pdf, 0KB</a>
+                    </p>
+                </div>
+            </div>
+            @if (Model?.Result?.RowErrors > 0)
+            {
+                <div class="form-group error" id="error-log">
+                    <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                    <p class="download-list-item">
+                        <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
+                    </p>
+                </div>
+            }
+        </div>
+
+        <div class="column-full">
+            <h2 class="heading-medium">Download template</h2>
+            <p>
+                Please download the free schools template using the link below. Then, fill in the template with the free schools you wish to create. 
+                Finally, upload the completed template using the 'Choose file' button below. All uploads must be in XLSX format.
+            </p>
+            <a href="http://edubasepr.blob.core.windows.net/content/Bulk_Create_Free_Schools_template.xlsx" class="download-list-item">FreeSchoolsTemplate.xlsx, 5KB</a>
+        </div>
+
+        <div class="column-full">
+            <h2 class="heading-medium">Upload completed template to create new free schools</h2>
+            <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="bulkfile" class="form-label">Upload a file</label>      
+                @Html.ValidationMessageFor(x => x.BulkFile)  
+                <div class="upload-control-wrapper">
+                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "file-input" });
+                    <button class="button button-grey file-selector">Choose file</button>
+                    <div class="text-field-wrapper">
+                        <input type="text" class="file-name" readonly="readonly" value="No file chosen" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="column-full">
+            <input type="submit" class="button mobile-full-width" value="Submit"/>           
+            <a href="/Tools" class="button button-grey cancel mobile-full-width">Cancel</a>
+        </div>
+       
+</div>
+}

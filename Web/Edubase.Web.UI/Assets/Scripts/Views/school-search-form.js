@@ -253,8 +253,8 @@
             return;
         }
 
-        var templateHandler = function (suggestion) {
-            var tmpl = '<div><a href="javascript:">' + suggestion[field] + '</span></a></div>';
+        var templateHandler = function (suggestion) {           
+            var tmpl = '<div><a href="javascript:">' + suggestion[field] + '</a></div>';
 
             if (suggestion.hasOwnProperty('closed') && suggestion.closed) {
                 tmpl = '<div><a href="javascript:"><span class="estab-name">' + suggestion[field] + '</span><span class="estab-status">Closed</span></a></div>';
@@ -267,9 +267,17 @@
             return tmpl;
         };
 
+        var useHighlight = function() { // custom highlighing in use for name based searches
+            if (targetInputElementName === '#TextSearchModel_Text' ||
+                targetInputElementName === '#GroupSearchModel_Text') {
+                return false;
+            }
+            return true;
+        }
+
         $(targetInputElementName).typeahead({
             hint: false,
-            highlight: true,
+            highlight: useHighlight(),
             highlightAliases: [
                 ["st. ", "st ", "saint "]
             ],
@@ -287,6 +295,22 @@
                 suggestion: templateHandler
             }
         });
+        // custom suggestion highlights for name based searches
+        $('#TextSearchModel_Text, #GroupSearchModel_Text').on('typeahead:render',
+            function () {
+                var q = this.value.split(' ');
+                var suggestions = $(this).nextAll('.tt-menu').find('.tt-suggestion');
+                var re = new RegExp(q.join('|'), 'gi');
+                $.each(suggestions,
+                    function (n, sug) {
+                        var suggestionText = $(sug).find('a').text();
+                        suggestionText = suggestionText.replace(re, function (match) {
+                            return '<span class="suggestion-highlight">' + match + '</span>';
+                        });
+                        $(sug).find('a').html(suggestionText);
+                    });
+            });
+
 
         var currentSuggestionName = "";
 
@@ -303,8 +327,7 @@
 
                 }
             }
-        });
-
+        });       
 
         $(targetInputElementName).bind("typeahead:autocomplete", function (src, suggestion) {
             $(targetResolvedInputElementName).val(suggestion[value]);

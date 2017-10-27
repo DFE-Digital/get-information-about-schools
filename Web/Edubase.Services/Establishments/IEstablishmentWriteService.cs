@@ -26,5 +26,7 @@ namespace Edubase.Services.Establishments
         Task<ApiResponse<object, ValidationEnvelopeDto[]>> AddLinkedEstablishmentAsync(int parentUrn, int urnToLink, int linkTypeId, DateTime linkDate, IPrincipal principal);
         Task<ApiResponse> ConfirmAsync(int urn, IPrincipal principal);
         Task<ApiResponse> ConfirmGovernanceAsync(int urn, IPrincipal principal);
+        Task<ApiResponse<BulkCreateFreeSchoolsResult>> BulkCreateFreeSchoolsAsync(string filename, IPrincipal principal);
+        Task<ApiResponse<BulkCreateFreeSchoolsResult>> BulkCreateFreeSchoolsGetProgressAsync(Guid taskId, IPrincipal principal);
     }
 }
