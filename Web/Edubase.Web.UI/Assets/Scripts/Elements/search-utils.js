@@ -220,6 +220,10 @@ DfE.searchUtils = (function () {
                 var valid = true;
                 $.each(fields,
                     function (m, field) {
+                        if (field.value.substr(0, 1) == ".") {
+                            field.value = "0" + field.value;
+                        }
+
                         if (!field.value.match(/^[0-9]{1,2}(\.[0-9]{1,2})?$/)) {
                             valid = false;
                             canSubmit = false;
