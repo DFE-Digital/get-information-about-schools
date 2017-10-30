@@ -30,6 +30,20 @@
     }
 
     SearchWithin.prototype = {
+        regenerateItems: function() {
+            var filterData = [];
+            $(this.el).find('.filter-wrapper').each(function (n, elem) {
+                var temp = {};
+                temp.id = $(elem).find('.filter-input').prop('id');
+                temp.text = $.trim($(elem).find('.filter-radio').text());
+                temp.checked = $(elem).find('.trigger-result-update').is(':checked');
+
+                filterData.push(temp);
+
+            });
+
+            this.dataList = filterData;
+        },
         init: function () {
             var $el = $(this.el);
             var opts = this.opts;
@@ -45,7 +59,6 @@
                 var html = '';
                 for (var i = 0, len = options.length; i < len; i++) {
                     var opt = options[i];
-
                     var optionText = opt.text.replace(new RegExp(userText, 'gi'), function(match) {
                         return '<span>' + match + '</span>';
                     });
@@ -70,19 +83,8 @@
                 searchField.val('');
             }
 
-            // create data list from filters
-            var filterData = [];
-            $el.find('.filter-wrapper').each(function (n, elem) {
-                var temp = {};
-                temp.id = $(elem).find('.filter-input').prop('id');
-                temp.text = $.trim($(elem).find('.filter-radio').text());
-                temp.checked = $(elem).find('.trigger-result-update').is(':checked');
-
-                filterData.push(temp);
-
-            });
-
-            this.dataList = filterData;
+            this.regenerateItems();
+            
 
             //attach events
             searchField.on('keyup', function () {
@@ -124,7 +126,7 @@
             originalFilters.on('change', function () {
                 var radioChecked = $(this).is(':checked');
                 var radioId = this.id;
-
+                self.regenerateItems();
                 self.dataList.filter(function (item) {
                     if (item.id === radioId) {
                         item.checked = radioChecked;

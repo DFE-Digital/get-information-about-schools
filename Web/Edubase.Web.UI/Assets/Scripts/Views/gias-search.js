@@ -378,8 +378,20 @@ DfE.searchResults = (function () {
             $('#clear-filters').on('click', function (e) {
                 e.preventDefault();
                 window.clearTimeout(filterIntent);
-                $('#filter-form').find('input[type="text"]').val('');
-                $('#filter-form').find('.clear-selections').click();
+                $filterForm.find('input[type="text"]').val('');
+                $filterForm.find('.clear-selections').click();
+                var selectedFilters = $filterForm
+                    .find('.options-container .trigger-result-update')
+                    .filter(function (n, item) {
+                        return $(item).prop('checked');
+                    });
+
+                selectedFilters.slice(0, 1).trigger('change');
+                selectedFilters.prop('checked', false);
+                $filterForm.find('.select-all').next('label').removeClass('partial-selection');
+                $filterForm.find('.select-all').prop('checked', false);
+                $filterForm.find('.filter-group-title').next('label').removeClass('partial-selection');
+                $filterForm.find('.filter-group-title').prop('checked', false);
             });
         },
 
