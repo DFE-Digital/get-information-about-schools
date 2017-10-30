@@ -655,26 +655,52 @@ table.change-history {
 
 table.expanded-table {
     thead th {
-        a.selected-sort.sorted-asc::after ,
+        a.selected-sort.sorted-asc::after,
         a.selected-sort.sorted-desc::after {
             margin-top: 0;
+        }
+    }
+
+    thead th.cell-estab {
+        a.sorted-asc.selected-sort:after {
+            margin-top: -8px;
         }
     }
 }
 
 .multi-estab-changes {
     .cell-oldvalue, .cell-newvalue {
-        width: 8%;
+        width: 9.5%;
     }
 
     .cell-suggested {
         width: 13%;
     }
+
+    .cell-urn {
+        width: 8%;
+
+        .selected-sort:after {
+            right: 1px;
+        }
+    }
+
+    .cell-estab {
+        .selected-sort:after {
+            right: 2px;
+        }
+        
+        .sorted-desc.selected-sort:after {
+            margin-top: 0;
+        }
+    }
+
     thead th {
         padding-right: 3px;
+
         a {
             max-width: 95%;
-            display: block;    
+            display: block;
         }
     }
 }
