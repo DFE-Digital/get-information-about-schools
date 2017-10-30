@@ -26,9 +26,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Establishments.DisplayPolicies;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
@@ -130,7 +133,45 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
         public async Task<ActionResult> EditLocation(ViewModel model)
         {
-            return await SaveEstablishment(model);
+            var oldModel = await CreateEditViewModel(model.Urn);
+
+            SetProperty(oldModel, model, m => m.RSCRegionId);
+            SetProperty(oldModel, model, m => m.GovernmentOfficeRegionId);
+            SetProperty(oldModel, model, m => m.AdministrativeDistrictId);
+            SetProperty(oldModel, model, m => m.AdministrativeWardId);
+            SetProperty(oldModel, model, m => m.ParliamentaryConstituencyId);
+            SetProperty(oldModel, model, m => m.UrbanRuralId);
+            SetProperty(oldModel, model, m => m.GSSLAId);
+            SetProperty(oldModel, model, m => m.Easting);
+            SetProperty(oldModel, model, m => m.Northing);
+            SetProperty(oldModel, model, m => m.CASWardId);
+            SetProperty(oldModel, model, m => m.MSOAId);
+            SetProperty(oldModel, model, m => m.LSOAId);
+
+            oldModel.Action = model.Action;
+            oldModel.SelectedTab = model.SelectedTab;
+            oldModel.OverrideCRProcess = model.OverrideCRProcess;
+            oldModel.ChangeEffectiveDate = model.ChangeEffectiveDate;
+
+            return await SaveEstablishment(oldModel);
+        }
+
+        private void SetProperty<TProperty>(ViewModel oldModel, ViewModel newModel, Expression<Func<ViewModel, TProperty>> property)
+        {
+            var memberExpression = property.Body as MemberExpression;
+            if (memberExpression != null)
+            {
+                var propertyInfo = memberExpression.Member as PropertyInfo;
+                if (propertyInfo != null)
+                {
+                    var propertyName = propertyInfo.Name;
+                    var policyGetter = typeof(EstablishmentDisplayEditPolicy).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance)?.GetGetMethod();
+                    if (policyGetter == null || (bool)policyGetter.Invoke(oldModel.EditPolicy, null))
+                    {
+                        propertyInfo.SetValue(oldModel, propertyInfo.GetValue(newModel));
+                    }
+                }
+            }
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
@@ -220,8 +261,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links", Name = "EditEstabLinks")]
-        public async Task<ActionResult> EditLinks(int? id)
+        public async Task<ActionResult> EditLinks(int? id, bool saved = false)
         {
+            ViewBag.ShowSaved = saved;
+
             if (!id.HasValue) return HttpNotFound();
 
             var viewModel = new EditEstablishmentLinksViewModel();
@@ -305,7 +348,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                             await _establishmentWriteService.AddLinkedEstablishmentAsync(link.Urn.Value, viewModel.Urn.Value, viewModel.ActiveRecord.ReverseLinkTypeId.Value,
                                 (viewModel.ActiveRecord.ReverseLinkDateEditable.ToDateTime() ?? viewModel.ActiveRecord.LinkDateEditable.ToDateTime()).Value, User);
                         }
-                        return RedirectToRoute("EditEstabLinks", new { id = deltaViewModel.Urn });
+                        return RedirectToRoute("EditEstabLinks", new { id = deltaViewModel.Urn, saved = true });
                     }
                 }
                 return View("AddEditLink", viewModel);
@@ -313,10 +356,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, bool pendingApproval = false, int skip = 0, string sortBy = null)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, bool pendingApproval = false, int skip = 0, string sortBy = null, bool saved = false)
         {
             ViewBag.ShowApproved = approved;
             ViewBag.PendingApproval = pendingApproval;
+            ViewBag.ShowSaved = saved;
 
             var viewModel = new EstablishmentDetailViewModel
             {
@@ -404,7 +448,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     {
                         foreach (var error in response.Errors)
                         {
-                            ModelState.AddModelError(error.Fields, error.Message);
+                            ModelState.AddModelError(error.Fields, error.GetMessage());
                         }
                     }
                 }
@@ -571,7 +615,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
-            domainModel.SENIds = viewModel.SENIds ?? new int[0];
+            if(keys.Contains("SENList")) domainModel.SENIds = viewModel.SENIds ?? new int[0];
+            if (keys.Contains(nameof(viewModel.MSOACode))) domainModel.MSOAId = viewModel.MSOAId;
+            if (keys.Contains(nameof(viewModel.LSOACode))) domainModel.LSOAId = viewModel.LSOAId;
         }
 
         private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)

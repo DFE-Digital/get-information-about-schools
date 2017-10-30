@@ -19,7 +19,15 @@ DfE.mapInteractions =  (function () {
                     : '/public/assets/images/maps/google-closed-marker.png';
                
 
-            if (!$mapElem.is(':visible')) { return }
+            if (!$mapElem.is(':visible')) {
+                $(window).on('tabChange', function (e) {
+                    if (e.tab === '#school-dashboard') {
+                        $(window).off('tabChange');
+                        DfE.mapInteractions.initMap();
+                    }
+                });
+                return;
+            }
 
             var map = new google.maps.Map(document.getElementById('map'), {
                 center: mapCentre,

@@ -3,14 +3,25 @@
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.IGroupPageViewModel;
 @model VM
 @{
-    ViewBag.bodyClasses = "governance school-details";
+    ViewBag.bodyClasses = "school-details";
+    if(string.Equals(Model.SelectedTabName, "governance"))
+    {
+        ViewBag.bodyClasses = String.Concat("governance ", ViewBag.bodyClasses);
+
+    }
     ViewBag.hideLogo = true;
-    Layout = "~/Views/Dfe/Layouts/template.cshtml";
+        Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 
-@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "home-link" })
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" })</li>
+    </ul>
+    
+</div>
 
-<h1 class="heading-xlarge">@Model.GroupName</h1>
+
+<h1 class="heading-large">@Model.GroupName</h1>
 
 <p class="urn">UID: @Model.GroupUId</p>
 <p class="establishment-type">@Model.GroupTypeName</p>
@@ -72,7 +83,7 @@
                 {
                     @RenderBody()
                 }
-                
+               
             </div>
         </div>
     </div>

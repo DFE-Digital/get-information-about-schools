@@ -242,6 +242,10 @@ $tabheight: 60px;
         .column-half, .column-two-thirds {
             padding-left: 0;
         }
+    
+        .tab-content .tab-content {
+            padding: 0;
+        }
     }
 }
 

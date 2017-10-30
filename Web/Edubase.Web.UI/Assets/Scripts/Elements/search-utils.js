@@ -206,6 +206,51 @@ DfE.searchUtils = (function () {
                     
                 }
             });
+        },
+        validateRadiusFilter: function () {
+            var filters = $('#EditSearchCollapse').find('.radius-filter');
+            var canSubmit = true;
+            errorSummary.addClass('hidden');
+            errorSummary.find('.summary-radius-error').addClass('hidden');
+            filters.each(function (n, elem) {
+                $(elem).find('.form-group').removeClass('error');
+                $(elem).find('.error-message').addClass('hidden');
+
+                var fields = $(elem).find('.form-control');
+                var valid = true;
+                $.each(fields,
+                    function (m, field) {
+                        if (field.value.substr(0, 1) == ".") {
+                            field.value = "0" + field.value;
+                        }
+
+                        if (!field.value.match(/^[0-9]{1,2}(\.[0-9]{1,2})?$/)) {
+                            valid = false;
+                            canSubmit = false;
+                        }
+                    });
+
+                if (!valid) {
+                    $(elem).find('.form-group').addClass('error');
+                    $(elem).find('.error-message').removeClass('hidden');
+                    errorSummary.removeClass('hidden');
+                    errorSummary.find('.summary-radius-error').removeClass('hidden');
+                    return;
+                }
+
+                if (n + 1 === filters.length && canSubmit) {
+
+                    if (DfE.searchMap.currentView === 'map') {
+                        DfE.searchResults.setSearchParams();
+                        DfE.searchMap.getSearchData();
+                    } else {
+                        DfE.searchMap.dataRefreshRequired = true;
+                        DfE.searchResults.setSearchParams();
+                        DfE.searchResults.getResults();
+                    }
+
+                }
+            });
         }
     }
 }());

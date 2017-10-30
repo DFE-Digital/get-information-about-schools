@@ -9,8 +9,8 @@
     ViewBag.Title = Model.PageTitle;
     Layout = "_EditLayoutPage.cshtml";
 }
-
-
+<div class="tab-content">
+    
 @using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUId)
@@ -21,8 +21,16 @@
     @Html.HiddenFor(x => x.SelectedTabName)
     @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
 
+    <div>
+        @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+        {
+            <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save</button>
+        }
+        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+    </div>
+
     <div class="column-two-thirds">
-        <h2 class="heading-large">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
+        <h2 class="bold-large">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
     </div>
 
 
@@ -123,8 +131,9 @@
                         else if (Model.LinkedEstablishments.Establishments[i].EditMode)
                         {
                             <div class="form-group">
-                                @Html.ActionLink("Cancel", "EditLinks","Group", new { area = "Groups"}, new {@class= "button button-grey allow-exit" })
-                                <button type="submit" class="button button-grey" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
+                                
+                                <button type="submit" class="button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
+                                @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "button button-grey allow-exit" })
                             </div>
                         }
 
@@ -142,15 +151,16 @@
         </div>
 
         <div class="column-half">
-
-            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
-
             @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
             {
-                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Submit</button>
+                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save</button>
             }
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+
+           
         </div>
 }
+</div>
 @section ViewScripts
 {
     @if (Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))

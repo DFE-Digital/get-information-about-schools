@@ -20,9 +20,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
             { 7, eTextSearchType.LAESTAB },
             { 8, eTextSearchType.UKPRN }
         };
-
-        private readonly int[] _radiuses = new int[] { 1, 3, 5, 10, 15, 20, 25 };
-
+        
         private Dictionary<char, eSortBy> _sortByMap = new Dictionary<char, eSortBy>
         {
             { 'd', eSortBy.Distance },
@@ -76,6 +74,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
             UKPRN
         }
 
+
+        private readonly int[] _radiuses = new int[] { 1, 3, 5, 10, 15, 20, 25 };
+        public int[] GetRadiusOptions() => _radiuses;
+
         public IList<EstablishmentSearchResultModel> Results { get; set; }
         public string Error { get; set; }
 
@@ -98,11 +100,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
-
-        public int[] GetRadiusOptions() => _radiuses;
-
+        
         [BindAlias(BIND_ALIAS_RADIUS)]
-        public int? RadiusInMiles { get; set; }
+        public double? RadiusInMiles { get; set; }
 
         [BindAlias(BIND_ALIAS_SORT_BY)]
         public char? SortBy { get; set; }
@@ -115,13 +115,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         }
 
         private eSortBy GetDefaultSortOption() => SearchType == eSearchType.Location ? eSortBy.Distance : eSortBy.NameAlphabeticalAZ;
-        
 
-        public int GetRadiusOption()
-        {
-            if (!RadiusInMiles.HasValue || !_radiuses.Contains(RadiusInMiles.Value)) return _radiuses[1];
-            else return RadiusInMiles.Value;
-        }
+
+        public double GetRadiusOption() => RadiusInMiles ?? 3;
 
         private Lazy<LatLon> _coordinate;
 
@@ -143,6 +139,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public string SelectedExtraSearchFilters { get; set; }
 
         public IEnumerable<HeirarchicalLookupItemViewModel> EstablishmentTypes { get; set; }
+        public Dictionary<int, string> EstablishmentTypeLookup { get; set; }
 
         [BindAlias(BIND_ALIAS_TYPEIDS)]
         public List<int> SelectedEstablishmentTypeIds { get; set; } = new List<int>();

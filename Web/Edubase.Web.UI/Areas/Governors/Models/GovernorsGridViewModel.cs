@@ -91,6 +91,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             EstablishmentUrn = establishmentUrn;
             CreateGrids(dto, dto.CurrentGovernors, false, groupUId, establishmentUrn);
             CreateGrids(dto, dto.HistoricalGovernors, true, groupUId, establishmentUrn);
+            AlignGrids();
         }
 
         public GovernorsGridViewModel()
@@ -180,6 +181,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     Grids.Add(grid);
                 }
             }
+
+
         }
 
         private void SetupHeader(GR role, GridViewModel<GovernorModel> grid, GovernorDisplayPolicy displayPolicy, bool includeEndDate)
@@ -195,6 +198,66 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
                 .AddHeaderCell("Email address", displayPolicy.EmailAddress)
                 .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="viewModel">Target grid</param>
+        /// <param name="maxAmount">Hard max of how many to add</param>
+        /// <param name="targetCount"></param>
+        /// <param name="index"></param>
+        public void AddEmptyCells(GovernorGridViewModel grid, int targetCount, int? maxAmount = null, int? index = null)
+        {
+            var addedCount = 0;
+            var lastIndex = grid.HeaderCells.Count - 1;
+
+            if (index.HasValue) // validate the index
+            {
+                if (index > lastIndex) index = null; // change to an 'Add' operation
+                else if (index < 0) index = 0;
+            }
+
+            while(grid.HeaderCells.Count < targetCount && (!maxAmount.HasValue || addedCount < maxAmount.Value))
+            {
+                if (grid.HeaderCells.Count < targetCount)
+                {
+                    var sortKey = "col_" + (grid.HeaderCells.Count + 1);
+                    if (index == null)
+                    {
+                        grid.HeaderCells.Add(new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                        foreach (var row in grid.Rows) row.Cells.Add(new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                    }
+                    else
+                    {
+                        grid.HeaderCells.Insert(index.Value, new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                        foreach (var row in grid.Rows) row.Cells.Insert(index.Value, new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                    }
+                    addedCount++;
+                }
+            }
+        }
+
+        private void AlignGrids()
+        {
+            int maxCols = 5;
+
+            foreach (var grid in Grids)
+            {
+                if (grid.Rows.Any())
+                {
+                    var lastIndex = grid.HeaderCells.Count - 1;
+                    if(grid.HeaderCells[lastIndex].Text == "From")
+                    {
+                        AddEmptyCells(grid, maxCols, 1); // adds one to the end
+                        AddEmptyCells(grid, maxCols, null, lastIndex); // add * before 'from'
+                    }
+                    else if (grid.HeaderCells[lastIndex].Text == "To")
+                    {
+                        AddEmptyCells(grid, maxCols, null, lastIndex - 1);  // add * before 'from'
+                    }
+                }
+            }
         }
     }
 }

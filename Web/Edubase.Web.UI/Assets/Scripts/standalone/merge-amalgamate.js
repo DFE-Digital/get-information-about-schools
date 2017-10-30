@@ -185,8 +185,8 @@
                 this.populateSelect('new-establishment-phase', validOptions);
             },
             checkMergeType: function () {
-                this.typeError = this.mergerType === '';
-                if (!this.typeError) {
+                this.mergerTypeError = this.mergerType === '';
+                if (!this.mergerTypeError) {
                     this.mergerTypeConfirmed = true;
                 }
             },

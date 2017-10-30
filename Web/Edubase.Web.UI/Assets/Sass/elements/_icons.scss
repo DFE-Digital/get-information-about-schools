@@ -160,10 +160,10 @@ td.download-list-item {
 
 .icon-help {
     position:relative;
-    display: inline-block;
+    /*display: inline-block;
     width: 20px;
     height: 20px;
-    top: 3px;
+    top: 3px;*/
 
     &:after {
         position: absolute;
@@ -175,7 +175,8 @@ td.download-list-item {
         text-align: center;   
         border-radius: 12px;
         padding: 1px 2px 2px;
-        top: 4px;
+        margin-left: 3px;
+        top: 2px;
         font-size: 12px;
 
     }

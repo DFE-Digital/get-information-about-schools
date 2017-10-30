@@ -18,6 +18,14 @@
     </ul>
 </div>
 
+@if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
+{
+    <div class="pending-updates-message dismissable-message">
+        <div class="tick"></div>
+        Your changes have been saved
+        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+    </div>
+}
 
 <h1 class="heading-large">@Model.Name</h1>
 <p class="urn">URN: @Model.Urn</p>

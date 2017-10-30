@@ -95,5 +95,9 @@
 }
 
 .group-search-intro {
-    padding-top: 20px;
+    margin-top: 20px;
+
+    .is-mac & {
+        margin-top: 3px;
+    }
 }

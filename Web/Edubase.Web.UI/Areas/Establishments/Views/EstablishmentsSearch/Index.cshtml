@@ -13,7 +13,7 @@
 <div class="grid-row" id="search-results">
     <div class="column-full results-heading">
         <div class="breadcrumbs">            
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = @Model.SearchType})">Back to find an establishment</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = Model.SearchType})">Back to find an establishment</a>
         </div>
 
         <h1 class="heading-xlarge">Search results</h1>
@@ -29,13 +29,10 @@
                 if (Model.TextSearchType == M.eTextSearchType.EstablishmentName || 
                     Model.TextSearchType == M.eTextSearchType.Unknown)
                 {
-                    <text>
-                        @*We found <span class="heading-xlarge count">@Model.Count</span> establishments*@
-                        @if (!Model.TextSearchModel.Text.IsEmpty())
-                        {
-                            <text>Establishments matching &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
-                        }
-                    </text>
+                    if (!Model.TextSearchModel.Text.IsEmpty())
+                    {
+                        <text>Establishments matching &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
+                    }
                 }
                 else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
                 {
@@ -64,18 +61,15 @@
                 }
                 <text>Establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
             }
-            @*else
-            {
-                <text>We found <span class="heading-xlarge count">@Model.Count</span> establishments</text>
-            }*@
     </p>
     </div>
     <div class="column-full">
         <div class="error-summary hidden" id="js-filter-error-summary">
             <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
             <ul class="error-summary-list">
-                <li class="summary-date-error error-message hidden">Your date format is not recognised</li>
-                <li class="summary-range-error error-message hidden">Your age range format is not recognised</li>
+                <li class="summary-date-error error-message hidden">Please enter the date in the format DD/MM/YYYY</li>
+                <li class="summary-range-error error-message hidden">Please enter the age in the correct format, for example 5 to 11</li>
+                <li class="summary-radius-error error-message hidden">Please enter a radius between 0 and 99.99</li>
             </ul>
         </div>
         <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
@@ -96,8 +90,7 @@
 
                     @if (Model.SearchType == eSearchType.Location)
                     {
-                        @RadiusSelector("Within radius of")
-
+                        @RadiusFilter()
                     }
 
 
@@ -162,7 +155,7 @@
 
                     <div id="filter-addtional-controls">
                         <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
-                        <a href="#" class="add-filters-link add-clear-filters">+ Add more filters</a>
+                        <a href="#" class="add-filters-link add-clear-filters">Add/remove filters</a>
                     </div>
 
 
@@ -188,9 +181,9 @@
                 </div>
 
                 <div id="additional-filter-wrap" class="hidden">
-                    <div class="govuk-option-select js-collapsible searchable-filters" data-closed-on-load="false" id="option-select-additional-filters">
+                    <div class="searchable-filters govuk-option-select additional-filters" data-closed-on-load="false" id="option-select-additional-filters">
                         <div class="container-head js-container-head">
-                            <div class="option-select-label">Add more filters</div>
+                            <div class="option-select-label">Add/remove filters</div>
                             <div class="js-selected-counter">
                                 <span class="js-selected-counter-text"></span>
                             </div>
@@ -205,7 +198,7 @@
                         </div>
                     </div>
 
-                    <input value="Add" class="button " id="filter-refine" type="submit">
+                    <input value="Add/remove" class="button " id="filter-refine" type="submit">
                     <button class="button button-grey " id="add-filter-cancel">Cancel</button>
                 </div>
 
@@ -248,7 +241,7 @@
                 
             </div>
         </div>
-        <a href="#" class="clear-selections filter-clear">Clear</a>
+        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
     @if (filterRefine)
     {
         @SearchWithin()
@@ -296,7 +289,7 @@
                 <span class="js-selected-counter-text"></span>                
             </div>
         </div>
-        <a href="#" class="clear-selections filter-clear">Clear</a>
+        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
         @if (filterRefine)
         {
            @SearchWithin()
@@ -407,6 +400,32 @@
         </select>
     </div>
     
+}
+
+@helper RadiusFilter() {
+
+    <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS">
+
+        <div class="container-head js-container-head">
+            <div class="option-select-label">Within radius of</div>
+            <div class="js-selected-counter"></div>
+        </div>
+        <div class="options-container" id="">
+            <div class="js-auto-height-inner">
+                <div class="form-group">
+                    <fieldset class="range-group">
+                        <span class="error-message hidden">Please check the radius you have entered</span>
+                        <span class="inline-form-control">
+                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="form-control" maxlength="5" />
+                            &nbsp;miles
+                        </span>
+                        <a href="#" class="button button-grey filter-button">Apply</a>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
 }
 
 

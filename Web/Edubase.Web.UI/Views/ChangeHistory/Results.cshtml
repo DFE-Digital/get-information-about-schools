@@ -36,7 +36,7 @@
             }
         }
         <h1 class="heading-xlarge">@heading</h1>
-        <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href=@($"{Url.RouteUrl("DownloadChangeHistory")}?{Request.QueryString}")>Download change history</a>
+        <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href="@($"{Url.RouteUrl("DownloadChangeHistory")}?{Request.QueryString}")">Download change history</a>
     </div>
 </div>
 
@@ -137,7 +137,7 @@
 
             </div>
         </div>
-        <a href="#" class="clear-selections filter-clear">Clear</a>
+        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 <fieldset>
@@ -173,7 +173,7 @@
 
             </div>
         </div>
-        <a href="#" class="clear-selections filter-clear">Clear</a>
+        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 <fieldset>

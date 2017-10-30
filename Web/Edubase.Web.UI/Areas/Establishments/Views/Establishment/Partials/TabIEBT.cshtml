@@ -6,14 +6,10 @@
 <div id="school-iebt" class="tab-content">
     @if (Model.UserCanEdit)
     {
-        <div class="button-row">
             @Html.ActionLink("Edit", "EditIEBT", "Establishment", null,new { @class = "button button-grey mobile-full-width" })
-        </div>
     }
     
-    <div class="detail-summary">        
-        <h2 class="heading-medium">Independent Education and Boarding Team</h2>
-        
+    <div class="detail-summary">              
         @if (p.Notes)
         {
             <h2 class="heading-small">Notes</h2>

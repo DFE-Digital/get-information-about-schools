@@ -15,6 +15,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     {
         public const string BIND_ALIAS_ROLE_ID = "t";
         public const string BIND_ALIAS_GOVERNOR_TYPE_FLAG_ID = "g";
+        public const string BIND_ALIAS_LAIDS = "d";
 
         public GovernorSearchPayloadViewModel GovernorSearchModel { get; set; } = new GovernorSearchPayloadViewModel();
         public IList<SearchGovernorModel> Results { get; set; } = new List<SearchGovernorModel>();
@@ -30,7 +31,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             new LookupItemViewModel((int)eGovernorTypesFlag.FreeSchools, "Free schools"),
             new LookupItemViewModel((int)eGovernorTypesFlag.AcadsWithSchoolSponsor, "Academies with a school sponsor"),
         };
-        
+
+        public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }
 
         public long Count { get; set; }
 
@@ -57,6 +59,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         [BindAlias(BIND_ALIAS_GOVERNOR_TYPE_FLAG_ID)]
         public List<int> SelectedGovernorTypeFlagIds { get; set; } = new List<int>();
+
+        [BindAlias(BIND_ALIAS_LAIDS)]
+        public List<int> SelectedLocalAuthorityIds { get; set; } = new List<int>();
 
         public string RoleNames => StringUtil.Sentenceify(SelectedRoleIds.Select(x => GovernorRoles.First(r => r.Id == x).Name).ToArray(), StringUtil.SentenceifyOptions.AND);
 

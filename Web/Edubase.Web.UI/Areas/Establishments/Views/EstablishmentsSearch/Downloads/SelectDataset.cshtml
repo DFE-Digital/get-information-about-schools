@@ -34,6 +34,16 @@
                 establishment name, address, type and phase. Full data includes all data ﬁelds.
             </p>
 
+            <div class="expanding-content-wrapper" data-update-text="true" data-opened-text="Less information" data-closed-text="More information">
+                <a href="#" class="expanding-content-trigger">
+                    More information
+                </a>
+                <div class="expanding-content panel-indent">
+                    <p class="bold-small">Core data fields</p>
+                    <p>Address, Admissions Policy, Boarders, Close Date, County, Diocese, Establishment Name, Establishment Number, Establishment Status, Federation Flag, Federations, Further Education Type, Gender, Head First Name, Head Last Name, Head Title, LA, Locality, Nursery Provision, Official Sixth Form, Open Date, Phase Of Education, Postcode, Religious Character, Religious Ethos, School Sponsor Flag, School Sponsors, Statutory High Age, Statutory Low Age, Street, Telephone Number, Town, Trusts, Trust School Flag, Type Of Establishment, UKPRN, URN, School Website</p>
+                </div>
+            </div>
+
             @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
             {
                 @Html.HiddenFor(m => m.SearchQueryString)

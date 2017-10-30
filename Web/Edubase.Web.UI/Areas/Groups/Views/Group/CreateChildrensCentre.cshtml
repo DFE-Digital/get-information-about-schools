@@ -65,7 +65,7 @@
 
         </div>
         <div class="column-full">
-            <div class="button-row">
+            <div class="submit-cancel-panel">
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="step0Continue">
                     Continue
                 </a>
@@ -94,7 +94,7 @@
                         {{groupNameApiError}}
                     </li>
                     <li class="error-message" v-show="groupNameError">
-                        Please check the {{groupTypeName}} name
+                        Please enter the {{groupTypeName}} name
                     </li>
                     <li class="error-message" v-show="openDateError">
                         Please check the opening date you have entered
@@ -139,7 +139,7 @@
             </div>
         </div>
         <div class="column-full">
-            <div class="button-row">
+            <div class="submit-cancel-panel">
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="step1Continue">
                     Continue
                 </a>
@@ -191,7 +191,7 @@
                 </ul>
             </div>
             <div class="error-summary" v-show="duplicateUrnError">
-                <h2 class="error-summary-heading heading-medium">Please check the URN </h2>
+                <h2 class="error-summary-heading heading-medium">Please check the URN</h2>
                 <ul class="error-summary=list">
                     <li class="error-message">
                         The URN is a duplicate.
@@ -226,7 +226,7 @@
                 <label class="form-label">
                     Establishment <abbr title="Unique Reference Number">URN</abbr>
                 </label>
-                <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please check the URN</span>
+                <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid URN</span>
                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 search-box", v_model = "searchUrn"})
                 <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn">Find</button>
             </div>
@@ -252,7 +252,6 @@
                         <td aria-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
                             <span class="radio-button-wrap">
                                 <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
-                                @*@Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new {id = "lead-" + Model.LinkedEstablishments.Establishments[i].Urn})*@
                                 <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
                                     <span class="visuallyhidden">Set as lead establishment</span>
                                 </label>
@@ -273,7 +272,7 @@
                 </table>
                 <p class="table-caption">{{tableCount}}</p>
             </div>
-            <div class="button-row">
+            <div class="submit-cancel-panel">
 
                 <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true,tooFewCentresError=false">&laquo; Go back</a>
                 @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
@@ -332,7 +331,7 @@
             <input type="hidden" name="@(nameof(GroupEditorViewModel.ProcessedWarnings))" id="processed-warnings" />
         </div>
         <div class="column-full">
-            <div class="button-row">
+            <div class="submit-cancel-panel">
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup">
                     <span v-show="!pendingEdit">Add</span>
                     <span v-show="pendingEdit">Update</span>

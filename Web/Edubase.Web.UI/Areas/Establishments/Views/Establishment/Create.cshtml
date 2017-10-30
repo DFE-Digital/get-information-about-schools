@@ -2,7 +2,7 @@
 @model CreateChildrensCentreViewModel
 @{
     ViewBag.Title = "Create a new establishment";
-    ViewBag.bodyClasses = "create-establishment";
+    ViewBag.bodyClasses = "create-establishment school-details";
 }
 
 <div class="breadcrumbs">
@@ -57,7 +57,7 @@
             </div>
 
             <div class="column-half">
-                <h2 class="heading-medium">New establishment</h2>
+                <h2 class="heading-medium create-estab-label">New establishment</h2>
 
                 <div class="form-group @Html.ValidationCssClassFor(x => x.Name)">
                     @Html.LabelFor(x => x.Name, "Establishment name")
