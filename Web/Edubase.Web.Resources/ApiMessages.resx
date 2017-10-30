@@ -275,4 +275,10 @@ Please check the 'Establishment open date'</value>
   <data name="error.validation.link.cc.wrong.establishment.type" xml:space="preserve">
     <value>This URN is not a children's centre URN. Please enter a valid URN</value>
   </data>
+  <data name="wrong.value_headFirstName" xml:space="preserve">
+    <value>Please enter a valid first name</value>
+  </data>
+  <data name="wrong.value_headLastName" xml:space="preserve">
+    <value>Please enter a valid last name</value>
+  </data>
 </root>

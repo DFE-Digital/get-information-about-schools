@@ -153,10 +153,11 @@
 
                     @if (Model.EditPolicy.HeadFirstName)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.HeadFirstName)">
                             <label class="form-label" for="headfirstname">
                                 @(Model.EditPolicy.HeadteacherLabel) first name
                             </label>
+                            @Html.ValidationMessageFor(x => x.HeadFirstName)
                             @Html.TextBoxFor(x => x.HeadFirstName, new { maxlength = 120, id = "headfirstname", @class = "form-control", placeholder = "First name" })
                             @Html.HiddenFor(x => x.OldHeadFirstName)
                         </div>
@@ -164,10 +165,11 @@
 
                     @if (Model.EditPolicy.HeadLastName)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.HeadFirstName)">
                             <label class="form-label">
                                 @(Model.EditPolicy.HeadteacherLabel) last name
                             </label>
+                            @Html.ValidationMessageFor(x => x.HeadLastName)
                             @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, id = "headlastname", @class = "form-control", placeholder = "Last name" })
                             @Html.HiddenFor(x => x.OldHeadLastName)
                         </div>
