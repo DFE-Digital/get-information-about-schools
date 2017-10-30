@@ -241,6 +241,7 @@ DfE.searchUtils = (function () {
                 if (n + 1 === filters.length && canSubmit) {
 
                     if (DfE.searchMap.currentView === 'map') {
+                        DfE.searchResults.setSearchParams();
                         DfE.searchMap.getSearchData();
                     } else {
                         DfE.searchMap.dataRefreshRequired = true;
