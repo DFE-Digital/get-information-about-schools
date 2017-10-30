@@ -9,8 +9,8 @@
     ViewBag.Title = Model.PageTitle;
     Layout = "_EditLayoutPage.cshtml";
 }
-
-
+<div class="tab-content">
+    
 @using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUId)
@@ -21,8 +21,16 @@
     @Html.HiddenFor(x => x.SelectedTabName)
     @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
 
+    <div>
+        @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+        {
+            <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save</button>
+        }
+        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+    </div>
+
     <div class="column-two-thirds">
-        <h2 class="heading-large">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
+        <h2 class="bold-large">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
     </div>
 
 
@@ -152,6 +160,7 @@
            
         </div>
 }
+</div>
 @section ViewScripts
 {
     @if (Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
