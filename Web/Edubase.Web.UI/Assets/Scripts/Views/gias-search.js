@@ -9,7 +9,7 @@ DfE.searchResults = (function () {
     var searchType = null;
     var filterIntent = null;
     var seenOpenDateWarning = false;
-    var downloadBaseUrl = '/Establishments/Search/PrepareDownload';
+    var downloadBaseUrl;
     var $additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera');
     var $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear');
     var $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]');
@@ -397,6 +397,7 @@ DfE.searchResults = (function () {
 
         init: function () {
             var self = this;
+            downloadBaseUrl = $downloadLink.attr('href').split('?')[0];
             self.setupGovUkSelects();
             self.setupAdditionalFilters();
              if (document.getElementById('client-only-searchtype')) {
