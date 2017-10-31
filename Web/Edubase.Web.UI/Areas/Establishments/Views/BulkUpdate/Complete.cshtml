@@ -25,7 +25,7 @@
                         <ul class="error-list">
                             <li>
                                 You have uploaded an incorrect file type.
-                                <a href="#bulkfile">Please upload a CSV or XLSX file</a>
+                                <a href="#bulkfile">Please upload a tab delimited text file or XLSX file</a>
                             </li>
                         </ul>
                     }
@@ -36,7 +36,7 @@
                         <ul class="error-list">
                             <li>
                                 You didn't upload a file
-                                <a href="#bulkfile">Please upload a CSV or XLSX file to continue</a>
+                                <a href="#bulkfile">Please upload a tab delimited text file or XLSX file to continue</a>
                             </li>
                         </ul>
                     }
@@ -115,7 +115,7 @@
                 }
                 else if (ViewBag.fileTypeError != null && ViewBag.fileTypeError)
                 {
-                    <span class="error-message">Please upload a CSV or XLSX</span>
+                    <span class="error-message">Please upload a tab delimited text file or XLSX file</span>
                 }                
                 <div class="upload-control-wrapper">
                     <input type="file" class="file-input" id="bulkfile" name="bulkfile" />
