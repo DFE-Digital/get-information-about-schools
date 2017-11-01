@@ -3,11 +3,20 @@ using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
-    public class EditGroupDelegationInformationViewModel : IGroupPageViewModel
+    public class EditGroupDelegationInformationViewModel : GroupPageViewModelBase
     {
         [Display(Name="Please provide details of the level of the local governing body's (LGB's) delegated authority, including a shared LGB if applicable"), MaxLength(1000)]
         public string DelegationInformation { get; set; }
+    }
 
+    public class EditGroupCorporateContactViewModel : GroupPageViewModelBase
+    {
+        [Display(Name = "Contact details")]
+        public string CorporateContact { get; set; }
+    }
+
+    public class GroupPageViewModelBase : IGroupPageViewModel
+    {   
         public int? GroupUId { get; set; }
         public string ListOfEstablishmentsPluralName { get; set; }
         public string GroupName { get; set; }

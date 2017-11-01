@@ -20,6 +20,8 @@
             @if (Model.ShowDelegationInformation)
             {
                 @ShowDelegationInformation()
+                <br />
+                @ShowCorporateContactInformation()
             }
 
             @DisplayGovernanceMode()
@@ -33,8 +35,7 @@
             {
                 <div class="form-group inline-select-button">
                     <label class="form-label">Select role</label>
-                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }),
-                new { id = "roleid", @class = "form-control" })
+                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }), new { id = "roleid", @class = "form-control" })
                 
                     <input type="submit" value="Add " class="button" />
                 </div>
@@ -67,6 +68,9 @@ else
         {
             <div class="column-full governors-section">
                 @ShowDelegationInformation()
+            </div>
+            <div class="column-full governors-section">
+                @ShowCorporateContactInformation()
             </div>
         }
     }
@@ -103,6 +107,27 @@ else
         </div>
     }
 
+}
+
+@helper ShowCorporateContactInformation()
+{
+    <h2 class="bold-small">Corporate contact</h2>
+    <div class="expanding-content-wrapper" data-update-text="false">
+        <a href="#" class="expanding-content-trigger">
+            More details
+        </a>
+        <div class="expanding-content panel-indent">
+            @(Model.CorporateContact ?? "Not recorded")
+        </div>
+    </div>
+    if (Model.EditMode)
+    {
+        <div class="grid-row">
+            <div class="column-full">
+                @Html.RouteLink("Edit", "GroupEditCorporateContact", new { GroupUId = Model.GroupUId }, new { @class = "button button-grey mobile-full-width" })
+            </div>
+        </div>
+    }
 }
 
 @helper ShowLegalDuty()

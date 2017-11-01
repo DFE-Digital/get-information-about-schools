@@ -43,6 +43,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string ParentEntityName => GroupUId.HasValue ? "group" : "establishment";
 
         public string DelegationInformation { get; set; }
+        public string CorporateContact { get; set; }
 
         public bool ShowDelegationInformation { get; set; }
 

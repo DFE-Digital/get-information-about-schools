@@ -98,6 +98,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 viewModel.ShowDelegationInformation = x.GroupTypeId.GetValueOrDefault() == (int)eLookupGroupType.MultiacademyTrust;
                 viewModel.DelegationInformation = x.DelegationInformation;
+                viewModel.CorporateContact = x.CorporateContact;
             });
 
             viewModel.RemovalGid = removalGid;
@@ -539,6 +540,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 var groupModel = (await _groupReadService.GetAsync(groupUId.Value, user)).GetResult();
                 viewModel.ShowDelegationInformation = groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust;
                 viewModel.DelegationInformation = groupModel.DelegationInformation;
+                viewModel.CorporateContact = groupModel.CorporateContact;
             }
 
             return viewModel;

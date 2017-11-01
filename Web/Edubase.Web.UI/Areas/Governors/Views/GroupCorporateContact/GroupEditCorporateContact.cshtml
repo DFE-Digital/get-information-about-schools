@@ -1,0 +1,29 @@
+﻿@model EditGroupCorporateContactViewModel
+    
+@{
+    ViewBag.hideLogo = true;
+    ViewBag.SelectedTab = "EditGovernance";
+    Layout = Model.Layout;
+}
+
+<div id="" class="tab-content">
+    <div class="column-two-thirds">
+        <h1 class="heading-medium tab-lead">Corporate contact</h1>
+        @using (Html.BeginRouteForm("GroupEditCorporateContactPost", FormMethod.Post))
+        {
+            @Html.HiddenFor(m => m.GroupUId)
+            <div class="edit-governor">                
+                <div class="form-group">
+                    @Html.LabelFor(x => x.CorporateContact, new {@class = "form-label"})
+
+                    @Html.TextBoxFor(x => x.CorporateContact, new { rows = "6", cols = "60", @class = "form-control", maxlength = 10 })
+                </div>
+
+                <div class="button-row">
+                    <input type="submit" value="Save" class="button mobile-full-width"/>
+                    <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="button button-grey mobile-full-width">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

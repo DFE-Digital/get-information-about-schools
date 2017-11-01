@@ -267,6 +267,7 @@
     <Compile Include="Areas\Establishments\Models\BulkCreateFreeSchoolsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
+    <Compile Include="Areas\Governors\Controllers\GroupCorporateContactController.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceDelegationController.cs" />
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
     <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
@@ -854,6 +855,7 @@
     <Content Include="Areas\Establishments\Views\BulkCreateFreeSchools\BulkCreateFreeSchools.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkCreateFreeSchools\InProgress.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkCreateFreeSchools\Completed.cshtml" />
+    <Content Include="Areas\Governors\Views\GroupCorporateContact\GroupEditCorporateContact.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
