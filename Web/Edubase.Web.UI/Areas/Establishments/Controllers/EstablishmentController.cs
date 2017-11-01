@@ -372,7 +372,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var result = await _establishmentReadService.GetAsync(id, User);
             if (result.ReturnValue == null) return HttpNotFound();
             viewModel.Establishment = result.ReturnValue;
-            
+
             await Task.WhenAll(
                 PopulateLinkedEstablishments(id, viewModel),
                 PopulateChangeHistory(id, viewModel, skip, 100, sortBy),

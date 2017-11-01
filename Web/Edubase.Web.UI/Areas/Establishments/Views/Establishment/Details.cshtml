@@ -27,11 +27,11 @@
     {
         if (Model.SearchSource == eLookupSearchSource.Governors)
         {
-            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+            <a href=@($"{Url.Action("Index", "GovernorSearch", new { area = "Governors" })}?{Model.SearchQueryString}")>Back to search results</a>
         }
         else
         {
-            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}")> Back to search results</a>
         }
     }
 </div>
@@ -95,57 +95,7 @@
     @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto.Value, Model.EstabDetailRouteDto)) }, new { })
 </p>
 
-@if (Model.Establishment.ConfirmationUpToDateRequired || Model.Establishment.ConfirmationUpToDateGovernanceRequired)
-{
-    <div class="up-to-date-confirmations expanding-content-wrapper" data-update-text="false">
-        <a class="expanding-content-trigger" href="#">Confirm records</a>
-        <div class="expanding-content panel-indent">
-
-            @if (Model.Establishment.ConfirmationUpToDateRequired)
-            {
-                <div class="data-confirmation-panel">
-                    <p class="confirmation-statement">
-                        Establishment record last confirmed:
-                        <span class="confirmation-date">
-                            @(Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
-                        </span> 
-                    </p>
-
-
-                    @using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new { urn = Model.Establishment.Urn }, FormMethod.Post))
-                    {
-                        <label class="confirmation-label" for="estab-data-confirm">
-                            Confirm establishment record is up to date
-                        </label>
-                        <button class="button button-grey confirmation-button" id="estab-data-confirm">Confirm</button>
-                    }
-                    
-                </div>
-                
-            }
-            @if (Model.Establishment.ConfirmationUpToDateGovernanceRequired)
-            {
-                <div class="data-confirmation-panel">
-                    <p class="confirmation-statement">
-                        Governance record last confirmed: 
-                        <span class="confirmation-date">
-                            @(Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
-                        </span>
-                    </p>
-
-
-                    @using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new { urn = Model.Establishment.Urn }, FormMethod.Post))
-                    {
-                        <label class="confirmation-label" for="gov-data-confirm">
-                            Confirm governance record is up to date
-                        </label>
-                        <button class="button button-grey confirmation-button" id="gov-data-confirm">Confirm</button>
-                    }
-                </div>                
-            }
-        </div>
-    </div>
-}
+@{Html.RenderPartial(@"Partials\ConfirmationNotifications");}
 
 <div class="column-full">
     <div class="grid-row horizontal-tabs-wrapper">

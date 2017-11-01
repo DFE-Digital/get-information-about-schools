@@ -302,6 +302,8 @@ namespace Edubase.Services.Establishments.Models
         public bool ConfirmationUpToDateGovernanceRequired { get; set; }
         public DateTime? ConfirmationUpToDate_LastConfirmationDate { get; set; }
         public DateTime? ConfirmationUpToDateGovernance_LastConfirmationDate { get; set; }
+        public bool UrgentConfirmationUpToDateRequired { get; set; }
+        public bool UrgentConfirmationUpToDateGovernanceRequired { get; set; }
         
     }
 }

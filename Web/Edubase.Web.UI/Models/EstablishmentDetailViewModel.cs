@@ -44,6 +44,7 @@ namespace Edubase.Web.UI.Models
             Member,
             Trustee
         }
+        
 
         public EstablishmentModel Establishment { get; set; }
 
@@ -179,5 +180,19 @@ namespace Edubase.Web.UI.Models
 
         public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
 
+        /// <summary>
+        /// Whether the current user needs to confirm either the establishment or governance records are up-to-date; at _MEDIUM_ priority.
+        /// </summary>
+        public bool MediumPriorityConfirmationsPending => MediumPriorityEstablishmentConfirmationPending || MediumPriorityGovernanceConfirmationPending;
+
+        /// <summary>
+        /// Whether the current user has a HIGH PRIORITY obligation to confirm their Establishment or Governance records are up-to-date.
+        /// </summary>
+        public bool HighPriorityConfirmationsPending => HighPriorityEstablishmentConfirmationPending || HighPriorityGovernanceConfirmationPending;
+
+        public bool MediumPriorityEstablishmentConfirmationPending => Establishment.ConfirmationUpToDateRequired && !Establishment.UrgentConfirmationUpToDateRequired;
+        public bool MediumPriorityGovernanceConfirmationPending => Establishment.ConfirmationUpToDateGovernanceRequired && !Establishment.UrgentConfirmationUpToDateGovernanceRequired;
+        public bool HighPriorityEstablishmentConfirmationPending => (Establishment?.UrgentConfirmationUpToDateRequired).GetValueOrDefault();
+        public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
     }
 }
