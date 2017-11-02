@@ -1,4 +1,5 @@
 ﻿using Edubase.Common;
+using Edubase.Common.Spatial;
 using Edubase.Web.UI.Models;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string LAESTAB { get; set; }
         public string LocalAuthorityName { get; set; }
         public string StatusName { get; set; }
+        public LatLon Location { get; set; }
+
+        public double? Latitude => Location?.Latitude;
+        public double? Longitude => Location?.Longitude;
 
         [Display(Name = "Joined date")]
         public DateTimeViewModel JoinedDateEditable { get; set; } = new DateTimeViewModel();

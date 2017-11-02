@@ -40,4 +40,23 @@
             }
         }
     }
+
+    .group-establishment-list {
+        clear: left;
+        max-width: 59%;
+        float: left;
+
+        @include media(mobile) {
+            max-width: 100%;
+            float: none;
+        }
+
+        .school-results-listing {
+            margin-top: 0;
+        }
+    }
+
+    &.school-details .map-container .map-toggle {
+        margin-bottom: 20px;
+    }
 }

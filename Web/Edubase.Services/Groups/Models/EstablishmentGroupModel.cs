@@ -1,4 +1,5 @@
-﻿using Edubase.Services.Domain;
+﻿using Edubase.Common.Spatial;
+using Edubase.Services.Domain;
 using Newtonsoft.Json;
 using System;
 
@@ -31,5 +32,8 @@ namespace Edubase.Services.Groups.Models
 
         [JsonProperty("statusName")]
         public string StatusName { get; set; }
+
+        [JsonProperty("latLon")]
+        public LatLon Location { get; set; }
     }
 }

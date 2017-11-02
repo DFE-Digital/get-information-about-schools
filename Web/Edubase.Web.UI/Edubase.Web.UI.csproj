@@ -457,6 +457,7 @@
     <Content Include="Assets\Scripts\mapsApiKey.js" />
     <Content Include="Assets\Scripts\standalone\indi-search.js" />
     <Content Include="Assets\Scripts\standalone\search-map.js" />
+    <Content Include="Assets\Scripts\Views\group-details.js" />
     <Content Include="Assets\Scripts\Views\gias-search.js" />
     <Content Include="Assets\Scripts\Elements\search-utils.js" />
     <Content Include="public\assets\images\icons\arrows-vert.png" />

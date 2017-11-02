@@ -5,7 +5,7 @@
 @model GroupDetailViewModel
 @{
     ViewBag.Title = Model.Group.Name;
-    ViewBag.PageClass = "mat-details";
+    ViewBag.PageClass = "mat-details school-details";
     
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
@@ -209,58 +209,66 @@
                         @Html.ActionLink("Edit", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
                     }
 
-
                     <div class="column-full">
-                        <ul class="school-results-listing">
-                            @foreach (var result in Model.Establishments)
-                            {
-                                <li>
-                                    <h2>
-                                        @Html.ActionLink(result.Name, "Details", "Establishment", new { id = result.Urn, area = "Establishments" }, new { @class = "bold-small" })
-                                        @if (result.CCIsLeadCentre)
-                                        {
-                                            <text>(Lead centre)</text>
-                                        }
-                                    </h2>
+                        <div class="map-container">
+                            <div id="group-map" class="school-detail-map"></div>
+                            <a href="#map" id="map-toggle" class="map-toggle">Show map</a>
+                        </div>
+                        <script type="text/javascript">
+                            var establishmentsList = @Html.Json(Model.Establishments);
+                        </script>
+                        <div class="group-establishment-list">
 
-                                    <dl>
-                                        <dt>Address:</dt>
-                                        <dd>@result.Address</dd>
+                            <ul class="school-results-listing">
+                                @foreach (var result in Model.Establishments)
+                                {
+                                    <li>
+                                        <h2>
+                                            @Html.ActionLink(result.Name, "Details", "Establishment", new { id = result.Urn, area = "Establishments" }, new { @class = "bold-small" })
+                                            @if (result.CCIsLeadCentre)
+                                            {
+                                                <text>(Lead centre)</text>
+                                            }
+                                        </h2>
 
-                                        <dt>Phase / type:</dt>
-                                        <dd>
-                                            @(result.PhaseName ?? "Not recorded"),
-                                            @(result.TypeName ?? "Not recorded")
-                                        </dd>
+                                        <dl>
+                                            <dt>Address:</dt>
+                                            <dd>@result.Address</dd>
 
-                                        <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                                        <dd>@result.Urn</dd>
-                                        
-                                        <dt class="inline-details">
-                                            <abbr title="Local authority - Establishment number">LAESTAB</abbr>:
-                                        </dt>
-                                        <dd>@(result.LAESTAB ?? "Not recorded")</dd>
-                                        
-                                        <dt>Status:</dt>
-                                        <dd>@(result.StatusName ?? "Not recorded")</dd>
-                                        
-                                        <dt>Local authority name:</dt>
-                                        <dd>@(result.LocalAuthorityName ?? "Not recorded")</dd>
+                                            <dt>Phase / type:</dt>
+                                            <dd>
+                                                @(result.PhaseName ?? "Not recorded"),
+                                                @(result.TypeName ?? "Not recorded")
+                                            </dd>
 
-                                        <dt>Joined date:</dt>
-                                        <dd>@(result.JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
-                                    </dl>
+                                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
+                                            <dd>@result.Urn</dd>
 
-                                </li>
-                            }
-                        </ul>
+                                            <dt class="inline-details">
+                                                <abbr title="Local authority - Establishment number">LAESTAB</abbr>:
+                                            </dt>
+                                            <dd>@(result.LAESTAB ?? "Not recorded")</dd>
+
+                                            <dt>Status:</dt>
+                                            <dd>@(result.StatusName ?? "Not recorded")</dd>
+
+                                            <dt>Local authority name:</dt>
+                                            <dd>@(result.LocalAuthorityName ?? "Not recorded")</dd>
+
+                                            <dt>Joined date:</dt>
+                                            <dd>@(result.JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                                        </dl>
+
+                                    </li>
+                                }
+                            </ul>
+                        </div>
                     </div>
 
                     @if (Model.CanUserEdit && Model.Establishments.Count > 0)
                     {
                         @Html.ActionLink("Edit", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-grey mobile-full-width" })
                     }
-
 
                 </div>
                 
@@ -382,9 +390,11 @@
             </div>
         </div>
     </div>
+
 @section ViewScripts
 {
     <script>
         $('#governance').find('.sortable-table').clientSort();
     </script>
+    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
 }

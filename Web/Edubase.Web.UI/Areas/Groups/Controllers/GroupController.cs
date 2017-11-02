@@ -553,7 +553,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     LAESTAB = establishmentGroup.LAESTAB,
                     LocalAuthorityName = establishmentGroup.LocalAuthorityName,
                     PhaseName = establishmentGroup.PhaseName,
-                    StatusName = establishmentGroup.StatusName
+                    StatusName = establishmentGroup.StatusName,
+                    Location = establishmentGroup.Location
                 });
             }
         }
