@@ -247,6 +247,7 @@ namespace Edubase.Services.Lookup
 
         private string ProcessLookupName(string name)
         {
+            Guard.IsNotNull(name, () => new ArgumentNullException(nameof(name)));
             if (name.EndsWith("CountryId")) name = "CountryId";
             else if (name.EndsWith("CountyId")) name = "CountyId";
             return name;

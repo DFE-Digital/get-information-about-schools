@@ -355,6 +355,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
+        [HttpHead, Route("Details/{urn:int}", Name = "EstabDetailsHead")]
+        public async Task<ActionResult> DetailsHead(int urn)
+        {
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            var result = await _establishmentReadService.GetAsync(urn, User);
+            if (result.ReturnValue == null) return HttpNotFound();
+            return new HttpStatusCodeResult(200);
+        }
+        
+
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, bool pendingApproval = false, int skip = 0, string sortBy = null, bool saved = false)
         {

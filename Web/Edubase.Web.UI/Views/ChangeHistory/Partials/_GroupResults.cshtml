@@ -39,7 +39,14 @@
                     <a href="@Url.SortUrl("requestType")"
                        class="@Html.Conditional(sortField == "requestType", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Request<br/>type</a>
                 </th>
-                <th scope="col" class="cell-change"><span class="not-a-link">Change</span></th>
+                @*<th scope="col" class="cell-change"><span class="not-a-link">Change</span></th>*@
+
+                <th scope="col" class="cell-change multi-line">
+                    <a href="@Url.SortUrl("changes")"
+                       class="@Html.Conditional(sortField == "changes", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Change</a>
+                </th>
+
+
                 <th scope="col" class="cell-suggested multi-line">
                     <a href="@Url.SortUrl("originatorUserName")"
                        class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested<br/> by</a>

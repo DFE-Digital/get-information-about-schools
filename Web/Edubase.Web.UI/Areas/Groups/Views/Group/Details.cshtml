@@ -80,31 +80,7 @@
         @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { })
     </p>
 
-    @if(Model.Group.ConfirmationUpToDateGovernanceRequired)
-    {
-        <div class="up-to-date-confirmations expanding-content-wrapper" data-update-text="false">
-            <a class="expanding-content-trigger" href="#">Confirm records</a>
-            <div class="expanding-content panel-indent">
-                <div class="data-confirmation-panel">
-                    <p class="confirmation-statement">
-                        Governance record last confirmed:
-                        <span class="confirmation-date">
-                            @(Model.Group.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
-                        </span>
-                    </p>
-
-                    @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
-                    {
-                        <label class="confirmation-label" for="governance-data-confirm">
-                            Confirm governance record is up to date:
-                        </label>
-                        <button class="button button-grey confirmation-button" id="governance-data-confirm">Confirm</button>
-                    }
-                </div>
-            </div>
-            
-        </div>
-    }
+    @{Html.RenderPartial(@"Partials\GroupConfirmationNotifications");}
 
     <div class="grid-row horizontal-tabs-wrapper">
         <div class="column-full">
@@ -333,7 +309,12 @@
                                             Request type    
                                         </a>
                                     </th>
-                                    <th>Change</th>
+                                    <th>
+                                        <a href="@Url.SortUrl("changes", "#change-history")"
+                                           class="@Html.Conditional(sortField == "changes", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
+                                            Changes
+                                        </a>
+                                    </th>
                                     <th>
                                         <a href="@Url.SortUrl("originatorUserName", "#change-history")"
                                            class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
