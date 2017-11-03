@@ -12,6 +12,17 @@
 
     public class GroupDetailViewModel
     {
+        private Dictionary<int, string> _groupTypes2Name = new Dictionary<int, string>
+        {
+            [(int)GT.ChildrensCentresCollaboration] = "children's centres collaboration",
+            [(int)GT.ChildrensCentresGroup] = "children's centres group",
+            [(int)GT.Federation] = "federation",
+            [(int)GT.MultiacademyTrust] = "multi-academy trust",
+            [(int)GT.SchoolSponsor] = "school sponsor",
+            [(int)GT.SingleacademyTrust] = "single-academy trust",
+            [(int)GT.Trust] = "trust"
+        };
+
         public bool CanUserEdit { get; set; }
         public bool CanUserEditGovernance { get; set; }
         public bool IsUserLoggedOn { get; set; }
@@ -36,5 +47,7 @@
         public string CompaniesHouseUrl => ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"].Append(Group.CompaniesHouseNumber);
 
         public PaginatedResult<GroupChangeDto> ChangeHistory { get; set; }
+
+        public string GroupTypeNameForClosureLabel => _groupTypes2Name.ContainsKey(GroupTypeId) ? _groupTypes2Name[GroupTypeId] : string.Empty;
     }
 }

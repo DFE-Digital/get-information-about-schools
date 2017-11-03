@@ -39,13 +39,13 @@
         }
     }
     
-    @if (Model.IsClosed && Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+    @if (Model.IsClosed)
     {
         if (Model.IsClosedInError)
         {
             <div class="grey-warning dismissable-message">
                 <p>
-                    This multi-academy trust was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                    This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
                 </p>
                 <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
             </div>
@@ -54,13 +54,12 @@
         {
             <div class="grey-warning dismissable-message">
                 <p>
-                    This multi-academy trust closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                    This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
                 </p>
                 <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
             </div>
         }
     }
-
 </div>
 
 @if (ViewBag.ShowSaved)
