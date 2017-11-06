@@ -264,7 +264,7 @@
                 {
                     <div id="links" class="tab-content">
                         <p class="table-caption">
-                            This group is the predecessor to Cunningham Academy Trust, UID: 987.
+                            This group is the @((Model.Links.First().LinkType?.Contains("Successor")).GetValueOrDefault() ? "predecessor" : "successor") to @Model.Links.First().GroupName, UID: @Model.Links.First().UId.
                         </p>
                         <div class="table-count">
                             <p>Showing 1 - @Model.Links.Count() of @Model.Links.Count()</p>
