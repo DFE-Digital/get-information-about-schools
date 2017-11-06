@@ -13,6 +13,9 @@ namespace Edubase.Services.Enums
         [EnumMember(Value = "New link")]
         NewLink,
 
+        [EnumMember(Value = "New group link")]
+        NewGroupLink,
+
         [EnumMember(Value = "Remove link")]
         RemoveLink,
 

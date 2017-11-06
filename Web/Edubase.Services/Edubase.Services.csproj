@@ -253,6 +253,7 @@
     <Compile Include="Groups\Downloads\IGroupDownloadService.cs" />
     <Compile Include="Groups\Models\EstablishmentGroupModel.cs" />
     <Compile Include="Groups\Models\LinkedEstablishmentGroup.cs" />
+    <Compile Include="Groups\Models\LinkedGroupModel.cs" />
     <Compile Include="Groups\Models\SaveGroupDto.cs" />
     <Compile Include="Groups\Validation\SaveGroupDtoValidator.cs" />
     <Compile Include="IntegrationEndPoints\CompaniesHouse\ICompaniesHouseService.cs" />

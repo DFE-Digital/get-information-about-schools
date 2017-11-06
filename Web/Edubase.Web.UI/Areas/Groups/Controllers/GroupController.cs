@@ -90,6 +90,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, skip, 100, sortBy.Clean() ?? "requestedDateUtc-desc", User);
             }
 
+            viewModel.Links = await _groupReadService.GetLinksAsync(id, User);
+
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value, true);
             
             return View(viewModel);

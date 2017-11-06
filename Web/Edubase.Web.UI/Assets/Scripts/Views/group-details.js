@@ -8,7 +8,7 @@ DfE.Views.GroupDetails = (function () {
         var mobileToggleSwitch = $('#map-toggle'), mapInitialised = false;
 
         // map only shows by default on larger screens
-        if ($map.length && $map.css('display') === 'block') {
+        if ($map.length && $map.css('display') === 'block' && $map.is(":visible")) {
             DfE.mapInteractions.loadGoogleScript(initFunc);
             mapInitialised = true;
         }
@@ -29,6 +29,13 @@ DfE.Views.GroupDetails = (function () {
                 $(this).text('Close map');
             }
             $(this).toggleClass('trigger-open');
+        });
+
+        $(window).on('tabChange', function (e) {
+            if (!mapInitialised) {
+                DfE.mapInteractions.loadGoogleScript(initFunc);
+                mapInitialised = true;
+            } else window.groupMap.invalidateSize();
         });
     }
     

@@ -36,5 +36,6 @@ namespace Edubase.Services.Groups
 
         Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, string sortBy, IPrincipal principal);
         Task<PaginatedResult<GroupChangeDto>> GetChangeHistoryAsync(int uid, int skip, int take, string sortBy, DateTime? dateFrom, DateTime? dateTo, string suggestedBy, IPrincipal principal);
+        Task<IEnumerable<LinkedGroupModel>> GetLinksAsync(int uid, IPrincipal principal);
     }
 }

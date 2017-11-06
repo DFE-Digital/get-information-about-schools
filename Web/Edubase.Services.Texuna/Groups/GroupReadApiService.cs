@@ -70,6 +70,8 @@ namespace Edubase.Services.Texuna.Groups
         public async Task<List<EstablishmentGroupModel>> GetEstablishmentGroupsAsync(int groupUid, IPrincipal principal, bool includeFutureDated = false) 
             => (await _httpClient.GetAsync<List<EstablishmentGroupModel>>($"group/{groupUid}/establishments?editMode={includeFutureDated}", principal)).GetResponse();
 
+        public async Task<IEnumerable<LinkedGroupModel>> GetLinksAsync(int uid, IPrincipal principal)
+            => (await _httpClient.GetAsync<List<LinkedGroupModel>>($"group/{uid}/links", principal)).GetResponse();
 
         public async Task<ApiPagedResult<SearchGroupDocument>> SearchAsync(GroupSearchPayload payload, IPrincipal principal)
         {

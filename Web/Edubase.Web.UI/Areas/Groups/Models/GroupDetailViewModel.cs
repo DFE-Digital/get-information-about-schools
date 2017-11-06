@@ -49,5 +49,7 @@
         public PaginatedResult<GroupChangeDto> ChangeHistory { get; set; }
 
         public string GroupTypeNameForClosureLabel => _groupTypes2Name.ContainsKey(GroupTypeId) ? _groupTypes2Name[GroupTypeId] : string.Empty;
+
+        public IEnumerable<LinkedGroupModel> Links { get; set; }
     }
 }
