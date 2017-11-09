@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using AutoMapper;
+﻿using AutoMapper;
 using Edubase.Common;
 using Edubase.Services.Domain;
-using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Groups;
+using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using Edubase.Web.Resources;
@@ -21,7 +15,10 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models;
 using Moq;
 using NUnit.Framework;
-using Edubase.Services.Groups.Models;
+using System.Collections.Generic;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace Edubase.UnitTest.Controllers
 {
@@ -30,23 +27,54 @@ namespace Edubase.UnitTest.Controllers
     {
         public EstablishmentControllerTest()
         {
-            
         }
 
         [Test]
-        public async Task Estab_EditDetails_Null_Id()
+        public async Task Estab_Edit_Helpdesk_Id_NotFound()
         {
-            var response = await ObjectUnderTest.EditDetails(null, null);
+            GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
+
+            Assert.That(async () => await ObjectUnderTest.EditHelpdesk(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
+        }
+
+        [Test]
+        public async Task Estab_Edit_Helpdesk_Null_Id()
+        {
+            var response = await ObjectUnderTest.EditHelpdesk(null as int?);
 
             Assert.IsTrue(response is HttpNotFoundResult);
         }
 
         [Test]
-        public async Task Estab_EditDetails_Id_NotFound()
+        public async Task Estab_Edit_IEBT_Id_NotFound()
         {
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            Assert.That(async () => await ObjectUnderTest.EditDetails(4, null), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
+            Assert.That(async () => await ObjectUnderTest.EditIEBT(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
+        }
+
+        [Test]
+        public async Task Estab_Edit_IEBT_Null_Id()
+        {
+            var response = await ObjectUnderTest.EditIEBT(null as int?);
+
+            Assert.IsTrue(response is HttpNotFoundResult);
+        }
+
+        [Test]
+        public async Task Estab_Edit_Location_Id_NotFound()
+        {
+            GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
+
+            Assert.That(async () => await ObjectUnderTest.EditLocation(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
+        }
+
+        [Test]
+        public async Task Estab_Edit_Location_Null_Id()
+        {
+            var response = await ObjectUnderTest.EditLocation(null as int?);
+
+            Assert.IsTrue(response is HttpNotFoundResult);
         }
 
         [Test]
@@ -94,7 +122,7 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishment));
             GetMock<IMapper>().Setup(m => m.Map<EditEstablishmentModel>(establishment)).Returns(editEstabModel);
             GetMock<IMapper>().Setup(m => m.Map(It.IsAny<IEBTModel>(), editEstabModel)).Returns(editEstabModel);
-            GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentDisplayEditPolicy {IEBTDetail = new IEBTDetailDisplayEditPolicy()});
+            GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() });
             GetMock<IPrincipal>().Setup(p => p.IsInRole(It.IsAny<string>())).Returns(true);
 
             SetupCachedLookupService();
@@ -102,9 +130,9 @@ namespace Edubase.UnitTest.Controllers
             var response = await ObjectUnderTest.EditDetails(4, address);
 
             Assert.That(response is ViewResult);
-            var viewResult = (ViewResult) response;
+            var viewResult = (ViewResult)response;
             Assert.That(viewResult.Model is EditEstablishmentModel);
-            var model = (EditEstablishmentModel) viewResult.Model;
+            var model = (EditEstablishmentModel)viewResult.Model;
             Assert.That(model.Address_CityOrTown == replacementAddress.Town);
             Assert.That(model.Address_CountryId == replacementAddress.CountryId);
             Assert.That(model.Address_CountyId == replacementAddress.CountyId);
@@ -118,67 +146,35 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Estab_Edit_Helpdesk_Null_Id()
+        public async Task Estab_EditDetails_Id_NotFound()
         {
-            var response = await ObjectUnderTest.EditHelpdesk(null as int?);
+            GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
+
+            Assert.That(async () => await ObjectUnderTest.EditDetails(4, null), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
+        }
+
+        [Test]
+        public async Task Estab_EditDetails_Null_Id()
+        {
+            var response = await ObjectUnderTest.EditDetails(null, null);
 
             Assert.IsTrue(response is HttpNotFoundResult);
         }
 
         [Test]
-        public async Task Estab_Edit_Helpdesk_Id_NotFound()
+        public async Task Estab_EditLinks_Id_NotFound()
         {
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            Assert.That(async () => await ObjectUnderTest.EditHelpdesk(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
+            Assert.That(async () => await ObjectUnderTest.EditLinks(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
         }
 
         [Test]
-        public async Task Estab_Edit_Location_Null_Id()
+        public async Task Estab_EditLinks_Null_Id()
         {
-            var response = await ObjectUnderTest.EditLocation(null as int?);
+            var response = await ObjectUnderTest.EditLinks(null);
 
             Assert.IsTrue(response is HttpNotFoundResult);
-        }
-
-        [Test]
-        public async Task Estab_Edit_Location_Id_NotFound()
-        {
-            GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
-
-            Assert.That(async () => await ObjectUnderTest.EditLocation(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
-        }
-
-        [Test]
-        public async Task Estab_Edit_IEBT_Null_Id()
-        {
-            var response = await ObjectUnderTest.EditIEBT(null as int?);
-
-            Assert.IsTrue(response is HttpNotFoundResult);
-        }
-
-        [Test]
-        public async Task Estab_Edit_IEBT_Id_NotFound()
-        {
-            GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
-
-            Assert.That(async () => await ObjectUnderTest.EditIEBT(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
-        }
-
-        [Test]
-        public async Task Estab_SearchForEstablishment_Null_Id()
-        {
-            var response = await ObjectUnderTest.SearchForEstablishment(null, null);
-
-            Assert.IsTrue(response is HttpNotFoundResult);
-        }
-
-        [Test]
-        public async Task Estab_SearchForEstablishment_Id_NotFound()
-        {
-            GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
-
-            Assert.That(async () => await ObjectUnderTest.SearchForEstablishment(4, null), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
         }
 
         [Test]
@@ -214,19 +210,19 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Estab_EditLinks_Null_Id()
-        {
-            var response = await ObjectUnderTest.EditLinks(null);
-
-            Assert.IsTrue(response is HttpNotFoundResult);
-        }
-
-        [Test]
-        public async Task Estab_EditLinks_Id_NotFound()
+        public async Task Estab_SearchForEstablishment_Id_NotFound()
         {
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(eServiceResultStatus.NotFound));
 
-            Assert.That(async () => await ObjectUnderTest.EditLinks(4), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
+            Assert.That(async () => await ObjectUnderTest.SearchForEstablishment(4, null), Throws.TypeOf<EntityNotFoundException>(), "Expected exception of type EntityNotFoundException");
+        }
+
+        [Test]
+        public async Task Estab_SearchForEstablishment_Null_Id()
+        {
+            var response = await ObjectUnderTest.SearchForEstablishment(null, null);
+
+            Assert.IsTrue(response is HttpNotFoundResult);
         }
 
         [SetUp]

@@ -24,65 +24,6 @@ namespace Edubase.UnitTest.Controllers
     public class EstablishmentsSearchControllerTest
     {
         [Test]
-        public async Task EstabSearch_Index_WithValidURN_RedirectsToEstabDetail()
-        {
-            var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
-            var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
-            var cls = new Mock<ICachedLookupService>(MockBehavior.Strict);
-            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
-            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
-            context.SetupGet(x => x.Request).Returns(request.Object);
-            context.SetupGet(x => x.User).Returns(null as IPrincipal);
-            ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(true));
-
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
-            
-            var vm = new EstablishmentSearchViewModel();
-            vm.TextSearchModel.AutoSuggestValue = "123456";
-
-            var result = (RedirectToRouteResult) await subject.Index(vm);
-
-            Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
-            Assert.That(result.RouteValues["controller"], Is.EqualTo("Establishment"));
-            Assert.That(result.RouteValues["id"], Is.EqualTo(123456));
-            Assert.That(result.RouteValues["area"], Is.EqualTo("Establishments"));
-        }
-
-        [Test]
-        public async Task EstabSearch_Index_WithInvalidURN_RedirectsBackOnSelf()
-        {
-            var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
-            var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
-            var cls = new Mock<ICachedLookupService>(MockBehavior.Strict);
-            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
-            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
-            var mockUrlHelper = new Mock<UrlHelper>();
-
-            mockUrlHelper.Setup(x => x.Action(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).Returns("/Establishments/Search");
-            mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
-            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
-            context.SetupGet(x => x.Request).Returns(request.Object);
-            context.SetupGet(x => x.User).Returns(null as IPrincipal);
-            ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(false));
-            ers.Setup(x => x.SearchAsync(It.IsAny<EstablishmentSearchPayload>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<EstablishmentSearchResultModel>(0, new List<EstablishmentSearchResultModel>()));
-
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
-            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
-            subject.Url = mockUrlHelper.Object;
-
-            var vm = new EstablishmentSearchViewModel();
-            vm.TextSearchModel.AutoSuggestValue = "1256";
-
-            var result = (RedirectResult)await subject.Index(vm);
-
-            Assert.That(result.Url, Is.EqualTo("action=Index|controller=Search|area=|SearchType=Text|TextSearchModel.Text=|NoResultsForName=True"));
-        }
-
-
-        [Test]
         public async Task EstabSearch_Index_DisplaysResults()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -91,7 +32,7 @@ namespace Edubase.UnitTest.Controllers
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
-            
+
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(null as IPrincipal);
@@ -111,7 +52,6 @@ namespace Edubase.UnitTest.Controllers
                     Name = "School 2"
                 }
             }));
-            
 
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
@@ -120,7 +60,7 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
 
-            var result = (ViewResult) await subject.Index(vm);
+            var result = (ViewResult)await subject.Index(vm);
 
             Assert.That(vm.Count, Is.EqualTo(2));
             Assert.That(vm.Results.Count, Is.EqualTo(2));
@@ -157,7 +97,6 @@ namespace Edubase.UnitTest.Controllers
                     Name = "School 2"
                 }
             }));
-
 
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
@@ -210,7 +149,6 @@ namespace Edubase.UnitTest.Controllers
                 }
             }));
 
-
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
@@ -218,16 +156,16 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = true;
-            var result = (RedirectToRouteResult) await subject.Index(vm);
+            var result = (RedirectToRouteResult)await subject.Index(vm);
             Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
             Assert.That(result.RouteValues["controller"], Is.EqualTo("Establishment"));
             Assert.That(result.RouteValues["id"], Is.EqualTo(672393));
             Assert.That(result.RouteValues["area"], Is.EqualTo("Establishments"));
-        
+
             vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = false;
-            var result2 = (ViewResult) await subject.Index(vm);
+            var result2 = (ViewResult)await subject.Index(vm);
             Assert.That(vm.Count, Is.EqualTo(1));
             Assert.That(vm.Results.Count, Is.EqualTo(1));
             Assert.That(vm.Results[0].Name, Is.EqualTo("School 1"));
@@ -263,14 +201,13 @@ namespace Edubase.UnitTest.Controllers
                 }
             }));
 
-
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = laestab;
-            var result = (ViewResult) await subject.Index(vm);
+            var result = (ViewResult)await subject.Index(vm);
             Assert.That(vm.TextSearchType, Is.EqualTo(eTextSearchType.LAESTAB));
             Assert.That(vm.Count, Is.EqualTo(1));
             Assert.That(vm.Results.Count, Is.EqualTo(1));
@@ -279,7 +216,63 @@ namespace Edubase.UnitTest.Controllers
             Assert.That(vm.Results[0].EstablishmentNumber, Is.EqualTo(5437));
         }
 
+        [Test]
+        public async Task EstabSearch_Index_WithInvalidURN_RedirectsBackOnSelf()
+        {
+            var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
+            var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
+            var cls = new Mock<ICachedLookupService>(MockBehavior.Strict);
+            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
+            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
+            var mockUrlHelper = new Mock<UrlHelper>();
 
+            mockUrlHelper.Setup(x => x.Action(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>())).Returns("/Establishments/Search");
+            mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
+            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
+            context.SetupGet(x => x.Request).Returns(request.Object);
+            context.SetupGet(x => x.User).Returns(null as IPrincipal);
+            ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(false));
+            ers.Setup(x => x.SearchAsync(It.IsAny<EstablishmentSearchPayload>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<EstablishmentSearchResultModel>(0, new List<EstablishmentSearchResultModel>()));
+
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+            subject.Url = mockUrlHelper.Object;
+
+            var vm = new EstablishmentSearchViewModel();
+            vm.TextSearchModel.AutoSuggestValue = "1256";
+
+            var result = (RedirectResult)await subject.Index(vm);
+
+            Assert.That(result.Url, Is.EqualTo("action=Index|controller=Search|area=|SearchType=Text|TextSearchModel.Text=|NoResultsForName=True"));
+        }
+
+        [Test]
+        public async Task EstabSearch_Index_WithValidURN_RedirectsToEstabDetail()
+        {
+            var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
+            var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
+            var cls = new Mock<ICachedLookupService>(MockBehavior.Strict);
+            var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
+            var context = new Mock<HttpContextBase>(MockBehavior.Strict);
+
+            request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
+            context.SetupGet(x => x.Request).Returns(request.Object);
+            context.SetupGet(x => x.User).Returns(null as IPrincipal);
+            ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(true));
+
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
+
+            var vm = new EstablishmentSearchViewModel();
+            vm.TextSearchModel.AutoSuggestValue = "123456";
+
+            var result = (RedirectToRouteResult)await subject.Index(vm);
+
+            Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
+            Assert.That(result.RouteValues["controller"], Is.EqualTo("Establishment"));
+            Assert.That(result.RouteValues["id"], Is.EqualTo(123456));
+            Assert.That(result.RouteValues["area"], Is.EqualTo("Establishments"));
+        }
         [Test]
         public async Task EstabSearch_PrepareDownload_Step1_BackOfficeUser()
         {
@@ -296,12 +289,12 @@ namespace Edubase.UnitTest.Controllers
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(principal.Object);
             principal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
-            
+
             var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel();
-            var result = (ViewResult) await subject.PrepareDownload(viewModel);
+            var result = (ViewResult)await subject.PrepareDownload(viewModel);
 
             Assert.That(viewModel.AllowAnyExtraFields, Is.True);
             Assert.That(viewModel.AllowIncludeBringUpFields, Is.True);
@@ -400,11 +393,6 @@ namespace Edubase.UnitTest.Controllers
 
             Assert.That(result.RouteValues["action"], Is.EqualTo("Download"));
             Assert.That(result.RouteValues["id"], Is.EqualTo(guid));
-
         }
-
-
-
     }
-
 }
