@@ -1,199 +1,226 @@
 ﻿@using Edubase.Web.UI.ValueConverters;
 @using Edubase.Web.UI.Areas.Establishments.Models.Search;
+@using Edubase.Common;
+@using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 @model EstablishmentDetailViewModel
 
-
-
-
-        <dt>Address:</dt>
-        <dd>@Model.GetAddress()</dd>
-        <dt>Local authority:</dt>
-        <dd>
-            @if (Model.Establishment.LocalAuthorityId.HasValue)
-            {
-                <a href="/Establishments/Search?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
-                    @Model.LocalAuthorityName
-                </a>
-                <text>(@Model.LocalAuthorityCode)</text>
-            }
-        </dd>
+<dt>Address:</dt>
+<dd>@Model.GetAddress()</dd>
+<dt>Local authority:</dt>
+<dd>
+    @if (Model.Establishment.LocalAuthorityId.HasValue)
+    {
+        <a href="/Establishments/Search?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
+            @Model.LocalAuthorityName
+        </a>
+        <text>(@Model.LocalAuthorityCode)</text>
+    }
+</dd>
  
-        <dt>@(Model.DisplayPolicy.HeadteacherLabel):</dt>
-        <dd>
-            @if (Model.DisplayPolicy.HeadTitleId)
-            {
-                <text>@Model.HeadTitleName.Replace("Not recorded", string.Empty)</text>
-            }
-            @if (Model.DisplayPolicy.HeadFirstName)
-            {
-                <text>@Model.Establishment.HeadFirstName</text>
-            }
-            @if (Model.DisplayPolicy.HeadLastName)
-            {
-                <text>@Model.Establishment.HeadLastName</text>
-            }
-        </dd>
-
-    @if (Model.DisplayPolicy.HeadEmailAddress)
+<dt>@(Model.DisplayPolicy.HeadteacherLabel):</dt>
+<dd>
+    @if (Model.DisplayPolicy.HeadTitleId)
     {
-            <dt>@(Model.DisplayPolicy.HeadteacherLabel) appointment date</dt>
-            <dd>
-                @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
-            </dd>
+        <text>@Model.HeadTitleName.Replace("Not recorded", string.Empty)</text>
+    }
+    @if (Model.DisplayPolicy.HeadFirstName)
+    {
+        <text>@Model.Establishment.HeadFirstName</text>
+    }
+    @if (Model.DisplayPolicy.HeadLastName)
+    {
+        <text>@Model.Establishment.HeadLastName</text>
+    }
+</dd>
+
+@if (Model.DisplayPolicy.HeadEmailAddress)
+{
+    <dt>@(Model.DisplayPolicy.HeadteacherLabel) appointment date</dt>
+    <dd>
+        @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
+    </dd>
         
-            <dt>@(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
-            <dd>
-                @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
-            </dd>       
-    }
+    <dt>@(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
+    <dd>
+        @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
+    </dd>       
+}
 
-    @if (Model.DisplayPolicy.AgeRange)
-    {
-            <dt scope="col">Age range: <a href="#help-text-age-range" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
-            <dd>
-                @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
-                {
-                    <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
-                }
-            </dd>
-    }
+@if (Model.DisplayPolicy.AgeRange)
+{
+    <dt scope="col">Age range: <a href="#help-text-age-range" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
+    <dd>
+        @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
+        {
+            <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
+        }
+    </dd>
+}
 
   
-        <dt>Phase of education:</dt>
-        <dd>
-            @Model.EducationPhaseName
-        </dd>
+<dt>Phase of education:</dt>
+<dd>
+    @Model.EducationPhaseName
+</dd>
 
-    @if (Model.DisplayPolicy.TypeId)
-    {
+@if (Model.DisplayPolicy.TypeId)
+{
         
-            <dt>@(Model.DisplayPolicy.EstablishmentTypeLabel):</dt>
-            <dd>
-                @Model.TypeName
-            </dd>
-        
-    }
+    <dt>@(Model.DisplayPolicy.EstablishmentTypeLabel):</dt>
+    <dd>
+        @Model.TypeName
+    </dd>
+}
 
-    @if (Model.DisplayPolicy.FurtherEducationTypeId)
-    {
-            <dt>Further education type:</dt>
-            <dd>
-                @Model.FurtherEducationTypeName
-            </dd>
-    }
+@if (Model.DisplayPolicy.FurtherEducationTypeId)
+{
+    <dt>Further education type:</dt>
+    <dd>
+        @Model.FurtherEducationTypeName
+    </dd>
+}
 
-    @foreach (var group in Model.Groups.OrderByDescending(g => Model.GetGroupFieldLabel(g))) 
-    {
-            <dt>@(Model.GetGroupFieldLabel(group)):</dt>
-            <dd>
-                @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUId, area = "Groups" }, null)
-            </dd>
-    }
+@foreach (var group in Model.Groups.OrderByDescending(g => Model.GetGroupFieldLabel(g))) 
+{
+    <dt>@(Model.GetGroupFieldLabel(group)):</dt>
+    <dd>
+        @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUId, area = "Groups" }, null)
+    </dd>
+}
     
-    @if (Model.DisplayPolicy.GenderId)
-    {
-            <dt>Gender of entry:</dt>
-            <dd>
-                @Model.GenderName
-            </dd>
-    }
+@if (Model.DisplayPolicy.GenderId)
+{
+    <dt>Gender of entry:</dt>
+    <dd>
+        @Model.GenderName
+    </dd>
+}
 
-        <dt>ID:</dt>
-        <dd>
-            <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
-            @if (Model.DisplayPolicy.EstablishmentNumber)
-            {
-                <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br /></text>
-            }
-            @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
-            { 
-                <text><abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN</text>
-            }
-        </dd>
+<dt>ID:</dt>
+<dd>
+    <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
+    @if (Model.DisplayPolicy.EstablishmentNumber)
+    {
+        <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br /></text>
+    }
+    @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
+    { 
+        <text><abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN</text>
+    }
+</dd>
 
     
-        <dt>Establishment status:</dt>
-        <dd>
-            @if (Model.IsClosed)
-            {
-                <span class="pending-closure">
-                    @Model.StatusName
-                </span>
-            }
-            else
-            {
-                @Model.StatusName
-            }
-        </dd>
-
-    @if (Model.DisplayPolicy.AdmissionsPolicyId)
+<dt>Establishment status:</dt>
+<dd>
+    @if (Model.IsClosed)
     {
-            <dt>Admissions policy:</dt>
-            <dd>
-                @Model.AdmissionsPolicyName
-            </dd>
+        <span class="pending-closure">
+            @Model.StatusName
+        </span>
     }
-
-    @if (Model.DisplayPolicy.Contact_WebsiteAddress)
+    else
     {
-            <dt>Website:</dt>
-            <dd>
-                @if (Model.Establishment.Contact_WebsiteAddress == null)
-                {
-                    <text>Not recorded</text>
-                }
-                else
-                {
-                    <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank">
-                        @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
-                    </a>
-                }
-            </dd>
+        @Model.StatusName
     }
+</dd>
 
-    @if (Model.DisplayPolicy.Contact_TelephoneNumber)
-    {
-        <dt>Telephone:</dt>
-        <dd>@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</dd>
-    }
+@if (Model.DisplayPolicy.AdmissionsPolicyId)
+{
+    <dt>Admissions policy:</dt>
+    <dd>
+        @Model.AdmissionsPolicyName
+    </dd>
+}
 
-    @if (Model.DisplayPolicy.OfstedRatingId)
-    {
-            <dt>Ofsted rating:</dt>
-            <dd>
-                @if (Model.Establishment.OfstedRatingId.HasValue)
-                {
-                    <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
-                }
-                else
-                {
-                    <span>Not recorded</span>
-                }
+@if (Model.DisplayPolicy.Contact_WebsiteAddress)
+{
+    <dt>Website:</dt>
+    <dd>
+        @if (Model.Establishment.Contact_WebsiteAddress == null)
+        {
+            <text>Not recorded</text>
+        }
+        else
+        {
+            <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank">
+                @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
+            </a>
+        }
+    </dd>
+}
 
-                @if (Model.Establishment.OfstedInspectionDate.HasValue)
-                {
-                    <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
-                }
-                @if (Model.OfstedRatingReportUrl != null)
-                {
-                    <br />
-                    <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report</a>
-                }
-            </dd>
-    }
+@if (Model.DisplayPolicy.Contact_TelephoneNumber)
+{
+    <dt>Telephone:</dt>
+    <dd>@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</dd>
+}
 
-    @if (Model.DisplayPolicy.InspectorateId)
-    {
-            <dt>Inspectorate:</dt>
-            <dd>
-                @Model.InspectorateName
-            </dd>
-    }
+@if (Model.Establishment.TypeId.OneOfThese(ET.SixthFormCentres, ET.FurtherEducation, ET.InstitutionFundedByOtherGovernmentDepartment))
+{
+    @CSCPLink()
+}
 
-    @if (Model.DisplayPolicy.ProprietorName)
-    {
-            <dt>Proprietor's name:</dt>
-            <dd>@Model.Establishment.ProprietorName</dd>
+@if (Model.DisplayPolicy.OfstedRatingId)
+{
+    <dt>Ofsted rating:</dt>
+    <dd>
+        @if (Model.Establishment.OfstedRatingId.HasValue)
+        {
+            <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
+        }
+        else
+        {
+            <span>Not recorded</span>
+        }
 
-    }
+        @if (Model.Establishment.OfstedInspectionDate.HasValue)
+        {
+            <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
+        }
+        @if (Model.OfstedRatingReportUrl != null)
+        {
+            <br />
+            <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report</a>
+        }
+    </dd>
+}
+
+@if (Model.Establishment.TypeId.OneOfThese(ET.Academy1619SponsorLed,
+    ET.Academy1619Converter, ET.AcademyAlternativeProvisionConverter,
+    ET.AcademyConverter, ET.AcademySpecialConverter,
+    ET.AcademySpecialSponsorLed, ET.AcademySponsorLed,
+    ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsSpecial,
+    ET.StudioSchools, ET.UniversityTechnicalCollege,
+    ET.CityTechnologyCollege, ET.CommunitySchool,
+    ET.FoundationSchool, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool,
+    ET.CommunitySpecialSchool, ET.FoundationSpecialSchool))
+{
+    @CSCPLink()
+}
+
+@if (Model.DisplayPolicy.InspectorateId)
+{
+    <dt>Inspectorate:</dt>
+    <dd>
+        @Model.InspectorateName
+    </dd>
+}
+
+@if (Model.Establishment.TypeId.OneOfThese(ET.OtherIndependentSchool, 
+    ET.NonmaintainedSpecialSchool, ET.OtherIndependentSpecialSchool))
+{
+    @CSCPLink()
+}
+
+@if (Model.DisplayPolicy.ProprietorName)
+{
+    <dt>Proprietor's name:</dt>
+    <dd>@Model.Establishment.ProprietorName</dd>
+}
+
+@helper CSCPLink() { 
+    <dt class="cscp-link">School performance:</dt>
+    <dd class="cscp-link"><a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" target="_blank">Compare School and College Performance page</a></dd>
+}
+
 

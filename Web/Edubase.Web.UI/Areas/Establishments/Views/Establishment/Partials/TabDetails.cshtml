@@ -19,778 +19,344 @@
         </div>
     }
     
-<div class="detail-summary">
-    <dl>
-        @{Html.RenderPartial(@"Partials\Header");}
+    <div class="detail-summary">
+        <dl>
+            @{Html.RenderPartial(@"Partials\Header");}
 
-        @if (Model.DisplayPolicy.ReligiousCharacterId)
-        {
-            <dt>Religious character:</dt>
-            <dd>
-                @Model.ReligiousCharacterName
-            </dd>
-        }
-        
-        @if (Model.DisplayPolicy.DioceseId)
-        {
-            <dt>Diocese:</dt>
-            <dd>@Model.DioceseName</dd>
-        }
-        
-        @if (Model.DisplayPolicy.ReligiousEthosId)
-        {
-            <dt>Religious ethos:</dt>
-            <dd>
-                @Model.ReligiousEthosName
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.ProvisionBoardingId)
-        {
-            <dt>Boarders:</dt>
-            <dd>@Model.ProvisionBoardingName</dd>
-        }
-
-        @if (Model.DisplayPolicy.ProvisionNurseryId)
-        {
-            <dt>Nursery provision:</dt>
-            <dd>@Model.ProvisionNurseryName</dd>
-
-        }
-
-        @if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
-        {
-            <dt>Official sixth form:</dt>
-            <dd>@Model.ProvisionOfficialSixthFormName</dd>
-        }
-
-        @if (Model.DisplayPolicy.Capacity)
-        {
-            <dt>School capacity: <a href="#help-text-school-capacity" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
-            <dd>@Model.Establishment.Capacity</dd>
-        }
-
-        @if (Model.DisplayPolicy.Section41ApprovedId)
-        {
-            <dt>Section 41 approved:</dt>
-            <dd>@Model.Section41ApprovedName</dd>
-            
-        }
-
-            <dt>Open date / Reason:</dt>
-            <dd>
-                @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
-                @Model.ReasonEstablishmentOpenedName
-            </dd>
-
-        @if (Model.DisplayPolicy.CloseDate)
-        {
-            <dt>Close date / Reason:</dt>
-            <dd>
-                @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
-                @Model.ReasonEstablishmentClosedName
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCOperationalHoursId)
-        {
-                <dt>Operational hours:</dt>
+            @if (Model.DisplayPolicy.ReligiousCharacterId)
+            {
+                <dt>Religious character:</dt>
                 <dd>
-                    @Model.CCOperationalHoursName
-                </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCUnder5YearsOfAgeCount)
-        {
-            <dt>Number of under 5s:</dt>
-            <dd>
-                @Model.Establishment.CCUnder5YearsOfAgeCount
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCGovernanceId)
-        {
-            <dt>Governance:</dt>
-            <dd>
-                @Model.CCGovernanceName
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCGovernanceDetail)
-        {
-            <dt>Governance detail:</dt>
-            <dd>
-                @(Model.Establishment.CCGovernanceDetail ?? "Not recorded")
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCLAContactDetail)
-        {
-            <dt>Local authority contact name:</dt>
-            <dd>
-                @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded" )
-            </dd>
-
-            <dt>Local authority contact email:</dt>
-            <dd>
-                @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded" )
-            </dd>
-
-            <dt>Local authority contact telephone number:</dt>
-            <dd>
-                @(Model.Establishment?.CCLAContactDetail?.TelephoneNumber ?? "Not recorded")
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCDeliveryModelId)
-        {
-            <dt>Delivery model:</dt>
-            <dd>
-                @Model.CCDeliveryModelName
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.GroupCollaborationName)
-        {
-            <dt>Group/Collaboration name:</dt>
-            <dd>
-                @(Model.Groups.FirstOrDefault()?.Name ?? "Not recorded")
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCGroupLeadId)
-        {
-            <dt>Group lead centre:</dt>
-            <dd>
-                @Model.CCGroupLeadName
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCPhaseTypeId)
-        {
-            <dt>Phase:</dt>
-            <dd>
-                @Model.CCPhaseTypeName
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCDisadvantagedAreaId)
-        {
-            <dt>Disadvantaged area:</dt>
-            <dd>
-                @Model.CCDisadvantagedAreaName
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.CCDirectProvisionOfEarlyYearsId)
-        {
-            <dt>Direct provision of early years:</dt>
-            <dd>
-                @Model.CCDirectProvisionOfEarlyYearsName
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.ProvisionSpecialClassesId)
-        {
-            <dt>Special classes:</dt>
-            <dd>@Model.ProvisionSpecialClassesName</dd>
-        }
-
-        @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
-        {
-            <dt>Number of pupils eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
-            <dd>@(Model.Establishment.FreeSchoolMealsNumber?.ToString() ?? "Not recorded")</dd>
-        }
-
-        @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
-        {
-            <dt>Percentage of children eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
-            <dd>@(Model.Establishment.FreeSchoolMealsPercentage?.ToString().Append("%") ?? "Not recorded")</dd>
-        }
-
-        @if (Model.DisplayPolicy.SENStat)
-        {
-            <dt>Number of Special Pupils Under a SEN Statement/EHCP:</dt>
-            <dd>@Model.Establishment.SENStat</dd>            
-        }
-
-        @if (Model.DisplayPolicy.SENNoStat)
-        {
-            <dt>Number of Special Pupils Not Under a SEN Statement/EHCP:</dt>
-            <dd>@Model.Establishment.SENNoStat</dd>
-        }
-
-
-        @if (Model.DisplayPolicy.Contact_EmailAddress)
-        {
-            <dt>@Model.DisplayPolicy.MainEmailAddressLabel:</dt>
-            <dd>@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</dd>
-        }
-
-        @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
-        {
-            <dt>Alternative email:</dt>
-            <dd>@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</dd>
-        }
-
-        @if (Model.DisplayPolicy.LastChangedDate)
-        {
-            <dt>Last Change:</dt>
-            <dd>@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</dd>
-        }
-
-        @if (Model.DisplayPolicy.SENIds)
-        {
-            <dt>Type of SEN provision:</dt>
-            <dd>
-                @Model.SENNames
-            </dd>
-        }
-
-        @if (Model.DisplayPolicy.TeenageMothersProvisionId)
-        {
-            <dt>Teenage mothers:</dt>
-            <dd>@Model.TeenageMothersProvisionName</dd>
-        }
-
-        @if (Model.DisplayPolicy.TeenageMothersCapacity)
-        {
-            <dt>Teenage mothers places:</dt>
-            <dd>@Model.Establishment.TeenageMothersCapacity</dd>
-        }
-
-        @if (Model.DisplayPolicy.ChildcareFacilitiesId)
-        {
-            <dt>Childcare facilities provision:</dt>
-            <dd>@Model.ChildcareFacilitiesName</dd>
-        }
-
-        @if (Model.DisplayPolicy.PRUSENId)
-        {
-            <dt>SEN facilities:</dt>
-            <dd>@Model.PRUSENName</dd>
-        }
-
-        @if (Model.DisplayPolicy.PRUEBDId)
-        {
-            <dt>Pupils with EBD:</dt>
-            <dd>@Model.PRUEBDName</dd>
-        }
-
-        @if (Model.DisplayPolicy.PlacesPRU)
-        {
-            <dt>Number of places:</dt>
-            <dd>@Model.Establishment.PlacesPRU</dd>
-        }
-
-        @if (Model.DisplayPolicy.PruFulltimeProvisionId)
-        {
-            <dt>Full time provision :</dt>
-            <dd>@Model.PruFulltimeProvisionName</dd>
-        }
-
-
-        @if (Model.DisplayPolicy.PruEducatedByOthersId)
-        {
-            <dt>Pupils educated by other providers:</dt>
-            <dd>@Model.PruEducatedByOthersName</dd>
-        }
-
-
-        @if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
-        {
-            <dt>Type of resourced provision:</dt>
-            <dd>@Model.TypeOfResourcedProvisionName</dd>
-        }
-
-        @if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
-        {
-            <dt>Resourced provision number on roll:</dt>
-            <dd>@Model.Establishment.ResourcedProvisionOnRoll</dd>
-        }
-
-        @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
-        {
-            <dt>Resourced provision capacity:</dt>
-            <dd>@Model.Establishment.ResourcedProvisionCapacity</dd>
-        }
-
-        @if (Model.DisplayPolicy.SenUnitOnRoll)
-        {
-            <dt>SEN Unit number on roll:</dt>
-            <dd>@Model.Establishment.SenUnitOnRoll</dd>
-        }
-
-        @if (Model.DisplayPolicy.SenUnitCapacity)
-        {
-            <dt>SEN Unit capacity:</dt>
-            <dd>@Model.Establishment.SenUnitCapacity</dd>
-        }
-
-
-        @if (Model.DisplayPolicy.BSOInspectorateId)
-        {
-            <dt>Inspectorate name:</dt>
-            <dd>@Model.BSOInspectorateName</dd>
-        }
-
-        @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
-        {
-                <dt>Inspectorate report:</dt>
-                <dd>@Model.Establishment.BSOInspectorateReportUrl</dd>
-        }
-
-        @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
-        {
-            <dt>Date of Last Inspection Visit:</dt>
-            <dd>@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("dd/MM/yyyy"))</dd>
-        }
-
-        @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
-        {
-            <dt>Date of Next Inspection Visit:</dt>
-            <dd>@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("dd/MM/yyyy"))</dd>
-        }
-
-
-    </dl>
-    
-</div>
-
-
-@*<table class="borderless">
-        <caption class="visually-hidden">@Model.Establishment.Name details</caption>
-    
-        @{Html.RenderPartial(@"Partials\Header");}
-
-        @if (Model.DisplayPolicy.ReligiousCharacterId)
-        {
-            <tr>
-                <th>Religious character:</th>
-                <td>
                     @Model.ReligiousCharacterName
-                </td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.DioceseId)
-        {
-            <tr>
-                <th>Diocese:</th>
-                <td>
-                    @Model.DioceseName
-                </td>
-            </tr>
-        }
-
-        @if (Model.DisplayPolicy.ReligiousEthosId)
-        {
-            <tr>
-                <th>Religious ethos:</th>
-                <td>
+                </dd>
+            }
+        
+            @if (Model.DisplayPolicy.DioceseId)
+            {
+                <dt>Diocese:</dt>
+                <dd>@Model.DioceseName</dd>
+            }
+        
+            @if (Model.DisplayPolicy.ReligiousEthosId)
+            {
+                <dt>Religious ethos:</dt>
+                <dd>
                     @Model.ReligiousEthosName
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.ProvisionBoardingId)
-        {
-            <tr>
-                <th>Boarders:</th>
-                <td>@Model.ProvisionBoardingName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.ProvisionBoardingId)
+            {
+                <dt>Boarders:</dt>
+                <dd>@Model.ProvisionBoardingName</dd>
+            }
 
-        @if (Model.DisplayPolicy.ProvisionNurseryId)
-        {
-            <tr>
-                <th>Nursery provision:</th>
-                <td>@Model.ProvisionNurseryName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.ProvisionNurseryId)
+            {
+                <dt>Nursery provision:</dt>
+                <dd>@Model.ProvisionNurseryName</dd>
 
-        @if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
-        {
-            <tr>
-                <th>Official sixth form:</th>
-                <td>@Model.ProvisionOfficialSixthFormName</td>
-            </tr>
-        }
+            }
 
-        @if (Model.DisplayPolicy.Capacity)
-        {
-            <tr>
-                <th>School capacity: <a href="#help-text-school-capacity" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></th>
-                <td>@Model.Establishment.Capacity</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
+            {
+                <dt>Official sixth form:</dt>
+                <dd>@Model.ProvisionOfficialSixthFormName</dd>
+            }
 
-        @if (Model.DisplayPolicy.Section41ApprovedId)
-        {
-            <tr>
-                <th>Section 41 approved:</th>
-                <td>@Model.Section41ApprovedName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.Capacity)
+            {
+                <dt>School capacity: <a href="#help-text-school-capacity" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
+                <dd>@Model.Establishment.Capacity</dd>
+            }
 
-        <tr>
-            <th>Open date / Reason:</th>
-            <td>
-                @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
-                @Model.ReasonEstablishmentOpenedName
-            </td>
-        </tr>
+            @if (Model.DisplayPolicy.Section41ApprovedId)
+            {
+                <dt>Section 41 approved:</dt>
+                <dd>@Model.Section41ApprovedName</dd>
+            
+            }
 
-        @if (Model.DisplayPolicy.CloseDate)
-        {
-            <tr>
-                <th>Close date / Reason:</th>
-                <td>
+                <dt>Open date / Reason:</dt>
+                <dd>
+                    @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
+                    @Model.ReasonEstablishmentOpenedName
+                </dd>
+
+            @if (Model.DisplayPolicy.CloseDate)
+            {
+                <dt>Close date / Reason:</dt>
+                <dd>
                     @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
                     @Model.ReasonEstablishmentClosedName
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCOperationalHoursId)
-        {
-            <tr>
-                <th>Operational hours:</th>
-                <td>
-                    @Model.CCOperationalHoursName
-                </td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.CCOperationalHoursId)
+            {
+                    <dt>Operational hours:</dt>
+                    <dd>
+                        @Model.CCOperationalHoursName
+                    </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCUnder5YearsOfAgeCount)
-        {
-            <tr>
-                <th>Number of under 5s:</th>
-                <td>
+            @if (Model.DisplayPolicy.CCUnder5YearsOfAgeCount)
+            {
+                <dt>Number of under 5s:</dt>
+                <dd>
                     @Model.Establishment.CCUnder5YearsOfAgeCount
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCGovernanceId)
-        {
-            <tr>
-                <th>Governance:</th>
-                <td>
+            @if (Model.DisplayPolicy.CCGovernanceId)
+            {
+                <dt>Governance:</dt>
+                <dd>
                     @Model.CCGovernanceName
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCGovernanceDetail)
-        {
-            <tr>
-                <th>Governance detail:</th>
-                <td>
+            @if (Model.DisplayPolicy.CCGovernanceDetail)
+            {
+                <dt>Governance detail:</dt>
+                <dd>
                     @(Model.Establishment.CCGovernanceDetail ?? "Not recorded")
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCLAContactDetail)
-        {
-            <tr>
-                <th>Local authority contact name:</th>
-                <td>
+            @if (Model.DisplayPolicy.CCLAContactDetail)
+            {
+                <dt>Local authority contact name:</dt>
+                <dd>
                     @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded" )
-                </td>
-            </tr>
-            <tr>
-                <th>Local authority contact email:</th>
-                <td>
+                </dd>
+
+                <dt>Local authority contact email:</dt>
+                <dd>
                     @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded" )
-                </td>
-            </tr>
-            <tr>
-                <th>Local authority contact telephone number:</th>
-                <td>
+                </dd>
+
+                <dt>Local authority contact telephone number:</dt>
+                <dd>
                     @(Model.Establishment?.CCLAContactDetail?.TelephoneNumber ?? "Not recorded")
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCDeliveryModelId)
-        {
-            <tr>
-                <th>Delivery model:</th>
-                <td>
+            @if (Model.DisplayPolicy.CCDeliveryModelId)
+            {
+                <dt>Delivery model:</dt>
+                <dd>
                     @Model.CCDeliveryModelName
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.GroupCollaborationName)
-        {
-            <tr>
-                <th>Group/Collaboration name:</th>
-                <td>
+            @if (Model.DisplayPolicy.GroupCollaborationName)
+            {
+                <dt>Group/Collaboration name:</dt>
+                <dd>
                     @(Model.Groups.FirstOrDefault()?.Name ?? "Not recorded")
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCGroupLeadId)
-        {
-            <tr>
-                <th>Group lead centre:</th>
-                <td>
+            @if (Model.DisplayPolicy.CCGroupLeadId)
+            {
+                <dt>Group lead centre:</dt>
+                <dd>
                     @Model.CCGroupLeadName
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCPhaseTypeId)
-        {
-            <tr>
-                <th>Phase:</th>
-                <td>
+            @if (Model.DisplayPolicy.CCPhaseTypeId)
+            {
+                <dt>Phase:</dt>
+                <dd>
                     @Model.CCPhaseTypeName
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCDisadvantagedAreaId)
-        {
-            <tr>
-                <th>Disadvantaged area:</th>
-                <td>
+            @if (Model.DisplayPolicy.CCDisadvantagedAreaId)
+            {
+                <dt>Disadvantaged area:</dt>
+                <dd>
                     @Model.CCDisadvantagedAreaName
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.CCDirectProvisionOfEarlyYearsId)
-        {
-            <tr>
-                <th>Direct provision of early years:</th>
-                <td>
+            @if (Model.DisplayPolicy.CCDirectProvisionOfEarlyYearsId)
+            {
+                <dt>Direct provision of early years:</dt>
+                <dd>
                     @Model.CCDirectProvisionOfEarlyYearsName
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.ProvisionSpecialClassesId)
-        {
-            <tr>
-                <th>Special classes:</th>
-                <td>@Model.ProvisionSpecialClassesName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.ProvisionSpecialClassesId)
+            {
+                <dt>Special classes:</dt>
+                <dd>@Model.ProvisionSpecialClassesName</dd>
+            }
 
-        @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
-        {
-            <tr>
-                <th>Number of pupils eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></th>
-                <td>@(Model.Establishment.FreeSchoolMealsNumber?.ToString() ?? "Not recorded")</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
+            {
+                <dt>Number of pupils eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
+                <dd>@(Model.Establishment.FreeSchoolMealsNumber?.ToString() ?? "Not recorded")</dd>
+            }
 
-        @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
-        {
-            <tr>
-                <th>Percentage of children eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></th>
-                <td>@(Model.Establishment.FreeSchoolMealsPercentage?.ToString().Append("%") ?? "Not recorded")</td>
-            </tr>
-        }       
+            @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
+            {
+                <dt>Percentage of children eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
+                <dd>@(Model.Establishment.FreeSchoolMealsPercentage?.ToString().Append("%") ?? "Not recorded")</dd>
+            }
 
-        @if (Model.DisplayPolicy.SENStat)
-        {
-            <tr>
-                <th>Number of Special Pupils Under a SEN Statement/EHCP:</th>
-                <td>@Model.Establishment.SENStat</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.SENStat)
+            {
+                <dt>Number of Special Pupils Under a SEN Statement/EHCP:</dt>
+                <dd>@Model.Establishment.SENStat</dd>            
+            }
 
-        @if (Model.DisplayPolicy.SENNoStat)
-        {
-            <tr>
-                <th>Number of Special Pupils Not Under a SEN Statement/EHCP:</th>
-                <td>@Model.Establishment.SENNoStat</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.SENNoStat)
+            {
+                <dt>Number of Special Pupils Not Under a SEN Statement/EHCP:</dt>
+                <dd>@Model.Establishment.SENNoStat</dd>
+            }
 
 
-        @if (Model.DisplayPolicy.Contact_EmailAddress)
-        {
-            <tr>
-                <th>@Model.DisplayPolicy.MainEmailAddressLabel:</th>
-                <td>@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.Contact_EmailAddress)
+            {
+                <dt>@Model.DisplayPolicy.MainEmailAddressLabel:</dt>
+                <dd>@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</dd>
+            }
 
-        @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
-        {
-            <tr>
-                <th>Alternative email:</th>
-                <td>@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
+            {
+                <dt>Alternative email:</dt>
+                <dd>@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</dd>
+            }
 
-        @if (Model.DisplayPolicy.LastChangedDate)
-        {
-            <tr>
-                <th>Last Change:</th>
-                <td>@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.LastChangedDate)
+            {
+                <dt>Last Change:</dt>
+                <dd>@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</dd>
+            }
 
-        @if (Model.DisplayPolicy.SENIds)
-        {
-            <tr>
-                <th>Type of SEN provision:</th>
-                <td>
+            @if (Model.DisplayPolicy.SENIds)
+            {
+                <dt>Type of SEN provision:</dt>
+                <dd>
                     @Model.SENNames
-                </td>
-            </tr>
-        }
+                </dd>
+            }
 
-        @if (Model.DisplayPolicy.TeenageMothersProvisionId)
-        {
-            <tr>
-                <th>Teenage mothers:</th>
-                <td>@Model.TeenageMothersProvisionName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.TeenageMothersProvisionId)
+            {
+                <dt>Teenage mothers:</dt>
+                <dd>@Model.TeenageMothersProvisionName</dd>
+            }
 
-        @if (Model.DisplayPolicy.TeenageMothersCapacity)
-        {
-            <tr>
-                <th>Teenage mothers places:</th>
-                <td>@Model.Establishment.TeenageMothersCapacity</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.TeenageMothersCapacity)
+            {
+                <dt>Teenage mothers places:</dt>
+                <dd>@Model.Establishment.TeenageMothersCapacity</dd>
+            }
 
-        @if (Model.DisplayPolicy.ChildcareFacilitiesId)
-        {
-            <tr>
-                <th>Childcare facilities provision:</th>
-                <td>@Model.ChildcareFacilitiesName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.ChildcareFacilitiesId)
+            {
+                <dt>Childcare facilities provision:</dt>
+                <dd>@Model.ChildcareFacilitiesName</dd>
+            }
 
-        @if (Model.DisplayPolicy.PRUSENId)
-        {
-            <tr>
-                <th>SEN facilities:</th>
-                <td>@Model.PRUSENName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.PRUSENId)
+            {
+                <dt>SEN facilities:</dt>
+                <dd>@Model.PRUSENName</dd>
+            }
 
-        @if (Model.DisplayPolicy.PRUEBDId)
-        {
-            <tr>
-                <th>Pupils with EBD:</th>
-                <td>@Model.PRUEBDName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.PRUEBDId)
+            {
+                <dt>Pupils with EBD:</dt>
+                <dd>@Model.PRUEBDName</dd>
+            }
 
-        @if (Model.DisplayPolicy.PlacesPRU)
-        {
-            <tr>
-                <th>Number of places:</th>
-                <td>@Model.Establishment.PlacesPRU</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.PlacesPRU)
+            {
+                <dt>Number of places:</dt>
+                <dd>@Model.Establishment.PlacesPRU</dd>
+            }
 
-        @if (Model.DisplayPolicy.PruFulltimeProvisionId)
-        {
-            <tr>
-                <th>Full time provision :</th>
-                <td>@Model.PruFulltimeProvisionName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.PruFulltimeProvisionId)
+            {
+                <dt>Full time provision :</dt>
+                <dd>@Model.PruFulltimeProvisionName</dd>
+            }
 
 
-        @if (Model.DisplayPolicy.PruEducatedByOthersId)
-        {
-            <tr>
-                <th>Pupils educated by other providers:</th>
-                <td>@Model.PruEducatedByOthersName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.PruEducatedByOthersId)
+            {
+                <dt>Pupils educated by other providers:</dt>
+                <dd>@Model.PruEducatedByOthersName</dd>
+            }
 
 
-        @if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
-        {
-            <tr>
-                <th>Type of resourced provision:</th>
-                <td>@Model.TypeOfResourcedProvisionName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
+            {
+                <dt>Type of resourced provision:</dt>
+                <dd>@Model.TypeOfResourcedProvisionName</dd>
+            }
 
-        @if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
-        {
-            <tr>
-                <th>Resourced provision number on roll:</th>
-                <td>@Model.Establishment.ResourcedProvisionOnRoll</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
+            {
+                <dt>Resourced provision number on roll:</dt>
+                <dd>@Model.Establishment.ResourcedProvisionOnRoll</dd>
+            }
 
-        @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
-        {
-            <tr>
-                <th>Resourced provision capacity:</th>
-                <td>@Model.Establishment.ResourcedProvisionCapacity</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
+            {
+                <dt>Resourced provision capacity:</dt>
+                <dd>@Model.Establishment.ResourcedProvisionCapacity</dd>
+            }
 
-        @if (Model.DisplayPolicy.SenUnitOnRoll)
-        {
-            <tr>
-                <th>SEN Unit number on roll:</th>
-                <td>@Model.Establishment.SenUnitOnRoll</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.SenUnitOnRoll)
+            {
+                <dt>SEN Unit number on roll:</dt>
+                <dd>@Model.Establishment.SenUnitOnRoll</dd>
+            }
 
-        @if (Model.DisplayPolicy.SenUnitCapacity)
-        {
-            <tr>
-                <th>SEN Unit capacity:</th>
-                <td>@Model.Establishment.SenUnitCapacity</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.SenUnitCapacity)
+            {
+                <dt>SEN Unit capacity:</dt>
+                <dd>@Model.Establishment.SenUnitCapacity</dd>
+            }
 
 
-        @if (Model.DisplayPolicy.BSOInspectorateId)
-        {
-            <tr>
-                <th>Inspectorate name:</th>
-                <td>@Model.BSOInspectorateName</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.BSOInspectorateId)
+            {
+                <dt>Inspectorate name:</dt>
+                <dd>@Model.BSOInspectorateName</dd>
+            }
 
-        @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
-        {
-            <tr>
-                <th>Inspectorate report:</th>
-                <td>@Model.Establishment.BSOInspectorateReportUrl</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
+            {
+                    <dt>Inspectorate report:</dt>
+                    <dd>@Model.Establishment.BSOInspectorateReportUrl</dd>
+            }
 
-        @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
-        {
-            <tr>
-                <th>Date of Last Inspection Visit:</th>
-                <td>@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("dd/MM/yyyy"))</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
+            {
+                <dt>Date of Last Inspection Visit:</dt>
+                <dd>@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("dd/MM/yyyy"))</dd>
+            }
 
-        @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
-        {
-            <tr>
-                <th>Date of Next Inspection Visit:</th>
-                <td>@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("dd/MM/yyyy"))</td>
-            </tr>
-        }
+            @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
+            {
+                <dt>Date of Next Inspection Visit:</dt>
+                <dd>@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("dd/MM/yyyy"))</dd>
+            }
 
 
-    </table>*@
+        </dl>
     
+    </div>
+
     @if (Model.UserCanEdit)
     {
         @Html.ActionLink("Edit", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
