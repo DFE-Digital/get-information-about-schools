@@ -30,7 +30,7 @@
         {
             <div class="form-group">
                 @Html.LabelFor(x => x.AdditionalAddresses[i].CountyId, "County", new { @class = "form-label" })
-                @Html.DropDownListFor(x => x.AdditionalAddresses[i].CountyId, Model.Counties, "", new { @class = "form-control alt-address" })
+                @Html.DropDownListFor(x => x.AdditionalAddresses[i].CountyId, new SelectList(Model.Counties, "Value", "Text", address.CountyId), "", new { @class = "form-control alt-address" })
             </div>
         }
 
@@ -38,16 +38,17 @@
         {
             <div class="form-group">
                 @Html.LabelFor(x => x.AdditionalAddresses[i].CountryId, "Country", new { @class = "form-label" })
-                @Html.DropDownListFor(x => x.AdditionalAddresses[i].CountryId, Model.Countries, "", new { @class = "form-control", disabled = "disabled" })
+                @Html.DropDownListFor(x => x.AdditionalAddresses[i].CountryId, new SelectList(Model.Countries, "Value", "Text", address.CountryId), "", new { @class = "form-control", disabled = "disabled" })
             </div>
         }
+
         @Html.HiddenFor(x => x.AdditionalAddresses[i].CountryId)
 
         <div class="form-group">
             @Html.LabelFor(x => x.AdditionalAddresses[i].PostCode, "Postcode", new { @class = "form-label" })
             @Html.TextBoxFor(x => x.AdditionalAddresses[i].PostCode, new { maxlength = 120, @class = "form-control postcode-field alt-address", disabled = "disabled" })
             @Html.HiddenFor(x => x.AdditionalAddresses[i].PostCode)
-            @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-" }, new { @class = "replace-address" })
+            @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-" + i }, new { @class = "replace-address" })
         </div>
 
         @Html.HiddenFor(x => x.AdditionalAddresses[i].UPRN)

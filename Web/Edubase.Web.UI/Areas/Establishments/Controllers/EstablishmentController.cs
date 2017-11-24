@@ -878,16 +878,21 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     viewModel.Northing = replaceAddressViewModel.Northing;
                     viewModel.Easting = replaceAddressViewModel.Easting;
                 }
-                else if (replaceAddressViewModel.Target == "alt")
+                else if (replaceAddressViewModel.Target.StartsWith("alt"))
                 {
-                    //viewModel.AltTown = replaceAddressViewModel.Town;
-                    //viewModel.AltCountryId = replaceAddressViewModel.CountryId;
-                    //viewModel.AltCountyId = replaceAddressViewModel.CountyId;
-                    //viewModel.AltStreet = replaceAddressViewModel.Street;
-                    //viewModel.AltLocality = replaceAddressViewModel.Locality;
-                    //viewModel.AltAddress3 = replaceAddressViewModel.Address3;
-                    //viewModel.AltPostCode = replaceAddressViewModel.PostCode;
-                    //viewModel.AltUPRN = replaceAddressViewModel.SelectedUPRN;
+                    var index = replaceAddressViewModel.Target.GetPart("-", 1).ToInteger().Value;
+                    var addressModel = new AdditionalAddressModel();
+                    if (index > (viewModel.AdditionalAddresses.Count - 1)) viewModel.AdditionalAddresses.Add(addressModel);
+                    else addressModel = viewModel.AdditionalAddresses[index];
+
+                    addressModel.Town = replaceAddressViewModel.Town;
+                    addressModel.CountryId = replaceAddressViewModel.CountryId;
+                    addressModel.CountyId = replaceAddressViewModel.CountyId;
+                    addressModel.Street = replaceAddressViewModel.Street;
+                    addressModel.Locality = replaceAddressViewModel.Locality;
+                    addressModel.Address3 = replaceAddressViewModel.Address3;
+                    addressModel.PostCode = replaceAddressViewModel.PostCode;
+                    addressModel.UPRN = replaceAddressViewModel.SelectedUPRN;
                 }
                 viewModel.IsDirty = true;
             }
