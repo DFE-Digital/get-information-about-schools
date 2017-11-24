@@ -101,21 +101,7 @@ namespace Edubase.Services.Establishments.Models
         [IgnoreChanges]
         public string Address_UPRN { get; set; }
 
-        #region Alt Address
-
-        public string AltSiteName { get; set; }
-        public int? AltCountryId { get; set; }
-
-        [IgnoreChanges]
-        public string AltUPRN { get; set; }
-        public string AltStreet { get; set; }
-        public string AltLocality { get; set; }
-        public string AltAddress3 { get; set; }
-        public string AltTown { get; set; }
-        public int? AltCountyId { get; set; }
-        public string AltPostCode { get; set; }
-        #endregion
-
+        public AdditionalAddressModel[] AdditionalAddresses { get; set; } = new AdditionalAddressModel[0];
 
         [DisplayName("Headteacher/principal/manager first name")]
         public string HeadFirstName { get; set; }
@@ -284,7 +270,6 @@ namespace Edubase.Services.Establishments.Models
         public DateTime? CreatedUtc { get; set; }
         public DateTime? LastUpdatedUtc { get; set; }
         public async Task<string> GetAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Locality, Address_Line3, Address_CityOrTown, await lookup.GetNameAsync("CountyId", Address_CountyId), Address_PostCode);
-        public async Task<string> GetAltAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", AltStreet, AltLocality, AltAddress3, AltTown, await lookup.GetNameAsync("CountyId", AltCountyId), AltPostCode);
         public string GetLAESTAB(string laCode) => string.Concat(laCode, "/", EstablishmentNumber.GetValueOrDefault().ToString("D4"));
         public string HelpdeskNotes { get; set; }
         public DateTime? HelpdeskLastUpdate { get; set; }

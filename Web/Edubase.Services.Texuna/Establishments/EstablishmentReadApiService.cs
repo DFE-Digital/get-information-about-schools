@@ -158,6 +158,7 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model)
         {
             var changes = ReflectionHelper.DetectChanges(model, original, typeof(IEBTModel));
+            changes.AddRange(await DetectAdditionalAddressChanges(original, model));
             var retVal = new List<ChangeDescriptorDto>();
 
             foreach (var change in changes)
@@ -212,6 +213,114 @@ namespace Edubase.Services.Texuna.Establishments
                     OldValue = originalSenNames
                 });
             }
+        }
+
+        private async Task<IEnumerable<ChangeDescriptor>> DetectAdditionalAddressChanges(EstablishmentModel originalModel, EstablishmentModel newModel)
+        {
+            var retVal = new List<ChangeDescriptor>();
+            var newAddresses = newModel.AdditionalAddresses.Where(x => !x.Id.HasValue);
+            foreach (var newAddress in newAddresses)
+            {
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Site name",
+                    NewValue = newAddress.SiteName
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Street",
+                    NewValue = newAddress.Street
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Locality",
+                    NewValue = newAddress.Locality
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Address line 3",
+                    NewValue = newAddress.Address3
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "City / town",
+                    NewValue = newAddress.Town
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "County",
+                    NewValue = await _cachedLookupService.GetNameAsync("CountyId", newAddress.CountyId)
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Post code",
+                    NewValue = newAddress.PostCode
+                });
+            }
+            
+            var editedAddresses = newModel.AdditionalAddresses.Where(x => x.Id.HasValue);
+            foreach (var address in editedAddresses)
+            {
+                var oldAddress = originalModel.AdditionalAddresses.FirstOrDefault(x => x.Id == address.Id);
+                if (oldAddress != null)
+                {
+                    retVal.AddRange(ReflectionHelper.DetectChanges(address, oldAddress).AsEnumerable());
+                }
+            }
+
+            var removedAddresses = originalModel.AdditionalAddresses.Where(x => !newModel.AdditionalAddresses.Select(y => y.Id).Contains(x.Id));
+            foreach (var address in removedAddresses)
+            {
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Site name",
+                    OldValue = address.SiteName
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Street",
+                    OldValue = address.Street
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Locality",
+                    OldValue = address.Locality
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Address line 3",
+                    OldValue = address.Address3
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "City / town",
+                    OldValue = address.Town
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "County",
+                    OldValue = await _cachedLookupService.GetNameAsync("CountyId", address.CountyId)
+                });
+
+                retVal.Add(new ChangeDescriptor
+                {
+                    Name = "Post code",
+                    OldValue = address.PostCode
+                });
+            }
+
+            return retVal;
         }
     }
 }

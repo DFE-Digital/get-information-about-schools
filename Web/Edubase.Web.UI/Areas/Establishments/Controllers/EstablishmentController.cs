@@ -370,7 +370,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             SetProperty(oldModel, model, m => m.MSOAId);
             SetProperty(oldModel, model, m => m.LSOAId);
 
-            oldModel.Action = model.Action;
+            oldModel.ActionSpecifier = model.ActionSpecifier;
             oldModel.SelectedTab = model.SelectedTab;
             oldModel.OverrideCRProcess = model.OverrideCRProcess;
             oldModel.ChangeEffectiveDate = model.ChangeEffectiveDate;
@@ -612,6 +612,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (keys.Contains("SENList")) domainModel.SENIds = viewModel.SENIds ?? new int[0];
             if (keys.Contains(nameof(viewModel.MSOACode))) domainModel.MSOAId = viewModel.MSOAId;
             if (keys.Contains(nameof(viewModel.LSOACode))) domainModel.LSOAId = viewModel.LSOAId;
+
+            domainModel.AdditionalAddresses = viewModel.AdditionalAddresses.ToArray();
         }
 
         private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)
@@ -765,7 +767,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             vm.AddressCountryName = await c.GetNameAsync("CountryId", vm.Establishment.Address_CountryId);
             vm.AddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.Address_CountyId);
-            vm.AltAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.AltCountyId);
+            //vm.AltAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.AltCountyId);
             vm.IEBTProprietorsAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ProprietorsCountyId);
             vm.IEBTChairOfProprietorsBodyAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ChairOfProprietorsBodyCountyId);
 
@@ -878,14 +880,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
                 else if (replaceAddressViewModel.Target == "alt")
                 {
-                    viewModel.AltTown = replaceAddressViewModel.Town;
-                    viewModel.AltCountryId = replaceAddressViewModel.CountryId;
-                    viewModel.AltCountyId = replaceAddressViewModel.CountyId;
-                    viewModel.AltStreet = replaceAddressViewModel.Street;
-                    viewModel.AltLocality = replaceAddressViewModel.Locality;
-                    viewModel.AltAddress3 = replaceAddressViewModel.Address3;
-                    viewModel.AltPostCode = replaceAddressViewModel.PostCode;
-                    viewModel.AltUPRN = replaceAddressViewModel.SelectedUPRN;
+                    //viewModel.AltTown = replaceAddressViewModel.Town;
+                    //viewModel.AltCountryId = replaceAddressViewModel.CountryId;
+                    //viewModel.AltCountyId = replaceAddressViewModel.CountyId;
+                    //viewModel.AltStreet = replaceAddressViewModel.Street;
+                    //viewModel.AltLocality = replaceAddressViewModel.Locality;
+                    //viewModel.AltAddress3 = replaceAddressViewModel.Address3;
+                    //viewModel.AltPostCode = replaceAddressViewModel.PostCode;
+                    //viewModel.AltUPRN = replaceAddressViewModel.SelectedUPRN;
                 }
                 viewModel.IsDirty = true;
             }
@@ -899,7 +901,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             model.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             await PopulateSelectLists(model);
 
-            if (model.Action == ViewModel.eAction.SaveDetails || model.Action == ViewModel.eAction.SaveIEBT || model.Action == ViewModel.eAction.SaveLocation)
+            if (model.ActionSpecifierCommand == ViewModel.ASSave)
             {
                 var originalEstabTypeId = (eLookupEstablishmentType)domainModel.TypeId;
                 await ValidateAsync(model, domainModel);
@@ -918,7 +920,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
-            else if (model.Action == ViewModel.eAction.Confirm)
+            else if(model.ActionSpecifierCommand == ViewModel.ASAddAddress) model.AdditionalAddresses.Add(new AdditionalAddressModel());
+            else if (model.ActionSpecifierCommand == ViewModel.ASRemoveAddress) model.AdditionalAddresses.RemoveAt(int.Parse(model.ActionSpecifierParam));
+            else if (model.ActionSpecifierCommand  == ViewModel.ASConfirm)
             {
                 if (ModelState.IsValid)
                 {

@@ -18,7 +18,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>44300</IISExpressSSLPort>
+    <IISExpressSSLPort>45600</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -859,6 +859,7 @@
     <Content Include="Areas\Governors\Views\GroupCorporateContact\GroupEditCorporateContact.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\ConfirmationNotifications.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Partials\GroupConfirmationNotifications.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditAddresses.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />

@@ -48,7 +48,7 @@
     </div>
     
 
-    @if (Model.DisplayPolicy.AltSiteName.GetValueOrDefault(true))
+    @*@if (Model.DisplayPolicy.AltSiteName.GetValueOrDefault(true))
     {
         <h3 class="font-small">Other site</h3>
         if (Model.Establishment.AltSiteName != null)
@@ -61,11 +61,9 @@
                 <dt>Address:</dt>
                 <dd>@Model.GetAltAddress()</dd>
 
-                @*<dt>Telephone</dt>
-                    <dd>@(address.TelephoneNumber ?? "Not recorded")</dd>*@
             </dl>
         </div>
-    }
+    }*@
 
     @if (Model.UserCanEdit)
     {

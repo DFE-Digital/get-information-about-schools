@@ -11,7 +11,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
     {
         public EditEstablishmentModelValidator(IEstablishmentReadService establishmentReadService)
         {
-            When(x => x.Action == EditEstablishmentModel.eAction.SaveDetails, () =>
+            When(x => x.ActionSpecifierParam == EditEstablishmentModel.ASSaveDetail, () =>
             {
                 RuleFor(x => x.EducationPhaseId)
                     .Must((m, x) => !x.HasValue || (establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.TypeId.Value]).Contains(x.Value))

@@ -22,6 +22,11 @@ namespace Edubase.Common
             DisplayName = displayName;
         }
 
+        public ChangeDescriptor()
+        {
+
+        }
+
         private string ToString(object val) => val != null && val is DateTime ? ((DateTime)val).ToString("dd/MM/yyyy") : val?.ToString();
 
         public override string ToString() => 

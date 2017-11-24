@@ -219,6 +219,7 @@
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayEditPolicy.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
+    <Compile Include="Establishments\Models\AdditionalAddressModel.cs" />
     <Compile Include="Establishments\Models\AmalgamateMergeRequest.cs" />
     <Compile Include="Establishments\Models\BulkCreateAcademiesProgress.cs" />
     <Compile Include="Establishments\Models\BulkUpdateDto.cs" />
@@ -301,7 +302,6 @@
     <Compile Include="Establishments\Search\EstablishmentSearchFilters.cs" />
     <Compile Include="Establishments\Search\EstablishmentSearchPayload.cs" />
     <Compile Include="Establishments\IEstablishmentReadService.cs" />
-    <Compile Include="Establishments\Models\EstablishmentAddressModel.cs" />
     <Compile Include="Establishments\Models\LinkedEstablishmentModel.cs" />
     <Compile Include="Establishments\Search\EstablishmentSuggestionItem.cs" />
     <Compile Include="Governors\Search\GovernorSuggestionItem.cs" />

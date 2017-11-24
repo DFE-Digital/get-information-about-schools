@@ -8,6 +8,7 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 
 namespace Edubase.Web.UI.Models
 {
+    using Edubase.Services.Establishments.Models;
     using Edubase.Services.Groups.Models;
     using Services.Domain;
     using System.ComponentModel;
@@ -16,18 +17,33 @@ namespace Edubase.Web.UI.Models
 
     public class EditEstablishmentModel : IEstablishmentPageViewModel
     {
-        public enum eAction
-        {
-            Edit,
-            FindEstablishment,
-            SaveDetails,
-            SaveLocation,
-            SaveIEBT,
-            Confirm,
-            AddLinkedSchool,
-            RemoveLinkedSchool,
-            CancelChanges
-        }
+        //public enum eAction
+        //{
+        //    Edit,
+        //    FindEstablishment,
+        //    SaveDetails,
+        //    SaveLocation,
+        //    SaveIEBT,
+        //    Confirm,
+        //    AddLinkedSchool,
+        //    RemoveLinkedSchool,
+        //    CancelChanges,
+        //    AddAddress
+        //}
+        
+        /// <summary>
+        /// Action Specifiers (AS)
+        /// </summary>
+        public const string ASRemoveAddress = "RemoveAddress"; // suffixed with hyphen as it's parameterised in its use.
+        public const string ASAddAddress = "AddAddress";
+        public const string ASSave = "Save"; // suffixed with hyphen as it's parameterised in its use.
+        public const string ASConfirm = "Confirm";
+        public const string ASCancel = "Cancel";
+
+        public const string ASSaveDetail = "details";
+        public const string ASSaveLocation = "location";
+        public const string ASSaveIEBT = "iebt";
+        public const string ASSaveHelpdesk = "helpdesk";
 
         public enum eLinkType
         {
@@ -85,16 +101,18 @@ namespace Edubase.Web.UI.Models
         public string Address_UPRN { get; set; }
 
 
-        public string AltSiteName { get; set; }
-        public int? AltCountryId { get; set; }
-        public string AltUPRN { get; set; }
-        public string AltStreet { get; set; }
-        public string AltLocality { get; set; }
-        public string AltAddress3 { get; set; }
-        public string AltTown { get; set; }
-        public int? AltCountyId { get; set; }
-        public string AltPostCode { get; set; }
-        public bool IsAltAddressSet => AltSiteName.Clean() != null || AltStreet.Clean() != null;
+        //public string AltSiteName { get; set; }
+        //public int? AltCountryId { get; set; }
+        //public string AltUPRN { get; set; }
+        //public string AltStreet { get; set; }
+        //public string AltLocality { get; set; }
+        //public string AltAddress3 { get; set; }
+        //public string AltTown { get; set; }
+        //public int? AltCountyId { get; set; }
+        //public string AltPostCode { get; set; }
+        //public bool IsAltAddressSet => AltSiteName.Clean() != null || AltStreet.Clean() != null;
+
+        public List<AdditionalAddressModel> AdditionalAddresses { get; set; } = new List<AdditionalAddressModel>();
 
         public string TypeName { get; set; }
 
@@ -130,7 +148,13 @@ namespace Edubase.Web.UI.Models
 
         [Display(Name = "Close date")]
         public DateTimeViewModel CloseDate { get; set; } = new DateTimeViewModel();
-        public eAction Action { get; set; }
+        
+        public string ActionSpecifier { get; set; }
+        public string ActionSpecifierCommand => ActionSpecifier.GetPart("-", 0);
+        public string ActionSpecifierParam => ActionSpecifier.GetPart("-", 1);
+        public static string GetActionSpecifier(string command, object parameter) => string.Concat(command, "-", parameter);
+
+
 
         public bool ScrollToLinksSection { get; set; }
         

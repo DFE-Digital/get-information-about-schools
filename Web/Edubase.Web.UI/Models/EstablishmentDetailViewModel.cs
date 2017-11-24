@@ -138,7 +138,7 @@ namespace Edubase.Web.UI.Models
         public string AdmissionsPolicyName { get; set; }
         public string AddressCountryName { get; set; }
         public string AddressCountyName { get; set; }
-        public string AltAddressCountyName { get; set; }
+        //public string AltAddressCountyName { get; set; }
         public string OfstedRatingName { get; set; }
         public string HelpdeskPreviousLocalAuthorityName { get; set; }
         
@@ -154,13 +154,13 @@ namespace Edubase.Web.UI.Models
             AddressCountyName?.Replace("Not recorded", string.Empty), 
             Establishment.Address_PostCode);
 
-        public string GetAltAddress() => StringUtil.ConcatNonEmpties(", ",
-            Establishment.AltStreet,
-            Establishment.AltLocality,
-            Establishment.AltAddress3,
-            Establishment.AltTown,
-            AltAddressCountyName?.Replace("Not recorded", string.Empty),
-            Establishment.AltPostCode);
+        //public string GetAltAddress() => StringUtil.ConcatNonEmpties(", ",
+        //    Establishment.AltStreet,
+        //    Establishment.AltLocality,
+        //    Establishment.AltAddress3,
+        //    Establishment.AltTown,
+        //    AltAddressCountyName?.Replace("Not recorded", string.Empty),
+        //    Establishment.AltPostCode);
 
         public string GetProprietorsAddress() => StringUtil.ConcatNonEmpties(", ",
             Establishment.IEBTModel.ProprietorsStreet,

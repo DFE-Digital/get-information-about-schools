@@ -21,7 +21,7 @@
 
                 <div class="column-half">
 
-                    <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
+                    <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
 
 
@@ -88,58 +88,14 @@
                     @Html.HiddenFor(x => x.Northing)
                     @Html.HiddenFor(x => x.Easting)
 
-                    @if (Model.EditPolicy.AltSiteName.GetValueOrDefault(true))
+                    @if (Model.EditPolicy.AdditionalAddresses.GetValueOrDefault(true))
                     {
-                        <div class="alt-address">
-                            <div class="grey-bar"></div>
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.AltSiteName, $"Site name")
-                                @Html.TextBoxFor(x => x.AltSiteName, new { @class = "form-control alt-address" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.AltStreet, "Street")
-                                @Html.TextBoxFor(x => x.AltStreet, new { @class = "form-control alt-address" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.AltLocality, "Locality")
-                                @Html.TextBoxFor(x => x.AltLocality, new { @class = "form-control alt-address" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.AltAddress3, "Address 3")
-                                @Html.TextBoxFor(x => x.AltAddress3, new { @class = "form-control alt-address" })
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.AltTown, "Town")
-                                @Html.TextBoxFor(x => x.AltTown, new { @class = "form-control alt-address" })
-                            </div>
-
-                            @if (Model.AltCountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
-                            {
-                                <div class="form-group">
-                                    @Html.LabelFor(x => x.AltCountyId, "County", new { @class = "form-label" })
-                                    @Html.DropDownListFor(x => x.AltCountyId, Model.Counties, "", new { @class = "form-control alt-address" })
-                                </div>
-                            }
-
-                            @if (Model.AltCountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
-                            {
-                                <div class="form-group">
-                                    @Html.LabelFor(x => x.AltCountryId, "Country", new { @class = "form-label" })
-                                    @Html.DropDownListFor(x => x.AltCountryId, Model.Countries, "", new { @class = "form-control", disabled = "disabled" })
-                                </div>
-                            }
-                            @Html.HiddenFor(x => x.AltCountryId)
-
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.AltPostCode, "Postcode", new { @class = "form-label" })
-                                @Html.TextBoxFor(x => x.AltPostCode, new { maxlength = 120, @class = "form-control postcode-field alt-address", disabled = "disabled" })
-                                @Html.HiddenFor(x => x.AltPostCode)
-                                @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt" }, new { @class = "replace-address" })
-                            </div>
-
-                            @Html.HiddenFor(x => x.AltUPRN)
-                        </div>
+                        Html.RenderPartial("Partials/_EditAddresses");
                     }
+
+                    <div class="form-group">
+                        <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASAddAddress" class="button button-grey">Add address</button>
+                    </div>
 
                     @if (Model.EditPolicy.HeadTitleId)
                     {
@@ -739,8 +695,7 @@
                         @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new { title = "BSO: Next inspection visit" })
                     }
 
-
-                    <button type="submit" class="button mobile-full-width" name="action" value="@ViewModel.eAction.SaveDetails">Save</button>
+                    <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
 
                 </div>
@@ -752,8 +707,8 @@
             Html.RenderPartial("Partials/_ConfirmChanges");
 
             <div class="button-row">
-                <button class="button-grey button mobile-full-width" name="action" type="submit" value="@ViewModel.eAction.CancelChanges">&laquo; Back</button>
-                <button type="submit" name="action" value="@ViewModel.eAction.Confirm" class="button mobile-full-width js-confirm">Confirm</button>
+                <button class="button-grey button mobile-full-width" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
+                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button mobile-full-width js-confirm">Confirm</button>
 
                 @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey mobile-full-width", id = "cancel-edit" })
             </div>

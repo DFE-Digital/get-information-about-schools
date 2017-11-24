@@ -1,0 +1,61 @@
+﻿@model EditEstablishmentModel
+
+@for (int i = 0; i < Model.AdditionalAddresses.Count; i++)
+{
+    var address = Model.AdditionalAddresses[i];
+    <div class="alt-address">
+        <div class="grey-bar"></div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.AdditionalAddresses[i].SiteName, $"Site name " + (i+1))
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].SiteName, new { @class = "form-control alt-address" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.AdditionalAddresses[i].Street, "Street")
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Street, new { @class = "form-control alt-address" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.AdditionalAddresses[i].Locality, "Locality")
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Locality, new { @class = "form-control alt-address" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.AdditionalAddresses[i].Address3, "Address 3")
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Address3, new { @class = "form-control alt-address" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.AdditionalAddresses[i].Town, "Town")
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Town, new { @class = "form-control alt-address" })
+        </div>
+
+        @if (Model.AdditionalAddresses[i].CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+        {
+            <div class="form-group">
+                @Html.LabelFor(x => x.AdditionalAddresses[i].CountyId, "County", new { @class = "form-label" })
+                @Html.DropDownListFor(x => x.AdditionalAddresses[i].CountyId, Model.Counties, "", new { @class = "form-control alt-address" })
+            </div>
+        }
+
+        @if (Model.AdditionalAddresses[i].CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+        {
+            <div class="form-group">
+                @Html.LabelFor(x => x.AdditionalAddresses[i].CountryId, "Country", new { @class = "form-label" })
+                @Html.DropDownListFor(x => x.AdditionalAddresses[i].CountryId, Model.Countries, "", new { @class = "form-control", disabled = "disabled" })
+            </div>
+        }
+        @Html.HiddenFor(x => x.AdditionalAddresses[i].CountryId)
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.AdditionalAddresses[i].PostCode, "Postcode", new { @class = "form-label" })
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].PostCode, new { maxlength = 120, @class = "form-control postcode-field alt-address", disabled = "disabled" })
+            @Html.HiddenFor(x => x.AdditionalAddresses[i].PostCode)
+            @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-" }, new { @class = "replace-address" })
+        </div>
+
+        @Html.HiddenFor(x => x.AdditionalAddresses[i].UPRN)
+        @Html.HiddenFor(x => x.AdditionalAddresses[i].Id)
+
+        <div class="form-group">
+            <button type="submit" name="@nameof(EditEstablishmentModel.ActionSpecifier)" value="@EditEstablishmentModel.GetActionSpecifier(EditEstablishmentModel.ASRemoveAddress, i)" class="button button-grey">Remove address</button>
+        </div>
+    </div>
+}
+
