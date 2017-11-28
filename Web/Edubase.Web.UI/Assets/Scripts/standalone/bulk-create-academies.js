@@ -303,42 +303,50 @@
             },
             validateOpenDate: function () {
                 var day = parseInt(this.openDateDay, 10),
-                    month = parseInt(this.openDateMonth, 10) - 1,
+                    enteredMonth = parseInt(this.openDateMonth, 10),
                     year = parseInt(this.openDateYear, 10),
-
                     dateError = false,
                     months31 = [0, 2, 4, 6, 7, 9, 11];
 
-                if (!day || !month || !year || isNaN(day) || isNaN(month) || isNaN(year)) {
+                if (!day
+                    || !enteredMonth
+                    || !year
+                    || isNaN(day)
+                    || isNaN(enteredMonth)
+                    || isNaN(year)
+                    || enteredMonth > 12
+                    || enteredMonth < 1
+                    || day < 1)
+                {
                     dateError = true;
-                }
-
-                var isLeap = new Date(year, 1, 29).getMonth() === 1; 
-
-                if (isLeap && month === 1) {
-                    if (day > 29) {
-                        dateError = true;
-                    }
-                } else if (month === 1) {
-                    if (day > 28) {
-                        dateError = true;
-                    }
-                }
-
-                if (months31.indexOf(month - 1)) {
-                    if (day < 1 || day > 31) {
-                        dateError = true;
-                    }
                 } else {
-                    if (day < 1 || day > 30) {
+                    var monthIndex = enteredMonth - 1;
+                    var isLeap = new Date(year, 1, 29).getMonth() === 1;
+
+                    if (isLeap && monthIndex === 1) {
+                        if (day > 29) {
+                            dateError = true;
+                        }
+                    } else if (monthIndex === 1) {
+                        if (day > 28) {
+                            dateError = true;
+                        }
+                    }
+
+                    if (months31.indexOf(monthIndex) > -1) {
+                        if (day < 1 || day > 31) {
+                            dateError = true;
+                        }
+                    } else {
+                        if (day < 1 || day > 30) {
+                            dateError = true;
+                        }
+                    }
+
+                    if (monthIndex < 0 || monthIndex > 11) {
                         dateError = true;
                     }
                 }
-
-                if (month < 1 || month > 12) {
-                    dateError = true;
-                }
-
                 return dateError;
             },
             addEstablishment: function () {
