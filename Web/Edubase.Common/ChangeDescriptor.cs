@@ -1,4 +1,6 @@
-﻿namespace Edubase.Common
+﻿using System;
+
+namespace Edubase.Common
 {
     public class ChangeDescriptor
     {
@@ -6,12 +8,12 @@
         public string Name { get; set; }
         public string NewValue { get; set; }
         public string OldValue { get; set; }
-        
+
         public ChangeDescriptor(string name, object newValue, object oldValue)
         {
             Name = name;
-            NewValue = newValue?.ToString();
-            OldValue = oldValue?.ToString();
+            NewValue = ToString(newValue);
+            OldValue = ToString(oldValue);
         }
 
         public ChangeDescriptor(string name, string displayName, object newValue, object oldValue)
@@ -20,7 +22,9 @@
             DisplayName = displayName;
         }
 
-        public override string ToString() => 
+        private string ToString(object val) => val != null && val is DateTime ? ((DateTime)val).ToString("dd/MM/yyyy") : val?.ToString();
+
+        public override string ToString() =>
             $"Name = {Name}; Old Value = {OldValue ?? "<empty>"}, New Value = {NewValue ?? "<empty>"}";
     }
 }
