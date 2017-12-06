@@ -1,4 +1,5 @@
 ﻿using Edubase.Common;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 
@@ -26,7 +27,7 @@ namespace Edubase.Services.Domain
         {
             if (Success && Response != null) return Response;
             else if (Success && Response == null) throw new Exception("The response is empty but the API call was successful.");
-            else throw new Exception($"The API was not successful. There were {Errors?.Length} errors");
+            else throw new Exception($"The API was not successful. There were {Errors?.Length} errors; " + SerialiseErrors(Errors));
         }
 
         public ApiResponse<T> OK(T response)
@@ -79,6 +80,17 @@ namespace Edubase.Services.Domain
         }
 
         public bool HasErrors => (Errors != null && Errors.Any());
+
+        public static string SerialiseErrors(ApiError[] errors)
+        {
+            if (errors != null && errors.Length > 0)
+            {
+                var json = JsonConvert.SerializeObject(errors);
+                json = json.Ellipsis(1000);
+                return json;
+            }
+            else return string.Empty;
+        }
     }
 
 
@@ -165,7 +177,7 @@ namespace Edubase.Services.Domain
         {
             if (Successful && Response != null) return Response;
             else if (Successful && Response == null) throw new Exception("The response is empty but the API call was successful.");
-            else throw new Exception($"The API was not successful. There were {Errors?.Length} errors");
+            else throw new Exception($"The API was not successful. There were {Errors?.Length} errors; " + ApiResponse.SerialiseErrors(Errors));
         }
     }
 }
