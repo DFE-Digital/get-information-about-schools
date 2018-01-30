@@ -359,14 +359,14 @@
             {
                 stopwatch.Stop();
                 string responseMessage = null;
-#if DEBUG
+
+                var context = HttpContext.Current;
+
                 if (response?.Content != null)
                 {
                     responseMessage = await response.Content?.ReadAsStringAsync();
                 }
-
-                var context = HttpContext.Current;
-
+#if DEBUG
                 var data = new ApiTraceData
                 {
                     StartTime = startTime,
@@ -383,7 +383,7 @@
 
                 ApiTrace.Data.Add(data);
 #endif
-                
+
                 await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed, context?.User?.Identity?.GetUserId());
             }
         }
