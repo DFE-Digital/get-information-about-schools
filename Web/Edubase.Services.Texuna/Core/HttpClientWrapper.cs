@@ -384,13 +384,13 @@
                 ApiTrace.Data.Add(data);
 #endif
                 
-                await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed);
+                await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed, context?.User?.Identity?.GetUserId());
             }
         }
 
-        private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed)
+        private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed, string userId)
         {
-            var apiSessionId = _clientStorage?.Get("ApiSessionId");
+            var apiSessionId = _clientStorage?.Get("ApiSessionId") ?? userId.Clean();
             if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
             {
                 if (responseMessage == null && response?.Content != null)
