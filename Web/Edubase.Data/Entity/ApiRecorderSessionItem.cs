@@ -21,7 +21,7 @@ namespace Edubase.Data.Entity
         public ApiRecorderSessionItem(string sessionId, string requestPath)
         {
             PartitionKey = sessionId;
-            RowKey = string.Concat(DateTime.UtcNow.ToString("yyyyMMdd-HHmmss"), "~~", requestPath.CleanOfNonChars(false, "-"), "~~", RandomNumber.Next(1, 100));
+            RowKey = string.Concat(DateTime.UtcNow.ToString("yyyyMMdd-HHmmss"), "~~", requestPath.CleanOfNonChars(false, "-"), "~~", RandomNumber.Next(1, 10000));
             Path = requestPath;
         }
 
