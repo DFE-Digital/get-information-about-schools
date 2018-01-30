@@ -96,7 +96,10 @@ namespace Edubase.Web.UI.Filters
 
             if (new[] { string.Empty, "POST", "GET" }.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase))) // only log errors GET/POST or empty http method 
             {
-                DependencyResolver.Current.GetService<IMessageLoggingService>().Push(msg);
+                if ((msg.UserAgent ?? string.Empty).IndexOf("bot", StringComparison.OrdinalIgnoreCase) == -1)
+                {
+                    DependencyResolver.Current.GetService<IMessageLoggingService>().Push(msg);
+                }
             }
             
             return msg;
