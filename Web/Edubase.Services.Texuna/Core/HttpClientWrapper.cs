@@ -390,24 +390,31 @@
 
         private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed, string userId)
         {
-            var apiSessionId = _clientStorage?.Get("ApiSessionId") ?? userId.Clean();
-            if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
+            try
             {
-                if (responseMessage == null && response?.Content != null)
+                var apiSessionId = _clientStorage?.Get("ApiSessionId") ?? userId.Clean();
+                if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
                 {
-                    responseMessage = await response.Content?.ReadAsStringAsync();
-                }
+                    if (responseMessage == null && response?.Content != null)
+                    {
+                        responseMessage = await response.Content?.ReadAsStringAsync();
+                    }
 
-                await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
-                {
-                    HttpMethod = requestMessage.Method.ToString(),
-                    RawRequestBody = GetRequestJsonBody(requestMessage),
-                    RawResponseBody = responseMessage.Ellipsis(32000),
-                    RequestHeaders = ToJsonIndented(requestMessage.Headers),
-                    ResponseHeaders = ToJsonIndented(response.Headers),
-                    ElapsedTimeSpan = elapsed.ToString(),
-                    ElapsedMS = elapsed.TotalMilliseconds
-                });
+                    await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
+                    {
+                        HttpMethod = requestMessage.Method.ToString(),
+                        RawRequestBody = GetRequestJsonBody(requestMessage),
+                        RawResponseBody = responseMessage.Ellipsis(32000),
+                        RequestHeaders = ToJsonIndented(requestMessage.Headers),
+                        ResponseHeaders = ToJsonIndented(response.Headers),
+                        ElapsedTimeSpan = elapsed.ToString(),
+                        ElapsedMS = elapsed.TotalMilliseconds
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                
             }
         }
 
