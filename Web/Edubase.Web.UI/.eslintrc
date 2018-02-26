@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "eslint:recommended"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "globals": {
+    "GOVUK": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "rules": {
+    "indent": ["error", 2,  {"SwitchCase": 1}],
+    "quotes": ["error", "single"],
+    "semi": 2,
+    "eqeqeq": ["error", "smart"],
+    "array-bracket-spacing": 2,
+    "object-curly-spacing": 2,
+    "space-before-function-paren": ["error", "never"],
+    "one-var": ["error", {"initialized": "never", "uninitialized": "always"}]
+  }
+}
