@@ -854,6 +854,7 @@
     <Content Include="Areas\Establishments\Views\BulkCreateFreeSchools\BulkCreateFreeSchools.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkCreateFreeSchools\InProgress.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkCreateFreeSchools\Completed.cshtml" />
+    <Content Include="ci\build-front-end.cmd" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
