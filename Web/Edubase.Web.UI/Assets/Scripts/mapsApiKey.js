@@ -1,3 +1,3 @@
 ﻿DfE.mapConfig = {
-    apiKey: 'AIzaSyC5YvjNVqceizjjEi95rzhCCjwsCVrb8Gw'
+    apiKey: 'AIzaSyCbBf8u5KuNoIiWn3t1kiAVY8LAOht7Iws'
 };

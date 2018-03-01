@@ -359,14 +359,14 @@
             {
                 stopwatch.Stop();
                 string responseMessage = null;
-#if DEBUG
+
+                var context = HttpContext.Current;
+
                 if (response?.Content != null)
                 {
                     responseMessage = await response.Content?.ReadAsStringAsync();
                 }
-
-                var context = HttpContext.Current;
-
+#if DEBUG
                 var data = new ApiTraceData
                 {
                     StartTime = startTime,
@@ -383,31 +383,38 @@
 
                 ApiTrace.Data.Add(data);
 #endif
-                
-                await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed);
+
+                await LogApiInteraction(requestMessage, response, responseMessage, stopwatch.Elapsed, context?.User?.Identity?.GetUserId());
             }
         }
 
-        private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed)
+        private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed, string userId)
         {
-            var apiSessionId = _clientStorage?.Get("ApiSessionId");
-            if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
+            try
             {
-                if (responseMessage == null && response?.Content != null)
+                var apiSessionId = _clientStorage?.Get("ApiSessionId") ?? userId.Clean();
+                if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
                 {
-                    responseMessage = await response.Content?.ReadAsStringAsync();
-                }
+                    if (responseMessage == null && response?.Content != null)
+                    {
+                        responseMessage = await response.Content?.ReadAsStringAsync();
+                    }
 
-                await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
-                {
-                    HttpMethod = requestMessage.Method.ToString(),
-                    RawRequestBody = GetRequestJsonBody(requestMessage),
-                    RawResponseBody = responseMessage.Ellipsis(32000),
-                    RequestHeaders = ToJsonIndented(requestMessage.Headers),
-                    ResponseHeaders = ToJsonIndented(response.Headers),
-                    ElapsedTimeSpan = elapsed.ToString(),
-                    ElapsedMS = elapsed.TotalMilliseconds
-                });
+                    await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
+                    {
+                        HttpMethod = requestMessage.Method.ToString(),
+                        RawRequestBody = GetRequestJsonBody(requestMessage),
+                        RawResponseBody = responseMessage.Ellipsis(32000),
+                        RequestHeaders = ToJsonIndented(requestMessage.Headers),
+                        ResponseHeaders = ToJsonIndented(response.Headers),
+                        ElapsedTimeSpan = elapsed.ToString(),
+                        ElapsedMS = elapsed.TotalMilliseconds
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                
             }
         }
 
