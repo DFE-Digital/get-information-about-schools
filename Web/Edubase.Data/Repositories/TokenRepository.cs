@@ -54,7 +54,7 @@ namespace Edubase.Data.Repositories
         {
             if (id.Length < 5) throw new ArgumentException("Id is not valid", nameof(id));
 
-            var q = Table.CreateQuery<Token>().Where(x => x.PartitionKey == id.Substring(0, 4) && x.RowKey == id.Substring(5)).AsTableQuery();
+            var q = Table.CreateQuery<Token>().Where(x => x.PartitionKey == id.Substring(0, 4) && x.RowKey == id.Substring(4)).AsTableQuery();
             var results = await q.ExecuteSegmentedAsync(null);
             return results.FirstOrDefault();
         }

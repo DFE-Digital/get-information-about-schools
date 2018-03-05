@@ -73,8 +73,11 @@
                             }
                             @foreach (var cell in row.Cells.Skip(1))
                             {
-                                <dt>@cell.Parent.Text:</dt>
-                                <dd>@(cell.Text ?? "Not recorded")</dd>
+                                if (cell.Parent != null)
+                                {
+                                    <dt>@cell.Parent.Text:</dt>
+                                    <dd>@(cell.Text ?? "Not recorded")</dd>
+                                }
                             }
                         </dl>
 

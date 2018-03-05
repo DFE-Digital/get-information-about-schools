@@ -8,7 +8,7 @@ namespace Edubase.Common
         public string Name { get; set; }
         public string NewValue { get; set; }
         public string OldValue { get; set; }
-        
+
         public ChangeDescriptor(string name, object newValue, object oldValue)
         {
             Name = name;
@@ -29,7 +29,7 @@ namespace Edubase.Common
 
         private string ToString(object val) => val != null && val is DateTime ? ((DateTime)val).ToString("dd/MM/yyyy") : val?.ToString();
 
-        public override string ToString() => 
+        public override string ToString() =>
             $"Name = {Name}; Old Value = {OldValue ?? "<empty>"}, New Value = {NewValue ?? "<empty>"}";
     }
 }

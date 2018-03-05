@@ -12,15 +12,24 @@ namespace Edubase.Data.Entity
         [IgnoreProperty]
         public string Id => string.Concat(PartitionKey, RowKey);
 
-        public Token()
-        {
-            PartitionKey = Base62.FromCurrentDate();
-            RowKey = Base62.Encode(RandomNumber.Next(1, 10_000_000));
-        }
-
         public Token(string data) : this()
         {
             Data = data;
+        }
+
+        public Token() : this(DateTime.Now)
+        {
+
+        }
+
+        public Token(DateTime tokenDate)
+        {
+            var partitionKey = Base62.FromDate(tokenDate);
+            if (partitionKey.Length < 4) partitionKey = partitionKey.PadLeft(4, '0');
+            else if (partitionKey.Length > 4) partitionKey = partitionKey.Substring(0, 4);
+
+            PartitionKey = partitionKey;
+            RowKey = Base62.Encode(RandomNumber.Next(1, 10_000_000));
         }
     }
 }
