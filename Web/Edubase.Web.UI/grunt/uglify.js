@@ -28,6 +28,16 @@
 
             dest: 'public/assets/scripts/application.js'
         },
+        "bundle-elements-prod": {
+            options: {
+                sourceMap: true,
+                beautify: false,
+                compress: true,
+                mangle: true
+            },
+            src: scriptBundle,
+            dest: 'public/assets/scripts/application.js'
+        },
         "process-standalone": {
             options: {
                 sourceMap: isLocal,
