@@ -18,7 +18,7 @@
 	"quotmark": false,  // we like flexibility
 	"undef": true,
 	"unused": true,
-	"strict": true,
+	"strict": false,
 	"trailing": true,
 	"maxparams": false,  // no
 	"maxdepth": false,   // no
@@ -53,6 +53,7 @@
 	"supernew": false,
 	"noyield": false,
 	"validthis": true,
+	"jquery": true,
 
 	// environments
 	"browser": true,
@@ -61,7 +62,11 @@
 	"predef": [
       "GOVUK",
       //"ieVersion",
-      "jQuery"
+	  "jQuery",
+	  "DfE",
+	  "L",
+	  "ga",
+	  "google"
     ],
 
 	// legacy

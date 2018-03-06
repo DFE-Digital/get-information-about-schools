@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         jshintrc: true
       },
       files: {
-        src: ['Assets/Scripts/**/*.js']
+        src: ['Assets/Scripts/*.js', 'Assets/Scripts/Views/**/*.js', 'Assets/Scripts/Elements/**/*.js']
       }
     }
   };
