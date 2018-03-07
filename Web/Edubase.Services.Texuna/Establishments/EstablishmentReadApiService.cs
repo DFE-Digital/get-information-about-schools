@@ -235,49 +235,49 @@ namespace Edubase.Services.Texuna.Establishments
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(newAddress.SiteName),
-                    DisplayName = f(i, "Site name"),
+                    DisplayName = "Site name (new)",
                     NewValue = newAddress.SiteName
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(newAddress.Street),
-                    DisplayName = f(i, "Street"),
+                    DisplayName = "Street (new)",
                     NewValue = newAddress.Street
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(newAddress.Locality),
-                    DisplayName = f(i, "Locality"),
+                    DisplayName = "Locality (new)",
                     NewValue = newAddress.Locality
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(newAddress.Address3),
-                    DisplayName = f(i, "Address line 3"),
+                    DisplayName = "Address line 3 (new)",
                     NewValue = newAddress.Address3
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(newAddress.Town),
-                    DisplayName = f(i, "City / town"),
+                    DisplayName = "City / town (new)",
                     NewValue = newAddress.Town
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(newAddress.CountyId),
-                    DisplayName = f(i, "County"),
+                    DisplayName = "County (new)",
                     NewValue = await _cachedLookupService.GetNameAsync("CountyId", newAddress.CountyId)
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(newAddress.PostCode),
-                    DisplayName = f(i, "Post code"),
+                    DisplayName = "Post code (new)",
                     NewValue = newAddress.PostCode
                 });
             }
@@ -285,12 +285,13 @@ namespace Edubase.Services.Texuna.Establishments
             var editedAddresses = newModel.AdditionalAddresses.Where(x => x.Id.HasValue).ToArray();
             for (int i = 0; i < editedAddresses.Length; i++)
             {
+                var index = newModel.AdditionalAddresses.ToList().IndexOf(editedAddresses[i]) + 1;
                 var address = editedAddresses[i];
                 var oldAddress = originalModel.AdditionalAddresses.FirstOrDefault(x => x.Id == address.Id);
                 if (oldAddress != null)
                 {
                     var changes = ReflectionHelper.DetectChanges(address, oldAddress).AsEnumerable();
-                    changes.ForEach(x => x.DisplayName = f(i,  PropertyName2Label(x.Name))); // alter the field name so it contains the index of the current address model
+                    changes.ForEach(x => x.DisplayName = f(index,  PropertyName2Label(x.Name))); // alter the field name so it contains the index of the current address model
                     retVal.AddRange(changes);
                 }
             }
@@ -298,53 +299,54 @@ namespace Edubase.Services.Texuna.Establishments
             var removedAddresses = originalModel.AdditionalAddresses.Where(x => !newModel.AdditionalAddresses.Select(y => y.Id).Contains(x.Id)).ToArray();
             for (int i = 0; i < removedAddresses.Length; i++)
             {
+                var index = newModel.AdditionalAddresses.ToList().IndexOf(removedAddresses[i]) + 1;
                 var address = removedAddresses[i];
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(address.SiteName),
-                    DisplayName = f(i, "Site name"),
+                    DisplayName = "Site name (deleting)",
                     OldValue = address.SiteName
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(address.Street),
-                    DisplayName = f(i, "Street"),
+                    DisplayName = "Street (deleting)",
                     OldValue = address.Street
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(address.Locality),
-                    DisplayName = f(i, "Locality"),
+                    DisplayName = "Locality (deleting)",
                     OldValue = address.Locality
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(address.Address3),
-                    DisplayName = f(i, "Address line 3"),
+                    DisplayName = "Address line 3 (deleting)",
                     OldValue = address.Address3
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(address.Town),
-                    DisplayName = f(i, "City / town"),
+                    DisplayName = "City / town (deleting)",
                     OldValue = address.Town
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(address.CountyId),
-                    DisplayName = f(i, "County"),
+                    DisplayName = "County (deleting)",
                     OldValue = await _cachedLookupService.GetNameAsync("CountyId", address.CountyId)
                 });
 
                 retVal.Add(new ChangeDescriptor
                 {
                     Name = nameof(address.PostCode),
-                    DisplayName = f(i, "Post code"),
+                    DisplayName = "Post code (deleting)",
                     OldValue = address.PostCode
                 });
             }

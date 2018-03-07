@@ -16,21 +16,7 @@ namespace Edubase.Web.UI.Models
     using ET = Services.Enums.eLookupEstablishmentType;
 
     public class EditEstablishmentModel : IEstablishmentPageViewModel
-    {
-        //public enum eAction
-        //{
-        //    Edit,
-        //    FindEstablishment,
-        //    SaveDetails,
-        //    SaveLocation,
-        //    SaveIEBT,
-        //    Confirm,
-        //    AddLinkedSchool,
-        //    RemoveLinkedSchool,
-        //    CancelChanges,
-        //    AddAddress
-        //}
-        
+    { 
         /// <summary>
         /// Action Specifiers (AS)
         /// </summary>
@@ -99,18 +85,6 @@ namespace Edubase.Web.UI.Models
         public string Address_Locality { get; set; }
         public string Address_PostCode { get; set; }
         public string Address_UPRN { get; set; }
-
-
-        //public string AltSiteName { get; set; }
-        //public int? AltCountryId { get; set; }
-        //public string AltUPRN { get; set; }
-        //public string AltStreet { get; set; }
-        //public string AltLocality { get; set; }
-        //public string AltAddress3 { get; set; }
-        //public string AltTown { get; set; }
-        //public int? AltCountyId { get; set; }
-        //public string AltPostCode { get; set; }
-        //public bool IsAltAddressSet => AltSiteName.Clean() != null || AltStreet.Clean() != null;
 
         public List<AdditionalAddressModel> AdditionalAddresses { get; set; } = new List<AdditionalAddressModel>();
 

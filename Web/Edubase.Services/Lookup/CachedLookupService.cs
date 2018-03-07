@@ -13,7 +13,6 @@ namespace Edubase.Services.Lookup
     public class CachedLookupService : ICachedLookupService
     {
         private readonly Dictionary<string, Func<int, Task<string>>> _mappingAsync;
-        private readonly Dictionary<string, Func<int, string>> _mapping;
         private readonly ILookupService _lookupService;
         private readonly ICacheAccessor _cacheAccessor;
 

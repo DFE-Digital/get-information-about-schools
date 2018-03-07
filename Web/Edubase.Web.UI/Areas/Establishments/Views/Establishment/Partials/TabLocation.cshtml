@@ -46,24 +46,26 @@
             <dd>@Model.LSOAName</dd>
         </dl>
     </div>
-    
 
-    @*@if (Model.DisplayPolicy.AltSiteName.GetValueOrDefault(true))
+    <br />
+    @if (Model.AdditionalAddressList.Any())
     {
-        <h3 class="font-small">Other site</h3>
-        if (Model.Establishment.AltSiteName != null)
+        <h3 class="font-small">Other sites</h3>
+        <br />
+        foreach (var address in Model.AdditionalAddressList)
         {
-            <h4 class="font-small">@Model.Establishment.AltSiteName</h4>
+            if (address.SiteName != null)
+            {
+                <h4 class="font-small">@address.SiteName</h4>
+            }
+            <div class="detail-summary">
+                <dl>
+                    <dt>Address:</dt>
+                    <dd>@address.GetAddress()</dd>
+                </dl>
+            </div>
         }
-
-        <div class="detail-summary">
-            <dl>
-                <dt>Address:</dt>
-                <dd>@Model.GetAltAddress()</dd>
-
-            </dl>
-        </div>
-    }*@
+    }
 
     @if (Model.UserCanEdit)
     {

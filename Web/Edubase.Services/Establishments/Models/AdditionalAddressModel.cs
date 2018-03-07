@@ -22,6 +22,5 @@ namespace Edubase.Services.Establishments.Models
         public string PostCode { get; set; }
         [JsonProperty("latLon")]
         public LatLon Location { get; set; }
-        public async Task<string> GetAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", Street, Locality, Address3, Town, await lookup.GetNameAsync(nameof(CountyId), CountyId), PostCode);
     }
 }

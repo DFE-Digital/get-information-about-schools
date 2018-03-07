@@ -101,7 +101,7 @@ namespace Edubase.UnitTest.Controllers
                 Easting = 4
             };
 
-            var replacementAddress = new ReplaceAddressViewModel
+            var replacementAddress = new AddOrReplaceAddressViewModel
             {
                 Target = "main",
                 Town = "replacementTown",
@@ -178,7 +178,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
         [Test]
-        public async Task Estab_ReplaceEstablishmentAddress()
+        public async Task Estab_AddOrReplaceEstablishmentAddress()
         {
             var nationalities = new List<LookupDto>
             {
@@ -206,7 +206,7 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishment));
             GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(It.IsAny<EstablishmentModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy { AccommodationChangedId = true } });
 
-            await ObjectUnderTest.ReplaceEstablishmentAddressAsync(5, "test");
+            await ObjectUnderTest.AddOrReplaceEstablishmentAddressAsync(5, "test");
         }
 
         [Test]

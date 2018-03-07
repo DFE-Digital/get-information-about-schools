@@ -10,6 +10,7 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Services.Core;
 using Edubase.Web.UI.Helpers;
 using System;
+using System.Linq;
 
 namespace Edubase.Web.UI.Models
 {
@@ -138,7 +139,6 @@ namespace Edubase.Web.UI.Models
         public string AdmissionsPolicyName { get; set; }
         public string AddressCountryName { get; set; }
         public string AddressCountyName { get; set; }
-        //public string AltAddressCountyName { get; set; }
         public string OfstedRatingName { get; set; }
         public string HelpdeskPreviousLocalAuthorityName { get; set; }
         
@@ -153,14 +153,8 @@ namespace Edubase.Web.UI.Models
             Establishment.Address_CityOrTown, 
             AddressCountyName?.Replace("Not recorded", string.Empty), 
             Establishment.Address_PostCode);
-
-        //public string GetAltAddress() => StringUtil.ConcatNonEmpties(", ",
-        //    Establishment.AltStreet,
-        //    Establishment.AltLocality,
-        //    Establishment.AltAddress3,
-        //    Establishment.AltTown,
-        //    AltAddressCountyName?.Replace("Not recorded", string.Empty),
-        //    Establishment.AltPostCode);
+        
+        public IEnumerable<AdditionalAddressViewModel> AdditionalAddressList { get; set; } = Enumerable.Empty<AdditionalAddressViewModel>();
 
         public string GetProprietorsAddress() => StringUtil.ConcatNonEmpties(", ",
             Establishment.IEBTModel.ProprietorsStreet,

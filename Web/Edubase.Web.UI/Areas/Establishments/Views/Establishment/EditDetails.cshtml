@@ -81,7 +81,7 @@
                         @Html.ValidationMessageFor(x => x.Address_PostCode)
                         @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, @class = "form-control postcode-field", disabled = "disabled" })
                         @Html.HiddenFor(x => x.Address_PostCode)
-                        @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn, target = "main" }, new { @class = "replace-address" })
+                        @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "main" }, new { @class = "replace-address" })
                     </div>
 
                     @Html.HiddenFor(x => x.Address_UPRN)
@@ -94,7 +94,7 @@
                     }
 
                     <div class="form-group">
-                        <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASAddAddress" class="button button-grey">Add new address</button>
+                        @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = $"alt-new" }, new { @class = "replace-address" })
                     </div>
 
                     @if (Model.EditPolicy.HeadTitleId)

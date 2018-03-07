@@ -48,7 +48,7 @@
             @Html.LabelFor(x => x.AdditionalAddresses[i].PostCode, "Postcode", new { @class = "form-label" })
             @Html.TextBoxFor(x => x.AdditionalAddresses[i].PostCode, new { maxlength = 120, @class = "form-control postcode-field alt-address", disabled = "disabled" })
             @Html.HiddenFor(x => x.AdditionalAddresses[i].PostCode)
-            @Html.RouteLink("Replace this address", "ReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-" + i }, new { @class = "replace-address" })
+            @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-" + i }, new { @class = "replace-address" })
         </div>
 
         @Html.HiddenFor(x => x.AdditionalAddresses[i].UPRN)

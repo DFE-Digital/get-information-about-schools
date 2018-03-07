@@ -26,6 +26,7 @@ using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -283,7 +284,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             ViewModel viewModel = await CreateEditViewModel(id, vm =>
             {
                 if (addrtok.Clean() != null)
-                    ReplaceAddressFromUrlToken(addrtok, vm);
+                    AddOrReplaceAddressFromUrlToken(addrtok, vm);
             });
             viewModel.SelectedTab = "details";
             return View(viewModel);
@@ -385,17 +386,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return RedirectToRoute("EstabDetails", new { id = urn });
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "ReplaceEstablishmentAddress")]
-        public async Task<ActionResult> ReplaceEstablishmentAddressAsync(int urn, string target)
+        [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddress")]
+        public async Task<ActionResult> AddOrReplaceEstablishmentAddressAsync(int urn, string target)
         {
-            var viewModel = new ReplaceAddressViewModel((await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(Constants.COUNTRY_ID_UK),
+            var viewModel = new AddOrReplaceAddressViewModel((await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(Constants.COUNTRY_ID_UK),
                 (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(), target);
             await PopulateEstablishmentPageViewModel(viewModel, urn, "details");
-            return View("ReplaceAddress", viewModel);
+            return View("AddOrReplaceAddress", viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "ReplaceEstablishmentAddressPost")]
-        public async Task<ActionResult> ReplaceEstablishmentAddressPostAsync(int urn, string target, ReplaceAddressViewModel viewModel)
+        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddressPost")]
+        public async Task<ActionResult> AddOrReplaceEstablishmentAddressPostAsync(int urn, string target, AddOrReplaceAddressViewModel viewModel)
         {
             ModelState.Clear();
 
@@ -431,7 +432,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             await PopulateEstablishmentPageViewModel(viewModel, urn, "details");
-            return View("ReplaceAddress", viewModel);
+            return View("AddOrReplaceAddress", viewModel);
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links/Search", Name = "EditEstabLinks_SearchForEstablishment")]
@@ -767,7 +768,25 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             vm.AddressCountryName = await c.GetNameAsync("CountryId", vm.Establishment.Address_CountryId);
             vm.AddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.Address_CountyId);
-            //vm.AltAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.AltCountyId);
+
+            vm.AdditionalAddressList = await Task.WhenAll(vm.Establishment.AdditionalAddresses.Select(async x => new AdditionalAddressViewModel
+            {
+                Address3 = x.Address3,
+                CountryId = x.CountryId,
+                Id = x.Id,
+                Locality = x.Locality,
+                Location = x.Location,
+                CountyId = x.CountyId,
+                PostCode = x.PostCode,
+                SiteName = x.SiteName,
+                Street = x.Street,
+                Town = x.Town,
+                UPRN = x.UPRN,
+                CountryName = (await c.GetNameAsync(() => x.CountryId)).RemoveSubstring("Not recorded"),
+                CountyName = (await c.GetNameAsync((() => x.CountyId))).RemoveSubstring("Not recorded")
+            }));
+
+            
             vm.IEBTProprietorsAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ProprietorsCountyId);
             vm.IEBTChairOfProprietorsBodyAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ChairOfProprietorsBodyCountyId);
 
@@ -860,39 +879,43 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             MapToDomainModelIEBT(model, domainModel, Request.Form);
         }
 
-        private void ReplaceAddressFromUrlToken(string addrtok, ViewModel viewModel)
+        private void AddOrReplaceAddressFromUrlToken(string addrtok, ViewModel viewModel)
         {
-            var replaceAddressViewModel = UriHelper.TryDeserializeUrlToken<ReplaceAddressViewModel>(addrtok);
-            if (replaceAddressViewModel != null)
+            var addressViewModel = UriHelper.TryDeserializeUrlToken<AddOrReplaceAddressViewModel>(addrtok);
+            if (addressViewModel != null)
             {
-                if (replaceAddressViewModel.Target == "main")
+                if (addressViewModel.Target == "main")
                 {
-                    viewModel.Address_CityOrTown = replaceAddressViewModel.Town;
-                    viewModel.Address_CountryId = replaceAddressViewModel.CountryId;
-                    viewModel.Address_CountyId = replaceAddressViewModel.CountyId;
-                    viewModel.Address_Line1 = replaceAddressViewModel.Street;
-                    viewModel.Address_Locality = replaceAddressViewModel.Locality;
-                    viewModel.Address_Line3 = replaceAddressViewModel.Address3;
-                    viewModel.Address_PostCode = replaceAddressViewModel.PostCode;
-                    viewModel.Address_UPRN = replaceAddressViewModel.SelectedUPRN;
-                    viewModel.Northing = replaceAddressViewModel.Northing;
-                    viewModel.Easting = replaceAddressViewModel.Easting;
+                    viewModel.Address_CityOrTown = addressViewModel.Town;
+                    viewModel.Address_CountryId = addressViewModel.CountryId;
+                    viewModel.Address_CountyId = addressViewModel.CountyId;
+                    viewModel.Address_Line1 = addressViewModel.Street;
+                    viewModel.Address_Locality = addressViewModel.Locality;
+                    viewModel.Address_Line3 = addressViewModel.Address3;
+                    viewModel.Address_PostCode = addressViewModel.PostCode;
+                    viewModel.Address_UPRN = addressViewModel.SelectedUPRN;
+                    viewModel.Northing = addressViewModel.Northing;
+                    viewModel.Easting = addressViewModel.Easting;
                 }
-                else if (replaceAddressViewModel.Target.StartsWith("alt"))
+                else if (addressViewModel.Target.StartsWith("alt"))
                 {
-                    var index = replaceAddressViewModel.Target.GetPart("-", 1).ToInteger().Value;
-                    var addressModel = new AdditionalAddressModel();
-                    if (index > (viewModel.AdditionalAddresses.Count - 1)) viewModel.AdditionalAddresses.Add(addressModel);
-                    else addressModel = viewModel.AdditionalAddresses[index];
+                    AdditionalAddressModel map(AddOrReplaceAddressViewModel source, AdditionalAddressModel dest)
+                    {
+                        dest.Town = source.Town;
+                        dest.CountryId = source.CountryId;
+                        dest.CountyId = source.CountyId;
+                        dest.Street = source.Street;
+                        dest.Locality = source.Locality;
+                        dest.Address3 = source.Address3;
+                        dest.PostCode = source.PostCode;
+                        dest.UPRN = source.SelectedUPRN;
+                        return dest;
+                    };
 
-                    addressModel.Town = replaceAddressViewModel.Town;
-                    addressModel.CountryId = replaceAddressViewModel.CountryId;
-                    addressModel.CountyId = replaceAddressViewModel.CountyId;
-                    addressModel.Street = replaceAddressViewModel.Street;
-                    addressModel.Locality = replaceAddressViewModel.Locality;
-                    addressModel.Address3 = replaceAddressViewModel.Address3;
-                    addressModel.PostCode = replaceAddressViewModel.PostCode;
-                    addressModel.UPRN = replaceAddressViewModel.SelectedUPRN;
+                    var p = addressViewModel.Target.GetPart("-", 1);
+                    var index = p.ToInteger().GetValueOrDefault();
+                    if (index > (viewModel.AdditionalAddresses.Count - 1) || p == "new") viewModel.AdditionalAddresses.Add(map(addressViewModel, new AdditionalAddressModel()));
+                    else map(addressViewModel, viewModel.AdditionalAddresses[index]);                    
                 }
                 viewModel.IsDirty = true;
             }
@@ -942,8 +965,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         private void SetProperty<TProperty>(ViewModel oldModel, ViewModel newModel, Expression<Func<ViewModel, TProperty>> property)
         {
-            var memberExpression = property.Body as MemberExpression;
-            if (memberExpression != null)
+            if (property.Body is MemberExpression memberExpression)
             {
                 var propertyInfo = memberExpression.Member as PropertyInfo;
                 if (propertyInfo != null)

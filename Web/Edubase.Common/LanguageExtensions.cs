@@ -85,22 +85,19 @@ namespace Edubase.Common
 
         public static int ToInteger(this string text, int defaultValue)
         {
-            int retVal;
-            if (!text.IsNullOrEmpty() && int.TryParse(text, out retVal)) return retVal;
+            if (!text.IsNullOrEmpty() && int.TryParse(text, out int retVal)) return retVal;
             else return defaultValue;
         }
 
         public static decimal? ToDecimal(this string text)
         {
-            decimal temp;
-            if (!text.IsNullOrEmpty() && decimal.TryParse(text, out temp)) return temp;
+            if (!text.IsNullOrEmpty() && decimal.TryParse(text, out decimal temp)) return temp;
             else return null;
         }
 
         public static double? ToDouble(this string text)
         {
-            double temp;
-            if (!text.IsNullOrEmpty() && double.TryParse(text, out temp)) return temp;
+            if (!text.IsNullOrEmpty() && double.TryParse(text, out double temp)) return temp;
             else return null;
         }
 
@@ -129,16 +126,14 @@ namespace Edubase.Common
         public static DateTime? ToDateTime(this string data, string format)
         {
             if (data == null) return null;
-            DateTime temp;
-            if (DateTime.TryParseExact(data, format, null, DateTimeStyles.None, out temp)) return temp;
+            if (DateTime.TryParseExact(data, format, null, DateTimeStyles.None, out DateTime temp)) return temp;
             else return null;
         }
 
         public static DateTime? ToDateTime(this string data)
         {
             if (data == null) return null;
-            DateTime temp;
-            if (DateTime.TryParse(data, out temp)) return temp;
+            if (DateTime.TryParse(data, out DateTime temp)) return temp;
             else return null;
         }
 
