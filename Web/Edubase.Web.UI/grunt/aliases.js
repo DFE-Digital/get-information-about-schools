@@ -17,6 +17,20 @@ module.exports = {
         "clean:styleguide",
         "hologram:generate"
     ],
+    "build-dev": [
+      "clean:elements-css",
+      "sass:generate-dev",
+      "clean:elements-js",
+      "uglify:bundle-elements-dev",
+      "jshint:scripts"
+    ],
+    "build-prod": [
+      "clean:elements-css",
+      "sass:generate-prod",
+      "clean:elements-js",
+      "uglify:bundle-elements-prod",
+      "jshint:scripts"
+    ],
     "test": [
         "compile-dev-assets",
         "karma:chrome",
