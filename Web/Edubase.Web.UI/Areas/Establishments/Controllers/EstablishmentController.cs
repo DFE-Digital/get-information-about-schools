@@ -34,6 +34,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
+using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -563,10 +564,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             preprocessViewModel?.Invoke(viewModel);
 
+            viewModel.EditPolicy.AdditionalAddresses = CanUserDefineAdditionalAddresses(domainModel.TypeId.GetValueOrDefault());
+
             await PopulateSelectLists(viewModel);
             return viewModel;
         }
 
+        public bool CanUserDefineAdditionalAddresses(int typeId) 
+            => typeId.OneOfThese(ET.NonmaintainedSpecialSchool, ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool) && User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.IEBT);
+        
         private async Task<ActionResult> DeleteLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {
             await _establishmentWriteService.DeleteLinkedEstablishmentAsync(deltaViewModel.Urn.Value, deltaViewModel.ActiveRecord.Id.Value, User);
@@ -769,23 +775,26 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             vm.AddressCountryName = await c.GetNameAsync("CountryId", vm.Establishment.Address_CountryId);
             vm.AddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.Address_CountyId);
 
-            vm.AdditionalAddressList = await Task.WhenAll(vm.Establishment.AdditionalAddresses.Select(async x => new AdditionalAddressViewModel
-            {
-                Address3 = x.Address3,
-                CountryId = x.CountryId,
-                Id = x.Id,
-                Locality = x.Locality,
-                Location = x.Location,
-                CountyId = x.CountyId,
-                PostCode = x.PostCode,
-                SiteName = x.SiteName,
-                Street = x.Street,
-                Town = x.Town,
-                UPRN = x.UPRN,
-                CountryName = (await c.GetNameAsync(() => x.CountryId)).RemoveSubstring("Not recorded"),
-                CountyName = (await c.GetNameAsync((() => x.CountyId))).RemoveSubstring("Not recorded")
-            }));
 
+            if (vm.Establishment.AdditionalAddresses != null)
+            {
+                vm.AdditionalAddressList = await Task.WhenAll(vm.Establishment.AdditionalAddresses.Select(async x => new AdditionalAddressViewModel
+                {
+                    Address3 = x.Address3,
+                    CountryId = x.CountryId,
+                    Id = x.Id,
+                    Locality = x.Locality,
+                    Location = x.Location,
+                    CountyId = x.CountyId,
+                    PostCode = x.PostCode,
+                    SiteName = x.SiteName,
+                    Street = x.Street,
+                    Town = x.Town,
+                    UPRN = x.UPRN,
+                    CountryName = (await c.GetNameAsync(() => x.CountryId)).RemoveSubstring("Not recorded"),
+                    CountyName = (await c.GetNameAsync((() => x.CountyId))).RemoveSubstring("Not recorded")
+                }));
+            }
             
             vm.IEBTProprietorsAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ProprietorsCountyId);
             vm.IEBTChairOfProprietorsBodyAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ChairOfProprietorsBodyCountyId);

@@ -91,11 +91,10 @@
                     @if (Model.EditPolicy.AdditionalAddresses.GetValueOrDefault(true))
                     {
                         Html.RenderPartial("Partials/_EditAddresses");
+                        <div class="form-group">
+                            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = $"alt-new" }, new { @class = "replace-address" })
+                        </div>
                     }
-
-                    <div class="form-group">
-                        @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = $"alt-new" }, new { @class = "replace-address" })
-                    </div>
 
                     @if (Model.EditPolicy.HeadTitleId)
                     {
