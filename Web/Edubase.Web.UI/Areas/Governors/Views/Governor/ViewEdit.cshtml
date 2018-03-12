@@ -21,8 +21,9 @@
             {
                 @ShowDelegationInformation()
                 <br />
-                @ShowCorporateContactInformation()
             }
+
+            @ShowCorporateContactInformation()
 
             @DisplayGovernanceMode()
         </div>
@@ -69,16 +70,27 @@ else
             <div class="column-full governors-section">
                 @ShowDelegationInformation()
             </div>
-            <div class="column-full governors-section">
-                @ShowCorporateContactInformation()
-            </div>
         }
+    }
+
+    if (!Model.EditMode)
+    {
+        <div class="column-full governors-section">
+            @ShowCorporateContactInformation()
+        </div>
     }
 
     @DisplayGovernors()
 }
 else
 {
+    if (!Model.EditMode)
+    {
+        <div class="column-full governors-section">
+            @ShowCorporateContactInformation()
+        </div>
+    }
+
     <div class="tab-content" style="display:block !important; float:none;">
         <div class="column-half" style="display:block !important; float:none;">
             <p>There is no governance information for this @Model.ParentEntityName</p>
@@ -112,14 +124,15 @@ else
 @helper ShowCorporateContactInformation()
 {
     <h2 class="bold-small">Corporate contact</h2>
-    <div class="expanding-content-wrapper" data-update-text="false">
+    <div class="expanding-content-wrapper" data-update-text="false" style="margin-bottom:3px;">
         <a href="#" class="expanding-content-trigger">
             More details
         </a>
         <div class="expanding-content panel-indent">
-            @(Model.CorporateContact ?? "Not recorded")
+            This only applies to organisations (most often a diocese or higher education institution) which are a corporate member or director/trustee of an academy trust. They should provide contact details here for someone in their organisation who can provide information on which members of their organisation have acted in the capacity of corporate member or corporate director/trustee.
         </div>
     </div>
+    <p>@(Model.CorporateContact ?? "Not recorded")</p>
     if (Model.EditMode)
     {
         <div class="grid-row">
