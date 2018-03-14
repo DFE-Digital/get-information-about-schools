@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="button-row">
-                    <input type="submit" value="Save" class="button mobile-full-width"/>
+                    <button type="submit" value="Save" class="button mobile-full-width">Save</button>
                     <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="button button-grey mobile-full-width">Cancel</a>
                 </div>
             </div>
@@ -33,5 +33,15 @@
 {
     <script>
         $('#DelegationInformation').textCount();
+
+        (function () {
+            if ("@Request.HttpMethod" == "GET") {
+                var initialValue = $.trim($("textarea").val());
+                $("button[type=submit]").prop("disabled", true);
+                $("textarea").on("change keyup", function () {
+                    $("button[type=submit]").prop("disabled", initialValue == $.trim($("textarea").val()));
+                });
+            }
+        })();
     </script>
 }

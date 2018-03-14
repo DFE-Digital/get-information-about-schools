@@ -195,7 +195,6 @@
         </script>
     }
 
-
     @if (Request.HttpMethod == "POST" && Model.Action != "cancel" )
     {
         <script>
@@ -204,4 +203,15 @@
             });
         </script>
     }
+
+    <script>
+        (function () {
+            var $urnSearchField = $("#LinkedEstablishments_LinkedEstablishmentSearch_Urn");
+            var $urnSearchButton = $(".add-establishment-link").find("button");
+            var toggle = function () { $urnSearchButton.prop("disabled", $.trim($urnSearchField.val()).length < 5 || Math.floor($urnSearchField.val()) != $urnSearchField.val() || !$.isNumeric($urnSearchField.val()) ); };
+            toggle();
+            $urnSearchField.on("change keyup", toggle);
+        })();
+
+    </script>
 }
