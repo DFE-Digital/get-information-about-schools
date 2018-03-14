@@ -62,3 +62,7 @@
 
     }
 }
+
+input#filter-refine[disabled] {
+    background-color: $button-colour;
+}

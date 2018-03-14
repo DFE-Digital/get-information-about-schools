@@ -21,7 +21,7 @@
 
                 <div class="column-half">
 
-                    <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Save</button>
+                    <button id="save-submit-top" type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
 
 
@@ -694,7 +694,7 @@
                         @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new { title = "BSO: Next inspection visit" })
                     }
 
-                    <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save</button>
+                    <button id="save-submit-bottom" type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-grey cancel mobile-full-width" })
 
                 </div>
@@ -746,6 +746,7 @@
                     var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
                     var phases = @Html.Json(Model.EducationPhases);
 
+                    $("#save-submit-bottom,#save-submit-top").prop("disabled", true);
                     var $fields = $('#content').find('.form-control');
                     var exitAttached = false;
 
@@ -754,9 +755,10 @@
                             DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                             exitAttached = true;
                         }
+                        $("#save-submit-bottom,#save-submit-top").prop("disabled", false);
                     };
 
-                    $fields.on('change', registerUnloadNotification);
+                    $fields.on('change keyup', registerUnloadNotification);
 
                     @if (Model.IsDirty)
                     {

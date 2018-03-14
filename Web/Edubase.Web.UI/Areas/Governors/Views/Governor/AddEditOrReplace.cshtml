@@ -42,7 +42,6 @@
             
         if (Model.ReplaceGovernorViewModel.GID.HasValue)
         {
-            @*<p class="bold-small">Replace @Model.GovernorRoleName.ToLower()</p>*@
             <h3 class="heading-small">@Model.ReplaceGovernorViewModel.Name</h3>
             <div class="date-group-wrap">
                 @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)" })
@@ -64,7 +63,7 @@
 
 @helper Buttons()
 {
-    <button type="submit" name="action" class="button" value="">
+    <button id="save-button" type="submit" name="action" class="button" value="">
         @if (Model.ReplaceGovernorViewModel.GID.HasValue)
         {
             <text>Save</text>
@@ -126,6 +125,21 @@
                     }
                 });
             }
+
+            (function () { // disable the save button when the mandatory fields aren't populated
+                var $saveButton = $("#save-button");
+                var fields = ["#FirstName", "#LastName", "#AppointingBodyId", "#EmailAddress", "#TelephoneNumber"];
+                var validate = function () {
+                    return fields.some(function (x) {
+                        var $el = $(x);
+                        return $el.length == 1 && $.trim($el.val()) == "";
+                    });
+                };
+                var toggle = function () { $saveButton.prop("disabled", validate()); };
+                $(fields.join(",")).on("keyup change", toggle);
+                toggle();
+            })();
+
         }());
 </script>
 }

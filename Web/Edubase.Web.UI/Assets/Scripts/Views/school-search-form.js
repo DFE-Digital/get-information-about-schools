@@ -66,7 +66,6 @@
                     'Please enter an establishment name, URN, LAESTAB or UKPRN to start a search');
 
             }
-           
         });
 
         $('#la-search-submit').on('click', function (e) {
@@ -131,6 +130,37 @@
             }                       
         });
 
+        var buttonEnabler = function (button, textbox) {
+            var condition = function () { $(button).prop("disabled", ($.trim($(textbox).val())).length === 0); };
+            condition();
+            $(textbox).on("keyup change", condition);
+        };
+
+        buttonEnabler("#name-search-submit", "#TextSearchModel_Text");
+        buttonEnabler("#location-search-submit", "#LocationSearchModel_Text");
+        buttonEnabler("#group-search-submit", "#GroupSearchModel_Text");
+        buttonEnabler("#governor-search-submit-1", "#GovernorSearchModel_Gid");
+
+        (function (button, textbox) {
+            var b = false;
+            var toggle = function (disabled) { $(button).prop("disabled", disabled); };
+            toggle($.trim($(textbox).val()).length === 0);
+            $(textbox).on("keyup change", function () {
+                if (!b) {
+                    toggle(($.trim($(textbox).val())).length === 0);
+                    b = true;
+                } else toggle(false);
+            });
+        })("#la-search-submit","#LocalAuthorityToAdd");
+
+        (function () {
+            var toggle = function (disabled) { $("#governor-search-submit").prop("disabled", (disabled === true ? true : false)); };
+            $('#governor-roles').find(':checkbox').on("click", function () {
+                toggle(false);
+            });
+            $("#forename, #surname").on("keyup change", toggle);
+            toggle(true);
+        })();
 
     },
 
@@ -226,7 +256,6 @@
         });
 
         if (typeof (suggestionSource) === "function") { // remote source
-            //console.log("suggestionSource is a function");
             minChars = 3;
             source = function (query, syncResultsFn, asyncResultsFn) {
                 return suggestionSource.call(self, query, asyncResultsFn);
@@ -236,8 +265,7 @@
             if (!suggestionSource.data) { console.log("suggestionSource.data is null"); return; }
             if (!suggestionSource.name) { console.log("suggestionSource.name is null"); return; }
             if (!suggestionSource.value) { console.log("suggestionSource.value is null"); return; }
-            //console.log("suggestionSource.data has " + suggestionSource.data.length + " items");
-
+            
             minChars = 2;
             field = suggestionSource.name;
             value = suggestionSource.value;
