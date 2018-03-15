@@ -440,6 +440,12 @@
                 this.step0Complete = true;
                 this.appState = 'groupDetail';
             },
+            allowStep1Continue: function () {
+                return $.trim(this.groupName) !== '' && $.trim(this.la) !== '' && $.trim(this.openDateDay) !== '' && $.trim(this.openDateMonth) !== '' && $.trim(this.openDateYear) !== '';
+            },
+            allowAddToGroup: function () {
+                return $.trim(this.la) !== '' && $.trim(this.joinDateDay) !== '' && $.trim(this.joinDateMonth) !== '' && $.trim(this.joinDateYear) !== '';
+            },
             step1Continue: function () {
                 var self = this;
                 $.when(this.validateDate('openDate')).done(function () {

@@ -14,7 +14,7 @@
 
                 estabTypeError: false,
 
-                pendingEstab: {},
+                pendingEstab: { },
                 pendingEdit: false,
                 establishmentFound: false,
                 openDateDay: today.getDate(),
@@ -263,7 +263,7 @@
                                 if (jqXHR.hasOwnProperty('responseJSON')) {
                                     self.apiError = jqXHR.responseJSON;
                                 } else {
-                                    self.urnLookUpError = "The urn in is invalid";
+                                    self.urnLookUpError = "The URN in is invalid";
                                 }
                                 
                                 self.isProcessing = false;
@@ -293,7 +293,7 @@
                                         self.buildTypesDropDown();
                                         self.pendingEstab = estab;
                                     } else {
-                                        self.urnLookUpError = "The urn in is invalid";
+                                        self.urnLookUpError = "The URN in is invalid";
                                         self.isSearching = false;
                                     }
                                 }, 0);

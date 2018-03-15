@@ -49,7 +49,7 @@
 
             @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date"})
 
-            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
+            <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
             @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
 
             }
@@ -118,7 +118,7 @@
 
                         @if (Model.LinkedEstablishments.Establishments[i].EditMode)
                         {
-                            @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new {title = "Joined date"})
+                            @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new {title = "Joined date", fieldsetClassName = "joined-date-editor" })
                         }
 
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
@@ -131,8 +131,7 @@
                         else if (Model.LinkedEstablishments.Establishments[i].EditMode)
                         {
                             <div class="form-group">
-                                
-                                <button type="submit" class="button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
+                                <button id="save-joined-date-submit" type="submit" class="button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
                                 @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "button button-grey allow-exit" })
                             </div>
                         }
@@ -211,6 +210,24 @@
             var toggle = function () { $urnSearchButton.prop("disabled", $.trim($urnSearchField.val()).length < 5 || Math.floor($urnSearchField.val()) != $urnSearchField.val() || !$.isNumeric($urnSearchField.val()) ); };
             toggle();
             $urnSearchField.on("change keyup", toggle);
+        })();
+
+        (function () {
+            var $addButton = $("#add-estab-submit");
+            var fields = ["#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Day", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Month", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Year"];
+            var toggle = function () {
+                $addButton.prop("disabled", fields.some(function (x) { return $.trim($(x).val()) == "" }));
+            };
+            $(fields.join(",")).on("change keyup", toggle);
+            toggle();
+        })();
+
+        (function () {
+            var $button = $("#save-joined-date-submit");
+            var inputs = $.makeArray($(".joined-date-editor").find("input"));
+            var toggle = function () { $button.prop("disabled", inputs.some(function (x) { return $.trim($(x).val()) == "" })); };
+            $(inputs).on("change keyup", toggle);
+            toggle();
         })();
 
     </script>
