@@ -74,7 +74,6 @@
             <span class="error-message" v-show="@showBinding" v-html="@messageBinding"></span>
         }
         
-
         <span class="inline-form-control">
             @Html.LabelFor(x => x.Day, new {@class = labelClassName })
             @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, $"form-control {cssClassPrefix}-day", 2, ViewData["vueModel"] != null ? String.Concat((string) ViewData["vueModel"], "Day") : null))

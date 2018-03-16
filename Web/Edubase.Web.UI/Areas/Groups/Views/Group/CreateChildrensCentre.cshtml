@@ -140,7 +140,7 @@
         </div>
         <div class="column-full">
             <div class="submit-cancel-panel">
-                <a href="#" class="button mobile-full-width" v-on:click.prevent="step1Continue">
+                <a href="#" class="button mobile-full-width" v-on:click.prevent="allowStep1Continue() ? step1Continue() : null" :disabled="!allowStep1Continue()">
                     Continue
                 </a>
                 <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'" v-show="!detailEdit">
@@ -228,7 +228,7 @@
                 </label>
                 <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid URN</span>
                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 search-box", v_model = "searchUrn"})
-                <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn">Find</button>
+                <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn" :disabled="$.trim(searchUrn).length < 5">Find</button>
             </div>
         </div>
         <div class="column-full">
@@ -279,7 +279,7 @@
                 {
                     <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave"/>
                     <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
-                    <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="submitCentres">Create</button>
+                    <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="submitCentres" :disabled="centresInGroup.length<2">Create</button>
                 }
 
                 @(Model.InEditMode
@@ -332,7 +332,7 @@
         </div>
         <div class="column-full">
             <div class="submit-cancel-panel">
-                <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup">
+                <a href="#" class="button mobile-full-width" v-on:click.prevent="allowAddToGroup() ? addToGroup() : null" :disabled="!allowAddToGroup()">
                     <span v-show="!pendingEdit">Add</span>
                     <span v-show="pendingEdit">Update</span>
                 </a>
@@ -350,6 +350,5 @@
 </div>
 @section ViewScripts
 {
-    @*<script src="/Assets/Scripts/standalone/create-childrens-centre.js"></script>*@
     <script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>
 }

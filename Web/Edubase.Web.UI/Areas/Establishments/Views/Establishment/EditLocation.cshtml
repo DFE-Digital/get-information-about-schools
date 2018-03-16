@@ -174,15 +174,20 @@
 {
     <script>
         var $fields = $('#content').find('.form-control');
+        var $buttons = $("button[type='submit']");
         var exitAttached = false;
-       
-        $fields.on('change', function () {
+
+        $buttons.prop("disabled", true);
+
+        $fields.on('change keyup', function () {
             if (!exitAttached) {
                 DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                 exitAttached = true;
             }
-
+            $buttons.prop("disabled", false);
         });
+
+        
 
     </script>
 }

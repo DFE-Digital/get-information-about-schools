@@ -10,7 +10,7 @@
                 <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
                 @if (Model.Details != null)
                 {
-                    <li>@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new { area="Groups"})</li>
+                    <li>@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new { area = "Groups" })</li>
                 }
             </ul>
         </div>
@@ -37,7 +37,7 @@
             <div class="column-full">
                 <fieldset>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.Text)">
-                        @Html.LabelFor(x => x.Text, "Companies House number, Group UID or ID", new {@class="form-label"})
+                        @Html.LabelFor(x => x.Text, "Companies House number, Group UID or ID", new { @class = "form-label" })
                         @Html.ValidationMessageFor(x => x.Text)
                         @Html.TextBoxFor(x => x.Text, new { @class = "form-control form-control-1-2" })
                     </div>
@@ -49,9 +49,25 @@
                 <div class="button-row">
                     <button type="submit" name="actionname" class="button mobile-full-width" value="find">Continue</button>
                     @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
-                </div>                
+                </div>
             </div>
         </div>
+    }
+
+    @section ViewScripts{
+
+        <script>
+            $(function () {
+                (function () {
+                    var $btn = $("button[type='submit']");
+                    var $field = $("input#Text");
+                    var toggle = function () { $btn.prop("disabled", $.trim($field.val()).length < 4); };
+                    $field.on("keyup change", toggle);
+                    toggle();
+                })();
+            });
+        </script>
+
     }
 }
 else
@@ -59,7 +75,7 @@ else
     <div class="grid-row">
         <div class="column-two-thirds">
             <p>Check this is the correct single academy trust before converting. A new UID will be created on conversion.</p>
-            
+
         </div>
     </div>
 
@@ -74,9 +90,9 @@ else
         @Html.HiddenFor(x => x.Text)
         <div class="grid-row">
             <div class="column-two-thirds">
-                
+
                 <h2 class="heading-small">Existing trust details</h2>
-                
+
                 <dl class="key-value-list trust-detail-list">
                     <dt>Trust name:</dt>
                     <dd>@Model.Details.Name</dd>
@@ -89,7 +105,7 @@ else
                     {
                         <dd>Not recorded</dd>
                     }
-                    
+
                     <dt>Address:</dt>
                     <dd>@Model.GetAddress()</dd>
                     <dt>Group UID:</dt>
@@ -97,7 +113,7 @@ else
                     <dt>Group ID:</dt>
                     <dd>@(Model.Details.GroupId ?? "Not recorded")</dd>
                 </dl>
-                
+
             </div>
         </div>
         <div class="grid-row">
@@ -105,11 +121,12 @@ else
                 <div class="form-group">
                     @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy SAT governance to MAT")
                 </div>
-                
-                @Html.RouteLink("« Go back", "GroupConvertSAT2MAT", null, new {@class = "button button-grey cancel mobile-full-width"})
+
+                @Html.RouteLink("« Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-grey cancel mobile-full-width" })
                 <button type="submit" name="actionname" class="button mobile-full-width" value="confirm">Convert</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-grey cancel mobile-full-width"})
+                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
             </div>
         </div>
     }
 }
+

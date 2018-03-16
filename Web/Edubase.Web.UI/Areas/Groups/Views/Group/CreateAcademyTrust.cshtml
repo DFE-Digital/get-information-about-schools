@@ -123,7 +123,17 @@
                 DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                 exitAttached = true;
             }
+        });
 
+
+        $(function () {
+            (function () {
+                var $btn = $("button[type='submit']");
+                var $fields = $("input,select");
+                var toggle = function () { $btn.prop("disabled", $("#TypeId").val() == "" || $("#GroupId").val() == "") };
+                $fields.on("keyup change", toggle);
+                toggle();
+            })();
         });
 
     </script>

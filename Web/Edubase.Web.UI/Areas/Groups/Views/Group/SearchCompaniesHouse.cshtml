@@ -15,11 +15,27 @@
     </ul>
 </div>
 
+@section ViewScripts{
+
+    <script>
+        $(function () {
+            (function () {
+                var $btn = $("button[type='submit']");
+                var $field = $("input#SearchText");
+                var toggle = function () { $btn.prop("disabled", $.trim($field.val()) == ""); };
+                $field.on("keyup change", toggle);
+                toggle();
+            })();
+        });
+    </script>
+
+}
+
 
 @using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Get))
-{ 
+{
     <div class="grid-row">
-        <div class="column-full">                      
+        <div class="column-full">
             <h1 class="heading-xlarge">Create an academy trust</h1>
             <p>To create an academy trust record select the company record from Companies House.</p>
 
@@ -43,8 +59,8 @@
 
             <h2 class="heading-small">Add company</h2>
             <div class="form-group inline-with-button">
-                @Html.LabelFor(x => x.SearchText, "Enter the Companies House name or number", new { @class = "form-label"})
-                @Html.TextBoxFor(x => x.SearchText, new {maxlength = 120, @class = "form-control "})
+                @Html.LabelFor(x => x.SearchText, "Enter the Companies House name or number", new { @class = "form-label" })
+                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control " })
                 <button type="submit" class="button inline-submit">Find</button>
             </div>
 
@@ -53,7 +69,7 @@
 
     if (Model.Results != null && !Model.NotFound)
     {
-       
+
         if (Model.Results.PageCount > 1)
         {
             <div class="grid-row">
@@ -70,12 +86,12 @@
                 <div class="column-full">
                     <table class="edubase-table company-details">
                         <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Companies House no.</th>
-                            <th>Incorporated</th>
-                            <th>Address</th>
-                        </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Companies House no.</th>
+                                <th>Incorporated</th>
+                                <th>Address</th>
+                            </tr>
                         </thead>
                         @foreach (var result in Model.Results.Items)
                         {

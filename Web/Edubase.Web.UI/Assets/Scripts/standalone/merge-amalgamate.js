@@ -190,6 +190,22 @@
                     this.mergerTypeConfirmed = true;
                 }
             },
+            disallowMerge: function () {
+                return this.leadEstab.length < 5 || isNaN(this.leadEstab)
+                    || (($.trim(this.linkedEstab0).length < 5 || isNaN(this.linkedEstab0))
+                        && ($.trim(this.linkedEstab1).length < 5 || isNaN(this.linkedEstab1))
+                        && ($.trim(this.linkedEstab2).length < 5 || isNaN(this.linkedEstab2)));
+            },
+            disallowAmalgamate: function () {
+
+                var urns = [];
+                if (($.trim(this.amalgamatedEstab0).length >= 5 && !isNaN(this.amalgamatedEstab0))) urns.push(this.amalgamatedEstab0);
+                if (($.trim(this.amalgamatedEstab1).length >= 5 && !isNaN(this.amalgamatedEstab1))) urns.push(this.amalgamatedEstab1);
+                if (($.trim(this.amalgamatedEstab2).length >= 5 && !isNaN(this.amalgamatedEstab2))) urns.push(this.amalgamatedEstab2);
+                if (($.trim(this.amalgamatedEstab3).length >= 5 && !isNaN(this.amalgamatedEstab3))) urns.push(this.amalgamatedEstab3);
+
+                return urns.length < 2;
+            },
             validateMergeSelection: function () {
                 this.fieldCount = 0;
                 var self = this;

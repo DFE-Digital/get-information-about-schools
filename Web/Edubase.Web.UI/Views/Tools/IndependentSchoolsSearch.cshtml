@@ -53,11 +53,14 @@
             <div class="form-group form-control-3-4 ">
                 <div id="la-id-target">
                     @foreach (var id in Model.SelectedLocalAuthorityIds)
-                {
-                    var la = Model.LocalAuthorities.Single(x => x.Id == id);
-                        <input value="@la.Name" type="hidden" class="user-selected-la" />
-                        <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
-                        <input type="hidden" name="@VM.BindAliasForSelectedLocalAuthorityIds" value="@id" id="la-@id">
+                    {
+                        var la = Model.LocalAuthorities.SingleOrDefault(x => x.Id == id);
+                        if(la != null)
+                        {
+                            <input value="@la.Name" type="hidden" class="user-selected-la" />
+                            <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
+                            <input type="hidden" name="@VM.BindAliasForSelectedLocalAuthorityIds" value="@id" id="la-@id">
+                        }
                     }
                     <div class="floating-text-field-wrap">
                         <input class="floating-text-field form-control-3-4" id="LocalAuthorityToAdd" autocomplete="off" />

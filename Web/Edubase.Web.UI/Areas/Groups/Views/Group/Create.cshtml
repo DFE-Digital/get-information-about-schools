@@ -328,6 +328,17 @@
 
         }());
 
+        (function () {
+            if ("@Request.HttpMethod" == "GET") {
+                var $button = $("#create-submit");
+                var fields = ["#GroupName", "#OpenDate_Day", "#OpenDate_Month", "#OpenDate_Year", "#groupid"];
+                var toggle = function () {
+                    $button.prop("disabled", fields.some(function (x) { return $(x).length == 1 && $.trim($(x).val()) == "" }));
+                };
+                $(fields.join(",")).on("change keyup", toggle);
+                toggle();
+            }
+        })();
 
     </script>
 @if (!Model.InEditMode)

@@ -144,9 +144,20 @@
 
         </div>
         <div class="column-full">
-            <input type="submit" class="button mobile-full-width" value="Submit"/>           
+            <button type="submit" class="button mobile-full-width" value="Submit">Submit</button>           
             <a href="/Tools" class="button button-grey cancel mobile-full-width">Cancel</a>
         </div>
        
 </div>
+}
+
+
+@section ViewScripts{
+    <script>
+        $(function () {
+            var toggle = function () { $("button[type='submit']").prop("disabled", $("#BulkUpdateType").val() == "") };
+            $("#BulkUpdateType").on("change", toggle);
+            toggle();
+        });
+    </script>
 }

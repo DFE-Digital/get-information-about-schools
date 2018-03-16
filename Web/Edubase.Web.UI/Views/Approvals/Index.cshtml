@@ -58,8 +58,8 @@
                             <p class="error-message" v-show="apiError.length > 0" v-html="apiError"></p>
                         </div>
                         <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
-                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
-                            <button type="submit" name="action" value="" class="button"
+                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection" :disabled="noItemsSelected">Approve</button>
+                            <button type="submit" name="action" value="" class="button" :disabled="noItemsSelected"
                                     v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false, reason=''">Reject</button>
                         </div>
 
@@ -74,7 +74,7 @@
                                 </div>
                             </div>
                             <div class="button-row">
-                                <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection">Submit</button>
+                                <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection" :disabled="$.trim(reason).length == 0">Submit</button>
                                 <button type="submit" name="action" class="button button-grey cancel mobile-full-width"
                                         v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false, apiError = false">Cancel</button>
                             </div>
@@ -144,7 +144,7 @@
                             <tbody v-if="changes.length > 0">
                             <tr v-for="(entry, index) in changes">
                                 <td class="cell-checkbox" aria-label="Select item">
-                                    <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox">
+                                    <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox" v-on:click="selectItem">
                                     <label class="edubase-label edubase-button-checkbox" :for="'change-'+entry.id">
                                         <span class="visuallyhidden">Select this change for approval or rejection</span>
                                     </label>

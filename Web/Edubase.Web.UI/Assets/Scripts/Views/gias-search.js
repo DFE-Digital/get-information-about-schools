@@ -60,6 +60,7 @@ DfE.searchResults = (function () {
                     $('#additional-filter-wrap').removeClass('hidden');
                     $('#filter-addtional-controls').addClass('hidden');
                     $('#filter-submit').addClass('hidden');
+                    $("#filter-refine").prop("disabled", true);
                 });
 
             $('#filter-refine').on('click',
@@ -123,6 +124,7 @@ DfE.searchResults = (function () {
 
             $('#additional-filter-wrap').find('.additional-filter-type').on('change',
                 function () {
+                    $("#filter-refine").prop("disabled", false);
                     if (!$(this).is(':checked')) {
                         $(this.value).find('input:checked').click();
                     }

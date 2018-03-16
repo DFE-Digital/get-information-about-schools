@@ -333,6 +333,19 @@
                 function (e) {
                     $('#create-submit').click();
                 });
+
+            (function () {
+                if ("@Request.HttpMethod" == "GET") {
+                    var $button = $("#create-submit");
+                    var fields = ["#Name", "#LocalAuthorityId", "#EstablishmentTypeId", "#EducationPhaseId"];
+                    var toggle = function () {
+                        $button.prop("disabled", fields.some(function (x) { return $.trim($(x).val()) == "" }) || (!$("#generate-number-radio").is(":checked") && !$("#enter-number-radio").is(":checked")));
+                    };
+                    $("input,select").on("change keyup click", toggle);
+                    toggle();
+                }
+            })();
+            
         }());
 
     </script>

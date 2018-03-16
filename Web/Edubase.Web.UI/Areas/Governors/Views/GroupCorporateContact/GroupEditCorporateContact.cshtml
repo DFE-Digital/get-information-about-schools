@@ -1,5 +1,5 @@
 ﻿@model EditGroupCorporateContactViewModel
-    
+
 @{
     ViewBag.hideLogo = true;
     ViewBag.SelectedTab = "EditGovernance";
@@ -12,18 +12,34 @@
         @using (Html.BeginRouteForm("GroupEditCorporateContactPost", FormMethod.Post))
         {
             @Html.HiddenFor(m => m.GroupUId)
-            <div class="edit-governor">                
+            <div class="edit-governor">
                 <div class="form-group">
-                    @Html.LabelFor(x => x.CorporateContact, new {@class = "form-label"})
+                    @Html.LabelFor(x => x.CorporateContact, new { @class = "form-label" })
 
                     @Html.TextBoxFor(x => x.CorporateContact, new { rows = "6", cols = "60", @class = "form-control", maxlength = 10 })
                 </div>
 
                 <div class="button-row">
-                    <input type="submit" value="Save" class="button mobile-full-width"/>
+                    <button type="submit" value="Save" class="button mobile-full-width">Save</button>
                     <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="button button-grey mobile-full-width">Cancel</a>
                 </div>
             </div>
         }
     </div>
 </div>
+
+@section ViewScripts
+{
+    <script>
+        (function () {
+            if ("@Request.HttpMethod" == "GET") {
+                var $corporateContact = $("#CorporateContact");
+                var initialValue = $.trim($corporateContact.val());
+                $("button[type=submit]").prop("disabled", true);
+                $corporateContact.on("change keyup", function () {
+                    $("button[type=submit]").prop("disabled", initialValue == $.trim($corporateContact.val()));
+                });
+            }
+        })();
+    </script>
+}
