@@ -32,12 +32,12 @@
                 cannedRejections: window.GIASRejections || [],
                 showRejections: false,
                 noReasonSelectedError: false,
-                reasonIds: []
+                reasonIds: [],
+                noItemsSelected: true
 
             },
             created: function() {
                 this.getChangesData();
-                
             },
             computed: {
                 pageCount: function () {
@@ -53,10 +53,16 @@
                 },
                 totalPages: function() {
                     return Math.ceil(this.currentCount / defaults.pageSize);
+                },
+                isZeroItemsSelected: function () {
+                    console.log("isZeroItemsSelected");
+                    return $('#changes-table').find('.boldened-checkbox').filter(':checked').length == 0;
                 }
-
             },
             methods: {
+                selectItem: function () {
+                    this.noItemsSelected = ($('#changes-table').find('.boldened-checkbox').filter(':checked').length == 0);
+                },
                 selectReason: function () {
                     var reasonText = this.reason;
                     var self = this;

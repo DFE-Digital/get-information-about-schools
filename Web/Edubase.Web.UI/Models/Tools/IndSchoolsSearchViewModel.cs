@@ -42,7 +42,7 @@ namespace Edubase.Web.UI.Models.Tools
         public string ActionName { get; set; }
 
         [Required(ErrorMessage = "Please select an action")]
-        public string Mode { get; set; }
+        public string Mode { get; set; } = SpecifierDateOfActionGeneral;
         public bool IsWelfareMode => Mode == SpecifierDateOfActionWelfare;
         public bool IsGeneralMode => Mode == SpecifierDateOfActionGeneral;
 

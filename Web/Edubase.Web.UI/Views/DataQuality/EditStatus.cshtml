@@ -41,7 +41,7 @@
 
         <div class="column-full">
             <div class="button-row">
-                <input type="submit" class="button mobile-full-width" value="Save" id="save-data-status"/>
+                <button type="submit" class="button mobile-full-width" value="Save" id="save-data-status">Save</button>
                 <a href="@Url.Action("ViewStatus", "DataQuality")" class="button button-grey mobile-full-width">Cancel</a>
             </div>
         </div>
@@ -60,8 +60,16 @@
                 DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                 exitAttached = true;
             }
-
         });
+
+        (function () {
+            var $btn = $("button");
+            var $inputs = $("input");
+            var inputs = $.makeArray($inputs);
+            var toggle = function () { $btn.prop("disabled", inputs.some(function (x) { return $(x).val() == ""; })); };
+            toggle();
+            $inputs.on("keyup change", toggle);
+        })();
 
     </script>
 }
