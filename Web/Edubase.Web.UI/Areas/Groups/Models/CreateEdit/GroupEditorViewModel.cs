@@ -43,7 +43,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             ApiWarningCodes.CONFIRMATION_CC_CLOSE,
             ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND,
             ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE,
-            ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED
+            ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED,
+            ApiWarningCodes.GROUP_OPEN_DATE_ALIGNMENT
         };
         
         public string Action { get; set; }

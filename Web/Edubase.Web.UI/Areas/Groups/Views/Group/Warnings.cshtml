@@ -32,7 +32,7 @@
             <ul class="font-small list list-bullet">
                 <li>I have read the DfE's short guide for LAs document, and</li>
                 <li>by closing this children's centres group all linked children's centre establishments will have their links removed from this group.</li>
-            </ul>            
+            </ul>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-1">Proceed</a>
@@ -72,6 +72,25 @@
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-3">Proceed</a>
             <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel-3">Cancel</a>
+        </div>
+    </div>
+}
+
+
+
+@if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_OPEN_DATE_ALIGNMENT))
+{
+    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.GROUP_OPEN_DATE_ALIGNMENT);
+    <div class="modal-overlay" id="warning-modal-overlay-4"></div>
+    <div class="modal-content" id="warning-modal-content-4">
+        <div class="modal-inner">
+            <a href="#" id="warning-exit-overlay-4" class="modal-exit">Close</a>
+            <h3 class="heading-medium">Are you sure you want to change the open date?</h3>
+            <p>This open date is later than some of the @Model.ListOfEstablishmentsPluralName.ToLower()’ joined dates. These joined dates will be automatically aligned to the new open date.</p>
+        </div>
+        <div class="button-row">
+            <a href="#" class="button mobile-full-width" id="overlay-proceed-4">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel-4">Cancel</a>
         </div>
     </div>
 }
