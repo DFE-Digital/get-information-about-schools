@@ -746,7 +746,7 @@
                     var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
                     var phases = @Html.Json(Model.EducationPhases);
 
-                    $("#save-submit-bottom,#save-submit-top").prop("disabled", true);
+                    if("@Request.HttpMethod"=="GET")$("#save-submit-bottom,#save-submit-top").prop("disabled", true);
                     var $fields = $('#content').find('.form-control');
                     var exitAttached = false;
 
