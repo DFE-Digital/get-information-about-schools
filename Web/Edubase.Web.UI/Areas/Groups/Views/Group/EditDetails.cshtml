@@ -203,9 +203,8 @@
 
             $modalProceeds.on('click',
                 function (e) {
-                    console.log('proceed');
                     canProceed = true;
-                    $('#edit-submit').click();
+                    setTimeout(function () { $('#edit-submit').click(); }, 300);
                 });
 
             if ($modalProceeds.length > 0) {
