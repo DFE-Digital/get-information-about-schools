@@ -136,8 +136,8 @@
                     });
                 };
                 var toggle = function () { $saveButton.prop("disabled", validate()); };
-                $(fields.join(",")).on("keyup change", toggle);
-                toggle();
+                $saveButton.prop("disabled", true);
+                $("input,select").on("keyup change", toggle);
             })();
 
         }());
