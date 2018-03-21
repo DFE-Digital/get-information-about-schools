@@ -145,11 +145,8 @@
             var b = false;
             var toggle = function (disabled) { $(button).prop("disabled", disabled); };
             toggle($.trim($(textbox).val()).length === 0);
-            $(textbox).on("keyup change", function () {
-                if (!b) {
-                    toggle(($.trim($(textbox).val())).length === 0);
-                    b = true;
-                } else toggle(false);
+            $(document).on("keyup change click", textbox + ",.remove-suggest-la", function () {
+                toggle(($.trim($(textbox).val())).length === 0 && $(".selected-las .remove-suggest-la").length == 0);
             });
         })("#la-search-submit","#LocalAuthorityToAdd");
 
