@@ -151,12 +151,18 @@
         })("#la-search-submit","#LocalAuthorityToAdd");
 
         (function () {
-            var toggle = function (disabled) { $("#governor-search-submit").prop("disabled", (disabled === true ? true : false)); };
-            $('#governor-roles').find(':checkbox').on("click", function () {
-                toggle(false);
+            var $button = $("#governor-search-submit");
+            var disable = function (b) { $button.prop("disabled", b); };
+            $("form#governor-search-by-name-or-role").dirrty({ preventLeaving: false })
+                .on("dirty", function () { disable(false); })
+                .on("clean", function () { disable(true); });
+            disable(true);
+
+            $("input#searchtype-gov-namerole").on("change", function (e, flag) { // hack jQuery Dirrty plugin so that it doesn't count the radio input in whether the form is 'dirty' or not.
+                var $el = $(this);
+                $el.attr("data-dirrty-initial-value", ($el.is(":checked") ? "checked" : "unchecked"));
+                if (!flag) $el.trigger("change", true);
             });
-            $("#forename, #surname").on("keyup change", toggle);
-            toggle(true);
         })();
 
     },

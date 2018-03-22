@@ -15,7 +15,7 @@
     <legend>Search by:</legend>
     <ul>
         <li class="search-type-wrapper">
-            @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
+            @using (Html.BeginRouteForm("SearchResults", FormMethod.Get, new { id = "governor-search-by-name-or-role" }))
             {
                 @Html.HiddenFor(m => m.SelectedTab)
                 <fieldset class="search-toggle-panel">
