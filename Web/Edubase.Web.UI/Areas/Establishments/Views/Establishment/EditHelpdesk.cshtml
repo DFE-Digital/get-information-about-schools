@@ -78,26 +78,33 @@
         }
         else
         {
-@section ViewScripts
-{
-    <script>
-        var $buttons = $("button[type='submit']");
-        $buttons.prop("disabled", true);
+            @section ViewScripts {
+                <script>
 
-        var $fields = $('#content').find('.form-control');
-        var exitAttached = false;
+                    (function () {
+                        var $buttons = $("button[type='submit']");
+                        $buttons.prop("disabled", true);
+                        $(document.forms[0]).dirrty({ preventLeaving: false }).on("dirty", function () {
+                            $buttons.prop("disabled", false);
+                        }).on("clean", function () {
+                            $buttons.prop("disabled", true);
+                        });
+                    })();
+                    
+                    var $fields = $('#content').find('.form-control');
+                    var exitAttached = false;
        
-        $fields.on('change keyup', function () {
-            if (!exitAttached) {
-                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                exitAttached = true;
-            }
-            $buttons.prop("disabled", false);
-        });
-        $('#HelpdeskNotes').textCount({ maxLength: 255 });
+                    $fields.on('change keyup', function () {
+                        if (!exitAttached) {
+                            DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                            exitAttached = true;
+                        }
+                    });
 
-    </script>
-}
+                    $('#HelpdeskNotes').textCount({ maxLength: 255 });
+
+                </script>
+            }
         }
     
     </div>

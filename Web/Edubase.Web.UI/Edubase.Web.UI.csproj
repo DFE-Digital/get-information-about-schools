@@ -682,6 +682,8 @@
     <Content Include="public\dfeagiledevops-typeahead\test\typeahead\menu_spec.js" />
     <Content Include="public\dfeagiledevops-typeahead\test\typeahead\plugin_spec.js" />
     <Content Include="public\dfeagiledevops-typeahead\test\typeahead\typeahead_spec.js" />
+    <Content Include="public\dirrty\demo\index.html" />
+    <Content Include="public\dirrty\dist\jquery.dirrty.js" />
     <Content Include="public\govuk-styleguide-theme\scripts\hgt.js" />
     <Content Include="public\govuk-styleguide-theme\scripts\vendor\infinite.min.js" />
     <Content Include="public\govuk-styleguide-theme\scripts\vendor\jquery.waypoints.min.js" />
@@ -866,6 +868,11 @@
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
+    <Content Include="public\dirrty\.bower.json" />
+    <Content Include="public\dirrty\bower.json" />
+    <Content Include="public\dirrty\dirrty.jquery.json" />
+    <Content Include="public\dirrty\LICENSE" />
+    <Content Include="public\dirrty\README.md" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

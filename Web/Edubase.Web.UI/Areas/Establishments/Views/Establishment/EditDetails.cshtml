@@ -746,7 +746,6 @@
                     var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
                     var phases = @Html.Json(Model.EducationPhases);
 
-                    if("@Request.HttpMethod"=="GET")$("#save-submit-bottom,#save-submit-top").prop("disabled", true);
                     var $fields = $('#content').find('.form-control');
                     var exitAttached = false;
 
@@ -755,10 +754,9 @@
                             DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                             exitAttached = true;
                         }
-                        $("#save-submit-bottom,#save-submit-top").prop("disabled", false);
                     };
 
-                    $fields.on('change keyup', registerUnloadNotification);
+                    $fields.on('change', registerUnloadNotification);
 
                     @if (Model.IsDirty)
                     {
@@ -790,6 +788,19 @@
                         $phaseSelector.html(optionList);
                     }
 
+                    @if(!Model.IsDirty)
+                    {
+                        <text>
+                            (function () {
+                                var $buttons = $("#save-submit-bottom,#save-submit-top");
+                                var disable = function (b) { $buttons.prop("disabled", b); };
+                                disable(true);
+                                $(document.forms[0]).dirrty({ preventLeaving: false })
+                                    .on("dirty", function () { disable(false); })
+                                    .on("clean", function () { disable(true); });
+                            })();
+                        </text>
+                    }
                     
 
                 </script>

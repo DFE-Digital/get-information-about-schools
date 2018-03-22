@@ -170,27 +170,30 @@
         }
         else
         {
-@section ViewScripts
-{
-    <script>
-        var $fields = $('#content').find('.form-control');
-        var $buttons = $("button[type='submit']");
-        var exitAttached = false;
+            @section ViewScripts {
+                <script>
+                    var $fields = $('#content').find('.form-control');
+                    var exitAttached = false;
 
-        $buttons.prop("disabled", true);
+                    $fields.on('change keyup', function () {
+                        if (!exitAttached) {
+                            DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                            exitAttached = true;
+                        }
+                    });
 
-        $fields.on('change keyup', function () {
-            if (!exitAttached) {
-                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                exitAttached = true;
+                    (function () {
+                        var $buttons = $("button[type='submit']");
+                        $buttons.prop("disabled", true);
+                        $(document.forms[0]).dirrty({ preventLeaving: false }).on("dirty", function () {
+                            $buttons.prop("disabled", false);
+                        }).on("clean", function () {
+                            $buttons.prop("disabled", true);
+                        });
+                    })();        
+
+                </script>
             }
-            $buttons.prop("disabled", false);
-        });
-
-        
-
-    </script>
-}
         }
     
     </div>

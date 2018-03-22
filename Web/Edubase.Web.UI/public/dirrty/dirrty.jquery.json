@@ -1,0 +1,34 @@
+{
+    "name": "dirrty",
+    "title": "dirrty",
+    "description": "lightweight jquery plugin to detect when the fields of a form are modified",
+    "keywords": [
+        "dirty",
+        "form",
+        "fields",
+	      "changes"
+    ],
+    "version": "0.2.0",
+    "author": {
+        "name": "Ruben Torres"
+    },
+    "maintainers": [
+        {
+            "name": "Ruben Torres",
+            "email": "rubentdh@gmail.com",
+            "url": "rubentd.com"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/darthrubens/dirrty/blob/master/LICENSE"
+        }
+    ],
+    "homepage": "http://rubentd.com/dirrty",
+    "docs": "http://rubentd.com/dirrty",
+    "download": "http://rubentd.com/dirrty",
+    "dependencies": {
+        "jquery": ">=1.5"
+    }
+}
