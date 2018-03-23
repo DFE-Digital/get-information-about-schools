@@ -17,13 +17,12 @@
         <div class="column-two-thirds">
             @ShowLegalDuty()
 
-            @if (Model.ShowDelegationInformation)
+            @if (Model.ShowDelegationAndCorpContactInformation)
             {
                 @ShowDelegationInformation()
                 <br />
+                @ShowCorporateContactInformation()
             }
-
-            @ShowCorporateContactInformation()
 
             @DisplayGovernanceMode()
         </div>
@@ -60,37 +59,21 @@ else
     </div>
 }
 
+@if (Model.ShowDelegationAndCorpContactInformation)
+{
+    <div class="column-full governors-section">
+        @ShowDelegationInformation()
+        <br />
+        @ShowCorporateContactInformation()
+    </div>
+}
 
 @if (Model.DomainModel.HasGovernors)
 {
-    if (Model.ShowDelegationInformation)
-    {
-        if (!Model.EditMode)
-        {
-            <div class="column-full governors-section">
-                @ShowDelegationInformation()
-            </div>
-        }
-    }
-
-    if (!Model.EditMode)
-    {
-        <div class="column-full governors-section">
-            @ShowCorporateContactInformation()
-        </div>
-    }
-
     @DisplayGovernors()
 }
 else
 {
-    if (!Model.EditMode)
-    {
-        <div class="column-full governors-section">
-            @ShowCorporateContactInformation()
-        </div>
-    }
-
     <div class="tab-content" style="display:block !important; float:none;">
         <div class="column-half" style="display:block !important; float:none;">
             <p>There is no governance information for this @Model.ParentEntityName</p>
