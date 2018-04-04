@@ -47,6 +47,10 @@ using Edubase.Services.Texuna.Serialization;
 using System.Net.Http.Headers;
 using Edubase.Services.Texuna.Core;
 using System.Web;
+using AzureTableLogger;
+using AzureTableLogger.Services;
+using Edubase.Web.UI.Filters;
+using Microsoft.WindowsAzure.Storage;
 
 namespace Edubase.Web.UI
 {
@@ -82,10 +86,12 @@ namespace Edubase.Web.UI
         {
             builder.RegisterType<MockSmtpEndPoint>().As<ISmtpEndPoint>(); // use mock for now, we don't need to email error reports at the moment.
 
-            builder.RegisterType<MessageLoggingService>()
-                .As<IMessageLoggingService>()
-                .As<IExceptionLogger>()
-                .SingleInstance();
+            builder.RegisterType<LoggingService>().WithParameters(new [] {
+                new TypedParameter(typeof(CloudStorageAccount), CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString)),
+                new TypedParameter(typeof(string), "AZTLoggerMessages")
+            }).As<ILoggingService>().SingleInstance();
+            builder.RegisterType<AzLogger>().As<IAzLogger>().SingleInstance();
+            builder.RegisterType<ExceptionHandler>().AsSelf().SingleInstance();
 
             var dbGeographyConverter = new DbGeographyConverter();
             var jsonConverterCollection = new JsonConverterCollection() { dbGeographyConverter };
@@ -94,9 +100,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<CacheAccessor>()
                 .SingleInstance().As<ICacheAccessor>()
                 .UsingConstructor(typeof(JsonConverterCollection));
-
-            builder.RegisterInstance(Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(
-                ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString));
 
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
             builder.RegisterType<GooglePlacesService>().As<IGooglePlacesService>();

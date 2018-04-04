@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http.Filters;
+using Autofac;
+using AzureTableLogger.LogMessages;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -45,7 +47,7 @@ namespace Edubase.Web.UI.Filters
         private HttpResponseMessage GetResponseMessage(HttpActionExecutedContext actionExecutedContext)
         {
             if (actionExecutedContext == null) throw new ArgumentNullException(nameof(actionExecutedContext));
-            var msg = new ExceptionHandler().Log(actionExecutedContext.Request.Properties["MS_HttpContext"] as HttpContextWrapper, actionExecutedContext.Exception);
+            WebLogMessage msg = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>().Log(actionExecutedContext.Request.Properties["MS_HttpContext"] as HttpContextWrapper, actionExecutedContext.Exception);
             var error = new SystemErrorMessage
             {
                 ErrorCode = msg.Id,

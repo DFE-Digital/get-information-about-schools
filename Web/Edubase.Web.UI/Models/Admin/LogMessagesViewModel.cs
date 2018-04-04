@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using AzureTableLogger.LogMessages;
 
 namespace Edubase.Web.UI.Models.Admin
 {
     public class LogMessagesViewModel
     {
-        public IEnumerable<LogMessage> Messages { get; set; }
+        public IEnumerable<WebLogMessage> Messages { get; set; }
         public string SkipToken { get; set; }
         public string DateFilter { get; set; }
 

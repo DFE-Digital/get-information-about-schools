@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Http;
+using AzureTableLogger;
 using Newtonsoft.Json.Serialization;
 using Kentor.AuthServices.Exceptions;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
@@ -23,8 +24,6 @@ namespace Edubase.Web.UI
     {
         protected void Application_Start()
         {
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
             
             GlobalConfiguration.Configure(x => 
             {
@@ -34,6 +33,9 @@ namespace Edubase.Web.UI
                 x.Formatters.JsonFormatter.UseDataContractJsonSerializer = false;
                 x.Filters.Add(new ApiExceptionFilter());
             });
+
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>());
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
             
             IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
             
@@ -41,27 +43,17 @@ namespace Edubase.Web.UI
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
             fluentValidationModelValidatorProvider.AddImplicitRequiredValidator = false;
             ModelValidatorProviders.Providers.Add(fluentValidationModelValidatorProvider);
-
-            FlushLogMessages();
+            
+#if (DEBUG)
+            IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IAzLogger>().ScheduleLogFlush(5);
+#else
+            IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IAzLogger>().ScheduleLogFlush(10, 40);
+#endif
 
             ModelBinders.Binders.DefaultBinder = new DefaultModelBinderEx();
             ValueProviderFactories.Factories.Add(new TokenValueProviderFactory());
 
             MvcHandler.DisableMvcResponseHeader = true;
-        }
-
-        private void FlushLogMessages(CacheEntryRemovedArguments arguments = null)
-        {
-            var task = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IMessageLoggingService>().FlushAsync();
-            var interval = RandomNumber.Next(10, 40); // random so that in a webfarm, where nodes start simultaneously, flushing is staggered across a time window.
-#if (DEBUG)
-            interval = 5;
-#endif
-            MemoryCache.Default.Set(new CacheItem(nameof(FlushLogMessages), 0), new CacheItemPolicy()
-            {
-                AbsoluteExpiration = DateTime.UtcNow.AddSeconds(interval), 
-                RemovedCallback = FlushLogMessages
-            });
         }
 
         protected void Application_Error(object sender, EventArgs e)
@@ -77,7 +69,7 @@ namespace Edubase.Web.UI
 
                 if (ctx != null && ex != null)
                 {
-                    var msg = new ExceptionHandler().Log(new HttpContextWrapper(ctx), ex);
+                    var msg = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>().Log(new HttpContextWrapper(ctx), ex);
                     ctx.Items["edubase_error_code"] = msg.Id;
                 }
             }
