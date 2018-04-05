@@ -27,7 +27,7 @@ namespace Edubase.Web.UI.Controllers
         [Route("Logs")]
         public async Task<ActionResult> Logs(string date, string skipToken)
         {
-            Tuple<IEnumerable<LogMessage>, TableContinuationToken> result = await _loggingService.GetAllAsync(10, UriHelper.TryDeserializeUrlToken<TableContinuationToken>(skipToken), date.ToDateTime("yyyyMMdd"));
+            Tuple<IEnumerable<WebLogMessage>, TableContinuationToken> result = await _loggingService.GetAllAsync<WebLogMessage>(10, UriHelper.TryDeserializeUrlToken<TableContinuationToken>(skipToken), date.ToDateTime("yyyyMMdd"));
             LogMessagesDto dto = new LogMessagesDto(result.Item1, UriHelper.SerializeToUrlToken(result.Item2));
             return View(new LogMessagesViewModel(dto) {DateFilter = date});
         }
@@ -35,7 +35,7 @@ namespace Edubase.Web.UI.Controllers
         [Route("LogDetail/{id}")]
         public async Task<ActionResult> LogDetail(string id)
         {
-            var message = await _loggingService.GetAsync(id);
+            var message = await _loggingService.GetAsync<WebLogMessage>(id);
             if (message == null) return Content("Log message not found.  Please note it may take up to 30 seconds for a log message to become available at this URL.", "text/plain");
             return View(message);
         }

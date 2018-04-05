@@ -86,8 +86,11 @@ namespace Edubase.Web.UI
         {
             builder.RegisterType<MockSmtpEndPoint>().As<ISmtpEndPoint>(); // use mock for now, we don't need to email error reports at the moment.
 
+            CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString);
+            builder.RegisterInstance(cloudStorageAccount);
+
             builder.RegisterType<LoggingService>().WithParameters(new [] {
-                new TypedParameter(typeof(CloudStorageAccount), CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString)),
+                new TypedParameter(typeof(CloudStorageAccount), cloudStorageAccount),
                 new TypedParameter(typeof(string), "AZTLoggerMessages")
             }).As<ILoggingService>().SingleInstance();
             builder.RegisterType<AzLogger>().As<IAzLogger>().SingleInstance();

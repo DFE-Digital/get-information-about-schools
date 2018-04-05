@@ -22,7 +22,7 @@ namespace Edubase.Web.UI.Models.Admin
 
         public LogMessagesViewModel(LogMessagesDto dto) 
         {
-            Messages = dto.Items as IEnumerable<WebLogMessage>;
+            Messages = dto.Items;
             SkipToken = dto.SkipToken;
         }
     }
