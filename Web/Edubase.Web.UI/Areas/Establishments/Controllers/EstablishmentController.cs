@@ -934,7 +934,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
             model.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
-            if (model.EditPolicy.AdditionalAddresses.HasValue && !model.EditPolicy.AdditionalAddresses.Value || model.AdditionalAddresses.Count == 0)
+            if ((model.EditPolicy.AdditionalAddresses.HasValue && !model.EditPolicy.AdditionalAddresses.Value || model.AdditionalAddresses.Count == 0) && domainModel.AdditionalAddresses != null)
             {
                 model.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
             }
