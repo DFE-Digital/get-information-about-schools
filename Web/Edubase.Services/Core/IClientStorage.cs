@@ -5,6 +5,11 @@
     /// </summary>
     public interface IClientStorage
     {
+        /// <summary>
+        /// Source IP address of the client.
+        /// </summary>
+        string IPAddress { get; }
+
         string Get(string key);
 
         /// <summary>

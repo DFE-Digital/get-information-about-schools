@@ -14,6 +14,8 @@ namespace Edubase.Web.UI.Helpers
             _httpContext = httpContext;
         }
 
+        public string IPAddress { get => _httpContext.Request.UserHostAddress; }
+
         public string Get(string key) => _httpContext.Request.Cookies.AllKeys.Contains(key) ? _httpContext.Request.Cookies.Get(key)?.Value.Clean() : null;
 
         public string Save(string key, string value)

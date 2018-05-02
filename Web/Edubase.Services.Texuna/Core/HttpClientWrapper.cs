@@ -424,6 +424,7 @@
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(HEADER_SA_USER_ID, principal.GetUserId() ?? string.Empty);
+            requestMessage.Headers.Add("X-Source-IP", _clientStorage.IPAddress);
             if (requestBodyData != null)
             {
                 requestMessage.Content = new ObjectContent<object>(requestBodyData, _formatter);
