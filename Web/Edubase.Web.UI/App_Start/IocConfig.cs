@@ -132,6 +132,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<DataQualityStatusRepository>().As<IDataQualityStatusRepository>();
             builder.RegisterType<LocalAuthoritySetRepository>().As<ILocalAuthoritySetRepository>();
             builder.RegisterType<TokenRepository>().As<ITokenRepository>().SingleInstance();
+            builder.RegisterType<UserPreferenceRepository>().As<IUserPreferenceRepository>().SingleInstance();
 
             builder.RegisterType<BlobService>().As<IBlobService>();
 

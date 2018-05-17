@@ -167,10 +167,13 @@
     <Compile Include="Entity\ApiRecorderSessionItem.cs" />
     <Compile Include="Entity\DataQualityStatus.cs" />
     <Compile Include="Entity\LogMessage.cs" />
+    <Compile Include="Entity\UserPreference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DataQualityStatusRepository.cs" />
     <Compile Include="Repositories\ILocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\ITokenRepository.cs" />
+    <Compile Include="Repositories\IUserPreferenceRepository.cs" />
+    <Compile Include="Repositories\UserPreferenceRepository.cs" />
     <Compile Include="Repositories\TokenRepository.cs" />
     <Compile Include="Repositories\LocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\IDataQualityStatusRepository.cs" />

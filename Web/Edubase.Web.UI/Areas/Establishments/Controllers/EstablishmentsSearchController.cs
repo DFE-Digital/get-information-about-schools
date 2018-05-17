@@ -71,7 +71,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public async Task<ActionResult> JsonResults(EstablishmentSearchViewModel model)
         {
             var payload = await GetEstablishmentSearchPayload(model);
-            //payload.Object.Skip = 0;
             payload.Object.Take = 100;
 
             if (!payload.Success) model.Error = payload.ErrorMessage;
