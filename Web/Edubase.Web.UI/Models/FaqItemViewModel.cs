@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
 {
-    public class GlossaryItemViewModel
+    public class FaqItemViewModel
     {
         public string Id { get; set; }
 
@@ -15,7 +15,13 @@ namespace Edubase.Web.UI.Models
 
         public bool IsDeleting { get; set; }
 
-        public GlossaryItemViewModel()
+        [Required, Display(Name = "Display order")]
+        public int DisplayOrder { get; set; }
+
+        [Required, Display(Name = "Title font size")]
+        public string TitleFontSize { get; set; }
+
+        public FaqItemViewModel()
         {
 
         }

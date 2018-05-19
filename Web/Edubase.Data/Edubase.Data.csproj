@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbGeographyConverter.cs" />
+    <Compile Include="Entity\FaqItem.cs" />
     <Compile Include="Entity\Token.cs" />
     <Compile Include="Entity\LocalAuthoritySet.cs" />
     <Compile Include="Entity\GlossaryItem.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Entity\UserPreference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DataQualityStatusRepository.cs" />
+    <Compile Include="Repositories\FaqRepository.cs" />
     <Compile Include="Repositories\ILocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\ITokenRepository.cs" />
     <Compile Include="Repositories\IUserPreferenceRepository.cs" />

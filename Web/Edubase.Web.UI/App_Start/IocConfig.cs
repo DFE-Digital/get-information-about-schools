@@ -143,6 +143,7 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<FaqRepository>().AsSelf().SingleInstance();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
