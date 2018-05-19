@@ -158,7 +158,7 @@
                                     <label for="agerange-from" class="form-label">
                                         Low
                                     </label>
-                                    @Html.TextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control age-field", placeholder = "From", type = "number", min = 1, max = 99 })
+                                    @Html.TextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, id = "agerange-from", @class = "form-control age-field", placeholder = "From", type = "number", min = 0, max = 99 })
 
                                 </span>
                                 <span class="inline-form-control">
