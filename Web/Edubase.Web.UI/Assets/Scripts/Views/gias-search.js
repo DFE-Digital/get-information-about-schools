@@ -82,23 +82,27 @@ DfE.searchResults = (function () {
             });
 
             $(".js-save-set").on("click", function () {
-                var token = DfE.Util.QueryString.get('tok');
-                if (token) {
-                    $.ajax({
-                        url: "/api/save-search-token",
-                        contentType: 'application/json; charset=utf-8',
-                        dataType: 'json',
-                        method: 'post',
-                        data: JSON.stringify({
-                            token: token
-                        }),
-                        success: function (data) {
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.log(errorThrown);
-                        }
-                    });
-                }
+                var filterCount = $filters.filter(':checked, :selected').length;
+                var token = null;
+
+                if (filterCount > 0)
+                    token = DfE.Util.QueryString.get('tok')
+
+                $.ajax({
+                    url: "/api/save-search-token",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    method: 'post',
+                    data: JSON.stringify({
+                        token: token
+                    }),
+                    success: function (data) {
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+                
             });
 
             if (document.getElementById('selected-search-filters')) {
