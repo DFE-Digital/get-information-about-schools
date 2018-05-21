@@ -33,7 +33,7 @@
         @foreach (var item in Model.Items)
         {
             <h2 class="heading-@(item.TitleFontSize??"small")">@item.Title</h2>
-            <p>@Html.Raw(FormatHelpers.HtmlizeNewLines(item.Content))</p>
+            <p>@Html.Raw(item.Content.Replace("\n","<br/>"))</p>
             if (Model.UserCanEdit)
             {
                 @Html.RouteLink("Edit", "EditFaqItem", new { id = item.RowKey }, new { @class = "button button-grey Faq-edit-button" })
