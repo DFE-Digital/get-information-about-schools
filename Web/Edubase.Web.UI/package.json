@@ -19,7 +19,7 @@
     "grunt-contrib-uglify": "~0.9.1",
     "grunt-hologram": "~0.0.7",
     "grunt-karma": "~0.12.0",
-    "grunt-sass": "~1.0.0",
+    "grunt-sass": "^2.1.0",
     "jasmine-core": "~2.3.4",
     "karma": "~0.13.3",
     "karma-chrome-launcher": "~0.2.0",
