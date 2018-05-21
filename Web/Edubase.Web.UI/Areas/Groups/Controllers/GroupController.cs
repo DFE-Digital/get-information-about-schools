@@ -366,10 +366,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("CreateAcademyTrust", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize(Roles=EdubaseRoles.ROLE_BACKOFFICE), Route("Convert", Name = "GroupConvertSAT2MAT")]
+        [HttpGet, EdubaseAuthorize, Route("Convert", Name = "GroupConvertSAT2MAT")]
         public ActionResult Convert() => View(new ConvertSATViewModel());
 
-        [HttpPost, EdubaseAuthorize(Roles=EdubaseRoles.ROLE_BACKOFFICE), Route("Convert", Name = "PostGroupConvertSAT2MAT"), ValidateAntiForgeryToken]
+        [HttpPost, EdubaseAuthorize, Route("Convert", Name = "PostGroupConvertSAT2MAT"), ValidateAntiForgeryToken]
         public async Task<ActionResult> Convert(ConvertSATViewModel viewModel)
         {
             if (viewModel.ActionName == "find" && ModelState.IsValid)
