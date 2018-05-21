@@ -15,7 +15,15 @@
             </ul>
 
         </div>
-        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+        @if (ViewBag.ExTypeName == "UsageQuotaExceededException")
+        {
+            <h1 class="heading-xlarge">Usage quota exceeded</h1>
+        }
+        else
+        {
+            <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+        }
+
     </div>
     <div class="column-two-thirds">
         @FormatHelpers.HtmlizeNewLines(ViewBag.PublicErrorMessage)

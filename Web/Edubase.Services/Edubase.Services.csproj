@@ -245,6 +245,7 @@
     <Compile Include="Exceptions\TexunaApiNotFoundException.cs" />
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
+    <Compile Include="Exceptions\UsageQuotaExceededException.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
     <Compile Include="Governors\Downloads\GovernorSearchDownloadPayload.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />

@@ -288,6 +288,8 @@
                         break;
                     case HttpStatusCode.Forbidden:
                         throw new EduSecurityException($"The current principal does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
+                    case (HttpStatusCode) 429:
+                        throw new UsageQuotaExceededException();
                     default:
                         throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
                 }
