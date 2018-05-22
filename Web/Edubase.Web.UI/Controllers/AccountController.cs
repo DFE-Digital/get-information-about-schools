@@ -64,6 +64,13 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<ActionResult> GetLandingPage(ClaimsPrincipal principal)
         {
+            // Redirect to the user's last saved search token if there is one.
+            var searchToken = (await _userPreferenceRepository.GetAsync(principal.GetUserId()))?.SavedSearchToken;
+            if (searchToken != null && (await _tokenRepository.GetAsync(searchToken)) != null)
+            {
+                return Redirect(string.Concat(Url.RouteUrl("EstabSearch"), "?tok=", searchToken));
+            }
+
             if (principal.IsInRole(EdubaseRoles.ESTABLISHMENT))
             {
                 var urn = await _securityService.GetMyEstablishmentUrn(principal);
@@ -79,15 +86,6 @@ namespace Edubase.Web.UI.Controllers
                 var searchQueryString = string.Join("&", new[] { ET.NonmaintainedSpecialSchool, ET.BritishSchoolsOverseas, ET.CityTechnologyCollege, ET.OtherIndependentSchool }
                     .Select(x => $"{EstablishmentSearchViewModel.BIND_ALIAS_TYPEIDS}={(int)x}"));
                 return Redirect(string.Concat(Url.RouteUrl("EstabSearch"), "?", searchQueryString));
-            }
-            else 
-            {
-                // Redirect to the user's last saved search token if there is one.
-                var searchToken = (await _userPreferenceRepository.GetAsync(principal.GetUserId()))?.SavedSearchToken;
-                if (searchToken != null && (await _tokenRepository.GetAsync(searchToken)) != null)
-                {
-                    return Redirect(string.Concat(Url.RouteUrl("EstabSearch"), "?tok=", searchToken));
-                }
             }
 
             return RedirectToAction("Index", "Search");
