@@ -27,7 +27,8 @@
         <div class="column-full">
             <h2 class="bold-medium">Download establishment search results</h2>
             <br />
-            <h2 class="bold-medium">Select the data you are interested in</h2>
+            <h2 class="bold-medium js-when-on">Select the data you are interested in</h2>
+            <p class="js-when-off">Sorry, you need to have JavaScript enabled to view this page.</p>
 
             <p><!-- nothing specified in the prototype --></p>
             @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get, new Dictionary<string, object> { ["@submit"] = "validateForm", ["id"] = "app", ["class"] = "hidden" }))
