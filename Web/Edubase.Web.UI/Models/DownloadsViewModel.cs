@@ -1,6 +1,7 @@
 ﻿using Edubase.Services.Core;
 using Edubase.Services.Downloads.Models;
 using Edubase.Web.Resources;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace Edubase.Web.UI.Models
                 .Contains(x.Tag));
 
 
-            if (allEstabData.Any()|| openAcademiesAndFreeSchoolsData.Any() || openStateFundedSchoolsData.Any() || openChildrensCentresData.Any())
+            if (allEstabData.Any() || openAcademiesAndFreeSchoolsData.Any() || openStateFundedSchoolsData.Any() || openChildrensCentresData.Any())
             {
                 var section = new Section { Heading = "Establishments", Paragraph = "You can download the complete record for the speciﬁed establishment types. There's a separate file with links to any predecessor or successor establishments." };
 
@@ -117,6 +118,8 @@ namespace Edubase.Web.UI.Models
 
             if (miscData.Any())
             {
+                miscData.ForEach(x => x.AuthenticationRequired = true);
+
                 var section = new Section { Heading = "Miscellaneous", Paragraph = "" };
                 section.SubSections.Add(new Section
                 {

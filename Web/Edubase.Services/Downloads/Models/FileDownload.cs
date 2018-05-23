@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Edubase.Services.Downloads.Models
+﻿namespace Edubase.Services.Downloads.Models
 {
     public class FileDownload
     {
@@ -13,5 +7,6 @@ namespace Edubase.Services.Downloads.Models
         public string Description { get; set; }
         public long FileSizeInBytes { get; set; }
         public string Tag { get; set; }
+        public bool AuthenticationRequired { get; set; }
     }
 }
