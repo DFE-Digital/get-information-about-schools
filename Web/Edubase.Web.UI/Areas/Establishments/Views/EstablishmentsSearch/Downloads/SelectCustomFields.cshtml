@@ -151,6 +151,11 @@
             computed: {
                 alphabeticalView: function () { return this.uiMode == "a"; },
                 categorisedView: function () { return this.uiMode == "c"; }
+            },
+            watch: {
+                search: function (val) {
+                    if (!val) this.doSearch();
+                }
             }
         });
 
