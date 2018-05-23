@@ -201,6 +201,7 @@
     <Compile Include="Domain\ApiError.cs" />
     <Compile Include="Domain\DownloadDto.cs" />
     <Compile Include="Domain\EstablishmentLookupDto.cs" />
+    <Compile Include="Domain\EstablishmentSearchDownloadCustomField.cs" />
     <Compile Include="Domain\GroupChangeDto.cs" />
     <Compile Include="Domain\FileDownloadDto.cs" />
     <Compile Include="Domain\NumericResultDto.cs" />

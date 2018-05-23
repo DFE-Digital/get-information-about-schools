@@ -39,9 +39,18 @@
     <div class="download-step">        
         <div class="column-two-thirds">
             <h2 class="bold-medium">Download @Model.DownloadName search results</h2>
-            <p>@Model.Step of @Model.TotalSteps</p>
+
+            @if (Model.TotalSteps.HasValue)
+            {
+                <p>@Model.Step of @Model.TotalSteps</p>
+            }
+            else
+            {
+                <br />
+            }
+
             <p class="font-small">Preparing your requested data. Large files may take some time to download.</p>
-                      
+
         </div>
         <div class="column-full">
             <div class="progress-indicator">

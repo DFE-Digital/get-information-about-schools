@@ -1,6 +1,7 @@
 ﻿using Edubase.Services.Domain;
 using Edubase.Services.Establishments.Downloads;
 using System;
+using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
@@ -24,6 +25,11 @@ namespace Edubase.Services.Texuna.Establishments
         {
             return (await _httpClient.PostAsync<ApiResultDto<Guid>>("establishment/search/download/generate", payload, principal)).GetResponse().Value;
         }
-        
+
+        public async Task<IEnumerable<EstablishmentSearchDownloadCustomField>> GetSearchDownloadCustomFields(IPrincipal principal)
+        {
+            return (await _httpClient.GetAsync<IEnumerable<EstablishmentSearchDownloadCustomField>>("establishment/search/download/custom-fields", principal)).GetResponse();
+        }
+
     }
 }

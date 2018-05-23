@@ -873,6 +873,7 @@
     <Content Include="Areas\Groups\Views\Group\Partials\GroupConfirmationNotifications.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditAddresses.cshtml" />
     <Content Include="blockedips.config" />
+    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectCustomFields.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />

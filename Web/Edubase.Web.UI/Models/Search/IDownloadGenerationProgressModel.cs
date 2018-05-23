@@ -5,8 +5,8 @@ namespace Edubase.Web.UI.Models.Search
 {
     public interface IDownloadGenerationProgressModel
     {
-        int Step { get; }
-        int TotalSteps { get; }
+        int? Step { get; }
+        int? TotalSteps { get; }
         string DownloadName { get; }
         eFileFormat FileFormat { get; }
         ProgressDto Progress { get; }
