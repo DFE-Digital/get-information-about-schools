@@ -252,6 +252,34 @@
             <script type="text/javascript" src="/public/assets/scripts/standalone/data-status.js"></script>
         }
 
+        <script>
+            (function () {
+                var myetag = GOVUK.getCookie("@Edubase.Web.UI.Controllers.HomeController.NewsBlobETag");
+                var etag = "@Edubase.Web.UI.Controllers.HomeController.GetNewsPageETag()";
+
+                if (!myetag) myetag = null;
+                if (!etag) etag = null;
+
+                // console.log(myetag + " vs " + etag);
+
+                if (myetag != etag) {
+                    $("<p/>").okCancel({
+                        immediate: true,
+                        ok: function () {
+                            location.href = "/news";
+                        },
+                        title: 'The News page has been updated',
+                        content: 'A new article has been added to the News Page that could help your Get Information about Schools experience. Click \'Ok\' to view the News Page or find the News link in the black header.',
+                        triggerEvent: 'click',
+                        okLabel: "Go to News page"
+                    });
+                    GOVUK.setCookie("@Edubase.Web.UI.Controllers.HomeController.NewsBlobETag", etag);
+                }
+            })();
+                
+
+        </script>
+        
     </div>
     <script>
         if (top.location !== location) {

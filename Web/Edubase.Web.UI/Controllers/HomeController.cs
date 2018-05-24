@@ -4,6 +4,7 @@ using Edubase.Services.Lookup;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers
@@ -11,6 +12,9 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("Home"), Route("{action=index}")]
     public class HomeController : EduBaseController
     {
+        const string NewsBlobNameHtml = "newsblog.html";
+        public const string NewsBlobETag = "newsblog-etag";
+        
         private readonly ILookupService _lookup;
         private readonly IBlobService _blobService;
         private readonly ICacheAccessor _cacheAccessor;
@@ -27,9 +31,28 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/guidance")]
         public ActionResult Guidance() => View();
-        
+
         [Route("~/news")]
-        public async Task<ActionResult> News() => View(new MvcHtmlString(await GetHtmlBlob("newsblog.html")));
+        public async Task<ActionResult> News(bool? refresh)
+        {
+            var blob = _blobService.GetBlobReference("content", NewsBlobNameHtml);
+            var html = await _cacheAccessor.GetAsync<string>(NewsBlobNameHtml);
+            var etag = await _cacheAccessor.GetAsync<string>(NewsBlobETag);
+
+            if((html == null && await blob.ExistsAsync()) || refresh.GetValueOrDefault())
+            {
+                await blob.FetchAttributesAsync();
+                html = await blob.DownloadTextAsync();
+                etag = CleanETag(blob.Properties.ETag);
+
+                await _cacheAccessor.SetAsync(NewsBlobNameHtml, html, TimeSpan.FromHours(1));
+                await _cacheAccessor.SetAsync(NewsBlobETag, etag, TimeSpan.FromHours(1));
+            }
+
+            Response.Cookies.Set(new HttpCookie(NewsBlobETag, etag) { Expires = DateTime.MaxValue });
+
+            return View(new MvcHtmlString(html));
+        }
 
         [Route("~/help")]
         public ActionResult Help() => View();
@@ -45,19 +68,10 @@ namespace Edubase.Web.UI.Controllers
                 var result = (await client.GetAsync("http://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl")).EnsureSuccessStatusCode();
                 return Content(await result.Content.ReadAsStringAsync(), "text/xml");
             }
-
         }
 
-        private async Task<string> GetHtmlBlob(string name)
-        {
-            var blob = _blobService.GetBlobReference("content", name);
-            var html = await _cacheAccessor.GetAsync<string>(name);
-            if (html == null && await blob.ExistsAsync())
-            {
-                html = await blob.DownloadTextAsync();
-                await _cacheAccessor.SetAsync(name, html, TimeSpan.FromHours(1));
-            }
-            return html;
-        }
+        public static string GetNewsPageETag() => DependencyResolver.Current.GetService<ICacheAccessor>().Get<string>(NewsBlobETag);
+
+        private static string CleanETag(string s) => s.Replace("\"", string.Empty);
     }
 }
