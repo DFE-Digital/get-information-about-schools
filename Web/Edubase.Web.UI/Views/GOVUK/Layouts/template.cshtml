@@ -171,6 +171,7 @@
                                     <li><a href="/help">Help</a></li>
                                     <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)</li>
                                 }
+                                <li><a href="/News">News</a></li>
                             </ul>
 
                         </nav>
@@ -226,7 +227,7 @@
                             <li><a href="/cookies">Cookies</a></li>
                             <li>@Html.RouteLink("Glossary", "Glossary")</li>
                             <li><a href="/guidance">Guidance</a></li>
-                            <li><a href="/news">News</a></li>
+                            @*<li><a href="/news">News</a></li>*@
                         </ul>
 
                         <div class="open-government-licence">
