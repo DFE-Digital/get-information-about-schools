@@ -10,6 +10,7 @@ using Edubase.Services.Texuna.Models;
 using System.Linq;
 using Edubase.Services.Core;
 using Newtonsoft.Json;
+using Edubase.Common;
 
 namespace Edubase.Services.Texuna.Groups
 {
@@ -88,6 +89,8 @@ namespace Edubase.Services.Texuna.Groups
 
         public async Task<IEnumerable<GroupSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
+            if (text.Clean() == null) return Enumerable.Empty<GroupSuggestionItem>();
+
             var suggestions = (await _httpClient.GetAsync<List<GroupSuggestionItem>>($"{ApiSuggestPath}?text={text}&take={take}",
                 principal)).GetResponse();
 

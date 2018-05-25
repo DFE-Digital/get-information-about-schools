@@ -203,8 +203,10 @@ namespace Edubase.Services.Texuna.Establishments
             => (await _httpClient.PostAsync<ApiPagedResult<EstablishmentSearchResultModel>>("establishment/search", payload, principal)).GetResponse();
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
-            => (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
-
+        {
+            if (text.Clean() == null) return Enumerable.Empty<EstablishmentSuggestionItem>();
+            return (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
+        }
         private async Task DetectSENChanges(EstablishmentModel original, EstablishmentModel model, List<ChangeDescriptorDto> retVal)
         {
             var originalSenIds = (original.SENIds ?? new int[0]).OrderBy(x => x);
