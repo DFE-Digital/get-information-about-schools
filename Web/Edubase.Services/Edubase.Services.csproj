@@ -67,6 +67,9 @@
       <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="AzureTableLogger, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\AzureTableLogger.1.0.6\lib\net46\AzureTableLogger.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging, Version=2.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.3.1\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -122,8 +125,8 @@
       <HintPath>..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=8.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Storage.8.4.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.9.1.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="MoreLinq, Version=2.6.20831.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.2.6.0\lib\net40\MoreLinq.dll</HintPath>
@@ -322,7 +325,6 @@
     <Compile Include="Groups\Search\GroupSearchPayload.cs" />
     <Compile Include="Groups\Search\GroupSuggestionItem.cs" />
     <Compile Include="IBlobService.cs" />
-    <Compile Include="IMessageLoggingService.cs" />
     <Compile Include="Exceptions\EdubaseException.cs" />
     <Compile Include="Exceptions\EduSecurityException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
@@ -337,8 +339,6 @@
     <Compile Include="IntegrationEndPoints\Smtp\SmtpEndPoint.cs" />
     <Compile Include="Lookup\ICachedLookupService.cs" />
     <Compile Include="Lookup\ILookupService.cs" />
-    <Compile Include="MessageLoggingService.cs" />
-    <Compile Include="LogMessageReadService.cs" />
     <Compile Include="Nomenclature\NomenclatureService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ClaimsIdentityConverters\StubClaimsIdConverter.cs" />

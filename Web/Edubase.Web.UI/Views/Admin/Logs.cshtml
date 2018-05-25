@@ -50,7 +50,7 @@ else
                     <td>@(m.UserAgent.Ellipsis(45) ?? "--")</td>
                     <td>@(m.UserName ?? "--")</td>
                     <td title="m.Url">@(Uri.IsWellFormedUriString(m.Url, UriKind.Absolute) ? (new Uri(m.Url).PathAndQuery).Ellipsis(50) : "" ?? "--")</td>
-                    <td title="@m.Text">@(m.Text.Ellipsis(50) ?? "--")</td>
+                    <td title="@m.Message">@(m.Message.Ellipsis(50) ?? "--")</td>
                     <td>@Html.ActionLink("View", "LogDetail", new { id = m.Id })</td>
                 </tr>
             }

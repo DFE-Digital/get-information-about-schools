@@ -10,12 +10,18 @@ using Microsoft.AspNet.Identity;
 using Edubase.Common;
 using Edubase.Services.Exceptions;
 using Autofac.Core;
+using AzureTableLogger;
+using AzureTableLogger.LogMessages;
 using Kentor.AuthServices.Exceptions;
 
 namespace Edubase.Web.UI.Filters
 {
     public class ExceptionHandler : IExceptionFilter
     {
+        private readonly IAzLogger _logger;
+
+        public ExceptionHandler(IAzLogger logger) => _logger = logger;
+
         public static bool EnableFriendlyErrorPage => StringUtil.Boolify(ConfigurationManager.AppSettings["EnableFriendlyErrorPage"], true);
 
         public void OnException(ExceptionContext filterContext)
@@ -67,7 +73,7 @@ namespace Edubase.Web.UI.Filters
             }
         }
 
-        public LogMessage Log(HttpContextBase ctx, Exception exception)
+        public WebLogMessage Log(HttpContextBase ctx, Exception exception)
         {
             string userId = null, userName = null;
             string httpMethod = ctx?.Request?.HttpMethod ?? string.Empty;
@@ -77,32 +83,32 @@ namespace Edubase.Web.UI.Filters
                 userId = ctx?.User?.Identity?.GetUserId();
                 userName = ctx?.User?.Identity?.GetUserName();
             }
-            catch { }
-            
-            var msg = new LogMessage
+            catch
             {
-                ClientIPAddress = ctx?.Request?.UserHostAddress,
+                // ignored
+            }
+
+            WebLogMessage msg = new WebLogMessage {
+                ClientIpAddress = ctx?.Request?.UserHostAddress,
                 Environment = ConfigurationManager.AppSettings["Environment"],
                 Exception = exception?.ToString(),
                 HttpMethod = httpMethod,
-                Level = LogMessage.eLevel.Error,
-                ReferrerUrl = ctx?.Request?.UrlReferrer?.ToString(),
-                Text = exception?.GetBaseException()?.Message,
-                Url = ctx?.Request?.Url.ToString(),
-                UserAgent = ctx?.Request?.UserAgent,
+                Level = LogMessage.LogLevel.ERROR,
+                ReferrerUrl = ctx?.Request.UrlReferrer?.ToString(),
+                Message = exception?.GetBaseException().Message,
+                Url = ctx?.Request.Url?.ToString(),
+                UserAgent = ctx?.Request.UserAgent,
                 UserId = userId,
                 UserName = userName,
                 RequestJsonBody = (exception as TexunaApiSystemException)?.ApiRequestJsonPayload ?? string.Empty
             };
 
-            if (new[] { string.Empty, "POST", "GET" }.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase))) // only log errors GET/POST or empty http method 
+            if (!new[] {string.Empty, "POST", "GET"}.Any(x => httpMethod.Equals(x, StringComparison.OrdinalIgnoreCase))) return msg; // only log errors GET/POST or empty http method
+            if ((msg.UserAgent ?? string.Empty).IndexOf("bot", StringComparison.OrdinalIgnoreCase) == -1)
             {
-                if ((msg.UserAgent ?? string.Empty).IndexOf("bot", StringComparison.OrdinalIgnoreCase) == -1)
-                {
-                    DependencyResolver.Current.GetService<IMessageLoggingService>().Push(msg);
-                }
+                _logger.Log(msg);
             }
-            
+
             return msg;
         }
     }

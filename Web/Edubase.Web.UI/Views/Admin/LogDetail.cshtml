@@ -1,5 +1,5 @@
 ﻿@using Edubase.Data.Entity;
-@model LogMessage
+@model AzureTableLogger.LogMessages.WebLogMessage
 @{
     ViewBag.bodyClasses = "view-logs";
 }
@@ -38,7 +38,7 @@
 
     <tr>
         <td>Client IP address</td>
-        <td>@Model.ClientIPAddress</td>
+        <td>@Model.ClientIpAddress</td>
     </tr>
 
     <tr>
@@ -64,7 +64,7 @@
 
     <tr>
         <td>Text</td>
-        <td class="plain">@FormatHelpers.HtmlizeNewLines(Model.Text)</td>
+        <td class="plain">@FormatHelpers.HtmlizeNewLines(Model.Message)</td>
     </tr>
 
     <tr>
