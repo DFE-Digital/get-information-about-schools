@@ -11,8 +11,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public ProgressDto Progress { get; set; }
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
-        public int Step { get; set; }
-        public int TotalSteps { get; set; }
+        public int? Step { get; set; }
+        public int? TotalSteps { get; set; }
         public string DownloadName => "governor";
 
         eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;

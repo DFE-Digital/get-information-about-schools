@@ -15,5 +15,6 @@ namespace Edubase.Services.Establishments.Downloads
         public bool IncludeBringUpFields { get; set; }
         public bool IncludeChildrensCentreFields { get; set; }
         public bool IncludeLinks { get; set; }
+        public string[] SelectedFields { get; set; }
     }
 }

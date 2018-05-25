@@ -1,0 +1,43 @@
+﻿@model FaqViewModel
+@{
+    ViewBag.Title = "GIAS: Frequently asked questions";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">Get information about schools: FAQs</h1>
+        <p>Answers to commonly asked questions about Get information about schools.</p>
+        <br />
+        <hr />
+        <br />
+    </div>
+</div>
+
+
+<div class="grid-row">
+    <div class="column-full">
+        @if (Model.UserCanEdit)
+        {
+            @Html.RouteLink("New Entry", "CreateFaqItem", null, new { @class = "plus-link", style = "float:none;" })
+        }
+
+
+        @foreach (var item in Model.Items)
+        {
+            <h2 class="heading-@(item.TitleFontSize??"small")">@item.Title</h2>
+            <p>@Html.Raw(item.Content.Replace("\n","<br/>"))</p>
+            if (Model.UserCanEdit)
+            {
+                @Html.RouteLink("Edit", "EditFaqItem", new { id = item.RowKey }, new { @class = "button button-grey Faq-edit-button" })
+            }
+        }
+    </div>
+</div>

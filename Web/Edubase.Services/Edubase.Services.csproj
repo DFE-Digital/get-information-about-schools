@@ -204,6 +204,7 @@
     <Compile Include="Domain\ApiError.cs" />
     <Compile Include="Domain\DownloadDto.cs" />
     <Compile Include="Domain\EstablishmentLookupDto.cs" />
+    <Compile Include="Domain\EstablishmentSearchDownloadCustomField.cs" />
     <Compile Include="Domain\GroupChangeDto.cs" />
     <Compile Include="Domain\FileDownloadDto.cs" />
     <Compile Include="Domain\NumericResultDto.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Exceptions\TexunaApiNotFoundException.cs" />
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
+    <Compile Include="Exceptions\UsageQuotaExceededException.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
     <Compile Include="Governors\Downloads\GovernorSearchDownloadPayload.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />

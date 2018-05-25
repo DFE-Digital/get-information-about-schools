@@ -1,6 +1,7 @@
 ﻿using Edubase.Services.Core;
 using Edubase.Services.Downloads.Models;
 using Edubase.Web.Resources;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +37,17 @@ namespace Edubase.Web.UI.Models
             var openChildrensCentresData = Downloads.Where(x => new[] { "all.open.childrens.centres", "all.open.childrens.centres.links" }.Contains(x.Tag));
             var openGroupData = Downloads.Where(x => new[] { "academy.sponsor.and.trust.links", "all.group.records", "all.group.links.records", "all.group.with.links.records" }.Contains(x.Tag));
             var allGovernorData = Downloads.Where(x => new[] { "all.governance.records", "all.mat.governance.records", "all.academy.governance.records", "all.la.maintained.governance.records" }.Contains(x.Tag));
-            
-            
-            if(allEstabData.Any()|| openAcademiesAndFreeSchoolsData.Any() || openStateFundedSchoolsData.Any() || openChildrensCentresData.Any())
+
+            var miscData = Downloads.Where(x => !allEstabData.Concat(openAcademiesAndFreeSchoolsData)
+                .Concat(openStateFundedSchoolsData)
+                .Concat(openChildrensCentresData)
+                .Concat(openGroupData)
+                .Concat(allGovernorData)
+                .Select(y => y.Tag)
+                .Contains(x.Tag));
+
+
+            if (allEstabData.Any() || openAcademiesAndFreeSchoolsData.Any() || openStateFundedSchoolsData.Any() || openChildrensCentresData.Any())
             {
                 var section = new Section { Heading = "Establishments", Paragraph = "You can download the complete record for the speciﬁed establishment types. There's a separate file with links to any predecessor or successor establishments." };
 
@@ -103,6 +112,19 @@ namespace Edubase.Web.UI.Models
                 {
                     Heading = "All governor data",
                     Files = allGovernorData.Select(x => new Tuple<string, FileDownload>(FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
+                });
+                retVal.Add(section);
+            }
+
+            if (miscData.Any())
+            {
+                miscData.ForEach(x => x.AuthenticationRequired = true);
+
+                var section = new Section { Heading = "Miscellaneous", Paragraph = "" };
+                section.SubSections.Add(new Section
+                {
+                    Heading = "All data",
+                    Files = miscData.Select(x => new Tuple<string, FileDownload>(FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
                 });
                 retVal.Add(section);
             }

@@ -209,8 +209,6 @@
         {
             @section ViewScripts {
                 <script>
-                    var $buttons = $("button[type='submit']");
-                    $buttons.prop("disabled", true);
                     var $fields = $('#content').find('.form-control');
                     var exitAttached = false;
 
@@ -219,10 +217,19 @@
                             DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                             exitAttached = true;
                         }
-                        $buttons.prop("disabled", false);
                     });
                     $('#Notes').textCount({ maxLength: 4000 });
                     $('#Associations').textCount({ maxLength: 1000 });
+
+                    (function () {
+                        var $buttons = $("button[type='submit']");
+                        $buttons.prop("disabled", true);
+                        $(document.forms[0]).dirrty({ preventLeaving: false }).on("dirty", function () {
+                            $buttons.prop("disabled", false);
+                        }).on("clean", function () {
+                            $buttons.prop("disabled", true);
+                        });
+                    })();
                 </script>
                 
             }

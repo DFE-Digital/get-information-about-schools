@@ -21,7 +21,6 @@
         this.el = el;
         this.opts = $.extend({}, defaults, opts);
         this.init();
-
     }
 
 

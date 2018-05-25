@@ -45,7 +45,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string DelegationInformation { get; set; }
         public string CorporateContact { get; set; }
 
-        public bool ShowDelegationInformation { get; set; }
+        public bool ShowDelegationAndCorpContactInformation { get; set; }
 
         /// <summary>
         /// GID of the governor that's being removed.

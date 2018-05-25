@@ -19,7 +19,8 @@
     "govuk_template": "https://github.com/alphagov/govuk_template/releases/download/v0.18.0/govuk_template-0.18.0.tgz",
     "jquery": "~1.11.2",
     "jquery-simulate": "~1.0.1",
-    "dfeagiledevops-typeahead": "https://github.com/DFEAGILEDEVOPS/typeahead.js.git#95582dfe56df715e3ea46c9798a3047eb6b939f0"
+    "dfeagiledevops-typeahead": "https://github.com/DFEAGILEDEVOPS/typeahead.js.git#95582dfe56df715e3ea46c9798a3047eb6b939f0",
+    "dirrty": "^0.2.0"
   },
   "devDependencies": {
     "govuk-styleguide-theme": "DFEAGILEDEVOPS/govuk-styleguide-theme"

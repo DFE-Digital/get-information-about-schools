@@ -27,7 +27,7 @@
         <div class="column-full">
 
             <h2 class="bold-medium">Download establishment search results</h2>
-            <p>1 of 4</p>
+            <br />
             <h2 class="bold-medium">Select the data you are interested in</h2>
             <p>
                 Core data includes commonly used ﬁelds including <abbr title="Unique Reference Number">URN</abbr>,
@@ -51,10 +51,12 @@
                     <div class="form-group">
                         <fieldset class="stacked-controls">
                             <legend class="visually-hidden">Select a data set</legend>
-                            
-                            @Html.GiasRadioFor(m=>m.Dataset, "core", "Core set of data",null,  new { @checked="checked", @class="core-full" })
-                            
-                            @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data",null, new { @class = "core-full" })
+
+                            @Html.GiasRadioFor(m => m.Dataset, "core", "Core set of data", null, new { @checked = "checked", @class = "core-full" })
+
+                            @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data", null, new { @class = "core-full" })
+
+                            @Html.GiasRadioFor(m => m.Dataset, "custom", "Choose a specific set of data", null, new { @class = "custom-fields" })
 
                             <div class="panel-indent shift-panel stacked-controls" id="data-download-options">
                                 <fieldset>
@@ -63,27 +65,27 @@
                                     @if (Model.AllowIncludeEmailAddresses)
                                     {
                                         @Html.GiasCheckboxFor(m => m.IncludeEmailAddresses, "Email addresses")
-                                            
+
                                     }
 
                                     @if (Model.AllowIncludeIEBTFields)
                                     {
                                         @Html.GiasCheckboxFor(m => m.IncludeIEBTFields, "IEBT fields")
-                                           
+
                                     }
 
                                     @if (Model.AllowIncludeBringUpFields)
                                     {
                                         @Html.GiasCheckboxFor(m => m.IncludeBringUpFields, "Bring up fields")
-                                            
+
                                     }
 
                                     @if (Model.AllowIncludeChildrensCentreFields)
                                     {
                                         @Html.GiasCheckboxFor(m => m.IncludeChildrensCentreFields, "Children's centre fields")
-                                            
+
                                     }
-                                        
+
                                     @Html.GiasCheckboxFor(m => m.IncludeLinks, "Links")
 
                                 </fieldset>
@@ -117,6 +119,10 @@
                         return rad.checked;
                     }).parents('.radio-button-wrap'));
             }
+
+            $(".custom-fields").on("change", function () {
+                $panel.detach();
+            });
         }());
     </script>
 }

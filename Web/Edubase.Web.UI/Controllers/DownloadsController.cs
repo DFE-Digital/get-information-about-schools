@@ -12,6 +12,9 @@ using Edubase.Services.Groups.Downloads;
 using Edubase.Web.UI.Filters;
 using Edubase.Common;
 using Edubase.Web.UI.Helpers;
+using System.Linq;
+using System.Net.Http;
+using Edubase.Services;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -21,14 +24,16 @@ namespace Edubase.Web.UI.Controllers
         private readonly IDownloadsService _downloadsService;
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupDownloadService _groupDownloadService;
+        private readonly HttpClientWrapper _httpClientHelper;
 
-        public DownloadsController(IDownloadsService downloadsService, IEstablishmentReadService establishmentReadService, IGroupDownloadService groupDownloadService)
+        public DownloadsController(IDownloadsService downloadsService, IEstablishmentReadService establishmentReadService, IGroupDownloadService groupDownloadService, HttpClientWrapper httpClientHelper)
         {
             _downloadsService = downloadsService;
             _establishmentReadService = establishmentReadService;
             _groupDownloadService = groupDownloadService;
+            _httpClientHelper = httpClientHelper;
         }
-        
+
         public async Task<ActionResult> Index(int? skip)
         {
             var viewModel = new DownloadsViewModel
@@ -90,7 +95,7 @@ namespace Edubase.Web.UI.Controllers
             else if (downloadType.HasValue && start) return Redirect((await _groupDownloadService.DownloadGroupData(uid, downloadType.Value, User)).Url);
             else return View("SelectFormat");
         }
-        
+
         [HttpGet, EdubaseAuthorize]
         [Route("Download/ChangeHistory/{downloadType}")]
         public async Task<ActionResult> DownloadChangeHistory(int? groupId, int? establishmentUrn, DownloadType downloadType)
@@ -107,5 +112,27 @@ namespace Edubase.Web.UI.Controllers
 
             return null;
         }
+
+
+        [HttpGet]
+        [Route("Download/File", Name = "DownloadFile")]
+        public async Task<ActionResult> DownloadFileAsync(string id)
+        {
+            var file = (await _downloadsService.GetListAsync(User)).FirstOrDefault(x => x.Tag == id);
+            if (file != null)
+            {
+                using (var c = new HttpClient())
+                {
+                    var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, file.Url, User);
+                    var response = await c.SendAsync(requestMessage);
+                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType)
+                    {
+                        FileDownloadName = response.Content.Headers.ContentDisposition.FileName.CleanOfNonChars()
+                    };
+                }
+            }
+            else return HttpNotFound();
+        }
+
     }
 }

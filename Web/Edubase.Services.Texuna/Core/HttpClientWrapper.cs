@@ -55,22 +55,21 @@
 
         public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal, bool throwOnNotFound)
         {
-            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Get, uri, principal);
+            var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Get, uri, principal);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync<TResponse>(uri, result, throwOnNotFound);
-
         }
 
         public async Task<ApiResponse> PatchAsync(string uri, object data, IPrincipal principal)
         {
-            var requestMessage = await CreateHttpRequestMessage(new HttpMethod("PATCH"), uri, principal, data);
+            var requestMessage = await CreateHttpRequestMessageAsync(new HttpMethod("PATCH"), uri, principal, data);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync(uri, result);
         }
 
         public async Task DeleteAsync(string uri, object data, IPrincipal principal)
         {
-            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Delete, uri, principal, data);
+            var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Delete, uri, principal, data);
             var result = await SendAsync(requestMessage);
             await ParseHttpResponseMessageAsync(uri, result);
 
@@ -80,14 +79,14 @@
 
         public async Task<ApiResponse<T>> PutAsync<T>(string uri, object data, IPrincipal principal)
         {
-            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
+            var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Put, uri, principal, data);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync<T>(uri, result);
         }
 
         public async Task<ApiResponse> PutAsync(string uri, object data, IPrincipal principal)
         {
-            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, data);
+            var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Put, uri, principal, data);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync(uri, result);
         }
@@ -98,7 +97,7 @@
 
         public async Task<ApiResponse<T>> PostAsync<T>(string uri, object data, IPrincipal principal)
         {
-            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
+            var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Post, uri, principal, data);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync<T>(uri, result);
 
@@ -106,8 +105,7 @@
 
         public async Task<ApiResponse> PostAsync(string uri, object data, IPrincipal principal)
         {
-
-            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, data);
+            var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Post, uri, principal, data);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync(uri, result);
 
@@ -117,7 +115,7 @@
             where TValidationEnvelope : class
         {
 
-            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal, payload);
+            var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Post, uri, principal, payload);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(uri, result);
 
@@ -126,7 +124,7 @@
         public async Task<ApiResponse<TSuccess, TValidationEnvelope>> PutAsync<TSuccess, TValidationEnvelope>(string uri, object payload, IPrincipal principal)
             where TValidationEnvelope : class
         {
-            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Put, uri, principal, payload);
+            var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Put, uri, principal, payload);
             var result = await SendAsync(requestMessage);
             return await ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(uri, result);
 
@@ -146,7 +144,7 @@
         /// </remarks>
         public async Task<ApiResponse<T>> PostMultipartAsync<T>(string uri, object data, string fileName, IPrincipal principal)
         {
-            var requestMessage = await CreateHttpRequestMessage(HttpMethod.Post, uri, principal);
+            var requestMessage = await CreateHttpRequestMessageAsync(HttpMethod.Post, uri, principal);
 
             var content = new MultipartContent("form-data", Guid.NewGuid().ToString());
 
@@ -288,6 +286,8 @@
                         break;
                     case HttpStatusCode.Forbidden:
                         throw new EduSecurityException($"The current principal does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
+                    case (HttpStatusCode) 429:
+                        throw new UsageQuotaExceededException();
                     default:
                         throw new TexunaApiSystemException($"The API returned an error with status code: {message.StatusCode}. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
                 }
@@ -418,12 +418,13 @@
             }
         }
 
-        private async Task<HttpRequestMessage> CreateHttpRequestMessage(HttpMethod method, string uri, IPrincipal principal, object requestBodyData = null)
+        public async Task<HttpRequestMessage> CreateHttpRequestMessageAsync(HttpMethod method, string uri, IPrincipal principal, object requestBodyData = null)
         {
             if (uri.StartsWith("/")) throw new Exception($"{nameof(uri)} parameter value starts with a forward-slash.  You didn't want to do that.");
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(HEADER_SA_USER_ID, principal.GetUserId() ?? string.Empty);
+            requestMessage.Headers.Add("X-Source-IP", _clientStorage.IPAddress);
             if (requestBodyData != null)
             {
                 requestMessage.Content = new ObjectContent<object>(requestBodyData, _formatter);

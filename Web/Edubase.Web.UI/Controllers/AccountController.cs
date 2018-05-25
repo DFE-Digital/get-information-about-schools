@@ -13,6 +13,8 @@ using System;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
 using Edubase.Services.Exceptions;
+using Edubase.Data.Repositories;
+using Edubase.Services.Texuna;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -21,10 +23,14 @@ namespace Edubase.Web.UI.Controllers
     public class AccountController : Controller
     {
         private readonly ISecurityService _securityService;
+        private readonly IUserPreferenceRepository _userPreferenceRepository;
+        private readonly ITokenRepository _tokenRepository;
 
-        public AccountController(ISecurityService securityService)
+        public AccountController(ISecurityService securityService, IUserPreferenceRepository userPreferenceRepository, ITokenRepository tokenRepository)
         {
             _securityService = securityService;
+            _userPreferenceRepository = userPreferenceRepository;
+            _tokenRepository = tokenRepository;
         }
 
         //
@@ -58,6 +64,13 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<ActionResult> GetLandingPage(ClaimsPrincipal principal)
         {
+            // Redirect to the user's last saved search token if there is one.
+            var searchToken = (await _userPreferenceRepository.GetAsync(principal.GetUserId()))?.SavedSearchToken;
+            if (searchToken != null && (await _tokenRepository.GetAsync(searchToken)) != null)
+            {
+                return Redirect(string.Concat(Url.RouteUrl("EstabSearch"), "?tok=", searchToken));
+            }
+
             if (principal.IsInRole(EdubaseRoles.ESTABLISHMENT))
             {
                 var urn = await _securityService.GetMyEstablishmentUrn(principal);

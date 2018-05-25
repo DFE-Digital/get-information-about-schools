@@ -1,5 +1,4 @@
 ﻿@using Edubase.Web.UI.Models.Search;
-@using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
 @model VM
@@ -12,7 +11,6 @@
 <div class="grid-row">
     <div class="column-full">
         @{ Html.RenderPartial("Partials/_SearchHeader"); }
-        
         @Html.ValidationSummary(false, null, new { @class = "error-summary" })
     </div>
     <div class="column-full">
@@ -54,12 +52,11 @@
             </div>
 
         </div>
-        @* Tool tip texts - Potential TODO add to resource file *@
-    @if (User.Identity.IsAuthenticated || Model.SelectedTab != SearchViewModel.Tab.Governors)
-    {
-        Html.RenderPartial("Partials/_HelpText");
-        
-    }
+
+        @if (User.Identity.IsAuthenticated || Model.SelectedTab != SearchViewModel.Tab.Governors)
+        {
+            Html.RenderPartial("Partials/_HelpText");
+        }
 
     </div>
 

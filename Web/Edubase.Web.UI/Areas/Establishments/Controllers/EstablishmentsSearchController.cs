@@ -71,7 +71,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public async Task<ActionResult> JsonResults(EstablishmentSearchViewModel model)
         {
             var payload = await GetEstablishmentSearchPayload(model);
-            //payload.Object.Skip = 0;
             payload.Object.Take = 100;
 
             if (!payload.Success) model.Error = payload.ErrorMessage;
@@ -119,6 +118,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View("Downloads/SelectDataset", viewModel);
             }
 
+            if (viewModel.Dataset == eDataSet.Custom && !viewModel.SelectedCustomFields.Any())
+            {
+                viewModel.SearchQueryString = Request.QueryString.ToString();
+                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).OrderBy(x => x.Name).ToList();
+                return View("Downloads/SelectCustomFields", viewModel);
+            }
+
             if (!viewModel.FileFormat.HasValue)
                 return View("Downloads/SelectFormat", viewModel);
 
@@ -132,7 +138,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     IncludeChildrensCentreFields = viewModel.IncludeChildrensCentreFields,
                     IncludeEmailAddresses = viewModel.IncludeEmailAddresses,
                     IncludeIEBTFields = viewModel.IncludeIEBTFields,
-                    IncludeLinks = viewModel.IncludeLinks
+                    IncludeLinks = viewModel.IncludeLinks,
+                    SelectedFields = viewModel.SelectedCustomFields.ToArray()
                 }, User);
 
             return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
@@ -141,9 +148,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("Download")]
         public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
-
             var model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id, User);
-            var viewModel = new EstablishmentSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 4 : 3)
+            var viewModel = new EstablishmentSearchDownloadGenerationProgressViewModel(model)
             {
                 FileFormat = fileFormat,
                 SearchSource = searchSource,

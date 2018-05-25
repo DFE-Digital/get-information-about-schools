@@ -4,7 +4,8 @@
     {
         Core,
         Full,
-        IEBT
+        IEBT,
+        Custom
     }
 
 }

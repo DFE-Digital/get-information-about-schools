@@ -96,7 +96,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User, x => viewModel.GovernanceMode = x.GovernanceMode, x=>
             {
-                viewModel.ShowDelegationInformation = x.GroupTypeId.GetValueOrDefault() == (int)eLookupGroupType.MultiacademyTrust;
+                viewModel.ShowDelegationAndCorpContactInformation = x.GroupTypeId.GetValueOrDefault() == (int)eLookupGroupType.MultiacademyTrust;
                 viewModel.DelegationInformation = x.DelegationInformation;
                 viewModel.CorporateContact = x.CorporateContact;
             });
@@ -538,7 +538,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (groupUId.HasValue)
             {
                 var groupModel = (await _groupReadService.GetAsync(groupUId.Value, user)).GetResult();
-                viewModel.ShowDelegationInformation = groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust;
+                viewModel.ShowDelegationAndCorpContactInformation = groupModel.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust;
                 viewModel.DelegationInformation = groupModel.DelegationInformation;
                 viewModel.CorporateContact = groupModel.CorporateContact;
             }

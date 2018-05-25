@@ -364,7 +364,7 @@ namespace Edubase.UnitTest.Controllers
 
             var modelResult = viewResult.Model as GovernorsGridViewModel;
             modelResult.ShouldNotBeNull();
-            modelResult.ShowDelegationInformation.ShouldBeFalse();
+            modelResult.ShowDelegationAndCorpContactInformation.ShouldBeFalse();
             modelResult.DelegationInformation.ShouldBe(groupModel.DelegationInformation);
             modelResult.GroupUId.ShouldBe(groupUId);
             modelResult.EstablishmentUrn.ShouldBeNull();

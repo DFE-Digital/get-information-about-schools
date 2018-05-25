@@ -1,0 +1,167 @@
+﻿@using Edubase.Services.Enums
+@using Microsoft.Ajax.Utilities
+@using Edubase.Web.UI.Areas.Establishments.Models.Search
+@model EstablishmentSearchDownloadViewModel
+@using Edubase.Web.UI.Helpers
+@{
+    ViewBag.bodyClasses = " search-page custom-fields-download";
+    ViewBag.hideLogo = true;
+}
+
+<div class="breadcrumbs">
+    @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
+    {
+        @Html.ActionLink("Home", "Index", "Search", new { area = "" })
+    }
+    else
+    {
+        <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+    }
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">Download data</h1>
+    </div>
+    <div class="horizontal-tabs-wrapper">
+        <div class="column-full">
+            <h2 class="bold-medium">Download establishment search results</h2>
+            <br />
+            <h2 class="bold-medium js-when-on">Select the data you are interested in</h2>
+            <p class="js-when-off">Sorry, you need to have JavaScript enabled to view this page.</p>
+
+            <p><!-- nothing specified in the prototype --></p>
+            @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get, new Dictionary<string, object> { ["@submit"] = "validateForm", ["id"] = "app", ["class"] = "hidden" }))
+            {
+                <div v-if="showValidationError" class="validation-summary-errors error-summary">
+                    <span>Information missing or incorrect</span>
+                    <p>Please select at least one field</p>
+                </div>
+
+                <div class="download-step">
+                    <fieldset class="stacked-controls">
+                        <legend class="visually-hidden">Select fields to download</legend>
+
+                        <div class="form-group">
+                            <label for="search">Search by field name</label>
+                            <br />
+                            <input id="search" v-model="search" class="form-control search" placeholder="Search..." @@keydown.enter.prevent="doSearch" />
+                            <button class="button button-search icon-only" @@click="doSearch" type="button"></button>
+
+                            <div class="switch" v-show="!isFiltered">
+                                <a href="javascript:" @@click="showAlphabeticalView" v-show="!alphabeticalView">View in alphabetical order</a>
+                                <a href="javascript:" @@click="showCategorisedView" v-show="!categorisedView">View in sections</a>
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <input class="button" type="submit" value="Next" />
+                            <div class="switch" v-show="!isFiltered">
+                                <button href="javascript:" class="button-as-link" @@click="selectAll" type="button">Select all</button>
+                                <button href="javascript:" class="button-as-link" @@click="clearAll" type="button">Clear all</button>
+                            </div>
+                        </div>
+
+                        <ul :class="['categorised-list', 'chevron-accordion', categorisedView ? '' : 'hidden']">
+                            <li class="expander-panel" v-for="(item, index) in fieldsByCategory">
+                                <a class="panel-trigger" :href="'#target-'+index" aria-expanded="false" :aria-controls="'target-'+index">{{item.category}}</a>
+                                <div class="expander-panel-content" id="'target-'+index">
+
+                                    <span v-for="(field, i) in item.customFields" class="checkbox-wrap">
+                                        <input :id="'chk2-'+(index+'_'+i)" type="checkbox" :value="field.id" v-model="selections" />
+                                        <label :for="'chk2-'+(index+'_'+i)" class="edubase-button-checkbox">{{ field.name }}</label>
+                                    </span>
+
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div :class="['alphabetical-list', alphabeticalView ? '' : 'hidden']">
+                            <span v-for="(item, index) in filteredList" class="checkbox-wrap">
+                                <input :id="'chk-'+index" type="checkbox" name="@EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias" :value="item.id" v-model="selections" />
+                                <label :for="'chk-'+index" class="edubase-button-checkbox">{{ item.name }}</label>
+                            </span>
+                        </div>
+
+                        <p v-show="filteredList.length == 0">No results</p>
+
+                    </fieldset>
+                </div>
+                @Html.HiddenFieldsFromQueryString(new[] { EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias })
+                <input class="button" type="submit" value="Next" />
+            }
+        </div>
+    </div>
+</div>
+
+@section ViewScripts
+{
+    <script>
+        var fieldList = @Html.Json(Model.CustomFields);
+        var fieldListByCat = @Html.Json(Model.CustomFieldsByCategory);
+        var selections = @Html.Json(Model.SelectedCustomFields);
+
+        var app = new Vue({
+            el: "#app",
+            data: {
+                fields: fieldList,
+                fieldsByCategory: fieldListByCat,
+                filteredList: fieldList,
+                selections: selections,
+                showValidationError: false,
+                uiMode: "c",
+                search: null,
+                isFiltered: false
+            },
+            methods: {
+                selectAll: function(){
+                    this.selections = [];
+                    [].forEach.call(this.fields, function(item){ this.selections.push(item.id);  }.bind(this));
+                },
+                clearAll: function(){
+                    this.selections = [];
+                },
+                validateForm: function(e) {
+                    if(this.selections.length > 0) return true;
+                    else {
+                        $(window).scrollTop(0);
+                        this.showValidationError = true;
+                        e.preventDefault();
+                    }
+                },
+                showAlphabeticalView: function(){
+                    this.uiMode = "a";
+                },
+                showCategorisedView: function(){
+                    this.uiMode = "c";
+                },
+                doSearch: function () {
+                    if (this.search) {
+                        this.showAlphabeticalView();
+                        this.filteredList = this.fields.filter(function (f) { return f.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1; }.bind(this));
+                        this.isFiltered = true;
+                    } else {
+                        this.filteredList = this.fields;
+                        this.isFiltered = false;
+                    }
+                }
+            },
+            computed: {
+                alphabeticalView: function () { return this.uiMode == "a"; },
+                categorisedView: function () { return this.uiMode == "c"; }
+            },
+            watch: {
+                search: function (val) {
+                    if (!val) this.doSearch();
+                }
+            }
+        });
+
+        $("form").removeClass("hidden");
+        $(".panel-trigger").on("click", function (el) { $(this).parent().toggleClass("open-expander"); });
+
+    </script>
+}
+

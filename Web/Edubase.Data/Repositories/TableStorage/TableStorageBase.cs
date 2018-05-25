@@ -36,7 +36,6 @@
 
             Table = tableClient.GetTableReference(tsTableName);
             Table.CreateIfNotExists();
-
         }
 
         public CloudTable Table { get; }

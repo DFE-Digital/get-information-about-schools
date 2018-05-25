@@ -58,42 +58,52 @@ DfE.searchResults = (function () {
                 function (e) {
                     e.preventDefault();
                     $('#additional-filter-wrap').removeClass('hidden');
-                    $('#filter-addtional-controls').addClass('hidden');
-                    $('#filter-submit').addClass('hidden');
                     $("#filter-refine").prop("disabled", true);
                 });
 
-            $('#filter-refine').on('click',
-                function (e) {
-                    e.preventDefault();
-                    $('#additional-filter-wrap').addClass('hidden');
-                        $extraFiltersLink.removeClass('hidden');
+            $("#additional-filter-wrap input").on("change", function (e) {
+                e.preventDefault();
+                $extraFiltersLink.removeClass('hidden');
 
-                    var $selectedFilters = $('#additional-filter-wrap').find('input:checked');
+                var $selectedFilters = $('#additional-filter-wrap').find('input:checked');
+                $additionalFilters.addClass('hidden');
 
-                    
-                    $additionalFilters.addClass('hidden');
+                var $ele = $('#selected-search-filters');
+                $ele.val("");
 
-                    var $ele = $('#selected-search-filters');
-                    $ele.val("");
-
-                    $selectedFilters.each(function () {
-                        var idToShow = $(this).val();
-                        $(idToShow).removeClass('hidden');
-                        var bindAlias = $(idToShow).data('bind-alias');
-                        var specifier = $ele.val() + bindAlias;
-                        $ele.val(specifier);
-                    });
-                    $('#filter-addtional-controls').removeClass('hidden');
+                $selectedFilters.each(function () {
+                    var idToShow = $(this).val();
+                    $(idToShow).removeClass('hidden');
+                    var bindAlias = $(idToShow).data('bind-alias');
+                    var specifier = $ele.val() + bindAlias;
+                    $ele.val(specifier);
                 });
+                $('#filter-addtional-controls').removeClass('hidden');
+            });
 
-            $('#add-filter-cancel').on('click',
-                function (e) {
-                    e.preventDefault();
-                    $('#additional-filter-wrap').addClass('hidden');
-                    $('#filter-addtional-controls').removeClass('hidden');
-                    $('#filter-submit').removeClass('hidden');
+            $(".js-save-set").on("click", function () {
+                var filterCount = $filters.filter(':checked, :selected').length;
+                var token = null;
+
+                if (filterCount > 0)
+                    token = DfE.Util.QueryString.get('tok')
+
+                $.ajax({
+                    url: "/api/save-search-token",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    method: 'post',
+                    data: JSON.stringify({
+                        token: token
+                    }),
+                    success: function (data) {
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
                 });
+                
+            });
 
             if (document.getElementById('selected-search-filters')) {
                 var aliases = $('#selected-search-filters').val().split('');
@@ -226,7 +236,7 @@ DfE.searchResults = (function () {
             $filterForm.find('.filter-clone').prop('disabled', true);
             $('#filter-form').find('.active-clear').addClass('clear-disabled');
             $('#filter-form').find('input[type="text"]').prop('disabled', true);
-            $('#filter-addtional-controls a').addClass('hidden');
+            //$('#filter-addtional-controls a').addClass('hidden');
         },
         enableFilters: function () {
             $filters.prop('disabled', false);
@@ -239,11 +249,10 @@ DfE.searchResults = (function () {
         getResults : function() {
             DfE.searchResults.disableFilters();
             $('.date-filter-warning').addClass('hidden');
-
+            
             $resultsContainer.html(plsWait);
             
             $.ajax({
-                //url: 'Search/results-js',
                 type: "POST",
                 url: '/api/tokenize',
                
@@ -287,6 +296,7 @@ DfE.searchResults = (function () {
                                 }
                             }
 
+                            $('.js-save-set').removeClass('hidden');
                           }
 
                     });
@@ -387,13 +397,12 @@ DfE.searchResults = (function () {
                     .filter(function (n, item) {
                         return $(item).prop('checked');
                     });
-
-                selectedFilters.slice(0, 1).trigger('change');
                 selectedFilters.prop('checked', false);
                 $filterForm.find('.select-all').next('label').removeClass('partial-selection');
                 $filterForm.find('.select-all').prop('checked', false);
                 $filterForm.find('.filter-group-title').next('label').removeClass('partial-selection');
                 $filterForm.find('.filter-group-title').prop('checked', false);
+                selectedFilters.slice(0, 1).trigger('change');
             });
         },
 

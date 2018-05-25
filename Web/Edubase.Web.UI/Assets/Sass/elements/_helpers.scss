@@ -83,3 +83,22 @@ $path: "/public/images/";
 .blanket-container {
     position:relative;
 }
+
+.js-enabled {
+    .js-when-on {
+        display: block;
+    }
+
+    .js-when-off {
+        display: none;
+    }
+}
+
+.no-js {
+    .js-when-on {
+        display: none;
+    }
+    .js-when-off {
+        display: block;
+    }
+}
