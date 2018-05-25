@@ -11,15 +11,20 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public ProgressDto Progress { get; set; }
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
-        public int? Step { get; private set; }
+        public int? Step { get; set; } = 0;
         public int? TotalSteps => 3;
         public string DownloadName => "group";
         eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
 
-        public GroupSearchDownloadGenerationProgressViewModel(ProgressDto progressDto, int step)
+        public GroupSearchDownloadGenerationProgressViewModel(ProgressDto progressDto)
         {
             Progress = progressDto;
+        }
+
+        public GroupSearchDownloadGenerationProgressViewModel SetStep(int step)
+        {
             Step = step;
+            return this;
         }
     }
 }

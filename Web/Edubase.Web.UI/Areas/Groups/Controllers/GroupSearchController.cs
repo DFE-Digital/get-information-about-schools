@@ -53,6 +53,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (!viewModel.FileFormat.HasValue)
             {
                 viewModel.SearchQueryString = Request.QueryString.ToString();
+                viewModel.Step = 1;
                 return View("Downloads/SelectFormat", viewModel);
             }
 
@@ -69,20 +70,20 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
             var model = await _groupDownloadService.GetDownloadGenerationProgressAsync(id, User);
-            var viewModel = new GroupSearchDownloadGenerationProgressViewModel(model, model.IsComplete ? 3 : 2)
+            var viewModel = new GroupSearchDownloadGenerationProgressViewModel(model)
             {
                 FileFormat = fileFormat,
                 SearchSource = searchSource,
                 SearchQueryString = searchQueryString
             };
+            
 
             if (model.HasErrored)
                 throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
 
-            if (!model.IsComplete)
-                return View("Downloads/PreparingFilePleaseWait", viewModel);
+            if (!model.IsComplete) return View("Downloads/PreparingFilePleaseWait", viewModel.SetStep(2));
 
-            return View("Downloads/ReadyToDownload", viewModel);
+            return View("Downloads/ReadyToDownload", viewModel.SetStep(3));
         }
 
         private async Task<ActionResult> SearchGroups(GroupSearchViewModel model)

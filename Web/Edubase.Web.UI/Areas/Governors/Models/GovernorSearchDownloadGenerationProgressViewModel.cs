@@ -21,5 +21,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             Progress = progressDto;
         }
+
+
     }
 }

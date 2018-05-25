@@ -60,7 +60,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var allowNonPublicDataDownload = User.InRole(EdubaseRoles.EDUBASE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.EFADO, EdubaseRoles.edubase_ddce, EdubaseRoles.SFC);
             viewModel.TotalSteps = allowNonPublicDataDownload ? 4 : 3;
             viewModel.Step++;
-
+            
             if (allowNonPublicDataDownload && !viewModel.IncludeNonPublicData.HasValue)
                 return View("Downloads/SelectDataset", viewModel);
 
@@ -75,7 +75,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     IncludeNonPublicData = allowNonPublicDataDownload && viewModel.IncludeNonPublicData.GetValueOrDefault()
                 }, User);
 
-            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, step = viewModel.Step + 1, viewModel.TotalSteps, viewModel.SearchQueryString, viewModel.SearchSource });
+            return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, step = viewModel.Step, viewModel.TotalSteps, viewModel.SearchQueryString, viewModel.SearchSource });
         }
 
         [HttpGet, Route("Download")]
@@ -93,6 +93,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (model.HasErrored)
                 throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+
+            viewModel.Step++;
 
             if (!model.IsComplete)
                 return View("Downloads/PreparingFilePleaseWait", viewModel);
