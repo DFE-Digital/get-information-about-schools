@@ -124,7 +124,7 @@ namespace Edubase.Web.UI.Controllers
                 using (var c = new HttpClient())
                 {
                     var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, file.Url, User);
-                    var response = await c.SendAsync(requestMessage);
+                    var response = (await c.SendAsync(requestMessage)).EnsureSuccessStatusCode();
                     return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType)
                     {
                         FileDownloadName = response.Content.Headers.ContentDisposition.FileName.CleanOfNonChars()
