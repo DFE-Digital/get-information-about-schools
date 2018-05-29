@@ -121,7 +121,7 @@ namespace Edubase.Web.UI.Controllers
             var file = (await _downloadsService.GetListAsync(User)).FirstOrDefault(x => x.Tag == id);
             if (file != null)
             {
-                using (var c = new HttpClient())
+                using (var c = IocConfig.CreateHttpClient())
                 {
                     var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, file.Url, User);
                     var response = (await c.SendAsync(requestMessage)).EnsureSuccessStatusCode();
