@@ -127,7 +127,7 @@ namespace Edubase.Web.UI.Controllers
                     var response = (await c.SendAsync(requestMessage)).EnsureSuccessStatusCode();
                     return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType)
                     {
-                        FileDownloadName = response.Content.Headers.ContentDisposition.FileName.CleanOfNonChars()
+                        FileDownloadName = response.Content.Headers.ContentDisposition.FileName.RemoveSubstring("\"")
                     };
                 }
             }
