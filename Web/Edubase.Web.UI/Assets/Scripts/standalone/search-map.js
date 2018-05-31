@@ -27,7 +27,7 @@ DfE.searchMap = (function () {
             if (!DfE.searchMap.scriptsLoaded) {
                 var s = document.createElement('script');
                 s.src = 'https://maps.googleapis.com/maps/api/js?key=' +
-                    DfE.searchMap.googleApiKey +
+                DfE.searchMap.googleApiKey +
                     '&callback=DfE.searchMap.initMap';
                 document.body.appendChild(s);
                 DfE.searchMap.scriptsLoaded = true;

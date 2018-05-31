@@ -57,7 +57,11 @@
         <!--<![endif]-->
 
         <!--[if (gte IE 9)|!(IE)]><!-->
-            <script src="/public/assets/scripts/application.js?v=@version"></script>
+        <script>
+            var mapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])";
+        </script>
+        <script src="/public/assets/scripts/application.js?v=@version"></script>
+        
         <!--<![endif]-->
 
         <!--[if (gte IE 9)|!(IE)]><!-->

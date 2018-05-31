@@ -13,10 +13,12 @@
         window.DfE = {
             Views: {},
             Elements: {},
-            Util: { Analytics: {} }
+            Util: { Analytics: {} },
+            mapConfig: {}
         };
     }
 
+    window.DfE.mapConfig.apiKey = mapsApiKey;
     window.DfE.Util.randomNumber = function () { return Math.floor((Math.random() * 10000000) + 1); };
 
     window.DfE.Util.QueryString = {
@@ -30,7 +32,6 @@
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
     };
-
 
     $(function () {
         $(document).on("click", "a,.js-track", window.DfE.Util.Analytics.TrackClick);

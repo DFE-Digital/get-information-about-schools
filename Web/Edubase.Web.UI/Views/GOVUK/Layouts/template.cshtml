@@ -92,6 +92,7 @@
     <link rel="apple-touch-icon-precomposed" href="@(ViewBag.assetsPath)/images/apple-touch-icon-60x60.png?0.12.0">
 
     @RenderSection("Head", required: false)
+    
 </head>
 <body class="@(ViewBag.bodyClasses) no-js">
     <!-- Google Tag Manager (noscript) -->
@@ -282,11 +283,13 @@
         </script>
         
     </div>
-    <script>
-        if (top.location !== location) {
-            top.location.href = document.location.href;
-        }
-    </script>
+<script>
+    if (top.location !== location) {
+        top.location.href = document.location.href;
+    }
+</script>
+
 </body>
 
 </html>
+
