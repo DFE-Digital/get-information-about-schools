@@ -4,9 +4,9 @@ DfE.mapInteractions = (function () {
     'use strict';
    
      return {
-        loadGoogleScript: function (initFunc, key) {
+        loadGoogleScript: function (initFunc) {
              if (!initFunc) initFunc = "DfE.mapInteractions.initMap";
-             $.getScript("https://maps.googleapis.com/maps/api/js?key=" + key + "&callback=" + initFunc);
+             $.getScript("https://maps.googleapis.com/maps/api/js?key=" + DfE.mapConfig.apiKey + "&callback=" + initFunc);
         },
         
         initMap: function() {

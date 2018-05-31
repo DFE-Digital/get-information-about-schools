@@ -14,7 +14,7 @@ describe('Map interactions', function(){
         spyOn(DfE.mapInteractions, 'loadGoogleScript').and.callThrough();
         spyOn(DfE.mapInteractions, 'initMap').and.callThrough();
 
-        DfE.mapInteractions.loadGoogleScript("", DfE.mapConfig.apiKey);
+        DfE.mapInteractions.loadGoogleScript();
     });
 
 
