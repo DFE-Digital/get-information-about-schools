@@ -290,3 +290,12 @@
 </body>
 
 </html>
+
+@section ViewScripts
+{
+    <script>
+        DfE = window.DfE || {};
+        DfE.mapConfig = DfE.mapConfig || {};
+        DfE.mapConfig.apiKey = "@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])";
+    </script>
+}

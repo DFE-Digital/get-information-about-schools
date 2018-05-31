@@ -13,10 +13,13 @@
         window.DfE = {
             Views: {},
             Elements: {},
-            Util: { Analytics: {} }
+            Util: { Analytics: {} },
+            mapConfig: {}
         };
     }
 
+    /// this doesn't work as not in a view
+    window.DfE.mapConfig.apiKey = '@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])';
     window.DfE.Util.randomNumber = function () { return Math.floor((Math.random() * 10000000) + 1); };
 
     window.DfE.Util.QueryString = {
@@ -30,7 +33,6 @@
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
     };
-
 
     $(function () {
         $(document).on("click", "a,.js-track", window.DfE.Util.Analytics.TrackClick);

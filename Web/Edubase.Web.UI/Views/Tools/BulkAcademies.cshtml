@@ -227,6 +227,11 @@
 
 
 @section ViewScripts {
+    <script>        
+        DfE = window.DfE || {};
+        DfE.mapConfig = DfE.mapConfig || {};
+        DfE.mapConfig.apiKey = "@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])";
+    </script>
     <script>
         var types = [
             { "id": 39, "name": "Academy 16-19 Converter" },
@@ -284,7 +289,6 @@
     <script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>
     
     @*<script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>*@
-
 }
 
 

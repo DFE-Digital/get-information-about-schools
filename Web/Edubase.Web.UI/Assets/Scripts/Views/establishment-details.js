@@ -8,10 +8,11 @@ DfE.Views.SchoolDetails = (function () {
     var initSchoolMap = function () {
         var mobileToggleSwitch = $('#map-toggle'),
         mapInitialised = false;
+        console.log(DfE);
 
         // map only shows by default on larger screens
         if ($map.length && $map.css('display') === 'block') {
-            DfE.mapInteractions.loadGoogleScript();
+            DfE.mapInteractions.loadGoogleScript("", DfE.mapConfig.apiKey);
             mapInitialised = true;
         }
 
@@ -24,7 +25,7 @@ DfE.Views.SchoolDetails = (function () {
 
             } else {
                 if (!mapInitialised) {
-                    DfE.mapInteractions.loadGoogleScript();
+                    DfE.mapInteractions.loadGoogleScript("", DfE.mapConfig.apiKey);
                     mapInitialised = true;
                 } 
                 $map.css({ display: 'block' });

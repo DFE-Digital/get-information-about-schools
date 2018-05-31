@@ -177,6 +177,11 @@
 </div>
 @section ViewScripts
 {
+    <script>        
+        DfE = window.DfE || {};
+        DfE.mapConfig = DfE.mapConfig || {};
+        DfE.mapConfig.apiKey = "@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])";
+    </script>
     <script>
         var $fields = $('#content').find('.form-control');
         var exitAttached = false;

@@ -1,12 +1,12 @@
 ﻿DfE = window.DfE || {};
 
-DfE.mapInteractions =  (function () {
+DfE.mapInteractions = (function () {
     'use strict';
    
      return {
-         loadGoogleScript: function (initFunc) {
+        loadGoogleScript: function (initFunc, key) {
              if (!initFunc) initFunc = "DfE.mapInteractions.initMap";
-             $.getScript("https://maps.googleapis.com/maps/api/js?key=" + DfE.mapConfig.apiKey + "&callback=" + initFunc);
+             $.getScript("https://maps.googleapis.com/maps/api/js?key=" + key + "&callback=" + initFunc);
         },
         
         initMap: function() {

@@ -63,6 +63,11 @@
 </div>
 
 @section ViewScripts{
+    <script>        
+        DfE = window.DfE || {};
+        DfE.mapConfig = DfE.mapConfig || {};
+        DfE.mapConfig.apiKey = "@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])";
+    </script>
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])"></script>
     <script type="text/javascript">
