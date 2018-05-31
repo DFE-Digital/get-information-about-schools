@@ -14,7 +14,7 @@ namespace Edubase.Services.IntegrationEndPoints.Google
 
     public class GooglePlacesService : IGooglePlacesService
     {
-        static readonly string _apiKey = ConfigurationManager.AppSettings["GoogleApiKey"];
+        static readonly string _apiKey = ConfigurationManager.AppSettings["GoogleApiKeyServerSide"];
         readonly JsonMediaTypeFormatter _formatter = new JsonMediaTypeFormatter();
 
         public async Task<AutocompleteItemDto[]> SearchAsync(string text)
