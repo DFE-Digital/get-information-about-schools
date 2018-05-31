@@ -19,7 +19,7 @@
     }
 
     /// this doesn't work as not in a view
-    window.DfE.mapConfig.apiKey = '@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])';
+    window.DfE.mapConfig.apiKey = mapsApiKey;
     window.DfE.Util.randomNumber = function () { return Math.floor((Math.random() * 10000000) + 1); };
 
     window.DfE.Util.QueryString = {
