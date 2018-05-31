@@ -18,7 +18,6 @@
         };
     }
 
-    /// this doesn't work as not in a view
     window.DfE.mapConfig.apiKey = mapsApiKey;
     window.DfE.Util.randomNumber = function () { return Math.floor((Math.random() * 10000000) + 1); };
 
