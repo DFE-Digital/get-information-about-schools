@@ -19,7 +19,7 @@
 
 @section ViewScripts {
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDzfRLwoZ1fYoPnDiKAQqKeHA7gbhDn8vY"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])"></script>
     <script>
         (function($) {
             var defaults = {
