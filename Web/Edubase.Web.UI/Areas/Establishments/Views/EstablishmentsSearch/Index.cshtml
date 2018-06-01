@@ -301,7 +301,7 @@
                     {
                         <dl class="nested-items">
                             <dt>
-                                <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                                <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x=> selectedItems.Contains(x.Id)), "checked")/>
                                 <label for="@(name)_@item.Id" class="filter-radio">
                                     @item
                                     <a href="#" class="child-option-toggle"></a>
