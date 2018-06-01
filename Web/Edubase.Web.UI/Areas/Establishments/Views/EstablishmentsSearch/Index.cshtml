@@ -274,7 +274,7 @@
     {
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
-    <div class="govuk-option-select js-collapsible nested-filter-options @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
+    <div class="govuk-option-select js-collapsible nested-filter-options js-selectable @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>

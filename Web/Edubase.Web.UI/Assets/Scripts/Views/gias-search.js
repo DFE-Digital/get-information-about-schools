@@ -24,17 +24,17 @@ DfE.searchResults = (function () {
 
     function deDupeParams(qs) {
         var paramArray = qs.split('&');
-        return paramArray.sort().filter(function(item, pos, ary) {
+        return paramArray.sort().filter(function (item, pos, ary) {
             return !pos || item !== ary[pos - 1];
         }).join('&');
 
     }
 
     return {
-        params: function() {
+        params: function () {
             return searchParams;
         },
-        setSearchParams: function() {
+        setSearchParams: function () {
             searchParams = deDupeParams($filterForm.find(':input').filter(function (n, ele) {
                 return ele.value !== '';
             }).serialize());
@@ -102,7 +102,7 @@ DfE.searchResults = (function () {
                         console.log(errorThrown);
                     }
                 });
-                
+
             });
 
             if (document.getElementById('selected-search-filters')) {
@@ -132,14 +132,13 @@ DfE.searchResults = (function () {
 
                 });
 
-            $('#additional-filter-wrap').find('.additional-filter-type').on('change',
-                function () {
+            $('#additional-filter-wrap').find('.additional-filter-type').on('change', function () {
                     $("#filter-refine").prop("disabled", false);
                     if (!$(this).is(':checked')) {
                         $(this.value).find('input:checked').click();
                     }
                 });
-            
+
         },
 
         setupGovUkSelects: function () {
@@ -169,9 +168,9 @@ DfE.searchResults = (function () {
                 });
 
             $('#EditSearchCollapse').find('.age-filter .form-control, .date-filters .form-control').on('blur',
-                function() {
+                function () {
                     var somethingHasValue = $(this).parents('.js-auto-height-inner').find('input.form-control')
-                        .filter(function(n, elem) {
+                        .filter(function (n, elem) {
                             return elem.value.length > 0;
                         }).length >
                         0;
@@ -180,6 +179,20 @@ DfE.searchResults = (function () {
                     } else {
                         $(this).parents('.govuk-option-select').find('.clear-selections').removeClass('active-clear');
                     }
+                });
+
+            $('.govuk-option-select').on('countUpdated',
+                function (e, d) {
+                    var os = this;
+                    if (d.selectedCount) {
+                        $(this).find('.filter-clear, .additional-filter-clear').addClass('active-clear');
+                    } else {
+                        $(this).find('.filter-clear, .additional-filter-clear').removeClass('active-clear');
+                    }
+                    window.setTimeout(function () {
+                        var clearLeftPos = $(os).find('.js-selected-counter').width() + 12 + 'px';
+                        $(os).find('.clear-selections').css({ left: clearLeftPos });
+                    }, 0);
                 });
 
             $clearLinks.on('click',
@@ -209,35 +222,15 @@ DfE.searchResults = (function () {
 
                             if ($(this).parents('.govuk-option-select').hasClass('nested-filter-options')) {
                                 $govUkSelect.find('.filter-group-title').prop('checked', false);
-                                $govUkSelect.find('.filter-group-title').next('label').removeClass('partial-selection');                                
+                                $govUkSelect.find('.filter-group-title').next('label').removeClass('partial-selection');
                             }
                         }
                     }
                 });
 
-            $('.govuk-option-select').on('countUpdated',
-                function (e, d) {
-                    var os = this;
-                    if (d.selectedCount) {
-                        $(this).find('.filter-clear, .additional-filter-clear').addClass('active-clear');
-                    } else {
-                        $(this).find('.filter-clear, .additional-filter-clear').removeClass('active-clear');
-                    }
-                    window.setTimeout(function() {                        
-                        var clearLeftPos = $(os).find('.js-selected-counter').width() + 12 + 'px';
-                        $(os).find('.clear-selections').css({ left: clearLeftPos });
-                    },0);
-                });
-
             
         },
-        disableFilters: function () {
-            $filters.prop('disabled', true);
-            $filterForm.find('.filter-clone').prop('disabled', true);
-            $('#filter-form').find('.active-clear').addClass('clear-disabled');
-            $('#filter-form').find('input[type="text"]').prop('disabled', true);
-            //$('#filter-addtional-controls a').addClass('hidden');
-        },
+        
         enableFilters: function () {
             $filters.prop('disabled', false);
             $filterForm.find('.filter-clone').prop('disabled', false);
@@ -246,23 +239,30 @@ DfE.searchResults = (function () {
             $('#filter-addtional-controls a').removeClass('hidden');
         },
 
-        getResults : function() {
+        disableFilters: function () {
+            $filters.prop('disabled', true);
+            $filterForm.find('.filter-clone').prop('disabled', true);
+            $('#filter-form').find('.active-clear').addClass('clear-disabled');
+            $('#filter-form').find('input[type="text"]').prop('disabled', true);
+        },
+
+        getResults: function () {
             DfE.searchResults.disableFilters();
             $('.date-filter-warning').addClass('hidden');
-            
+
             $resultsContainer.html(plsWait);
-            
+
             $.ajax({
                 type: "POST",
                 url: '/api/tokenize',
-               
+
                 data: searchParams,
                 success: function (data, status, xhr) {
                     token = data.token;
                     if (GOVUK.support.history()) {
                         history.pushState({}, null, window.location.href.split('?')[0] + '?tok=' + token);
                     }
-                    
+
                     $.ajax({
                         url: 'Search/results-js',
                         data: "tok=" + token,
@@ -297,18 +297,18 @@ DfE.searchResults = (function () {
                             }
 
                             $('.js-save-set').removeClass('hidden');
-                          }
+                        }
 
                     });
 
 
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     DfE.searchResults.enableFilters();
                 }
             });
         },
-        shouldShowGovWarning: function() {
+        shouldShowGovWarning: function () {
             return $('#option-select-local-authority').find(':checkbox').filter(':checked').length > 0;
         },
         bindEvents: function () {
@@ -319,20 +319,20 @@ DfE.searchResults = (function () {
                 var chxName = $(this).prop('name');
                 var isChecked = this.checked;
                 var filterCount = $filters.filter(':checked, :selected').length;
-                
+
                 var similarInput = $('#filter-form').find('.trigger-result-update[name="' + chxName + '"]').filter(function (n, input) {
-                if (input.value === chxVal) {
+                    if (input.value === chxVal) {
                         return input;
                     }
                 }).not(currentInput);
 
                 if (similarInput.length > 0) {
-                    similarInput.prop('checked', isChecked);                    
-                    window.setTimeout(function() {
+                    similarInput.prop('checked', isChecked);
+                    window.setTimeout(function () {
                         similarInput.parents('.nested-items').data().nestedFilters.setPartialState();
-                    },0);                    
+                    }, 0);
                 }
-                
+
                 if (filterIntent) {
                     window.clearTimeout(filterIntent);
                 }
@@ -341,11 +341,11 @@ DfE.searchResults = (function () {
                 }
 
                 $resultsContainer.addClass('pending-results-update');
-                searchParams = deDupeParams($filterForm.find(':input').filter(function(n, ele) {
+                searchParams = deDupeParams($filterForm.find(':input').filter(function (n, ele) {
                     return ele.value !== '';
                 }).serialize());
-                    
-              
+
+
                 filterIntent = window.setTimeout(function () {
                     self.getResults();
                     if (DfE.searchMap.currentView === 'map') {
@@ -365,15 +365,9 @@ DfE.searchResults = (function () {
                         }
                     }
 
-                }, 1500);                
-                
-            });
+                }, 1500);
 
-            $('.age-filter').find('.filter-button').on('click',
-                function (e) {
-                    e.preventDefault();
-                    DfE.searchUtils.validateAgeFilters();
-                });
+            });
 
             $('.radius-filter').find('.filter-button').on('click',
                 function (e) {
@@ -381,11 +375,13 @@ DfE.searchResults = (function () {
                     DfE.searchUtils.validateRadiusFilter();
                 });
 
-            $('.date-filters').find('.filter-button').on('click',
+            $('.age-filter').find('.filter-button').on('click',
                 function (e) {
                     e.preventDefault();
-                    DfE.searchUtils.validateDateFilters();
+                    DfE.searchUtils.validateAgeFilters();
                 });
+
+            
 
             $('#clear-filters').on('click', function (e) {
                 e.preventDefault();
@@ -404,6 +400,14 @@ DfE.searchResults = (function () {
                 $filterForm.find('.filter-group-title').prop('checked', false);
                 selectedFilters.slice(0, 1).trigger('change');
             });
+
+            $('.date-filters').find('.filter-button').on('click',
+            function (e) {
+                e.preventDefault();
+                DfE.searchUtils.validateDateFilters();
+            });
+
+            
         },
 
         init: function () {
@@ -411,10 +415,10 @@ DfE.searchResults = (function () {
             downloadBaseUrl = $downloadLink.attr('href').split('?')[0];
             self.setupGovUkSelects();
             self.setupAdditionalFilters();
-             if (document.getElementById('client-only-searchtype')) {
-                 searchType = document.getElementById('client-only-searchtype').value;
-             } 
-            
+            if (document.getElementById('client-only-searchtype')) {
+                searchType = document.getElementById('client-only-searchtype').value;
+            }
+
             if (searchType === 'ByLocalAuthority') {
                 DfE.searchUtils.updateSearchedLas();
             }
@@ -427,8 +431,6 @@ DfE.searchResults = (function () {
                 DfE.searchMap = {};
                 DfE.searchMap.currentView = 'list';
             }
-            
-
         }
     }
 })();
