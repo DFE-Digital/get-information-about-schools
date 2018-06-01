@@ -52,11 +52,19 @@
                     childControls.prop('checked', false);
                 }
                 childControls.change();
-                
-                var count = optSelect.find('.trigger-result-update').filter(function (n,elem) {
-                    return elem.checked;
-                }).length;
 
+                var buf = [];
+                optSelect.find('.trigger-result-update').filter(function (n, elem) {
+                    return elem.checked;
+                }).each(function (n, elem) {
+                    if ($.inArray(elem.value, buf) === -1) {
+                        buf.push(elem.value);
+                    }
+                    });
+
+                var count = buf.length;
+
+   
                 var checkedString = '';
                 if (count > 0) {
                     checkedString = count + ' selected';
@@ -66,8 +74,6 @@
                 window.setTimeout(function () {
                     optSelect.find('.js-selected-counter-text').text(checkedString);
                 }, 0);
-
-
             });
 
             childControls.on('change', function(e) {
