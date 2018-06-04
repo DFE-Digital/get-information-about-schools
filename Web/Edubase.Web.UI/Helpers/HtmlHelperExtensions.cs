@@ -53,7 +53,10 @@ namespace Edubase.Web.UI.Helpers
 
         public static IHtmlString Conditional<TModel>(this HtmlHelper<TModel> htmlHelper, bool condition, string text)
             => condition ? htmlHelper.Raw(text) : MvcHtmlString.Empty;
-        
+
+        public static IHtmlString Conditional<TModel>(this HtmlHelper<TModel> htmlHelper, bool condition, IHtmlString html)
+            => condition ? html : MvcHtmlString.Empty;
+
         public static IHtmlString HiddenFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
          => condition ? htmlHelper.HiddenFor(expression) : MvcHtmlString.Empty;
         

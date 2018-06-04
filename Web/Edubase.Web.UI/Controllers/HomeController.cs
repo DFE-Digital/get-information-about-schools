@@ -70,8 +70,25 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        public static string GetNewsPageETag() => DependencyResolver.Current.GetService<ICacheAccessor>().Get<string>(NewsBlobETag);
+        public static string GetNewsPageETag()
+        {
+            var cache = DependencyResolver.Current.GetService<ICacheAccessor>();
+            var svc = DependencyResolver.Current.GetService<IBlobService>();
 
+            var etag = cache.Get<string>(NewsBlobETag);
+            if(etag == null)
+            {
+                var blob = svc.GetBlobReference("content", NewsBlobNameHtml);
+                if (blob.Exists())
+                {
+                    blob.FetchAttributes();
+                    etag = CleanETag(blob.Properties.ETag);
+                    cache.Set(NewsBlobETag, etag, TimeSpan.FromHours(1));
+                }
+            }
+
+            return etag;
+        }
         private static string CleanETag(string s) => s.Replace("\"", string.Empty);
     }
 }
