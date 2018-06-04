@@ -262,8 +262,6 @@
                 if (!myetag) myetag = null;
                 if (!etag) etag = null;
 
-                // console.log(myetag + " vs " + etag);
-
                 if (myetag != etag) {
                     $("<p/>").okCancel({
                         immediate: true,
@@ -275,7 +273,7 @@
                         triggerEvent: 'click',
                         okLabel: "Go to News page"
                     });
-                    GOVUK.setCookie("@Edubase.Web.UI.Controllers.HomeController.NewsBlobETag", etag);
+                    GOVUK.setCookie("@Edubase.Web.UI.Controllers.HomeController.NewsBlobETag", etag, { days: 365 });
                 }
             })();
                 
