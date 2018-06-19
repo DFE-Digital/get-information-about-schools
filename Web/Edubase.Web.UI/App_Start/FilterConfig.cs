@@ -9,7 +9,7 @@ namespace Edubase.Web.UI
         public static void RegisterGlobalFilters(GlobalFilterCollection filters, ExceptionHandler exceptionHandler)
         {
             filters.Add(new UnauthorizedAccessAttribute());
-            filters.Add(new HandleErrorAttribute());
+            filters.Add(new ErrorHandler.AiHandleErrorAttribute());
             filters.Add(exceptionHandler);
         }
     }
