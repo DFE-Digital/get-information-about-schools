@@ -432,9 +432,13 @@
             
         });
 
-        $(window).on('noLocationMatch', function(e) {
-            self.showWarning($('#searchby-location-ref'),
-                'We couldn’t find any locations matching your search criteria');
+        $(window).on('noLocationMatch', function (e) {
+            var text = $('#LocationSearchModel_Text').val();
+            var match = text.match(/\b[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}\b/i);
+            if (!match) { // only show message when not a postcode
+                self.showWarning($('#searchby-location-ref'),
+                    'We couldn’t find any locations matching your search criteria');
+            }
         });
     }
 

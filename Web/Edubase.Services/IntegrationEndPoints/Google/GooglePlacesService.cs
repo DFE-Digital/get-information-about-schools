@@ -17,17 +17,17 @@ namespace Edubase.Services.IntegrationEndPoints.Google
         static readonly string _apiKey = ConfigurationManager.AppSettings["GoogleApiKeyServerSide"];
         readonly JsonMediaTypeFormatter _formatter = new JsonMediaTypeFormatter();
 
-        public async Task<AutocompleteItemDto[]> SearchAsync(string text)
+        public async Task<GooglePlacesItemDto[]> SearchAsync(string text)
         {
             text = text.Clean();
-            if (text == null) return new AutocompleteItemDto[0];
+            if (text == null) return new GooglePlacesItemDto[0];
             
             using (var client = new HttpClient())
             {
                 var message = await client.GetAsync($"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={text}&key={_apiKey}&components=country:GB&types=(cities)");
                 var response = await ParseHttpResponseMessageAsync<AutocompleteApiQueryResponse>(message);
                 ValidateResponse(response);
-                return response.predictions.Select(x => new AutocompleteItemDto(x.place_id, x.description)).ToArray();
+                return response.predictions.Select(x => new GooglePlacesItemDto(x.place_id, x.description)).ToArray();
             }
         }
 

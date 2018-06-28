@@ -1,5 +1,6 @@
 ﻿using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
+using Edubase.Services.Geo;
 using Edubase.Services.Groups;
 using Edubase.Services.IntegrationEndPoints.Google;
 using Edubase.Services.IntegrationEndPoints.Google.Models;
@@ -26,7 +27,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>().Object;
             var grs = new Mock<IGroupReadService>().Object;
             var cls = new Mock<ICachedLookupService>().Object;
-            var gps = new Mock<IGooglePlacesService>().Object;
+            var gps = new Mock<IPlacesLookupService>().Object;
             var subject = new SearchController(ers, cls, grs, gps);
             var result = (RedirectResult) await subject.Index(new SearchViewModel { LocalAuthorityToRemove = 1, SelectedLocalAuthorityIds = new LocalAuthorityIdList(new[] { 1, 2, 3 }) });
             Assert.That(result.Url, Is.EqualTo($"/?{SearchViewModel.BIND_ALIAS_LAIDS}=2&{SearchViewModel.BIND_ALIAS_LAIDS}=3#la"));
@@ -38,7 +39,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>().Object;
             var grs = new Mock<IGroupReadService>().Object;
             var cls = new Mock<ICachedLookupService>();
-            var gps = new Mock<IGooglePlacesService>().Object;
+            var gps = new Mock<IPlacesLookupService>().Object;
 
             cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "TESTLA" } });
 
@@ -54,7 +55,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>().Object;
             var grs = new Mock<IGroupReadService>().Object;
             var cls = new Mock<ICachedLookupService>();
-            var gps = new Mock<IGooglePlacesService>().Object;
+            var gps = new Mock<IPlacesLookupService>().Object;
 
             cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "TESTLA" }, new LookupDto { Id = 3, Name = "BOB" } });
 
@@ -75,9 +76,9 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>().Object;
             var grs = new Mock<IGroupReadService>().Object;
             var cls = new Mock<ICachedLookupService>();
-            var gps = new Mock<IGooglePlacesService>();
+            var gps = new Mock<IPlacesLookupService>();
 
-            gps.Setup(x => x.SearchAsync("Bob")).ReturnsAsync(new AutocompleteItemDto[] { new AutocompleteItemDto("x", "Bobville") });
+            gps.Setup(x => x.SearchAsync("Bob")).ReturnsAsync(new[] { new PlaceDto("x", "Bobville") });
 
             var subject = new SearchController(ers, cls.Object, grs, gps.Object);
             var viewModel = new SearchViewModel { SearchType = eSearchType.Location };
@@ -97,7 +98,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>().Object;
             var grs = new Mock<IGroupReadService>().Object;
             var cls = new Mock<ICachedLookupService>();
-            var gps = new Mock<IGooglePlacesService>();
+            var gps = new Mock<IPlacesLookupService>();
 
             cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "TESTLA" }, new LookupDto { Id = 3, Name = "BOB" } });
             cls.Setup(x => x.GovernorRolesGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "role" }, new LookupDto { Id = 3, Name = "role" } });
@@ -117,7 +118,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>().Object;
             var grs = new Mock<IGroupReadService>().Object;
             var cls = new Mock<ICachedLookupService>();
-            var gps = new Mock<IGooglePlacesService>();
+            var gps = new Mock<IPlacesLookupService>();
 
 
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
@@ -153,7 +154,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>().Object;
             var grs = new Mock<IGroupReadService>().Object;
             var cls = new Mock<ICachedLookupService>();
-            var gps = new Mock<IGooglePlacesService>();
+            var gps = new Mock<IPlacesLookupService>();
 
 
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
@@ -180,7 +181,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>().Object;
             var grs = new Mock<IGroupReadService>().Object;
             var cls = new Mock<ICachedLookupService>();
-            var gps = new Mock<IGooglePlacesService>();
+            var gps = new Mock<IPlacesLookupService>();
 
 
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);

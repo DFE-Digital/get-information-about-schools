@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.IntegrationEndPoints.Google.Models
 {
-    public class AutocompleteItemDto
+    public class GooglePlacesItemDto
     {
         public string Id { get; set; }
         public string Name { get; set; }
 
-        public AutocompleteItemDto()
+        public GooglePlacesItemDto()
         {
 
         }
 
-        public AutocompleteItemDto(string id, string name)
+        public GooglePlacesItemDto(string id, string name)
         {
             Name = name;
             Id = id;

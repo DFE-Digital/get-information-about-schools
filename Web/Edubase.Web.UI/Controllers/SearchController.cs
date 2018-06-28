@@ -13,7 +13,7 @@ using System.Web.Mvc;
 namespace Edubase.Web.UI.Controllers
 {
     using Common.Spatial;
-    using Services.IntegrationEndPoints.Google;
+    using Edubase.Services.Geo;
     using eStatus = Services.Enums.eLookupEstablishmentStatus;
 
     public class SearchController : EduBaseController
@@ -21,14 +21,14 @@ namespace Edubase.Web.UI.Controllers
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGroupReadService _groupReadService;
-        private readonly IGooglePlacesService _googlePlacesService;
+        private readonly IPlacesLookupService _placesService;
 
         public SearchController(IEstablishmentReadService establishmentReadService,
             ICachedLookupService cachedLookupService,
             IGroupReadService groupReadService,
-            IGooglePlacesService googlePlacesService)
+            IPlacesLookupService placesService)
         {
-            _googlePlacesService = googlePlacesService;
+            _placesService = placesService;
             _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
@@ -151,7 +151,7 @@ namespace Edubase.Web.UI.Controllers
         [Route("Search/ResolveLocation"), HttpGet]
         public async Task<ActionResult> ResolveLocation(string placeId)
         {
-            var location = await _googlePlacesService.GetCoordinateAsync(placeId);
+            var location = await _placesService.GetCoordinateAsync(placeId);
             var url = Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" });
             const string key = "LocationSearchModel.AutoSuggestValue";
             url += "?" + Request.QueryString.RemoveKeys("placeId", key).AddIfNonExistent(key, $"{location.Latitude},{location.Longitude}");
@@ -160,7 +160,7 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<ActionResult> ProcessLocationDisambiguation(SearchViewModel model)
         {
-            var items = await _googlePlacesService.SearchAsync(model.LocationSearchModel.Text);
+            var items = await _placesService.SearchAsync(model.LocationSearchModel.Text);
             return View("LocationDisambiguation", new LocationDisambiguationViewModel() { SearchText = model.LocationSearchModel.Text, MatchingLocations = items.ToList() });
         }
     }

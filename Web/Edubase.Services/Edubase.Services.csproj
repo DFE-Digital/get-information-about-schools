@@ -197,6 +197,7 @@
     <Compile Include="Domain\ApiPagedResult.cs" />
     <Compile Include="Domain\ApiResultDto.cs" />
     <Compile Include="Domain\ApiWarningCodes.cs" />
+    <Compile Include="Domain\AutocompleteItemDto.cs" />
     <Compile Include="Domain\BulkCreateFreeSchoolsResult.cs" />
     <Compile Include="Domain\BulkUpdateProgressModel.cs" />
     <Compile Include="Domain\CreateEstablishmentPermissionDto.cs" />
@@ -250,6 +251,9 @@
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Exceptions\UsageQuotaExceededException.cs" />
+    <Compile Include="Geo\IPlacesLookupService.cs" />
+    <Compile Include="Geo\PlaceDto.cs" />
+    <Compile Include="Geo\PlacesLookupService.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
     <Compile Include="Governors\Downloads\GovernorSearchDownloadPayload.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />
@@ -279,7 +283,7 @@
     <Compile Include="IntegrationEndPoints\Google\GooglePlacesService.cs" />
     <Compile Include="IntegrationEndPoints\Google\IGooglePlacesService.cs" />
     <Compile Include="IntegrationEndPoints\Google\Models\AddressComponent.cs" />
-    <Compile Include="IntegrationEndPoints\Google\Models\AutocompleteItemDto.cs" />
+    <Compile Include="IntegrationEndPoints\Google\Models\GooglePlacesItemDto.cs" />
     <Compile Include="IntegrationEndPoints\Google\Models\Geometry.cs" />
     <Compile Include="IntegrationEndPoints\Google\Models\GoogleApiException.cs" />
     <Compile Include="IntegrationEndPoints\Google\Models\Location.cs" />
@@ -292,6 +296,10 @@
     <Compile Include="IntegrationEndPoints\Google\Models\StructuredFormatting.cs" />
     <Compile Include="IntegrationEndPoints\Google\Models\Term.cs" />
     <Compile Include="IntegrationEndPoints\Google\Models\Viewport.cs" />
+    <Compile Include="IntegrationEndPoints\OSPlaces\IOSPlacesApiService.cs" />
+    <Compile Include="IntegrationEndPoints\OSPlaces\Models\OSPlacesItemDto.cs" />
+    <Compile Include="IntegrationEndPoints\OSPlaces\Models\OSPlacesModels.cs" />
+    <Compile Include="IntegrationEndPoints\OSPlaces\OSPlacesApiService.cs" />
     <Compile Include="Lookup\CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />

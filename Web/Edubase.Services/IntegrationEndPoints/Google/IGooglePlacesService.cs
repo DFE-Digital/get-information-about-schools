@@ -7,6 +7,6 @@ namespace Edubase.Services.IntegrationEndPoints.Google
     public interface IGooglePlacesService
     {
         Task<LatLon> GetCoordinateAsync(string placeId);
-        Task<AutocompleteItemDto[]> SearchAsync(string text);
+        Task<GooglePlacesItemDto[]> SearchAsync(string text);
     }
 }

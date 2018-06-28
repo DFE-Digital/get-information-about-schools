@@ -153,17 +153,22 @@
                     $('#location-search-submit').on('click', function (e) {
                         if (!locationSelected) {
                             e.preventDefault();
-
-                            if ($('#LocationSearchModel_Text').val() !== '') {
-                                $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).click();
-                                window.setTimeout(function() {
-                                    $('#location-search-submit').click();
-                                },100);
-                                
+                            var text = $('#LocationSearchModel_Text').val();
+                            if (text !== '') {
+                                var $elems = $el.nextAll('.tt-menu').find('.tt-suggestion');
+                                if ($elems.length > 0) {
+                                    $elems.slice(0, 1).click();
+                                    window.setTimeout(function () {
+                                        $('#location-search-submit').click();
+                                    }, 200);
+                                } else {
+                                    if (text.match(/\b[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}\b/i)) { // only allow a server-side search when it's a uk postcode
+                                        locationSelected = true;
+                                        $('#location-search-submit').click();
+                                    }
+                                }
                             }
                         }
-                        
-                    
                     });
 
                 },

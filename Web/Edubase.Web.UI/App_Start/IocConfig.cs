@@ -51,6 +51,8 @@ using AzureTableLogger;
 using AzureTableLogger.Services;
 using Edubase.Web.UI.Filters;
 using Microsoft.WindowsAzure.Storage;
+using Edubase.Services.Geo;
+using Edubase.Services.IntegrationEndPoints.OSPlaces;
 
 namespace Edubase.Web.UI
 {
@@ -106,6 +108,8 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
             builder.RegisterType<GooglePlacesService>().As<IGooglePlacesService>();
+            builder.RegisterType<OSPlacesApiService>().As<IOSPlacesApiService>();
+            builder.RegisterType<PlacesLookupService>().As<IPlacesLookupService>();
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
             builder.RegisterInstance(new NomenclatureService()).AsSelf();
 
