@@ -330,6 +330,21 @@ namespace Edubase.Web.UI.Models
         public string ChairOfProprietorsBodyFaxNumber { get; set; }
         public string ChairOfProprietorsBodyEmail { get; set; }
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
+
+        public bool AnyChairOfProprietorsFieldsSet => new[]
+        {
+            ChairOfProprietorsBodyName,
+            ChairOfProprietorsBodyStreet,
+            ChairOfProprietorsBodyLocality,
+            ChairOfProprietorsBodyAddress3,
+            ChairOfProprietorsBodyTown,
+            ChairOfProprietorsBodyPostcode,
+            ChairOfProprietorsBodyTelephoneNumber,
+            ChairOfProprietorsBodyFaxNumber,
+            ChairOfProprietorsBodyEmail,
+            ChairOfProprietorsBodyPreferredJobTitle
+        }.Any(x => x.Clean() != null);
+
         public int? AccommodationChangedId { get; set; }
         public IEnumerable<SelectListItem> PruFulltimeProvisionOptions { get; internal set; }
         public IEnumerable<SelectListItem> PruEducatedByOthersOptions { get; internal set; }

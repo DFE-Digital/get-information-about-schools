@@ -57,38 +57,21 @@
             
             if (radioId === 'proprietor-type-body') {
                 $('#field-clone-target').append(self.cloneFields);
-
-                if (overlayAttached) {
-                     $('#proprietor-radios').find('input').data().okCancel
+                $('#proprietor-radios').find('input').data().okCancel
                     .updateModalContent('Are you sure you want to change to a proprietary body?',
-                        'All single proprietor changes will be lost');
-                }               
-               
+                        'All single proprietor details will be lost');
             } else {
                 $('#cloneable-fields-container').append(self.cloneFields);
-
-                if (overlayAttached) {
-                    $('#proprietor-radios').find('input').data().okCancel
-                        .updateModalContent('Are you sure you want to change to a single proprietor?',
-                            'All proprietary body changes will be lost');
-                }
+                $('#proprietor-radios').find('input').data().okCancel
+                    .updateModalContent('Are you sure you want to change to a single proprietor?',
+                        'All proprietary body details will be lost');
             }
-
         });
 
-
-        $('#proprietor-body, #proprietor-single').on('change, keydown', '.form-control', function() {
-            if (!overlayAttached) {
-                overlayAttached = true;                
-                self.radios.okCancel({
-                    ok: self.okClick,
-                    cancel: self.cancelClick,
-                    idPrefix: 'iebt-'
-                });
-
-            }
-            $('#proprietor-body, #proprietor-single').off('change, keydown', '.form-control');
-            
+        self.radios.okCancel({
+            ok: self.okClick,
+            cancel: self.cancelClick,
+            idPrefix: 'iebt-'
         });
     }    
 };
