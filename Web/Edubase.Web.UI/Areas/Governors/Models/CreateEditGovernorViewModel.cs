@@ -1,4 +1,8 @@
-﻿using Edubase.Services.Enums;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using Edubase.Services.Enums;
+using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
@@ -30,6 +34,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public ReplaceGovernorViewModel ReplaceGovernorViewModel { get; set; } = new ReplaceGovernorViewModel();
 
+
+
         public string FormPostRouteName
         {
             get
@@ -42,5 +48,12 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public string GroupTypeName { get; set; }
         public string TypeName { get; set; }
+
+        public IEnumerable<SelectListItem> ExistingGovernors { get; set; } = Enumerable.Empty<SelectListItem>();
+
+        public GovernorModel SelectedGovernor { get; set; }
+
+        public int? SelectedPreviousGovernorId { get; set; }
+        public bool ReinstateAsGovernor{ get; set; }
     }
 }

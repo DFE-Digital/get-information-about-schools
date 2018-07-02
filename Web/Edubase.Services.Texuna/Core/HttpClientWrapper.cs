@@ -10,6 +10,7 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -392,7 +393,9 @@
         {
             try
             {
-                var apiSessionId = _clientStorage?.Get("ApiSessionId") ?? userId.Clean();
+                bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out bool enableApiLogging);
+                var apiSessionId = _clientStorage?.Get("ApiSessionId") ?? (enableApiLogging ? userId.Clean() : null);
+
                 if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
                 {
                     if (responseMessage == null && response?.Content != null)

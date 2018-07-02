@@ -219,7 +219,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
              Route(GROUP_EDIT_GOVERNOR, Name = "GroupEditGovernor"), Route(ESTAB_EDIT_GOVERNOR, Name = "EstabEditGovernor"),
              Route(GROUP_REPLACE_GOVERNOR, Name = "GroupReplaceGovernor"), Route(ESTAB_REPLACE_GOVERNOR, Name = "EstabReplaceGovernor"),
              HttpGet]
-        public async Task<ActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn, eLookupGovernorRole? role, int? gid)
+        public async Task<ActionResult> AddEditOrReplace(int? groupUId, int? establishmentUrn, eLookupGovernorRole? role, int? gid, int? gid2)
         {
             var replaceMode = (ControllerContext.RouteData.Route as System.Web.Routing.Route).Url.IndexOf("/Replace/", StringComparison.OrdinalIgnoreCase) > -1;
             if (role == null && gid == null) throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
@@ -255,6 +255,20 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.ReplaceGovernorViewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
                     viewModel.ReplaceGovernorViewModel.GID = gid;
                     viewModel.ReplaceGovernorViewModel.Name = model.GetFullName();
+
+                    if (establishmentUrn.HasValue)
+                    {
+                        var models = await _governorsReadService.GetGovernorListAsync(urn: establishmentUrn, principal: User);
+                        var govs = models.CurrentGovernors.Where(x => x.RoleId == (int)eLookupGovernorRole.Governor).OrderBy(x => x.Person_LastName);
+
+                        if (gid2.HasValue)
+                        {
+                            viewModel.SelectedGovernor = govs.FirstOrDefault(x => x.Id == gid2);
+                            PrepopulateFields(viewModel.SelectedGovernor, viewModel);
+                        }
+
+                        viewModel.ExistingGovernors = govs.Select(x => new SelectListItem { Text = x.Person_FirstName + " " + x.Person_LastName, Value = x.Id.ToString(), Selected = gid2.HasValue && gid2.Value == x.Id });
+                    }
                 }
                 else
                 {
@@ -297,6 +311,38 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             ModelState.Clear();
 
             return View(viewModel);
+        }
+
+        /// <summary>
+        /// When replacing an existing chair of governor with data from an existing governor, this method prepopulates the fields from the governor record.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="viewModel"></param>
+        private void PrepopulateFields(GovernorModel model, CreateEditGovernorViewModel viewModel)
+        {
+            viewModel.AppointingBodyId = model.AppointingBodyId;
+            viewModel.AppointmentEndDate = new DateTimeViewModel(model.AppointmentEndDate);
+            viewModel.AppointmentStartDate = new DateTimeViewModel(model.AppointmentStartDate);
+            viewModel.DOB = new DateTimeViewModel(model.DOB);
+            viewModel.EmailAddress = model.EmailAddress;
+
+            viewModel.GovernorTitleId = model.Person_TitleId;
+            viewModel.FirstName = model.Person_FirstName;
+            viewModel.MiddleName = model.Person_MiddleName;
+            viewModel.LastName = model.Person_LastName;
+
+            viewModel.PreviousTitleId = model.PreviousPerson_TitleId;
+            viewModel.PreviousFirstName = model.PreviousPerson_FirstName;
+            viewModel.PreviousMiddleName = model.PreviousPerson_MiddleName;
+            viewModel.PreviousLastName = model.PreviousPerson_LastName;
+
+            viewModel.TelephoneNumber = model.TelephoneNumber;
+            viewModel.PostCode = model.PostCode;
+
+            viewModel.EstablishmentUrn = model.EstablishmentUrn;
+            viewModel.GroupUId = model.GroupUId;
+
+            viewModel.SelectedPreviousGovernorId = model.Id;
         }
 
         private async Task<bool> RoleAllowed(eLookupGovernorRole roleId, int? groupUId, int? establishmentUrn, IPrincipal user)
@@ -379,6 +425,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.GID = response.Response;
                     ModelState.Clear();
 
+                    if (viewModel.SelectedPreviousGovernorId.HasValue)
+                    {
+                        await RetireGovernorAsync(viewModel.SelectedPreviousGovernorId.Value, viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime()?.AddDays(1));
+                        if (viewModel.ReinstateAsGovernor && viewModel.ReplaceGovernorViewModel.GID.HasValue) await ReInstateChairAsGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value);
+                    }
+
                     var url = viewModel.EstablishmentUrn.HasValue
                         ? $"{Url.RouteUrl("EstabDetails", new { id = viewModel.EstablishmentUrn, saved = true })}#school-governance"
                         : $"{Url.RouteUrl("GroupDetails", new { id = viewModel.GroupUId, saved = true })}#governance";
@@ -393,6 +445,24 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             
             return View(viewModel);
         }
+
+        public async Task RetireGovernorAsync(int gid, DateTime? endDate)
+        {
+            await _governorsWriteService.UpdateDatesAsync(gid, endDate ?? DateTime.Now.Date, User);
+        }
+
+        /// <summary>
+        /// Re-instates a chair of governors as just a simple lowly governor
+        /// </summary>
+        /// <param name="gid"></param>
+        /// <returns></returns>
+        public async Task ReInstateChairAsGovernorAsync(int gid)
+        {
+            var model = await _governorsReadService.GetGovernorAsync(gid, User);
+            model.RoleId = (int)eLookupGovernorRole.Governor;
+            await _governorsWriteService.SaveAsync(model, User);
+        }
+
 
         [HttpGet, Route(ESTAB_REPLACE_CHAIR, Name = "EstabReplaceChair"), EdubaseAuthorize]
         public async Task<ActionResult> ReplaceChair(int establishmentUrn, int gid)

@@ -13,18 +13,18 @@
 }
 
 <div class="column-half">
-        
+
     @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post))
     {
-             
+
         <h2 class="heading-medium tab-lead">
-            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Edit ? "Edit" : "") 
-            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Create ? "Add" : "") 
-            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Replace ? "Replace" : "") 
-            
+            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Edit ? "Edit" : "")
+            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Create ? "Add" : "")
+            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Replace ? "Replace" : "")
+
             @Model.GovernorRoleName.ToLower()
         </h2>
-            
+
         @Html.HiddenFor(x => x.GovernorRole)
         @Html.HiddenFor(x => x.GovernorRoleName)
         @Html.HiddenFor(x => x.GID)
@@ -36,29 +36,41 @@
         @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
         @Html.HiddenFor(x => x.IsHistoric)
         @Html.HiddenFor(x => x.Mode)
+        @Html.HiddenFor(x => x.SelectedPreviousGovernorId)
 
         @Html.HiddenFor(x => x.ReplaceGovernorViewModel.GID)
         @Html.HiddenFor(x => x.ReplaceGovernorViewModel.Name)
-            
+
         if (Model.ReplaceGovernorViewModel.GID.HasValue)
         {
             <h3 class="heading-small">@Model.ReplaceGovernorViewModel.Name</h3>
             <div class="date-group-wrap">
                 @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)" })
             </div>
+            <span class="checkbox-wrap">
+                @Html.CheckBoxFor(x => x.ReinstateAsGovernor, new { @id = "ReinstateAsGovernor" })
+                @Html.LabelFor(x => x.ReinstateAsGovernor, "Re-instate as governor", new { @for = "ReinstateAsGovernor", @class = "edubase-button-checkbox" })
+            </span>
         }
+
+
         <h2 class="heading-medium">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</h2>
-            
+
+        if (Model.ExistingGovernors.Any())
+        {
+            <div class="form-group js-when-on">
+                @Html.LabelFor(x => x.SelectedPreviousGovernorId, "Choose governor")
+                @Html.DropDownListFor(x => x.SelectedPreviousGovernorId, Model.ExistingGovernors, "", new { @class = "form-control choose-governor" })
+            </div>
+            <br />
+        }
+
         @Html.EditorFor(m => m, new { disableStartDate = Model.ReplaceGovernorViewModel.GID.HasValue, reactivationWarning = (Model.Mode == CreateEditGovernorViewModel.EditMode.Edit && Model.AppointmentEndDate.ToDateTime().HasValue && Model.AppointmentEndDate.ToDateTime().Value < DateTime.Now.Date) })
 
         <div class="button-row">
             @Buttons()
         </div>
-            
-            
     }
-
-        
 </div>
 
 @helper Buttons()
@@ -84,7 +96,7 @@
 {
     <script>
         (function () {
-            var $fields = $('#content').find('.form-control');
+            var $fields = $('#content').find('.form-control').not(".choose-governor");
             var exitAttached = false;
 
             $fields.on('change', function () {
@@ -139,6 +151,20 @@
                 $saveButton.prop("disabled", true);
                 $("input,select").on("keyup change", toggle);
             })();
+
+
+            $(".choose-governor").on("change", function () {
+
+                var queryParameters = {}, queryString = location.search.substring(1),
+                    re = /([^&=]+)=([^&]*)/g, m;
+
+                while (m = re.exec(queryString)) {
+                    queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+                }
+                queryParameters['gid2'] = $(this).val();
+                location.search = $.param(queryParameters);
+                
+            });
 
         }());
 </script>
