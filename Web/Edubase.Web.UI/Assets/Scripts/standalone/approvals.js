@@ -34,7 +34,6 @@
                 noReasonSelectedError: false,
                 reasonIds: [],
                 noItemsSelected: true
-
             },
             created: function() {
                 this.getChangesData();
@@ -52,7 +51,7 @@
                     return starting + " - " + ending;
                 },
                 totalPages: function() {
-                    return Math.ceil(this.currentCount / defaults.pageSize);
+                    return Math.ceil(this.currentCount / this.pageSize);
                 },
                 isZeroItemsSelected: function () {
                     console.log("isZeroItemsSelected");
@@ -118,7 +117,7 @@
                     $.ajax({
                         url: defaults.apiUrl,
                         data: {
-                            take: defaults.pageSize,
+                            take: this.pageSize,
                             skip: skip || 0,
                             sortBy: this.sortType + sortDir // Jon: put `th.data-sortkey` value into here and concat '-asc' or '-desc'
                         },
@@ -154,8 +153,12 @@
                 },
                 setCurrentPage: function (pageIndex) {
                     this.currentPage = pageIndex;
-                    this.getChangesData(pageIndex * defaults.pageSize);
-
+                    this.getChangesData(pageIndex * this.pageSize);
+                },
+                showAll: function () {
+                    this.currentPage = 0;
+                    this.pageSize = 100000;
+                    this.getChangesData();
                 },
                 confirmRejection: function () {
                     var self = this;

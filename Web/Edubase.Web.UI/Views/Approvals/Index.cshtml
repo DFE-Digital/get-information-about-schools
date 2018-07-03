@@ -94,11 +94,13 @@
                             </p>
                             <ul class="pagination-links">
                                 <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                                <li v-for="item in totalPages">
+                                <li v-if="totalPages > 1" v-for="item in totalPages">
                                     <span v-if="item === currentPage + 1" class="numeric-pagination go-nowhere">{{ item }}</span>
                                     <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(item -1)">{{ item }}</a>
                                 </li>
                                 <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+
+                                <li v-if="totalPages > 1"><a href="#" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
                             </ul>
                         </div>
                     </div>
