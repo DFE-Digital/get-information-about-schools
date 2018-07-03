@@ -51,6 +51,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public IEnumerable<SelectListItem> ExistingGovernors { get; set; } = Enumerable.Empty<SelectListItem>();
 
+        public bool AllowReinstateAsGovernor => EstablishmentUrn.HasValue;
+
         public GovernorModel SelectedGovernor { get; set; }
 
         public int? SelectedPreviousGovernorId { get; set; }

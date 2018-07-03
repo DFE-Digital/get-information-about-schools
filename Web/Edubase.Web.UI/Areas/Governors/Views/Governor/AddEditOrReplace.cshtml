@@ -48,7 +48,7 @@
                 @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)" })
             </div>
 
-            if (Model.ExistingGovernors.Any())
+            if (Model.AllowReinstateAsGovernor)
             {
                 <span class="checkbox-wrap">
                     @Html.CheckBoxFor(x => x.ReinstateAsGovernor, new { @id = "ReinstateAsGovernor" })
@@ -56,7 +56,6 @@
                 </span>
             }
         }
-
 
         <h2 class="heading-medium">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</h2>
 
