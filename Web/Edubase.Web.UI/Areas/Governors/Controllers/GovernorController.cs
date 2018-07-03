@@ -418,6 +418,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     }
                 }
 
+                GovernorModel oldGovernorModel = null;
+                if (viewModel.ReinstateAsGovernor && (viewModel.ReplaceGovernorViewModel?.GID.HasValue).GetValueOrDefault())
+                    oldGovernorModel = await _governorsReadService.GetGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value, User);
+
                 var response = await _governorsWriteService.SaveAsync(governorModel, User);
                 
                 if (response.Success)
@@ -427,8 +431,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                     if (viewModel.SelectedPreviousGovernorId.HasValue)
                     {
-                        await RetireGovernorAsync(viewModel.SelectedPreviousGovernorId.Value, viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime()?.AddDays(1));
-                        if (viewModel.ReinstateAsGovernor && viewModel.ReplaceGovernorViewModel.GID.HasValue) await ReInstateChairAsGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value);
+                        await RetireGovernorAsync(viewModel.SelectedPreviousGovernorId.Value, viewModel.ReplaceGovernorViewModel.AppointmentEndDate.ToDateTime().GetValueOrDefault());
+                        if (viewModel.ReinstateAsGovernor && viewModel.ReplaceGovernorViewModel.GID.HasValue)
+                            await ReInstateChairAsGovernorAsync(viewModel.ReplaceGovernorViewModel.GID.Value, governorModel.AppointmentStartDate.GetValueOrDefault(), (oldGovernorModel?.AppointmentEndDate).GetValueOrDefault());
                     }
 
                     var url = viewModel.EstablishmentUrn.HasValue
@@ -446,9 +451,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(viewModel);
         }
 
-        public async Task RetireGovernorAsync(int gid, DateTime? endDate)
+        public async Task RetireGovernorAsync(int gid, DateTime endDate)
         {
-            await _governorsWriteService.UpdateDatesAsync(gid, endDate ?? DateTime.Now.Date, User);
+            await _governorsWriteService.UpdateDatesAsync(gid, endDate, User);
         }
 
         /// <summary>
@@ -456,10 +461,15 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// </summary>
         /// <param name="gid"></param>
         /// <returns></returns>
-        public async Task ReInstateChairAsGovernorAsync(int gid)
+        public async Task ReInstateChairAsGovernorAsync(int gid, DateTime appointmentStartDate, DateTime appointmentEndDate)
         {
             var model = await _governorsReadService.GetGovernorAsync(gid, User);
             model.RoleId = (int)eLookupGovernorRole.Governor;
+            model.Id = null;
+            model.AppointmentStartDate = appointmentStartDate;
+            model.AppointmentEndDate = appointmentEndDate;
+            model.EmailAddress = null;
+            model.TelephoneNumber = null;
             await _governorsWriteService.SaveAsync(model, User);
         }
 

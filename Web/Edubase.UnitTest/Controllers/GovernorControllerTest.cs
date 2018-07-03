@@ -410,7 +410,7 @@ namespace Edubase.UnitTest.Controllers
         public async Task Gov_AddEditOrReplace_NullParams()
         {
             GetMock<ControllerContext>().SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
-            await ObjectUnderTest.AddEditOrReplace(null, null, null, null).ShouldThrowAsync<EdubaseException>();
+            await ObjectUnderTest.AddEditOrReplace(null, null, null, null, null).ShouldThrowAsync<EdubaseException>();
         }
 
         [Test]
@@ -423,7 +423,7 @@ namespace Edubase.UnitTest.Controllers
             });
             GetMock<ControllerContext>().SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")) );
 
-            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, eLookupGovernorRole.ChairOfGovernors, null);
+            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, eLookupGovernorRole.ChairOfGovernors, null, null);
 
             var redirectResult = result as RedirectToRouteResult;
             redirectResult.ShouldNotBeNull();
@@ -443,7 +443,7 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IGovernorsReadService>().Setup(g => g.GetEditorDisplayPolicyAsync(eLookupGovernorRole.ChairOfGovernors, false, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
             SetupCachedLookupService();
 
-            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, eLookupGovernorRole.ChairOfGovernors, null);
+            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, eLookupGovernorRole.ChairOfGovernors, null, null);
 
             var viewResult = result as ViewResult;
             viewResult.ShouldNotBeNull();
@@ -473,7 +473,7 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IGovernorsReadService>().Setup(g => g.GetEditorDisplayPolicyAsync(eLookupGovernorRole.Governor, false, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
             SetupCachedLookupService();
 
-            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, null, 1032);
+            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, null, 1032, null);
 
             var viewResult = result as ViewResult;
             viewResult.ShouldNotBeNull();
@@ -493,7 +493,7 @@ namespace Edubase.UnitTest.Controllers
             });
             GetMock<ControllerContext>().SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
 
-            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, null);
+            var result = await ObjectUnderTest.AddEditOrReplace(null, estabUrn, eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, null, null);
 
             var redirectResult = result as RedirectToRouteResult;
             redirectResult.ShouldNotBeNull();

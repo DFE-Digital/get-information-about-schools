@@ -25,6 +25,10 @@ DfE.Util.showUnload = function (message, permitedExits) {
 
     $('body').append(overlay);
 
+    this.suppress = function () {
+        youMayLeave = true;
+    }
+
     function bindEscapeKey() {
         $(document).on('keypress', function (e) {
             e = e || window.event;
@@ -106,7 +110,6 @@ DfE.Util.showUnload = function (message, permitedExits) {
 
     $('body').on('click', '#button-ok', function () {
         youMayLeave = true;
-        console.log(exitElem);
         if (typeof exitUrl !== 'undefined') {
             window.location = exitUrl;
         } else {
@@ -120,5 +123,7 @@ DfE.Util.showUnload = function (message, permitedExits) {
             return message;
         }
     });
+
+    return this;
 };
 

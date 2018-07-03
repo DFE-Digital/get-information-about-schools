@@ -99,9 +99,10 @@
             var $fields = $('#content').find('.form-control').not(".choose-governor");
             var exitAttached = false;
 
+            var unloadWarning = null;
             $fields.on('change', function () {
                 if (!exitAttached) {
-                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                    unloadWarning = DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
                     exitAttached = true;
                 }
 
@@ -154,6 +155,8 @@
 
 
             $(".choose-governor").on("change", function () {
+
+                if (unloadWarning) unloadWarning.suppress();
 
                 var queryParameters = {}, queryString = location.search.substring(1),
                     re = /([^&=]+)=([^&]*)/g, m;
