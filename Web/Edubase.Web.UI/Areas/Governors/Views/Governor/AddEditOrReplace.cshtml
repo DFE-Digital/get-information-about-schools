@@ -47,10 +47,14 @@
             <div class="date-group-wrap">
                 @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)" })
             </div>
-            <span class="checkbox-wrap">
-                @Html.CheckBoxFor(x => x.ReinstateAsGovernor, new { @id = "ReinstateAsGovernor" })
-                @Html.LabelFor(x => x.ReinstateAsGovernor, "Re-instate as governor", new { @for = "ReinstateAsGovernor", @class = "edubase-button-checkbox" })
-            </span>
+
+            if (Model.ExistingGovernors.Any())
+            {
+                <span class="checkbox-wrap">
+                    @Html.CheckBoxFor(x => x.ReinstateAsGovernor, new { @id = "ReinstateAsGovernor" })
+                    @Html.LabelFor(x => x.ReinstateAsGovernor, "Re-instate as governor", new { @for = "ReinstateAsGovernor", @class = "edubase-button-checkbox" })
+                </span>
+            }
         }
 
 
