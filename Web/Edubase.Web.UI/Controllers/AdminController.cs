@@ -14,6 +14,7 @@ using AzureTableLogger.LogMessages;
 using AzureTableLogger.Services;
 using Edubase.Services.Domain;
 using Microsoft.WindowsAzure.Storage.Table;
+using System.Linq;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -28,14 +29,14 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Logs(string date, string skipToken)
         {
             var result = await _loggingService.GetAllAsync(10, UriHelper.TryDeserializeUrlToken<TableContinuationToken>(skipToken), date.ToDateTime("yyyyMMdd"));
-            LogMessagesDto dto = new LogMessagesDto(result.Item1, UriHelper.SerializeToUrlToken(result.Item2));
+            LogMessagesDto dto = new LogMessagesDto(result.Item1.Cast<WebLogMessage>(), UriHelper.SerializeToUrlToken(result.Item2));
             return View(new LogMessagesViewModel(dto) {DateFilter = date});
         }
 
         [Route("LogDetail/{id}")]
         public async Task<ActionResult> LogDetail(string id)
         {
-            var message = await _loggingService.GetAsync(id);
+            var message = (WebLogMessage) await _loggingService.GetAsync(id);
             if (message == null) return Content("Log message not found.  Please note it may take up to 30 seconds for a log message to become available at this URL.", "text/plain");
             return View(message);
         }
