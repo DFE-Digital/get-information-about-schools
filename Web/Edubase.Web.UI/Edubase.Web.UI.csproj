@@ -949,7 +949,6 @@
     <Content Include="Views\GOVUK\Partials\phase\beta.cshtml" />
     <Content Include="Views\GOVUK\Views\ga\google-analytics.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Prototype\TestView.cshtml" />
     <Content Include="Views\Prototype\4778-school-search.cshtml" />
     <Content Include="Views\Prototype\4720-create-school.cshtml" />
@@ -957,9 +956,6 @@
     <Content Include="Views\Prototype\Placeholder.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Create.cshtml" />
-    <Content Include="Views\Admin\Logs.cshtml" />
-    <Content Include="Views\Admin\LogDetail.cshtml" />
-    <Content Include="Views\Admin\Dashboard.cshtml" />
     <Content Include="Views\Downloads\PreparingScheduledExtractPleaseWait.cshtml" />
     <Content Include="Views\Downloads\ReadyToDownloadScheduledExtract.cshtml" />
     <Content Include="Views\ChangeHistory\Index.cshtml" />
@@ -1066,6 +1062,7 @@
     <Folder Include="grunt\" />
     <Folder Include="public\govuk_template\assets\javascripts\vendor\goog\" />
     <Folder Include="public\html\" />
+    <Folder Include="Views\Admin\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
     <Folder Include="Views\UserRoles\" />
   </ItemGroup>
