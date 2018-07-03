@@ -82,10 +82,10 @@ namespace Edubase.Web.UI.Controllers.Api
                     EstablishmentType = x.TypeId.HasValue ? estabTypes.FirstOrDefault(t => t.Id == x.TypeId)?.Name : null,
                     OpeningDate = x.OpenDate,
                     DisplayDate = x.OpenDate?.ToString("dd/MM/yyyy"),
-                    PredecessorName = x.PredecessorName,
-                    PredecessorUrn = x.PredecessorUrn,
+                    x.PredecessorName,
+                    x.PredecessorUrn,
                 }).OrderBy(x=> x.OpeningDate),
-                Count = apiResult.Count
+                apiResult.Count
             };
         }
 

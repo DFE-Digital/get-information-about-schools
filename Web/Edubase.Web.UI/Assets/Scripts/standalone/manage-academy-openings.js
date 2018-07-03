@@ -122,6 +122,11 @@
 
                 return [yyyy, mm, dd].join(separator);
             },
+            showAll: function () {
+                this.pageSize = 100000;
+                this.setCurrentPage(0);
+                this.buildPages(this.openingAcademies, this.pageSize);
+            },
             buildDateDropDown: function () {
                 var openingDates = [];
                 var i;
