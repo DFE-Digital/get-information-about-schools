@@ -265,7 +265,7 @@
 
                     @if (Model.EditPolicy.Contact_TelephoneNumber)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.Contact_TelephoneNumber)">
                             <label for="Contact_TelephoneNumber" class="form-label">Telephone</label>
                             @Html.TextBoxFor(x => x.Contact_TelephoneNumber, new { @class = "form-control" })
                         </div>

@@ -298,7 +298,8 @@ namespace Edubase.Web.UI.Controllers
                     NextActionRequiredByWELMax = viewModel.IsWelfareMode ? getMaxDate(viewModel.MaxDate.ToDateTime()) : null,
                     NextGeneralActionRequiredMin = viewModel.IsGeneralMode ? getMinDate(viewModel.MinDate.ToDateTime()) : null,
                     NextGeneralActionRequiredMax = viewModel.IsGeneralMode ? getMaxDate(viewModel.MaxDate.ToDateTime()) : null,
-                    LocalAuthorityIds = laIds
+                    LocalAuthorityIds = laIds,
+                    StatusIds = new[] { (int) eLookupEstablishmentStatus.Open, (int) eLookupEstablishmentStatus.OpenButProposedToClose }
                 },
                 Skip = viewModel.Skip,
                 Take = 50,

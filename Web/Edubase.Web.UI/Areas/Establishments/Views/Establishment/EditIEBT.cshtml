@@ -99,13 +99,13 @@
                 <fieldset class="toggle-panels" id="proprietor-radios">
                     <legend class="bold-legend">Proprietor</legend>
                     <span class="radio-button-wrap">
-                        <input type="radio" name="proprietor-type" value="single" id="proprietor-type-single" data-toggle-panel="#proprietor-single" />
+                        <input type="radio" name="proprietor-type" value="single" id="proprietor-type-single" data-toggle-panel="#proprietor-single"  @Html.Conditional(!Model.AnyChairOfProprietorsFieldsSet, "checked") />
                         <label class="edubase-button-radio" for="proprietor-type-single">
                             Single proprietor
                         </label>
                     </span>
                     <span class="radio-button-wrap">
-                        <input type="radio" name="proprietor-type" value="body" id="proprietor-type-body" data-toggle-panel="#proprietor-body" />
+                        <input type="radio" name="proprietor-type" value="body" id="proprietor-type-body" data-toggle-panel="#proprietor-body" @Html.Conditional(Model.AnyChairOfProprietorsFieldsSet, "checked") />
                         <label class="edubase-button-radio" for="proprietor-type-body">
                             Proprietory body
                         </label>
@@ -137,9 +137,8 @@
                 <div id="proprietor-body" class="panel-indent edu-edit-panel">
                     <h4 class="heading-small">Proprietor body details</h4>
                     <div id="field-clone-target">
-                        
+
                     </div>
-                    
                     
                     <h4 class="heading-small edu-section-break">Chair of the proprietary body details</h4>
 
@@ -151,7 +150,7 @@
                     @RenderTextBox("Town", x => x.ChairOfProprietorsBodyTown)
                     
                     <div class="form-group cloneable">
-                        <label for="ChairOfProprietorsBodyCountyId" class="form-label">County</label>
+                        <label for="@nameof(Model.ChairOfProprietorsBodyCountyId)" class="form-label">County</label>
                         @Html.DropDownListFor(x => x.ChairOfProprietorsBodyCountyId, Model.Counties, "", new { @class = "form-control" })
                     </div>
 
