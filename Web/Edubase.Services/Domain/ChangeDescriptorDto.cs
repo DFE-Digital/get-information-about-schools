@@ -8,5 +8,6 @@ namespace Edubase.Services.Domain
         public string Name { get; set; }
         public string OldValue { get; set; }
         public string NewValue { get; set; }
+        public string Id { get; set; }
     }
 }

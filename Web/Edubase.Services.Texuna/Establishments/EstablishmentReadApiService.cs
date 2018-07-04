@@ -15,6 +15,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using MoreLinq;
+using Edubase.Services.Establishments.EditPolicies;
 
 namespace Edubase.Services.Texuna.Establishments
 {
@@ -83,8 +84,8 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<FileDownloadDto> GetDownloadAsync(int urn, DownloadType format, IPrincipal principal)
             => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/download?format={format.ToString().ToLower()}", principal)).GetResponse();
 
-        public async Task<EstablishmentDisplayEditPolicy> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user)
-                    => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/edit-policy", user)).GetResponse().Initialise(establishment);
+        public async Task<EstablishmentEditPolicyEnvelope> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user)
+                    => (await _httpClient.GetAsync<EstablishmentEditPolicyEnvelope>($"establishment/{establishment.Urn}/edit-policy", user)).GetResponse().Initialise(establishment);
 
         public async Task<string> GetEstablishmentNameAsync(int urn, IPrincipal principal) => (await GetAsync(urn, principal)).GetResult().Name;
 
@@ -175,6 +176,7 @@ namespace Edubase.Services.Texuna.Establishments
 
                 retVal.Add(new ChangeDescriptorDto
                 {
+                    Id = change.Name,
                     Name = change.DisplayName ?? change.Name,
                     NewValue = change.NewValue.Clean(),
                     OldValue = change.OldValue.Clean()

@@ -557,7 +557,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var viewModel = _mapper.Map<ViewModel>(domainModel);
             _mapper.Map(domainModel.IEBTModel, viewModel);
 
-            viewModel.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
+            viewModel.EditPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
             viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
@@ -685,7 +685,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.SelectedTab = selectedTabName;
             viewModel.Urn = urn;
             var domainModel = (await _establishmentReadService.GetAsync(urn, User)).GetResult();
-            var editPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
+            var editPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, editPolicy, User);
             viewModel.Name = domainModel.Name;
             if (domainModel.TypeId.HasValue) viewModel.TypeName = (await _cachedLookupService.GetNameAsync(() => domainModel.TypeId));
@@ -933,7 +933,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private async Task<ActionResult> SaveEstablishment(ViewModel model)
         {
             var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
-            model.EditPolicy = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
+            var editPolicyEnvelope = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
+            model.EditPolicy = editPolicyEnvelope.EditPolicy;
+
             if ((model.EditPolicy.AdditionalAddresses.HasValue && !model.EditPolicy.AdditionalAddresses.Value || model.AdditionalAddresses.Count == 0) && domainModel.AdditionalAddresses != null)
             {
                 model.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
@@ -944,9 +946,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (model.ActionSpecifierCommand == ViewModel.ASSave)
             {
-                var originalEstabTypeId = (eLookupEstablishmentType)domainModel.TypeId;
+                var originalEstabTypeId = (ET)domainModel.TypeId;
                 await ValidateAsync(model, domainModel);
-                var newEstabTypeId = (eLookupEstablishmentType?)domainModel.TypeId;
+                var newEstabTypeId = (ET?)domainModel.TypeId;
 
                 if (ModelState.IsValid)
                 {
@@ -954,10 +956,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                     var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, User);
 
-                    if (originalEstabTypeId == eLookupEstablishmentType.ChildrensCentreLinkedSite && newEstabTypeId == eLookupEstablishmentType.ChildrensCentre) model.CCIsPromoting = true;
-                    else if (originalEstabTypeId == eLookupEstablishmentType.ChildrensCentre && newEstabTypeId == eLookupEstablishmentType.ChildrensCentreLinkedSite) model.CCIsDemoting = true;
+                    if (originalEstabTypeId == ET.ChildrensCentreLinkedSite && newEstabTypeId == ET.ChildrensCentre) model.CCIsPromoting = true;
+                    else if (originalEstabTypeId == ET.ChildrensCentre && newEstabTypeId == ET.ChildrensCentreLinkedSite) model.CCIsDemoting = true;
 
-                    if (changes.Any()) model.ChangesSummary = changes;
+                    if (changes.Any())
+                    {
+                        model.ChangesSummary = changes;
+                        model.ApprovalFields = editPolicyEnvelope.GetApprovalFields();
+                    }
                     else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }

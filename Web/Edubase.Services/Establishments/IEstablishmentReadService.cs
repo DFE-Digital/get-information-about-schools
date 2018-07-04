@@ -2,6 +2,7 @@
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.DisplayPolicies;
+using Edubase.Services.Establishments.EditPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace Edubase.Services.Establishments
 
         Task<FileDownloadDto> GetDownloadAsync(int urn, DownloadType format, IPrincipal principal);
 
-        Task<EstablishmentDisplayEditPolicy> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user);
+        Task<EstablishmentEditPolicyEnvelope> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user);
 
         Task<string> GetEstablishmentNameAsync(int urn, IPrincipal principal);
 

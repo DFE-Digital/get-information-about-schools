@@ -3,6 +3,7 @@ using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.DisplayPolicies;
+using Edubase.Services.Establishments.EditPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Groups;
@@ -122,7 +123,7 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishment));
             GetMock<IMapper>().Setup(m => m.Map<EditEstablishmentModel>(establishment)).Returns(editEstabModel);
             GetMock<IMapper>().Setup(m => m.Map(It.IsAny<IEBTModel>(), editEstabModel)).Returns(editEstabModel);
-            GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() });
+            GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentEditPolicyEnvelope { EditPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() } });
             GetMock<IPrincipal>().Setup(p => p.IsInRole(It.IsAny<string>())).Returns(true);
 
             SetupCachedLookupService();
@@ -204,7 +205,7 @@ namespace Edubase.UnitTest.Controllers
             GetMock<ICachedLookupService>().Setup(c => c.NationalitiesGetAllAsync()).ReturnsAsync(() => nationalities);
             GetMock<ICachedLookupService>().Setup(c => c.CountiesGetAllAsync()).ReturnsAsync(() => counties);
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishment));
-            GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(It.IsAny<EstablishmentModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy { AccommodationChangedId = true } });
+            GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(It.IsAny<EstablishmentModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentEditPolicyEnvelope { EditPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy { AccommodationChangedId = true } } });
 
             await ObjectUnderTest.AddOrReplaceEstablishmentAddressAsync(5, "test");
         }
