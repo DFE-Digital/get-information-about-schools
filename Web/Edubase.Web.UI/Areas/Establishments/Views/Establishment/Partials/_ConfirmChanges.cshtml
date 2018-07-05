@@ -73,13 +73,13 @@
         <p class="font-xsmall">Please conﬁrm updates to the following items for the Establishment @Model.OriginalEstablishmentName. URN: @Model.Urn.</p>
 
         <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
-        <table class="edubase-table changes-summary">            
+        <table class="edubase-table changes-summary confirm-changes">            
             <thead>
                 <tr>
                     <th>Field</th>
                     <th>Old value</th>
                     <th>New value</th>
-                    <th>Requires approval?</th>
+                    <th>This field requires approval</th>
                 </tr>
             </thead>
             <tbody>
@@ -89,7 +89,16 @@
                         <td aria-label="Field">@item.Name</td>
                         <td aria-label="Old value">@(item.OldValue ?? "<empty>")</td>
                         <td aria-label="New value">@(item.NewValue ?? "<empty>")</td>
-                        <td aria-label="Requires approval">@(Model.ApprovalFields.Contains(item.Id, StringComparer.InvariantCultureIgnoreCase) ? "Yes" : "No")</td>
+                        <td aria-label="This field requires approval">
+                            @if(Model.ApprovalFields.Contains(item.Id, StringComparer.InvariantCultureIgnoreCase))
+                            {
+                                <div class="requires-approval">Yes</div>
+                            }
+                            else
+                            {
+                                <text>No</text>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>

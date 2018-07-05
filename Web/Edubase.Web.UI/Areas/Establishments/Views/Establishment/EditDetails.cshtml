@@ -6,6 +6,12 @@
     {
         Layout = "_EditLayoutPage.cshtml";
     }
+    else
+    {
+        ViewBag.bodyClasses = "create-edit-school school-details";
+        ViewBag.hideLogo = true;
+        ViewBag.Title = "Edit establishment";
+    }
 }
 
 @using (Html.BeginForm())
@@ -16,6 +22,9 @@
         @Html.HiddenFor(x => x.SelectedTab)
         @Html.HiddenFor(x => x.TypeName)
         @Html.HiddenFor(x => x.LegalParentGroupToken)
+        @Html.HiddenFor(x => x.ChangesInstantCount)
+        @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
+
         <div class="column-full" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
             <div class="grid-row">
 

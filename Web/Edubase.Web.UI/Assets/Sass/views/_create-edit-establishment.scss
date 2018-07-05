@@ -239,6 +239,24 @@ legend {
     legend.effective-date {
         font-weight: bold;
     }
+
+
+    .edubase-table.changes-summary.confirm-changes {
+        div.requires-approval {
+            width: 50px;
+            color: $orange;
+            display: inline-block;
+            background-image: file-url("icons/icon-information.png");
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: contain;
+
+            @include device-pixel-ratio() {
+                background-image: file-url("icons/icon-information-2x.png");
+                background-size: contain;
+            }
+        }
+    }
 }
 
 

@@ -1,9 +1,7 @@
 ﻿@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
 @using Edubase.Common
-@using Edubase.Services.Domain
 @using Edubase.Services.Enums
-@using Edubase.Web.Resources
 @using Microsoft.Ajax.Utilities
 @model EstablishmentDetailViewModel
 @{
@@ -60,7 +58,7 @@
     }
 }
 
-@if (ViewBag.ShowSaved)
+@if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
 {
     <div class="pending-updates-message dismissable-message">
         <div class="tick"></div>
@@ -69,20 +67,22 @@
     </div>
 }
 
-@if (ViewBag.ShowApproved)
+@if (ViewBag.ApprovedCount != null && ViewBag.ApprovedCount > 0)
 {
+    var c = (int)ViewBag.ApprovedCount;
     <div class="pending-updates-message dismissable-message">
         <div class="tick"></div>
-        Your changes have been approved
+        @c change@(Html.Conditional(c > 1, "s")) to establishment details @(c > 1 ? "have" : "has") been instantly updated
         <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
     </div>
 }
 
-@if (ViewBag.PendingApproval)
+@if (ViewBag.PendingApprovalCount != null && ViewBag.PendingApprovalCount > 0)
 {
+    var c = (int)ViewBag.PendingApprovalCount;
     <div class="pending-updates-message dismissable-message">
         <div class="tick"></div>
-        Your changes have been submitted, some changes may require approval before being visible
+        @c change@(Html.Conditional(c > 1, "s")) to establishment details require approval. You do not need to take any action now and changes will be made soon. If we need more information we will contact you.
         <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
     </div>
 }

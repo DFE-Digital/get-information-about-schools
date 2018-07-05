@@ -235,10 +235,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, bool approved = false, bool pendingApproval = false, int skip = 0, string sortBy = null, bool saved = false)
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, 
+            int approved = 0, int pending = 0, int skip = 0, string sortBy = null, bool saved = false)
         {
-            ViewBag.ShowApproved = approved;
-            ViewBag.PendingApproval = pendingApproval;
+            ViewBag.ApprovedCount = approved;
+            ViewBag.PendingApprovalCount = pending;
             ViewBag.ShowSaved = saved;
 
             var viewModel = new EstablishmentDetailViewModel
@@ -963,8 +964,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     {
                         model.ChangesSummary = changes;
                         model.ApprovalFields = editPolicyEnvelope.GetApprovalFields();
+                        model.ChangesRequireApprovalCount = changes.Where(x => model.ApprovalFields.Contains(x.Id, StringComparer.OrdinalIgnoreCase)).Count();
+                        model.ChangesInstantCount = changes.Where(x => !model.ApprovalFields.Contains(x.Id, StringComparer.OrdinalIgnoreCase)).Count();
+                        ModelState.Remove(nameof(model.ChangesRequireApprovalCount));
+                        ModelState.Remove(nameof(model.ChangesInstantCount));
                     }
-                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
+                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
             else if(model.ActionSpecifierCommand == ViewModel.ASAddAddress) model.AdditionalAddresses.Add(new AdditionalAddressModel());
@@ -975,7 +980,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     await PrepareModels(model, domainModel);
                     await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                    return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value, approved = model.OverrideCRProcess, pendingApproval = !model.OverrideCRProcess }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
+                    return Redirect(Url.RouteUrl("EstabDetails", new
+                    {
+                        id = model.Urn.Value,
+                        approved = model.GetChangesNotRequiringApprovalCount(),
+                        pending = model.GetChangesRequiringApprovalCount()
+                    }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
 
