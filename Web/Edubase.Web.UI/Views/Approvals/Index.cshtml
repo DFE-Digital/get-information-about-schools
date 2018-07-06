@@ -113,6 +113,10 @@
                                     <a href="#" v-on:click.prevent="setSort('establishmentUrn')"
                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentUrn' ? 'selected-sort': '' ]">URN</a>
                                 </th>
+                                <th scope="col" class="cell-urn">
+                                    <a href="#" v-on:click.prevent="setSort('establishmentLAESTAB')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentLAESTAB' ? 'selected-sort': '' ]">DfE Number</a>
+                                </th>
                                 <th scope="col" class="cell-estab">
                                     <a href="#" v-on:click.prevent="setSort('establishmentName')"
                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentName' ? 'selected-sort': '' ]">Establishment</a>
@@ -154,6 +158,7 @@
                                 <td aria-label="URN">
                                     <a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentUrn}}</a>
                                 </td>
+                                <td aria-label="DfE Number">{{entry.establishmentLAESTAB}}</td>
                                 <td aria-label="Establishment"><a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentName}}</a></td>
                                 <td aria-label="Updated field">{{entry.fieldName}}</td>
                                 <td aria-label="Old value">{{entry.oldValue}}</td>

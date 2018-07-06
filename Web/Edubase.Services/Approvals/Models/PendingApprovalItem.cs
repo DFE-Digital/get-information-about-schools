@@ -15,6 +15,7 @@ namespace Edubase.Services.Approvals.Models
         public string OriginatorFullName { get; set; }
         public int EstablishmentUrn { get; set; }
         public string EstablishmentName { get; set; }
+        public string EstablishmentLAESTAB { get; set; }
 
     }
 }

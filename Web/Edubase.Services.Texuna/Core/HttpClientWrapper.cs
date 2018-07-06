@@ -52,6 +52,11 @@
 
         }
 
+        public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage) : this(httpClient, formatter, clientStorage, null)
+        {
+
+        }
+
         public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal) => await GetAsync<TResponse>(uri, principal, true);
 
         public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal, bool throwOnNotFound)

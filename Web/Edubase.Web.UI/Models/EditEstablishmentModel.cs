@@ -66,6 +66,7 @@ namespace Edubase.Web.UI.Models
         public int? DioceseId { get; set; }
         public int? AdmissionsPolicyId { get; set; }
         public int? Capacity { get; set; }
+        public int? NumberOfPupilsOnRoll { get; set; }
         public int? ProvisionSpecialClassesId { get; set; }
         public int? UKPRN { get; set; }
         public int? EstablishmentTypeGroupId { get; set; }

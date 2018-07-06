@@ -50,6 +50,7 @@ namespace Edubase.Services.Establishments.Models
         public virtual bool Capacity { get; set; }
 
         public virtual bool ProvisionSpecialClassesId { get; set; }
+        public virtual bool NumberOfPupilsOnRoll { get; set; }
 
         public virtual bool UKPRN { get; set; }
 

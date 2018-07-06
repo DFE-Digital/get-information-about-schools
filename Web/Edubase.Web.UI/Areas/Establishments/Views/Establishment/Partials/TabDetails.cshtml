@@ -70,6 +70,12 @@
                 <dd>@Model.Establishment.Capacity</dd>
             }
 
+            @if (Model.DisplayPolicy.NumberOfPupilsOnRoll)
+            {
+                <dt>Number of pupils:</dt>
+                <dd>@Model.Establishment.NumberOfPupilsOnRoll</dd>
+            }
+
             @if (Model.DisplayPolicy.Section41ApprovedId)
             {
                 <dt>Section 41 approved:</dt>

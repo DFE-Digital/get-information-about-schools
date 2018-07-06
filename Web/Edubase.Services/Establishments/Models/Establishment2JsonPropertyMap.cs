@@ -106,7 +106,9 @@ namespace Edubase.Services.Establishments.Models
             "predecessorName",
             "predecessorUrn",
             "nextGeneralActionRequired",
-            "nextActionRequiredByWEL"};
+            "nextActionRequiredByWEL",
+            "numberOfPupilsOnRoll"
+        };
 
         public static string Convert(string propertyName)
         {

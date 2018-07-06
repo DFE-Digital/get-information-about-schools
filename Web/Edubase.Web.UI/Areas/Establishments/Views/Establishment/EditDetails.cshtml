@@ -369,6 +369,14 @@
                         </div>
                     }
 
+                    @if (Model.EditPolicy.NumberOfPupilsOnRoll)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.NumberOfPupilsOnRoll)">
+                            <label for="NumberOfPupilsOnRoll">Number of pupils</label>
+                            @Html.TextBoxFor(x => x.NumberOfPupilsOnRoll, new { id = "NumberOfPupilsOnRoll", @class = "form-control", type = "number" })
+                        </div>
+                    }
+
                     @if (Model.EditPolicy.Section41ApprovedId)
                     {
                         <div class="form-group">

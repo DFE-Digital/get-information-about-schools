@@ -1,7 +1,9 @@
 ﻿using Edubase.Services;
+using Edubase.Services.Core;
 using Edubase.Services.Exceptions;
 using Edubase.UnitTest.Mocks;
 using Edubase.Web.UI;
+using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
@@ -121,7 +123,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
             return retVal;
         }
 
-        private HttpClientWrapper CreateWrapper(MockHttpMessageHandler mockHandler) => new HttpClientWrapper(new HttpClient(mockHandler), IocConfig.CreateJsonMediaTypeFormatter());
+        private HttpClientWrapper CreateWrapper(MockHttpMessageHandler mockHandler) => new HttpClientWrapper(new HttpClient(mockHandler), IocConfig.CreateJsonMediaTypeFormatter(), new Mock<IClientStorage>(MockBehavior.Loose).Object);
 
 
     }

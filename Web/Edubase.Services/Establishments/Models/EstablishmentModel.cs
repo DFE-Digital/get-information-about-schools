@@ -77,6 +77,10 @@ namespace Edubase.Services.Establishments.Models
         [DisplayName("Special classes")]
         public int? ProvisionSpecialClassesId { get; set; }
 
+        [DisplayName("Number of pupils")]
+        public int? NumberOfPupilsOnRoll { get; set; }
+
+
         [DisplayName("UKPRN"), JsonProperty("UKPRN")]
         public int? UKPRN { get; set; }
 
