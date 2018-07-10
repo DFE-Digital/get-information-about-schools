@@ -63,7 +63,7 @@
         {
             <div class="form-group js-when-on">
                 @Html.LabelFor(x => x.SelectedPreviousGovernorId, "Choose governor")
-                @Html.DropDownListFor(x => x.SelectedPreviousGovernorId, Model.ExistingGovernors, "", new { @class = "form-control choose-governor" })
+                @Html.DropDownListFor(x => x.SelectedPreviousGovernorId, Model.ExistingGovernors, "New", new { @class = "form-control choose-governor" })
             </div>
             <br />
         }
