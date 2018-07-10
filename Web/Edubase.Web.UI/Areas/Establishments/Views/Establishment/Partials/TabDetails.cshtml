@@ -73,7 +73,7 @@
             @if (Model.DisplayPolicy.NumberOfPupilsOnRoll)
             {
                 <dt>Number of pupils:</dt>
-                <dd>@Model.Establishment.NumberOfPupilsOnRoll</dd>
+                <dd>@(Model.Establishment.NumberOfPupilsOnRoll?.ToString() ?? "Not recorded")</dd>
             }
 
             @if (Model.DisplayPolicy.Section41ApprovedId)
