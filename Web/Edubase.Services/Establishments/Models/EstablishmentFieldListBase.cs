@@ -67,6 +67,7 @@ namespace Edubase.Services.Establishments.Models
         public virtual bool Address_CountyId { get; set; }
 
         public virtual bool Address_CountryId { get; set; }
+        public virtual bool Address_UPRN { get; set; }
 
         public virtual bool Address_Locality { get; set; }
 
