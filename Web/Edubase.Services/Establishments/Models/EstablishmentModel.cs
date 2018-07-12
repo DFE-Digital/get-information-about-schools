@@ -102,7 +102,6 @@ namespace Edubase.Services.Establishments.Models
 
         public string Address_PostCode { get; set; }
 
-        [IgnoreChanges]
         public string Address_UPRN { get; set; }
 
         public AdditionalAddressModel[] AdditionalAddresses { get; set; } = new AdditionalAddressModel[0];
