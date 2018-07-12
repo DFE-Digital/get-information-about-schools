@@ -211,65 +211,73 @@
 
                 @if (Model.LinkedEstablishments.Establishments.Count > 0)
                 {
-                    <h2 class="heading-medium">Childrens centres to add to the group.</h2>
-                    
+                    if (Model.GroupType == L.Federation)
+                    {
+                        <h3 class="heading-medium">Establishments to add to the group.</h3>
+                    }
+                    else
+                    {
+                        <h2 class="heading-medium">Children's centres to add to the group.</h2>
+                    }
+
+
                     <p class="table-caption">Showing 1 - @Model.LinkedEstablishments.Establishments.Count of @Model.LinkedEstablishments.Establishments.Count</p>
                     <table class="edubase-table childrens-centre-listing">
                         <thead>
-                        <tr>
-                            @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
-                            {
-                                <th>Lead centre</th>
-                            }
-                            <th>URN</th>
-                            <th>Name</th>
-                            <th>Join date</th>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                            <tr>
+                                @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
+                                {
+                                    <th>Lead centre</th>
+                                }
+                                <th>URN</th>
+                                <th>Name</th>
+                                <th>Join date</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </thead>
                         <tbody>
 
 
-                        @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
-                        {
+                            @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
+                            {
 
-                            <tr>
-                                @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
-                                {
-                                    <td aria-label="Lead centre" class="radio-cell">
-                                        <span class="radio-button-wrap">
-                                            @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new {id = "lead-" + Model.LinkedEstablishments.Establishments[i].Urn})
-                                            <label class="edubase-button-radio" for="lead-@Model.LinkedEstablishments.Establishments[i].Urn">
-                                                <span class="visuallyhidden">Set as lead establishment</span>
-                                            </label>
-                                        </span>
+                                <tr>
+                                    @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
+                                    {
+                                        <td aria-label="Lead centre" class="radio-cell">
+                                            <span class="radio-button-wrap">
+                                                @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { id = "lead-" + Model.LinkedEstablishments.Establishments[i].Urn })
+                                                <label class="edubase-button-radio" for="lead-@Model.LinkedEstablishments.Establishments[i].Urn">
+                                                    <span class="visuallyhidden">Set as lead establishment</span>
+                                                </label>
+                                            </span>
+                                        </td>
+                                    }
+                                    <td aria-label="URN">@Model.LinkedEstablishments.Establishments[i].Urn</td>
+                                    <td aria-label="Name">@Model.LinkedEstablishments.Establishments[i].Name</td>
+                                    <td aria-label="Join date">
+                                        @(Model.LinkedEstablishments.Establishments[i].JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
+                                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
                                     </td>
-                                }
-                                <td aria-label="URN">@Model.LinkedEstablishments.Establishments[i].Urn</td>
-                                <td aria-label="Name">@Model.LinkedEstablishments.Establishments[i].Name</td>
-                                <td aria-label="Join date">
-                                    @(Model.LinkedEstablishments.Establishments[i].JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
-                                    @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
-                                </td>
-                                @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                                {
-                                    <td><button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="link-button">Edit</button></td>
-                                    <td>
-                                        <button type="submit" class="link-button" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
-                                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
-                                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Name)
-                                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Urn)
-                                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Address)
-                                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].TypeName)
-                                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].HeadFullName)
-                                        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].EditMode)
+                                    @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                                    {
+                                        <td><button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="link-button">Edit</button></td>
+                                        <td>
+                                            <button type="submit" class="link-button" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
+                                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
+                                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Name)
+                                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Urn)
+                                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Address)
+                                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].TypeName)
+                                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].HeadFullName)
+                                            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].EditMode)
 
-                                    </td>
+                                        </td>
 
-                                }
-                            </tr>   
-                        }
+                                    }
+                                </tr>
+                            }
                         </tbody>
                     </table>
                     <p class="table-caption">Showing 1 - @Model.LinkedEstablishments.Establishments.Count of @Model.LinkedEstablishments.Establishments.Count</p>

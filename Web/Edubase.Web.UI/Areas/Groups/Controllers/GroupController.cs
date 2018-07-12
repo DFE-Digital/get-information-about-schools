@@ -111,7 +111,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 viewModel.GroupTypeId = (int)GT.ChildrensCentresCollaboration;
                 viewModel.SaveMode = eSaveMode.DetailsAndLinks;
             }
-            else if (groupTypeMode == eGroupTypeMode.Federation) viewModel.GroupTypeId = (int)GT.Federation;
+            else if (groupTypeMode == eGroupTypeMode.Federation)
+            {
+                viewModel.GroupTypeId = (int)GT.Federation;
+                viewModel.SaveMode = eSaveMode.DetailsAndLinks;
+            }
             else if (groupTypeMode == eGroupTypeMode.Trust) viewModel.GroupTypeId = (int)GT.Trust;
             else if (groupTypeMode == eGroupTypeMode.Sponsor) viewModel.GroupTypeId = (int)GT.SchoolSponsor;
             else throw new ArgumentOutOfRangeException(nameof(type));
