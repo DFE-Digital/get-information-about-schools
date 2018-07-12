@@ -937,10 +937,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var editPolicyEnvelope = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
             model.EditPolicy = editPolicyEnvelope.EditPolicy;
 
-            if ((model.EditPolicy.AdditionalAddresses.HasValue && !model.EditPolicy.AdditionalAddresses.Value || model.AdditionalAddresses.Count == 0) && domainModel.AdditionalAddresses != null)
+            if ((!model.EditPolicy.AdditionalAddresses || model.AdditionalAddresses.Count == 0) && domainModel.AdditionalAddresses != null)
             {
                 model.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
             }
+
             model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, model.EditPolicy, User);
             model.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
             await PopulateSelectLists(model);

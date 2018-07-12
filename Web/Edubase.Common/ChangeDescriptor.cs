@@ -8,6 +8,7 @@ namespace Edubase.Common
         public string Name { get; set; }
         public string NewValue { get; set; }
         public string OldValue { get; set; }
+        public string Tag { get; set; }
 
         public ChangeDescriptor(string name, object newValue, object oldValue)
         {

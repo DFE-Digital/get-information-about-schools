@@ -179,7 +179,8 @@ namespace Edubase.Services.Texuna.Establishments
                     Id = change.Name,
                     Name = change.DisplayName ?? change.Name,
                     NewValue = change.NewValue.Clean(),
-                    OldValue = change.OldValue.Clean()
+                    OldValue = change.OldValue.Clean(),
+                    Tag = change.Tag
                 });
             }
 
@@ -363,6 +364,8 @@ namespace Edubase.Services.Texuna.Establishments
                     });
                 }
             }
+
+            retVal.ForEach(x => x.Tag = "additionaladdress");
 
             return retVal;
         }

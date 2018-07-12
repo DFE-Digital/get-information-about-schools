@@ -199,7 +199,7 @@ namespace Edubase.Services.Establishments.Models
         public bool HelpdeskPreviousLocalAuthorityId { get; set; }
         public bool HelpdeskPreviousEstablishmentNumber { get; set; }
         
-        public bool? AdditionalAddresses { get; set; }
+        public bool AdditionalAddresses { get; set; }
 
         public bool FreeSchoolMealsNumber { get; set; }
         public bool FreeSchoolMealsPercentage { get; set; }
