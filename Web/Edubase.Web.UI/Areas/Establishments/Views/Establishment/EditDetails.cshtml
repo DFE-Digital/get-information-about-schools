@@ -97,7 +97,7 @@
                     @Html.HiddenFor(x => x.Northing)
                     @Html.HiddenFor(x => x.Easting)
 
-                    @if (Model.EditPolicy.AdditionalAddresses.GetValueOrDefault(true))
+                    @if (Model.EditPolicy.AdditionalAddresses)
                     {
                         Html.RenderPartial("Partials/_EditAddresses");
                         <div class="form-group">
