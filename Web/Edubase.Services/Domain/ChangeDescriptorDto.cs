@@ -10,5 +10,6 @@ namespace Edubase.Services.Domain
         public string NewValue { get; set; }
         public string Id { get; set; }
         public string Tag { get; set; }
+        public bool RequiresApproval { get; set; }
     }
 }

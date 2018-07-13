@@ -90,7 +90,7 @@
                         <td aria-label="Old value">@(item.OldValue ?? "<empty>")</td>
                         <td aria-label="New value">@(item.NewValue ?? "<empty>")</td>
                         <td aria-label="This field requires approval">
-                            @if (Model.ApprovalFields.Contains(item.Id, StringComparer.InvariantCultureIgnoreCase) || (item.Tag == "additionaladdress" && Model.ApprovalFields.Contains("additionalAddresses")))
+                            @if (item.RequiresApproval)
                             {
                                 <div class="requires-approval">Yes</div>
                             }

@@ -2,6 +2,8 @@
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Edubase.Services.Establishments.DisplayPolicies
 {
@@ -26,6 +28,18 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             }
 
             return this;
+        }
+
+        /// <summary>
+        /// Returns a list of property names whose values are set to true.
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetTrueFieldNames()
+        {
+            var retVal = new List<string>();
+            retVal.AddRange(GetType().GetProperties().Where(x => x.PropertyType == typeof(bool) && (bool)x.GetValue(this, null)).Select(x => x.Name));
+            retVal.AddRange(IEBTDetail.GetType().GetProperties().Where(x => x.PropertyType == typeof(bool) && (bool)x.GetValue(IEBTDetail, null)).Select(x => x.Name));
+            return retVal.ToArray();
         }
     }
 }

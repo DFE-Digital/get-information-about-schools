@@ -51,9 +51,9 @@ namespace Edubase.Services.Establishments
 
         Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn, IPrincipal principal);
 
-        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, IPrincipal principal);
+        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, EstablishmentDisplayEditPolicy approvalsPolicy, IPrincipal principal);
 
-        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model);
+        Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model, EstablishmentDisplayEditPolicy approvalsPolicy);
 
         Task<IEnumerable<LookupDto>> GetPermissibleLocalGovernorsAsync(int urn, IPrincipal principal);
 

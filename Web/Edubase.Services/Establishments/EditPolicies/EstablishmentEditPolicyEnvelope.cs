@@ -17,13 +17,5 @@ namespace Edubase.Services.Establishments.EditPolicies
             EditPolicy.Initialise(establishment);
             return this;
         }
-
-        public string[] GetApprovalFields()
-        {
-            var retVal = new List<string>();
-            retVal.AddRange(ApprovalsPolicy.GetType().GetProperties().Where(x => x.PropertyType == typeof(bool) && (bool)x.GetValue(ApprovalsPolicy, null)).Select(x => x.Name));
-            retVal.AddRange(ApprovalsPolicy.IEBTDetail.GetType().GetProperties().Where(x => x.PropertyType == typeof(bool) && (bool)x.GetValue(ApprovalsPolicy.IEBTDetail, null)).Select(x => x.Name));
-            return retVal.ToArray();
-        }
     }
 }

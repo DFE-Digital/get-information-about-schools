@@ -956,7 +956,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     model.OriginalEstablishmentName = domainModel.Name;
 
-                    var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, User);
+                    var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, editPolicyEnvelope.ApprovalsPolicy, User);
 
                     if (originalEstabTypeId == ET.ChildrensCentreLinkedSite && newEstabTypeId == ET.ChildrensCentre) model.CCIsPromoting = true;
                     else if (originalEstabTypeId == ET.ChildrensCentre && newEstabTypeId == ET.ChildrensCentreLinkedSite) model.CCIsDemoting = true;
@@ -964,9 +964,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     if (changes.Any())
                     {
                         model.ChangesSummary = changes;
-                        model.ApprovalFields = editPolicyEnvelope.GetApprovalFields();
-                        model.ChangesRequireApprovalCount = changes.Where(x => model.ApprovalFields.Contains(x.Id, StringComparer.OrdinalIgnoreCase)).Count();
-                        model.ChangesInstantCount = changes.Where(x => !model.ApprovalFields.Contains(x.Id, StringComparer.OrdinalIgnoreCase)).Count();
+                        model.ChangesRequireApprovalCount = changes.Count(x => x.RequiresApproval);
+                        model.ChangesInstantCount = changes.Count(x => !x.RequiresApproval);
                         ModelState.Remove(nameof(model.ChangesRequireApprovalCount));
                         ModelState.Remove(nameof(model.ChangesInstantCount));
                     }
