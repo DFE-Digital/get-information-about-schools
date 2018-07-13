@@ -195,7 +195,7 @@
 
                     @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new {title = "Joined date"})
 
-                    <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
+                    <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
                     @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
 
                 }
@@ -354,6 +354,16 @@
             var toggle = function () { $urnSearchButton.prop("disabled", $.trim($urnSearchField.val()).length < 5 || Math.floor($urnSearchField.val()) != $urnSearchField.val() || !$.isNumeric($urnSearchField.val())); };
             toggle();
             $urnSearchField.on("change keyup", toggle);
+        })();
+
+        (function () {
+            var $addButton = $("#add-estab-submit");
+            var fields = ["#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Day", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Month", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Year"];
+            var toggle = function () {
+                $addButton.prop("disabled", fields.some(function (x) { return $.trim($(x).val()) == "" }));
+            };
+            $(fields.join(",")).on("change keyup", toggle);
+            toggle();
         })();
 
     </script>
