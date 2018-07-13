@@ -169,7 +169,7 @@
                     <h3 class="bold-small">Add establishment to this @Model.FieldNamePrefix.ToLower()</h3>
                 }
                 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
+                <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn) add-establishment-link">
                     @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                     <label class="form-label">
                         Establishment <abbr title="Unique Reference Number">URN</abbr>
@@ -346,6 +346,14 @@
                 $(fields.join(",")).on("change keyup", toggle);
                 toggle();
             }
+        })();
+
+        (function () {
+            var $urnSearchField = $("#LinkedEstablishments_LinkedEstablishmentSearch_Urn");
+            var $urnSearchButton = $(".add-establishment-link").find("button");
+            var toggle = function () { $urnSearchButton.prop("disabled", $.trim($urnSearchField.val()).length < 5 || Math.floor($urnSearchField.val()) != $urnSearchField.val() || !$.isNumeric($urnSearchField.val())); };
+            toggle();
+            $urnSearchField.on("change keyup", toggle);
         })();
 
     </script>
