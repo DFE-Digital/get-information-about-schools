@@ -114,7 +114,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else if (groupTypeMode == eGroupTypeMode.Federation)
             {
                 viewModel.GroupTypeId = (int)GT.Federation;
-                viewModel.SaveMode = eSaveMode.DetailsAndLinks;
+                viewModel.SaveMode = User.IsInRole(EdubaseRoles.ESTABLISHMENT) ? eSaveMode.DetailsAndLinks : eSaveMode.Details;
             }
             else if (groupTypeMode == eGroupTypeMode.Trust) viewModel.GroupTypeId = (int)GT.Trust;
             else if (groupTypeMode == eGroupTypeMode.Sponsor) viewModel.GroupTypeId = (int)GT.SchoolSponsor;
