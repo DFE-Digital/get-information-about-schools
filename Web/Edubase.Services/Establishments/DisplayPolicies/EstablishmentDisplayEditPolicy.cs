@@ -38,7 +38,7 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         {
             var retVal = new List<string>();
             retVal.AddRange(GetType().GetProperties().Where(x => x.PropertyType == typeof(bool) && (bool)x.GetValue(this, null)).Select(x => x.Name));
-            retVal.AddRange(IEBTDetail.GetType().GetProperties().Where(x => x.PropertyType == typeof(bool) && (bool)x.GetValue(IEBTDetail, null)).Select(x => x.Name));
+            retVal.AddRange(IEBTDetail.GetTrueFieldNames().Select(x => $"{nameof(IEBTModel)}.{x}"));
             return retVal.ToArray();
         }
     }

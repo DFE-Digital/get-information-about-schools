@@ -198,5 +198,12 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             || ChairOfProprietorsBodyLocality || ChairOfProprietorsBodyAddress3 || ChairOfProprietorsBodyTown || ChairOfProprietorsBodyCountyId || ChairOfProprietorsBodyPostcode || ChairOfProprietorsBodyTelephoneNumber || ChairOfProprietorsBodyFaxNumber 
             || ChairOfProprietorsBodyEmail || ChairOfProprietorsBodyPreferredJobTitle || AccommodationChangedId || PTBoysAged3 || PTBoysAged4B || PTGirlsAged4C || PTBoysAged4A || PTGirlsAged4B || PTGirlsAged4A || PTGirlsAged3 || PTBoysAged4C 
             || PTBoysAged2AndUnder || PTGirlsAged2AndUnder;
+
+        public string[] GetTrueFieldNames()
+        {
+            var retVal = new List<string>();
+            retVal.AddRange(GetType().GetProperties().Where(x => x.PropertyType == typeof(bool) && (bool)x.GetValue(this, null)).Select(x => x.Name));
+            return retVal.ToArray();
+        }
     }
 }
