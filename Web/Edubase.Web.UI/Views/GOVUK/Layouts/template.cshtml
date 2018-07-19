@@ -5,6 +5,7 @@
     var title = !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Get information about schools";
     var documentTitle = string.Format("{0} - {1}", title, "GOV.UK");
     var disableNewsBanner = System.Configuration.ConfigurationManager.AppSettings["DisableNewsBanner"] == "true";
+    var gtmKey = System.Configuration.ConfigurationManager.AppSettings["GoogleTagManagerKey"];
 }
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lt-ie9" lang="en"><![endif]-->
@@ -21,7 +22,7 @@
             }); var f = d.getElementsByTagName(s)[0],
                 j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
                     'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-N8R9FW7');
+        })(window, document, 'script', 'dataLayer', '@gtmKey'); // 
     </script>
     <!-- End Google Tag Manager -->
 
@@ -98,8 +99,7 @@
 <body class="@(ViewBag.bodyClasses) no-js">
     <!-- Google Tag Manager (noscript) -->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N8R9FW7"
-                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=@gtmKey" height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
@@ -284,11 +284,12 @@
         </script>
         
     </div>
-<script>
-    if (top.location !== location) {
-        top.location.href = document.location.href;
-    }
-</script>
+
+    <script>
+        if (top.location !== location) {
+            top.location.href = document.location.href;
+        }
+    </script>
 
 </body>
 
