@@ -97,15 +97,16 @@ namespace Edubase.Web.UI.Controllers.Api
         /// <param name="payload"></param>
         /// <returns></returns>
         [Route("api/academy/{urn:int}"), HttpPost, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
-        public async Task<ApiResponse> SaveAsync(int urn, [FromBody] dynamic payload)
+        public async Task<HttpResponseMessage> SaveAsync(int urn, [FromBody] dynamic payload)
         {
             DateTime openingDate = payload.openDate;
             var links = await _establishmentReadService.GetLinkedEstablishmentsAsync(urn, User);
             var link = links.FirstOrDefault(e => e.LinkTypeId == (int)eLookupEstablishmentLinkType.ParentOrPredecessor);
 
+            ApiResponse response;
             if (link != null)
             {
-                await _establishmentWriteService.PartialUpdateAsync(new EstablishmentModel
+                response = await _establishmentWriteService.PartialUpdateAsync(new EstablishmentModel
                 {
                     CloseDate = openingDate.AddDays(-1),
                     Urn = link.Urn
@@ -113,9 +114,11 @@ namespace Edubase.Web.UI.Controllers.Api
                 {
                     CloseDate = true
                 }, User);
+
+                if (response.HasErrors) return Request.CreateResponse(HttpStatusCode.BadRequest, response);
             }
             
-            return await _establishmentWriteService.PartialUpdateAsync(new EstablishmentModel
+            response = await _establishmentWriteService.PartialUpdateAsync(new EstablishmentModel
             {
                 OpenDate = openingDate,
                 Name = payload.name,
@@ -125,6 +128,9 @@ namespace Edubase.Web.UI.Controllers.Api
                 OpenDate = true,
                 Name = true
             }, User);
+
+            if (response.HasErrors) return Request.CreateResponse(HttpStatusCode.BadRequest, response);
+            else return Request.CreateResponse(HttpStatusCode.OK, response);
         }
 
     }
