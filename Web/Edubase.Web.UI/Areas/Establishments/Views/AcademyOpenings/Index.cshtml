@@ -15,20 +15,29 @@
 </div>
 
 <div id="academy-opening-app" v-cloak>
-<div v-show="Object.keys(apiError).length>0">
-    <h1 class="heading-xlarge">Sorry, something went wrong</h1>
-    <p>Please try again later.</p>
-    <p>A report of the error has been sent to our technical team.</p>
-    
-    <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
-    <div v-show="apiError.hasOwnProperty('technicalDetails')">
-        <code>
-            {{apiError.technicalDetails}}
-        </code>
-    </div>
-   
+    <div v-show="Object.keys(apiError).length>0">
+        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+        <p>Please try again later.</p>
+        <p>A report of the error has been sent to our technical team.</p>
 
-</div>
+        <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
+        <div v-show="apiError.hasOwnProperty('technicalDetails')">
+            <code>
+                {{apiError.technicalDetails}}
+            </code>
+        </div>
+    </div>
+
+    <div class="error-summary" v-show="recordUpdateErrors.errors">
+        <h2 class="error-summary-heading heading-medium">Error updating record</h2>
+        <ul class="error-summary-list">
+            <li class="error-message" v-for="(item, index) in recordUpdateErrors.errors">
+                {{item.message}}
+            </li>
+            
+        </ul>
+    </div>
+
     <div v-show="Object.keys(apiError).length === 0">
         <div class="grid-row" v-show="!editRecord">
             <div class="column-full">

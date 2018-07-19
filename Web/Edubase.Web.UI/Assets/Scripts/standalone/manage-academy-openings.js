@@ -37,8 +37,8 @@
             loadDataError: false,
             apiError: {},
             sortKey: 'openingDate',
-            sortAscending: true            
-
+            sortAscending: true,
+            recordUpdateErrors: {}
         },
         created: function () {
             this.loadData();
@@ -281,6 +281,7 @@
                     this.editRecord = false;
                     this.isProcessing = true;
                     this.userHasEdited = false;
+                    this.recordUpdateErrors = {};
 
                     $(window).off('beforeunload');
 
@@ -293,16 +294,23 @@
                             openDate: [this.updateDateYear, this.updateDateMonth , this.updateDateDay].join('-'),
                             name: this.updateName
                         }),
-                        success: function (data) {                            
+                        success: function (data) {
+                            
                             self.loadData();
                         },
                         error: function (jqxhr) {
+
+                            self.searchUrn = urn;
+                            self.presentDetail = true;
+                            self.editRecord = true;
+                            self.isProcessing = false;
+                            self.userHasEdited = true;
+
                             if (jqxhr.hasOwnProperty('responseJSON')) {
-                                self.apiError = jqxhr.responseJSON;
+                                self.recordUpdateErrors = jqxhr.responseJSON;
                             } else {
                                 self.loadDataError = true;
                             }
-                            console.log('update error');
                         }
                     });
                 }
@@ -352,6 +360,7 @@
                 return this.od;
             },
             cancelEditClick: function () {
+                this.recordUpdateErrors = {};
                 if (this.userHasEdited) {
                     return this.presentExitWarning = true;
                 }
