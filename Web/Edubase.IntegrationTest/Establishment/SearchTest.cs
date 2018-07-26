@@ -13,8 +13,6 @@ using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Security;
 using Edubase.Web.UI;
-using LinqToExcel;
-using LinqToExcel.Attributes;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using NUnit.Framework;
