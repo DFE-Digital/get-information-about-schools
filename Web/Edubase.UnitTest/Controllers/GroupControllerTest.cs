@@ -92,6 +92,7 @@ namespace Edubase.UnitTest.Controllers
         [Test]
         public void Group_CreateNewGroup_PermissionDenied()
         {
+            GetMock<IPrincipal>().Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
             InjectBasicLAsAndGroupTypes();
             GetMock<ISecurityService>().Setup(x => x.GetCreateGroupPermissionAsync(It.IsAny<IPrincipal>())).ReturnsAsync(new CreateGroupPermissionDto { GroupTypes = new eLookupGroupType[0] });
             Assert.That(async () => await ObjectUnderTest.CreateNewGroup("Federation"), Throws.TypeOf<PermissionDeniedException>());
@@ -110,6 +111,8 @@ namespace Edubase.UnitTest.Controllers
                 .ReturnsAsync(new CreateGroupPermissionDto { GroupTypes = new eLookupGroupType[] { eLookupGroupType.ChildrensCentresCollaboration, eLookupGroupType.Federation, eLookupGroupType.Trust, eLookupGroupType.SchoolSponsor }, CCLocalAuthorityId = localAuthorityId });
 
             InjectBasicLAsAndGroupTypes();
+
+            GetMock<IPrincipal>().Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
 
             var result = (ViewResult)await ObjectUnderTest.CreateNewGroup(type);
             var model = (GroupEditorViewModel) result.Model;
