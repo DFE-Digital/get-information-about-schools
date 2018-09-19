@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
@@ -174,7 +174,9 @@ namespace Edubase.Services.Texuna.Establishments
                 }
 
                 if(change.DisplayName == null)
+                {
                     change.DisplayName = PropertyName2Label(change.Name);
+                }
 
                 retVal.Add(new ChangeDescriptorDto
                 {
@@ -192,14 +194,6 @@ namespace Edubase.Services.Texuna.Establishments
             return retVal;
         }
 
-        private string PropertyName2Label(string name)
-        {
-            if (name.EndsWith("Id", StringComparison.Ordinal)) name = name.Substring(0, name.Length - 2);
-            name = name.Replace("_", "").Replace(nameof(IEBTModel) + ".", string.Empty);
-            name = name.ToProperCase(true);
-            return name;
-        }
-
         public async Task<IEnumerable<LookupDto>> GetPermissibleLocalGovernorsAsync(int urn, IPrincipal principal) => (await _httpClient.GetAsync<List<LookupDto>>($"establishment/{urn}/permissible-local-governors", principal)).GetResponse();
 
         public async Task<int[]> GetPermittedStatusIdsAsync(IPrincipal principal)
@@ -210,26 +204,12 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10)
         {
-            if (text.Clean() == null) return Enumerable.Empty<EstablishmentSuggestionItem>();
-            return (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
-        }
-        private async Task DetectSENChanges(EstablishmentModel original, EstablishmentModel model, List<ChangeDescriptorDto> retVal)
-        {
-            var originalSenIds = (original.SENIds ?? new int[0]).OrderBy(x => x);
-            var newSenIds = (model.SENIds ?? new int[0]).OrderBy(x => x);
-            if (!originalSenIds.SequenceEqual(newSenIds))
+            if (text.Clean() == null)
             {
-                var sens = await _cachedLookupService.SpecialEducationNeedsGetAllAsync();
-                var originalSenNames = StringUtil.SentencifyNoFormating(originalSenIds.Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
-                var newSenNames = StringUtil.SentencifyNoFormating(newSenIds.Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
-                retVal.Add(new ChangeDescriptorDto
-                {
-                    Name = "Type of SEN provision",
-                    NewValue = newSenNames,
-                    OldValue = originalSenNames,
-                    RequiresApproval = true
-                });
+                return Enumerable.Empty<EstablishmentSuggestionItem>();
             }
+
+            return (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
         }
 
         private async Task<IEnumerable<ChangeDescriptor>> DetectAdditionalAddressChanges(EstablishmentModel originalModel, EstablishmentModel newModel, EstablishmentDisplayEditPolicy approvalsPolicy)
@@ -240,7 +220,7 @@ namespace Edubase.Services.Texuna.Establishments
 
             if (newAddresses != null)
             {
-                for (int i = 0; i < newAddresses.Length; i++)
+                for (var i = 0; i < newAddresses.Length; i++)
                 {
                     var newAddress = newAddresses[i];
                     retVal.Add(new ChangeDescriptor
@@ -297,7 +277,7 @@ namespace Edubase.Services.Texuna.Establishments
             var editedAddresses = newModel.AdditionalAddresses?.Where(x => x.Id.HasValue).ToArray();
             if (editedAddresses != null)
             {
-                for (int i = 0; i < editedAddresses.Length; i++)
+                for (var i = 0; i < editedAddresses.Length; i++)
                 {
                     var index = newModel.AdditionalAddresses.ToList().IndexOf(editedAddresses[i]) + 1;
                     var address = editedAddresses[i];
@@ -314,7 +294,7 @@ namespace Edubase.Services.Texuna.Establishments
             var removedAddresses = originalModel.AdditionalAddresses?.Where(x => !newModel.AdditionalAddresses.Select(y => y.Id).Contains(x.Id)).ToArray();
             if (removedAddresses != null)
             {
-                for (int i = 0; i < removedAddresses.Length; i++)
+                for (var i = 0; i < removedAddresses.Length; i++)
                 {
                     var index = newModel.AdditionalAddresses.ToList().IndexOf(removedAddresses[i]) + 1;
                     var address = removedAddresses[i];
@@ -372,6 +352,37 @@ namespace Edubase.Services.Texuna.Establishments
             retVal.ForEach(x => x.Tag = "additionaladdress");
 
             return retVal;
+        }
+
+        private async Task DetectSENChanges(EstablishmentModel original, EstablishmentModel model, List<ChangeDescriptorDto> retVal)
+        {
+            var originalSenIds = (original.SENIds ?? new int[0]).OrderBy(x => x);
+            var newSenIds = (model.SENIds ?? new int[0]).OrderBy(x => x);
+            if (!originalSenIds.SequenceEqual(newSenIds))
+            {
+                var sens = await _cachedLookupService.SpecialEducationNeedsGetAllAsync();
+                var originalSenNames = StringUtil.SentencifyNoFormating(originalSenIds.Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
+                var newSenNames = StringUtil.SentencifyNoFormating(newSenIds.Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
+                retVal.Add(new ChangeDescriptorDto
+                {
+                    Name = "Type of SEN provision",
+                    NewValue = newSenNames,
+                    OldValue = originalSenNames,
+                    RequiresApproval = true
+                });
+            }
+        }
+
+        private string PropertyName2Label(string name)
+        {
+            if (name.EndsWith("Id", StringComparison.Ordinal))
+            {
+                name = name.Substring(0, name.Length - 2);
+            }
+
+            name = name.Replace("_", "").Replace(nameof(IEBTModel) + ".", string.Empty);
+            name = name.ToProperCase(true);
+            return name;
         }
     }
 }

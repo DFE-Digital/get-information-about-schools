@@ -1,7 +1,5 @@
-﻿namespace Edubase.Integration.Tests.Cache
+namespace Edubase.Integration.Tests.Cache
 {
-    using Edubase.Common.Cache;
-    using NUnit.Framework;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -9,6 +7,8 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Edubase.Common.Cache;
+    using NUnit.Framework;
 
     [TestFixture]
     public class CacheAccessorTest
@@ -31,7 +31,7 @@
             await _cacheThatsConnected.SetAsync(key, new Employee(25, "Clayton Gragg"));
 
             // ACT
-            var value = await _cacheThatsConnected.GetAsync<Employee>(key); // should return null, as the connection 
+            var value = await _cacheThatsConnected.GetAsync<Employee>(key); // should return null, as the connection
             bool deletionResult = await _cacheThatsConnected.DeleteAsync(key);
 
             Assert.That(value.Id, Is.EqualTo(25));
@@ -114,7 +114,6 @@
         //    // Act
         //    var testValue = await tempCache.GetAsync<string>("lovely_non_existent_item");
         //    await tempCache.InitialiseIfNecessaryAsync();
-
 
         //    // Assert
         //    Assert.AreEqual(CacheAccessor.State.NotConnected, tempCache.Status);
@@ -253,7 +252,6 @@
             var v4 = await cacheAccessor1.GetWithMetaDataAsync<string>(KEY);
             var v5 = await cacheAccessor2.GetWithMetaDataAsync<string>(KEY);
 
-
             Assert.IsTrue(logOfCA2.First().CachingEvent == eCacheEvent.KeySetInMemory, "The next audit event should have been to receive the key update message");
             Assert.IsTrue(v1.IsFromCentralCacheServer, "Trying to get something that isn't set, should _AT_LEAST_ try the central cache");
             Assert.IsTrue(v2.IsFromInMemoryCache, "Getting an item after setting it should mean that the in-memory cache has had time to catch up");
@@ -269,7 +267,7 @@
             Assert.IsNotNull(v7.Data, "The data shouldn't be null");
             Assert.AreEqual(VALUE, v7.Data);
             Assert.IsTrue(v7.IsFromInMemoryCache, "The value should have been retrieved from the memory cache");
-            
+
             // This test is too subjective for the build server
             // Assert.IsTrue(v7.ElapsedMilliseconds < v6.ElapsedMilliseconds, "It should have been quicker to get the value the second time");
         }
@@ -312,7 +310,7 @@
                 inits.Add(c.InitialiseIfNecessaryAsync());
                 caches.Add(c);
             }
-            
+
             await Task.WhenAll(inits.ToArray()); // wait for initialisation
             var cacheOne = caches.First();
 
@@ -334,7 +332,6 @@
                 propagationTasks.Add(cacher.WaitForEvent(eCacheEvent.KeySetInMemory, 60000));
             }
             await Task.WhenAll(propagationTasks.ToArray());
-
 
             var values = new List<CacheResponseDto<List<int>>>();
             for (int i = 0; i < MAX_CACHES; i++)
@@ -431,9 +428,9 @@
         {
             // ARRANGE
             var ca1 = new CacheAccessor(new CacheConfig { IsAuditingEnabled = true, IsCentralCacheEnabled = false });
-            
+
             await ca1.InitialiseIfNecessaryAsync();
-            
+
             var KEY = CreateGuid();
             var VALUE = CreateGuid();
 
@@ -449,7 +446,6 @@
             Assert.IsTrue(evt1 == eCacheEvent.KeyDeletedInMemory);
             Assert.IsTrue(ca1.LastCachingEvent == eCacheEvent.KeyValueGotFromMemoryAttempt);
         }
-
 
         /// <summary>
         /// This is an important test because the serialization format is binary, so it tests that byte arrays themselves are also fine
@@ -489,10 +485,7 @@
             Assert.AreEqual(VALUE2[0], data2.Data[0]);
             Assert.AreEqual(VALUE2[1], data2.Data[1]);
             Assert.AreEqual(VALUE2[2], data2.Data[2]);
-
         }
-
-
 
         [Test]
         public async Task Cache_TestImmutableRefTypeObjectDoesNOTCauseAnException()
@@ -516,14 +509,13 @@
             Assert.AreEqual(value, value2);
         }
 
-
         [Test]
         public async Task Cache_TestEnumerableObject_Roundtrips()
         {
             var cache = new CacheAccessor(new CacheConfig { IsAuditingEnabled = true, IsCentralCacheEnabled = false });
             var ops = cache;
             var key = Guid.NewGuid().ToString("N");
-            var value = (IEnumerable)new List<string> { "this is a thing in the list" };
+            var value = (IEnumerable) new List<string> { "this is a thing in the list" };
             await cache.InitialiseIfNecessaryAsync();
             await ops.SetAsync(key, value, null);
             var value2 = await cache.GetAsync<IEnumerable>(key);
@@ -536,7 +528,7 @@
             var cache = new CacheAccessor(new CacheConfig { IsAuditingEnabled = true, IsCentralCacheEnabled = false });
             var ops = cache;
             var key = Guid.NewGuid().ToString("N");
-            var value = (IDictionary<string, string>)new Dictionary<string, string> { { "k", "v" } };
+            var value = (IDictionary<string, string>) new Dictionary<string, string> { { "k", "v" } };
             await cache.InitialiseIfNecessaryAsync();
             await ops.SetAsync(key, value, null);
             var value2 = await cache.GetAsync<Dictionary<string, string>>(key);
@@ -585,7 +577,6 @@
             }
         }
 
-
         private string Key()
         {
             var key = CreateGuid();
@@ -598,9 +589,8 @@
         }
     }
 
-
     [Serializable]
-    class Employee
+    internal class Employee
     {
         public int Id { get; set; }
         public string Name { get; set; }

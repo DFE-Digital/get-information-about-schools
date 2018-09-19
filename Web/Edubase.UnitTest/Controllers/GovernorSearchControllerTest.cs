@@ -1,26 +1,21 @@
-﻿using Edubase.Services.Domain;
-using Edubase.Services.Establishments;
-using Edubase.Services.Governors;
-using Edubase.Services.Governors.Downloads;
-using Edubase.Services.Governors.Models;
-using Edubase.Services.Governors.Search;
-using Edubase.Services.Groups;
-using Edubase.Services.Groups.Downloads;
-using Edubase.Services.Groups.Models;
-using Edubase.Services.Groups.Search;
-using Edubase.Services.Lookup;
-using Edubase.Web.UI.Areas.Governors.Controllers;
-using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Areas.Groups.Controllers;
-using Edubase.Web.UI.Areas.Groups.Models;
-using Moq;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Edubase.Services.Domain;
+using Edubase.Services.Establishments;
+using Edubase.Services.Governors;
+using Edubase.Services.Governors.Downloads;
+using Edubase.Services.Governors.Models;
+using Edubase.Services.Governors.Search;
+using Edubase.Services.Groups;
+using Edubase.Services.Lookup;
+using Edubase.Web.UI.Areas.Governors.Controllers;
+using Edubase.Web.UI.Areas.Governors.Models;
+using Moq;
+using NUnit.Framework;
 
 namespace Edubase.UnitTest.Controllers
 {
@@ -85,31 +80,30 @@ namespace Edubase.UnitTest.Controllers
 
             var vm = new GovernorSearchViewModel();
             vm.GovernorSearchModel.Forename = "bob";
-            var result = (ViewResult)await subject.Index(vm);
+            var result = (ViewResult) await subject.Index(vm);
             grs.Verify(x => x.SearchAsync(It.Is<GovernorSearchPayload>(p => p.FirstName == "bob" && p.IncludeHistoric == false), It.IsAny<IPrincipal>()));
 
             vm = new GovernorSearchViewModel();
             vm.GovernorSearchModel.Surname = "yup";
-            result = (ViewResult)await subject.Index(vm);
+            result = (ViewResult) await subject.Index(vm);
             grs.Verify(x => x.SearchAsync(It.Is<GovernorSearchPayload>(p => p.LastName == "yup"), It.IsAny<IPrincipal>()));
 
             vm = new GovernorSearchViewModel();
             vm.GovernorSearchModel.Gid = 1000;
-            result = (ViewResult)await subject.Index(vm);
+            result = (ViewResult) await subject.Index(vm);
             grs.Verify(x => x.SearchAsync(It.Is<GovernorSearchPayload>(p => p.Gid == "1000"), It.IsAny<IPrincipal>()));
 
             vm = new GovernorSearchViewModel
             {
                 SelectedRoleIds = new List<int> { 1, 2, 3 }
             };
-            result = (ViewResult)await subject.Index(vm);
+            result = (ViewResult) await subject.Index(vm);
             grs.Verify(x => x.SearchAsync(It.Is<GovernorSearchPayload>(p => p.RoleIds != null & p.RoleIds.Length == 3), It.IsAny<IPrincipal>()));
 
             vm = new GovernorSearchViewModel();
             vm.GovernorSearchModel.IncludeHistoric = true;
-            result = (ViewResult)await subject.Index(vm);
+            result = (ViewResult) await subject.Index(vm);
             grs.Verify(x => x.SearchAsync(It.Is<GovernorSearchPayload>(p => p.IncludeHistoric == true), It.IsAny<IPrincipal>()));
         }
     }
-
 }

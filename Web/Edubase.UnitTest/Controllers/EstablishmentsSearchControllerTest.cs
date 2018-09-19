@@ -1,4 +1,12 @@
-﻿using Edubase.Services.Domain;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
@@ -8,14 +16,6 @@ using Edubase.Web.UI.Areas.Establishments.Controllers;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
 using static Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
 
 namespace Edubase.UnitTest.Controllers
@@ -60,7 +60,7 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
 
-            var result = (ViewResult)await subject.Index(vm);
+            var result = (ViewResult) await subject.Index(vm);
 
             Assert.That(vm.Count, Is.EqualTo(2));
             Assert.That(vm.Results.Count, Is.EqualTo(2));
@@ -105,7 +105,7 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = true;
-            var result = (ViewResult)await subject.Index(vm);
+            var result = (ViewResult) await subject.Index(vm);
             Assert.That(vm.Count, Is.EqualTo(2));
             Assert.That(vm.Results.Count, Is.EqualTo(2));
             Assert.That(vm.Results[0].Name, Is.EqualTo("School 1"));
@@ -114,7 +114,7 @@ namespace Edubase.UnitTest.Controllers
             vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = false;
-            result = (ViewResult)await subject.Index(vm);
+            result = (ViewResult) await subject.Index(vm);
             Assert.That(vm.Count, Is.EqualTo(2));
             Assert.That(vm.Results.Count, Is.EqualTo(2));
             Assert.That(vm.Results[0].Name, Is.EqualTo("School 1"));
@@ -156,7 +156,7 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = true;
-            var result = (RedirectToRouteResult)await subject.Index(vm);
+            var result = (RedirectToRouteResult) await subject.Index(vm);
             Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
             Assert.That(result.RouteValues["controller"], Is.EqualTo("Establishment"));
             Assert.That(result.RouteValues["id"], Is.EqualTo(672393));
@@ -165,7 +165,7 @@ namespace Edubase.UnitTest.Controllers
             vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = false;
-            var result2 = (ViewResult)await subject.Index(vm);
+            var result2 = (ViewResult) await subject.Index(vm);
             Assert.That(vm.Count, Is.EqualTo(1));
             Assert.That(vm.Results.Count, Is.EqualTo(1));
             Assert.That(vm.Results[0].Name, Is.EqualTo("School 1"));
@@ -207,7 +207,7 @@ namespace Edubase.UnitTest.Controllers
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = laestab;
-            var result = (ViewResult)await subject.Index(vm);
+            var result = (ViewResult) await subject.Index(vm);
             Assert.That(vm.TextSearchType, Is.EqualTo(eTextSearchType.LAESTAB));
             Assert.That(vm.Count, Is.EqualTo(1));
             Assert.That(vm.Results.Count, Is.EqualTo(1));
@@ -241,7 +241,7 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.AutoSuggestValue = "1256";
 
-            var result = (RedirectResult)await subject.Index(vm);
+            var result = (RedirectResult) await subject.Index(vm);
 
             Assert.That(result.Url, Is.EqualTo("action=Index|controller=Search|area=|SearchType=Text|TextSearchModel.Text=|NoResultsForName=True"));
         }
@@ -266,13 +266,14 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.AutoSuggestValue = "123456";
 
-            var result = (RedirectToRouteResult)await subject.Index(vm);
+            var result = (RedirectToRouteResult) await subject.Index(vm);
 
             Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
             Assert.That(result.RouteValues["controller"], Is.EqualTo("Establishment"));
             Assert.That(result.RouteValues["id"], Is.EqualTo(123456));
             Assert.That(result.RouteValues["area"], Is.EqualTo("Establishments"));
         }
+
         [Test]
         public async Task EstabSearch_PrepareDownload_Step1_BackOfficeUser()
         {
@@ -294,7 +295,7 @@ namespace Edubase.UnitTest.Controllers
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel();
-            var result = (ViewResult)await subject.PrepareDownload(viewModel);
+            var result = (ViewResult) await subject.PrepareDownload(viewModel);
 
             Assert.That(viewModel.AllowAnyExtraFields, Is.True);
             Assert.That(viewModel.AllowIncludeBringUpFields, Is.True);
@@ -325,7 +326,7 @@ namespace Edubase.UnitTest.Controllers
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel();
-            var result = (ViewResult)await subject.PrepareDownload(viewModel);
+            var result = (ViewResult) await subject.PrepareDownload(viewModel);
 
             Assert.That(viewModel.AllowAnyExtraFields, Is.False);
             Assert.That(viewModel.AllowIncludeBringUpFields, Is.False);
@@ -356,7 +357,7 @@ namespace Edubase.UnitTest.Controllers
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Full };
-            var result = (ViewResult)await subject.PrepareDownload(viewModel);
+            var result = (ViewResult) await subject.PrepareDownload(viewModel);
 
             Assert.That(viewModel.AllowAnyExtraFields, Is.True);
             Assert.That(viewModel.AllowIncludeBringUpFields, Is.True);
@@ -389,7 +390,7 @@ namespace Edubase.UnitTest.Controllers
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Full, FileFormat = Edubase.Services.Enums.eFileFormat.XLSX };
-            var result = (RedirectToRouteResult)await subject.PrepareDownload(viewModel);
+            var result = (RedirectToRouteResult) await subject.PrepareDownload(viewModel);
 
             Assert.That(result.RouteValues["action"], Is.EqualTo("Download"));
             Assert.That(result.RouteValues["id"], Is.EqualTo(guid));
