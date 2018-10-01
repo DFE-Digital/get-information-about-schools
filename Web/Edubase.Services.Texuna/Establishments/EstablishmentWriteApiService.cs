@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -47,13 +47,20 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<ApiResponse<BulkCreateAcademiesProgress, NewAcademyRequestValidationEnvelope[]>> BulkCreateAcademies(NewAcademyRequest[] newAcademyRequests, IPrincipal principal)
             => await _httpClient.PostAsync<BulkCreateAcademiesProgress, NewAcademyRequestValidationEnvelope[]>("establishment/bulk-create-academies", newAcademyRequests, principal);
 
+
         public async Task<ApiResponse<BulkCreateFreeSchoolsResult>> BulkCreateFreeSchoolsAsync(string filename, IPrincipal principal)
             => (await _httpClient.PostMultipartAsync<BulkCreateFreeSchoolsResult>("establishment/bulk-create-free-schools", null, filename, principal));
 
         public async Task<ApiResponse<BulkCreateFreeSchoolsResult>> BulkCreateFreeSchoolsGetProgressAsync(Guid taskId, IPrincipal principal)
-        {
-            return (await _httpClient.GetAsync<BulkCreateFreeSchoolsResult>($"establishment/bulk-create-free-schools/progress/{taskId}", principal));
-        }
+            => await _httpClient.GetAsync<BulkCreateFreeSchoolsResult>($"establishment/bulk-create-free-schools/progress/{taskId}", principal);
+
+
+        public async Task<ApiResponse<BulkUpdateProgressModel>> BulkAssociateEstabs2GroupsAsync(string filename, IPrincipal principal)
+            => await _httpClient.PostMultipartAsync<BulkUpdateProgressModel>("establishment/bulk-associate-to-groups", null, filename, principal);
+
+        public async Task<ApiResponse<BulkUpdateProgressModel>> BulkAssociateEstabs2GroupsGetProgressAsync(Guid taskId, IPrincipal principal)
+            => await _httpClient.GetAsync<BulkUpdateProgressModel>($"establishment/bulk-associate-to-groups/progress/{taskId}", principal);
+
 
         public async Task<ApiResponse<BulkUpdateProgressModel>> BulkUpdateAsync(BulkUpdateDto bulkUpdateInfo, IPrincipal principal)
         {

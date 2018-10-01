@@ -284,10 +284,12 @@
     <Compile Include="App_Start\StartupSASimulator.cs" />
     <Compile Include="App_Start\StartupSecureAccess.cs" />
     <Compile Include="Areas\Establishments\Controllers\AcademyOpeningsController.cs" />
+    <Compile Include="Areas\Establishments\Controllers\BulkAssociateEstabs2GroupsController.cs" />
     <Compile Include="Areas\Establishments\Controllers\BulkCreateFreeSchoolsController.cs" />
     <Compile Include="Areas\Establishments\Controllers\BulkUpdateController.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
     <Compile Include="Areas\Establishments\Models\AdditionalAddressViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\BulkAssociateEstabs2GroupsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkCreateFreeSchoolsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
@@ -889,6 +891,9 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Areas\Establishments\Views\BulkAssociateEstabs2Groups\BulkAssociateEstabs2Groups.cshtml" />
+    <Content Include="Areas\Establishments\Views\BulkAssociateEstabs2Groups\Completed.cshtml" />
+    <Content Include="Areas\Establishments\Views\BulkAssociateEstabs2Groups\InProgress.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />

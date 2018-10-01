@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -33,6 +33,7 @@ namespace Edubase.Web.UI.Models
         public bool UserCanConvertAcademyTrusts { get; internal set; }
         public bool UserCanViewIndependentSchoolsSignificantDates { get; internal set; }
         public bool UserCanBulkCreateFreeSchools { get; internal set; }
+        public bool UserCanBulkAssociateEstabs2Groups { get; internal set; }
 
         public List<LinkAction> GetCreateActions(HtmlHelper htmlHelper)
         {
@@ -55,6 +56,7 @@ namespace Edubase.Web.UI.Models
             var retVal = new List<LinkAction>();
             if (UserCanBulkUpdateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update establishments", "EstabBulkUpdate"), Description = "Update establishment data as a collection, rather than by individual entries." });
             if (UserCanBulkUpdateGovernors) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update governance", "GovernorsBulkUpdate"), Description = "Update your governance data as a collection, rather than by individual entries." });
+            if (UserCanBulkAssociateEstabs2Groups) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk upload academies to trust/sponsor", "BulkAssociateEstabs2Groups"), Description = "Use this tool to upload new academies to the relevant trusts / sponsor" });
             return retVal;
         }
 

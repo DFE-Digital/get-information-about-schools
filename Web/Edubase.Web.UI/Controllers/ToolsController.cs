@@ -1,4 +1,4 @@
-﻿using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
+using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -72,6 +72,7 @@ namespace Edubase.Web.UI.Controllers
                 UserCanConvertAcademyTrusts = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE, R.AP_AOS),
                 UserCanViewIndependentSchoolsSignificantDates = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE, R.IEBT),
                 UserCanBulkCreateFreeSchools = User.InRole(R.EDUBASE, R.ROLE_BACKOFFICE, R.EDUBASE_CMT, R.FST),
+                UserCanBulkAssociateEstabs2Groups = User.InRole(R.EDUBASE, R.ROLE_BACKOFFICE, R.EDUBASE_CMT, R.AP_AOS)
             };
 
             return View(viewModel);

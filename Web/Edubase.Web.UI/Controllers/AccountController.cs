@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Security;
 using Edubase.Services.Security.ClaimsIdentityConverters;
 using Edubase.Web.UI.MvcResult;
@@ -47,11 +47,21 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
-            if (loginInfo == null) throw new EdubaseException("No external login information was obtainable.");
+            if (loginInfo == null)
+            {
+                throw new EdubaseException("No external login information was obtainable.");
+            }
+
             var id = loginInfo.ExternalIdentity;
 
-            if (ConfigurationManager.AppSettings["owin:appStartup"] == "SASimulatorConfiguration") id = new StubClaimsIdConverter().Convert(id);
-            else id = new SecureAccessClaimsIdConverter().Convert(id);
+            if (ConfigurationManager.AppSettings["owin:appStartup"] == "SASimulatorConfiguration")
+            {
+                id = new StubClaimsIdConverter().Convert(id);
+            }
+            else
+            {
+                id = new SecureAccessClaimsIdConverter().Convert(id);
+            }
 
             var principal = new ClaimsPrincipal(id);
             var roles = await _securityService.GetRolesAsync(principal);
