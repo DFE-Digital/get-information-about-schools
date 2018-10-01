@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Common.Spatial;
 using Edubase.Services.IntegrationEndPoints.Google;
 using Edubase.Services.IntegrationEndPoints.OSPlaces;
@@ -25,7 +25,10 @@ namespace Edubase.Services.Geo
         public async Task<PlaceDto[]> SearchAsync(string text)
         {
             var retVal = (await _googlePlacesService.SearchAsync(text)).Select(x => new PlaceDto(GooglePlacesIdPrefixer + x.Id, x.Name)).ToArray();
-            if (retVal.Any()) return retVal;
+            if (retVal.Any())
+            {
+                return retVal;
+            }
 
             retVal = (await _osPlacesApiService.SearchAsync(text)).Select(x => new PlaceDto(OSPlacesIdPrefixer + x.Id, x.Name)).ToArray();
 
