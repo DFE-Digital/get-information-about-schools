@@ -291,6 +291,7 @@
     <Compile Include="Areas\Establishments\Models\AdditionalAddressViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkAssociateEstabs2GroupsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkCreateFreeSchoolsViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\Validators\BulkAssociateEstabs2GroupsViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
     <Compile Include="Areas\Governors\Controllers\GroupCorporateContactController.cs" />

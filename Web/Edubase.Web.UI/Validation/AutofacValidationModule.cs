@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Establishments.Models.Validators;
 using Edubase.Web.UI.Areas.Governors.Models;
@@ -20,11 +20,6 @@ namespace Edubase.Web.UI.Validation
             builder.RegisterType<EditEstablishmentModelValidator>()
                     .Keyed<IValidator>(typeof(IValidator<EditEstablishmentModel>))
                     .As<IValidator>().InstancePerDependency();
-
-            // temporarily disable local validation while it conflicts with the edit policies coming from Texuna
-            //builder.RegisterType<CreateEditGovernorViewModelValidator>()
-            //        .Keyed<IValidator>(typeof(IValidator<CreateEditGovernorViewModel>))
-            //        .As<IValidator>();
 
             builder.RegisterType<GovernorsGridViewModelValidator>()
                     .Keyed<IValidator>(typeof(IValidator<GovernorsGridViewModel>))
@@ -48,6 +43,10 @@ namespace Edubase.Web.UI.Validation
 
             builder.RegisterType<BulkCreateFreeSchoolsViewModelValidator>()
                 .Keyed<IValidator>(typeof(IValidator<BulkCreateFreeSchoolsViewModel>))
+                .As<IValidator>();
+
+            builder.RegisterType<BulkAssociateEstabs2GroupsViewModelValidator>()
+                .Keyed<IValidator>(typeof(IValidator<BulkAssociateEstabs2GroupsViewModel>))
                 .As<IValidator>();
 
             builder.RegisterType<GovernorsBulkUpdateViewModelValidator>()
