@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -235,6 +235,8 @@ namespace Edubase.UnitTest.Controllers
         {
             var grs = GetMock<IGroupReadService>();
             var estabList = CreateEstabList();
+
+            GetMock<IPrincipal>().Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
 
             InjectBasicLAsAndGroupTypes();
 
