@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Models;
 using System.Collections.Generic;
@@ -44,7 +44,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND,
             ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE,
             ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED,
-            ApiWarningCodes.GROUP_OPEN_DATE_ALIGNMENT
+            ApiWarningCodes.GROUP_OPEN_DATE_ALIGNMENT,
+            ApiWarningCodes.CONFIRMATION_MAT_CLOSE_LINKS
         };
         
         public string Action { get; set; }
@@ -65,6 +66,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string AddressJsonToken { get; set; }
         public bool CloseMATAndMarkAsCreatedInError { get; set; }
         public bool CanUserCloseMATAndMarkAsCreatedInError { get; set; }
+        public bool CanUserEditStatus { get; set; }
+        public bool CanUserEditClosedDate { get; set; }
+
+        public IEnumerable<SelectListItem> Statuses { get; set; }
 
         [Display(Name = "Closed date")]
         public DateTimeViewModel ClosedDate { get; set; } = new DateTimeViewModel();
@@ -106,9 +111,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         /// </summary>
         public IEnumerable<SelectListItem> CCGroupTypes { get; set; }
         
-
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
-        
+
+        public const string UIWarningCodeMatClosureAreYouSure = "mat_closure_are_you_sure";
+
         public List<ApiWarning> WarningsToProcess { get; private set; } = new List<ApiWarning>();
 
         public bool ProcessedWarnings { get; set; }
@@ -117,11 +123,14 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         {
             if (!ProcessedWarnings && !envelope.Errors.Any())
             {
-                var warnings = envelope.Warnings;
-                warnings = warnings ?? new List<ApiWarning>();
-                warnings = warnings.Where(x => RecognisedWarningCodes.Contains(x.Code) == true).ToList();
-                WarningsToProcess = warnings;
+                WarningsToProcess = envelope.Warnings ?? new List<ApiWarning>();
+                WarningsToProcess = WarningsToProcess.Where(x => RecognisedWarningCodes.Contains(x.Code)).ToList();
                 ProcessedWarnings = true;
+
+                if (OriginalStatusId != (int) eLookupGroupStatus.Closed && StatusId == (int) eLookupGroupStatus.Closed && GroupTypeId == (int) GT.MultiacademyTrust)
+                {
+                    WarningsToProcess.Add(new ApiWarning { Code = UIWarningCodeMatClosureAreYouSure, Message = "Are you sure you want to close this multi-academy trust?" });
+                }
             }
         }
 

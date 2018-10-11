@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Establishments;
+using Edubase.Services.Establishments;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
@@ -29,6 +29,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using static Models.CreateEdit.GroupEditorViewModelBase;
     using GT = Services.Enums.eLookupGroupType;
     using GS = Services.Enums.eLookupGroupStatus;
+    using R = EdubaseRoles;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -188,7 +189,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 GroupUId = domainModel.GroupUId,
                 GroupId = domainModel.GroupId,
                 SelectedTabName = "details",
-                StatusId = domainModel.StatusId
+                StatusId = domainModel.StatusId,
+                OriginalStatusId = domainModel.StatusId
             };
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
@@ -198,16 +200,32 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
             viewModel.DeriveCCLeadCentreUrn();
 
-            if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+            if (viewModel.GroupTypeId.HasValue)
+            {
+                viewModel.GroupTypeName = await _lookup.GetNameAsync(() => viewModel.GroupTypeId);
+            }
 
             viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust) 
                 && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed) 
-                && User.InRole(EdubaseRoles.ROLE_BACKOFFICE);
+                && User.InRole(R.ROLE_BACKOFFICE);
 
             viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup) 
-                && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(EdubaseRoles.ROLE_BACKOFFICE);
+                && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(R.ROLE_BACKOFFICE);
+
+
+            if(User.InRole(R.EDUBASE, R.ROLE_BACKOFFICE, R.EDUBASE_CMT, R.AP_AOS) && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust))
+            {
+                viewModel.CanUserEditClosedDate = true;
+                viewModel.CanUserEditStatus = true;
+                PopulateStatusSelectList(viewModel);
+            }
 
             return View("EditDetails", viewModel);
+        }
+
+        private static void PopulateStatusSelectList(GroupEditorViewModel viewModel)
+        {
+            viewModel.Statuses = new[] { new SelectListItem { Value = ((int) GS.Open).ToString(), Text = "Open" }, new SelectListItem { Value = ((int) GS.Closed).ToString(), Text = "Closed" } };
         }
 
         [HttpPost]
@@ -218,7 +236,16 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             result.AddToModelState(ModelState, string.Empty);
 
             await PopulateSelectLists(viewModel);
-            if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+
+            if(viewModel.CanUserEditStatus)
+            {
+                PopulateStatusSelectList(viewModel);
+            }
+
+            if (viewModel.GroupTypeId.HasValue)
+            {
+                viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+            }
 
             await ValidateAsync(viewModel);
 
@@ -245,7 +272,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var dto = CreateSaveDto(viewModel);
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields?.Replace("Unmapped field: group.closedDate", nameof(viewModel.ClosedDate)) ?? string.Empty, x.GetMessage()));
                 viewModel.SetWarnings(validationEnvelope);
                 ModelState.Remove(nameof(viewModel.ProcessedWarnings));
             }
@@ -458,14 +485,17 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 if (!resp.HasErrors) viewModel.GroupUId = resp.GetResponse().Value;
                 return resp;
             }
-            else return await _groupWriteService.SaveAsync(dto, User);
+            else
+            {
+                return await _groupWriteService.SaveAsync(dto, User);
+            }
         }
 
         private SaveGroupDto CreateSaveDto(GroupEditorViewModel viewModel)
         {
             viewModel.SetCCLeadCentreUrn();
 
-            Func<GroupModel> createDomainModel = () => new GroupModel
+            GroupModel createDomainModel() => new GroupModel
             {
                 CompaniesHouseNumber = viewModel.CompaniesHouseNumber,
                 GroupId = viewModel.GroupId,
@@ -476,11 +506,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 Name = viewModel.GroupName,
                 OpenDate = viewModel.OpenDate.ToDateTime(),
                 ClosedDate = viewModel.ClosedDate.ToDateTime(),
-                Address = UriHelper.TryDeserializeUrlToken<AddressDto>(viewModel.AddressJsonToken)
+                Address = UriHelper.TryDeserializeUrlToken<AddressDto>(viewModel.AddressJsonToken),
+                StatusId = viewModel.StatusId
             };
 
-            Func<List<LinkedEstablishmentGroup>> createLinksDomainModel = 
-                () => viewModel.LinkedEstablishments.Establishments.Select(x => new LinkedEstablishmentGroup
+            List<LinkedEstablishmentGroup> createLinksDomainModel() => viewModel.LinkedEstablishments.Establishments.Select(x => new LinkedEstablishmentGroup
             {
                 Urn = x.Urn,
                 Id = x.Id,

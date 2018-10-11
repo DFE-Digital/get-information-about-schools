@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Edubase.Services.Enums;
 using Edubase.Services.Groups;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
@@ -91,6 +91,19 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .Must(x => x.IsValid() || x.IsEmpty())
                     .WithMessage("{0} is invalid. Please enter a valid date", x => x.OpenDateLabel);
 
+                When(x => x.CanUserEditClosedDate
+                    && x.GroupType == eLookupGroupType.MultiacademyTrust
+                    && x.OriginalStatusId != (int) eLookupGroupStatus.Closed
+                    && x.StatusId == (int) eLookupGroupStatus.Closed
+                    && x.SaveGroupDetail, () =>
+                {
+                    RuleFor(x => x.ClosedDate)
+                    .Must(x => !x.IsEmpty())
+                    .WithMessage("Please enter a date for the closure of this MAT")
+                    .Must(x => x.IsValid() || x.IsEmpty())
+                    .WithMessage("Closed date is invalid. Please enter a valid date.");
+                });
+                
                 RuleFor(x => x.GroupName)
                     .Cascade(CascadeMode.StopOnFirstFailure)
                     .NotEmpty()

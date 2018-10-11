@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web.Mvc;
 using Edubase.Services.Downloads;
 using System.Threading.Tasks;
@@ -131,7 +131,31 @@ namespace Edubase.Web.UI.Controllers
                     };
                 }
             }
-            else return HttpNotFound();
+            else
+            {
+                return HttpNotFound();
+            }
+        }
+
+        [HttpGet, EdubaseAuthorize]
+        [Route("Download/MATClosureReport", Name = "DownloadMATClosureReport")]
+        public async Task<ActionResult> DownloadMATClosureReportAsync()
+        {
+            using (var c = IocConfig.CreateHttpClient())
+            {
+                var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, "downloads/matclosurereport.csv", User);
+                var response = (await c.SendAsync(requestMessage));
+
+                if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return HttpNotFound();
+                }
+                else
+                {
+                    response.EnsureSuccessStatusCode();
+                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = $"matclosurereport_{DateTime.Now.Date.ToString("dd-MM-yyyy")}.csv" };
+                }
+            }
         }
 
     }
