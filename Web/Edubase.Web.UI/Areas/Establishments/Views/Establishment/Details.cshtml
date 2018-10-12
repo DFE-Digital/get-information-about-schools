@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.Helpers
+@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models
 @using Edubase.Common
 @using Edubase.Services.Enums
@@ -92,7 +92,7 @@
 <p class="urn">URN: @Model.Establishment.Urn</p>
 <p class="establishment-type">@Model.TypeName</p>
 <p class="establishment-data-download">
-    @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto.Value, Model.EstabDetailRouteDto)) }, new { })
+    @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto.Value, Model.EstabDetailRouteDto)) }, new { rel = "nofollow" })
 </p>
 
 @{Html.RenderPartial(@"Partials\ConfirmationNotifications");}

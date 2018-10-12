@@ -77,7 +77,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Download/Establishment/{urn}", Name = "EstabDataDownload")]
         public async Task<ActionResult> DownloadEstablishmentData(int urn, string state, DownloadType? downloadType = null, bool start = false)
         {
-            Guard.IsNotNull(state, () => new ArgumentNullException(nameof(state)));
+            state.AssertIsNotEmpty(nameof(state));
             ViewBag.RouteName = "EstabDataDownload";
             ViewBag.BreadcrumbRoutes = UriHelper.DeserializeUrlToken<RouteDto[]>(state);
             if (downloadType.HasValue && !start) return View("Download");
@@ -88,7 +88,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Download/Group/{uid}", Name = "GroupDataDownload")]
         public async Task<ActionResult> DownloadGroupData(int uid, string state, DownloadType? downloadType = null, bool start = false)
         {
-            Guard.IsNotNull(state, () => new ArgumentNullException(nameof(state)));
+            state.AssertIsNotEmpty(nameof(state));
             ViewBag.RouteName = "GroupDataDownload";
             ViewBag.BreadcrumbRoutes = UriHelper.DeserializeUrlToken<RouteDto[]>(state);
             if (downloadType.HasValue && !start) return View("Download");

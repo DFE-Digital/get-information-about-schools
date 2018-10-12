@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,6 +42,5 @@ namespace Edubase.Common
         {
             if (!(obj is T)) throw new Exception(msg);
         }
-
     }
 }

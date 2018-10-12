@@ -1,4 +1,4 @@
-﻿using Edubase.Data.Entity;
+using Edubase.Data.Entity;
 using Edubase.Services;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,10 @@ namespace Edubase.Web.UI.Filters
 
         public void OnException(ExceptionContext filterContext)
         {
-            if (filterContext == null) throw new ArgumentNullException(nameof(filterContext));
+            if (filterContext == null)
+            {
+                throw new ArgumentNullException(nameof(filterContext));
+            }
 
             if (filterContext.Exception is EdubaseException) // domain / purposeful exception - not logged
             {

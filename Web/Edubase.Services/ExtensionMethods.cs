@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Exceptions;
+using Edubase.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,5 +50,17 @@ namespace Edubase.Services
         public static Dictionary<int, int[]> AsInts(this Dictionary<eLookupEstablishmentType, eLookupEducationPhase[]> dict) 
             => dict.Select(x => new { key = (int)x.Key, val = x.Value.Select(v => (int)v).ToArray() }).ToDictionary(x => x.key, x => x.val);
 
+        /// <summary>
+        /// Asserts that the supplied object is not null or empty; if it is, a RuleViolationEmptyParamException exception is raised.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="paramName"></param>
+        public static void AssertIsNotEmpty(this object obj, string paramName = null)
+        {
+            if ((obj is string && string.IsNullOrWhiteSpace(obj as string)) || obj == null)
+            {
+                throw new RuleViolationEmptyParamException($"Parameter {paramName} was empty");
+            }
+        }
     }
 }

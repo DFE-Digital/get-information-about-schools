@@ -1,7 +1,8 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Common;
+using Edubase.Services;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Exceptions;
@@ -54,9 +55,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [Route(EstabEditGovernanceMode, Name = "EstabEditGovernanceMode"), HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> EditGovernanceMode(int? establishmentUrn, bool failed = false)
         {
-            Guard.IsTrue(establishmentUrn.HasValue, () => new InvalidParameterException($"Parameter '{nameof(establishmentUrn)}' is null."));
+            establishmentUrn.AssertIsNotEmpty(nameof(establishmentUrn));
             
-            if (failed) ModelState.AddModelError("", "Unable to update Governance");
+            if (failed)
+            {
+                ModelState.AddModelError("", "Unable to update Governance");
+            }
 
             var viewModel = new EditGovernanceModeViewModel
             {
