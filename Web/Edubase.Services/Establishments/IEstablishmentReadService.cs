@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Core;
+using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.DisplayPolicies;
@@ -68,5 +68,9 @@ namespace Edubase.Services.Establishments
         Task<ApiPagedResult<EstablishmentSearchResultModel>> SearchAsync(EstablishmentSearchPayload payload, IPrincipal principal);
 
         Task<IEnumerable<EstablishmentSuggestionItem>> SuggestAsync(string text, IPrincipal principal, int take = 10);
+        
+        Task<PaginatedResult<EstablishmentChangeDto>> GetGovernanceChangeHistoryAsync(int urn, int skip, int take, string sortBy, IPrincipal user);
+
+        Task<FileDownloadDto> GetGovernanceChangeHistoryDownloadAsync(int urn, DownloadType format, IPrincipal principal);
     }
 }

@@ -77,7 +77,16 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<FileDownloadDto> GetChangeHistoryDownloadAsync(int urn, EstablishmentChangeHistoryDownloadFilters filters, IPrincipal principal)
             => (await _httpClient.PostAsync<FileDownloadDto>($"establishment/{urn}/changes/download", filters, principal)).GetResponse();
+        
+        public async Task<PaginatedResult<EstablishmentChangeDto>> GetGovernanceChangeHistoryAsync(int urn, int skip, int take, string sortBy, IPrincipal user)
+        {
+            var changes = (await _httpClient.GetAsync<ApiPagedResult<EstablishmentChangeDto>>($"establishment/{urn}/governance/changes?skip={skip}&take={take}&sortby={sortBy}", user)).GetResponse();
+            return new PaginatedResult<EstablishmentChangeDto>(skip, take, changes.Count, changes.Items);
+        }
 
+        public async Task<FileDownloadDto> GetGovernanceChangeHistoryDownloadAsync(int urn, DownloadType format, IPrincipal principal)
+            => (await _httpClient.GetAsync<FileDownloadDto>($"establishment/{urn}/governance/changes/download?format={format.ToString().ToLower()}", principal)).GetResponse();
+        
         public async Task<EstablishmentDisplayEditPolicy> GetDisplayPolicyAsync(EstablishmentModel establishment, IPrincipal user)
                             => (await _httpClient.GetAsync<EstablishmentDisplayEditPolicy>($"establishment/{establishment.Urn}/display-policy", user)).GetResponse().Initialise(establishment);
 

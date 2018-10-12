@@ -1,4 +1,13 @@
-﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using AutoMapper;
 using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Services;
@@ -23,18 +32,8 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using MoreLinq;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Data.Entity;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 using ET = Edubase.Services.Enums.eLookupEstablishmentType;
+using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -165,6 +164,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View("AddEditLink", viewModel);
             }
         }
+
         [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
         public async Task<ActionResult> Create()
         {
@@ -198,7 +198,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     LocalAuthorityId = viewModel.LocalAuthorityId,
                     CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(),
                     IEBTModel = new IEBTModel(),
-                    StatusId = (int)eLookupEstablishmentStatus.ProposedToOpen
+                    StatusId = (int) eLookupEstablishmentStatus.ProposedToOpen
                 };
 
                 var validation = await _establishmentWriteService.ValidateCreateAsync(apiModel, true, User);
@@ -235,7 +235,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
-        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments, 
+        public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments,
             int approved = 0, int pending = 0, int skip = 0, string sortBy = null, bool saved = false)
         {
             ViewBag.ApprovedCount = approved;
@@ -250,7 +250,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             };
 
             var result = await _establishmentReadService.GetAsync(id, User);
-            if (result.ReturnValue == null) return HttpNotFound();
+            if (result.ReturnValue == null)
+            {
+                return HttpNotFound();
+            }
+
             viewModel.Establishment = result.ReturnValue;
 
             await Task.WhenAll(
@@ -262,12 +266,36 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 PopulateLookupNames(viewModel),
                 PopulateGovernors(viewModel));
 
-            viewModel.AgeRangeToolTip = _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?)viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.AgeRangeToolTip = _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
 
             return View(viewModel);
+        }
+
+        [HttpGet, Route("Details/{id:int}/Governance/Changes", Name = "EstabDetailGovChangeHistory"), EdubaseAuthorize]
+        public async Task<ActionResult> GovernanceChangeHistoryAsync(int id, int skip = 0, string sortBy = null)
+        {
+            var result = await _establishmentReadService.GetAsync(id, User);
+
+            if (result.ReturnValue == null)
+            {
+                return HttpNotFound();
+            }
+
+            var changes = await _establishmentReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User);
+
+            var viewModel = new EstablishmentDetailViewModel
+            {
+                Establishment = result.ReturnValue,
+                ChangeHistory = changes
+            };
+
+            viewModel.LegalParentGroup = GetLegalParent(viewModel.Establishment.Urn.Value,
+                await _groupReadService.GetAllByEstablishmentUrnAsync(viewModel.Establishment.Urn.Value, User), User);
+
+            return View("GovernanceChangeHistory", viewModel);
         }
 
         [HttpHead, Route("Details/{urn:int}", Name = "EstabDetailsHead")]
@@ -283,7 +311,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public async Task<ActionResult> EditDetails(int? id, string addrtok)
         {
             if (!id.HasValue) return HttpNotFound();
-            ViewModel viewModel = await CreateEditViewModel(id, vm =>
+            var viewModel = await CreateEditViewModel(id, vm =>
             {
                 if (addrtok.Clean() != null)
                     AddOrReplaceAddressFromUrlToken(addrtok, vm);
@@ -467,19 +495,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         /// <returns></returns>
         internal static GroupModel GetLegalParent(int establishmentUrn, IEnumerable<GroupModel> parentGroups, IPrincipal principal)
         {
-            var parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.SingleacademyTrust);
+            var parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int) eLookupGroupType.SingleacademyTrust);
             if (parentGroup != null)
             {
                 return parentGroup;
             }
 
-            parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust);
+            parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust);
             if (parentGroup != null)
             {
                 return parentGroup;
             }
 
-            parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int)eLookupGroupType.Trust);
+            parentGroup = parentGroups.FirstOrDefault(g => g.GroupTypeId == (int) eLookupGroupType.Trust);
             return parentGroup ?? parentGroups.FirstOrDefault();
         }
 
@@ -571,9 +599,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return viewModel;
         }
 
-        public bool CanUserDefineAdditionalAddresses(int typeId) 
+        public bool CanUserDefineAdditionalAddresses(int typeId)
             => typeId.OneOfThese(ET.NonmaintainedSpecialSchool, ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool) && User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.IEBT);
-        
+
         private async Task<ActionResult> DeleteLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {
             await _establishmentWriteService.DeleteLinkedEstablishmentAsync(deltaViewModel.Urn.Value, deltaViewModel.ActiveRecord.Id.Value, User);
@@ -689,7 +717,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var editPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, editPolicy, User);
             viewModel.Name = domainModel.Name;
-            if (domainModel.TypeId.HasValue) viewModel.TypeName = (await _cachedLookupService.GetNameAsync(() => domainModel.TypeId));
+
+            if (domainModel.TypeId.HasValue)
+            {
+                viewModel.TypeName = (await _cachedLookupService.GetNameAsync(() => domainModel.TypeId));
+            }
+
             viewModel.LegalParentGroup = GetLegalParent(viewModel.Urn.Value, await _groupReadService.GetAllByEstablishmentUrnAsync(viewModel.Urn.Value, User), User);
         }
 
@@ -776,7 +809,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             vm.AddressCountryName = await c.GetNameAsync("CountryId", vm.Establishment.Address_CountryId);
             vm.AddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.Address_CountyId);
 
-
             if (vm.Establishment.AdditionalAddresses != null)
             {
                 vm.AdditionalAddressList = await Task.WhenAll(vm.Establishment.AdditionalAddresses.Select(async x => new AdditionalAddressViewModel
@@ -796,7 +828,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     CountyName = (await c.GetNameAsync((() => x.CountyId))).RemoveSubstring("Not recorded")
                 }));
             }
-            
+
             vm.IEBTProprietorsAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ProprietorsCountyId);
             vm.IEBTChairOfProprietorsBodyAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ChairOfProprietorsBodyCountyId);
 
@@ -925,7 +957,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     var p = addressViewModel.Target.GetPart("-", 1);
                     var index = p.ToInteger().GetValueOrDefault();
                     if (index > (viewModel.AdditionalAddresses.Count - 1) || p == "new") viewModel.AdditionalAddresses.Add(map(addressViewModel, new AdditionalAddressModel()));
-                    else map(addressViewModel, viewModel.AdditionalAddresses[index]);                    
+                    else map(addressViewModel, viewModel.AdditionalAddresses[index]);
                 }
                 viewModel.IsDirty = true;
             }
@@ -948,9 +980,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (model.ActionSpecifierCommand == ViewModel.ASSave)
             {
-                var originalEstabTypeId = (ET)domainModel.TypeId;
+                var originalEstabTypeId = (ET) domainModel.TypeId;
                 await ValidateAsync(model, domainModel);
-                var newEstabTypeId = (ET?)domainModel.TypeId;
+                var newEstabTypeId = (ET?) domainModel.TypeId;
 
                 if (ModelState.IsValid)
                 {
@@ -972,9 +1004,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
                 }
             }
-            else if(model.ActionSpecifierCommand == ViewModel.ASAddAddress) model.AdditionalAddresses.Add(new AdditionalAddressModel());
+            else if (model.ActionSpecifierCommand == ViewModel.ASAddAddress) model.AdditionalAddresses.Add(new AdditionalAddressModel());
             else if (model.ActionSpecifierCommand == ViewModel.ASRemoveAddress) model.AdditionalAddresses.RemoveAt(int.Parse(model.ActionSpecifierParam));
-            else if (model.ActionSpecifierCommand  == ViewModel.ASConfirm)
+            else if (model.ActionSpecifierCommand == ViewModel.ASConfirm)
             {
                 if (ModelState.IsValid)
                 {
@@ -1001,7 +1033,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     var propertyName = propertyInfo.Name;
                     var policyGetter = typeof(EstablishmentDisplayEditPolicy).GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance)?.GetGetMethod();
-                    if (policyGetter == null || (bool)policyGetter.Invoke(oldModel.EditPolicy, null))
+                    if (policyGetter == null || (bool) policyGetter.Invoke(oldModel.EditPolicy, null))
                     {
                         propertyInfo.SetValue(oldModel, propertyInfo.GetValue(newModel));
                     }

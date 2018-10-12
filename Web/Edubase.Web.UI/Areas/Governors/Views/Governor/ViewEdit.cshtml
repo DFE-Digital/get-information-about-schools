@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Enums;
+@using Edubase.Services.Enums;
 @using Edubase.Web.UI.Models.Grid
 @using Edubase.Web.UI.Helpers
 @model GovernorsGridViewModel
@@ -50,6 +50,13 @@ else
     <div class="grid-row">
         <div class="column-two-thirds">
             @ShowLegalDuty()
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.EstablishmentUrn })
+                <br /><br />
+            }
+
             @if (Model.GovernanceMode.HasValue)
             {
                 <h2 class="bold-small">Establishment governance</h2>
