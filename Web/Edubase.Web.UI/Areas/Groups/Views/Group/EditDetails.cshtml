@@ -95,7 +95,7 @@
                 @* CLOSED DATE *@
                 @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust) || Model.CanUserEditClosedDate)
                 {
-                    @Html.EditorFor(x => x.ClosedDate, new { title = "Closed date" })
+                    @Html.EditorFor(x => x.ClosedDate, new { title = "Closed date", fieldsetClassName = "closed-date" })
                 }
                 else
                 {
@@ -269,6 +269,18 @@
                     $("button[type=submit]").prop("disabled", false);
                 });
             }
+
+            var $closedDateInputs = $(".closed-date input[type='text']");
+            var $statusSelector = $("select#StatusId");
+
+            if ($closedDateInputs.length && $statusSelector.length) {
+                var f = function () {
+                    $closedDateInputs.prop("disabled", $statusSelector.val() != "2");
+                };
+                f();
+                $statusSelector.on("change", f);
+            }
+
         })();
 
     </script>
