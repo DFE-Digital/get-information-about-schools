@@ -51,7 +51,7 @@ else
         <div class="column-two-thirds">
             @ShowLegalDuty()
 
-            @if (User.Identity.IsAuthenticated && Model.EstablishmentUrn.HasValue)
+            @if (User.Identity.IsAuthenticated)
             {
                 @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.EstablishmentUrn })
                 <br /><br />
