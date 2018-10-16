@@ -1,4 +1,4 @@
-﻿using System.Security.Principal;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Domain;
@@ -28,5 +28,7 @@ namespace Edubase.Services.Establishments
         Task<ApiResponse> ConfirmGovernanceAsync(int urn, IPrincipal principal);
         Task<ApiResponse<BulkCreateFreeSchoolsResult>> BulkCreateFreeSchoolsAsync(string filename, IPrincipal principal);
         Task<ApiResponse<BulkCreateFreeSchoolsResult>> BulkCreateFreeSchoolsGetProgressAsync(Guid taskId, IPrincipal principal);
+        Task<ApiResponse<BulkUpdateProgressModel>> BulkAssociateEstabs2GroupsAsync(string filename, IPrincipal principal);
+        Task<ApiResponse<BulkUpdateProgressModel>> BulkAssociateEstabs2GroupsGetProgressAsync(Guid taskId, IPrincipal principal);
     }
 }

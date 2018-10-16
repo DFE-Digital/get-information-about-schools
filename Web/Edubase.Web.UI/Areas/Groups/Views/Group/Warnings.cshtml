@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Domain
+@using Edubase.Services.Domain
 @model GroupEditorViewModel
 
 @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))
@@ -91,6 +91,41 @@
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-4">Proceed</a>
             <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel-4">Cancel</a>
+        </div>
+    </div>
+}
+
+
+
+@if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION_MAT_CLOSE_LINKS))
+{
+    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_MAT_CLOSE_LINKS);
+    <div class="modal-overlay" id="warning-modal-overlay-5"></div>
+    <div class="modal-content" id="warning-modal-content-5">
+        <div class="modal-inner">
+            <a href="#" id="warning-exit-overlay-5" class="modal-exit">Close</a>
+            <h3 class="heading-medium">Are you sure you wish to continue?</h3>
+            <p>@warning.Message</p>
+        </div>
+        <div class="button-row">
+            <a href="#" class="button mobile-full-width" id="overlay-proceed-5">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel-5">Cancel</a>
+        </div>
+    </div>
+}
+else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewModel.UIWarningCodeMatClosureAreYouSure) != null)
+{
+    var warning = Model.WarningsToProcess.Single(x => x.Code == GroupEditorViewModel.UIWarningCodeMatClosureAreYouSure);
+    <div class="modal-overlay" id="warning-modal-overlay-6"></div>
+    <div class="modal-content" id="warning-modal-content-6">
+        <div class="modal-inner">
+            <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a>
+            <h3 class="heading-medium">Are you sure you wish to continue?</h3>
+            <p>@warning.Message</p>
+        </div>
+        <div class="button-row">
+            <a href="#" class="button mobile-full-width" id="overlay-proceed-6">Proceed</a>
+            <a href="#" class="button button-grey mobile-full-width" id="overlay-cancel-6">Cancel</a>
         </div>
     </div>
 }

@@ -1,4 +1,4 @@
-﻿@using Edubase.Common
+@using Edubase.Common
 @using Edubase.Services.Domain
 @using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
@@ -81,7 +81,7 @@
     <p class="group-type">@Model.GroupTypeName</p>
 
     <p class="group-data-download">
-        @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { })
+        @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { rel = "nofollow" })
     </p>
 
     @{Html.RenderPartial(@"Partials\GroupConfirmationNotifications");}

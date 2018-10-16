@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Enums;
 using System;
 using System.Collections.Generic;
@@ -55,6 +55,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string GroupTypeName { get; set; }
         public string SelectedTabName { get; set; }
         public int? StatusId { get; set; }
-        
+        public int? OriginalStatusId { get; set; }
+
+
     }
 }

@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+using System.Collections.Generic;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using AutoMapper;
 using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
@@ -16,10 +20,6 @@ using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models;
 using Moq;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Edubase.UnitTest.Controllers
 {
@@ -131,9 +131,9 @@ namespace Edubase.UnitTest.Controllers
             var response = await ObjectUnderTest.EditDetails(4, address);
 
             Assert.That(response is ViewResult);
-            var viewResult = (ViewResult)response;
+            var viewResult = (ViewResult) response;
             Assert.That(viewResult.Model is EditEstablishmentModel);
-            var model = (EditEstablishmentModel)viewResult.Model;
+            var model = (EditEstablishmentModel) viewResult.Model;
             Assert.That(model.Address_CityOrTown == replacementAddress.Town);
             Assert.That(model.Address_CountryId == replacementAddress.CountryId);
             Assert.That(model.Address_CountyId == replacementAddress.CountyId);

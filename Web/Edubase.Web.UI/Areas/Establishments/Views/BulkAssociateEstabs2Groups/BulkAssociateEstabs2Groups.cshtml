@@ -1,0 +1,63 @@
+@model BulkAssociateEstabs2GroupsViewModel
+
+@{
+    ViewBag.Title = "Bulk upload academies to trust/sponsor";
+}
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.RouteLink("Home", "Homepage")</li>
+        <li>@Html.RouteLink("Tools", "Tools")</li>
+    </ul>
+</div>
+
+@Html.ValidationSummary("Incorrect or missing details")
+
+@using (Html.BeginRouteForm("BulkAssociateEstabs2GroupsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="grid-row spaced-groups">
+        <div class="column-full">
+            <h1 class="heading-xlarge">Bulk upload academies to trust/sponsor</h1>
+            <p>Use this tool to upload new academies to the relevant trusts / sponsor.</p>
+        </div>
+        <div class="column-full">
+            @if (Model?.Result?.RowErrors > 0)
+            {
+                <div class="form-group error" id="error-log">
+                    <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                    <p class="download-list-item">
+                        <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
+                    </p>
+                </div>
+            }
+        </div>
+
+        <div class="column-full">
+            <h2 class="heading-medium">Download template</h2>
+            <p>
+                Please use this template to list the academies.
+            </p>
+            <a href="http://edubasepr.blob.core.windows.net/content/academies_bulk_upload.xls" class="download-list-item">Academies_bulk_upload.xls, 25KB</a>
+        </div>
+
+        <div class="column-full">
+            <h2 class="heading-medium">Upload completed template</h2>
+            <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="bulkfile" class="form-label">Upload a file</label>
+                @Html.ValidationMessageFor(x => x.BulkFile)
+                <div class="upload-control-wrapper">
+                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "file-input" });
+                    <button class="button button-grey file-selector">Choose file</button>
+                    <div class="text-field-wrapper">
+                        <input type="text" class="file-name" readonly="readonly" value="No file chosen" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="column-full">
+            <input type="submit" class="button mobile-full-width" value="Submit" />
+            <a href="/Tools" class="button button-grey cancel mobile-full-width">Cancel</a>
+        </div>
+
+    </div>
+}

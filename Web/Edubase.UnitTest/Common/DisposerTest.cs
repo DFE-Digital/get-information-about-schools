@@ -1,8 +1,7 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.UnitTest.Mocks;
-using NUnit.Framework;
-using System.Linq;
 using MoreLinq;
+using NUnit.Framework;
 
 namespace Edubase.UnitTest.Common
 {
@@ -28,10 +27,9 @@ namespace Edubase.UnitTest.Common
         [Test]
         public void UsingInvokesMethodsInRightOrder()
         {
-            string test = "";
+            var test = "";
             Disposer.Using(() => new Disposable(), x => test += "1", x => test += "3", x => test += "2");
             Assert.AreEqual("123", test);
         }
-
     }
 }

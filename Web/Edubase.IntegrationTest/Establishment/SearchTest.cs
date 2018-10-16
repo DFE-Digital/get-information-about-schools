@@ -1,33 +1,17 @@
-﻿using Edubase.Common;
+using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
 using Edubase.Common.Cache;
-using Edubase.Common.Reflection;
 using Edubase.Data;
 using Edubase.Services;
-using Edubase.Services.Enums;
-using Edubase.Services.Establishments.DisplayPolicies;
-using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
-using Edubase.Services.Security;
 using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Security;
 using Edubase.Web.UI;
-using LinqToExcel;
-using LinqToExcel.Attributes;
-using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Edubase.IntegrationTest.Establishment
 {
@@ -39,7 +23,7 @@ namespace Edubase.IntegrationTest.Establishment
         {
             var client = IocConfig.CreateHttpClient();
             var clientWrapper = new HttpClientWrapper(client, IocConfig.CreateJsonMediaTypeFormatter());
-            
+
             var cls = new CachedLookupService(new LookupApiService(clientWrapper, new SecurityApiService(clientWrapper)), new CacheAccessor(new JsonConverterCollection() { new DbGeographyConverter() }));
             var las = await cls.LocalAuthorityGetAllAsync();
             var pcs = await cls.ParliamentaryConstituenciesGetAllAsync();
@@ -67,7 +51,6 @@ namespace Edubase.IntegrationTest.Establishment
             }, new GenericPrincipal(new GenericIdentity(""), new string[0]));
 
             Assert.IsTrue(result.Items.Count == 100);
-
         }
     }
 }

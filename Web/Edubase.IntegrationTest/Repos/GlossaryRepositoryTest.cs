@@ -1,11 +1,8 @@
-﻿using Edubase.Data.Repositories;
+using System.Linq;
+using System.Threading.Tasks;
+using Edubase.Data.Repositories;
 using Faker;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Edubase.IntegrationTest.Repos
 {
@@ -16,7 +13,7 @@ namespace Edubase.IntegrationTest.Repos
         public async Task InsertGlossaryItems()
         {
             var subject = new GlossaryRepository();
-            for (int i = 0; i < 100; i++)
+            for (var i = 0; i < 100; i++)
             {
                 await subject.CreateAsync(new Data.Entity.GlossaryItem
                 {

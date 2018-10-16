@@ -1,4 +1,5 @@
-﻿using Edubase.Common;
+using Edubase.Common;
+using Edubase.Services.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -25,9 +26,25 @@ namespace Edubase.Services.Domain
         /// <returns></returns>
         public T GetResponse()
         {
-            if (Success && Response != null) return Response;
-            else if (Success && Response == null) throw new Exception("The response is empty but the API call was successful.");
-            else throw new Exception($"The API was not successful. There were {Errors?.Length} errors; " + SerialiseErrors(Errors));
+            if (Success && Response != null)
+            {
+                return Response;
+            }
+            else if (Success && Response == null)
+            {
+                throw new Exception("The response is empty but the API call was successful.");
+            }
+            else
+            {
+                if ((Errors ?? new ApiError[0]).Any(x => (x.Code ?? "").IndexOf("accessDenied", StringComparison.OrdinalIgnoreCase) > -1))
+                {
+                    throw new PermissionDeniedException("Permission denied");
+                }
+                else
+                {
+                    throw new Exception($"The API was not successful. There were {Errors?.Length} errors; " + SerialiseErrors(Errors));
+                }
+            }
         }
 
         public ApiResponse<T> OK(T response)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web.Mvc;
 using Edubase.Services.Downloads;
 using System.Threading.Tasks;
@@ -77,7 +77,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Download/Establishment/{urn}", Name = "EstabDataDownload")]
         public async Task<ActionResult> DownloadEstablishmentData(int urn, string state, DownloadType? downloadType = null, bool start = false)
         {
-            Guard.IsNotNull(state, () => new ArgumentNullException(nameof(state)));
+            state.AssertIsNotEmpty(nameof(state));
             ViewBag.RouteName = "EstabDataDownload";
             ViewBag.BreadcrumbRoutes = UriHelper.DeserializeUrlToken<RouteDto[]>(state);
             if (downloadType.HasValue && !start) return View("Download");
@@ -88,7 +88,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Download/Group/{uid}", Name = "GroupDataDownload")]
         public async Task<ActionResult> DownloadGroupData(int uid, string state, DownloadType? downloadType = null, bool start = false)
         {
-            Guard.IsNotNull(state, () => new ArgumentNullException(nameof(state)));
+            state.AssertIsNotEmpty(nameof(state));
             ViewBag.RouteName = "GroupDataDownload";
             ViewBag.BreadcrumbRoutes = UriHelper.DeserializeUrlToken<RouteDto[]>(state);
             if (downloadType.HasValue && !start) return View("Download");
@@ -113,6 +113,10 @@ namespace Edubase.Web.UI.Controllers
             return null;
         }
 
+        [HttpGet, EdubaseAuthorize]
+        [Route("Download/Establishment/{id}/{downloadType}", Name = "DownloadEstablishmentGovernanceChangeHistory")]
+        public async Task<ActionResult> DownloadGovernanceChangeHistoryAsync(int id, DownloadType downloadType)
+            => Redirect((await _establishmentReadService.GetGovernanceChangeHistoryDownloadAsync(id, downloadType, User)).Url);
 
         [HttpGet]
         [Route("Download/File", Name = "DownloadFile")]
@@ -131,7 +135,31 @@ namespace Edubase.Web.UI.Controllers
                     };
                 }
             }
-            else return HttpNotFound();
+            else
+            {
+                return HttpNotFound();
+            }
+        }
+
+        [HttpGet, EdubaseAuthorize]
+        [Route("Download/MATClosureReport", Name = "DownloadMATClosureReport")]
+        public async Task<ActionResult> DownloadMATClosureReportAsync()
+        {
+            using (var c = IocConfig.CreateHttpClient())
+            {
+                var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, "downloads/matclosurereport.csv", User);
+                var response = (await c.SendAsync(requestMessage));
+
+                if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return HttpNotFound();
+                }
+                else
+                {
+                    response.EnsureSuccessStatusCode();
+                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = $"matclosurereport_{DateTime.Now.Date.ToString("dd-MM-yyyy")}.csv" };
+                }
+            }
         }
 
     }
