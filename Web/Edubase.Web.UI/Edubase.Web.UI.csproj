@@ -282,7 +282,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AiHandleErrorAttribute.cs" />
-    <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\AutoMapperWebProfile.cs" />
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\StartupSASimulator.cs" />
@@ -505,9 +504,6 @@
     <Content Include="public\assets\images\maps\open-marker.png" />
     <Content Include="public\assets\scripts\**\*.*" />
     <Content Include="public\assets\stylesheets\**\*.*" />
-    <Content Include="App_Data\sa-dev.education.gov.uk-metadata.xml" />
-    <Content Include="App_Data\sa-uat.education.gov.uk-metadata.xml" />
-    <Content Include="App_Data\sa.education.gov.uk-metadata.xml" />
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
     <Content Include="Assets\Sass\elements\_mobile-nav.scss" />
     <Content Include="Areas\Establishments\Views\Web.config" />
@@ -529,11 +525,6 @@
     <Content Include="Assets\Sass\views\_academy-openings.scss" />
     <Content Include="Assets\Sass\elements\_tooltips.scss" />
     <Content Include="Assets\Sass\elements\_modal.scss" />
-    <Content Include="App_Data\sa-dev.education.gov.uk-certificate.cer" />
-    <Content Include="App_Data\sa-uat.education.gov.uk-certificate.cer" />
-    <Content Include="App_Data\sa.education.gov.uk-certificate.cer" />
-    <Content Include="App_Data\edubase3.pfx" />
-    <Content Include="App_Data\Kentor.AuthServices.StubIdp.cer" />
     <Content Include="Areas\Governors\Views\Governor\_DuplicateGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\SharedGovernor\SelectSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\SharedGovernor\EditSharedGovernor.cshtml" />

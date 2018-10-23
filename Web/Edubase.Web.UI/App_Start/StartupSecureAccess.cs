@@ -1,4 +1,10 @@
-﻿using Edubase.Common;
+using System;
+using System.Configuration;
+using System.IdentityModel.Metadata;
+using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
+using System.Web.Helpers;
+using System.Web.Hosting;
 using Kentor.AuthServices;
 using Kentor.AuthServices.Configuration;
 using Kentor.AuthServices.Owin;
@@ -7,54 +13,21 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
-using System;
-using System.Configuration;
-using System.IdentityModel.Metadata;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
-using System.Web.Helpers;
-using System.Web.Hosting;
 
 [assembly: OwinStartup("SecureAccessConfiguration", typeof(Edubase.Web.UI.StartupSecureAccess))]
 
 namespace Edubase.Web.UI
 {
+    using static ConfigurationManager;
+
     public partial class StartupSecureAccess
     {
-        public void Configuration(IAppBuilder app)
-        {
-            ConfigureAuth(app);
-        }
+        public void Configuration(IAppBuilder app) => ConfigureAuth(app);
 
-        private static TimeSpan ConfiguredExpireTimeSpan
-        {
-            get
-            {
-                var configuredValue = ConfigurationManager.AppSettings["SessionExpireTimeSpan"];
-                return configuredValue != null
-                    ? TimeSpan.Parse(configuredValue)
-                    : TimeSpan.FromMinutes(60);
-            }
-        }
-
-        private static string SaCertificate
-        {
-            get
-            {
-                var configuredValue = ConfigurationManager.AppSettings["SaCertificate"];
-                return configuredValue ?? "wildcard-dfe.pfx";
-            }
-        }
-
-        private static string SaCertificatePassword
-        {
-            get
-            {
-                var configuredValue = ConfigurationManager.AppSettings["SaCertificatePassword"];
-                return configuredValue ?? "test";
-            }
-        }
+        public static TimeSpan ConfiguredExpireTimeSpan => TimeSpan.Parse(AppSettings["SessionExpireTimeSpan"]);
+        public static string ApplicationIdpEntityId => AppSettings[nameof(ApplicationIdpEntityId)];
+        public static Uri ExternalAuthDefaultCallbackUrl => new Uri(AppSettings[nameof(ExternalAuthDefaultCallbackUrl)]);
+        public static Uri MetadataLocation => new Uri(AppSettings[nameof(MetadataLocation)]);
 
         public void ConfigureAuth(IAppBuilder app)
         {
@@ -75,8 +48,8 @@ namespace Edubase.Web.UI
         {
             var spOptions = new SPOptions
             {
-                EntityId = new EntityId(AuthConfig.ApplicationIdpEntityId),
-                ReturnUrl = AuthConfig.ExternalAuthDefaultCallbackUrl,
+                EntityId = new EntityId(ApplicationIdpEntityId),
+                ReturnUrl = ExternalAuthDefaultCallbackUrl,
                 AuthenticateRequestSigningBehavior = SigningBehavior.Always
             };
 
@@ -88,19 +61,18 @@ namespace Edubase.Web.UI
 
             var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false) { SPOptions = spOptions };
 
-            var idp = new IdentityProvider(new EntityId(AuthConfig.ExternalIdpEntityId.AbsoluteUri), spOptions)
+            var idp = new IdentityProvider(new EntityId(MetadataLocation.AbsoluteUri), spOptions)
             {
                 AllowUnsolicitedAuthnResponse = true,
                 Binding = Saml2BindingType.HttpRedirect,
-                MetadataLocation = AuthConfig.ExternalIdpMetadataPath,
+                MetadataLocation = MetadataLocation.AbsoluteUri,
                 WantAuthnRequestsSigned = true
             };
 
-            idp.SigningKeys.AddConfiguredKey(new X509Certificate2(AuthConfig.ExternalIdpCertificatePath));
             authServicesOptions.IdentityProviders.Add(idp);
             return authServicesOptions;
         }
 
-        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath($"~/app_data/{SaCertificate}"), SaCertificatePassword, X509KeyStorageFlags.MachineKeySet);
+        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath($"~/app_data/wildcard-dfe.pfx"), "test", X509KeyStorageFlags.MachineKeySet);
     }
 }
