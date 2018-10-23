@@ -1,22 +1,17 @@
-﻿using Edubase.Data.Entity;
+using System;
+using System.Globalization;
+using System.IdentityModel.Metadata;
+using System.Security.Claims;
+using System.Web.Helpers;
 using Kentor.AuthServices;
 using Kentor.AuthServices.Configuration;
 using Kentor.AuthServices.Metadata;
 using Kentor.AuthServices.Owin;
 using Kentor.AuthServices.WebSso;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
-using System;
-using System.Configuration;
-using System.Globalization;
-using System.IdentityModel.Metadata;
-using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
-using System.Web.Helpers;
-using System.Web.Hosting;
 
 [assembly: OwinStartup("SASimulatorConfiguration", typeof(Edubase.Web.UI.StartupSASimulator))]
 
@@ -29,45 +24,19 @@ namespace Edubase.Web.UI
             ConfigureAuth(app);
         }
 
-        private static TimeSpan ConfiguredExpireTimeSpan
-        {
-            get
-            {
-                var configuredValue = ConfigurationManager.AppSettings["SessionExpireTimeSpan"];
-                return configuredValue != null
-                    ? TimeSpan.Parse(configuredValue)
-                    : TimeSpan.FromMinutes(60);
-            }
-        }
         public void ConfigureAuth(IAppBuilder app)
         {
-            
-            // Enable the application to use a cookie to store information for the signed in user
-            // and to use a cookie to temporarily store information about a user logging in with a third party login provider
-            // Configure the sign in cookie
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
-                Provider = new CookieAuthenticationProvider
-                {
-                    //// Enables the application to validate the security stamp when the user logs in.
-                    //// This is a security feature which is used when you change a password or add an external login to your account.  
-                    //OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
-                    //    validateInterval: ConfiguredExpireTimeSpan,
-                    //    regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
-                },
-                ExpireTimeSpan = ConfiguredExpireTimeSpan
+                Provider = new CookieAuthenticationProvider(),
+                ExpireTimeSpan = StartupSecureAccess.ConfiguredExpireTimeSpan
             });
 
-
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-
             app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
-
-
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
-
         }
 
         private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
@@ -85,18 +54,9 @@ namespace Edubase.Web.UI
                 SingleSignOnServiceUrl = new Uri("http://secure-access-simulator.azurewebsites.net/")
             };
 
-            idp.SigningKeys.AddConfiguredKey(
-                new X509Certificate2(
-                    HostingEnvironment.MapPath(
-                        "~/App_Data/Kentor.AuthServices.StubIdp.cer")));
-
+            //idp.SigningKeys.AddConfiguredKey(new X509Certificate2(HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.StubIdp.cer")));
             authServicesOptions.IdentityProviders.Add(idp);
-
-            // It's enough to just create the federation and associate it
-            // with the options. The federation will load the metadata and
-            // update the options with any identity providers found.
             new Federation("http://secure-access-simulator.azurewebsites.net/Federation", true, authServicesOptions);
-
             return authServicesOptions;
         }
 
@@ -113,7 +73,7 @@ namespace Edubase.Web.UI
             {
                 EntityId = new EntityId("http://edubase.gov"),
                 Organization = organization,
-                ReturnUrl = AuthConfig.ExternalAuthDefaultCallbackUrl
+                ReturnUrl = StartupSecureAccess.ExternalAuthDefaultCallbackUrl
             };
 
             var techContact = new ContactPerson
@@ -127,6 +87,7 @@ namespace Edubase.Web.UI
             {
                 Type = ContactType.Support
             };
+
             supportContact.EmailAddresses.Add("support@example.com");
             spOptions.Contacts.Add(supportContact);
 
