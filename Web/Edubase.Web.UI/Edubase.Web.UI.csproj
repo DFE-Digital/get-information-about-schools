@@ -281,7 +281,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AiHandleErrorAttribute.cs" />
     <Compile Include="App_Start\AutoMapperWebProfile.cs" />
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\StartupSASimulator.cs" />
