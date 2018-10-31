@@ -66,7 +66,8 @@ namespace Edubase.Web.UI
                 AllowUnsolicitedAuthnResponse = true,
                 Binding = Saml2BindingType.HttpRedirect,
                 MetadataLocation = MetadataLocation.AbsoluteUri,
-                WantAuthnRequestsSigned = true
+                WantAuthnRequestsSigned = true,
+                DisableOutboundLogoutRequests = true
             };
 
             authServicesOptions.IdentityProviders.Add(idp);
