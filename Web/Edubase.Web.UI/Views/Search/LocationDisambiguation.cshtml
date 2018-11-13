@@ -50,6 +50,6 @@
     const string key = "LocationSearchModel.AutoSuggestValue";
     var queryString = Request.QueryString.RemoveKeys("placeId", key).AddIfNonExistent(key, $"{place.Coords.Latitude},{place.Coords.Longitude}");
 
-    <li><a href="@Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })?@queryString">@place.Name</a></li>
+    <a href="@Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })?@queryString">@place.Name</a>
 
 }
