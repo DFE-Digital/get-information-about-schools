@@ -23,7 +23,6 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
         };
         private static readonly Policy RetryPolicy = Policy
                 .Handle<HttpRequestException>()
-                .Or<WebException>()
                 .WaitAndRetryAsync(new[]
                 {
                     TimeSpan.FromSeconds(1),
