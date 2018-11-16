@@ -1,16 +1,18 @@
-﻿namespace Edubase.Services.Geo
+using Edubase.Common.Spatial;
+
+namespace Edubase.Services.Geo
 {
     public class PlaceDto
     {
-        public string Id { get; set; }
         public string Name { get; set; }
+        public LatLon Coords { get; set; }
 
         public PlaceDto()  { }
 
-        public PlaceDto(string id, string name)
+        public PlaceDto(string name, LatLon coords)
         {
             Name = name;
-            Id = id;
+            Coords = coords;
         }
     }
 }

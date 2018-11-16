@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using AutoMapper;
@@ -15,7 +15,7 @@ using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
-using Edubase.Services.IntegrationEndPoints.Google;
+using Edubase.Services.IntegrationEndPoints.AzureMaps;
 using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
@@ -107,7 +107,7 @@ namespace Edubase.Web.UI
                 .UsingConstructor(typeof(JsonConverterCollection));
 
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
-            builder.RegisterType<GooglePlacesService>().As<IGooglePlacesService>();
+            builder.RegisterType<AzureMapsService>().As<IAzureMapsService>();
             builder.RegisterType<OSPlacesApiService>().As<IOSPlacesApiService>();
             builder.RegisterType<PlacesLookupService>().As<IPlacesLookupService>();
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();

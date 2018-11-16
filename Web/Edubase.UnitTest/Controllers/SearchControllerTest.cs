@@ -1,9 +1,7 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Geo;
 using Edubase.Services.Groups;
-using Edubase.Services.IntegrationEndPoints.Google;
-using Edubase.Services.IntegrationEndPoints.Google.Models;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI;
 using Edubase.Web.UI.Controllers;
@@ -77,8 +75,10 @@ namespace Edubase.UnitTest.Controllers
             var grs = new Mock<IGroupReadService>().Object;
             var cls = new Mock<ICachedLookupService>();
             var gps = new Mock<IPlacesLookupService>();
+            var coords = new Edubase.Common.Spatial.LatLon(1, 2);
+            const string placeName = "BobVille";
 
-            gps.Setup(x => x.SearchAsync("Bob")).ReturnsAsync(new[] { new PlaceDto("x", "Bobville") });
+            gps.Setup(x => x.SearchAsync("Bob")).ReturnsAsync(new[] { new PlaceDto(placeName, coords) });
 
             var subject = new SearchController(ers, cls.Object, grs, gps.Object);
             var viewModel = new SearchViewModel { SearchType = eSearchType.Location };
@@ -87,8 +87,8 @@ namespace Edubase.UnitTest.Controllers
 
             Assert.That(result.ViewName, Is.EqualTo("LocationDisambiguation"));
             var disambiguationResults = ((LocationDisambiguationViewModel)result.Model).MatchingLocations;
-            Assert.That(disambiguationResults[0].Id, Is.EqualTo("x"));
-            Assert.That(disambiguationResults[0].Name, Is.EqualTo("Bobville"));
+            Assert.That(disambiguationResults[0].Coords, Is.EqualTo(coords));
+            Assert.That(disambiguationResults[0].Name, Is.EqualTo(placeName));
             Assert.That(disambiguationResults.Count, Is.EqualTo(1));
         }
 
