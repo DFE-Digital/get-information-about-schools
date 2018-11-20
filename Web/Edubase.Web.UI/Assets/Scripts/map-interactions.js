@@ -131,7 +131,7 @@ DfE.mapInteractions = (function() {
         clusterGroup.addLayer(marker);
       });
       groupMap.addLayer(clusterGroup);
-      groupMap.fitBounds(clusterGroup.getBounds());
+      groupMap.fitBounds(clusterGroup.getBounds(), {padding: [10, 10]});
     }
   }
 }());
