@@ -485,8 +485,7 @@
     <Content Include="Assets\Scripts\Elements\Forms\select-all-filters.js" />
     <Content Include="Assets\Scripts\libs\leaflet\leaflet-src.js" />
     <Content Include="Assets\Scripts\libs\leaflet\leaflet.js" />
-    <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet-google.js" />
-    <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet.markercluster.src.js" />
+    <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet.markercluster-src.js" />
     <Content Include="Assets\Scripts\standalone\indi-search.js" />
     <Content Include="Assets\Scripts\standalone\search-map.js" />
     <Content Include="Assets\Scripts\Views\group-details.js" />

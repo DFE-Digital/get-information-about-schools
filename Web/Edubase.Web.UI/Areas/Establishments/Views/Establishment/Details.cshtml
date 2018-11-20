@@ -188,7 +188,7 @@
             <p>Link: <a href="@Model.AgeRangeToolTipLink">@Model.AgeRangeToolTipLink</a></p>
         }
     </div>
-    
+
     <div id="help-text-school-capacity">
         <h3 class="heading-small">School capacity</h3>
         <p>@Model.SchoolCapacityToolTip</p>
@@ -201,7 +201,7 @@
     <div id="help-text-fsm">
         <h3 class="heading-small">Free School Meals</h3>
         <p>
-            This shows whether a pupil's family have claimed eligibility for free school meals as reported in the annual spring school census. Parents are able to claim free school meals if they receive a qualifying benefit. 
+            This shows whether a pupil's family have claimed eligibility for free school meals as reported in the annual spring school census. Parents are able to claim free school meals if they receive a qualifying benefit.
             This does not show pupils who actually received free school meals but those who are eligible to receive them.
         </p>
     </div>
@@ -210,7 +210,7 @@
 
 
 @section ViewScripts {
-    
+
     @if (Model.Establishment.CloseDate != null)
     {
         <script>var estabOpen = false;</script>
@@ -219,7 +219,7 @@
     {
         <script>var estabOpen = true;</script>
     }
-    
+    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
     <script>
         $('#school-governance').find('.sortable-table').clientSort();
         $(function () {

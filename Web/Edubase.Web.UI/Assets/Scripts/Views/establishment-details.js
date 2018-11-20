@@ -11,37 +11,36 @@ DfE.Views.SchoolDetails = (function () {
 
         // map only shows by default on larger screens
         if ($map.length && $map.css('display') === 'block') {
-            DfE.mapInteractions.loadGoogleScript();
+          window.setTimeout(function(){
+            DfE.mapInteractions.initMap();
             mapInitialised = true;
+          }, 0);
         }
 
         // show the map in collapsable panel
         mobileToggleSwitch.on('click', function (e) {
             e.preventDefault();
-            if ($(this).hasClass('trigger-open')) {
+            if (mobileToggleSwitch.hasClass('trigger-open')) {
                 $map.css({ display: 'none' });
                 $(this).text('Show map');
 
             } else {
+              $map.css({ display: 'block' });
+              $(this).text('Close map');
                 if (!mapInitialised) {
-                    DfE.mapInteractions.loadGoogleScript();
-                    mapInitialised = true;
-                } 
-                $map.css({ display: 'block' });
-                $(this).text('Close map');
+                  DfE.mapInteractions.initMap();
+                }
             }
-
-            $(this).toggleClass('trigger-open');
-
+          mobileToggleSwitch.toggleClass('trigger-open');
         });
-    }
+    };
 
 
     if ($map.length) {
         initSchoolMap();
     }
 
-    if ($tabsWrapper.length) {        
+    if ($tabsWrapper.length) {
         $tabsWrapper.tabs();
     }
 }());
