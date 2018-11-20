@@ -7,14 +7,14 @@
         } else {
             $panel.prepend(warningTemplate.replace('{0}', message));
         }
-        
+
     },
     init: function (options) {
         'use strict';
 
         var defaults = {
             highlightFirstSuggestion: false
-        }
+        };
 
          this.opts = $.extend({}, defaults, options);
 
@@ -24,7 +24,7 @@
         /*@cc_on
             jScriptVersion = @_jscript_version
         @*/
-        
+
         $('#content').find('.search-toggle-panel').radioToggle({
             untoggle: true
         });
@@ -43,6 +43,11 @@
                     self.bindAutosuggest('#LocalAuthorityToAdd',
                         '#LocalAuthoritySearchModel_AutoSuggestValue',
                         { data: window.localAuthorities, name: "name", value: "id" });
+
+                    self.bindAutosuggest('#LocationSearchModel_Text',
+                      '#LocationSearchModel_AutoSuggestValue',
+                       self.getPlacesSuggestionHandler);
+
                 }, 500);
             });
         }
@@ -117,7 +122,7 @@
                     e.preventDefault();
                     return self.showWarning($('#searchtype-gov-namerole-ref'),
                         'Please enter a governor to start a search');
-                }                       
+                }
         });
 
         $('#governor-search-submit-1').on('click', function (e) {
@@ -127,7 +132,7 @@
                 e.preventDefault();
                 return self.showWarning($('#searchtype-gov-refno-ref'),
                     'Please enter a governor ID to start a search');
-            }                       
+            }
         });
 
         var buttonEnabler = function (button, textbox) {
@@ -185,6 +190,27 @@
         });
     },
 
+    getPlacesSuggestionHandler: function(keyword, callback) {
+      $.ajax({
+        url: '/Search/SuggestPlace',
+        data: {text: keyword},
+        dataType: 'json',
+        success: function(data) {
+          var suggestions = data.map(function(location){
+            var obj = {};
+            obj.text = location.name;
+            obj.value = location.coords.latitude + ', '+ location.coords.longitude;
+
+            return obj;
+          });
+          return callback(suggestions);
+        },
+        error: function(){
+          console.log('Problem retrieving location suggestions!');
+        }
+      });
+    },
+
     getTrustSuggestionHandler: function (keywords, callback) {
         var dataSuggestionUrl = $("#GroupSearchModel_Text").attr("data-suggestion-url");
         return $.get(encodeURI(dataSuggestionUrl + keywords), function (response) {
@@ -212,7 +238,7 @@
             re = /\{0\}/g,
             reId = /\{1}/g;
 
-            
+
 
         function includeLa(la) {
             var idString = "la-" + la.id;
@@ -268,7 +294,7 @@
             if (!suggestionSource.data) { console.log("suggestionSource.data is null"); return; }
             if (!suggestionSource.name) { console.log("suggestionSource.name is null"); return; }
             if (!suggestionSource.value) { console.log("suggestionSource.value is null"); return; }
-            
+
             minChars = 2;
             field = suggestionSource.name;
             value = suggestionSource.value;
@@ -284,7 +310,7 @@
             return;
         }
 
-        var templateHandler = function (suggestion) {           
+        var templateHandler = function (suggestion) {
             var tmpl = '<div><a href="javascript:">' + suggestion[field] + '</a></div>';
 
             if (suggestion.hasOwnProperty('closed') && suggestion.closed) {
@@ -304,7 +330,7 @@
                 return false;
             }
             return true;
-        }
+        };
 
         $(targetInputElementName).typeahead({
             hint: false,
@@ -346,6 +372,7 @@
         var currentSuggestionName = "";
 
         $(targetInputElementName).bind("typeahead:select", function (src, suggestion) {
+          console.log('select ', suggestion);
             $(targetResolvedInputElementName).val(suggestion[value]);
             currentSuggestionName = suggestion[field];
 
@@ -358,7 +385,12 @@
 
                 }
             }
-        });       
+
+            if (targetInputElementName === '#LocationSearchModel_Text') {
+              console.log(suggestion);
+              document.getElementById('LocationSearchModel_AutoSuggestValue').value = suggestion.value;
+            }
+        });
 
         $(targetInputElementName).bind("typeahead:autocomplete", function (src, suggestion) {
             $(targetResolvedInputElementName).val(suggestion[value]);
@@ -429,7 +461,7 @@
                 }
             }, 0);
 
-            
+
         });
 
         $(window).on('noLocationMatch', function (e) {

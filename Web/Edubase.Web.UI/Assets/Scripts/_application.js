@@ -18,7 +18,7 @@
         };
     }
 
-    window.DfE.mapConfig.apiKey = mapsApiKey;
+    window.DfE.mapConfig.apiKey = azureMapsApiKey;
     window.DfE.Util.randomNumber = function () { return Math.floor((Math.random() * 10000000) + 1); };
 
     window.DfE.Util.QueryString = {

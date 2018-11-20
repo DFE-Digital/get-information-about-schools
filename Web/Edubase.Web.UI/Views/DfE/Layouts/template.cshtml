@@ -6,7 +6,7 @@
 
 @section Head {
     <!--[if gt IE 8]><!--><link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css"><!--<![endif]-->
-   
+
     <!--[if lte IE 8]><link href="/public/assets/stylesheets/main-ie8.css" rel="stylesheet" type="text/css"/><![endif]-->
 
     @(RenderSection("Head", required: false))
@@ -36,10 +36,10 @@
 
         <!--[if (gte IE 9)|!(IE)]><!-->
         <script>
-            var mapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])";
+            var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";
         </script>
         <script src="/public/assets/scripts/application.js?v=@version"></script>
-        
+
         <!--<![endif]-->
 
         <!--[if (gte IE 9)|!(IE)]><!-->
@@ -47,5 +47,5 @@
         <!--<![endif]-->
     }
 
- 
+
 }
