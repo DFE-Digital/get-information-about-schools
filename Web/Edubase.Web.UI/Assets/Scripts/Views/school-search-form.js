@@ -372,7 +372,6 @@
         var currentSuggestionName = "";
 
         $(targetInputElementName).bind("typeahead:select", function (src, suggestion) {
-          console.log('select ', suggestion);
             $(targetResolvedInputElementName).val(suggestion[value]);
             currentSuggestionName = suggestion[field];
 
@@ -387,7 +386,6 @@
             }
 
             if (targetInputElementName === '#LocationSearchModel_Text') {
-              console.log(suggestion);
               document.getElementById('LocationSearchModel_AutoSuggestValue').value = suggestion.value;
             }
         });
