@@ -7,8 +7,11 @@ using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 using System.Web.Mvc;
+using DM.Common.Validators;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -33,7 +36,7 @@ namespace Edubase.Web.UI.Controllers
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
         }
-        
+
         [HttpGet, Route(Name = "Homepage")]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
@@ -135,7 +138,15 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text.Distill(), User));
 
         [Route("Search/SuggestPlace"), HttpGet]
-        public async Task<ActionResult> SuggestPlace(string text) => Json(await _placesService.SearchAsync(text));
+        public async Task<ActionResult> SuggestPlace(string text)
+        {
+            if (!QueryValidator.ValidatePlaceSuggestionQuery(text))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            return Json(await _placesService.SearchAsync(text));
+        }
 
         private async Task<ActionResult> ProcessLocalAuthorityDisambiguation(SearchViewModel model)
         {
