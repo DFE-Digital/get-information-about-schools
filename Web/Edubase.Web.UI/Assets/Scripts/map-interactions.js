@@ -55,6 +55,7 @@ DfE.mapInteractions = (function() {
       L.tileLayer('https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&zoom={z}&x={x}&y={y}&subscription-key=' + azureMapsApiKey, {
         attribution: '© ' + new Date().getFullYear() + ' Microsoft, © 1992 - ' + new Date().getFullYear() + ' TomTom',
         maxZoom: 18,
+        minZoom: 4,
         id: 'azuremaps.road',
         crossOrigin: true,
         subscriptionKey: azureMapsApiKey
@@ -101,6 +102,7 @@ DfE.mapInteractions = (function() {
       L.tileLayer('https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&zoom={z}&x={x}&y={y}&subscription-key=' + azureMapsApiKey, {
         attribution: '© ' + new Date().getFullYear() + ' Microsoft, © 1992 - ' + new Date().getFullYear() + ' TomTom',
         maxZoom: window.establishmentsList.length > 1 ? 18 : 16,
+        minZoom: 4,
         id: 'azuremaps.road',
         crossOrigin: true,
         subscriptionKey: azureMapsApiKey
